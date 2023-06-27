@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\User;
+use Carbon\Carbon;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+class UsersSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // make asap user with admin role
+        $user = new User;
+        $user->first_name = 'Asap';
+        $user->last_name = 'Admin';
+        $user->username = "asap-admin";
+        $user->email = 'admin@asap.bg';
+        $user->password = bcrypt('pass123');
+        $user->email_verified_at = Carbon::now();
+        $user->password_changed_at = Carbon::now();
+        $user->save();
+
+        $this->command->info("User with email: $user->email saved");
+
+        $role = Role::where('name', 'super-admin')->first();
+        $user->assignRole($role);
+
+        $this->command->info("Role $role->name was assigned to $user->first_name $user->last_name");
+    }
+}
