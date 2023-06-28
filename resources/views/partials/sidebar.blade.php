@@ -38,6 +38,21 @@
                             <p>{{ trans_choice('custom.nomenclature.act_type', 2) }}</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(Str::contains(url()->current(), ['nomenclature/legal_act_type'])) active @endif">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <p>{{ trans_choice('custom.legal_information', 1) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.nomenclature.legal_act_type') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'nomenclature/legal_act_type')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.nomenclature.legal_act_type', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"

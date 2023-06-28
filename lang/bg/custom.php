@@ -219,4 +219,8 @@ return [
     'act_type'                         => 'Вид акт|Видове актове',
     'act_types'                        => 'Вид акт|Видове актове',
     'nomenclature.act_type'            => 'Вид акт|Видове актове',
+    'legal_information'                => 'Правна информация',
+    'legal_act_type'                   => 'Категория акт|Категории актове',
+    'legal_act_types'                  => 'Категория акт|Категории актове',
+    'nomenclature.legal_act_type'      => 'Категория акт|Категории актове',
 ];
