@@ -28,6 +28,9 @@ class User extends Authenticatable
 
     const PAGINATE = 20;
 
+    const USER_TYPE_EXTERNAL = 2;
+    const USER_TYPE_INTERNAL = 1;
+
     /**
      * The attributes that are mass assignable.
      *

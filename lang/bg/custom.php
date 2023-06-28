@@ -211,4 +211,7 @@ return [
     'code'                             => 'Код',
     'zip_code'                         => 'Пощенски код',
     'altitude'                         => 'altitude',
+    'institution_levels'               => 'Нива институции',
+    'nomenclature.institutions'        => 'Институции',
+    'nomenclature.institution_levels'  => 'Ниво институция|Нива институции',
 ];

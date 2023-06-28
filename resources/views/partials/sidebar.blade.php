@@ -24,6 +24,21 @@
                 <!-- Admin -->
                 @can('manage.*')
                     <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(Str::contains(url()->current(), ['nomenclature/country', 'nomenclature/area', 'nomenclature/municipality', 'nomenclature/settlement'])) active @endif">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <p>{{ trans_choice('custom.nomenclature.institutions', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.nomenclature.institution_level') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'nomenclature/institution_level')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.nomenclature.institution_levels', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"

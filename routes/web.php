@@ -92,3 +92,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['roles:all
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');
 });
+
+require_once('admin.php');
