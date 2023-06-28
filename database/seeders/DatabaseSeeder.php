@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
             UsersSeeder::class,
             InstitutionLevelsSeeder::class,
+            ActTypesSeeder::class,
         ]);
     }
 }
