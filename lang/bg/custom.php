@@ -212,8 +212,8 @@ return [
     'code'                             => 'Код',
     'zip_code'                         => 'Пощенски код',
     'altitude'                         => 'altitude',
-    'institution_level'                => 'Ниво институция|Нива институции',
-    'institution_levels'               => 'Ниво институция|Нива институции',
+    'institution_level'                => 'Ниво обществени консултации|Нива обществени консултации',
+    'institution_levels'               => 'Ниво обществени консултации|Нива обществени консултации',
     'nomenclature.institutions'        => 'Институции',
-    'nomenclature.institution_level'   => 'Ниво институция|Нива институции',
+    'nomenclature.institution_level'   => 'Ниво обществени консултации|Нива обществени консултации',
 ];
