@@ -23,9 +23,6 @@ class InstitutionLevelController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? InstitutionLevel::PAGINATE;
 
-        if( !isset($requestFilter['active']) ) {
-            $requestFilter['active'] = 1;
-        }
         $items = InstitutionLevel::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);

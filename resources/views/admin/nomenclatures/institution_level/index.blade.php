@@ -11,9 +11,6 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController@index'])
-
                         <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>

@@ -72,6 +72,7 @@ return [
     'languages'                        => 'Език|Езици',
     'lists'                            => 'Списък|Списъци',
     'users'                            => 'Потребител|Потребители',
+    'nomenclature'                     => 'Номенклатура|Номенклатури',
     'nomenclatures'                    => 'Номенклатура|Номенклатури',
     'cities'                           => 'Град|Градове',
     'roles'                            => 'Роля|Роли',
@@ -211,7 +212,8 @@ return [
     'code'                             => 'Код',
     'zip_code'                         => 'Пощенски код',
     'altitude'                         => 'altitude',
-    'institution_levels'               => 'Нива институции',
+    'institution_level'                => 'Ниво институция|Нива институции',
+    'institution_levels'               => 'Ниво институция|Нива институции',
     'nomenclature.institutions'        => 'Институции',
-    'nomenclature.institution_levels'  => 'Ниво институция|Нива институции',
+    'nomenclature.institution_level'   => 'Ниво институция|Нива институции',
 ];

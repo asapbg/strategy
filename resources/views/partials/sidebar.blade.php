@@ -34,7 +34,7 @@
                                 <a href="{{ route('admin.nomenclature.institution_level') }}"
                                    class="nav-link @if(strstr(url()->current(), 'nomenclature/institution_level')) active @endif">
                                     <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.nomenclature.institution_levels', 2) }}</p>
+                                    <p>{{ trans_choice('custom.nomenclature.institution_level', 2) }}</p>
                                 </a>
                             </li>
                         </ul>
