@@ -31,7 +31,7 @@
                                 <select id="institution-level-select" name="institution_level_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
                                     @if(isset($institutionLevels) && $institutionLevels->count())
                                         @foreach($institutionLevels as $row)
-                                            <option value="{{ $row->id }}" @if(old('region', ($item->id ? $item->institution_level : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                            <option value="{{ $row->id }}" @if(old('institution_level_id', ($item->id ? $item->institution_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
