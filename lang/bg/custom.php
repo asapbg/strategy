@@ -216,4 +216,7 @@ return [
     'institution_levels'               => 'Ниво обществени консултации|Нива обществени консултации',
     'nomenclature.institutions'        => 'Институции',
     'nomenclature.institution_level'   => 'Ниво обществени консултации|Нива обществени консултации',
+    'act_type'                         => 'Вид акт|Видове актове',
+    'act_types'                        => 'Вид акт|Видове актове',
+    'nomenclature.act_type'            => 'Вид акт|Видове актове',
 ];

@@ -13,15 +13,17 @@ class ActType extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.institution_level';
+    const MODULE_NAME = 'custom.nomenclatures.act_type';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
-    protected $table = 'institution_level';
+    protected $table = 'act_type';
 
     //activity
-    protected string $logName = "institution_level";
+    protected string $logName = "act_type";
+
+    protected $fillable = ['institution_level_id'];
 
     /**
      * Get the model name
@@ -40,13 +42,18 @@ class ActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    public function institutionLevel()
+    {
+        return $this->hasOne(InstitutionLevel::class, 'id', 'institution_level_id');
+    }
+
     public static function optionsList()
     {
-        return DB::table('institution_levels')
-            ->select(['institution_level.id', 'institution_level_translations.name'])
-            ->join('institution_level_translations', 'institution_level_translations.institution_level_id', '=', 'institution_level.id')
-            ->where('institution_level_translations.locale', '=', app()->getLocale())
-            ->orderBy('institution_level_translations.name', 'asc')
+        return DB::table('act_types')
+            ->select(['act_type.id', 'act_type_translations.name'])
+            ->join('act_type_translations', 'act_type_translations.act_type_id', '=', 'act_type.id')
+            ->where('act_type_translations.locale', '=', app()->getLocale())
+            ->orderBy('act_type_translations.name', 'asc')
             ->get();
     }
 }
