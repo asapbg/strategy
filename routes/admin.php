@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/strategic_document_level', 'index')->name('nomenclature.strategic_document_level')->middleware('can:viewAny,App\Models\InstitutionLevel');
         Route::get('/nomenclature/strategic_document_level/edit/{item?}', 'edit')->name('nomenclature.strategic_document_level.edit');
         Route::match(['post', 'put'], '/nomenclature/strategic_document_level/store/{item?}', 'store')->name('nomenclature.strategic_document_level.store');
+    });
+
+    Route::controller(StrategicDocumentTypeController::class)->group(function () {
+        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\InstitutionLevel');
+        Route::get('/nomenclature/strategic_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic_document_type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
     });
 });
