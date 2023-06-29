@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
             UsersSeeder::class,
             InstitutionLevelsSeeder::class,
+            ConsultationCategorySeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
-            ConsultationCategorySeeder::class,
         ]);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Nomenclature;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreActTypeRequest;
 use App\Models\ActType;
-use App\Models\InstitutionLevel;
+use App\Models\ConsultationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,8 +47,8 @@ class ActTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = ActType::translationFieldsProperties();
-        $institutionLevels = InstitutionLevel::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'institutionLevels'));
+        $consultationCategories = ConsultationCategory::all();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories'));
     }
 
     public function store(StoreActTypeRequest $request, ActType $item)

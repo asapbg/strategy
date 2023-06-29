@@ -23,7 +23,7 @@ class ActType extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "act_type";
 
-    protected $fillable = ['institution_level_id'];
+    protected $fillable = ['consultation_category_id'];
 
     /**
      * Get the model name
@@ -42,9 +42,9 @@ class ActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public function institutionLevel()
+    public function consultationCategory()
     {
-        return $this->hasOne(InstitutionLevel::class, 'id', 'institution_level_id');
+        return $this->hasOne(ConsultationCategory::class, 'id', 'consultation_category_id');
     }
 
     public static function optionsList()

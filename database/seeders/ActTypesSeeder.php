@@ -3,7 +3,7 @@ namespace Database\Seeders;
 
 use App\Models\ActType;
 use Illuminate\Database\Seeder;
-use App\Models\InstitutionLevel;
+use App\Models\ConsultationCategory;
 
 class ActTypesSeeder extends Seeder
 {
@@ -39,12 +39,12 @@ class ActTypesSeeder extends Seeder
         ]];
 
         foreach ($types as $level => $types) {
-            $level = InstitutionLevel::whereHas('translations', function($query) use ($level) {
+            $level = ConsultationCategory::whereHas('translations', function($query) use ($level) {
                 $query->where('name', $level);
             })->first();
             foreach ($types as $type) {
                 $item = new ActType();
-                $item->institution_level_id = $level->id;
+                $item->consultation_category_id = $level->id;
                 $item->save();
                 if ($item->id) {
                     foreach ($locales as $locale) {

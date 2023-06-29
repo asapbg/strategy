@@ -25,7 +25,7 @@ class StoreActTypeRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'institution_level_id' => ['required', 'numeric'],
+            'consultation_category_id' => ['required', 'numeric'],
         ];
 
         if (request()->isMethod('put') ) {

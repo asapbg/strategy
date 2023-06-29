@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('act_type', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('institution_level_id');
+            $table->unsignedInteger('consultation_category_id');
             $table->timestamps();
         });
 
