@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicController;
+use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -51,5 +52,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/authority_accepting_strategic', 'index')->name('nomenclature.authority_accepting_strategic')->middleware('can:viewAny,App\Models\InstitutionLevel');
         Route::get('/nomenclature/authority_accepting_strategic/edit/{item?}', 'edit')->name('nomenclature.authority_accepting_strategic.edit');
         Route::match(['post', 'put'], '/nomenclature/authority_accepting_strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
+    });
+
+    Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
+        Route::get('/nomenclature/authority_advisory_board', 'index')->name('nomenclature.authority_advisory_board')->middleware('can:viewAny,App\Models\InstitutionLevel');
+        Route::get('/nomenclature/authority_advisory_board/edit/{item?}', 'edit')->name('nomenclature.authority_advisory_board.edit');
+        Route::match(['post', 'put'], '/nomenclature/authority_advisory_board/store/{item?}', 'store')->name('nomenclature.authority_advisory_board.store');
     });
 });
