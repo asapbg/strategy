@@ -42,7 +42,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
 
     public static function optionsList()
     {
-        return DB::table('legal_act_types')
+        return DB::table('legal_act_type')
             ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
             ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
             ->where('legal_act_type_translations.locale', '=', app()->getLocale())

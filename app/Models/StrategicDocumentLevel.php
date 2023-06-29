@@ -7,23 +7,21 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 
-class ActType extends ModelActivityExtend implements TranslatableContract
+class StrategicDocumentLevel extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.act_type';
+    const MODULE_NAME = 'custom.nomenclatures.strategic_document_level';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
-    protected $table = 'act_type';
+    protected $table = 'strategic_document_level';
 
     //activity
-    protected string $logName = "act_type";
-
-    protected $fillable = ['consultation_category_id'];
+    protected string $logName = "strategic_document_level";
 
     /**
      * Get the model name
@@ -42,18 +40,13 @@ class ActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public function consultationCategory()
-    {
-        return $this->hasOne(ConsultationCategory::class, 'id', 'consultation_category_id');
-    }
-
     public static function optionsList()
     {
-        return DB::table('act_type')
-            ->select(['act_type.id', 'act_type_translations.name'])
-            ->join('act_type_translations', 'act_type_translations.act_type_id', '=', 'act_type.id')
-            ->where('act_type_translations.locale', '=', app()->getLocale())
-            ->orderBy('act_type_translations.name', 'asc')
+        return DB::table('strategic_document_level')
+            ->select(['strategic_document_level.id', 'strategic_document_level_translations.name'])
+            ->join('strategic_document_level_translations', 'strategic_document_level_translations.consultation_category_id', '=', 'strategic_document_level.id')
+            ->where('strategic_document_level_translations.locale', '=', app()->getLocale())
+            ->orderBy('strategic_document_level_translations.name', 'asc')
             ->get();
     }
 }

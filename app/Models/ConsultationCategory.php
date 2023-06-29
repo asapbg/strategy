@@ -42,7 +42,7 @@ class ConsultationCategory extends ModelActivityExtend implements TranslatableCo
 
     public static function optionsList()
     {
-        return DB::table('consultation_categorys')
+        return DB::table('consultation_category')
             ->select(['consultation_category.id', 'consultation_category_translations.name'])
             ->join('consultation_category_translations', 'consultation_category_translations.consultation_category_id', '=', 'consultation_category.id')
             ->where('consultation_category_translations.locale', '=', app()->getLocale())

@@ -214,7 +214,6 @@ return [
     'altitude'                         => 'altitude',
     'institution_level'                => 'Ниво институции|Нива институции',
     'institution_levels'               => 'Ниво институции|Нива институции',
-    'nomenclature.institutions'        => 'Институции',
     'nomenclature.institution_level'   => 'Ниво институции|Нива институции',
     'act_type'                         => 'Вид акт|Видове актове',
     'act_types'                        => 'Вид акт|Видове актове',
@@ -226,4 +225,7 @@ return [
     'consultation_category'            => 'Категория на обществени консултации|Категории на обществени консултации',
     'consultation_categories'          => 'Категория на обществени консултации|Категории на обществени консултации',
     'nomenclature.consultation_category'=> 'Категория на обществени консултации|Категории на обществени консултации',
+    'strategic_document_level'         => 'Ниво на стратегически документ|Нива на стратегически документ',
+    'strategic_document_levels'        => 'Ниво на стратегически документ|Нива на стратегически документ',
+    'nomenclature.strategic_document_level'=> 'Ниво на стратегически документ|Нива на стратегически документ',
 ];

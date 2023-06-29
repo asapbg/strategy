@@ -42,7 +42,7 @@ class InstitutionLevel extends ModelActivityExtend implements TranslatableContra
 
     public static function optionsList()
     {
-        return DB::table('institution_levels')
+        return DB::table('institution_level')
             ->select(['institution_level.id', 'institution_level_translations.name'])
             ->join('institution_level_translations', 'institution_level_translations.consultation_category_id', '=', 'institution_level.id')
             ->where('institution_level_translations.locale', '=', app()->getLocale())
