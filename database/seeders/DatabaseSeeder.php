@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ConsultationCategorySeeder::class,
             StrategicDocumentLevelsSeeder::class,
             StrategicDocumentTypesSeeder::class,
+            AuthorityAcceptingStrategicSeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
         ]);
