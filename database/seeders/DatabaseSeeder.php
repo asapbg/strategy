@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             InstitutionLevelsSeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
+            ConsultationCategorySeeder::class,
         ]);
     }
 }

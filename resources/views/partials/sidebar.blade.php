@@ -32,6 +32,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('admin.nomenclature.consultation_category') }}"
+                            class="nav-link @if(strstr(url()->current(), 'nomenclature/consultation_category')) active @endif">
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                            <p>{{ trans_choice('custom.nomenclature.consultation_category', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('admin.nomenclature.act_type') }}"
                             class="nav-link @if(strstr(url()->current(), 'nomenclature/act_type')) active @endif">
                             <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
