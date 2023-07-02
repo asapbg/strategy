@@ -13,19 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('act_type_advisory', function (Blueprint $table) {
+        Schema::create('advisory_act_type', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
 
-        Schema::create('act_type_advisory_translations', function (Blueprint $table) {
+        Schema::create('advisory_act_type_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('locale')->index();
-            $table->unsignedInteger('act_type_advisory_id');
-            $table->unique(['act_type_advisory_id', 'locale']);
-            $table->foreign('act_type_advisory_id')
+            $table->unsignedInteger('advisory_act_type_id');
+            $table->unique(['advisory_act_type_id', 'locale']);
+            $table->foreign('advisory_act_type_id')
                 ->references('id')
-                ->on('act_type_advisory');
+                ->on('advisory_act_type');
 
             $table->string('name');
         });
@@ -38,7 +38,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('act_type_advisory_translations');
-        Schema::dropIfExists('act_type_advisory');
+        Schema::dropIfExists('advisory_act_type_translations');
+        Schema::dropIfExists('advisory_act_type');
     }
 };

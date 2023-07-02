@@ -7,21 +7,21 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 
-class ActTypeAdvisory extends ModelActivityExtend implements TranslatableContract
+class AdvisoryActType extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.act_type_advisory';
+    const MODULE_NAME = 'custom.nomenclatures.advisory_act_type';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
-    protected $table = 'act_type_advisory';
+    protected $table = 'advisory_act_type';
 
     //activity
-    protected string $logName = "act_type_advisory";
+    protected string $logName = "advisory_act_type";
 
     protected $fillable = ['consultation_category_id'];
 
@@ -49,11 +49,11 @@ class ActTypeAdvisory extends ModelActivityExtend implements TranslatableContrac
 
     public static function optionsList()
     {
-        return DB::table('act_type_advisory')
-            ->select(['act_type_advisory.id', 'act_type_advisory_translations.name'])
-            ->join('act_type_advisory_translations', 'act_type_advisory_translations.act_type_advisory_id', '=', 'act_type_advisory.id')
-            ->where('act_type_advisory_translations.locale', '=', app()->getLocale())
-            ->orderBy('act_type_advisory_translations.name', 'asc')
+        return DB::table('advisory_act_type')
+            ->select(['advisory_act_type.id', 'advisory_act_type_translations.name'])
+            ->join('advisory_act_type_translations', 'advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
+            ->where('advisory_act_type_translations.locale', '=', app()->getLocale())
+            ->orderBy('advisory_act_type_translations.name', 'asc')
             ->get();
     }
 }

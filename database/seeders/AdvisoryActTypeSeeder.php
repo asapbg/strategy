@@ -2,9 +2,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\ActTypeAdvisory;
+use App\Models\AdvisoryActType;
 
-class ActTypeAdvisorySeeder extends Seeder
+class AdvisoryActTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,7 +23,7 @@ class ActTypeAdvisorySeeder extends Seeder
         ];
 
         foreach ($types as $name) {
-            $item = new ActTypeAdvisory();
+            $item = new AdvisoryActType();
             $item->save();
             if ($item->id) {
                 foreach ($locales as $locale) {

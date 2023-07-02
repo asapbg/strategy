@@ -92,10 +92,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.act_type_advisory') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/act_type_advisory')) active @endif">
+                        <a href="{{ route('admin.nomenclature.advisory_act_type') }}"
+                            class="nav-link @if(strstr(url()->current(), 'nomenclature/advisory_act_type')) active @endif">
                             <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.act_type_advisory', 2) }}</p>
+                            <p>{{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}</p>
                         </a>
                     </li>
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>

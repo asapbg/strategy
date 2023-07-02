@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             StrategicDocumentTypesSeeder::class,
             AuthorityAcceptingStrategicSeeder::class,
             AuthorityAdvisoryBoardSeeder::class,
-            ActTypeAdvisorySeeder::class,
+            AdvisoryActTypeSeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
         ]);
