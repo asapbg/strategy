@@ -1,7 +1,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Logo -->
     <a href="{{ route('admin.home') }}" class="brand-link">
-        <span class="ml-2 brand-text">Laravel 9</span>
+        <span class="ml-2 brand-text">
+            <img src="{{ url('img/logo.png') }}" style="height: 40px; width: auto;">
+            {{ env('APP_NAME') }}
+        </span>
         <span class="ml-2 font-weight-light"></span>
     </a>
 
