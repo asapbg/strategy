@@ -17,22 +17,6 @@
                             @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="adm_level">{{ trans_choice('custom.consultation_category', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="institution-level-select" name="consultation_category_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($consultationCategories) && $consultationCategories->count())
-                                        @foreach($consultationCategories as $row)
-                                            <option value="{{ $row->id }}" @if(old('consultation_category_id', ($item->id ? $item->consultation_category_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('institution_level')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
