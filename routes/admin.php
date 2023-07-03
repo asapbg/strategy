@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
+use App\Http\Controllers\Admin\Nomenclature\DocumentTypeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -81,4 +82,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/advisory_chairman_type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
     });
 
+    Route::controller(DocumentTypeController::class)->group(function () {
+        Route::get('/nomenclature/document_type', 'index')->name('nomenclature.document_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/document_type/edit/{item?}', 'edit')->name('nomenclature.document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/document_type/store/{item?}', 'store')->name('nomenclature.document_type.store');
+    });
 });

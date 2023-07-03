@@ -112,6 +112,14 @@
                             <p>{{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.nomenclature.document_type') }}"
+                            class="nav-link @if(strstr(url()->current(), 'nomenclature/document_type')) active @endif">
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                            <p>{{ trans_choice('custom.nomenclature.document_type', 2) }}</p>
+                        </a>
+                    </li>
+
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"
