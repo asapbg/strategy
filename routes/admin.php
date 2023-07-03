@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicControlle
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +73,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/strategic_act_type', 'index')->name('nomenclature.strategic_act_type')->middleware('can:viewAny,App\Models\ActType');
         Route::get('/nomenclature/strategic_act_type/edit/{item?}', 'edit')->name('nomenclature.strategic_act_type.edit');
         Route::match(['post', 'put'], '/nomenclature/strategic_act_type/store/{item?}', 'store')->name('nomenclature.strategic_act_type.store');
+    });
+
+    Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
+        Route::get('/nomenclature/advisory_chairman_type', 'index')->name('nomenclature.advisory_chairman_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/advisory_chairman_type/edit/{item?}', 'edit')->name('nomenclature.advisory_chairman_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/advisory_chairman_type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
     });
 
 });
