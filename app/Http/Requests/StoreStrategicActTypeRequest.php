@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\AdvisoryActType;
+use App\Models\StrategicActType;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAdvisoryActTypeRequest extends FormRequest
+class StoreStrategicActTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,11 @@ class StoreAdvisoryActTypeRequest extends FormRequest
     public function rules()
     {
         if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:advisory_act_type'];
+            $rules['id'] = ['required', 'numeric', 'exists:strategic_act_type'];
         }
 
         foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryActType::translationFieldsProperties() as $field => $properties) {
+            foreach (StrategicActType::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }

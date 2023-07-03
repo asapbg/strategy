@@ -98,6 +98,13 @@
                             <p>{{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.nomenclature.strategic_act_type') }}"
+                            class="nav-link @if(strstr(url()->current(), 'nomenclature/strategic_act_type')) active @endif">
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                            <p>{{ trans_choice('custom.nomenclature.strategic_act_type', 2) }}</p>
+                        </a>
+                    </li>
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"

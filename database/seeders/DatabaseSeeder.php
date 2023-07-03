@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AuthorityAcceptingStrategicSeeder::class,
             AuthorityAdvisoryBoardSeeder::class,
             AdvisoryActTypeSeeder::class,
+            StrategicActTypeSeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
         ]);
