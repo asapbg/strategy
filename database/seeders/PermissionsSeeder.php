@@ -33,5 +33,18 @@ class PermissionsSeeder extends Seeder
 
         $role = Role::whereName('super-admin')->first();
         $role->givePermissionTo('manage.*');
+        
+        $moderators = [
+            'advisory',
+            'strategic',
+            'legal',
+            'advisory-boards',
+            'advisory-board',
+            'partnership'
+        ];
+        foreach ($moderators as $section) {
+            $role = Role::whereName('moderator-' . $section)->first();
+            $role->givePermissionTo('manage.' . $section);
+        }
     }
 }
