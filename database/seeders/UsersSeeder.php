@@ -34,5 +34,33 @@ class UsersSeeder extends Seeder
         $user->assignRole($role);
 
         $this->command->info("Role $role->name was assigned to $user->first_name $user->last_name");
+
+        // make moderator users
+        $moderators = [
+            'advisory',
+            'strategic',
+            'legal',
+            'advisory-boards',
+            'advisory-board',
+            'partnership'
+        ];
+        foreach ($moderators as $section) {
+            $user = new User;
+            $user->first_name = Role::whereName('moderator-' . $section)->first()->display_name;
+            $user->last_name = '';
+            $user->username = "moderator-$section";
+            $user->email = 'moderator@asap.bg';
+            $user->password = bcrypt('pass123');
+            $user->email_verified_at = Carbon::now();
+            $user->password_changed_at = Carbon::now();
+            $user->save();
+
+            $this->command->info("User with email: $user->email saved");
+
+            $role = Role::whereName('moderator-' . $section)->first();
+            $user->assignRole($role);
+
+            $this->command->info("Role $role->name was assigned to $user->first_name $user->last_name");
+        }
     }
 }
