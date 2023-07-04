@@ -26,7 +26,8 @@
 
                 <!-- Admin -->
                 @can('manage.*')
-                    <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
+                <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
+                    @can('manage.nomenclatures')
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
                            class="nav-link @if(strstr(url()->current(), 'nomenclature')) active @endif">
@@ -34,6 +35,7 @@
                             <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
                         </a>
                     </li>
+                    @endcan
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"
