@@ -28,65 +28,81 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.institution_level') }}">
-                            <p>{{ trans_choice('custom.nomenclature.institution_level', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.institution_level') }}">
+                            <i class="fas fa-university"></i>
+                            {{ trans_choice('custom.nomenclature.institution_level', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.consultation_category') }}">
-                            <p>{{ trans_choice('custom.nomenclature.consultation_category', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_category') }}">
+                            <i class="fas fa-folder-open"></i>
+                            {{ trans_choice('custom.nomenclature.consultation_category', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.act_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.act_type', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.act_type') }}">
+                            <i class="fas fa-file"></i>
+                            {{ trans_choice('custom.nomenclature.act_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.legal_act_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.legal_act_type', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.legal_act_type') }}">
+                            <i class="fas fa-folder-open"></i>
+                            {{ trans_choice('custom.nomenclature.legal_act_type', 2) }}
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.strategic_document_level') }}">
+                            <i class="fad fa-folder"></i>
+                            {{ trans_choice('custom.nomenclature.strategic_document_level', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.strategic_document_level') }}">
-                            <p>{{ trans_choice('custom.nomenclature.strategic_document_level', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.strategic_document_type') }}">
+                            <i class="fas fa-file"></i>
+                            {{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.strategic_document_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
+                            <i class="fas fa-university"></i>
+                            {{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
-                            <p>{{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.authority_advisory_board') }}">
+                            <i class="fas fa-university"></i>
+                            {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.advisory_act_type') }}">
+                            <i class="fas fa-file"></i>
+                            {{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.authority_advisory_board') }}">
-                            <p>{{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.strategic_act_type') }}">
+                            <i class="fas fa-file"></i>
+                            {{ trans_choice('custom.nomenclature.strategic_act_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.advisory_act_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.advisory_chairman_type') }}">
+                            <i class="fas fa-users"></i>
+                            {{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.strategic_act_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.strategic_act_type', 2) }}</p>
-                        </a>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.advisory_chairman_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}</p>
-                        </a>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="{{ route('admin.nomenclature.document_type') }}">
-                            <p>{{ trans_choice('custom.nomenclature.document_type', 2) }}</p>
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.document_type') }}">
+                            <i class="fas fa-file"></i>
+                            {{ trans_choice('custom.nomenclature.document_type', 2) }}
                         </a>
                     </div>
                 </div>
