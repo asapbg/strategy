@@ -28,98 +28,12 @@
                 @can('manage.*')
                     <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.institution_level') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/institution_level')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.institution_level', 2) }}</p>
+                        <a href="{{route('admin.nomenclature')}}"
+                           class="nav-link @if(strstr(url()->current(), 'nomenclature')) active @endif">
+                            <i class="fas fa-file"></i>
+                            <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.consultation_category') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/consultation_category')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.consultation_category', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.act_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/act_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.act_type', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link @if(Str::contains(url()->current(), ['nomenclature/legal_act_type'])) active @endif">
-                            <i class="nav-icon fas fa-layer-group"></i>
-                            <p>{{ trans_choice('custom.legal_information', 1) }}<i class="fas fa-angle-left right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.nomenclature.legal_act_type') }}"
-                                   class="nav-link @if(strstr(url()->current(), 'nomenclature/legal_act_type')) active @endif">
-                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.nomenclature.legal_act_type', 2) }}</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.strategic_document_level') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/strategic_document_level')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.strategic_document_level', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.strategic_document_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/strategic_document_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.authority_accepting_strategic') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/authority_accepting_strategic')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.authority_advisory_board') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/authority_advisory_board')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.advisory_act_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/advisory_act_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.strategic_act_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/strategic_act_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.strategic_act_type', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.advisory_chairman_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/advisory_chairman_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.nomenclature.document_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'nomenclature/document_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                            <p>{{ trans_choice('custom.nomenclature.document_type', 2) }}</p>
-                        </a>
-                    </li>
-
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"

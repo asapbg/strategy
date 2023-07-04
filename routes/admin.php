@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\NomenclatureController;
 use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
@@ -16,6 +17,11 @@ use App\Http\Controllers\Admin\Nomenclature\DocumentTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    
+    Route::controller(NomenclatureController::class)->group(function () {
+        Route::get('/nomenclature', 'index')->name('nomenclature');
+    });
+
     Route::controller(InstitutionLevelController::class)->group(function () {
         Route::get('/nomenclature/institution_level', 'index')->name('nomenclature.institution_level')->middleware('can:viewAny,App\Models\InstitutionLevel');
         Route::get('/nomenclature/institution_level/edit/{item?}', 'edit')->name('nomenclature.institution_level.edit');
