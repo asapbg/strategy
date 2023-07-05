@@ -26,7 +26,24 @@
 
                 <!-- Admin -->
                 @can('manage.*')
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
+                        <i class="nav-icon fas fa-bullhorn"></i>
+                        <p>{{ trans_choice('custom.public_consultations', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.consultations.public_consultations.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
+                            <i class="fas fa-bullhorn nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.consultations', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
+                    @canany(['manage.*', 'manage.advisory'])
+                    @endcan
                     @can('manage.nomenclatures')
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
