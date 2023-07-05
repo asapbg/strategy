@@ -20,6 +20,8 @@
     <script>
         GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
     </script>
+    <script src="{{ asset('vendor/ckeditor/ckeditor.min.js') }}"></script>
+    <script src="{{ asset('vendor/ckeditor/translations/bg.min.js') }}"></script>
     @stack('styles')
 </head>
 @php
@@ -79,6 +81,13 @@
 </div>
 
 <script src="{{ asset('js/admin.js') }}"></script>
+<script type="text/javascript">
+    ClassicEditor
+        .create(document.querySelector('.ckeditor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 @stack('scripts')
 
 </body>

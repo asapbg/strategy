@@ -52,6 +52,12 @@
                                 value="{{ old('title', ($item->id ? $item->translate(app()->getLocale())->title : '')) }}">
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="description">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
+                            <textarea id="description" name="description" rows="8"
+                                class="ckeditor form-control form-control-sm @error('description'){{ 'is-invalid' }}@enderror">{{ old('description', ($item->id ? $item->translate(app()->getLocale())->description : '')) }}</textarea>
+                        </div>
+
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
