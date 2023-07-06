@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
             DocumentTypesSeeder::class,
+            ConsultationTypesSeeder::class,
         ]);
     }
 }
