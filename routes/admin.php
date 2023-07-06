@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Consultations\ConsultationController;
+use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
 use App\Http\Controllers\Admin\NomenclatureController;
 use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
@@ -114,5 +115,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/consultation_type', 'index')->name('nomenclature.consultation_type')->middleware('can:viewAny,App\Models\ConsultationLevel');
         Route::get('/nomenclature/consultation_type/edit/{item?}', 'edit')->name('nomenclature.consultation_type.edit');
         Route::match(['post', 'put'], '/nomenclature/consultation_type/store/{item?}', 'store')->name('nomenclature.consultation_type.store');
+    });
+
+    Route::controller(ProgramProjectController::class)->group(function () {
+        Route::get('/nomenclature/program_project', 'index')->name('nomenclature.program_project')->middleware('can:viewAny,App\Models\ConsultationLevel');
+        Route::get('/nomenclature/program_project/edit/{item?}', 'edit')->name('nomenclature.program_project.edit');
+        Route::match(['post', 'put'], '/nomenclature/program_project/store/{item?}', 'store')->name('nomenclature.program_project.store');
     });
 });
