@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Nomenclature;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreAdvisoryActTypeRequest;
 use App\Models\AdvisoryActType;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +47,7 @@ class AdvisoryActTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = AdvisoryActType::translationFieldsProperties();
-        $consultationCategories = ConsultationCategory::all();
+        $consultationCategories = ConsultationLevel::all();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories'));
     }
 

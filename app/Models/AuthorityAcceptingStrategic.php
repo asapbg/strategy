@@ -44,7 +44,7 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
     {
         return DB::table('authority_accepting_strategic')
             ->select(['authority_accepting_strategic.id', 'authority_accepting_strategic_translations.name'])
-            ->join('authority_accepting_strategic_translations', 'authority_accepting_strategic_translations.consultation_category_id', '=', 'authority_accepting_strategic.id')
+            ->join('authority_accepting_strategic_translations', 'authority_accepting_strategic_translations.consultation_level_id', '=', 'authority_accepting_strategic.id')
             ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale())
             ->orderBy('authority_accepting_strategic_translations.name', 'asc')
             ->get();

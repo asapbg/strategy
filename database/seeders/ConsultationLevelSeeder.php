@@ -2,9 +2,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 
-class ConsultationCategorySeeder extends Seeder
+class ConsultationLevelSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,7 +18,7 @@ class ConsultationCategorySeeder extends Seeder
         $levels = ['Централно ниво', 'Централно друго', 'Областно ниво', 'Общинско ниво'];
 
         foreach ($levels as $name) {
-            $item = new ConsultationCategory();
+            $item = new ConsultationLevel();
             $item->save();
             if ($item->id) {
                 foreach ($locales as $locale) {

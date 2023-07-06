@@ -13,19 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('consultation_category', function (Blueprint $table) {
+        Schema::create('consultation_level', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
 
-        Schema::create('consultation_category_translations', function (Blueprint $table) {
+        Schema::create('consultation_level_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('locale')->index();
-            $table->unsignedInteger('consultation_category_id');
-            $table->unique(['consultation_category_id', 'locale']);
-            $table->foreign('consultation_category_id')
+            $table->unsignedInteger('consultation_level_id');
+            $table->unique(['consultation_level_id', 'locale']);
+            $table->foreign('consultation_level_id')
                 ->references('id')
-                ->on('consultation_category');
+                ->on('consultation_level');
 
             $table->string('name');
         });
@@ -38,7 +38,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('consultation_category_translations');
-        Schema::dropIfExists('consultation_category');
+        Schema::dropIfExists('consultation_level_translations');
+        Schema::dropIfExists('consultation_level');
     }
 };

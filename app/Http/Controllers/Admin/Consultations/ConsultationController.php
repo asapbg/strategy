@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\Consultations\PublicConsultation;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 use App\Models\ActType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -53,7 +53,7 @@ class ConsultationController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
         $actTypes = ActType::all();
-        $consultationCategories = ConsultationCategory::all();
+        $consultationCategories = ConsultationLevel::all();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories', 'actTypes'));
     }
 

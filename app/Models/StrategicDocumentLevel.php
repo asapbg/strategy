@@ -44,7 +44,7 @@ class StrategicDocumentLevel extends ModelActivityExtend implements Translatable
     {
         return DB::table('strategic_document_level')
             ->select(['strategic_document_level.id', 'strategic_document_level_translations.name'])
-            ->join('strategic_document_level_translations', 'strategic_document_level_translations.consultation_category_id', '=', 'strategic_document_level.id')
+            ->join('strategic_document_level_translations', 'strategic_document_level_translations.consultation_level_id', '=', 'strategic_document_level.id')
             ->where('strategic_document_level_translations.locale', '=', app()->getLocale())
             ->orderBy('strategic_document_level_translations.name', 'asc')
             ->get();

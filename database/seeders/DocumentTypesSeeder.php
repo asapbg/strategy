@@ -4,7 +4,7 @@ namespace Database\Seeders;
 use App\Models\ActType;
 use App\Models\DocumentType;
 use Illuminate\Database\Seeder;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 
 class DocumentTypesSeeder extends Seeder
 {
@@ -104,7 +104,7 @@ class DocumentTypesSeeder extends Seeder
         ]];
 
         foreach ($types as $level => $types) {
-            $level = ConsultationCategory::whereHas('translations', function($query) use ($level) {
+            $level = ConsultationLevel::whereHas('translations', function($query) use ($level) {
                 $query->where('name', $level);
             })->first();
             foreach ($types as $typeName => $typeData) {
@@ -113,7 +113,7 @@ class DocumentTypesSeeder extends Seeder
                 })->first();
                 foreach($typeData as $docType) {
                     $item = new DocumentType();
-                    $item->consultation_category_id = $level->id;
+                    $item->consultation_level_id = $level->id;
                     $item->act_type_id = $type->id;
                     $item->save();
                     if ($item->id) {

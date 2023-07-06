@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreConsultationCategoryRequest extends FormRequest
+class StoreConsultationLevelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,11 @@ class StoreConsultationCategoryRequest extends FormRequest
     public function rules()
     {
         if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:consultation_category'];
+            $rules['id'] = ['required', 'numeric', 'exists:consultation_level'];
         }
 
         foreach (config('available_languages') as $lang) {
-            foreach (ConsultationCategory::translationFieldsProperties() as $field => $properties) {
+            foreach (ConsultationLevel::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }

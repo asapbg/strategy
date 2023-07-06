@@ -36,9 +36,9 @@
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_category') }}">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_level') }}">
                             <i class="fas fa-folder-open"></i>
-                            {{ trans_choice('custom.nomenclature.consultation_category', 2) }}
+                            {{ trans_choice('custom.nomenclature.consultation_level', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">

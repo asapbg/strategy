@@ -22,7 +22,7 @@
                             <th>ID</th>
                             <th>{{ __('validation.attributes.name') }}</th>
                             <th>{{ trans_choice('custom.nomenclature.act_type', 1) }}</th>
-                            <th>{{ trans_choice('custom.nomenclature.consultation_category', 1) }}</th>
+                            <th>{{ trans_choice('custom.nomenclature.consultation_level', 1) }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -33,7 +33,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->actType->name }}</td>
-                                    <td>{{ $item->consultationCategory->name }}</td>
+                                    <td>{{ $item->consultationLevel->name }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

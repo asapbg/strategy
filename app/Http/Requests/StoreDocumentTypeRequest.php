@@ -25,7 +25,7 @@ class StoreDocumentTypeRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'consultation_category_id' => ['required', 'numeric'],
+            'consultation_level_id' => ['required', 'numeric'],
             'act_type_id' => ['required', 'numeric'],
         ];
 

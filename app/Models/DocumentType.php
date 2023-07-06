@@ -23,7 +23,7 @@ class DocumentType extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "document_type";
 
-    protected $fillable = ['consultation_category_id', 'act_type_id'];
+    protected $fillable = ['consultation_level_id', 'act_type_id'];
 
     /**
      * Get the model name
@@ -42,9 +42,9 @@ class DocumentType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public function consultationCategory()
+    public function consultationLevel()
     {
-        return $this->hasOne(ConsultationCategory::class, 'id', 'consultation_category_id');
+        return $this->hasOne(ConsultationLevel::class, 'id', 'consultation_level_id');
     }
 
     public function actType()

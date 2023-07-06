@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
             UsersSeeder::class,
             InstitutionLevelsSeeder::class,
-            ConsultationCategorySeeder::class,
+            ConsultationLevelSeeder::class,
             StrategicDocumentLevelsSeeder::class,
             StrategicDocumentTypesSeeder::class,
             AuthorityAcceptingStrategicSeeder::class,

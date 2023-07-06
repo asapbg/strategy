@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreDocumentTypeRequest;
 use App\Models\ActType;
 use App\Models\DocumentType;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +48,7 @@ class DocumentTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = DocumentType::translationFieldsProperties();
-        $consultationCategories = ConsultationCategory::all();
+        $consultationCategories = ConsultationLevel::all();
         $actTypes = ActType::all();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories', 'actTypes'));
     }

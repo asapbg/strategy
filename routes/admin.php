@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\ConsultationController;
 use App\Http\Controllers\Admin\NomenclatureController;
 use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
-use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
@@ -36,10 +36,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/institution_level/store/{item?}', 'store')->name('nomenclature.institution_level.store');
     });
 
-    Route::controller(ConsultationCategoryController::class)->group(function () {
-        Route::get('/nomenclature/consultation_category', 'index')->name('nomenclature.consultation_category')->middleware('can:viewAny,App\Models\ConsultationCategory');
-        Route::get('/nomenclature/consultation_category/edit/{item?}', 'edit')->name('nomenclature.consultation_category.edit');
-        Route::match(['post', 'put'], '/nomenclature/consultation_category/store/{item?}', 'store')->name('nomenclature.consultation_category.store');
+    Route::controller(ConsultationLevelController::class)->group(function () {
+        Route::get('/nomenclature/consultation_level', 'index')->name('nomenclature.consultation_level')->middleware('can:viewAny,App\Models\ConsultationLevel');
+        Route::get('/nomenclature/consultation_level/edit/{item?}', 'edit')->name('nomenclature.consultation_level.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation_level/store/{item?}', 'store')->name('nomenclature.consultation_level.store');
     });
 
     Route::controller(ActTypeController::class)->group(function () {

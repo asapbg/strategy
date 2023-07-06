@@ -8,5 +8,14 @@ class ActTypeTranslation extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['locale', 'public_consultation_id', 'title'];
+    protected $fillable = [
+        'locale',
+        'public_consultation_id',
+        'title',
+        'description',
+        'shortTermReason',
+        'responsibleUnit',
+        'responsiblePerson',
+        'address',
+    ];
 }

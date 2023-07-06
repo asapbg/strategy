@@ -18,14 +18,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="adm_level">{{ trans_choice('custom.consultation_category', 1) }}<span class="required">*</span></label>
+                            <label class="col-sm-12 control-label" for="adm_level">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
                             <div class="col-12">
-                                <select id="consultation-category-select" name="consultation_category_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
+                                <select id="consultation-category-select" name="consultation_level_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
                                 <option value="0" data-id="0">---</option>
                                     @if(isset($consultationCategories) && $consultationCategories->count())
                                         @foreach($consultationCategories as $row)
                                             <option value="{{ $row->id }}"
-                                                @if(old('consultation_category_id', ($item->id ? $item->consultation_category_id : 0)) == $row->id) selected @endif
+                                                @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif
                                                 data-id="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     @endif
@@ -43,7 +43,7 @@
                                     @if(isset($actTypes) && $actTypes->count())
                                         @foreach($actTypes as $row)
                                             <option value="{{ $row->id }}"
-                                                data-consultation-category="{{ $row->consultation_category_id }}"
+                                                data-consultation-category="{{ $row->consultation_level_id }}"
                                                 @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
                                                 data-id="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach

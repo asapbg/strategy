@@ -3,30 +3,30 @@
 namespace App\Http\Controllers\Admin\Nomenclature;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StoreConsultationCategoryRequest;
-use App\Models\ConsultationCategory;
+use App\Http\Requests\StoreConsultationLevelRequest;
+use App\Models\ConsultationLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
-class ConsultationCategoryController extends AdminController
+class ConsultationLevelController extends AdminController
 {
-    const LIST_ROUTE = 'admin.nomenclature.consultation_category';
-    const EDIT_ROUTE = 'admin.nomenclature.consultation_category.edit';
-    const STORE_ROUTE = 'admin.nomenclature.consultation_category.store';
-    const LIST_VIEW = 'admin.nomenclatures.consultation_category.index';
-    const EDIT_VIEW = 'admin.nomenclatures.consultation_category.edit';
+    const LIST_ROUTE = 'admin.nomenclature.consultation_level';
+    const EDIT_ROUTE = 'admin.nomenclature.consultation_level.edit';
+    const STORE_ROUTE = 'admin.nomenclature.consultation_level.store';
+    const LIST_VIEW = 'admin.nomenclatures.consultation_level.index';
+    const EDIT_VIEW = 'admin.nomenclatures.consultation_level.edit';
 
     public function index(Request $request)
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? ConsultationCategory::PAGINATE;
+        $paginate = $filter['paginate'] ?? ConsultationLevel::PAGINATE;
 
-        $items = ConsultationCategory::with(['translation'])
+        $items = ConsultationLevel::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'ConsultationCategory';
+        $toggleBooleanModel = 'ConsultationLevel';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
@@ -35,26 +35,26 @@ class ConsultationCategoryController extends AdminController
 
     /**
      * @param Request $request
-     * @param ConsultationCategory $item
+     * @param ConsultationLevel $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, ConsultationCategory $item)
+    public function edit(Request $request, ConsultationLevel $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', ConsultationCategory::class) ) {
+        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', ConsultationLevel::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = ConsultationCategory::translationFieldsProperties();
+        $translatableFields = ConsultationLevel::translationFieldsProperties();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
-    public function store(StoreConsultationCategoryRequest $request, ConsultationCategory $item)
+    public function store(StoreConsultationLevelRequest $request, ConsultationLevel $item)
     {
         $id = $item->id;
         $validated = $request->validated();
         if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', ConsultationCategory::class) ) {
+            || $request->user()->cannot('create', ConsultationLevel::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -62,15 +62,15 @@ class ConsultationCategoryController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
-            $this->storeTranslateOrNew(ConsultationCategory::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew(ConsultationLevel::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.nomenclature.consultation_category', 1)." ".__('messages.updated_successfully_m'));
+                    ->with('success', trans_choice('custom.nomenclature.consultation_level', 1)." ".__('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.nomenclature.consultation_category', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.consultation_level', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -96,7 +96,7 @@ class ConsultationCategoryController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = ConsultationCategory::query();
+        $qItem = ConsultationLevel::query();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

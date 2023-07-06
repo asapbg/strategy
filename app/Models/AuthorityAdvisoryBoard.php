@@ -44,7 +44,7 @@ class AuthorityAdvisoryBoard extends ModelActivityExtend implements Translatable
     {
         return DB::table('authority_advisory_board')
             ->select(['authority_advisory_board.id', 'authority_advisory_board_translations.name'])
-            ->join('authority_advisory_board_translations', 'authority_advisory_board_translations.consultation_category_id', '=', 'authority_advisory_board.id')
+            ->join('authority_advisory_board_translations', 'authority_advisory_board_translations.consultation_level_id', '=', 'authority_advisory_board.id')
             ->where('authority_advisory_board_translations.locale', '=', app()->getLocale())
             ->orderBy('authority_advisory_board_translations.name', 'asc')
             ->get();

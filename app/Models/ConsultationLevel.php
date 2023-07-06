@@ -7,21 +7,21 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 
-class ConsultationCategory extends ModelActivityExtend implements TranslatableContract
+class ConsultationLevel extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.consultation_category';
+    const MODULE_NAME = 'custom.nomenclatures.consultation_level';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
-    protected $table = 'consultation_category';
+    protected $table = 'consultation_level';
 
     //activity
-    protected string $logName = "consultation_category";
+    protected string $logName = "consultation_level";
 
     /**
      * Get the model name
@@ -42,11 +42,11 @@ class ConsultationCategory extends ModelActivityExtend implements TranslatableCo
 
     public static function optionsList()
     {
-        return DB::table('consultation_category')
-            ->select(['consultation_category.id', 'consultation_category_translations.name'])
-            ->join('consultation_category_translations', 'consultation_category_translations.consultation_category_id', '=', 'consultation_category.id')
-            ->where('consultation_category_translations.locale', '=', app()->getLocale())
-            ->orderBy('consultation_category_translations.name', 'asc')
+        return DB::table('consultation_level')
+            ->select(['consultation_level.id', 'consultation_level_translations.name'])
+            ->join('consultation_level_translations', 'consultation_level_translations.consultation_level_id', '=', 'consultation_level.id')
+            ->where('consultation_level_translations.locale', '=', app()->getLocale())
+            ->orderBy('consultation_level_translations.name', 'asc')
             ->get();
     }
 }

@@ -44,7 +44,7 @@ class InstitutionLevel extends ModelActivityExtend implements TranslatableContra
     {
         return DB::table('institution_level')
             ->select(['institution_level.id', 'institution_level_translations.name'])
-            ->join('institution_level_translations', 'institution_level_translations.consultation_category_id', '=', 'institution_level.id')
+            ->join('institution_level_translations', 'institution_level_translations.consultation_level_id', '=', 'institution_level.id')
             ->where('institution_level_translations.locale', '=', app()->getLocale())
             ->orderBy('institution_level_translations.name', 'asc')
             ->get();

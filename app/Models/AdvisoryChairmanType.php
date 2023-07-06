@@ -23,7 +23,7 @@ class AdvisoryChairmanType extends ModelActivityExtend implements TranslatableCo
     //activity
     protected string $logName = "advisory_chairman_type";
 
-    protected $fillable = ['consultation_category_id'];
+    protected $fillable = ['consultation_level_id'];
 
     /**
      * Get the model name
@@ -42,9 +42,9 @@ class AdvisoryChairmanType extends ModelActivityExtend implements TranslatableCo
         );
     }
 
-    public function consultationCategory()
+    public function consultationLevel()
     {
-        return $this->hasOne(ConsultationCategory::class, 'id', 'consultation_category_id');
+        return $this->hasOne(ConsultationLevel::class, 'id', 'consultation_level_id');
     }
 
     public static function optionsList()

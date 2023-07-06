@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters\ConsultationCategory;
+namespace App\Filters\ConsultationLevel;
 
 use App\Filters\FilterContract;
 use App\Filters\QueryFilter;
