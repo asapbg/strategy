@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\DocumentTypeController;
 
 use Illuminate\Support\Facades\Route;
@@ -107,5 +108,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/consultation_category', 'index')->name('nomenclature.consultation_category')->middleware('can:viewAny,App\Models\ConsultationLevel');
         Route::get('/nomenclature/consultation_category/edit/{item?}', 'edit')->name('nomenclature.consultation_category.edit');
         Route::match(['post', 'put'], '/nomenclature/consultation_category/store/{item?}', 'store')->name('nomenclature.consultation_category.store');
+    });
+
+    Route::controller(ConsultationTypeController::class)->group(function () {
+        Route::get('/nomenclature/consultation_type', 'index')->name('nomenclature.consultation_type')->middleware('can:viewAny,App\Models\ConsultationLevel');
+        Route::get('/nomenclature/consultation_type/edit/{item?}', 'edit')->name('nomenclature.consultation_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation_type/store/{item?}', 'store')->name('nomenclature.consultation_type.store');
     });
 });

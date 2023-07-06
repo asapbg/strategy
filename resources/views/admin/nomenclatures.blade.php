@@ -113,6 +113,12 @@
                             {{ trans_choice('custom.nomenclature.consultation_category', 2) }}
                         </a>
                     </div>
+                    <div class="col-sm-3">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_type') }}">
+                            <i class="fas fa-folder-open"></i>
+                            {{ trans_choice('custom.nomenclature.consultation_type', 2) }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
