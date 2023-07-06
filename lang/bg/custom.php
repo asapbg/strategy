@@ -265,4 +265,5 @@ return [
     'nomenclature.link_category'      => 'Категория връзки|Категории връзки',
     'start'                           => 'Начало',
     'end'                             => 'Край',
+    'diff_days'                       => 'Дни разлика'
 ];

@@ -106,18 +106,28 @@
                                 class="ckeditor form-control form-control-sm @error('description'){{ 'is-invalid' }}@enderror">{{ old('description', ($item->id ? $item->translate(app()->getLocale())->description : '')) }}</textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
-                            <input type="date" id="open_from" name="open_from"
-                                class="form-control form-control-sm @error('open_from'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('open_from', ($item->id ? $item->translate(app()->getLocale())->open_from : '')) }}">
-                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
+                                <input type="date" id="open_from" name="open_from"
+                                    class="form-control form-control-sm @error('open_from'){{ 'is-invalid' }}@enderror"
+                                    value="{{ old('open_from', ($item->id ? $item->translate(app()->getLocale())->open_from : '')) }}">
+                            </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
-                            <input type="date" id="open_to" name="open_to"
+                            <div class="col-sm-4">
+                                <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
+                                <input type="date" id="open_to" name="open_to"
                                 class="form-control form-control-sm @error('open_to'){{ 'is-invalid' }}@enderror"
                                 value="{{ old('open_to', ($item->id ? $item->translate(app()->getLocale())->open_to : '')) }}">
+                            </div>
+                            
+                            <div class="col-sm-4">
+                                <label class="col-sm-12 control-label">{{ __('custom.diff_days') }}</label>
+                                <p>
+                                    <span id="period-total"></span>
+                                    дни
+                                </p>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -176,3 +186,20 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $('#open_from, #open_to').on('change', onDateChange);
+        onDateChange();
+    });
+
+    function onDateChange() {
+        const date1 = new Date($('#open_from').val());
+        const date2 = new Date($('#open_to').val());
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        $('#period-total').text(diffDays ? diffDays : 0);
+    }
+</script>
+@endpush
