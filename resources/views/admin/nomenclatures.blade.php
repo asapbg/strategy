@@ -106,6 +106,14 @@
                         </a>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_category') }}">
+                            <i class="fas fa-folder-open"></i>
+                            {{ trans_choice('custom.nomenclature.consultation_category', 2) }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
