@@ -42,7 +42,7 @@ return new class extends Migration
             $table->text('shortTermReason');
             $table->string('responsibleUnit');
             $table->string('responsiblePerson');
-            $table->string('address');
+            $table->text('address');
         });
     }
 

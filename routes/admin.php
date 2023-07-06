@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\Consultations\ConsultationController;
-use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
+use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
 use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
 use App\Http\Controllers\Admin\NomenclatureController;
 use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
@@ -23,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
     // Manager controllers
-    Route::controller(ConsultationController::class)->group(function () {
+    Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public_consultations', 'index')->name('consultations.public_consultations.index');
         Route::get('/consultations/public_consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
         Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
@@ -124,7 +123,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/program_project/store/{item?}', 'store')->name('nomenclature.program_project.store');
     });
 
-    Route::controller(LinkCategoryController::class)->group(function () {
+    Route::controller(ConsultationCategoryController::class)->group(function () {
         Route::get('/nomenclature/link_category', 'index')->name('nomenclature.link_category')->middleware('can:viewAny,App\Models\ConsultationLevel');
         Route::get('/nomenclature/link_category/edit/{item?}', 'edit')->name('nomenclature.link_category.edit');
         Route::match(['post', 'put'], '/nomenclature/link_category/store/{item?}', 'store')->name('nomenclature.link_category.store');

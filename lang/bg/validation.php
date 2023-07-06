@@ -224,5 +224,12 @@ return [
         'text'                      => 'Текст',
         'begin_date'                => 'дата на започване',
         'model'                     => 'Модел',
+        'open_from'                 => 'Дата на откриване',
+        'open_to'                   => 'Дата на приключване',
+        'shortTermReason'           => 'Причина за кратък срок',
+        'responsibleUnit'           => 'Отговорно звено',
+        'responsiblePerson'         => 'Отговорно лице',
+        'active'                    => 'Активна',
+        'deleted'                   => 'Изтрита',
     ],
 ];

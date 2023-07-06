@@ -7,10 +7,13 @@ use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationLevel;
 use App\Models\ActType;
+use App\Models\ConsultationType;
+use App\Models\LinkCategory;
+use App\Models\ProgramProject;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class ConsultationController extends AdminController
+class PublicConsultationController extends AdminController
 {
     const LIST_ROUTE = 'admin.consultations.public_consultations.index';
     const EDIT_ROUTE = 'admin.consultations.public_consultations.edit';
@@ -52,9 +55,13 @@ class ConsultationController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
-        $actTypes = ActType::all();
+        
+        $consultationTypes = ConsultationType::all();
         $consultationCategories = ConsultationLevel::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories', 'actTypes'));
+        $actTypes = ActType::all();
+        $programProjects = ProgramProject::all();
+        $linkCategories = LinkCategory::all();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationTypes', 'consultationCategories', 'actTypes', 'programProjects', 'linkCategories'));
     }
 
     public function store(StorePublicConsultationRequest $request, PublicConsultation $item)
