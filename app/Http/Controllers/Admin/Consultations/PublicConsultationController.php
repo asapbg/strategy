@@ -78,7 +78,7 @@ class PublicConsultationController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
-            $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNewCurrent(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
@@ -88,7 +88,8 @@ class PublicConsultationController extends AdminController
             return to_route(self::LIST_ROUTE)
                 ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            Log::error($e);
+            \Log::error($e);
+            dd($e, $validated);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 

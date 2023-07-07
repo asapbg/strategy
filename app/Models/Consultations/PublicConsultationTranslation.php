@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Consultations;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ActTypeTranslation extends Model
+class PublicConsultationTranslation extends Model
 {
     public $timestamps = false;
 

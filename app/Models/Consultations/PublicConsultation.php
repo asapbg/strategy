@@ -25,7 +25,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     //activity
     protected string $logName = "public_consultation";
 
-    protected $fillable = ['consultation_category_id', 'act_type_id', 'program_project_id', 'link_category_id', 'open_from', 'open_to', 'email', 'phone', 'active'];
+    protected $fillable = ['consultation_category_id', 'act_type_id', 'program_project_id', 'link_category_id', 'open_from', 'open_to', 'address', 'email', 'phone', 'active'];
 
     /**
      * Get the model name
@@ -37,7 +37,23 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public static function translationFieldsProperties(): array
     {
         return array(
-            'name' => [
+            'title' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:255']
+            ],
+            'description' => [
+                'type' => 'ckeditor',
+                'rules' => ['required', 'string']
+            ],
+            'shortTermReason' => [
+                'type' => 'text',
+                'rules' => ['required', 'string']
+            ],
+            'responsibleUnit' => [
+                'type' => 'text',
+                'rules' => ['required', 'string']
+            ],
+            'responsiblePerson' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:255']
             ],

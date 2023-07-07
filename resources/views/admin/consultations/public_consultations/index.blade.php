@@ -31,8 +31,9 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->consultationLevel->name }}</td>
+                                    <td>{{ $item->title }}</td>
+                                    <td>{{ $item->open_from }}</td>
+                                    <td>{{ $item->open_to }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

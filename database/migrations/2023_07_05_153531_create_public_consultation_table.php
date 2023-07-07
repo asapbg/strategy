@@ -17,13 +17,14 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('consultation_category_id');
             $table->unsignedInteger('act_type_id');
-            $table->unsignedInteger('program_project_id')->nullable();
-            $table->unsignedInteger('link_category_id')->nullable();
+            $table->unsignedInteger('program_project_id');
+            $table->unsignedInteger('link_category_id');
             $table->date('open_from');
             $table->date('open_to');
             $table->string('email');
             $table->string('phone');
-            $table->boolean('active');
+            $table->text('address');
+            $table->boolean('active')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -39,10 +40,9 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description');
-            $table->text('shortTermReason');
+            $table->text('shortTermReason')->nullable();
             $table->string('responsibleUnit');
             $table->string('responsiblePerson');
-            $table->text('address');
         });
     }
 

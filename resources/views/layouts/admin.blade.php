@@ -82,11 +82,13 @@
 
 <script src="{{ asset('js/admin.js') }}"></script>
 <script type="text/javascript">
+$(document).ready(function() {
     ClassicEditor
-        .create(document.querySelector('.ckeditor'))
-        .catch(error => {
-            console.error(error);
-        });
+    .create(document.querySelector('.ckeditor'))
+    .catch(error => {
+        console.error(error);
+    });
+});
 </script>
 @stack('scripts')
 

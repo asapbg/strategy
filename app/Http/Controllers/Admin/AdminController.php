@@ -28,6 +28,23 @@ class AdminController extends Controller
         $item->save();
     }
 
+    /**
+     * @param $fields  //example $item->getFillable();
+     * @param $item   //model;
+     * @param $validated //request validated
+     */
+    protected function storeTranslateOrNewCurrent($fields, $item, $validated)
+    {
+        $locale = app()->getLocale();
+        foreach ($fields as $field) {
+            $fieldName = $field .'_'. $locale;
+            if(array_key_exists($fieldName, $validated)) {
+                $item->translateOrNew($locale)->{$field} = $validated[$fieldName];
+            }
+        }
+
+        $item->save();
+    }
 
     /**
      * Retiurn only fillable fields from validated request data

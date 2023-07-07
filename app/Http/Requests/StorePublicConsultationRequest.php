@@ -25,19 +25,25 @@ class StorePublicConsultationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'consultation_level_id' => ['required', 'numeric'],
+            'consultation_type_id' => ['required', 'numeric'],
+            'consultation_category_id' => ['required', 'numeric'],
             'act_type_id' => ['required', 'numeric'],
-            'title' => ['required'],
+            'program_project_id' => ['required', 'numeric'],
+            'link_category_id' => ['required', 'numeric'],
+            'open_from' => ['required'],
+            'open_to' => ['required'],
+            'address' => ['required'],
+            'email' => ['required'],
+            'phone' => ['required'],
+            'active' => ['boolean', 'nullable'],
         ];
 
         if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:act_type'];
+            $rules['id'] = ['required', 'numeric', 'exists:public_consultation'];
         }
 
-        foreach (config('available_languages') as $lang) {
-            foreach (PublicConsultation::translationFieldsProperties() as $field => $properties) {
-                $rules[$field.'_'.$lang['code']] = $properties['rules'];
-            }
+        foreach (PublicConsultation::translationFieldsProperties() as $field => $properties) {
+            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
 
         return $rules;

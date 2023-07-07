@@ -93,32 +93,23 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="title">{{ __('validation.attributes.title') }} <span class="required">*</span></label>
-                            <input type="text" id="title" name="title"
-                                class="form-control form-control-sm @error('title'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('title', ($item->id ? $item->translate(app()->getLocale())->title : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="description">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
-                            <textarea id="description" name="description" rows="8"
-                                class="ckeditor form-control form-control-sm @error('description'){{ 'is-invalid' }}@enderror">{{ old('description', ($item->id ? $item->translate(app()->getLocale())->description : '')) }}</textarea>
-                        </div>
+                        @include('admin.partial.edit_single_translatable', ['field' => 'title', 'required' => true])
+                    
+                        @include('admin.partial.edit_single_translatable', ['field' => 'description', 'required' => true])
 
                         <div class="row">
                             <div class="col-sm-4 form-group">
                                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
                                 <input type="date" id="open_from" name="open_from"
                                     class="form-control form-control-sm @error('open_from'){{ 'is-invalid' }}@enderror"
-                                    value="{{ old('open_from', ($item->id ? $item->translate(app()->getLocale())->open_from : '')) }}">
+                                    value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
                             </div>
 
                             <div class="col-sm-4">
                                 <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
                                 <input type="date" id="open_to" name="open_to"
                                 class="form-control form-control-sm @error('open_to'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('open_to', ($item->id ? $item->translate(app()->getLocale())->open_to : '')) }}">
+                                value="{{ old('open_to', ($item->id ? $item->open_to : '')) }}">
                             </div>
                             
                             <div class="col-sm-4">
@@ -130,46 +121,38 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="shortTermReason">{{ __('validation.attributes.shortTermReason') }} <span class="required">*</span></label>
-                            <input type="text" id="shortTermReason" name="shortTermReason"
-                                class="form-control form-control-sm @error('shortTermReason'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('shortTermReason', ($item->id ? $item->translate(app()->getLocale())->shortTermReason : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="responsibleUnit">{{ __('validation.attributes.responsibleUnit') }} <span class="required">*</span></label>
-                            <input type="text" id="responsibleUnit" name="responsibleUnit"
-                                class="form-control form-control-sm @error('responsibleUnit'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('responsibleUnit', ($item->id ? $item->translate(app()->getLocale())->responsibleUnit : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="responsiblePerson">{{ __('validation.attributes.shortTermReason') }} <span class="required">*</span></label>
-                            <input type="text" id="responsiblePerson" name="responsiblePerson"
-                                class="form-control form-control-sm @error('responsiblePerson'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('responsiblePerson', ($item->id ? $item->translate(app()->getLocale())->responsiblePerson : '')) }}">
-                        </div>
+                        @include('admin.partial.edit_single_translatable', ['field' => 'shortTermReason', 'required' => true])
+                        @include('admin.partial.edit_single_translatable', ['field' => 'responsibleUnit', 'required' => true])
+                        @include('admin.partial.edit_single_translatable', ['field' => 'responsiblePerson', 'required' => true])
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="address">{{ __('validation.attributes.address') }} <span class="required">*</span></label>
                             <input type="text" id="address" name="address"
                                 class="form-control form-control-sm @error('address'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('address', ($item->id ? $item->translate(app()->getLocale())->address : '')) }}">
+                                value="{{ old('address', ($item->id ? $item->address : '')) }}">
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="email">{{ __('validation.attributes.email') }} <span class="required">*</span></label>
                             <input type="email" id="email" name="email"
                                 class="form-control form-control-sm @error('email'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('email', ($item->id ? $item->translate(app()->getLocale())->email : '')) }}">
+                                value="{{ old('email', ($item->id ? $item->email : '')) }}">
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="phone">{{ __('validation.attributes.phone') }} <span class="required">*</span></label>
                             <input type="text" id="phone" name="phone"
                                 class="form-control form-control-sm @error('phone'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('phone', ($item->id ? $item->translate(app()->getLocale())->phone : '')) }}">
+                                value="{{ old('phone', ($item->id ? $item->phone : '')) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="active">
+                                <input type="checkbox" id="active" name="active"
+                                    class="checkbox @error('active'){{ 'is-invalid' }}@enderror"
+                                    value="1" {{ old('active', ($item->id ? ($item->active ? 'checked' : '') : '')) }}">
+                                {{ __('validation.attributes.active') }} <span class="required">*</span>
+                            </label>
                         </div>
 
                         <div class="form-group row">
