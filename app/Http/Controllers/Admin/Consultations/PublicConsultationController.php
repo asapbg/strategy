@@ -7,6 +7,7 @@ use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationLevel;
 use App\Models\ActType;
+use App\Models\ConsultationCategory;
 use App\Models\ConsultationType;
 use App\Models\LinkCategory;
 use App\Models\ProgramProject;
@@ -57,7 +58,7 @@ class PublicConsultationController extends AdminController
         $translatableFields = PublicConsultation::translationFieldsProperties();
         
         $consultationTypes = ConsultationType::all();
-        $consultationCategories = ConsultationLevel::all();
+        $consultationCategories = ConsultationCategory::all();
         $actTypes = ActType::all();
         $programProjects = ProgramProject::all();
         $linkCategories = LinkCategory::all();
