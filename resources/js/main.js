@@ -364,38 +364,7 @@ $(document).ready(function (e) {
             language: "bg"
         });
     }
-
-    if ($('#investigation_year').length) {
-        $('#investigation_year').datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years",
-            endDate: new Date(),
-            todayHighlight: true,
-            orientation: "bottom left",
-            autoclose: true
-        });
-    }
-
-    if($('.datepicker').length) {
-        $('.datepicker').datepicker({
-            format: 'dd-mm-yyyy',
-            todayHighlight: true,
-            orientation: "bottom left",
-            autoclose: true
-        });
-    }
-
-    if($('.datepicker_end_date').length) {
-        $('.datepicker_end_date').datepicker({
-            format: 'dd-mm-yyyy',
-            todayHighlight: true,
-            orientation: "bottom left",
-            endDate: new Date(),
-            autoclose: true
-        });
-    }
-
+    
     let start_date = (isEmpty($(".start_date").val())) ? moment().subtract(6, 'days').format('YYYY-MM-DD') : $(".start_date").val();
     let end_date = (isEmpty($(".end_date").val())) ? moment().format('YYYY-MM-DD') : $(".end_date").val();
     $(".start_date").val(start_date);
@@ -481,4 +450,9 @@ $(document).ready(function (e) {
         })
     })
 
+    ClassicEditor
+        .create(document.querySelector('.ckeditor'))
+        .catch(error => {
+            console.error(error);
+        });
 })

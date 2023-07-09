@@ -28,6 +28,7 @@ mix.scripts([
     'resources/adminlte-3.2/plugins/summernote/summernote.min.js',
     'resources/adminlte-3.2/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js',
     'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js',
+    'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.bg.min.js',
     'resources/adminlte-3.2/plugins/datatables-bs5/datatables.min.js',
     'resources/adminlte-3.2/plugins/select2/js/select2.full.min.js',
     'resources/adminlte-3.2/plugins/select2/js/i18n/bg.js',

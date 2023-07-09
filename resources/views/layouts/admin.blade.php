@@ -82,11 +82,14 @@
 
 <script src="{{ asset('js/admin.js') }}"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-    ClassicEditor
-    .create(document.querySelector('.ckeditor'))
-    .catch(error => {
-        console.error(error);
+$(document).ready(function () {
+    $('[data-provide="datepicker"]').datepicker({
+        todayBtn: true,
+        language: '{{ app()->getLocale() }}',
+        format: 'yyyy-mm-dd',
+        todayHighlight: true,
+        orientation: "bottom left",
+        autoclose: true
     });
 });
 </script>

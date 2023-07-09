@@ -100,14 +100,14 @@
                         <div class="row">
                             <div class="col-sm-4 form-group">
                                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
-                                <input type="date" id="open_from" name="open_from"
+                                <input type="text" id="open_from" name="open_from" data-provide="datepicker"
                                     class="form-control form-control-sm @error('open_from'){{ 'is-invalid' }}@enderror"
                                     value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
                             </div>
 
                             <div class="col-sm-4">
                                 <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
-                                <input type="date" id="open_to" name="open_to"
+                                <input type="text" id="open_to" name="open_to" data-provide="datepicker"
                                 class="form-control form-control-sm @error('open_to'){{ 'is-invalid' }}@enderror"
                                 value="{{ old('open_to', ($item->id ? $item->open_to : '')) }}">
                             </div>
