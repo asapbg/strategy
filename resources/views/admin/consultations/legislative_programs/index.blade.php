@@ -1,18 +1,14 @@
 @extends('layouts.admin')
 
 @section('content')
-
     <section class="content">
         <div class="container-fluid">
-
-            @include('admin.partial.filter_form')
-
             <div class="card">
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
+                        <a href="{{ route('admin.consultations.legislative_programs.edit') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.legislative_programs', 2) }}
                         </a>
                     </div>
 
@@ -20,8 +16,9 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ __('validation.attributes.name') }}</th>
-                            <th>{{ trans_choice('custom.nomenclature.consultation_category', 1) }}</th>
+                            <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ trans_choice('custom.start', 1) }}</th>
+                            <th>{{ trans_choice('custom.end', 1) }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -30,8 +27,9 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->consultationCategory->name }}</td>
+                                    <td>{{ $item->title }}</td>
+                                    <td>{{ $item->open_from }}</td>
+                                    <td>{{ $item->open_to }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
@@ -55,8 +53,6 @@
                     @endif
                 </div>
             </div>
-
-            @includeIf('modals.delete-resource', ['resource' => $title_singular])
         </div>
     </section>
 

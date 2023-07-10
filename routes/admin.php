@@ -29,6 +29,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
     });
 
+    // Mock controllers
+    Route::group([], function () {
+        Route::view('/consultations/legislative_programs', 'admin.consultations.legislative_programs.index')
+            ->name('consultations.legislative_programs.index');
+        Route::view('/consultations/legislative_programs/edit/{item?}', 'admin.consultations.legislative_programs.edit')
+            ->name('consultations.legislative_programs.edit');
+    });
+
     // Nomenclatures
     Route::controller(NomenclatureController::class)->group(function () {
         Route::get('/nomenclature', 'index')->name('nomenclature');

@@ -33,6 +33,13 @@
                     </a>
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
+                            <a href="{{ route('admin.consultations.legislative_programs.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
+                            <i class="fas fa-university nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.consultations.public_consultations.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
                             <i class="fas fa-bullhorn nav-icon nav-item-sub-icon"></i>

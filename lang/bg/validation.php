@@ -231,5 +231,7 @@ return [
         'responsiblePerson'         => 'Отговорно лице',
         'active'                    => 'Активна',
         'deleted'                   => 'Изтрита',
+        'effective_from'            => 'В сила от',
+        'effective_to'              => 'В сила до',
     ],
 ];
