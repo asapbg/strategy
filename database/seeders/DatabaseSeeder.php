@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             AdvisoryChairmanTypeSeeder::class,
             ActTypesSeeder::class,
             LegalActTypesSeeder::class,
-            DocumentTypesSeeder::class,
+            ConsultationDocumentTypesSeeder::class,
             ConsultationTypesSeeder::class,
         ]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters\DocumentType;
+namespace App\Filters\ConsultationDocumentType;
 
 use App\Filters\FilterContract;
 use App\Filters\QueryFilter;

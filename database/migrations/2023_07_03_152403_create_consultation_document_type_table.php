@@ -13,21 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('document_type', function (Blueprint $table) {
+        Schema::create('consultation_document_type', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('consultation_level_id');
             $table->unsignedInteger('act_type_id');
             $table->timestamps();
         });
 
-        Schema::create('document_type_translations', function (Blueprint $table) {
+        Schema::create('consultation_document_type_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('locale')->index();
-            $table->unsignedInteger('document_type_id');
-            $table->unique(['locale', 'document_type_id']);
-            $table->foreign('document_type_id')
+            $table->unsignedInteger('consultation_document_type_id');
+            $table->unique(['locale', 'consultation_document_type_id']);
+            $table->foreign('consultation_document_type_id')
                 ->references('id')
-                ->on('document_type');
+                ->on('consultation_document_type');
 
             $table->string('name');
         });
@@ -40,7 +40,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('document_type_translations');
-        Schema::dropIfExists('document_type');
+        Schema::dropIfExists('consultation_document_type_translations');
+        Schema::dropIfExists('consultation_document_type');
     }
 };

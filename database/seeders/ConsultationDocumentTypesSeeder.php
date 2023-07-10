@@ -2,11 +2,11 @@
 namespace Database\Seeders;
 
 use App\Models\ActType;
-use App\Models\DocumentType;
+use App\Models\ConsultationDocumentType;
 use Illuminate\Database\Seeder;
 use App\Models\ConsultationLevel;
 
-class DocumentTypesSeeder extends Seeder
+class ConsultationDocumentTypesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -112,7 +112,7 @@ class DocumentTypesSeeder extends Seeder
                     $query->where('name', $typeName);
                 })->first();
                 foreach($typeData as $docType) {
-                    $item = new DocumentType();
+                    $item = new ConsultationDocumentType();
                     $item->consultation_level_id = $level->id;
                     $item->act_type_id = $type->id;
                     $item->save();

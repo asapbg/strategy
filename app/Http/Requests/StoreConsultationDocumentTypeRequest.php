@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\DocumentType;
+use App\Models\ConsultationDocumentType;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDocumentTypeRequest extends FormRequest
+class StoreConsultationDocumentTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,7 +34,7 @@ class StoreDocumentTypeRequest extends FormRequest
         }
 
         foreach (config('available_languages') as $lang) {
-            foreach (DocumentType::translationFieldsProperties() as $field => $properties) {
+            foreach (ConsultationDocumentType::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }

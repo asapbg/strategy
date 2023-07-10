@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
-use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicController;
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
-use App\Http\Controllers\Admin\Nomenclature\DocumentTypeController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -64,10 +64,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/strategic_document_level/store/{item?}', 'store')->name('nomenclature.strategic_document_level.store');
     });
 
-    Route::controller(StrategicDocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicDocumentType');
-        Route::get('/nomenclature/strategic_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/strategic_document_type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
+    Route::controller(StrategicConsultationDocumentTypeController::class)->group(function () {
+        Route::get('/nomenclature/strategic_consultation_document_type', 'index')->name('nomenclature.strategic_consultation_document_type')->middleware('can:viewAny,App\Models\StrategicConsultationDocumentType');
+        Route::get('/nomenclature/strategic_consultation_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_consultation_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic_consultation_document_type/store/{item?}', 'store')->name('nomenclature.strategic_consultation_document_type.store');
     });
 
     Route::controller(AuthorityAcceptingStrategicController::class)->group(function () {
@@ -100,10 +100,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/advisory_chairman_type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
     });
 
-    Route::controller(DocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/document_type', 'index')->name('nomenclature.document_type')->middleware('can:viewAny,App\Models\DocumentType');
-        Route::get('/nomenclature/document_type/edit/{item?}', 'edit')->name('nomenclature.document_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/document_type/store/{item?}', 'store')->name('nomenclature.document_type.store');
+    Route::controller(ConsultationDocumentTypeController::class)->group(function () {
+        Route::get('/nomenclature/consultation_document_type', 'index')->name('nomenclature.consultation_document_type')->middleware('can:viewAny,App\Models\ConsultationDocumentType');
+        Route::get('/nomenclature/consultation_document_type/edit/{item?}', 'edit')->name('nomenclature.consultation_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation_document_type/store/{item?}', 'store')->name('nomenclature.consultation_document_type.store');
     });
 
     Route::controller(ConsultationCategoryController::class)->group(function () {

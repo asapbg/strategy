@@ -7,21 +7,21 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 
-class DocumentType extends ModelActivityExtend implements TranslatableContract
+class ConsultationDocumentType extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.document_type';
+    const MODULE_NAME = 'custom.nomenclatures.consultation_document_type';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
-    protected $table = 'document_type';
+    protected $table = 'consultation_document_type';
 
     //activity
-    protected string $logName = "document_type";
+    protected string $logName = "consultation_document_type";
 
     protected $fillable = ['consultation_level_id', 'act_type_id'];
 
@@ -54,11 +54,11 @@ class DocumentType extends ModelActivityExtend implements TranslatableContract
 
     public static function optionsList()
     {
-        return DB::table('document_type')
-            ->select(['document_type.id', 'document_type_translations.name'])
-            ->join('document_type_translations', 'document_type_translations.document_type_id', '=', 'document_type.id')
-            ->where('document_type_translations.locale', '=', app()->getLocale())
-            ->orderBy('document_type_translations.name', 'asc')
+        return DB::table('consultation_document_type')
+            ->select(['consultation_document_type.id', 'consultation_document_type_translations.name'])
+            ->join('consultation_document_type_translations', 'consultation_document_type_translations.consultation_document_type_id', '=', 'consultation_document_type.id')
+            ->where('consultation_document_type_translations.locale', '=', app()->getLocale())
+            ->orderBy('consultation_document_type_translations.name', 'asc')
             ->get();
     }
 }
