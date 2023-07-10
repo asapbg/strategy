@@ -1,6 +1,25 @@
 @extends('layouts.admin')
 
 @section('content')
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ trans_choice('custom.legislative_programs', 2) }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="/admin">{{ __('custom.home') }}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            {{ trans_choice('custom.legislative_programs', 2) }}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="content">
         <div class="container-fluid">
             <div class="card">
@@ -17,8 +36,6 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ __('validation.attributes.title') }}</th>
-                            <th>{{ trans_choice('custom.start', 1) }}</th>
-                            <th>{{ trans_choice('custom.end', 1) }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -28,8 +45,6 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ $item->open_from }}</td>
-                                    <td>{{ $item->open_to }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
