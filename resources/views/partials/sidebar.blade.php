@@ -27,6 +27,13 @@
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
+                    <a href="{{ route('admin.polls.index') }}"
+                    class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
+                        <i class="fal fa-check-square"></i>
+                        <p>{{ trans_choice('custom.polls', 2) }}</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">
                         <i class="nav-icon fas fa-cubes"></i>
                         <p>{{ trans_choice('custom.news', 2) }}<i class="fas fa-angle-left right"></i></p>
@@ -35,14 +42,14 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.news.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">
-                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.news', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.news.categories.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'news/categories')) active @endif">
-                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.news_category', 2) }}</p>
                             </a>
                         </li>

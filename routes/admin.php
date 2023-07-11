@@ -62,6 +62,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('news.categories.index');
         Route::view('/news/categories/edit/{item?}', 'admin.news.categories.edit')
             ->name('news.categories.edit');
+        
+        Route::view('/polls', 'admin.polls.index')
+            ->name('polls.index');
+        Route::view('/polls/edit/{item?}', 'admin.polls.edit')
+            ->name('polls.edit');
     });
 
     // Nomenclatures
