@@ -77,9 +77,16 @@
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
                             <a href="{{ route('admin.strategic_documents.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
+                            class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
                             <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.strategic_documents.institutions.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'institutions')) active @endif">
+                            <i class="fas fa-info-circle nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.institutions', 2) }}</p>
                             </a>
                         </li>
                     </ul>

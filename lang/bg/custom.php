@@ -279,4 +279,5 @@ return [
     'document_number'                 => 'Номер на документ',
     'document_date'                   => 'Дата на документ',
     'date_valid'                      => 'Дата на валидност',
+    'institutions'                    => 'Институция|Институции',
 ];

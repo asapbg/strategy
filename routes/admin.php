@@ -47,7 +47,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::view('/strategic_documents', 'admin.strategic_documents.index')
             ->name('strategic_documents.index');
         Route::view('/strategic_documents/edit/{item?}', 'admin.strategic_documents.edit')
-            ->name('strategic_documents.edit');    
+            ->name('strategic_documents.edit');
+
+        Route::view('/strategic_documents/institutions', 'admin.strategic_documents.institutions.index')
+            ->name('strategic_documents.institutions.index');
+        Route::view('/strategic_documents/institutions/edit/{item?}', 'admin.strategic_documents.institutions.edit')
+            ->name('strategic_documents.institutions.edit');
     });
 
     // Nomenclatures
