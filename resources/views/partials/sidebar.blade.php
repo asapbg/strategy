@@ -27,6 +27,50 @@
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">
+                        <i class="nav-icon fas fa-cubes"></i>
+                        <p>{{ trans_choice('custom.news', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.news.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">
+                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.news', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.news.categories.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'news/categories')) active @endif">
+                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.news_category', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
+                        <i class="nav-icon fas fa-info"></i>
+                        <p>{{ trans_choice('custom.strategic_documents', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.strategic_documents.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
+                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.strategic_documents.institutions.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'institutions')) active @endif">
+                            <i class="fas fa-info-circle nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.institutions', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
                         <i class="nav-icon fas fa-bullhorn"></i>
                         <p>{{ trans_choice('custom.public_consultations', 2) }}<i class="fas fa-angle-left right"></i></p>
@@ -65,28 +109,6 @@
                             class="nav-link @if(strstr(url()->current(), 'consultation_document_type')) active @endif">
                             <i class="fas fa-cube nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
-                        <i class="nav-icon fas fa-info"></i>
-                        <p>{{ trans_choice('custom.strategic_documents', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.strategic_documents.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
-                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.strategic_documents.institutions.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'institutions')) active @endif">
-                            <i class="fas fa-info-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.institutions', 2) }}</p>
                             </a>
                         </li>
                     </ul>

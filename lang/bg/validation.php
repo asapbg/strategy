@@ -234,5 +234,11 @@ return [
         'effective_from'            => 'В сила от',
         'effective_to'              => 'В сила до',
         'category'                  => 'Категория',
+        'event_date'                => 'Дата на събитие',
+        'external_link'             => 'Външна връзка',
+        'external_link_url'         => 'URL на външна връзка',
+        'highlighted_news'          => 'Водеща новина',
+        'show_news_home'            => 'Показване на начална страница',
+        'is_archived'               => 'Записът е архивиран',
     ],
 ];
