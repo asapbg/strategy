@@ -53,6 +53,20 @@
                                 <p>{{ trans_choice('custom.consultations', 2) }}</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.consultations.comments.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'comments')) active @endif">
+                            <i class="fas fa-comment nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.comments', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.nomenclature.consultation_document_type') }}"
+                            class="nav-link @if(strstr(url()->current(), 'consultation_document_type')) active @endif">
+                            <i class="fas fa-cube nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>

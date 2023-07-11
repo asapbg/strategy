@@ -38,8 +38,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         
         Route::view('/consultations/operational_programs', 'admin.consultations.operational_programs.index')
             ->name('consultations.operational_programs.index');
-            Route::view('/consultations/operational_programs/edit/{item?}', 'admin.consultations.operational_programs.edit')
-                ->name('consultations.operational_programs.edit');
+        Route::view('/consultations/operational_programs/edit/{item?}', 'admin.consultations.operational_programs.edit')
+            ->name('consultations.operational_programs.edit');
+            
+        Route::view('/consultations/comments', 'admin.consultations.comments.index')
+            ->name('consultations.comments.index');
     });
 
     // Nomenclatures
