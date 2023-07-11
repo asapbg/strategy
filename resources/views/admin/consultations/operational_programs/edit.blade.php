@@ -28,8 +28,8 @@
                     <form action="" method="post" name="form" id="form">
                         @csrf
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="description">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
-                            <textarea id="description" name="description" style="width: 100%" rows="5"></textarea>
+                            <label class="col-sm-12 control-label" for="title">{{ __('validation.attributes.title') }} <span class="required">*</span></label>
+                            <textarea id="title" name="title" style="width: 100%" rows="5"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="effective_from">{{ __('validation.attributes.effective_from') }} <span class="required">*</span></label>
@@ -44,7 +44,7 @@
                                 >
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
+                            <label class="col-sm-12 control-label">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
                             <textarea class="ckeditor"></textarea>
                         </div>
 
@@ -65,13 +65,7 @@
                         </div>
                     </form>
                     
-                    <div>
-                        <h5>{{ trans_choice('custom.attached_documents', 2) }}</h5>
-                        <button class="btn btn-success">
-                            <i class="fas fa-plus"></i>
-                            {{ __('custom.add') }}
-                        </button>
-                    </div>
+                    @include('admin.partial.attached_documents')
                 </div>
             </div>
         </div>

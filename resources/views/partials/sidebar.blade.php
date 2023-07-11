@@ -69,6 +69,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
+                        <i class="nav-icon fas fa-info"></i>
+                        <p>{{ trans_choice('custom.strategic_documents', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.strategic_documents.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
+                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     @canany(['manage.*', 'manage.advisory'])
                     @endcan

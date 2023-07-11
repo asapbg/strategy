@@ -233,5 +233,6 @@ return [
         'deleted'                   => 'Изтрита',
         'effective_from'            => 'В сила от',
         'effective_to'              => 'В сила до',
+        'category'                  => 'Категория',
     ],
 ];

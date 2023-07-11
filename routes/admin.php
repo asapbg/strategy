@@ -43,6 +43,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
+
+        Route::view('/strategic_documents', 'admin.strategic_documents.index')
+            ->name('strategic_documents.index');
+        Route::view('/strategic_documents/edit/{item?}', 'admin.strategic_documents.edit')
+            ->name('strategic_documents.edit');    
     });
 
     // Nomenclatures
