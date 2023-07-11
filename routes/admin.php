@@ -35,6 +35,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('consultations.legislative_programs.index');
         Route::view('/consultations/legislative_programs/edit/{item?}', 'admin.consultations.legislative_programs.edit')
             ->name('consultations.legislative_programs.edit');
+        
+        Route::view('/consultations/operational_programs', 'admin.consultations.operational_programs.index')
+            ->name('consultations.operational_programs.index');
+            Route::view('/consultations/operational_programs/edit/{item?}', 'admin.consultations.operational_programs.edit')
+                ->name('consultations.operational_programs.edit');
     });
 
     // Nomenclatures
@@ -72,10 +77,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/strategic_document_level/store/{item?}', 'store')->name('nomenclature.strategic_document_level.store');
     });
 
-    Route::controller(StrategicConsultationDocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/strategic_consultation_document_type', 'index')->name('nomenclature.strategic_consultation_document_type')->middleware('can:viewAny,App\Models\StrategicConsultationDocumentType');
-        Route::get('/nomenclature/strategic_consultation_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_consultation_document_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/strategic_consultation_document_type/store/{item?}', 'store')->name('nomenclature.strategic_consultation_document_type.store');
+    Route::controller(StrategicDocumentTypeController::class)->group(function () {
+        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicConsultationDocumentType');
+        Route::get('/nomenclature/strategic_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic_document_type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
     });
 
     Route::controller(AuthorityAcceptingStrategicController::class)->group(function () {

@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.legislative_programs', 2) }}</h1>
+                    <h1>{{ trans_choice('custom.operational_programs', 2) }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -13,7 +13,7 @@
                             <a href="/admin">{{ __('custom.home') }}</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.legislative_programs', 2) }}
+                            {{ trans_choice('custom.operational_programs', 2) }}
                         </li>
                     </ol>
                 </div>
@@ -26,8 +26,8 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        <a href="{{ route('admin.consultations.legislative_programs.edit') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.legislative_programs', 1) }}
+                        <a href="{{ route('admin.consultations.operational_programs.edit') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.operational_programs', 1) }}
                         </a>
                     </div>
 

@@ -40,6 +40,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('admin.consultations.operational_programs.index') }}"
+                            class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
+                            <i class="fas fa-cube nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.consultations.public_consultations.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
                             <i class="fas fa-bullhorn nav-icon nav-item-sub-icon"></i>
