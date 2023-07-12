@@ -242,5 +242,6 @@ return [
         'is_archived'               => 'Записът е архивиран',
         'start'                     => 'Начало',
         'end'                       => 'Край',
+        'highlighted_publication'   => 'Водеща публикация',
     ],
 ];

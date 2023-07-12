@@ -67,6 +67,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('polls.index');
         Route::view('/polls/edit/{item?}', 'admin.polls.edit')
             ->name('polls.edit');
+            
+        Route::view('/publications', 'admin.publications.index')
+            ->name('publications.index');
+        Route::view('/publications/edit/{item?}', 'admin.publications.edit')
+            ->name('publications.edit');
+        Route::view('/publications/categories', 'admin.publications.categories.index')
+            ->name('publications.categories.index');
+        Route::view('/publications/categories/edit/{item?}', 'admin.publications.categories.edit')
+            ->name('publications.categories.edit');
     });
 
     // Nomenclatures

@@ -49,8 +49,30 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.news.categories.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'news/categories')) active @endif">
-                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.news_category', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'publications')) active @endif">
+                        <i class="nav-icon fas fa-cubes"></i>
+                        <p>{{ trans_choice('custom.publications', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.publications.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">
+                                <i class="fas fa-newspaper nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.publications', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.publications.categories.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'publications/categories')) active @endif">
+                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.publications_categories', 2) }}</p>
                             </a>
                         </li>
                     </ul>
