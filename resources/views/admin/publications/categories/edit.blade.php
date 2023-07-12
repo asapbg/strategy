@@ -31,6 +31,13 @@
                             <input type="text" id="title" name="title" style="width: 100%" rows="5"></textarea>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="active">
+                                <input type="checkbox" id="active" name="active" class="checkbox">
+                                {{ __('validation.attributes.active') }}
+                            </label>
+                        </div>
+                        
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
