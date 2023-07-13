@@ -254,5 +254,7 @@ return [
         'service_description'       => 'Описание на извършените услуги',
         'reason_denied'             => 'Причина за отказ',
         'denied'                    => 'Отказана',
+        'internet_address'          => 'Интернет адрес',
+        'link_category'             => 'Категория връзки',
     ],
 ];

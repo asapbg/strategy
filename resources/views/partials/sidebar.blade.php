@@ -165,6 +165,28 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'links')) active @endif">
+                        <i class="nav-icon fas fa-link"></i>
+                        <p>{{ trans_choice('custom.links', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.nomenclature.link_category') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'link_category')) active @endif">
+                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.link_categories', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.links.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'links')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.links', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'pc_subjects')) active @endif">
                         <i class="fas fa-weight"></i>
                         <p>{{ trans_choice('custom.entities_and_payments', 2) }}<i class="fas fa-angle-left right"></i></p>

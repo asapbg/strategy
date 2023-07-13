@@ -28,7 +28,7 @@
                         @csrf
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="title">{{ __('validation.attributes.title') }} <span class="required">*</span></label>
-                            <textarea id="title" name="description" style="width: 100%" rows="5"></textarea>
+                            <textarea id="title" name="title" style="width: 100%" rows="5"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12 control-label">{{ trans_choice('validation.attributes.category', 1) }}<span class="required">*</span></label>
