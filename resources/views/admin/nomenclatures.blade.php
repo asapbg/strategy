@@ -62,9 +62,9 @@
                         </a>
                     </div>
                     <div class="col-sm-3">
-                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.strategic_consultation_document_type') }}">
+                        <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.strategic_document_type') }}">
                             <i class="fas fa-file"></i>
-                            {{ trans_choice('custom.nomenclature.strategic_consultation_document_type', 2) }}
+                            {{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}
                         </a>
                     </div>
                     <div class="col-sm-3">
