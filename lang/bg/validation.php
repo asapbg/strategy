@@ -245,5 +245,12 @@ return [
         'highlighted_publication'   => 'Водеща публикация',
         'element_type'              => 'Тип на елемента',
         'estimation_type'           => 'Тип на самооценка',
+        'entity_type'               => 'Вид лице',
+        'eik'                       => 'ЕИК',
+        'contract_date'             => 'Дата на договор',
+        'contractor'                => 'Възложител',
+        'payment'                   => 'Възнаграждение за извършените услуги в лева',
+        'vat'                       => 'ДДС',
+        'service_description'       => 'Описание на извършените услуги',
     ],
 ];

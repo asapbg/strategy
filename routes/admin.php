@@ -89,6 +89,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('ogp.articles.index');
         Route::view('/ogp/articles/edit/{item?}', 'admin.ogp.articles.edit')
             ->name('ogp.articles.edit');
+            
+        Route::view('/pc_subjects', 'admin.pc_subjects.index')
+            ->name('pc_subjects.index');
+        Route::view('/pc_subjects/edit/{item?}', 'admin.pc_subjects.edit')
+            ->name('pc_subjects.edit');
     });
 
     // Nomenclatures

@@ -289,4 +289,7 @@ return [
     'ogp.plan_elements'               => 'Елемент|Планове и оценки',
     'ogp.articles'                    => 'Новини и събития',
     'ogp.estimations'                 => 'Оценка|Оценки',
+    'entities_and_payments'           => 'Лица и възнаграждения',
+    'pc_subjects'                     => 'Лице съгласно ЗНА|Списък с ФЛ/ЮЛ',
+    'payment_with_vat'                => 'Във възнаграждението е включено ДДС в лева',
 ];

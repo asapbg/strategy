@@ -164,6 +164,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'pc_subjects')) active @endif">
+                        <i class="fas fa-weight"></i>
+                        <p>{{ trans_choice('custom.entities_and_payments', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pc_subjects.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'pc_subjects')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.pc_subjects', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     @canany(['manage.*', 'manage.advisory'])
                     @endcan

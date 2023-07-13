@@ -71,7 +71,6 @@
                         </div>
 
                         @include('admin.partial.attached_documents')
-
                     </form>
                 </div>
             </div>
