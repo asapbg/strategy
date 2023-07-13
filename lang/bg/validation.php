@@ -243,5 +243,6 @@ return [
         'start'                     => 'Начало',
         'end'                       => 'Край',
         'highlighted_publication'   => 'Водеща публикация',
+        'element_type'              => 'Тип на елемента',
     ],
 ];

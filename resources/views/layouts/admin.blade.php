@@ -85,7 +85,7 @@
 $(document).ready(function () {
     $('[data-provide="datepicker"]').datepicker({
         todayBtn: true,
-        language: '{{ app()->getLocale() }}',
+        language: GlobalLang,
         format: 'yyyy-mm-dd',
         todayHighlight: true,
         orientation: "bottom left",

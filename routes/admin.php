@@ -76,6 +76,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('publications.categories.index');
         Route::view('/publications/categories/edit/{item?}', 'admin.publications.categories.edit')
             ->name('publications.categories.edit');
+            
+        Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
+            ->name('ogp.plan_elements.index');
+        Route::view('/ogp/plan_elements/edit/{item?}', 'admin.ogp.plan_elements.edit')
+            ->name('ogp.plan_elements.edit');
+        Route::view('/ogp/estimations', 'admin.ogp.estimations.index')
+            ->name('ogp.estimations.index');
+        Route::view('/ogp/estimations/edit/{item?}', 'admin.ogp.estimations.edit')
+            ->name('ogp.estimations.edit');
+        Route::view('/ogp/articles', 'admin.ogp.articles.index')
+            ->name('ogp.articles.index');
+        Route::view('/ogp/articles/edit/{item?}', 'admin.ogp.articles.edit')
+            ->name('ogp.articles.edit');
     });
 
     // Nomenclatures

@@ -142,6 +142,28 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'ogp')) active @endif">
+                        <i class="fas fa-hand-point-up"></i>
+                        <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.ogp.plan_elements.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
+                                <i class="fas fa-calendar nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.ogp.articles.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'ogp/articles')) active @endif">
+                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.ogp.articles', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     @canany(['manage.*', 'manage.advisory'])
                     @endcan
