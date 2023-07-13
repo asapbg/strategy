@@ -244,5 +244,6 @@ return [
         'end'                       => 'Край',
         'highlighted_publication'   => 'Водеща публикация',
         'element_type'              => 'Тип на елемента',
+        'estimation_type'           => 'Тип на самооценка',
     ],
 ];
