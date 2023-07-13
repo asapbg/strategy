@@ -179,6 +179,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'pc_subjects')) active @endif">
+                        <i class="fas fa-weight"></i>
+                        <p>{{ trans_choice('custom.legislative_initiatives', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.legislative_initiatives.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'legislative_initiatives')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.legislative_initiatives_list', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     @canany(['manage.*', 'manage.advisory'])
                     @endcan

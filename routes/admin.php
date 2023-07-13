@@ -94,6 +94,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('pc_subjects.index');
         Route::view('/pc_subjects/edit/{item?}', 'admin.pc_subjects.edit')
             ->name('pc_subjects.edit');
+            
+        Route::view('/legislative_initiatives', 'admin.legislative_initiatives.index')
+            ->name('legislative_initiatives.index');
+        Route::view('/legislative_initiatives/edit/{item?}', 'admin.legislative_initiatives.edit')
+            ->name('legislative_initiatives.edit');
     });
 
     // Nomenclatures
