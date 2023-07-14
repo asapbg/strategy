@@ -104,6 +104,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('links.index');
         Route::view('/links/edit/{item?}', 'admin.links.edit')
             ->name('links.edit');
+        
+        Route::view('/pages', 'admin.pages.index')
+            ->name('pages.index');
+        Route::view('/pages/edit/{item?}', 'admin.pages.edit')
+            ->name('pages.edit');
+        
+        Route::view('/pages', 'admin.pages.index')
+            ->name('pages.index');
+        Route::view('/pages/edit/{item?}', 'admin.pages.edit')
+            ->name('pages.edit');
     });
 
     // Nomenclatures
@@ -142,7 +152,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(StrategicDocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicConsultationDocumentType');
+        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicDocumentType');
         Route::get('/nomenclature/strategic_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
         Route::match(['post', 'put'], '/nomenclature/strategic_document_type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
     });

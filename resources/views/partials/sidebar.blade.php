@@ -27,10 +27,59 @@
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">
+                        <i class="nav-icon fas fa-cubes"></i>
+                        <p>{{ trans_choice('validation.attributes.content', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.static_content', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'impact_assessment')) active @endif">
+                                <i class="fas fa-file nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.impact_assessment', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'static_pages')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.static_pages', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'multicriteria_analysis')) active @endif">
+                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.multicriteria_analysis', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.polls.index') }}"
                     class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
                         <i class="fal fa-check-square"></i>
                         <p>{{ trans_choice('custom.polls', 2) }}</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.activity-logs')}}"
+                       class="nav-link @if(strstr(url()->current(), 'activity-logs')) active @endif">
+                        <i class="fas fa-history"></i>
+                        <p>{{ trans_choice('custom.activity_logs', 2) }}</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -248,15 +297,6 @@
                            class="nav-link @if(strstr(url()->current(), 'permissions')) active @endif">
                             <i class="fas fa-gavel"></i>
                             <p>{{ trans_choice('custom.permissions', 2) }}</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-header">{{ trans_choice('custom.activity_logs', 1) }}</li>
-                    <li class="nav-item">
-                        <a href="{{route('admin.activity-logs')}}"
-                           class="nav-link @if(strstr(url()->current(), 'activity-logs')) active @endif">
-                            <i class="fas fa-history"></i>
-                            <p>{{ trans_choice('custom.activity_logs', 2) }}</p>
                         </a>
                     </li>
                 @endcan

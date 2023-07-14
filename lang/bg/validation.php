@@ -256,5 +256,10 @@ return [
         'denied'                    => 'Отказана',
         'internet_address'          => 'Интернет адрес',
         'link_category'             => 'Категория връзки',
+        'show_main_menu'            => 'Покажи в основното меню',
+        'specialised_page'          => 'Специализирана страница',
+        'css_class'                 => 'CSS клас',
+        'subtitle'                  => 'Под-заглавие',
+        'url'                       => 'URL',
     ],
 ];
