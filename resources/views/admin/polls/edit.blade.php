@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.news', 1) }}</h1>
+                    <h1>{{ trans_choice('custom.polls', 1) }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -13,7 +13,7 @@
                             <a href="/admin">{{ __('custom.home') }}</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.news', 2) }}
+                            {{ trans_choice('custom.polls', 2) }}
                         </li>
                     </ol>
                 </div>
