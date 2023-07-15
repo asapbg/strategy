@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
-
+use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
@@ -222,5 +222,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/link_category', 'index')->name('nomenclature.link_category')->middleware('can:viewAny,App\Models\LinkCategory');
         Route::get('/nomenclature/link_category/edit/{item?}', 'edit')->name('nomenclature.link_category.edit');
         Route::match(['post', 'put'], '/nomenclature/link_category/store/{item?}', 'store')->name('nomenclature.link_category.store');
+    });
+
+    Route::controller(PolicyAreaController::class)->group(function () {
+        Route::get('/nomenclature/policy_area', 'index')->name('nomenclature.policy_area')->middleware('can:viewAny,App\Models\LinkCategory');
+        Route::get('/nomenclature/policy_area/edit/{item?}', 'edit')->name('nomenclature.policy_area.edit');
+        Route::match(['post', 'put'], '/nomenclature/policy_area/store/{item?}', 'store')->name('nomenclature.policy_area.store');
     });
 });
