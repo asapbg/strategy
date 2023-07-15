@@ -1,73 +1,108 @@
 @extends('layouts.admin')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.strategic_documents', 1) }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="/admin">{{ __('custom.home') }}</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.strategic_documents', 2) }}
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="" method="post" name="form" id="form">
+                    @php($storeRoute = route($storeRouteName, ['item' => $item]))
+                    <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                         @csrf
+                        
+                        @include('admin.partial.edit_single_translatable', ['field' => 'title', 'required' => true])
+                    
+                        @include('admin.partial.edit_single_translatable', ['field' => 'description', 'required' => true])
+
                         <div class="form-group">
-                            <label class="col-sm-12 control-label">{{ trans_choice('validation.attributes.category', 1) }}<span class="required">*</span></label>
+                            <label class="col-sm-12 control-label" for="strategic_document_level_id">{{ trans_choice('custom.strategic_document_level', 1) }}<span class="required">*</span></label>
                             <div class="col-12">
-                                <select class="form-control form-control-sm select2">
-                                    <option>Изберете</option>
+                                <select id="strategic_document_level_id" name="strategic_document_level_id" class="form-control form-control-sm select2 @error('strategic_document_level_id'){{ 'is-invalid' }}@enderror">
+                                    @if(isset($strategicDocumentLevels) && $strategicDocumentLevels->count())
+                                        @foreach($strategicDocumentLevels as $row)
+                                            <option value="{{ $row->id }}" @if(old('strategic_document_level_id', ($item->id ? $item->strategic_document_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
+                                @error('strategic_document_level_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12 control-label">
-                                {{ trans_choice('custom.act', 1) }} <span class="required">*</span>
+                                {{ trans_choice('custom.policy_area', 1) }} <span class="required">*</span>
                             </label>
                             <div class="col-12">
-                                <select class="form-control form-control-sm select2">
-                                    <option>{{ __('custom.select') }}</option>
+                                <select name="policy_area_id" class="form-control form-control-sm select2">
+                                    <option value="1">{{ __('custom.select') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="document_number">{{ __('custom.document_number') }} <span class="required">*</span></label>
-                            <input type="text" id="document_number" name="document_number" class="form-control form-control-sm">
+                            <label class="col-sm-12 control-label" for="strategic_document_type_id">{{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span></label>
+                            <div class="col-12">
+                                <select id="strategic_document_type_id" name="strategic_document_type_id" class="form-control form-control-sm select2 @error('strategic_document_type_id'){{ 'is-invalid' }}@enderror">
+                                    @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
+                                        @foreach($strategicDocumentTypes as $row)
+                                            <option value="{{ $row->id }}" @if(old('strategic_document_type_id', ($item->id ? $item->strategic_document_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('strategic_document_type_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="strategic_act_type_id">{{ trans_choice('custom.strategic_act_type', 1) }}<span class="required">*</span></label>
+                            <div class="col-12">
+                                <select id="strategic_act_type_id" name="strategic_act_type_id" class="form-control form-control-sm select2 @error('strategic_act_type_id'){{ 'is-invalid' }}@enderror">
+                                    @if(isset($strategicActTypes) && $strategicActTypes->count())
+                                        @foreach($strategicActTypes as $row)
+                                            <option value="{{ $row->id }}" @if(old('strategic_act_type_id', ($item->id ? $item->strategic_act_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('strategic_act_type_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="document_number">{{ __('custom.document_number') }} <span class="required">*</span></label>
+                            <input type="text" id="document_number" name="document_number" class="form-control form-control-sm"
+                                value="{{ old('document_number', ($item->id ? $item->document_number : '')) }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="authority_accepting_strategic_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}<span class="required">*</span></label>
+                            <div class="col-12">
+                                <select id="authority_accepting_strategic_id" name="authority_accepting_strategic_id" class="form-control form-control-sm select2 @error('authority_accepting_strategic_id'){{ 'is-invalid' }}@enderror">
+                                    @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
+                                        @foreach($authoritiesAcceptingStrategic as $row)
+                                            <option value="{{ $row->id }}" @if(old('authority_accepting_strategic_id', ($item->id ? $item->authority_accepting_strategic_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('authority_accepting_strategic_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="document_date">{{ __('custom.document_date') }} <span class="required">*</span></label>
-                            <input type="text" id="document_date" name="document_date" data-provide="datepicker" class="form-control form-control-sm">
+                            <input type="text" id="document_date" name="document_date" data-provide="datepicker" class="form-control form-control-sm"
+                                value="{{ old('document_date', ($item->id ? $item->document_date : '')) }}">
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="title">{{ __('validation.attributes.title') }} <span class="required">*</span></label>
-                            <textarea id="title" name="description" style="width: 100%" rows="5"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
-                            <textarea class="ckeditor"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="date_valid">{{ __('custom.date_valid') }} <span class="required">*</span></label>
-                            <input type="text" id="date_valid" name="date_valid" data-provide="datepicker" class="form-control form-control-sm">
+                            <label class="col-sm-12 control-label" for="consultation_number">{{ __('custom.consultation_number') }} <span class="required">*</span></label>
+                            <input type="text" id="consultation_number" name="consultation_number" class="form-control form-control-sm"
+                                value="{{ old('consultation_number', ($item->id ? $item->consultation_number : '')) }}">
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="active">
-                                <input type="checkbox" id="active" name="active"
+                                <input type="checkbox" id="active" name="active" value="1"
                                     class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
                                 {{ __('validation.attributes.active') }} <span class="required">*</span>
                             </label>

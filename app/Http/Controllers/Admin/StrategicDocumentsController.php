@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Consultations;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StorePublicConsultationRequest;
-use App\Models\ActType;
-use App\Models\ConsultationCategory;
-use App\Models\Consultations\PublicConsultation;
-use App\Models\ConsultationType;
-use App\Models\LinkCategory;
-use App\Models\ProgramProject;
+use App\Http\Requests\StoreStrategicDocumentRequest;
+use App\Models\StrategicDocument;
+use App\Models\AuthorityAcceptingStrategic;
+use App\Models\StrategicActType;
+use App\Models\StrategicDocumentLevel;
+use App\Models\StrategicDocumentType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class PublicConsultationController extends AdminController
+class StrategicDocumentsController extends AdminController
 {
-    const LIST_ROUTE = 'admin.consultations.public_consultations.index';
-    const EDIT_ROUTE = 'admin.consultations.public_consultations.edit';
-    const STORE_ROUTE = 'admin.consultations.public_consultations.store';
-    const LIST_VIEW = 'admin.consultations.public_consultations.index';
-    const EDIT_VIEW = 'admin.consultations.public_consultations.edit';
+    const LIST_ROUTE = 'admin.strategic_documents.index';
+    const EDIT_ROUTE = 'admin.strategic_documents.edit';
+    const STORE_ROUTE = 'admin.strategic_documents.store';
+    const LIST_VIEW = 'admin.strategic_documents.index';
+    const EDIT_VIEW = 'admin.strategic_documents.edit';
 
     /**
      * Show the public consultations.
@@ -30,12 +29,12 @@ class PublicConsultationController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? PublicConsultation::PAGINATE;
+        $paginate = $filter['paginate'] ?? StrategicDocument::PAGINATE;
 
-        $items = PublicConsultation::with(['translation'])
+        $items = StrategicDocument::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'PublicConsultation';
+        $toggleBooleanModel = 'StrategicDocument';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
@@ -44,32 +43,31 @@ class PublicConsultationController extends AdminController
 
     /**
      * @param Request $request
-     * @param PublicConsultation $item
+     * @param StrategicDocument $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, PublicConsultation $item)
+    public function edit(Request $request, StrategicDocument $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PublicConsultation::class) ) {
+        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = PublicConsultation::translationFieldsProperties();
+        $translatableFields = StrategicDocument::translationFieldsProperties();
         
-        $consultationTypes = ConsultationType::all();
-        $consultationCategories = ConsultationCategory::all();
-        $actTypes = ActType::all();
-        $programProjects = ProgramProject::all();
-        $linkCategories = LinkCategory::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationTypes', 'consultationCategories', 'actTypes', 'programProjects', 'linkCategories'));
+        $strategicDocumentLevels = StrategicDocumentLevel::all();
+        $strategicDocumentTypes = StrategicDocumentType::all();
+        $strategicActTypes = StrategicActType::all();
+        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic'));
     }
 
-    public function store(StorePublicConsultationRequest $request, PublicConsultation $item)
+    public function store(StoreStrategicDocumentRequest $request, StrategicDocument $item)
     {
         $id = $item->id;
         $validated = $request->validated();
         if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', PublicConsultation::class) ) {
+            || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -77,7 +75,7 @@ class PublicConsultationController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
-            $this->storeTranslateOrNewCurrent(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNewCurrent(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
@@ -112,7 +110,7 @@ class PublicConsultationController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = PublicConsultation::query();
+        $qItem = StrategicDocument::query();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

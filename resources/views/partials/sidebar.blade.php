@@ -107,14 +107,14 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'publications')) active @endif">
                         <i class="nav-icon fas fa-cubes"></i>
-                        <p>{{ trans_choice('custom.publications', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        <p>{{ trans_choice('custom.library', 2) }}<i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
                             <a href="{{ route('admin.publications.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">
                                 <i class="fas fa-newspaper nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.publications', 2) }}</p>
+                                <p>{{ trans_choice('custom.library', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">

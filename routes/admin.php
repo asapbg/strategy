@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
 use App\Http\Controllers\Admin\NomenclatureController;
@@ -9,7 +10,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
-use App\Http\Controllers\Admin\Nomenclature\StrategicConsultationDocumentTypeController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicController;
 use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
 use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
@@ -44,10 +45,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
 
-        Route::view('/strategic_documents', 'admin.strategic_documents.index')
+        Route::controller(StrategicDocumentsController::class)->group(function () {
+            Route::get('/strategic_documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
+            Route::get('/strategic_documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
+            Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
+        });
+
+        /*Route::view('/strategic_documents', 'admin.strategic_documents.index')
             ->name('strategic_documents.index');
         Route::view('/strategic_documents/edit/{item?}', 'admin.strategic_documents.edit')
-            ->name('strategic_documents.edit');
+            ->name('strategic_documents.edit');*/
 
         Route::view('/strategic_documents/institutions', 'admin.strategic_documents.institutions.index')
             ->name('strategic_documents.institutions.index');
