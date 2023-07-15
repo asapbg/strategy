@@ -47,7 +47,7 @@ class StrategicDocumentsController extends AdminController
      * @param StrategicDocument $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, $item)
+    public function edit(Request $request, $item = null)
     {
         $item = $this->getRecord($item);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
@@ -65,7 +65,7 @@ class StrategicDocumentsController extends AdminController
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic', 'policyAreas'));
     }
 
-    public function store(StoreStrategicDocumentRequest $request, $item)
+    public function store(StoreStrategicDocumentRequest $request, $item = null)
     {
         $item = $this->getRecord($item);
         $validated = $request->validated();
@@ -129,7 +129,7 @@ class StrategicDocumentsController extends AdminController
         }
         $item = $qItem->find((int)$id);
         if( !$item ) {
-            abort(Response::HTTP_NOT_FOUND);
+            return new StrategicDocument();
         }
         return $item;
     }
