@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreStrategicDocumentRequest;
+use App\Models\PolicyArea;
 use App\Models\StrategicDocument;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\StrategicActType;
@@ -59,7 +60,8 @@ class StrategicDocumentsController extends AdminController
         $strategicDocumentTypes = StrategicDocumentType::all();
         $strategicActTypes = StrategicActType::all();
         $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic'));
+        $policyAreas = PolicyArea::all();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic', 'policyAreas'));
     }
 
     public function store(StoreStrategicDocumentRequest $request, StrategicDocument $item)
@@ -74,6 +76,7 @@ class StrategicDocumentsController extends AdminController
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+            $item->active = $request->input('active');
             $item->save();
             $this->storeTranslateOrNewCurrent(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 
@@ -95,9 +98,9 @@ class StrategicDocumentsController extends AdminController
     private function filters($request)
     {
         return array(
-            'name' => array(
+            'title' => array(
                 'type' => 'text',
-                'placeholder' => __('validation.attributes.name'),
+                'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('name'),
                 'col' => 'col-md-4'
             )

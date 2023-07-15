@@ -23,7 +23,7 @@ return new class extends Migration
             $table->bigInteger('authority_accepting_strategic_id');
             $table->date('document_date');
             $table->string('consultation_number');
-            $table->boolean('active');
+            $table->boolean('active')->nullable();
             $table->timestamps();
         });
 
