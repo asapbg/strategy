@@ -76,7 +76,7 @@ class StrategicDocumentsController extends AdminController
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
-            $item->active = $request->input('active');
+            $item->active = $request->input('active') ? 1 : 0;
             $item->save();
             $this->storeTranslateOrNewCurrent(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 

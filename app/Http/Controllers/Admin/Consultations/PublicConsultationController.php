@@ -76,6 +76,7 @@ class PublicConsultationController extends AdminController
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+            $item->active = $request->input('active') ? 1 : 0;
             $item->save();
             $this->storeTranslateOrNewCurrent(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 

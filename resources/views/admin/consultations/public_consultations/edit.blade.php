@@ -148,9 +148,9 @@
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="active">
-                                <input type="checkbox" id="active" name="active"
-                                    class="checkbox @error('active'){{ 'is-invalid' }}@enderror"
-                                    value="1" {{ old('active', ($item->id ? ($item->active ? 'checked' : '') : '')) }}">
+                                <input type="checkbox" id="active" name="active" value="1"
+                                    @if ($item->active) checked @endif
+                                    class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
                                 {{ __('validation.attributes.active') }} <span class="required">*</span>
                             </label>
                         </div>
