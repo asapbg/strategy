@@ -7,10 +7,11 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
+use illuminate\Database\Eloquent\SoftDeletes;
 
 class StrategicDocument extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable;
+    use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description'];

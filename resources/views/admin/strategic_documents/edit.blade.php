@@ -110,15 +110,19 @@
                                 <input type="checkbox" id="active" name="active" value="1"
                                     @if ($item->active) checked @endif
                                     class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
-                                {{ __('validation.attributes.active') }} <span class="required">*</span>
+                                    {{ __('validation.attributes.active') }} <span class="required">*</span>
                             </label>
                         </div>
+                        @if ($item->id)
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="deleted">
-                                <input type="checkbox" id="deleted" name="deleted" class="checkbox">
+                                <input type="checkbox" id="deleted" name="deleted" class="checkbox" value="1"
+                                    @if ($item->deleted_at) checked @endif
+                                >
                                 {{ __('validation.attributes.deleted') }}
                             </label>
                         </div>
+                        @endif
                         
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">

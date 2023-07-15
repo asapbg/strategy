@@ -47,8 +47,9 @@ class StrategicDocumentsController extends AdminController
      * @param StrategicDocument $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, StrategicDocument $item)
+    public function edit(Request $request, $item)
     {
+        $item = $this->getRecord($item);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
@@ -64,11 +65,11 @@ class StrategicDocumentsController extends AdminController
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic', 'policyAreas'));
     }
 
-    public function store(StoreStrategicDocumentRequest $request, StrategicDocument $item)
+    public function store(StoreStrategicDocumentRequest $request, $item)
     {
-        $id = $item->id;
+        $item = $this->getRecord($item);
         $validated = $request->validated();
-        if( ($id && $request->user()->cannot('update', $item))
+        if( ($item->id && $request->user()->cannot('update', $item))
             || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
@@ -77,10 +78,19 @@ class StrategicDocumentsController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->active = $request->input('active') ? 1 : 0;
+            if ($item->id) {
+                if ($request->input('deleted')) {
+                    $item->deleteTranslations();
+                    $item->delete();
+                }
+                else if ($item->deleted_at) {
+                    $item->restore();
+                }
+            }
             $item->save();
             $this->storeTranslateOrNewCurrent(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $id ) {
+            if( $item->id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
                     ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_m'));
             }
@@ -113,7 +123,7 @@ class StrategicDocumentsController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = StrategicDocument::query();
+        $qItem = StrategicDocument::withTrashed();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

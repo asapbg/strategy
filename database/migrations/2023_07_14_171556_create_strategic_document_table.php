@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('document_date');
             $table->string('consultation_number');
             $table->boolean('active')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 
