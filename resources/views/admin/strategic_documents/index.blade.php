@@ -3,6 +3,9 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
+
+            @include('admin.partial.filter_form')
+
             <div class="card">
                 <div class="card-body table-responsive">
 

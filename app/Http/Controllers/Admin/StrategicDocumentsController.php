@@ -111,9 +111,17 @@ class StrategicDocumentsController extends AdminController
             'title' => array(
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
-                'value' => $request->input('name'),
+                'value' => $request->input('title'),
                 'col' => 'col-md-4'
-            )
+            ),
+            'category' => array(
+                'type' => 'select',
+                'value' => $request->input('category'),
+                'options' => StrategicDocumentLevel::all()->map(function($item) {
+                    return ['value' => $item->id, 'name' => $item->name];
+                }),
+                'col' => 'col-md-4'
+            ),
         );
     }
 
