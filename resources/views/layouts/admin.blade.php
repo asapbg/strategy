@@ -83,14 +83,7 @@
 <script src="{{ asset('js/admin.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
-    $('[data-provide="datepicker"]').datepicker({
-        todayBtn: true,
-        language: GlobalLang,
-        format: 'yyyy-mm-dd',
-        todayHighlight: true,
-        orientation: "bottom left",
-        autoclose: true
-    });
+    
 });
 </script>
 @stack('scripts')

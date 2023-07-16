@@ -2760,7 +2760,7 @@ $(document).ready(function (e) {
             language: "bg"
         });
     }
-
+    
     let start_date = (isEmpty($(".start_date").val())) ? moment().subtract(6, 'days').format('YYYY-MM-DD') : $(".start_date").val();
     let end_date = (isEmpty($(".end_date").val())) ? moment().format('YYYY-MM-DD') : $(".end_date").val();
     $(".start_date").val(start_date);
@@ -2847,8 +2847,19 @@ $(document).ready(function (e) {
     })
 
     ClassicEditor
-        .create(document.querySelector('.ckeditor'))
+        .create(document.querySelector('.ckeditor'), {
+            language: GlobalLang,
+        })
         .catch(error => {
             console.error(error);
         });
+
+    $('[data-provide="datepicker"]').datepicker({
+        todayBtn: true,
+        language: GlobalLang,
+        format: 'yyyy-mm-dd',
+        todayHighlight: true,
+        orientation: "bottom left",
+        autoclose: true
+    });
 })

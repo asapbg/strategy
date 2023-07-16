@@ -451,8 +451,19 @@ $(document).ready(function (e) {
     })
 
     ClassicEditor
-        .create(document.querySelector('.ckeditor'))
+        .create(document.querySelector('.ckeditor'), {
+            language: GlobalLang,
+        })
         .catch(error => {
             console.error(error);
         });
+
+    $('[data-provide="datepicker"]').datepicker({
+        todayBtn: true,
+        language: GlobalLang,
+        format: 'yyyy-mm-dd',
+        todayHighlight: true,
+        orientation: "bottom left",
+        autoclose: true
+    });
 })
