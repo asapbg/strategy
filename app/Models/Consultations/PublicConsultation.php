@@ -2,6 +2,7 @@
 
 namespace App\Models\Consultations;
 
+use App\Models\ConsultationLevel;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -25,7 +26,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     //activity
     protected string $logName = "public_consultation";
 
-    protected $fillable = ['consultation_category_id', 'act_type_id', 'program_project_id', 'link_category_id', 'open_from', 'open_to', 'address', 'email', 'phone', 'active'];
+    protected $fillable = ['consultation_level_id', 'act_type_id', 'program_project_id', 'link_category_id', 'open_from', 'open_to', 'address', 'email', 'phone', 'active'];
 
     /**
      * Get the model name
@@ -60,9 +61,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
-    public function consultationCategory()
+    public function consultationLevel()
     {
-        return $this->hasOne(ConsultationCategory::class, 'id', 'consultation_category_id');
+        return $this->hasOne(ConsultationLevel::class, 'id', 'consultation_level_id');
     }
 
     public static function optionsList()

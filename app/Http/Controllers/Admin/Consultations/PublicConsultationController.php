@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\ActType;
-use App\Models\ConsultationCategory;
+use App\Models\ConsultationLevel;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\LinkCategory;
@@ -57,11 +57,11 @@ class PublicConsultationController extends AdminController
         $translatableFields = PublicConsultation::translationFieldsProperties();
         
         $consultationTypes = ConsultationType::all();
-        $consultationCategories = ConsultationCategory::all();
+        $consultationLevels = ConsultationLevel::all();
         $actTypes = ActType::all();
         $programProjects = ProgramProject::all();
         $linkCategories = LinkCategory::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationTypes', 'consultationCategories', 'actTypes', 'programProjects', 'linkCategories'));
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationTypes', 'consultationLevels', 'actTypes', 'programProjects', 'linkCategories'));
     }
 
     public function store(StorePublicConsultationRequest $request, PublicConsultation $item)

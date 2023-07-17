@@ -30,16 +30,16 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="col-sm-12 control-label" for="program-projectselect">{{ trans_choice('custom.consultation_category', 1) }}<span class="required">*</span></label>
+                            <label class="col-sm-12 control-label" for="program-projectselect">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
                             <div class="col-12">
-                                <select id="program-projectselect" name="consultation_category_id" class="form-control form-control-sm select2 @error('consultation_category_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($consultationCategories) && $consultationCategories->count())
-                                        @foreach($consultationCategories as $row)
-                                            <option value="{{ $row->id }}" @if(old('consultation_category_id', ($item->id ? $item->consultation_category_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                <select id="program-projectselect" name="consultation_level_id" class="form-control form-control-sm select2 @error('consultation_level_id'){{ 'is-invalid' }}@enderror">
+                                    @if(isset($consultationLevels) && $consultationLevels->count())
+                                        @foreach($consultationLevels as $row)
+                                            <option value="{{ $row->id }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
-                                @error('consultation_category_id')
+                                @error('consultation_level_id')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>

@@ -47,8 +47,8 @@ class AdvisoryActTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = AdvisoryActType::translationFieldsProperties();
-        $consultationCategories = ConsultationLevel::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories'));
+        $consultationLevels = ConsultationLevel::all();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels'));
     }
 
     public function store(StoreAdvisoryActTypeRequest $request, AdvisoryActType $item)

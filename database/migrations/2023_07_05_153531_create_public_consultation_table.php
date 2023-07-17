@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('public_consultation', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('consultation_category_id');
+            $table->unsignedInteger('consultation_level_id');
             $table->unsignedInteger('act_type_id');
             $table->unsignedInteger('program_project_id');
             $table->unsignedInteger('link_category_id');

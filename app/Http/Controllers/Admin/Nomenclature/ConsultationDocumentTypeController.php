@@ -48,9 +48,9 @@ class ConsultationDocumentTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = ConsultationDocumentType::translationFieldsProperties();
-        $consultationCategories = ConsultationLevel::all();
+        $consultationLevels = ConsultationLevel::all();
         $actTypes = ActType::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationCategories', 'actTypes'));
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'actTypes'));
     }
 
     public function store(StoreConsultationDocumentTypeRequest $request, ConsultationDocumentType $item)

@@ -22,8 +22,8 @@
                             <div class="col-12">
                                 <select id="consultation-category-select" name="consultation_level_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
                                 <option value="0" data-id="0">---</option>
-                                    @if(isset($consultationCategories) && $consultationCategories->count())
-                                        @foreach($consultationCategories as $row)
+                                    @if(isset($consultationLevels) && $consultationLevels->count())
+                                        @foreach($consultationLevels as $row)
                                             <option value="{{ $row->id }}"
                                                 @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif
                                                 data-id="{{ $row->id }}">{{ $row->name }}</option>
