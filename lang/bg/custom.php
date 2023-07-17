@@ -171,7 +171,7 @@ return [
     'observe'                          => 'Наблюдавай',
     'no_data'                          => 'Няма данни',
     'users_lists'                      => 'Списък с потребители',
-    'list_with'                        => 'Списък с',
+    'list_with'                        => 'Списък',
     'choose_password'                  => 'Въведете парола',
     'password_changed_at'              => 'Смяна на парола',
     'activity_log_date'                => 'Дата/час на действието',

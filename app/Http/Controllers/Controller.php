@@ -82,7 +82,7 @@ class Controller extends BaseController
         if ($segments[$links_count] == "edit") {
             $links_count--;
             $segments = array_slice(request()->segments(), 0, $links_count);
-            $heading = __('custom.edit_of').$this->title_singular;
+            $heading = __('custom.create') .' '. $this->title_singular;
             if (in_array("profile", $segments)) {
                 $heading = __('custom.edit_of').l_trans('custom.profiles', 1);
             }
