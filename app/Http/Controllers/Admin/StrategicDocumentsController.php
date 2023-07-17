@@ -98,8 +98,8 @@ class StrategicDocumentsController extends AdminController
             return to_route(self::LIST_ROUTE)
                 ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            \Log::error($e);
             dd($e, $validated);
+            \Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 

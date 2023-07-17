@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
@@ -29,6 +30,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
     });
 
+    Route::controller(StrategicDocumentsController::class)->group(function () {
+        Route::get('/strategic_documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
+        Route::get('/strategic_documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
+        Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
+    });
+
+    Route::controller(InstitutionController::class)->group(function () {
+        Route::get('/strategic_documents/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
+        Route::get('/strategic_documents/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
+        Route::match(['post', 'put'], '/strategic_documents/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
+    });
+
     // Mock controllers
     Route::group([], function () {
         Route::view('/consultations/legislative_programs', 'admin.consultations.legislative_programs.index')
@@ -44,21 +57,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
 
-        Route::controller(StrategicDocumentsController::class)->group(function () {
-            Route::get('/strategic_documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-            Route::get('/strategic_documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
-            Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
-        });
-
-        /*Route::view('/strategic_documents', 'admin.strategic_documents.index')
-            ->name('strategic_documents.index');
-        Route::view('/strategic_documents/edit/{item?}', 'admin.strategic_documents.edit')
-            ->name('strategic_documents.edit');*/
-
-        Route::view('/strategic_documents/institutions', 'admin.strategic_documents.institutions.index')
+       /* Route::view('/strategic_documents/institutions', 'admin.strategic_documents.institutions.index')
             ->name('strategic_documents.institutions.index');
         Route::view('/strategic_documents/institutions/edit/{item?}', 'admin.strategic_documents.institutions.edit')
-            ->name('strategic_documents.institutions.edit');
+            ->name('strategic_documents.institutions.edit');*/
         
         Route::view('/news', 'admin.news.index')
             ->name('news.index');
