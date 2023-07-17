@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
+use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
@@ -30,11 +31,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/public_consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
         Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
     });
-
     Route::controller(LegislativeProgramController::class)->group(function () {
         Route::get('/consultations/legislative_programs', 'index')->name('consultations.legislative_programs.index');
         Route::get('/consultations/legislative_programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
         Route::match(['post', 'put'], '/consultations/legislative_programs/store/{item?}', 'store')->name('consultations.legislative_programs.store');
+    });
+    Route::controller(OperationalProgramController::class)->group(function () {
+        Route::get('/consultations/operational_programs', 'index')->name('consultations.operational_programs.index');
+        Route::get('/consultations/operational_programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
+        Route::match(['post', 'put'], '/consultations/operational_programs/store/{item?}', 'store')->name('consultations.operational_programs.store');
     });
 
     // Strategic Documents
@@ -43,7 +48,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/strategic_documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
         Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
     });
-
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/strategic_documents/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/strategic_documents/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
@@ -52,12 +56,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Mock controllers
     Route::group([], function () {
-        
-        Route::view('/consultations/operational_programs', 'admin.consultations.operational_programs.index')
-            ->name('consultations.operational_programs.index');
-        Route::view('/consultations/operational_programs/edit/{item?}', 'admin.consultations.operational_programs.edit')
-            ->name('consultations.operational_programs.edit');
-            
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
         

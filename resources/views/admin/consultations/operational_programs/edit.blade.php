@@ -1,65 +1,47 @@
 @extends('layouts.admin')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.operational_programs', 1) }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="/admin">{{ __('custom.home') }}</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.operational_programs', 2) }}
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <p><b>Съдържанието е на Български</b></p>
-                    <form action="" method="post" name="form" id="form">
+                    <p><b>{{ __('custom.content_in_language') }}</b></p>
+                    @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
+                    <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                         @csrf
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="title">{{ __('validation.attributes.title') }} <span class="required">*</span></label>
-                            <textarea id="title" name="title" style="width: 100%" rows="5"></textarea>
-                        </div>
+
+                        @include('admin.partial.edit_single_translatable', ['field' => 'title', 'required' => true])
+
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="effective_from">{{ __('validation.attributes.effective_from') }} <span class="required">*</span></label>
                             <input type="text" id="effective_from" name="effective_from" data-provide="datepicker"
                                 class="form-control form-control-sm @error('effective_from'){{ 'is-invalid' }}@enderror"
+                                value="{{ old('effective_from', ($item->id ? $item->effective_from : '')) }}"
                                 >
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="effective_to">{{ __('validation.attributes.effective_to') }} <span class="required">*</span></label>
                             <input type="text" id="effective_to" name="effective_to" data-provide="datepicker"
-                                class="form-control form-control-sm"
+                                class="form-control form-control-sm @error('effective_to'){{ 'is-invalid' }}@enderror"
+                                value="{{ old('effective_to', ($item->id ? $item->effective_to : '')) }}"
                                 >
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label">{{ __('validation.attributes.description') }} <span class="required">*</span></label>
-                            <textarea class="ckeditor"></textarea>
-                        </div>
+
+                        @include('admin.partial.edit_single_translatable', ['field' => 'description', 'required' => true])
 
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="active">
-                                <input type="checkbox" id="active" name="active"
+                                <input type="checkbox" id="active" name="active" value="1"
+                                    @if ($item->active) checked @endif
                                     class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
-                                {{ __('validation.attributes.active') }} <span class="required">*</span>
+                                    {{ __('validation.attributes.active') }} <span class="required">*</span>
                             </label>
                         </div>
                         
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                <a href="{{ route('admin.consultations.legislative_programs.index') }}"
+                                <a href="{{ route('admin.consultations.operational_programs.index') }}"
                                 class="btn btn-primary">{{ __('custom.cancel') }}</a>
                             </div>
                         </div>
