@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             LegalActTypesSeeder::class,
             ConsultationDocumentTypesSeeder::class,
             ConsultationTypesSeeder::class,
+            PublicationCategorySeeder::class,
         ]);
     }
 }

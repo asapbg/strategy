@@ -92,9 +92,9 @@
                         </div>
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.authority_advisory_board') }}">
-                                <i class="fas fa-university"></i>
-                                {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
+                                href="{{ route('admin.nomenclature.publication_category') }}">
+                                <i class="fas fa-folder"></i>
+                                {{ trans_choice('custom.nomenclature.publication_category', 2) }}
                             </a>
                         </div>
                         <div class="col-sm-3">
@@ -136,6 +136,15 @@
                                 href="{{ route('admin.nomenclature.consultation_document_type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block"
+                                href="{{ route('admin.nomenclature.authority_advisory_board') }}">
+                                <i class="fas fa-university"></i>
+                                {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
                             </a>
                         </div>
                     </div>
