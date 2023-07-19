@@ -13,4 +13,6 @@ class NewsController extends PublicationController
     const LIST_VIEW = 'admin.publications.index';
     const EDIT_VIEW = 'admin.publications.edit';
     const PUBLICATION_TYPE = Publication::TYPE_OGP_NEWS;
+    const MODEL_NAME = 'custom.ogp.articles';
+
 }

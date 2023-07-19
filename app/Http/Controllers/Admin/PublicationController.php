@@ -17,6 +17,7 @@ class PublicationController extends AdminController
     const LIST_VIEW = 'admin.publications.index';
     const EDIT_VIEW = 'admin.publications.edit';
     const PUBLICATION_TYPE = Publication::TYPE_PUBLICATION;
+    const MODEL_NAME = 'custom.publications';
 
     /**
      * Show the public consultations.
@@ -37,7 +38,8 @@ class PublicationController extends AdminController
         $toggleBooleanModel = 'Publication';
         $editRouteName = static::EDIT_ROUTE;
         $listRouteName = static::LIST_ROUTE;
-        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'publicationType'));
+        $modelName = static::MODEL_NAME;
+        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'publicationType', 'modelName'));
     }
 
     /**
@@ -55,9 +57,10 @@ class PublicationController extends AdminController
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
         $publicationType = static::PUBLICATION_TYPE;
+        $modelName = static::MODEL_NAME;
         
         $publicationCategories = PublicationCategory::all();
-        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories', 'publicationType'));
+        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories', 'publicationType', 'modelName'));
     }
 
     public function store(StorePublicationRequest $request, $item = null)
