@@ -23,9 +23,17 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
+use App\Http\Controllers\Admin\PublicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    // Library
+    Route::controller(PublicationController::class)->group(function () {
+        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/publications/edit/{item?}', 'edit')->name('publications.edit');
+        Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
+    });
+
     // Consultations
     Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public_consultations', 'index')->name('consultations.public_consultations.index');
@@ -64,20 +72,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('news.index');
         Route::view('/news/edit/{item?}', 'admin.news.edit')
             ->name('news.edit');
-        Route::view('/news/categories', 'admin.news.categories.index')
-            ->name('news.categories.index');
-        Route::view('/news/categories/edit/{item?}', 'admin.news.categories.edit')
-            ->name('news.categories.edit');
         
         Route::view('/polls', 'admin.polls.index')
             ->name('polls.index');
         Route::view('/polls/edit/{item?}', 'admin.polls.edit')
             ->name('polls.edit');
             
-        Route::view('/publications', 'admin.publications.index')
-            ->name('publications.index');
-        Route::view('/publications/edit/{item?}', 'admin.publications.edit')
-            ->name('publications.edit');
         Route::view('/publications/categories', 'admin.publications.categories.index')
             ->name('publications.categories.index');
         Route::view('/publications/categories/edit/{item?}', 'admin.publications.categories.edit')
@@ -224,7 +224,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(PublicationCategoryController::class)->group(function () {
-        Route::get('/nomenclature/publication_category', 'index')->name('nomenclature.publication_category')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/publication_category', 'index')->name('nomenclature.publication_category')->middleware('can:viewAny,App\Models\PublicationCategory');
         Route::get('/nomenclature/publication_category/edit/{item?}', 'edit')->name('nomenclature.publication_category.edit');
         Route::match(['post', 'put'], '/nomenclature/publication_category/store/{item?}', 'store')->name('nomenclature.publication_category.store');
     });
