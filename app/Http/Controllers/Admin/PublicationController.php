@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePublicationRequest;
-use App\Models\PolicyArea;
 use App\Models\Publication;
-use App\Models\AuthorityAcceptingStrategic;
 use App\Models\PublicationCategory;
-use App\Models\StrategicActType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -19,6 +16,7 @@ class PublicationController extends AdminController
     const STORE_ROUTE = 'admin.publications.store';
     const LIST_VIEW = 'admin.publications.index';
     const EDIT_VIEW = 'admin.publications.edit';
+    const PUBLICATION_TYPE = Publication::TYPE_PUBLICATION;
 
     /**
      * Show the public consultations.
@@ -30,15 +28,16 @@ class PublicationController extends AdminController
         $requestFilter = $request->all();
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? Publication::PAGINATE;
+        $publicationType = static::PUBLICATION_TYPE;
 
         $items = Publication::with(['translation'])
+            ->whereType($publicationType)
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
-        $editRouteName = self::EDIT_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
-
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        $editRouteName = static::EDIT_ROUTE;
+        $listRouteName = static::LIST_ROUTE;
+        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'publicationType'));
     }
 
     /**
@@ -52,12 +51,13 @@ class PublicationController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-        $storeRouteName = self::STORE_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
+        $storeRouteName = static::STORE_ROUTE;
+        $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
+        $publicationType = static::PUBLICATION_TYPE;
         
         $publicationCategories = PublicationCategory::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories'));
+        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories', 'publicationType'));
     }
 
     public function store(StorePublicationRequest $request, $item = null)
@@ -86,12 +86,12 @@ class PublicationController extends AdminController
             $this->storeTranslateOrNewCurrent(Publication::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $item->id ) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_m'));
+                return redirect(route(static::EDIT_ROUTE, $item) )
+                    ->with('success', trans_choice('custom.publications', 1)." ".__('messages.updated_successfully_m'));
             }
 
-            return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
+            return to_route(static::LIST_ROUTE)
+                ->with('success', trans_choice('custom.publications', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             dd($e, $validated);
             \Log::error($e);

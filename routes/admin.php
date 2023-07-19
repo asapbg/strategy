@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
+use App\Http\Controllers\Admin\OGP\NewsController;
 use App\Http\Controllers\Admin\PublicationController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +64,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/strategic_documents/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });
 
+    // Open Govenrnance Publications
+    Route::controller(NewsController::class)->group(function () {
+        Route::get('/ogp/articles', 'index')->name('ogp.articles.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/ogp/articles/edit/{item?}', 'edit')->name('ogp.articles.edit');
+        Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
+    });
+
     // Mock controllers
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
@@ -91,10 +99,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('ogp.estimations.index');
         Route::view('/ogp/estimations/edit/{item?}', 'admin.ogp.estimations.edit')
             ->name('ogp.estimations.edit');
-        Route::view('/ogp/articles', 'admin.ogp.articles.index')
-            ->name('ogp.articles.index');
-        Route::view('/ogp/articles/edit/{item?}', 'admin.ogp.articles.edit')
-            ->name('ogp.articles.edit');
             
         Route::view('/pc_subjects', 'admin.pc_subjects.index')
             ->name('pc_subjects.index');

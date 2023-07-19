@@ -10,7 +10,7 @@
                     <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                         @csrf
                         
-                        <input type="hidden" name="type" value="1">
+                        <input type="hidden" name="type" value="{{ $publicationType }}">
                         @include('admin.partial.edit_single_translatable', ['field' => 'title', 'required' => true])
                     
                         <div class="form-group">

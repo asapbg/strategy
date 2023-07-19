@@ -10,7 +10,7 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        <a href="{{ route('admin.publications.edit') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.publications', 1) }}
                         </a>
                     </div>

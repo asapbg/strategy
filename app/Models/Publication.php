@@ -7,7 +7,7 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
-use illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Publication extends ModelActivityExtend implements TranslatableContract
 {
@@ -16,6 +16,9 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'content'];
     const MODULE_NAME = 'custom.publications';
+    const TYPE_PUBLICATION = 1;
+    const TYPE_OGP_NEWS = 2;
+    const TYPE_NEWS = 3;
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
