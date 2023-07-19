@@ -36,7 +36,8 @@
                                        value="{{ old($key, $field['value']) }}" >
                                 @break('text')
                                 @case('datepicker')
-                                <input type="text" name="{{ $key }}" autocomplete="off" readonly
+                                <input type="text" name="{{ $key }}" autocomplete="off"
+                                       data-provide="datepicker"
                                        class="form-control form-control-sm datepicker"
                                        placeholder="{{ $field['placeholder'] }}"
                                        value="{{ old($key, $field['value']) }}" >

@@ -107,15 +107,27 @@ class PublicationController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-3'
             ),
             'category' => array(
                 'type' => 'select',
                 'value' => $request->input('category'),
                 'options' => PublicationCategory::all()->map(function($item) {
                     return ['value' => $item->id, 'name' => $item->name];
-                }),
-                'col' => 'col-md-4'
+                })->prepend(['value' => null, 'name' => __('validation.attributes.category')]),
+                'col' => 'col-md-2'
+            ),
+            'from' => array(
+                'type' => 'datepicker',
+                'placeholder' => __('validation.attributes.date_from'),
+                'value' => $request->input('from'),
+                'col' => 'col-md-2'
+            ),
+            'to' => array(
+                'type' => 'datepicker',
+                'placeholder' => __('validation.attributes.date_to'),
+                'value' => $request->input('to'),
+                'col' => 'col-md-2'
             ),
         );
     }

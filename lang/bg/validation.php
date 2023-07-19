@@ -261,5 +261,7 @@ return [
         'css_class'                 => 'CSS клас',
         'subtitle'                  => 'Под-заглавие',
         'url'                       => 'URL',
+        'date_from'                 => 'От дата',
+        'date_to'                   => 'До дата',
     ],
 ];
