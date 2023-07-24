@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
@@ -80,6 +81,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
     });
 
+    // Links
+    Route::controller(LinkController::class)->group(function () {
+        Route::get('/links', 'index')->name('links.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/links/edit/{item?}', 'edit')->name('links.edit');
+        Route::match(['post', 'put'], '/links/store/{item?}', 'store')->name('links.store');
+    });
+
     // Mock controllers
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
@@ -108,11 +116,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('legislative_initiatives.index');
         Route::view('/legislative_initiatives/edit/{item?}', 'admin.legislative_initiatives.edit')
             ->name('legislative_initiatives.edit');
-        
-        Route::view('/links', 'admin.links.index')
-            ->name('links.index');
-        Route::view('/links/edit/{item?}', 'admin.links.edit')
-            ->name('links.edit');
         
         Route::view('/pages', 'admin.pages.index')
             ->name('pages.index');
