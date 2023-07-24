@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
@@ -85,11 +86,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('polls.index');
         Route::view('/polls/edit/{item?}', 'admin.polls.edit')
             ->name('polls.edit');
-            
-        Route::view('/publications/categories', 'admin.publications.categories.index')
-            ->name('publications.categories.index');
-        Route::view('/publications/categories/edit/{item?}', 'admin.publications.categories.edit')
-            ->name('publications.categories.edit');
             
         Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
             ->name('ogp.plan_elements.index');
@@ -231,5 +227,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/publication_category', 'index')->name('nomenclature.publication_category')->middleware('can:viewAny,App\Models\PublicationCategory');
         Route::get('/nomenclature/publication_category/edit/{item?}', 'edit')->name('nomenclature.publication_category.edit');
         Route::match(['post', 'put'], '/nomenclature/publication_category/store/{item?}', 'store')->name('nomenclature.publication_category.store');
+    });
+
+    Route::controller(NewsCategoryController::class)->group(function () {
+        Route::get('/nomenclature/news_category', 'index')->name('nomenclature.news_category')->middleware('can:viewAny,App\Models\NewsCategory');
+        Route::get('/nomenclature/news_category/edit/{item?}', 'edit')->name('nomenclature.news_category.edit');
+        Route::match(['post', 'put'], '/nomenclature/news_category/store/{item?}', 'store')->name('nomenclature.news_category.store');
     });
 });

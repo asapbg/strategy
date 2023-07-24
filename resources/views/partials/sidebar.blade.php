@@ -27,7 +27,7 @@
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">
                         <i class="nav-icon fas fa-cubes"></i>
                         <p>{{ trans_choice('validation.attributes.content', 2) }}<i class="fas fa-angle-left right"></i></p>
                     </a>
@@ -96,8 +96,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.nomenclature.publication_category') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'publication_category')) active @endif">
+                            <a href="{{ route('admin.nomenclature.news_category') }}"
+                            class="nav-link @if(Str::endsWith(url()->current(), 'news_category')) active @endif">
                                 <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.news_category', 2) }}</p>
                             </a>
