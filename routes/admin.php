@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
@@ -24,11 +25,18 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
-use App\Http\Controllers\Admin\OGP\NewsController;
+use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PublicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    // News
+    Route::controller(NewsController::class)->group(function () {
+        Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/news/edit/{item?}', 'edit')->name('news.edit');
+        Route::match(['post', 'put'], '/news/store/{item?}', 'store')->name('news.store');
+    });
+    
     // Library
     Route::controller(PublicationController::class)->group(function () {
         Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
@@ -65,8 +73,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/strategic_documents/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });
 
-    // Open Govenrnance Publications
-    Route::controller(NewsController::class)->group(function () {
+    // Open Govenrnance Partnership
+    Route::controller(OGPNewsController::class)->group(function () {
         Route::get('/ogp/articles', 'index')->name('ogp.articles.index')->middleware('can:viewAny,App\Models\Publication');
         Route::get('/ogp/articles/edit/{item?}', 'edit')->name('ogp.articles.edit');
         Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
@@ -76,11 +84,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
-        
-        Route::view('/news', 'admin.news.index')
-            ->name('news.index');
-        Route::view('/news/edit/{item?}', 'admin.news.edit')
-            ->name('news.edit');
         
         Route::view('/polls', 'admin.polls.index')
             ->name('polls.index');

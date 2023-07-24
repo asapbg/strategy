@@ -59,7 +59,7 @@ class PublicationController extends AdminController
         $publicationType = static::PUBLICATION_TYPE;
         $modelName = static::MODEL_NAME;
         
-        $publicationCategories = PublicationCategory::all();
+        $publicationCategories = static::getCategories();
         return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories', 'publicationType', 'modelName'));
     }
 
@@ -150,5 +150,10 @@ class PublicationController extends AdminController
             return new Publication();
         }
         return $item;
+    }
+
+    public static function getCategories()
+    {
+        return PublicationCategory::all();
     }
 }

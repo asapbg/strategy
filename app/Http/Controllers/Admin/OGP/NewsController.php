@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\OGP;
 
 use App\Http\Controllers\Admin\PublicationController;
 use App\Models\Publication;
+use App\Models\PublicationCategory;
 
 class NewsController extends PublicationController
 {
@@ -15,4 +16,8 @@ class NewsController extends PublicationController
     const PUBLICATION_TYPE = Publication::TYPE_OGP_NEWS;
     const MODEL_NAME = 'custom.ogp.articles';
 
+    public static function getCategories()
+    {
+        return collect([PublicationCategory::all()->first()]);
+    }
 }
