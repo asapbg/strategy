@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin\Nomenclature;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StorePolicyAreaRequest;
-use App\Models\PolicyArea;
+use App\Http\Requests\StorePublicationCategoryRequest;
+use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +21,12 @@ class PolicyAreaController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? PolicyArea::PAGINATE;
+        $paginate = $filter['paginate'] ?? PublicationCategory::PAGINATE;
 
-        $items = PolicyArea::with(['translation'])
+        $items = PublicationCategory::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'PolicyArea';
+        $toggleBooleanModel = 'PublicationCategory';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
@@ -35,26 +35,26 @@ class PolicyAreaController extends AdminController
 
     /**
      * @param Request $request
-     * @param PolicyArea $item
+     * @param PublicationCategory $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, PolicyArea $item)
+    public function edit(Request $request, PublicationCategory $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PolicyArea::class) ) {
+        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PublicationCategory::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = PolicyArea::translationFieldsProperties();
+        $translatableFields = PublicationCategory::translationFieldsProperties();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
-    public function store(StorePolicyAreaRequest $request, PolicyArea $item)
+    public function store(StorePublicationCategoryRequest $request, PublicationCategory $item)
     {
         $id = $item->id;
         $validated = $request->validated();
         if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', PolicyArea::class) ) {
+            || $request->user()->cannot('create', PublicationCategory::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -62,7 +62,7 @@ class PolicyAreaController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
-            $this->storeTranslateOrNew(PolicyArea::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew(PublicationCategory::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
@@ -96,7 +96,7 @@ class PolicyAreaController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = PolicyArea::query();
+        $qItem = PublicationCategory::query();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

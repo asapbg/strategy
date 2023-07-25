@@ -18,7 +18,7 @@ class PolicyArea extends ModelActivityExtend implements TranslatableContract
 
     public $timestamps = true;
 
-    protected $table = 'policy_area';
+    protected $table = 'publication_category';
 
     //activity
     protected string $logName = "policy_area";
@@ -42,11 +42,11 @@ class PolicyArea extends ModelActivityExtend implements TranslatableContract
 
     public static function optionsList()
     {
-        return DB::table('policy_area')
-            ->select(['policy_area.id', 'policy_area_translations.name'])
-            ->join('policy_area_translations', 'policy_area_translations.policy_area_id', '=', 'policy_area.id')
-            ->where('policy_area_translations.locale', '=', app()->getLocale())
-            ->orderBy('policy_area_translations.name', 'asc')
+        return DB::table('publication_category')
+            ->select(['publication_category.id', 'publication_category.name'])
+            ->join('publication_category_translations', 'publication_category_translations.publication_category_id', '=', 'publication_category.id')
+            ->where('publication_category_translations.locale', '=', app()->getLocale())
+            ->orderBy('publication_category_translations.name', 'asc')
             ->get();
     }
 }
