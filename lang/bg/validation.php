@@ -263,5 +263,7 @@ return [
         'url'                       => 'URL',
         'date_from'                 => 'От дата',
         'date_to'                   => 'До дата',
+        'objective'                 => 'Предмет на договора',
+        'executor'                  => 'Изпълнител',
     ],
 ];

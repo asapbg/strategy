@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
+use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PublicationController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/links/store/{item?}', 'store')->name('links.store');
     });
 
+    // PC Subjects
+    Route::controller(PCSubjectController::class)->group(function () {
+        Route::get('/pc_subjects', 'index')->name('pc_subjects.index')->middleware('can:viewAny,App\Models\PCSubject');
+        Route::get('/pc_subjects/edit/{item?}', 'edit')->name('pc_subjects.edit');
+        Route::match(['post', 'put'], '/pc_subjects/store/{item?}', 'store')->name('pc_subjects.store');
+    });
+
     // Mock controllers
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
@@ -106,11 +114,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('ogp.estimations.index');
         Route::view('/ogp/estimations/edit/{item?}', 'admin.ogp.estimations.edit')
             ->name('ogp.estimations.edit');
-            
-        Route::view('/pc_subjects', 'admin.pc_subjects.index')
-            ->name('pc_subjects.index');
-        Route::view('/pc_subjects/edit/{item?}', 'admin.pc_subjects.edit')
-            ->name('pc_subjects.edit');
             
         Route::view('/legislative_initiatives', 'admin.legislative_initiatives.index')
             ->name('legislative_initiatives.index');

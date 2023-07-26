@@ -11,7 +11,7 @@
 
                     <div class="mb-3">
                         <a href="{{ route('admin.strategic_documents.edit') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.p_c_subjects', 1) }}
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.strategic_documents', 1) }}
                         </a>
                     </div>
 
@@ -19,11 +19,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ __('validation.attributes.executor') }}</th>
-                            <th>{{ __('validation.attributes.type') }}</th>
-                            <th>{{ __('validation.attributes.contractor') }}</th>
-                            <th>{{ __('validation.attributes.contract_date') }}</th>
-                            <th>{{ __('custom.price_with_vat') }}</th>
+                            <th>{{ __('validation.attributes.title') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -32,11 +28,7 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->executor }}</td>
-                                    <td>{{ __($types[$item->type]) }}</td>
-                                    <td>{{ $item->contractor }}</td>
-                                    <td>{{ $item->contract_date }}</td>
-                                    <td>{{ $item->price }}</td>
+                                    <td>{{ $item->title }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
