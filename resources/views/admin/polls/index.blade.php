@@ -1,27 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.polls', 2) }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="/admin">{{ __('custom.home') }}</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.polls', 2) }}
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="content">
         <div class="container-fluid">
+
+            @include('admin.partial.filter_form')
+
             <div class="card">
                 <div class="card-body table-responsive">
 
@@ -36,9 +20,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ __('validation.attributes.title') }}</th>
-                            <th>{{ __('validation.attributes.description') }}</th>
-                            <th>{{ __('validation.attributes.start') }}</th>
-                            <th>{{ __('validation.attributes.end') }}</th>
+                            <th>{{ __('validation.attributes.created_at') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -48,6 +30,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
+                                    <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
@@ -63,12 +46,6 @@
                         @endif
                         </tbody>
                     </table>
-                </div>
-
-                <div class="card-footer mt-2">
-                    @if(isset($items) && $items->count() > 0)
-                        {{ $items->appends(request()->query())->links() }}
-                    @endif
                 </div>
             </div>
         </div>

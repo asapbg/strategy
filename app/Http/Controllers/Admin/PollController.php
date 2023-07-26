@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StoreLinkRequest;
-use App\Models\Link;
-use App\Models\LinkCategory;
+use App\Http\Requests\StorePollRequest;
+use App\Models\Poll;
+use App\Models\PollAnswer;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class LinkController extends AdminController
+class PollController extends AdminController
 {
-    const LIST_ROUTE = 'admin.links.index';
-    const EDIT_ROUTE = 'admin.links.edit';
-    const STORE_ROUTE = 'admin.links.store';
-    const LIST_VIEW = 'admin.links.index';
-    const EDIT_VIEW = 'admin.links.edit';
+    const LIST_ROUTE = 'admin.polls.index';
+    const EDIT_ROUTE = 'admin.polls.edit';
+    const STORE_ROUTE = 'admin.polls.store';
+    const LIST_VIEW = 'admin.polls.index';
+    const EDIT_VIEW = 'admin.polls.edit';
 
     /**
      * Show the public consultations.
@@ -26,12 +26,12 @@ class LinkController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? Link::PAGINATE;
+        $paginate = $filter['paginate'] ?? Poll::PAGINATE;
 
-        $items = Link::with(['translation'])
+        $items = Poll::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'Link';
+        $toggleBooleanModel = 'Poll';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
@@ -40,29 +40,28 @@ class LinkController extends AdminController
 
     /**
      * @param Request $request
-     * @param Link $item
+     * @param Poll $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit(Request $request, $item = null)
     {
-        $item = $this->getRecord($item);
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Link::class) ) {
+        $item = $this->getRecord($item, ['answers']);
+        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Poll::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = Link::translationFieldsProperties();
+        $translatableFields = Poll::translationFieldsProperties();
         
-        $linkCategories = LinkCategory::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'linkCategories'));
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
-    public function store(StoreLinkRequest $request, $item = null)
+    public function store(StorePollRequest $request, $item = null)
     {
-        $item = $this->getRecord($item);
+        $item = $this->getRecord($item, ['answers']);
         $validated = $request->validated();
         if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', Link::class) ) {
+            || $request->user()->cannot('create', Poll::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -80,7 +79,16 @@ class LinkController extends AdminController
                 }
             }
             $item->save();
-            $this->storeTranslateOrNewCurrent(Link::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNewCurrent(Poll::TRANSLATABLE_FIELDS, $item, $validated);
+
+            foreach ($item->answers as $answer) {
+                $answer->deleteTranslations();
+            }
+            $item->answers()->delete();
+            foreach ($request->input('answers') as $answer) {
+                $answerModel = new PollAnswer(['title' => $answer, 'poll_id' => $item->id]);
+                $answerModel->save();
+            }
 
             if( $item->id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
@@ -106,14 +114,6 @@ class LinkController extends AdminController
                 'value' => $request->input('title'),
                 'col' => 'col-md-4'
             ),
-            'category' => array(
-                'type' => 'select',
-                'value' => $request->input('category'),
-                'options' => LinkCategory::all()->map(function($item) {
-                    return ['value' => $item->id, 'name' => $item->name];
-                }),
-                'col' => 'col-md-4'
-            ),
         );
     }
 
@@ -123,13 +123,13 @@ class LinkController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = Link::withTrashed();
+        $qItem = Poll::withTrashed();
         if( sizeof($with) ) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
         if( !$item ) {
-            return new Link();
+            return new Poll();
         }
         return $item;
     }

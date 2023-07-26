@@ -28,10 +28,18 @@ use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PCSubjectController;
+use App\Http\Controllers\Admin\PollController;
 use App\Http\Controllers\Admin\PublicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    // Polls
+    Route::controller(PollController::class)->group(function () {
+        Route::get('/polls', 'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
+        Route::get('/polls/edit/{item?}', 'edit')->name('polls.edit');
+        Route::match(['post', 'put'], '/polls/store/{item?}', 'store')->name('polls.store');
+    });
+    
     // News
     Route::controller(NewsController::class)->group(function () {
         Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
@@ -100,11 +108,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
-        
-        Route::view('/polls', 'admin.polls.index')
-            ->name('polls.index');
-        Route::view('/polls/edit/{item?}', 'admin.polls.edit')
-            ->name('polls.edit');
             
         Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
             ->name('ogp.plan_elements.index');
