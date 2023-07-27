@@ -86,6 +86,7 @@ class PollController extends AdminController
             }
             $item->answers()->delete();
             foreach ($request->input('answers') as $answer) {
+                if (!$answer) continue;
                 $answerModel = new PollAnswer(['title' => $answer, 'poll_id' => $item->id]);
                 $answerModel->save();
             }

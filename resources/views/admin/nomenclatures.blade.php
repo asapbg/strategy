@@ -142,9 +142,16 @@
                     <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.authority_advisory_board') }}">
+                            href="{{ route('admin.nomenclature.authority_advisory_board') }}">
                                 <i class="fas fa-university"></i>
                                 {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block"
+                                href="{{ route('admin.nomenclature.regulatory_act_type') }}">
+                                <i class="fas fa-folder"></i>
+                                {{ trans_choice('custom.regulatory_act_types', 2) }}
                             </a>
                         </div>
                     </div>

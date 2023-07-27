@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
 use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
 use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
@@ -245,5 +246,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/news_category', 'index')->name('nomenclature.news_category')->middleware('can:viewAny,App\Models\NewsCategory');
         Route::get('/nomenclature/news_category/edit/{item?}', 'edit')->name('nomenclature.news_category.edit');
         Route::match(['post', 'put'], '/nomenclature/news_category/store/{item?}', 'store')->name('nomenclature.news_category.store');
+    });
+
+    Route::controller(RegulatoryActTypeController::class)->group(function () {
+        Route::get('/nomenclature/regulatory_act_type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/regulatory_act_type/edit/{item?}', 'edit')->name('nomenclature.regulatory_act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/regulatory_act_type/store/{item?}', 'store')->name('nomenclature.regulatory_act_type.store');
     });
 });
