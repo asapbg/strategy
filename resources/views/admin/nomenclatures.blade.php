@@ -98,16 +98,17 @@
                             </a>
                         </div>
                         <div class="col-sm-3">
-                            <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_level') }}">
-                                <i class="fas fa-folder-open"></i>
-                                {{ trans_choice('custom.nomenclature.consultation_level', 2) }}
+                            <a class="btn btn-info btn-block"
+                                href="{{ route('admin.nomenclature.regulatory_act_type') }}">
+                                <i class="fas fa-folder"></i>
+                                {{ trans_choice('custom.regulatory_act_types', 2) }}
                             </a>
                         </div>
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
-                                <i class="fas fa-university"></i>
-                                {{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}
+                                href="{{ route('admin.nomenclature.regulatory_act') }}">
+                                <i class="fas fa-file"></i>
+                                {{ trans_choice('custom.regulatory_acts', 2) }}
                             </a>
                         </div>
                     </div>
@@ -148,10 +149,16 @@
                             </a>
                         </div>
                         <div class="col-sm-3">
+                            <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_level') }}">
+                                <i class="fas fa-folder-open"></i>
+                                {{ trans_choice('custom.nomenclature.consultation_level', 2) }}
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.regulatory_act_type') }}">
-                                <i class="fas fa-folder"></i>
-                                {{ trans_choice('custom.regulatory_act_types', 2) }}
+                                href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
+                                <i class="fas fa-university"></i>
+                                {{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}
                             </a>
                         </div>
                     </div>

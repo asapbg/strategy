@@ -319,4 +319,7 @@ return [
     'contractor'                      => 'Възложител',
     'executor'                        => 'Изпълнител',
     'regulatory_act_types'            => 'Тип на нормативен акт|Типове нормативен акт',
+    'nomenclature.regulatory_act_type'=> 'Тип на нормативен акт|Типове нормативен акт',
+    'regulatory_acts'                 => 'Нормативен акт|Нормативни актове',
+    'nomenclature.regulatory_act'     => 'Нормативен акт|Нормативни актове',
 ];

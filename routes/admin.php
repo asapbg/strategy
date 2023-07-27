@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\RegulatoryActController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
@@ -249,8 +250,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(RegulatoryActTypeController::class)->group(function () {
-        Route::get('/nomenclature/regulatory_act_type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/regulatory_act_type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\RegulatoryActType');
         Route::get('/nomenclature/regulatory_act_type/edit/{item?}', 'edit')->name('nomenclature.regulatory_act_type.edit');
         Route::match(['post', 'put'], '/nomenclature/regulatory_act_type/store/{item?}', 'store')->name('nomenclature.regulatory_act_type.store');
+    });
+
+    Route::controller(RegulatoryActController::class)->group(function () {
+        Route::get('/nomenclature/regulatory_act', 'index')->name('nomenclature.regulatory_act')->middleware('can:viewAny,App\Models\RegulatoryAct');
+        Route::get('/nomenclature/regulatory_act/edit/{item?}', 'edit')->name('nomenclature.regulatory_act.edit');
+        Route::match(['post', 'put'], '/nomenclature/regulatory_act/store/{item?}', 'store')->name('nomenclature.regulatory_act.store');
     });
 });
