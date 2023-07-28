@@ -51,7 +51,7 @@
                     </ul>
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
-                            <a href="{{ route('admin.pages.index') }}"
+                            <a href="{{ route('admin.static_pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'static_pages')) active @endif">
                                 <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.static_pages', 2) }}</p>

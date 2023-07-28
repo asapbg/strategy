@@ -1,33 +1,17 @@
 @extends('layouts.admin')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ trans_choice('custom.pages', 2) }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="/admin">{{ __('custom.home') }}</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            {{ trans_choice('custom.pages', 2) }}
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="content">
         <div class="container-fluid">
+
+            @include('admin.partial.filter_form')
+
             <div class="card">
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        <a href="{{ route('admin.pages.edit') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.pages', 1) }}
+                        <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice($modelName, 1) }}
                         </a>
                     </div>
 
@@ -36,8 +20,8 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ __('validation.attributes.date') }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
-                            <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -46,6 +30,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
+                                    <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

@@ -267,5 +267,6 @@ return [
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
         'author'                    => 'Автор',
+        'highlighted_page'          => 'Водеща страница',
     ],
 ];

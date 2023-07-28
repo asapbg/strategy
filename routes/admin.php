@@ -30,12 +30,27 @@ use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
 use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
 use App\Http\Controllers\Admin\PublicationController;
+use App\Http\Controllers\Admin\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    // Content
+    Route::controller(PageController::class)->group(function () {
+        Route::get('/pages', 'index')->name('pages.index')->middleware('can:viewAny,App\Models\page');
+        Route::get('/pages/edit/{item?}', 'edit')->name('pages.edit');
+        Route::match(['post', 'put'], '/pages/store/{item?}', 'store')->name('pages.store');
+    });
+
+    Route::controller(StaticPageController::class)->group(function () {
+        Route::get('/static_pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\page');
+        Route::get('/static_pages/edit/{item?}', 'edit')->name('static_pages.edit');
+        Route::match(['post', 'put'], '/static_pages/store/{item?}', 'store')->name('static_pages.store');
+    });
+    
     // Polls
     Route::controller(PollController::class)->group(function () {
         Route::get('/polls', 'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
@@ -127,11 +142,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('ogp.estimations.index');
         Route::view('/ogp/estimations/edit/{item?}', 'admin.ogp.estimations.edit')
             ->name('ogp.estimations.edit');
-        
-        Route::view('/pages', 'admin.pages.index')
-            ->name('pages.index');
-        Route::view('/pages/edit/{item?}', 'admin.pages.edit')
-            ->name('pages.edit');
     });
 
     // Nomenclatures
