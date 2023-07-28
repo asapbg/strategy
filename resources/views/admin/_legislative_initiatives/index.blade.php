@@ -3,9 +3,6 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
-
-            @include('admin.partial.filter_form')
-
             <div class="card">
                 <div class="card-body table-responsive">
 
@@ -19,9 +16,12 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ trans_choice('custom.regulatory_acts', 1) }}</th>
-                            <th>{{ __('validation.attributes.author') }}</th>
+                            <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ __('validation.attributes.category') }}</th>
+                            <th>{{ __('validation.attributes.reason_denied') }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
+                            <th>{{ __('validation.attributes.active') }}</th>
+                            <th>{{ __('validation.attributes.denied') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -30,9 +30,7 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->regulatoryAct->name }}</td>
-                                    <td>{{ $item->author }}</td>
-                                    <td>{{ $item->created_at }}</td>
+                                    <td>{{ $item->title }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
@@ -48,6 +46,12 @@
                         @endif
                         </tbody>
                     </table>
+                </div>
+
+                <div class="card-footer mt-2">
+                    @if(isset($items) && $items->count() > 0)
+                        {{ $items->appends(request()->query())->links() }}
+                    @endif
                 </div>
             </div>
         </div>

@@ -266,5 +266,6 @@ return [
         'objective'                 => 'Предмет на договора',
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
+        'author'                    => 'Автор',
     ],
 ];

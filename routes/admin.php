@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
@@ -106,6 +107,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/pc_subjects/store/{item?}', 'store')->name('pc_subjects.store');
     });
 
+    // Legislative Initiatives
+    Route::controller(LegislativeInitiativeController::class)->group(function () {
+        Route::get('/legislative_initiatives', 'index')->name('legislative_initiatives.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/legislative_initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
+        Route::match(['post', 'put'], '/legislative_initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
+    });
+
     // Mock controllers
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
@@ -119,16 +127,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             ->name('ogp.estimations.index');
         Route::view('/ogp/estimations/edit/{item?}', 'admin.ogp.estimations.edit')
             ->name('ogp.estimations.edit');
-            
-        Route::view('/legislative_initiatives', 'admin.legislative_initiatives.index')
-            ->name('legislative_initiatives.index');
-        Route::view('/legislative_initiatives/edit/{item?}', 'admin.legislative_initiatives.edit')
-            ->name('legislative_initiatives.edit');
-        
-        Route::view('/pages', 'admin.pages.index')
-            ->name('pages.index');
-        Route::view('/pages/edit/{item?}', 'admin.pages.edit')
-            ->name('pages.edit');
         
         Route::view('/pages', 'admin.pages.index')
             ->name('pages.index');

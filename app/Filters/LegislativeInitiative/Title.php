@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters\Poll;
+namespace App\Filters\LegislativeInitiative;
 
 use App\Filters\FilterContract;
 use App\Filters\QueryFilter;
