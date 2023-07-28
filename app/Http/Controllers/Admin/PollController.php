@@ -81,14 +81,16 @@ class PollController extends AdminController
             $item->save();
             $this->storeTranslateOrNewCurrent(Poll::TRANSLATABLE_FIELDS, $item, $validated);
 
-            foreach ($item->answers as $answer) {
-                $answer->deleteTranslations();
-            }
-            $item->answers()->delete();
-            foreach ($request->input('answers') as $answer) {
-                if (!$answer) continue;
-                $answerModel = new PollAnswer(['title' => $answer, 'poll_id' => $item->id]);
-                $answerModel->save();
+            if ($request->has('answers')) {
+                foreach ($item->answers as $answer) {
+                    $answer->deleteTranslations();
+                }
+                $item->answers()->delete();
+                foreach ($request->input('answers') as $answer) {
+                    if (!$answer) continue;
+                    $answerModel = new PollAnswer(['title' => $answer, 'poll_id' => $item->id]);
+                    $answerModel->save();
+                }
             }
 
             if( $item->id ) {
