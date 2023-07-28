@@ -4,12 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePCSubjectRequest;
-use App\Models\PolicyArea;
 use App\Models\PCSubject;
-use App\Models\AuthorityAcceptingStrategic;
-use App\Models\StrategicActType;
-use App\Models\PCSubjectLevel;
-use App\Models\PCSubjectType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 

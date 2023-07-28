@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ConsultationTypesSeeder::class,
             PublicationCategorySeeder::class,
             RegulatoryActTypesSeeder::class,
+            PolicyAreaSeeder::class,
         ]);
     }
 }
