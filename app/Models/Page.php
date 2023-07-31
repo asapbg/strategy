@@ -18,6 +18,7 @@ class Page extends ModelActivityExtend implements TranslatableContract
     const MODULE_NAME = 'custom.pages';
     const TYPE_STATIC_CONTENT = 1;
     const TYPE_STATIC_PAGE = 2;
+    const TYPE_IMPACT_ASSESSMENT = 3;
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

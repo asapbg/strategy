@@ -38623,16 +38623,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/site.scss":
-/*!**********************************!*\
-  !*** ./resources/sass/site.scss ***!
-  \**********************************/
-/***/ (() => {
-
-throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\nSassError: expected \":\".\n    ╷\n127 │     span.link-text  {\r\n    │         ^\n    ╵\n  resources\\css\\site.css 127:9  @import\n  resources\\sass\\site.scss 1:9  root stylesheet\n    at processResult (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\webpack\\lib\\NormalModule.js:758:19)\n    at C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\webpack\\lib\\NormalModule.js:860:5\n    at C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\loader-runner\\lib\\LoaderRunner.js:399:11\n    at C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:18\n    at context.callback (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\loader-runner\\lib\\LoaderRunner.js:124:13)\n    at C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass-loader\\dist\\index.js:54:7\n    at Function.call$2 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:99051:16)\n    at render_closure1.call$2 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:84557:12)\n    at _RootZone.runBinary$3$3 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:29579:18)\n    at _FutureListener.handleError$1 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:28099:21)\n    at _Future__propagateToListeners_handleError.call$0 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:28406:49)\n    at Object._Future__propagateToListeners (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:3909:77)\n    at _Future._completeError$2 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:28252:9)\n    at _AsyncAwaitCompleter.completeError$2 (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:27900:12)\n    at Object._asyncRethrow (C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:3712:17)\n    at C:\\Users\\boyan.balkanski\\dev\\strategy\\node_modules\\sass\\sass.dart.js:19793:20");
-
-/***/ }),
-
 /***/ "./node_modules/process/browser.js":
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
@@ -51278,8 +51268,7 @@ Vue.compile = compileToFunctions;
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/site.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

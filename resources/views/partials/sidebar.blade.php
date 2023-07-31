@@ -42,7 +42,7 @@
                     </ul>
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
-                            <a href="{{ route('admin.pages.index') }}"
+                            <a href="{{ route('admin.impact_pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'impact_assessment')) active @endif">
                                 <i class="fas fa-file nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.impact_assessment', 2) }}</p>

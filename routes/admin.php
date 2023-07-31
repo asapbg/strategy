@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\ImpactPageController;
 use App\Http\Controllers\Admin\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\NewsController;
@@ -40,15 +41,21 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
     // Content
     Route::controller(PageController::class)->group(function () {
-        Route::get('/pages', 'index')->name('pages.index')->middleware('can:viewAny,App\Models\page');
+        Route::get('/pages', 'index')->name('pages.index')->middleware('can:viewAny,App\Models\Page');
         Route::get('/pages/edit/{item?}', 'edit')->name('pages.edit');
         Route::match(['post', 'put'], '/pages/store/{item?}', 'store')->name('pages.store');
     });
 
     Route::controller(StaticPageController::class)->group(function () {
-        Route::get('/static_pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\page');
+        Route::get('/static_pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
         Route::get('/static_pages/edit/{item?}', 'edit')->name('static_pages.edit');
         Route::match(['post', 'put'], '/static_pages/store/{item?}', 'store')->name('static_pages.store');
+    });
+
+    Route::controller(ImpactPageController::class)->group(function () {
+        Route::get('/impact_pages', 'index')->name('impact_pages.index')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/impact_pages/edit/{item?}', 'edit')->name('impact_pages.edit');
+        Route::match(['post', 'put'], '/impact_pages/store/{item?}', 'store')->name('impact_pages.store');
     });
     
     // Polls
