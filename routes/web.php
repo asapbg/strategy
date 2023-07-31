@@ -13,12 +13,11 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
+require_once('site.php');
+
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
 
-    Route::get('/', function () {
-        return to_route('admin.home');
-    });
     Route::get('/admin', [AdminHomeController::class, 'index'])->name('admin.home');
     Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('logout');
 
