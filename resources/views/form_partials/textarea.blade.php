@@ -1,0 +1,2 @@
+@include('form_partials.label')
+<textarea id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm">{{ isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '') }}</textarea>
