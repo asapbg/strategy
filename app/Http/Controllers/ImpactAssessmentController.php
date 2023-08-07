@@ -11,7 +11,9 @@ class ImpactAssessmentController extends Controller
     public function form($formName)
     {
         $state = session("forms.$formName", []);
-        return view('site.impact_assessment', compact('formName', 'state'));
+        $step = app('request')->input('step', 1);
+        $steps = count(\File::allFiles(resource_path("views/form_partials/$formName/steps")));
+        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps'));
     }
 
     public function store($formName)
@@ -31,6 +33,17 @@ class ImpactAssessmentController extends Controller
         }
         $data = array_merge($state, $data);
         session(["forms.$formName" => $data]);
-        return redirect()->back();
+        $step = app('request')->input('step');
+        if (app('request')->input('submit')) {
+            return view('impact_assessment.submitted', compact('formName'));
+        }
+        return redirect()->route('impact_assessment.form', ['form' => $formName, 'step' => $step]);
+    }
+
+    public function pdf($formName)
+    {
+        $state = session("forms.$formName", []);
+        $steps = count(\File::allFiles(resource_path("views/form_partials/$formName/steps")));
+        return view('impact_assessment.pdf', compact('formName', 'steps', 'state'));
     }
 }

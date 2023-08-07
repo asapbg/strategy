@@ -15,4 +15,5 @@ Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessment', 'index')->name('impact_assessment.index');
     Route::get('/impact_assessment/{form}', 'form')->name('impact_assessment.form');
     Route::post('/impact_assessment/{form}', 'store')->name('impact_assessment.store');
+    Route::get('/impact_assessment/{form}/pdf', 'pdf')->name('impact_assessment.pdf');
 });

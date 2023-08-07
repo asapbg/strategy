@@ -323,4 +323,7 @@ return [
     'nomenclature.regulatory_act_type'=> 'Тип на нормативен акт|Типове нормативен акт',
     'regulatory_acts'                 => 'Нормативен акт|Нормативни актове',
     'nomenclature.regulatory_act'     => 'Нормативен акт|Нормативни актове',
+    'next_step'                       => 'Следваща стъпка',
+    'prev_step'                       => 'Предишна стъпка',
+    'submit_form'                     => 'Завършване',
 ];
