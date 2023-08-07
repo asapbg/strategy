@@ -35,7 +35,7 @@ function nextStep() {
     document.forms[0].submit();
 }
 function submitForm() {
-    document.forms[0].action = '{{ route('impact_assessment.store', ['form' => $formName, 'submit' => true]) }}';
+    document.forms[0].action = '{!! route('impact_assessment.store', ['form' => $formName, 'inputId' => $inputId, 'submit' => true]) !!}';
     document.forms[0].submit();
 }
 </script>

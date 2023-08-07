@@ -25,7 +25,7 @@
     <div class="container">
        <div class="text-center">
            <h4>Успешно запазен формуляр!</h4>
-           <a href="{{ route('impact_assessment.pdf', ['form' => $formName]) }}" class="btn btn-default">
+           <a href="{{ route('impact_assessment.pdf', ['form' => $formName, 'inputId' => $inputId]) }}" class="btn btn-default">
                {{ __('forms.print_pdf') }}
            </a>
        </div>
