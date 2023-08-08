@@ -28,6 +28,12 @@
            <a href="{{ route('impact_assessment.pdf', ['form' => $formName, 'inputId' => $inputId]) }}" class="btn btn-default">
                {{ __('forms.print_pdf') }}
            </a>
+           <a href="{{ route('impact_assessment.show', ['form' => $formName, 'inputId' => $inputId]) }}" class="btn btn-default">
+               {{ __('forms.show_form_input') }}
+           </a>
+           <a href="{{ route('impact_assessment.form', ['form' => $formName]) }}" class="btn btn-default">
+               {{ __('forms.fill_again') }}
+           </a>
        </div>
     </div>
   </section>

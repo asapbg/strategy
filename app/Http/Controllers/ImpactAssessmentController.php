@@ -69,26 +69,31 @@ class ImpactAssessmentController extends Controller
         return redirect()->route('impact_assessment.form', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]);
     }
 
-    public function show($formName)
+    public function show($formName, $inputId)
     {
-        $state = $this->getState($formName);
+        $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly'));
+        $institutions = Institution::all();
+        $regulatoryActs = RegulatoryAct::all();
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'institutions', 'regulatoryActs'));
     }
 
-    public function pdf($formName)
+    public function pdf($formName, $inputId)
     {
-        $state = $this->getState($formName);
+        $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        $pdf = PDF::loadView('impact_assessment.pdf', compact('formName', 'steps', 'state', 'readOnly'));
+        $institutions = Institution::all();
+        $regulatoryActs = RegulatoryAct::all();
+        $pdf = PDF::loadView('impact_assessment.pdf', compact('formName', 'steps', 'state', 'readOnly', 'institutions', 'regulatoryActs'));
         return $pdf->download("$formName.pdf");
     }
     
-    private function getState($formName) {
+    private function getState($formName, $inputId = null) {
         $state = session("forms.$formName", []);
-        if ($inputId = app('request')->input('inputId')) {
+        if (!$inputId) $inputId = app('request')->input('inputId');
+        if ($inputId) {
             $item = FormInput::find($inputId);
             $state = json_decode($item->data, true);
         }

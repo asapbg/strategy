@@ -23,11 +23,11 @@
 
 <script>
 function prevStep() {
-    document.forms[0].action = '{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step-1]) }}';
+    document.forms[0].action = '{!! route('impact_assessment.store', ['form' => $formName, 'inputId' => $inputId, 'step' => $step-1]) !!}';
     document.forms[0].submit();
 }
 function nextStep() {
-    document.forms[0].action = '{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step+1]) }}';
+    document.forms[0].action = '{!! route('impact_assessment.store', ['form' => $formName, 'inputId' => $inputId, 'step' => $step+1]) !!}';
     document.forms[0].submit();
 }
 function submitForm() {

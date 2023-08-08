@@ -32,6 +32,8 @@ return [
     'name_and_job' => 'Име и длъжност',
     'date' => 'Дата',
     'print_pdf' => 'Разпечатай в PDF',
+    'show_form_input' => 'Покажи попълнения формуляр',
+    'fill_again' => 'Попълване отново',
     // Form 2
     'period_assessment' => 'Период на извършване на оценката',
     'national' => 'Национално',
