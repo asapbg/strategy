@@ -1,10 +1,14 @@
+<p>
+    <b>Образецът на частична предварителна оценка на въздействието влиза в сила от 01 януари 2021 г.</b>
+</p>
+<h3>Частична предварителна оценка на въздействието</h3>
 <table class="table" width="100%">
     <tr>
-        <td>
-            @include('form_partials.text', ['name' => 'institution'])
+        <td width="50%">
+            @include('form_partials.select', ['name' => 'institution', 'options' => $institutions])
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'regulatory_act'])
+            @include('form_partials.select', ['name' => 'regulatory_act', 'options' => $regulatoryActs])
         </td>
     </tr>
     <tr>

@@ -1,11 +1,7 @@
-<p>
-    <b>Образецът на частична предварителна оценка на въздействието влиза в сила от 01 януари 2021 г.</b>
-</p>
-<h3>Частична предварителна оценка на въздействието</h3>
 <form action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step]) }}" method="POST">
     @csrf
     
-    @include("form_partials.form1.steps.step$step")
+    @include("form_partials.$formName.steps.step$step")
 
     <table width="100%">
         <tr>

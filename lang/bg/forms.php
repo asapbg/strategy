@@ -1,6 +1,7 @@
 <?php
 
 return [
+    // Form 1
     'institution' => 'Институция',
     'regulatory_act' => 'Нормативен акт',
     'not_included_in_program' => 'Не е включен в законодателна/оперативна програма на Министерския съвет',
@@ -31,4 +32,10 @@ return [
     'name_and_job' => 'Име и длъжност',
     'date' => 'Дата',
     'print_pdf' => 'Разпечатай в PDF',
+    // Form 2
+    'period_assessment' => 'Период на извършване на оценката',
+    'national' => 'Национално',
+    'european' => 'Европейско',
+    'national_and_european' => 'Национално и европейско',
+    'international' => 'Международно',
 ];

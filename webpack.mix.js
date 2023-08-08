@@ -14,6 +14,13 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .copy('node_modules/admin-lte/dist/img', 'public/dist/img')
+    .scripts([
+        'resources/adminlte-3.2/plugins/select2/js/select2.full.min.js',
+        'resources/adminlte-3.2/plugins/select2/js/i18n/bg.js',
+    ], 'public/js/app_vendor.js')
+    .styles([
+        'resources/adminlte-3.2/plugins/select2/css/select2.min.css',
+    ], 'public/css/app_vendor.css')
     .sass('resources/sass/app.scss', 'public/css');
 
 mix.scripts([

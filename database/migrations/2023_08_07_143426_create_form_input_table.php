@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('form_input', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->bigInteger('user_id')->nullable();
             $table->string('form');
             $table->text('data');
             $table->timestamps();

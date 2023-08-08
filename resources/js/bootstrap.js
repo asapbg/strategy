@@ -14,6 +14,15 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+$(document).ready(function() {    
+    if($('.select2').length) {
+        $('.select2').select2({
+            allowClear: true,
+            placeholder: true,
+            language: "bg"
+        });
+    }
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

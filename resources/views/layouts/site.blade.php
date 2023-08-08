@@ -16,6 +16,7 @@
 <link href="/vendor/fontawesome-free-6.4.0-web/css/all.css" rel="stylesheet">
 
     <!-- Custom css -->
+<link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
 <link href="{{ asset('css/site.css') }}" rel="stylesheet">
 
 <!-- Add favicon -->
@@ -26,9 +27,11 @@
   src="https://code.jquery.com/jquery-3.7.0.min.js"
   integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
   crossorigin="anonymous"></script>
-
+<script src="{{ asset('js/app_vendor.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 </head>
-  
+
+<body>
 <header>
 
   <div id="topbar">
@@ -97,9 +100,8 @@
 </header>
 
 
-<body>
 @yield('content')
-</body>
+
 
 <footer>
   <div class="container">
@@ -153,9 +155,5 @@
   </div>
  
 </footer>
-
-
-
-
-</div>
+</body>
 </html>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormInput;
+use App\Models\RegulatoryAct;
+use App\Models\StrategicDocuments\Institution;
 use PDF;
 
 class ImpactAssessmentController extends Controller
@@ -17,7 +19,10 @@ class ImpactAssessmentController extends Controller
         $step = app('request')->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = app('request')->input('inputId', 0);
-        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId'));
+
+        $institutions = Institution::all();
+        $regulatoryActs = RegulatoryAct::all();
+        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId', 'institutions', 'regulatoryActs'));
     }
 
     public function store($formName)
@@ -41,22 +46,35 @@ class ImpactAssessmentController extends Controller
         session(["forms.$formName" => $data]);
         
         $inputId = app('request')->input('inputId', 0);
+        $submit = app('request')->input('submit');
 
-        if ($userId) {
-            $fi = $inputId ? FormInput::find($inputId) : FormInput::firstOrNew([
-                'form' => $formName,
-                'user_id' => $userId
-            ]);
+        if ($userId || $submit) {
+            $fi = FormInput::find($inputId);
+            if (!$fi) {
+                $fi = new FormInput([
+                    'form' => $formName,
+                    'user_id' => $userId,
+                ]);
+            }
             $fi->data = json_encode($data);
             $fi->save();
             $inputId = $fi->id;
         }
         
         $step = app('request')->input('step');
-        if (app('request')->input('submit')) {
+        if ($submit) {
+            session(["forms.$formName" => []]);
             return view('impact_assessment.submitted', compact('formName', 'inputId'));
         }
         return redirect()->route('impact_assessment.form', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]);
+    }
+
+    public function show($formName)
+    {
+        $state = $this->getState($formName);
+        $steps = $this->getSteps($formName);
+        $readOnly = true;
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly'));
     }
 
     public function pdf($formName)

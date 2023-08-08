@@ -23,7 +23,9 @@
 
 <section class="public-constultation">
     <div class="container">
-       @include('impact_assessment.form')
+        @for($p=1; $p<=$steps; $p++)
+        @include("form_partials.form1.steps.step$p")
+        @endfor
     </div>
   </section>
 @endsection

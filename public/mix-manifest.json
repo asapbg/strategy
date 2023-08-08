@@ -28,6 +28,8 @@
     "/dist/img/user6-128x128.jpg": "/dist/img/user6-128x128.jpg",
     "/dist/img/user7-128x128.jpg": "/dist/img/user7-128x128.jpg",
     "/dist/img/user8-128x128.jpg": "/dist/img/user8-128x128.jpg",
+    "/js/app_vendor.js": "/js/app_vendor.js",
+    "/css/app_vendor.css": "/css/app_vendor.css",
     "/js/admin.js": "/js/admin.js",
     "/css/admin.css": "/css/admin.css"
 }
