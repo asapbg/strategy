@@ -11,8 +11,8 @@ return [
     'problem_to_solve' => 'Проблем/проблеми за решаване',
     'goal' => 'Цел',
     'goals' => 'Цели',
-    'interested_party' => 'Заинтересованa странa',
-    'interested_parties' => 'Заинтересовани страни',
+    'interested_party' => 'Заинтересованa странa/група',
+    'interested_parties' => 'Заинтересовани страни/групи',
     'description' => 'Описание',
     'positive_impact' => 'Положителни (икономически/социални/екологични) въздействия',
     'negative_impact' => 'Отрицателни (икономически/социални/екологични) въздействия',
@@ -34,10 +34,12 @@ return [
     'print_pdf' => 'Разпечатай в PDF',
     'show_form_input' => 'Покажи попълнения формуляр',
     'fill_again' => 'Попълване отново',
+    'number_people' => 'Брой хора',
     // Form 2
     'period_assessment' => 'Период на извършване на оценката',
     'national' => 'Национално',
     'european' => 'Европейско',
     'national_and_european' => 'Национално и европейско',
     'international' => 'Международно',
+    'expenses_and_benefits' => 'Разходи и ползи',
 ];

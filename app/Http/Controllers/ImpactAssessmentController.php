@@ -19,10 +19,7 @@ class ImpactAssessmentController extends Controller
         $step = app('request')->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = app('request')->input('inputId', 0);
-
-        $institutions = Institution::all();
-        $regulatoryActs = RegulatoryAct::all();
-        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId', 'institutions', 'regulatoryActs'));
+        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId'));
     }
 
     public function store($formName)
@@ -36,7 +33,7 @@ class ImpactAssessmentController extends Controller
         }
         if (array_key_exists('add_array_entry', $data)) {
             $key = $data['add_array_entry'];
-            $value = data_get($data, $key, []);
+            $value = data_get($data, $key, [[]]);
             array_push($value, []);
             data_set($data, $key, $value);
             unset($data['add_array_entry']);
@@ -74,9 +71,7 @@ class ImpactAssessmentController extends Controller
         $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        $institutions = Institution::all();
-        $regulatoryActs = RegulatoryAct::all();
-        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'institutions', 'regulatoryActs'));
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly'));
     }
 
     public function pdf($formName, $inputId)
@@ -84,9 +79,7 @@ class ImpactAssessmentController extends Controller
         $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        $institutions = Institution::all();
-        $regulatoryActs = RegulatoryAct::all();
-        $pdf = PDF::loadView('impact_assessment.pdf', compact('formName', 'steps', 'state', 'readOnly', 'institutions', 'regulatoryActs'));
+        $pdf = PDF::loadView('impact_assessment.pdf', compact('formName', 'steps', 'state', 'readOnly'));
         return $pdf->download("$formName.pdf");
     }
     

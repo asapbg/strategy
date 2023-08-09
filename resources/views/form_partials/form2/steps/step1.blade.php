@@ -35,4 +35,20 @@
             @include('form_partials.text', ['name' => 'phone_and_email'])
         </td>
     </tr>
+
+    <tr>
+        <td colspan="2">
+            <h3>1. Проблеми, цели и варианти на действие</h3>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h4>1.1 Проблем/проблеми за решаване:</h4>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @include('form_partials.shared.problems')
+        </td>
+    </tr>
 </table>
