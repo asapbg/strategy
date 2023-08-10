@@ -9,8 +9,11 @@
         @php($label = __($buttonLabel) . ' ' . $a+1)
         @include('form_partials.textarea', ['name' => $nameSimple."[$a][text]", 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.text") : ''])
     </td>
-    <td valign="top">
+    <td valign="top" width="100">
         @include('form_partials.text', ['name' => $nameSimple."[$a][number]", 'label' => 'forms.number_people', 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.number") : ''])
+    </td>
+    <td width="50">
+        @include('form_partials.remove_button')
     </td>
 </tr>
 @endfor

@@ -1,5 +1,5 @@
 @if(!isset($readOnly))
-<button class="btn btn-info" type="button" onclick="$(this).after('<input type=hidden name=add_array_entry value={{ $name }}>'); document.forms[0].submit();">
+<button class="btn btn-primary mb-4" type="button" onclick="$(this).after('<input type=hidden name=add_array_entry value={{ $name }}>'); document.forms[0].submit();">
     {{ __('custom.add') }}
     {{ isset($buttonLabel) ? __($buttonLabel) : '' }}
 </button>

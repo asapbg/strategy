@@ -17,7 +17,7 @@
     @endfor
     <tr>
         <td colspan="2">
-            <p class="text-center">
+            <p>
                 <i>Посочете препоръчителните варианти за решаване на поставения проблем/проблеми.</i>
             </p>
         </td>
@@ -32,7 +32,7 @@
             @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 2, 'label' => 'forms.no_effect'])
             <br>
             @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => ''])
-            <p class="text-center">
+            <p>
                 <i>
                     1.1. Изборът следва да е съотносим с посочените специфични въздействия на препоръчителния вариант за решаване на всеки проблем.
                     <br>
@@ -49,7 +49,7 @@
             @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => ''])
             <br>
             @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no'])
-            <p class="text-center">
+            <p>
                 <i>
                     1.1. Изборът следва да е съотносим с посочените специфични въздействия на избрания вариант.
                     <br>
@@ -74,7 +74,7 @@
             @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => ''])
             <br>
             @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no'])
-            <p class="text-center">
+            <p>
                 <i>
                     Когато отговорът е „Да“, посочете регистрите, които се създават и по какъв начин те ще бъдат интегрирани в общата регистрова инфраструктура.
                 </i>
@@ -87,7 +87,7 @@
             @include('form_partials.radio', ['name' => 'affects_companies', 'value' => 1, 'label' => 'forms.act_affects_smc'])
             <br>
             @include('form_partials.radio', ['name' => 'affects_companies', 'value' => 0, 'label' => 'forms.act_not_affects_smc'])
-            <p class="text-center">
+            <p>
                 <i>
                     Изборът следва да е съотносим с посочените специфични въздействия на препоръчителния вариант.
                 </i>
@@ -98,7 +98,7 @@
         <td colspan="2">
             <h4>6.5. Потенциални рискове от прилагането на препоръчителния вариант (включително по отделните проблеми):</h4>
             @include('form_partials.textarea', ['name' => 'potential_risks', 'label' => ''])
-            <p class="text-center">
+            <p>
                 <i>
                     Посочете възможните рискове от прилагането на препоръчителния вариант, различни от отрицателните въздействия, напр. възникване на съдебни спорове и др.
                 </i>

@@ -17,6 +17,14 @@ h1,h2,h3,h4,h5,h6 {
     background: #21659e;
 }
 
+.btn {
+    color: #fff !important;
+}
+
+.btn-primary {
+    background : #21659e !important;
+}
+
 .main-color {
     color: #21659e !important;
 }

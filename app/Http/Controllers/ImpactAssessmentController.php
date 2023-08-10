@@ -60,7 +60,9 @@ class ImpactAssessmentController extends Controller
         $step = $request->input('step', 1);
         $currentStep = $request->input('currentStep', 1);
         $rules = config("validation.$formName.step$currentStep");
-        $request->validate($rules);
+        if ($currentStep <= $step) {
+            $request->validate($rules);
+        }
         
         if ($submit) {
             session(["forms.$formName" => []]);

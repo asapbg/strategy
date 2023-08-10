@@ -11,6 +11,7 @@ return [
     'problem_to_solve' => 'Проблем/проблеми за решаване',
     'goal' => 'Цел',
     'goals' => 'Цели',
+    'goal_goals' => 'Цел/цели',
     'interested_party' => 'Заинтересованa странa/група',
     'interested_parties' => 'Заинтересовани страни/групи',
     'description' => 'Описание',

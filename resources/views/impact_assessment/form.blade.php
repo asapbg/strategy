@@ -6,14 +6,14 @@
         <tr>
             <td>
                 @if($step > 1)
-                <button type="button" class="btn btn-info" onclick="prevStep()">{{ __('custom.prev_step') }}</button>
+                <button type="button" class="btn btn-primary" onclick="prevStep()">{{ __('custom.prev_step') }}</button>
                 @endif
             </td>
             <td style="text-align: right;">
                 @if($step < $steps)
-                <button type="button" class="btn btn-info" onclick="nextStep()">{{ __('custom.next_step') }}</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep()">{{ __('custom.next_step') }}</button>
                 @else
-                <button type="button" class="btn btn-info" onclick="submitForm()">{{ __('custom.submit_form') }}</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">{{ __('custom.submit_form') }}</button>
                 @endif
             </td>
         </tr>

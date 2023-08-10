@@ -9,7 +9,6 @@
 @for($m=0; $m<$loop2; $m++)
 <tr>
     <td colspan="2">
-        @php(var_dump(Arr::get($state, "variants.$n")))
         <h6>Вариант {{ $m+1 }}:</h6>
     </td>
 </tr>
@@ -18,16 +17,16 @@
         @include('form_partials.textarea', ['name' => "variants[$n][$m][description]", 'label' => 'forms.description', 'value' => Arr::get($state, "variants.$n.$m.description")])
 
         @include('form_partials.textarea', ['name' => "variants[$n][$m][positive_impact]", 'label' => 'forms.positive_impact', 'value' => Arr::get($state, "variants.$n.$m.positive_impact")])
-        <p class="text-center"><i>(върху всяка заинтересована страна/група заинтересовани страни)</i></p>
+        <p><i>(върху всяка заинтересована страна/група заинтересовани страни)</i></p>
         
         @include('form_partials.textarea', ['name' => "variants[$n][$m][negative_impact]", 'label' => 'forms.negative_impact', 'value' => Arr::get($state, "variants.$n.$m.negative_impact")])
-        <p class="text-center"><i>(върху всяка заинтересована страна/група заинтересовани страни)</i></p>
+        <p><i>(върху всяка заинтересована страна/група заинтересовани страни)</i></p>
         
         <h6>Специфични въздействия:</h6>
         @include('form_partials.textarea', ['name' => "variants[$n][$m][small_mid_impact]", 'label' => 'forms.small_mid_impact', 'value' => Arr::get($state, "variants.$n.$m.small_mid_impact")])
         
         @include('form_partials.textarea', ['name' => "variants[$n][$m][admin_weight]", 'label' => 'forms.admin_weight', 'value' => Arr::get($state, "variants.$n.$m.admin_weight")])
-        <p class="text-center">
+        <p>
             <i>
                 1.1. Опишете качествено (при възможност – и количествено) всички значителни потенциални икономически, социални и екологични въздействия, включително върху всяка заинтересована страна/група заинтересовани страни. Пояснете кои въздействия се очаква да бъдат значителни и кои второстепенни.
                 <br>
