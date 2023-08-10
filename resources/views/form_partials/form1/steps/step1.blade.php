@@ -5,10 +5,10 @@
 <table class="table" width="100%">
     <tr>
         <td width="50%">
-            @include('form_partials.text', ['name' => 'institution'])
+            <h5>@include('form_partials.text', ['name' => 'institution'])</h5>
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'regulatory_act'])
+            <h5>@include('form_partials.text', ['name' => 'regulatory_act'])</h5>
         </td>
     </tr>
     <tr>
@@ -20,11 +20,16 @@
         </td>
     </tr>
     <tr>
+        <td colspan="2">
+            <h5>@include('form_partials.text', ['name' => 'contact_person'])</h5>
+        </td>
+    </tr>
+    <tr>
         <td>
-            @include('form_partials.text', ['name' => 'contact_person'])
+            <h5>@include('form_partials.text', ['name' => 'phone'])</h5>
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'phone_and_email'])
+            <h5>@include('form_partials.text', ['name' => 'email'])</h5>
         </td>
     </tr>
     <tr>
