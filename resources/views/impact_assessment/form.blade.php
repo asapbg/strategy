@@ -1,20 +1,19 @@
 <form action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step]) }}" method="POST">
     @csrf
-    
+    <input type="hidden" name="currentStep" value="{{ $step }}">
     @include("form_partials.$formName.steps.step$step")
-
     <table width="100%">
         <tr>
             <td>
                 @if($step > 1)
-                <button type="button" onclick="prevStep()">{{ __('custom.prev_step') }}</button>
+                <button type="button" class="btn btn-info" onclick="prevStep()">{{ __('custom.prev_step') }}</button>
                 @endif
             </td>
             <td style="text-align: right;">
                 @if($step < $steps)
-                <button type="button" onclick="nextStep()">{{ __('custom.next_step') }}</button>
+                <button type="button" class="btn btn-info" onclick="nextStep()">{{ __('custom.next_step') }}</button>
                 @else
-                <button type="button" onclick="submitForm()">{{ __('custom.submit_form') }}</button>
+                <button type="button" class="btn btn-info" onclick="submitForm()">{{ __('custom.submit_form') }}</button>
                 @endif
             </td>
         </tr>

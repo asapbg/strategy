@@ -1,5 +1,5 @@
 <label>
-    <input type="radio" name="{{ $name }}"
+    <input type="radio" name="{{ $name }}" class="@error($name){{ 'is-invalid' }}@enderror"
         {{ array_key_exists($name, $state) ? ($state[$name] == $value ? 'checked' : '') : '' }} value="{{ $value }}">
     @include('form_partials.label')
 </label>

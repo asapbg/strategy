@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormInput;
-use App\Models\RegulatoryAct;
-use App\Models\StrategicDocuments\Institution;
+use Illuminate\Http\Request;
 use PDF;
 
 class ImpactAssessmentController extends Controller
@@ -13,20 +12,20 @@ class ImpactAssessmentController extends Controller
     {
     }
     
-    public function form($formName)
+    public function form($formName, Request $request)
     {
         $state = $this->getState($formName);
-        $step = app('request')->input('step', 1);
+        $step = $request->input('step', 1);
         $steps = $this->getSteps($formName);
-        $inputId = app('request')->input('inputId', 0);
+        $inputId = $request->input('inputId', 0);
         return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId'));
     }
 
-    public function store($formName)
+    public function store($formName, Request $request)
     {
         $userId = app('auth')->id();
         $state = $this->getState($formName);
-        $data = app('request')->except('_token');
+        $data = $request->except(['_token', 'currentStep']);
         if (array_key_exists('add_entry', $data)) {
             $data[substr($data['add_entry'], 0, -2)][] = '';
             unset($data['add_entry']);
@@ -42,8 +41,8 @@ class ImpactAssessmentController extends Controller
         $data = array_merge($state, $data);
         session(["forms.$formName" => $data]);
         
-        $inputId = app('request')->input('inputId', 0);
-        $submit = app('request')->input('submit');
+        $inputId = $request->input('inputId', 0);
+        $submit = $request->input('submit');
 
         if ($userId || $submit) {
             $fi = FormInput::find($inputId);
@@ -58,7 +57,11 @@ class ImpactAssessmentController extends Controller
             $inputId = $fi->id;
         }
         
-        $step = app('request')->input('step');
+        $step = $request->input('step', 1);
+        $currentStep = $request->input('currentStep', 1);
+        $rules = config("validation.$formName.step$currentStep");
+        $request->validate($rules);
+        
         if ($submit) {
             session(["forms.$formName" => []]);
             return view('impact_assessment.submitted', compact('formName', 'inputId'));

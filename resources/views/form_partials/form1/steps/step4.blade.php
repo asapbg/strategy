@@ -10,7 +10,7 @@
                     Посочете основните заинтересовани страни, с които са проведени консултации. Посочете резултатите от консултациите, включително на ниво ЕС: спорни въпроси, многократно поставяни въпроси и др.
                 </i>
             </p>
-            @include('form_partials.radio', ['name' => 'not_conducted_consultations', 'value' => 0, 'label' => 'forms.not_conducted_consultations'])
+            @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 0, 'label' => 'forms.not_conducted_consultations'])
             <br>
             @include('form_partials.textarea', ['name' => 'not_conducted_consultations_text', 'label' => ''])
             <p class="text-center">

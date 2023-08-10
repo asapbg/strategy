@@ -9,6 +9,7 @@
 @for($m=0; $m<$loop2; $m++)
 <tr>
     <td colspan="2">
+        @php(var_dump(Arr::get($state, "variants.$n")))
         <h6>Вариант {{ $m+1 }}:</h6>
     </td>
 </tr>

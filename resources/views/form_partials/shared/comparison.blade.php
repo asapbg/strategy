@@ -19,7 +19,7 @@
         <td>Цел {{ $n+1 }}</td>
         @for($m=0; $m<$maxVariants; $m++)
         <td>
-            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][0]" class="form-control" type="number"
+            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][0]" class="form-control @error("comparison.$p.$n.$m.0"){{ 'is-invalid' }}@enderror" type="number"
                 value="{{ data_get($state, "comparison.$p.$n.$m.0") }}">
         </td>
         @endfor
@@ -33,7 +33,7 @@
         <td>Цел {{ $n+1 }}</td>
         @for($m=0; $m<$maxVariants; $m++)
         <td>
-            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][1]" class="form-control" type="number"
+            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][1]" class="form-control @error("comparison.$p.$n.$m.1"){{ 'is-invalid' }}@enderror" type="number"
                 value="{{ data_get($state, "comparison.$p.$n.$m.1") }}">
         </td>
         @endfor
@@ -47,7 +47,7 @@
         <td>Цел {{ $n+1 }}</td>
         @for($m=0; $m<$maxVariants; $m++)
         <td>
-            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][2]" class="form-control" type="number"
+            <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][2]" class="form-control @error("comparison.$p.$n.$m.2"){{ 'is-invalid' }}@enderror" type="number"
                 value="{{ data_get($state, "comparison.$p.$n.$m.2") }}">
         </td>
         @endfor
