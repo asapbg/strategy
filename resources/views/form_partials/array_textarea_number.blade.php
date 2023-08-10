@@ -13,7 +13,9 @@
         @include('form_partials.text', ['name' => $nameSimple."[$a][number]", 'label' => 'forms.number_people', 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.number") : ''])
     </td>
     <td width="50">
-        @include('form_partials.remove_button')
+        @if($a > 0)
+            @include('form_partials.remove_button')
+        @endif
     </td>
 </tr>
 @endfor

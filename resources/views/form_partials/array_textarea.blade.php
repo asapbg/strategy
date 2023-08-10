@@ -10,7 +10,9 @@
             @include('form_partials.textarea', ['value' => array_key_exists($nameSimple, $state) ? $state[$nameSimple][$a] : '', 'nameDots' => "$nameSimple.$a"])
         </td>
         <td width="50">
-            @include('form_partials.remove_button')
+            @if($a > 0)
+                @include('form_partials.remove_button')
+            @endif
         </td>
     </tr>
     @endfor
