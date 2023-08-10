@@ -11,7 +11,7 @@
             <h5>{{ __('forms.on_problem') . ' ' . $n+1 . ': ' . __('forms.variant') }}</h5>
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => ''])
+            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n"])
         </td>
     </tr>
     @endfor
@@ -25,13 +25,15 @@
     <tr>
         <td colspan="2">
             <h4>6.1. Промяна в административната тежест за физическите и юридическите лица от прилагането на препоръчителния вариант (включително по отделните проблеми):</h4>   
-            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 0, 'label' => 'forms.will_increase'])
+            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 0, 'label' => 'forms.will_increase', 'clickSubmit' => true])
             <br>
-            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 1, 'label' => 'forms.will_decrease'])
+            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 1, 'label' => 'forms.will_decrease', 'clickSubmit' => true])
             <br>
-            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 2, 'label' => 'forms.no_effect'])
-            <br>
-            @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => ''])
+            @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 2, 'label' => 'forms.no_effect', 'clickSubmit' => true])
+            @if(Arr::has($state, 'change_admin_weight') && in_array(data_get($state, 'change_admin_weight'), [0, 1]))
+                <br>
+                @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => ''])
+            @endif
             <p>
                 <i>
                     1.1. Изборът следва да е съотносим с посочените специфични въздействия на препоръчителния вариант за решаване на всеки проблем.
@@ -44,11 +46,13 @@
     <tr>
         <td colspan="2">
             <h4>6.2. Създават ли се нови/засягат ли се съществуващи регулаторни режими и услуги от прилагането на препоръчителния вариант (включително по отделните проблеми)?</h4>   
-            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 1, 'label' => 'forms.yes'])
+            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
+            @if(Arr::has($state, 'affects_regulatory_acts') && data_get($state, 'affects_regulatory_acts') == 1)
+                <br>
+                @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => ''])
+            @endif
             <br>
-            @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => ''])
-            <br>
-            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no'])
+            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
             <p>
                 <i>
                     1.1. Изборът следва да е съотносим с посочените специфични въздействия на избрания вариант.
@@ -69,11 +73,13 @@
     <tr>
         <td colspan="2">
             <h4>6.3. Създават ли се нови регистри от прилагането на препоръчителния вариант (включително по отделните проблеми)?</h4>   
-            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 1, 'label' => 'forms.yes'])
+            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
+            @if(Arr::has($state, 'affects_registry') && data_get($state, 'affects_registry') == 1)
+                <br>
+                @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => ''])
+            @endif
             <br>
-            @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => ''])
-            <br>
-            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no'])
+            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
             <p>
                 <i>
                     Когато отговорът е „Да“, посочете регистрите, които се създават и по какъв начин те ще бъдат интегрирани в общата регистрова инфраструктура.

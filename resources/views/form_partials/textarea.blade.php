@@ -8,5 +8,5 @@ if (!isset($nameDots)) {
 @if (isset($readOnly))
 <p>{{ array_key_exists($name, $state) ? $state[$name] : '' }}</p>
 @else
-<textarea id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror">{{ isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '') }}</textarea>
+<textarea id="{{ $name }}" name="{{ $name }}" placeholder="{{ isset($placeholder) ? __($placeholder) : '' }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror">{{ isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '') }}</textarea>
 @endif
