@@ -7,7 +7,7 @@ return [
             'included_in_program' => 'required',
             'contact_person' => 'required',
             'phone' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
             'problem_to_solve.*' => 'required',
             'goals.*' => 'required',
             'interested_parties.*.text' => 'required',
@@ -21,5 +21,20 @@ return [
             'variants.*.*.admin_weight' => 'required',
             'comparison.*.*.*.*' => 'required',
         ],
-    ]
+        'step3' => [
+        ],
+        'step4' => [
+        ],
+    ],
+
+    'form2' => [
+        'step1' => [
+        ],
+        'step2' => [
+        ],
+        'step3' => [
+        ],
+        'step4' => [
+        ],
+    ],
 ];
