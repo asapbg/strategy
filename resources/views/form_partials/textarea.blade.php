@@ -1,4 +1,6 @@
-@include('form_partials.label')
+@if(isset($label) && $label)
+    @include('form_partials.label')
+@endif
 @php
 if (!isset($nameDots)) {
     $nameDots = str_replace('[', '.', $name);

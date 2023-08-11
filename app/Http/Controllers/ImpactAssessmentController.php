@@ -27,7 +27,12 @@ class ImpactAssessmentController extends Controller
         $state = $this->getState($formName);
         $data = $request->except(['_token', 'currentStep']);
         if (array_key_exists('add_entry', $data)) {
-            $data[substr($data['add_entry'], 0, -2)][] = '';
+            $key = \Str::endsWith($data['add_entry'], '[]')
+                ? substr($data['add_entry'], 0, -2)
+                : $data['add_entry'];
+            $value = data_get($data, $key);
+            array_push($value, '');
+            data_set($data, $key, $value);
             unset($data['add_entry']);
         }
         if (array_key_exists('add_array_entry', $data)) {
@@ -44,7 +49,7 @@ class ImpactAssessmentController extends Controller
         $inputId = $request->input('inputId', 0);
         $submit = $request->input('submit');
 
-        if ($userId || $submit) {
+        if (($userId && !$inputId) || $submit) {
             $fi = FormInput::find($inputId);
             if (!$inputId) {
                 $fi = new FormInput([

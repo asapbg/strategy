@@ -60,6 +60,7 @@ return [
         ],
         'step2' => [
             'goals.*' => 'required',
+            'variant_simple.*.*' => 'required',
         ],
         'step3' => [
             'variants.*.*.description' => 'required',
@@ -67,10 +68,17 @@ return [
             'variants.*.*.negative_impact' => 'required',
             'variants.*.*.small_mid_impact' => 'required',
             'variants.*.*.admin_weight' => 'required',
+            'variants.*.*.risks' => 'required',
         ],
         'step4' => [
-            'expenses.*.expenses' => 'required',
-            'expenses.*.benefits' => 'required',
+            'expenses.*.*.expenses' => 'required',
+            'expenses.*.*.benefits' => 'required',
+            'consultations' => 'required',
+            'effective_from' => 'required',
+            'responsibility' => 'required',
+            'name' => 'required',
+            'job' => 'required',
+            'date' => 'required',
         ],
     ],
 ];

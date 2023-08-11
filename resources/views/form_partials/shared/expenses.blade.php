@@ -36,9 +36,4 @@
         </table>
     </td>
 </tr>
-<tr>
-    <td colspan="2">
-    @include('form_partials.add_array_button', ['name' => "expenses.$n", 'buttonLabel' => 'forms.expenses_and_benefits'])
-    </td>
-</tr>
 @endfor

@@ -12,8 +12,8 @@
     <tr>
         <td colspan="2">
             <h3>1.3. Варианти за действие:</h3>
+            @include('form_partials.shared.variant_simple')
         </td>
     </tr>
-    @include('form_partials.shared.variant_simple')
 
 </table>
