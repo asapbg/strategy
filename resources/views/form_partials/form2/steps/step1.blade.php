@@ -18,13 +18,13 @@
             <h5>@include('form_partials.text', ['name' => 'period_assessment'])</h5>
         </td>
         <td>
+            <h5>
+                От какво ниво възниква необходимостта от предприемане на действието?
+            </h5>
             @include('form_partials.radio', ['name' => 'level', 'value' => 0, 'label' => 'forms.national'])
             @include('form_partials.radio', ['name' => 'level', 'value' => 1, 'label' => 'forms.european'])
             @include('form_partials.radio', ['name' => 'level', 'value' => 2, 'label' => 'forms.national_and_european'])
             @include('form_partials.radio', ['name' => 'level', 'value' => 3, 'label' => 'forms.international'])
-            <p>
-                <i>От какво ниво възниква необходимостта от предприемане на действието?</i>
-            </p>
         </td>
     </tr>
     <tr>

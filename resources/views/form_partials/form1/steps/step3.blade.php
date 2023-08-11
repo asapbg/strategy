@@ -11,7 +11,7 @@
             <h5>{{ __('forms.on_problem') . ' ' . $n+1 . ': ' . __('forms.variant') }}</h5>
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n"])
+            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n", 'value' => data_get($state, "chosen_variants.$n")])
         </td>
     </tr>
     @endfor

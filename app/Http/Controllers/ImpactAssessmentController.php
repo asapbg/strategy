@@ -46,7 +46,7 @@ class ImpactAssessmentController extends Controller
 
         if ($userId || $submit) {
             $fi = FormInput::find($inputId);
-            if (!$fi) {
+            if (!$inputId) {
                 $fi = new FormInput([
                     'form' => $formName,
                     'user_id' => $userId,

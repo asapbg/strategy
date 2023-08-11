@@ -1,4 +1,4 @@
-<form action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step]) }}" method="POST">
+<form action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]) }}" method="POST">
     @csrf
     <input type="hidden" name="currentStep" value="{{ $step }}">
     @include("form_partials.$formName.steps.step$step")

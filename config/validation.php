@@ -29,6 +29,8 @@ return [
             'affects_regulatory_acts_text' => 'required_if:affects_regulatory_acts,1',
             'affects_registry' => 'required',
             'affects_registry_text' => 'required_if:affects_registry,1',
+            'affects_companies' => 'required',
+            'potential_risks' => 'required',
         ],
         'step4' => [
             'conducted_consultations' => 'required',
