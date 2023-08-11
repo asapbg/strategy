@@ -47,12 +47,28 @@ return [
 
     'form2' => [
         'step1' => [
+            'institution' => 'required',
+            'regulatory_act' => 'required',
+            'period_assessment' => 'required',
+            'level' => 'required',
+            'contact_person' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'problem_to_solve.*' => 'required',
         ],
         'step2' => [
+            'goals.*' => 'required',
         ],
         'step3' => [
+            'variants.*.*.description' => 'required',
+            'variants.*.*.positive_impact' => 'required',
+            'variants.*.*.negative_impact' => 'required',
+            'variants.*.*.small_mid_impact' => 'required',
+            'variants.*.*.admin_weight' => 'required',
         ],
         'step4' => [
+            'expenses.*.expenses' => 'required',
+            'expenses.*.benefits' => 'required',
         ],
     ],
 ];

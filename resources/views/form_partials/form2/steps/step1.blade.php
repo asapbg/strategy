@@ -7,15 +7,15 @@
 <table class="table" width="100%">
     <tr>
         <td width="50%">
-            @include('form_partials.select', ['name' => 'institution', 'options' => $institutions])
+            <h5>@include('form_partials.text', ['name' => 'institution'])</h5>
         </td>
         <td>
-            @include('form_partials.select', ['name' => 'regulatory_act', 'options' => $regulatoryActs])
+            <h5>@include('form_partials.text', ['name' => 'regulatory_act'])</h5>
         </td>
     </tr>
     <tr>
         <td>
-            @include('form_partials.text', ['name' => 'period_assessment'])
+            <h5>@include('form_partials.text', ['name' => 'period_assessment'])</h5>
         </td>
         <td>
             @include('form_partials.radio', ['name' => 'level', 'value' => 0, 'label' => 'forms.national'])
@@ -28,11 +28,16 @@
         </td>
     </tr>
     <tr>
+        <td colspan="2">
+            <h5>@include('form_partials.text', ['name' => 'contact_person'])</h5>
+        </td>
+    </tr>
+    <tr>
         <td>
-            @include('form_partials.text', ['name' => 'contact_person'])
+            <h5>@include('form_partials.text', ['name' => 'phone'])</h5>
         </td>
         <td>
-            @include('form_partials.text', ['name' => 'phone_and_email'])
+            <h5>@include('form_partials.text', ['name' => 'email'])</h5>
         </td>
     </tr>
 

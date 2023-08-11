@@ -13,7 +13,7 @@
                 <td width="40%">Общи годишни разходи</td>
                 <td width="40%">Общи годишни ползи</td>
             </tr>
-            @php($loop2 = Arr::get($state, "expenses.$n", false) ? count(Arr::get($state, "expenses.$n")) : 1)
+            @php($loop2 = Arr::get($state, "variants.$n", false) ? count(Arr::get($state, "variants.$n")) : 1)
             @for($m=0; $m<$loop2; $m++)
             <tr>
                 <td>

@@ -14,6 +14,6 @@
             <h3>1.3. Варианти за действие:</h3>
         </td>
     </tr>
-    @include('form_partials.shared.variant')
+    @include('form_partials.shared.variant_simple')
 
 </table>
