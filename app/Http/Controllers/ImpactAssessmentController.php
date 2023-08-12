@@ -48,10 +48,17 @@ class ImpactAssessmentController extends Controller
         
         $inputId = $request->input('inputId', 0);
         $submit = $request->input('submit');
-
-        if (($userId && !$inputId) || $submit) {
+        
+        $step = $request->input('step', 1);
+        $currentStep = $request->input('currentStep', 1);
+        $rules = config("validation.$formName.step$currentStep");
+        if ($currentStep <= $step || $submit) {
+            $request->validate($rules);
+        }
+        
+        if ($userId || $inputId || $submit) {
             $fi = FormInput::find($inputId);
-            if (!$inputId) {
+            if (!$fi) {
                 $fi = new FormInput([
                     'form' => $formName,
                     'user_id' => $userId,
@@ -61,14 +68,7 @@ class ImpactAssessmentController extends Controller
             $fi->save();
             $inputId = $fi->id;
         }
-        
-        $step = $request->input('step', 1);
-        $currentStep = $request->input('currentStep', 1);
-        $rules = config("validation.$formName.step$currentStep");
-        if ($currentStep <= $step || $submit) {
-            $request->validate($rules);
-        }
-        
+
         if ($submit) {
             session(["forms.$formName" => []]);
             return view('impact_assessment.submitted', compact('formName', 'inputId'));

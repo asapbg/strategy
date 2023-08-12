@@ -14,9 +14,11 @@
             @include('form_partials.textarea', ['name' => "variant_simple[$n][$m]", 'label' => '', 'value' => Arr::get($state, "variant_simple.$n.$m")])
         </td>
         <td width="50">
+            @if($m > 0)
             <div class="float-end">
                 @include('form_partials.remove_button')
             </div>
+            @endif
         </td>
     </tr>
     @endfor
