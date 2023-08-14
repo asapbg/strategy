@@ -326,4 +326,8 @@ return [
     'next_step'                       => 'Следваща стъпка',
     'prev_step'                       => 'Предишна стъпка',
     'submit_form'                     => 'Завършване',
+    'register'                        => 'Регистрация',
+    'general_info'                    => 'Основна информация',
+    'subscriptions'                   => 'Абонаменти',
+    'form_inputs'                     => 'Формуляри',
 ];

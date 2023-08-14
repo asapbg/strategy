@@ -6,7 +6,7 @@
 
 * {
     font-family: "Fira Sans BGR";
-    color: #333333 !important;
+    color: #333333;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -58,14 +58,14 @@ header {
     width: 320px;
 }
 
-a.nav-link.active {
+nav.navbar a.nav-link.active {
     border-bottom: 2px solid #fff;
     color: #fff !important;
     border-top: 2px solid transparent;
 
 }
 
-a.nav-link{
+nav.navbar a.nav-link{
     border-bottom: 2px solid transparent;
     border-top: 2px solid transparent;
     transition: 500ms;
@@ -95,7 +95,7 @@ header .nav-item:first-child {
     padding-left:0px !important;
 }
 
-a.nav-link:hover {
+nav.navbar a.nav-link:hover {
     border-bottom: 2px solid #fff;
     color: #fff !important;
 }
@@ -179,7 +179,7 @@ span.left-link-icon i {
 font-size: 18px !important;
 }
 
-.public-constultation {
+.public-page {
     padding: 60px 0px;
 }
 

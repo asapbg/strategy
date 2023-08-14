@@ -14,4 +14,8 @@ class FormInput extends ModelActivityExtend
     protected string $logName = "form_input";
 
     protected $fillable = ['user_id', 'data', 'form'];
+
+    public function getDataParsedAttribute() {
+        return json_decode($this->data, true);
+    }
 }

@@ -68,10 +68,10 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav ">
           <li class="nav-item mx-1">
-            <a class="nav-link active " aria-current="page" href="#">Начало</a>
+            <a class="nav-link active " aria-current="page" href="/">Начало</a>
           </li>
           <li class="nav-item mx-1">
-            <a class="nav-link " aria-current="page" href="#">Обществени консултации</a>
+            <a class="nav-link " href="{{ url('/consultations') }}">Обществени консултации</a>
           </li>
           <li class="nav-item mx-1">
             <a class="nav-link" href="#">Актове на МС</a>
@@ -100,8 +100,31 @@
 </header>
 
 
-@yield('content')
+<section class="slider">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="slider-content">
+          <div class="breadcrumbs">
+            <a href="#">Начало</a> » <a href="#">@yield('pageTitle')</a>
+          </div>
+          <div class="page-heading">
+            <h1>
+              @yield('pageTitle')
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+
+<section class="public-page">
+  <div class="container">
+    @yield('content')
+  </div>
+</section>
 
 <footer>
   <div class="container">
