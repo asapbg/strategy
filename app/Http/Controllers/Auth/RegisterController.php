@@ -53,11 +53,11 @@ class RegisterController extends Controller
     {
         $rules = [
             'is_org' => ['required', 'boolean'],
-            'first_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
         if (!$data['is_org']) {
+            $rules['first_name'] = ['required', 'string', 'max:255'];
             $rules['last_name'] = ['required', 'string', 'max:255'];
         } else {
             $rules['org_name'] = ['required', 'string', 'max:255'];
@@ -75,6 +75,7 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'is_org' => $data['is_org'],
+            'org_name' => $data['org_name'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],

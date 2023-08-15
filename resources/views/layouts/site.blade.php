@@ -54,7 +54,7 @@
             <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
                 @php($user = app('auth')->user())
-                {{ $user->first_name . ' ' . $user->last_name }}
+                {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
               </button>
               <ul class="dropdown-menu" aria-labelledby="profile-menu">
                 <li>

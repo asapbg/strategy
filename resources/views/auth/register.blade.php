@@ -8,19 +8,19 @@
         <div class="col-md-8">
             <form method="POST" action="{{ route('register') }}">
                 @csrf
-
                 <div class="row mb-3">
                     <label for="is_org" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.is_org') }} <span class="text-danger">*</span></label>
                     
                     <div class="col-md-6">
-                        <label>
-                            <input id="is_org" type="radio" name="is_org" value="1" {{ old('is_org') == 1 ? 'checked' : '' }}>
-                            {{ __('custom.organisation') }}
-                        </label>
-                        <label>
-                            <input id="is_org" type="radio" name="is_org" value="0" {{ old('is_org') == 0 ? 'checked' : '' }}>
-                            {{ __('custom.person') }}
-                        </label>
+                        
+
+                        <div class="btn-group user-select" role="group" aria-label="Basic radio toggle button group">
+                            <input id="is_org1" class="btn-check form-control" type="radio" name="is_org" value="1" {{ old('is_org') == 1 ? 'checked' : '' }}>
+                            <label class="btn btn-outline-primary" for="is_org1">Юридическо лице</label>
+                        
+                            <input id="is_org2" class="btn-check form-control" type="radio" name="is_org" value="0" {{ old('is_org') == 0 ? 'checked' : '' }}>
+                            <label class="btn btn-outline-primary" for="is_org2">Физическо лице</label>
+                        </div>
 
                         @error('is_org')
                             <span class="invalid-feedback" role="alert">
