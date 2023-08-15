@@ -116,8 +116,7 @@
         togglePersonal();
     });
     function togglePersonal() {
-        console.log($(this).val());
-        $('#part-person').toggle($(this).val() == 0);
+        $('#part-person').toggle($('input[name="is_org"]:checked').val() == 0);
     }
 </script>
 @endpush

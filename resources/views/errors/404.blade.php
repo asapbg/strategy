@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.site')
 
-@section('title')
+@section('pageTitle')
     {{ __('custom.page_404_text') }}
 @endsection
 

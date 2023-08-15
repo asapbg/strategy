@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +58,7 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
         if (!$data['is_org']) {
-            $rules['last_name'] = ['required_if:is_org,0', 'string', 'max:255'];
+            $rules['last_name'] = ['required', 'string', 'max:255'];
         }
         return Validator::make($data, $rules);
     }
@@ -76,6 +77,7 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'password_changed_at' => Carbon::now(),
         ]);
         
         $role = Role::whereName(env('DEFAULT_ROLE'))->first();
