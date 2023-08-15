@@ -59,6 +59,8 @@ class RegisterController extends Controller
         ];
         if (!$data['is_org']) {
             $rules['last_name'] = ['required', 'string', 'max:255'];
+        } else {
+            $rules['org_name'] = ['required', 'string', 'max:255'];
         }
         return Validator::make($data, $rules);
     }

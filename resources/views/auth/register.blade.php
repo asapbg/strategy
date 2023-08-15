@@ -10,7 +10,7 @@
                 @csrf
 
                 <div class="row mb-3">
-                    <label for="is_org" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.is_org') }}</label>
+                    <label for="is_org" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.is_org') }} <span class="text-danger">*</span></label>
                     
                     <div class="col-md-6">
                         <label>
@@ -22,7 +22,7 @@
                             {{ __('custom.person') }}
                         </label>
 
-                        @error('username')
+                        @error('is_org')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -30,23 +30,38 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <label for="first_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.first_name') }}</label>
+                <div id="part-org">
+                    <div class="row mb-3">
+                        <label for="org_name" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.org_name') }} <span class="text-danger">*</span></label>
 
-                    <div class="col-md-6">
-                        <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" autocomplete="first_name">
+                        <div class="col-md-6">
+                            <input id="org_name" type="text" class="form-control @error('org_name') is-invalid @enderror" name="org_name" value="{{ old('org_name') }}" autocomplete="org_name">
 
-                        @error('first_name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                            @error('org_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
                 <div id="part-person">
                     <div class="row mb-3">
-                        <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.last_name') }}</label>
+                        <label for="first_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.first_name') }} <span class="text-danger">*</span></label>
+    
+                        <div class="col-md-6">
+                            <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" autocomplete="first_name">
+    
+                            @error('first_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.last_name') }} <span class="text-danger">*</span></label>
 
                         <div class="col-md-6">
                             <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" autocomplete="last_name">
@@ -61,7 +76,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('custom.email') }}</label>
+                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('custom.email') }} <span class="text-danger">*</span></label>
 
                     <div class="col-md-6">
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email">
@@ -75,7 +90,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.password') }}</label>
+                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.password') }} <span class="text-danger">*</span></label>
 
                     <div class="col-md-6">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
@@ -89,7 +104,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.password_confirm') }}</label>
+                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.password_confirm') }} <span class="text-danger">*</span></label>
 
                     <div class="col-md-6">
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
@@ -116,7 +131,9 @@
         togglePersonal();
     });
     function togglePersonal() {
-        $('#part-person').toggle($('input[name="is_org"]:checked').val() == 0);
+        var show = $('input[name="is_org"]:checked').val() == 0;
+        $('#part-org').toggle(!show);
+        $('#part-person').toggle(show);
     }
 </script>
 @endpush
