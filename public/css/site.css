@@ -764,4 +764,45 @@ ul.nav.flex-column.footer-nav a {
     background: #fff !important;
   }
 
+/*Register*/
+#register {
+    padding: 60px 0px;
+  }
+
+
+#register .input-group-text{
+    padding: 6px 20px !important;
+    background: #eaf3fb;
+    
+}
+
+
+#register .input-group-text i{
+   color: #20659e  !important;
+}
+
+#register label.btn.btn-outline-primary {
+    height: 58px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+#register  .btn-outline-primary {
+    border-color: #20659e  !important;
+}
+
+
+.user-select {
+    width: 100%;
+}
+
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    background: #20659e  !important;
+    border-color: #20659e  !important;
+    color: #fff !important;
+}
+
   /* end */

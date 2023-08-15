@@ -26,6 +26,7 @@ class UsersSeeder extends Seeder
         $user->password = bcrypt('pass123');
         $user->email_verified_at = Carbon::now();
         $user->password_changed_at = Carbon::now();
+        $user->user_type = User::USER_TYPE_INTERNAL;
         $user->save();
 
         $this->command->info("User with email: $user->email saved");
@@ -53,6 +54,7 @@ class UsersSeeder extends Seeder
             $user->password = bcrypt('pass123');
             $user->email_verified_at = Carbon::now();
             $user->password_changed_at = Carbon::now();
+            $user->user_type = User::USER_TYPE_INTERNAL;
             $user->save();
 
             $this->command->info("User with email: $user->email saved");

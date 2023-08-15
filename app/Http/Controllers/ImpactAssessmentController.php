@@ -46,17 +46,10 @@ class ImpactAssessmentController extends Controller
         $data = array_merge($state, $data);
         session(["forms.$formName" => $data]);
         
-        $inputId = $request->input('inputId', 0);
+        $inputId = $request->input('inputId', false);
         $submit = $request->input('submit');
         
-        $step = $request->input('step', 1);
-        $currentStep = $request->input('currentStep', 1);
-        $rules = config("validation.$formName.step$currentStep");
-        if ($currentStep <= $step || $submit) {
-            $request->validate($rules);
-        }
-        
-        if ($userId || $inputId || $submit) {
+        if (($userId && $inputId) || !$inputId || $submit) {
             $fi = FormInput::find($inputId);
             if (!$fi) {
                 $fi = new FormInput([
@@ -67,6 +60,13 @@ class ImpactAssessmentController extends Controller
             $fi->data = json_encode($data);
             $fi->save();
             $inputId = $fi->id;
+        }
+
+        $step = $request->input('step', 1);
+        $currentStep = $request->input('currentStep', 1);
+        $rules = config("validation.$formName.step$currentStep");
+        if ($currentStep <= $step || $submit) {
+            $request->validate($rules);
         }
 
         if ($submit) {
@@ -95,7 +95,7 @@ class ImpactAssessmentController extends Controller
     
     private function getState($formName, $inputId = null) {
         $state = session("forms.$formName", []);
-        if (!$inputId) $inputId = app('request')->input('inputId');
+        if (!$inputId) $inputId = app('request')->input('inputId', 0);
         if ($inputId) {
             $item = FormInput::find($inputId);
             $state = json_decode($item->data, true);
