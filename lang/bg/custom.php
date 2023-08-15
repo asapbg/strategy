@@ -330,6 +330,6 @@ return [
     'general_info'                    => 'Основна информация',
     'subscriptions'                   => 'Абонаменти',
     'form_inputs'                     => 'Формуляри',
-    'organisation'                    => 'Юридическо лице или ЕТ',
+    'organisation'                    => 'Юридическо лице',
     'person'                          => 'Физическо лице',
 ];

@@ -50,13 +50,16 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $rules = [
             'is_org' => ['required', 'boolean'],
             'first_name' => ['required', 'string', 'max:255'],
-            //'last_name' => ['required_if:is_org,0', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ];
+        if (!$data['is_org']) {
+            $rules['last_name'] = ['required_if:is_org,0', 'string', 'max:255'];
+        }
+        return Validator::make($data, $rules);
     }
 
     /**
@@ -69,9 +72,7 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'is_org' => $data['is_org'],
-            'username' => $data['username'],
             'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
