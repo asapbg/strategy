@@ -22,5 +22,6 @@ Route::controller(ImpactAssessmentController::class)->group(function () {
 
 
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {
-    Route::get('/profile/{tab?}', 'index')->name('site.profile');
+    Route::get('/profile/{tab?}', 'index')->name('profile');
+    Route::post('/profile/{tab?}', 'store')->name('profile.store');
 });

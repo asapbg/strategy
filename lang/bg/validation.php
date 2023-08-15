@@ -268,5 +268,6 @@ return [
         'institution'               => 'Институция',
         'author'                    => 'Автор',
         'highlighted_page'          => 'Водеща страница',
+        'is_org'                    => 'Вид профил',
     ],
 ];

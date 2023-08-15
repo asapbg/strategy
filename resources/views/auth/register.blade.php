@@ -10,10 +10,45 @@
                 @csrf
 
                 <div class="row mb-3">
+                    <label for="is_org" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.is_org') }}</label>
+                    
+                    <div class="col-md-6">
+                        <label>
+                            <input id="is_org" type="radio" name="is_org" value="1" {{ old('is_org') == 1 ? 'checked' : '' }} required>
+                            {{ __('custom.organisation') }}
+                        </label>
+                        <label>
+                            <input id="is_org" type="radio" name="is_org" value="0" {{ old('is_org') == 0 ? 'checked' : '' }} required>
+                            {{ __('custom.person') }}
+                        </label>
+
+                        @error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="username" class="col-md-4 col-form-label text-md-end">{{ __('custom.username') }}</label>
+
+                    <div class="col-md-6">
+                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+
+                        @error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <label for="first_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.first_name') }}</label>
 
                     <div class="col-md-6">
-                        <input id="middle_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
+                        <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name">
 
                         @error('first_name')
                             <span class="invalid-feedback" role="alert">
@@ -23,31 +58,33 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <label for="middle_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.middle_name') }}</label>
+                <div id="part-person">
+                    <div class="row mb-3">
+                        <label for="middle_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.middle_name') }}</label>
 
-                    <div class="col-md-6">
-                        <input id="middle_name" type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name') }}" required autocomplete="middle_name">
+                        <div class="col-md-6">
+                            <input id="middle_name" type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name') }}" autocomplete="middle_name">
 
-                        @error('middle_name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                            @error('middle_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
-                <div class="row mb-3">
-                    <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.last_name') }}</label>
+                    <div class="row mb-3">
+                        <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ __('custom.last_name') }}</label>
 
-                    <div class="col-md-6">
-                        <input id="name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" required autocomplete="last_name">
+                        <div class="col-md-6">
+                            <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" autocomplete="last_name">
 
-                        @error('last_name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                            @error('last_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -99,3 +136,16 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $('input[name="is_org"]').change(togglePersonal);
+        togglePersonal();
+    });
+    function togglePersonal() {
+        console.log($(this).val());
+        $('#part-person').toggle($(this).val() == 0);
+    }
+</script>
+@endpush

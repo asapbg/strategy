@@ -136,7 +136,6 @@ class LoginController extends Controller
             $user->save();
 
             \Auth::logoutOtherDevices(request('password'));
-
             return redirect()->intended($this->redirectPath());
 
         } else {

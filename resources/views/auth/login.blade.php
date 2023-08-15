@@ -63,6 +63,13 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-8">
+                        <a href="{{ url('/password/reset') }}">
+                            {{ __('auth.forgot_password') }}
+                        </a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

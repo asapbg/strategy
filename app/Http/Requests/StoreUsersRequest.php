@@ -25,11 +25,12 @@ class StoreUsersRequest extends FormRequest
     public function rules()
     {
         $must_change_password = $this->offsetGet('must_change_password');
-
+dd($must_change_password);
         $rules = [
+            'is_org'                => ['required', 'boolean'],
             'username'              => ['required', 'unique:users', 'string', 'max:255'],
             'first_name'            => ['required', 'string', 'max:255'],
-            'last_name'             => ['required', 'string', 'max:255'],
+            'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
             'roles'                 => ['required' ,'array', 'min:1'],
         ];

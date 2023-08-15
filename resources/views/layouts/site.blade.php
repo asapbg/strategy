@@ -18,17 +18,13 @@
     <!-- Custom css -->
 <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
 <link href="{{ asset('css/site.css') }}" rel="stylesheet">
+@stack('styles')
 
 <!-- Add favicon -->
 <link rel="icon" href="/img/logo_title.jpg" sizes="16x16 32x32" type="image/png" >
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<script
-  src="https://code.jquery.com/jquery-3.7.0.min.js"
-  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-  crossorigin="anonymous"></script>
 <script src="{{ asset('js/app_vendor.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
+@stack('scripts')
 </head>
 
 <body>
@@ -37,7 +33,7 @@
   <div id="topbar">
     <div class="container">
       <div class="row top">
-        <div class="col-md-8"> 
+        <div class="col-md-5"> 
           <div class="contact-info d-flex align-items-center">
             <a class="navbar-brand" href="#"><img src="/img/logo_title.png" alt="Logo" id="imageLogo"></a>
           </div>
@@ -50,12 +46,38 @@
             <input type="text" class="form-control" id="search-field" placeholder="Търсене в сайта">
             <button class="btn btn-primary">Търсене</button>
           </div>
+        </div>
 
+        <div class="col-md-3 text-end">    
+          <div class="auth">
+            @if(app('auth')->check())
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                @php($user = app('auth')->user())
+                {{ $user->first_name . ' ' . $user->last_name }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="profile-menu">
+                <li>
+                  <a class="dropdown-item" href="{{ route('profile') }}">{{ trans_choice('custom.profiles', 1) }}</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:;"
+                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                      {{ __('auth.logout') }}
+                  </a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                      @csrf
+                  </form>
+                </li>
+              </ul>
+            </div>
+            @else
+            <a class="btn btn-default" href="{{ route('login') }}">{{ __('custom.login') }}</a>
+            <a class="btn btn-default" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+            @endif
+          </div>
         </div>
       </div>
-
-
-
 
     </div>
   </div>
@@ -121,7 +143,7 @@
 
 
 <section class="public-page">
-  <div class="container">
+  <div class="container" id="app">
     @yield('content')
   </div>
 </section>

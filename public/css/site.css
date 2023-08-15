@@ -17,8 +17,8 @@ h1,h2,h3,h4,h5,h6 {
     background: #21659e;
 }
 
-.btn {
-    color: #fff !important;
+nav.navbar .btn {
+    color: #fff;
 }
 
 .btn-primary {
