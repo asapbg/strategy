@@ -1,19 +1,19 @@
 @php($loop = array_key_exists('problem_to_solve', $state) ? count($state['problem_to_solve']) : 1)
 @for($n=0; $n<$loop; $n++)
-<tr>
-    <td colspan="2">
+<div class="row">
+    <div class="col-sm-12">
         <h5>{{ isset($point) ? $point : '1.3' }}.{{ $n+1 }}. По проблем {{ $n+1 }}:</h5>
-    </td>
-</tr>
+    </div>
+</div>
 @php($loop2 = Arr::get($state, "variants.$n", false) ? count(Arr::get($state, "variants.$n")) : 1)
 @for($m=0; $m<$loop2; $m++)
-<tr>
-    <td colspan="2">
+<div class="row">
+    <div class="col-sm-12">
         <h6>Вариант {{ $m+1 }}:</h6>
-    </td>
-</tr>
-<tr>
-    <td colspan="2">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
         @include('form_partials.textarea', ['name' => "variants[$n][$m][description]", 'label' => 'forms.description', 'value' => Arr::get($state, "variants.$n.$m.description")])
 
         @include('form_partials.textarea', ['name' => "variants[$n][$m][positive_impact]", 'label' => 'forms.positive_impact', 'value' => Arr::get($state, "variants.$n.$m.positive_impact")])
@@ -33,12 +33,12 @@
                 1.2. Опишете специфичните въздействия с акцент върху малките и средните предприятия и административната тежест (задължения за информиране, такси, регулаторни режими, административни услуги и др.)
             </i>
         </p>
-    </td>
-</tr>
+    </div>
+</div>
 @endfor
-<tr>
-    <td colspan="2">
+<div class="row">
+    <div class="col-sm-12">
     @include('form_partials.add_array_button', ['name' => "variants.$n", 'buttonLabel' => 'forms.variant'])
-    </td>
-</tr>
+    </div>
+</div>
 @endfor

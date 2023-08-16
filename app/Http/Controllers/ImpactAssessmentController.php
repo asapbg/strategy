@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FormInput;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class ImpactAssessmentController extends Controller
@@ -11,25 +12,26 @@ class ImpactAssessmentController extends Controller
     public function index()
     {
     }
-    
+
     public function form($formName, Request $request)
     {
         $state = $this->getState($formName);
         $step = $request->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = $request->input('inputId', 0);
+
+        //dd(session()->all());
         return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId'));
     }
 
     public function store($formName, Request $request)
     {
         $userId = app('auth')->id();
-        $state = $this->getState($formName);
-        $data = $request->except(['_token', 'currentStep']);
+        $data = $request->except(['_token']);
         if (array_key_exists('add_entry', $data)) {
             $key = \Str::endsWith($data['add_entry'], '[]')
-                ? substr($data['add_entry'], 0, -2)
-                : $data['add_entry'];
+            ? substr($data['add_entry'], 0, -2)
+            : $data['add_entry'];
             $value = data_get($data, $key);
             array_push($value, '');
             data_set($data, $key, $value);
@@ -43,15 +45,19 @@ class ImpactAssessmentController extends Controller
             unset($data['add_array_entry']);
         }
         
-        $data = array_merge($state, $data);
-        session(["forms.$formName" => $data]);
-        
         $inputId = $request->input('inputId', false);
         $submit = $request->input('submit');
-        
-        if (($userId && $inputId) || !$inputId || $submit) {
+        $state = $this->getState($formName, $inputId);
+
+        $data = array_merge($state, $data);
+        $data['inputId'] = $inputId;
+        session(["forms.$formName" => $data]);
+
+        if ($userId || !$inputId || $submit) {
             $fi = FormInput::find($inputId);
-            if (!$fi) {
+            if ($fi) {
+                $data = array_merge($data);
+            } else {
                 $fi = new FormInput([
                     'form' => $formName,
                     'user_id' => $userId,
@@ -66,7 +72,12 @@ class ImpactAssessmentController extends Controller
         $currentStep = $request->input('currentStep', 1);
         $rules = config("validation.$formName.step$currentStep");
         if ($currentStep <= $step || $submit) {
-            $request->validate($rules);
+            $validator = Validator::make($data, $rules);
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('impact_assessment.form', ['form' => $formName, 'step' => $currentStep, 'inputId' => $inputId])
+                    ->withErrors($validator->errors());
+            }
         }
 
         if ($submit) {
@@ -92,8 +103,9 @@ class ImpactAssessmentController extends Controller
         $pdf = PDF::loadView('impact_assessment.pdf', compact('formName', 'steps', 'state', 'readOnly'));
         return $pdf->download("$formName.pdf");
     }
-    
-    private function getState($formName, $inputId = null) {
+
+    private function getState($formName, $inputId = null)
+    {
         $state = session("forms.$formName", []);
         if (!$inputId) $inputId = app('request')->input('inputId', 0);
         if ($inputId) {
@@ -103,7 +115,8 @@ class ImpactAssessmentController extends Controller
         return $state;
     }
 
-    private function getSteps($formName) {
+    public static function getSteps($formName)
+    {
         return count(\File::allFiles(resource_path("views/form_partials/$formName/steps")));
     }
 }

@@ -760,7 +760,7 @@ ul.nav.flex-column.footer-nav a {
 /*Register*/
 #register {
     padding: 60px 0px;
-  }
+}
 
 
 #register .input-group-text{
@@ -798,4 +798,7 @@ ul.nav.flex-column.footer-nav a {
     color: #fff !important;
 }
 
+.invalid-feedback {
+    display: block;
+}
   /* end */

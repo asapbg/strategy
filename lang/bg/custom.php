@@ -332,4 +332,6 @@ return [
     'form_inputs'                     => 'Формуляри',
     'organisation'                    => 'Юридическо лице',
     'person'                          => 'Физическо лице',
+    'draft'                           => 'Чернова',
+    'completed'                       => 'Завършен',
 ];

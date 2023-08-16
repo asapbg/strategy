@@ -1,19 +1,12 @@
-<table class="table" width="100%">
-    <tr>
-        <td colspan="2">
-            <h3>1.2. Цели:</h3>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            @include('form_partials.shared.goals')
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <h3>1.3. Варианти за действие:</h3>
-            @include('form_partials.shared.variant_simple')
-        </td>
-    </tr>
-
-</table>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>1.2. Цели:</h3>
+        @include('form_partials.shared.goals')
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>1.3. Варианти за действие:</h3>
+        @include('form_partials.shared.variant_simple')
+    </div>
+</div>
