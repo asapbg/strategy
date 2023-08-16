@@ -3,73 +3,77 @@
 @section('pageTitle', __('auth.login'))
 
 @section('content')
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            @error('username')
-            <div class="alert alert-danger mt-1">
-                {{ $message }}
-            </div>
-            @enderror
-
-            @error('error')
-            <div class="alert alert-danger mt-1">
-                {{ $message }}
-            </div>
-            @enderror
-
-            <div class="input-group mb-3">
-                <input type="text" name="username" class="form-control" required
-                        @if(old('username')) value="{{ old('username') }} @else placeholder="{{ __('auth.username') }}" @endif">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="password" name="password" class="form-control" required autocomplete="current-password"
-                        @if(old('password')) value="{{ old('password') }} @else placeholder="{{ __('auth.password') }}" @endif">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
-                    </div>
-                </div>
-            </div>
-
-            {{--If more then one guard is used in the app use this--}}
-            <div class="form-group d-none">
-                <select name="provider" id="provider" class="form-control">
-                    <option value="ldap" @if(old('provider') == 'ldap') @endif>Активна директория(ActiveDirectory)</option>
-                    <option value="db" @if(old('provider') == 'db') @endif selected>Вътрешен потребител</option>
-                </select>
-            </div>
-
+<form method="POST" action="{{ route('login') }}">
+    @csrf
+    <section id="login">
+        <div class="container">
             <div class="row">
-                <div class="col-8">
-                    <div class="icheck-primary">
-                        <input type="checkbox" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                        <label for="remember">
-                            {{ __('validation.attributes.rememberme') }}
-                        </label>
+                <div class="col-md-6 offset-md-3">
+
+                    @error('username')
+                        <div class="alert alert-danger mt-1">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    @error('error')
+                        <div class="alert alert-danger mt-1">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <div class="login-form p-4">
+                        <div class="input-group">
+                            <div class="flex-grow-1 form-floating">
+                                <input type="text" name="username" class="form-control" required
+                                    @if (old('username')) value="{{ old('username') }} @else placeholder="{{ __('validation.attributes.email') }}" @endif">
+                                <label for="floatingInput">
+                                    {{ __('validation.attributes.email') }}
+                                </label>
+                            </div>
+                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+
+
+                            <div class="input-group mt-3 mb-3">
+                                <div class="flex-grow-1 form-floating">
+                                    <input type="password" name="password" class="form-control" required autocomplete="current-password"
+                                        @if (old('password')) value="{{ old('password') }} @else placeholder="{{ __('auth.password') }}" @endif">
+                                    <label>
+                                        {{ __('validation.attributes.password') }}
+                                    </label>
+                                </div>
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+
+                            </div>
+
+
+                            <div class="login-remember w-100">
+
+                                <div class="checkbox mb-3">
+                                    <label class="d-flex">
+                                        <input type="checkbox" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                        {{ __('validation.attributes.rememberme') }}
+                                    </label>
+                                </div>
+
+                                <div class="forgot-password mb-3">
+                                    <a href="{{ url('/password/reset') }}">
+                                        {{ __('auth.forgot_password') }}
+                                    </a>
+                                </div>
+                            </div>
+                            <button class="cstm-btn w-100 btn btn-lg rounded" type="submit"><span class="btn-label"><i
+                                class="fa-solid fa-right-to-bracket main-color"
+                                style="margin-right:10px"></i></span>
+                                {{ __('auth.login') }}
+                                </button>
+                        </div>
+
+
                     </div>
                 </div>
-
-                <div class="col-4">
-                    <button type="submit" class="btn btn-primary btn-block">{{ __('auth.login') }}</button>
-                </div>
             </div>
-
-            <div class="row">
-                <div class="col-8">
-                    <a href="{{ url('/password/reset') }}">
-                        {{ __('auth.forgot_password') }}
-                    </a>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
+    </section>
+</form>
 @endsection
