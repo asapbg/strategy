@@ -81,4 +81,10 @@ return [
             'date' => 'required',
         ],
     ],
+
+    'form3' => [
+        'step1' => [
+            'problem_to_solve.*' => 'required',
+        ],
+    ],
 ];

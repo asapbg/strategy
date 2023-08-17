@@ -11,6 +11,7 @@ class ImpactAssessmentController extends Controller
 {
     public function index()
     {
+        return view('impact_assessment.index');
     }
 
     public function form($formName, Request $request)
@@ -28,6 +29,16 @@ class ImpactAssessmentController extends Controller
     {
         $userId = app('auth')->id();
         $data = $request->except(['_token']);
+
+        $dataDots = \Arr::dot(\Arr::except($data, ['step', 'currentStep']));
+        $isDataEmpty = true;
+        foreach($dataDots as $dd) {
+            if (!empty($dd)) {
+                $isDataEmpty = false;
+                break;
+            }
+        }
+
         if (array_key_exists('add_entry', $data)) {
             $key = \Str::endsWith($data['add_entry'], '[]')
             ? substr($data['add_entry'], 0, -2)
@@ -53,10 +64,10 @@ class ImpactAssessmentController extends Controller
         $data['inputId'] = $inputId;
         session(["forms.$formName" => $data]);
 
-        if ($userId || !$inputId || $submit) {
+        if (!$isDataEmpty && ($userId || !$inputId || $submit)) {
             $fi = FormInput::find($inputId);
             if ($fi) {
-                $data = array_merge($data);
+                $data = array_merge($data, $state);
             } else {
                 $fi = new FormInput([
                     'form' => $formName,
