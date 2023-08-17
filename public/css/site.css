@@ -638,23 +638,24 @@ textarea {
 /*Single page - Consultations*/
 .slider {
     padding: 60px 0px;
-    background: url(/img/gray-bgr.jpg);
+    background: url(../img/slider-img.png);
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     /* background: #fafafa;*/
 }
 
 .page-heading h1 {
-    color: #333 !important;
+    color: #fff !important;
 }
 
 .breadcrumbs a {
-    color: #333 !important;
+    color: #fff !important;
     text-decoration: none;
 }
 
 .breadcrumbs {
-    color: #333 !important;
+    color: #fff !important;
 }
+
 
 input#startdate {
     border-top-right-radius: 0px !important;
