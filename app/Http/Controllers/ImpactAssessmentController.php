@@ -63,11 +63,11 @@ class ImpactAssessmentController extends Controller
         $data = array_merge($state, $data);
         $data['inputId'] = $inputId;
         session(["forms.$formName" => $data]);
-
+        
         if (!$isDataEmpty && ($userId || !$inputId || $submit)) {
             $fi = FormInput::find($inputId);
             if ($fi) {
-                $data = array_merge($data, $state);
+                $state = $this->getState($formName, $inputId);
             } else {
                 $fi = new FormInput([
                     'form' => $formName,

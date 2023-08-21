@@ -7,7 +7,14 @@
 <div class="row">
     <div class="col-sm-12">
         <h4>1. {{ __('forms.problem_to_solve') }}</h4>
-        @include('form_partials.shared.problems')
+        <p>
+            <i>1.1.	Описание на проблема/ите или въпросите, които се уреждат с проекта на нормативен акт (винаги, когато е възможно, проблемът трябва да има количествен показател (Ръководство, РМС № 728 от 2019 г., стр. 19)). Описание на причините за тяхното възникване;
+            <br>
+            1.2.	Описание на проблемите в прилагането на съществуващото законодателство;
+            <br>
+            1.3.	Описание на нововъзникналите обстоятелства.</i>
+        </p>
+        @include('form_partials.array_textarea', ['name' => 'problem_to_solve[]', 'buttonLabel' => 'custom.problem'])
     </div>
 </div>
 
@@ -20,6 +27,3 @@
     </i>
 </p>
 @include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party'])
-
-<h3>3. {{ __('forms.goal_goals') }}</h3>
-@include('form_partials.shared.goals')

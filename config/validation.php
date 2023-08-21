@@ -85,6 +85,25 @@ return [
     'form3' => [
         'step1' => [
             'problem_to_solve.*' => 'required',
+            'interested_parties.*.text' => 'required',
+            'interested_parties.*.number' => 'required',
         ],
+        'step2' => [
+            'goals.*.*' => 'required',
+            'variant_simple.*.*' => 'required',
+        ],
+        'step3' => [
+            'variants.*.*.economic_impacts' => 'required',
+            'variants.*.*.social_impact' => 'required',
+            'variants.*.*.ecologic_impact' => 'required',
+            'variants.*.*.specific_impact_1' => 'required',
+            'variants.*.*.specific_impact_2' => 'required',
+            'quality_assessment' => 'required',
+        ],
+        'step4' => [],
+        'step5' => [],
+        'step6' => [],
+        'step7' => [],
+        'step8' => [],
     ],
 ];
