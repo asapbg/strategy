@@ -19,6 +19,6 @@
 @endfor
 <tr>
     <td colspan="3">
-        @include('form_partials.add_array_button', ['name' => $nameSimple, 'buttonLabel' => "forms.$nameSimple"])
+        @include('form_partials.add_array_button', ['name' => $nameSimple, 'buttonLabel' => $buttonLabel ? $buttonLabel : "forms.$nameSimple"])
     </td>
 </tr>

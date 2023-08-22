@@ -62,4 +62,6 @@ return [
     'specific_impact' => 'Специфично въздействие',
     // Form 4
     'abbreviation' => 'Абревиатура',
+    'figure' => 'Фигура',
+    'table' => 'Таблица',
 ];
