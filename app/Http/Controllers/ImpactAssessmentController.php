@@ -59,12 +59,12 @@ class ImpactAssessmentController extends Controller
         $inputId = $request->input('inputId', false);
         $submit = $request->input('submit');
         $state = $this->getState($formName, $inputId);
-
-        $data = array_merge($state, $data);
-        $data['inputId'] = $inputId;
-        session(["forms.$formName" => $data]);
         
-        if (!$isDataEmpty && ($userId || !$inputId || $submit)) {
+        $data = array_merge($state, $data);
+        if ($inputId) $data['inputId'] = $inputId;
+        session(["forms.$formName" => $data]);
+
+        if (!$isDataEmpty && (($userId && !$inputId) || $submit)) {
             $fi = FormInput::find($inputId);
             if ($fi) {
                 $state = $this->getState($formName, $inputId);
@@ -78,10 +78,11 @@ class ImpactAssessmentController extends Controller
             $fi->save();
             $inputId = $fi->id;
         }
-
+        
         $step = $request->input('step', 1);
         $currentStep = $request->input('currentStep', 1);
         $rules = config("validation.$formName.step$currentStep");
+        
         if ($currentStep <= $step || $submit) {
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {

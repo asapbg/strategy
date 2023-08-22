@@ -106,4 +106,14 @@ return [
         'step7' => [],
         'step8' => [],
     ],
+    'form4' => [
+        'step1' => [
+            'abbreviations.*.abbreviation' => 'required',
+            'abbreviations.*.meaning' => 'required',
+            'figures.*.number' => 'required',
+            'figures.*.text' => 'required',
+            'tables.*.number' => 'required',
+            'tables.*.text' => 'required',
+        ],
+    ],
 ];
