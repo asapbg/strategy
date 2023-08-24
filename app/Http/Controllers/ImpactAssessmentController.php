@@ -40,16 +40,14 @@ class ImpactAssessmentController extends Controller
         }
 
         if (array_key_exists('add_entry', $data)) {
-            $key = \Str::endsWith($data['add_entry'], '[]')
-            ? substr($data['add_entry'], 0, -2)
-            : $data['add_entry'];
+            $key = $this->getKeyDots($data['add_entry']);
             $value = data_get($data, $key);
             array_push($value, '');
             data_set($data, $key, $value);
             unset($data['add_entry']);
         }
         if (array_key_exists('add_array_entry', $data)) {
-            $key = $data['add_array_entry'];
+            $key = $this->getKeyDots($data['add_array_entry']);
             $value = data_get($data, $key, [[]]);
             array_push($value, []);
             data_set($data, $key, $value);
@@ -97,6 +95,15 @@ class ImpactAssessmentController extends Controller
             return view('impact_assessment.submitted', compact('formName', 'inputId'));
         }
         return redirect()->route('impact_assessment.form', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]);
+    }
+
+    private function getKeyDots($key) {
+        $key = \Str::endsWith($key, '[]')
+            ? substr($key, 0, -2)
+            : $key;
+        $key = str_replace('[', '.', $key);
+        $key = str_replace(']', '', $key);
+        return $key;
     }
 
     public function show($formName, $inputId)

@@ -108,12 +108,27 @@ return [
     ],
     'form4' => [
         'step1' => [
-            'abbreviations.*.abbreviation' => 'required',
-            'abbreviations.*.meaning' => 'required',
-            'figures.*.number' => 'required',
-            'figures.*.text' => 'required',
-            'tables.*.number' => 'required',
-            'tables.*.text' => 'required',
         ],
+        'step2' => [
+            'resume' => 'required',
+            'introduction' => 'required',
+            'goals.*' => 'required',
+        ],
+        'step3' => [
+            'investigate_changes' => 'required',
+            'problems.*' => 'required',
+            'resources_used' => 'required',
+            'achieved_results' => 'required',
+            'direct_effects' => 'required',
+            'impacts' => 'required',
+            'links_regulatory_acts' => 'required',
+            'main_highlights' => 'required',
+            'results_court' => 'required',
+        ],
+        'step4' => [],
+        'step5' => [],
+        'step6' => [],
+        'step7' => [],
+        'step8' => [],
     ],
 ];

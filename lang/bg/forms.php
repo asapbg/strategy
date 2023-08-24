@@ -64,4 +64,6 @@ return [
     'abbreviation' => 'Абревиатура',
     'figure' => 'Фигура',
     'table' => 'Таблица',
+    'change' => 'Изменение',
+    'question' => 'Въпрос',
 ];

@@ -1,13 +1,15 @@
 @php
     $nameSimple = Str::substr($name, 0, -2);
-    $loop = array_key_exists($nameSimple, $state) ? count($state[$nameSimple]) : 1;
+    $nameDots = str_replace('[', '.', $nameSimple);
+    $nameDots = str_replace(']', '', $nameDots);
+    $loop = \Arr::has($state, $nameDots) ? count(data_get($state, $nameDots)) : 1;
 @endphp
 <table width="100%">
     @for($a=0; $a<$loop; $a++)
     <tr>
         <td>
             @php($label = __($buttonLabel) . ' ' . $a+1)
-            @include('form_partials.textarea', ['value' => array_key_exists($nameSimple, $state) ? $state[$nameSimple][$a] : '', 'nameDots' => "$nameSimple.$a"])
+            @include('form_partials.textarea', ['nameDots' => "$nameDots.$a"])
         </td>
         <td width="50">
             @if($a > 0)

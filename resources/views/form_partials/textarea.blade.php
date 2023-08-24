@@ -6,7 +6,7 @@ if (!isset($nameDots)) {
     $nameDots = str_replace('[', '.', $name);
     $nameDots = str_replace(']', '', $nameDots);
 }
-$value = isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '');
+$value = isset($value) ? $value : (\Arr::has($state, $nameDots) ? data_get($state, $nameDots) : '');
 @endphp
 @if (isset($readOnly))
 <p>{{ $value }}</p>
