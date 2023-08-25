@@ -11,7 +11,6 @@
                     &quot;{{ $fi->dataParsed['regulatory_act'] }}&quot;
                 @endif
                 - {{ $fi->created_at }}
-                {{ $fi->dataParsed['step'] }}
             </a>
         </div>
         <div class="col-sm-4">
