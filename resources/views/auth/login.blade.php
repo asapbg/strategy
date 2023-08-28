@@ -51,7 +51,7 @@
 
                                 <div class="checkbox mb-3">
                                     <label class="d-flex">
-                                        <input type="checkbox" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                        <input class="me-1" type="checkbox" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                         {{ __('validation.attributes.rememberme') }}
                                     </label>
                                 </div>

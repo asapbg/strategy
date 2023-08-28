@@ -13,20 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('institution_level', function (Blueprint $table) {
+        Schema::create('country', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('system_name');
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
         });
 
-        Schema::create('institution_level_translations', function (Blueprint $table) {
+        Schema::create('country_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('locale')->index();
-            $table->unsignedInteger('institution_level_id');
-            $table->unique(['institution_level_id', 'locale']);
-            $table->foreign('institution_level_id')
+            $table->unsignedInteger('country_id');
+            $table->unique(['country_id', 'locale']);
+            $table->foreign('country_id')
                 ->references('id')
-                ->on('institution_level');
+                ->on('country');
 
             $table->string('name');
         });

@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class  UsersController extends Controller
             ->get(['id','display_name']);
 
         //\DB::enableQueryLog();
-        $users = User::with(['roles'])
+        $users = User::with(['roles', 'institution', 'institution.translation'])
             ->when($role_id, function ($query, $role_id) {
                 return $query->whereHas('roles', function ($q) use ($role_id) {
                     $q->where('id', $role_id);
@@ -107,8 +108,9 @@ class  UsersController extends Controller
         }
 
         $roles = Role::whereActive(true)->orderBy('display_name', 'asc')->get();
-
-        return $this->view('admin.users.create', compact('roles'));
+        $rolesRequiredInstitutions = User::ROLES_WITH_INSTITUTION;
+        $institutions = Institution::optionsList();
+        return $this->view('admin.users.create', compact('roles', 'rolesRequiredInstitutions', 'institutions'));
     }
 
     /**
@@ -122,6 +124,10 @@ class  UsersController extends Controller
         $must_change_password = ($request->filled('must_change_password')) ? true : null;
         $data = $request->except(['_token','password_confirmation','roles']);
         $roles = $request->offsetGet('roles');
+        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
+        if(count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0) {
+            unset($data['institution_id']);
+        }
 
         DB::beginTransaction();
 
@@ -170,8 +176,9 @@ class  UsersController extends Controller
         }
 
         $roles = Role::whereActive(true)->orderBy('display_name', 'asc')->get();
-
-        return $this->view('admin.users.edit', compact('user', 'roles'));
+        $rolesRequiredInstitutions = User::ROLES_WITH_INSTITUTION;
+        $institutions = Institution::optionsList();
+        return $this->view('admin.users.edit', compact('user', 'roles', 'rolesRequiredInstitutions', 'institutions'));
     }
 
     /**
@@ -185,6 +192,7 @@ class  UsersController extends Controller
     {
         $data = $request->except(['_token','roles']);
         $roles = $request->offsetGet('roles');
+        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
 
         DB::beginTransaction();
 
@@ -197,6 +205,7 @@ class  UsersController extends Controller
             $user->email = $data['email'];
             $user->active = $data['active'];
             $user->activity_status = $data['activity_status'];
+            $user->institution_id = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
 
             $user->syncRoles($roles);
 
@@ -241,7 +250,7 @@ class  UsersController extends Controller
      * @param UpdateUsersRequest $request
      * @return RedirectResponse
      */
-    public function updateProfile(User $user, UpdateUsersRequest $request)
+    public function updateProfile(UpdateUsersRequest $request, User $user)
     {
         $data = $request->except(['_token']);
 

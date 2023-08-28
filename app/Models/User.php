@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,15 @@ class User extends Authenticatable
 
     const USER_TYPE_EXTERNAL = 2;
     const USER_TYPE_INTERNAL = 1;
+
+    const ROLES_WITH_INSTITUTION = [
+        'moderator-advisory',
+        'moderator-strategic',
+        'moderator-legal',
+        'moderator-advisory-boards',
+        'moderator-advisory-board',
+        'moderator-partnership',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -116,6 +126,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(CustomActivity::class, 'causer_id', 'id');
     }
+
+    public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Institution::class, 'id', 'institution_id');
+    }
+
 
     /**
      * Return the user's full name if not empty

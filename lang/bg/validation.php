@@ -270,5 +270,6 @@ return [
         'highlighted_page'          => 'Водеща страница',
         'is_org'                    => 'Вид профил',
         'org_name'                        => 'Име на организацията',
+        'institution_id'            => 'Институция',
     ],
 ];

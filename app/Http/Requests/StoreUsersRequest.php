@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,15 +26,19 @@ class StoreUsersRequest extends FormRequest
     public function rules()
     {
         $must_change_password = $this->offsetGet('must_change_password');
-dd($must_change_password);
         $rules = [
-            'is_org'                => ['required', 'boolean'],
+//            'is_org'                => ['required', 'boolean'],
             'username'              => ['required', 'unique:users', 'string', 'max:255'],
             'first_name'            => ['required', 'string', 'max:255'],
             'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
             'roles'                 => ['required' ,'array', 'min:1'],
         ];
+        $roles = request()->input('roles');
+        if( $roles && count(array_intersect(rolesNames($roles), User::ROLES_WITH_INSTITUTION)) != 0 ) {
+            $rules['institution_id'] = ['required', 'numeric', 'exists:institution,id'];
+        }
+
         if(!$must_change_password) {
             $rules = array_merge($rules, self::passwordRequestValidationRules());
         }

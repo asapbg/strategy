@@ -183,3 +183,23 @@ if (!function_exists('l_trans')) {
         return mb_strtolower(trans_choice($value, $count));
     }
 }
+
+if (!function_exists('rolesNames')) {
+
+    /**
+     * Get roles names by id
+     *
+     * @method rolesNames
+     * @param array  $ids
+     *
+     * @return array
+     */
+    function rolesNames(array $ids)
+    {
+        $roles = [];
+        if( sizeof($ids) ) {
+            $roles = \Spatie\Permission\Models\Role::whereIn('id', $ids)->get()->pluck('name')->toArray();
+        }
+        return $roles;
+    }
+}

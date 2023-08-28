@@ -74,6 +74,24 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="form-group @if(count(array_intersect(old('roles') ? rolesNames(old('roles')) : $user->roles->pluck('name')->toArray(), $rolesRequiredInstitutions)) === 0) d-none @endif" id="institution_select">
+                                    <label class="col-sm-12 control-label" for="email">
+                                        {{ __('validation.attributes.institution_id') }}
+                                    </label>
+                                    <div class="col-12">
+                                        <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
+                                            <option value="" @if((is_null(old('roles')) || !sizeof(old('roles'))) && !$user->roles->count()) selected @endif>---</option>
+                                            @if(isset($institutions) && $institutions->count())
+                                                @foreach($institutions as $inst)
+                                                <option value="{{ $inst->id }}" @if(old('institution_id', (isset($user) ? $user->institution_id : '')) == $inst->id) selected @endif>{{ $inst->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('institution_id')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -171,6 +189,9 @@
                                                name="roles[]"
                                                id="role_{{ $role->id }}"
                                                value="{{ $role->id }}"
+                                               @if(isset($rolesRequiredInstitutions) && sizeof($rolesRequiredInstitutions) && in_array(rolesNames([$role->id])[0], $rolesRequiredInstitutions))
+                                                   data-institution="1"
+                                               @endif
                                                @if (in_array($role->id, $user_roles)) checked @endif
                                         >
                                         <label for="role_{{ $role->id }}">{{ $role->display_name }}</label>
@@ -199,3 +220,19 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.roles').on('change', function (){
+                let selectedRoles = $('.roles:checked').map(function () {
+                    return $(this).data('institution')
+                }).get();
+                if(jQuery.inArray(1, selectedRoles) !== -1) {
+                    $('#institution_select').removeClass('d-none');
+                } else {
+                    $('#institution_select').addClass('d-none');
+                }
+            });
+        });
+    </script>
+@endpush
