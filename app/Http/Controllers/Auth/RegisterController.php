@@ -79,6 +79,7 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
+            'username' => $data['email'],
             'password' => Hash::make($data['password']),
             'password_changed_at' => Carbon::now(),
         ]);
