@@ -63,7 +63,7 @@
             </div>
   
             <div class="col-md-3">
-              <a href="#" class="box-link dark-blue-bgr">
+              <a href="{{ route('impact_assessment.index') }}" class="box-link dark-blue-bgr">
                 <div class="info-box">
                   <div class="icon-wrap">
                     <i class="fa fa-book text-light"></i>
