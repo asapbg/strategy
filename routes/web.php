@@ -25,9 +25,7 @@ Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->g
 
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
-
-    Route::get('/admin', [AdminHomeController::class, 'index'])->name('admin.home');
-    Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('front.logout');
 
     Route::get('/locale', function (Request $request) {
         if ($request->has('locale')) {

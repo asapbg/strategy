@@ -136,7 +136,8 @@ class LoginController extends Controller
             $user->save();
 
             \Auth::logoutOtherDevices(request('password'));
-            return redirect()->intended($this->redirectPath());
+            $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin' : $this->redirectPath();
+            return redirect()->intended($route);
 
         } else {
 

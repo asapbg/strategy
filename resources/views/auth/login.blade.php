@@ -25,7 +25,7 @@
                     <div class="login-form p-4">
                         <div class="input-group">
                             <div class="flex-grow-1 form-floating">
-                                <input type="text" name="username" class="form-control" required
+                                <input type="text" name="username" class="form-control"
                                     @if (old('username')) value="{{ old('username') }} @else placeholder="{{ __('validation.attributes.email') }}" @endif">
                                 <label for="floatingInput">
                                     {{ __('validation.attributes.email') }}
@@ -36,7 +36,7 @@
 
                             <div class="input-group mt-3 mb-3">
                                 <div class="flex-grow-1 form-floating">
-                                    <input type="password" name="password" class="form-control" required autocomplete="current-password"
+                                    <input type="password" name="password" class="form-control" autocomplete="current-password"
                                         @if (old('password')) value="{{ old('password') }} @else placeholder="{{ __('auth.password') }}" @endif">
                                     <label>
                                         {{ __('validation.attributes.password') }}
@@ -73,17 +73,17 @@
 
                         </div>
                         <div class="row">
+                            <button class="col-12 cstm-btn btn btn-lg rounded" type="submit"><span class="btn-label"><i
+                                        class="fa-solid fa-right-to-bracket main-color"
+                                        style="margin-right:10px"></i></span>
+                                {{ __('auth.login') }}
+                            </button>
                             <a class="col-12 cstm-btn btn btn-lg rounded" href="{{ route('eauth.login') }}">
                                 <span class="btn-label"><i
                                         class="fa-solid fa-lock main-color"
                                         style="margin-right:10px"></i></span>
                                 {{ __('eauth.with_e_auth') }}
                             </a>
-                            <button class="col-12 cstm-btn btn btn-lg rounded" type="submit"><span class="btn-label"><i
-                                        class="fa-solid fa-right-to-bracket main-color"
-                                        style="margin-right:10px"></i></span>
-                                {{ __('auth.login') }}
-                            </button>
                         </div>
 
                     </div>
