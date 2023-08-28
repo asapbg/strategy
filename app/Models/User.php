@@ -29,6 +29,8 @@ class User extends Authenticatable
 
     const PAGINATE = 20;
 
+    const EXTERNAL_USER_DEFAULT_ROLE = 'external-user';
+
     const USER_TYPE_EXTERNAL = 2;
     const USER_TYPE_INTERNAL = 1;
 

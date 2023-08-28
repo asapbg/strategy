@@ -82,8 +82,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'password_changed_at' => Carbon::now(),
         ]);
-        
-        $role = Role::whereName(env('DEFAULT_ROLE'))->first();
+
+        $role = Role::whereName(User::EXTERNAL_USER_DEFAULT_ROLE)->first();
         $user->assignRole($role);
 
         return $user;
