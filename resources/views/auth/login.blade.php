@@ -56,11 +56,19 @@
                                     </label>
                                 </div>
 
-                                <div class="forgot-password mb-3">
-                                    <a href="{{ url('/password/reset') }}">
-                                        {{ __('auth.forgot_password') }}
-                                    </a>
-                                </div>
+{{--                                <div class="forgot-password mb-3">--}}
+{{--                                    <a href="{{ url('/password/reset') }}">--}}
+{{--                                        {{ __('auth.forgot_password') }}--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+                            </div>
+                            <div class="mb-2">
+                                <a class="d-inline-block w-100" href="{{ route('forgot_pass') }}">
+                                    {{ __('auth.forgot_password') }}
+                                </a>
+                                <a href="{{ route('register') }}">
+                                    {{ __('auth.do_not_have_account') }}
+                                </a>
                             </div>
                             <button class="cstm-btn w-100 btn btn-lg rounded" type="submit"><span class="btn-label"><i
                                 class="fa-solid fa-right-to-bracket main-color"

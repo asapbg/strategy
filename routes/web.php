@@ -15,6 +15,12 @@ Auth::routes(['verify' => true]);
 
 require_once('site.php');
 
+Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
+    Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
+    Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
+    Route::post('/forgot-password/update',                'confirmPassword')->name('forgot_pass.password.update');
+});
+
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
 

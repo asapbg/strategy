@@ -10,12 +10,12 @@
                 @csrf
                 <div class="row mb-3">
                     <label for="is_org" class="col-md-4 col-form-label text-md-end">{{ __('validation.attributes.is_org') }} <span class="text-danger">*</span></label>
-                    
+
                     <div class="col-md-6">
                         <div class="btn-group user-select" role="group" aria-label="Basic radio toggle button group">
                             <input id="is_org1" class="btn-check form-control" type="radio" name="is_org" value="1" {{ old('is_org') == 1 ? 'checked' : '' }}>
                             <label class="btn btn-outline-primary" for="is_org1">Юридическо лице</label>
-                        
+
                             <input id="is_org2" class="btn-check form-control" type="radio" name="is_org" value="0" {{ old('is_org') == 0 ? 'checked' : '' }}>
                             <label class="btn btn-outline-primary" for="is_org2">Физическо лице</label>
                         </div>
@@ -118,6 +118,11 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                </div>
+                <div class="mb-2">
+                    <a href="{{ route('login') }}">
+                        {{ __('auth.already_have_account') }}
+                    </a>
                 </div>
 
                 <div class="row mb-0">

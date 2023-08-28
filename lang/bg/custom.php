@@ -334,4 +334,5 @@ return [
     'person'                          => 'Физическо лице',
     'draft'                           => 'Чернова',
     'completed'                       => 'Завършен',
+    'btn.reset_password'              => 'Смени парола',
 ];
