@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class StoreUsersRequest extends FormRequest
@@ -34,6 +35,13 @@ class StoreUsersRequest extends FormRequest
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
             'roles'                 => ['required' ,'array', 'min:1'],
         ];
+
+        if( request()->input('id') ) {
+            $rules['email'][] = Rule::unique('users', 'email')->ignore((int)request()->input('id'));
+        } else {
+            $rules['email'][] = 'unique:users,email';
+        }
+
         $roles = request()->input('roles');
         if( $roles && count(array_intersect(rolesNames($roles), User::ROLES_WITH_INSTITUTION)) != 0 ) {
             $rules['institution_id'] = ['required', 'numeric', 'exists:institution,id'];

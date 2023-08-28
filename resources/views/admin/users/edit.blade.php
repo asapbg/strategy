@@ -9,7 +9,7 @@
 
                     <form action="{{ route('admin.users.update', $user->id) }}" method="post" name="form" id="form">
                         @csrf
-
+                        <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
