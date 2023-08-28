@@ -203,3 +203,47 @@ if (!function_exists('rolesNames')) {
         return $roles;
     }
 }
+
+if (!function_exists('getLocaleId')) {
+
+    /**
+     * returns id of the current locale based on configuration
+     *
+     * @method getLocaleId
+     * @param string $code
+     * @return int
+     */
+    function getLocaleId(string $code): int
+    {
+        $id = 1; //by default get first language
+        foreach (config('available_languages') as $key => $lang) {
+            if( $code == $lang['code'] ) {
+                $id = $key;
+            }
+        }
+        return $id;
+    }
+}
+
+if (!function_exists('optionsUserTypes')) {
+
+    /**
+     * Get all users types and return options
+     *
+     * @method optionsUserTypes
+     *
+     * @param bool $any
+     * @param string|int $anyValue
+     * @param string|int $anyName
+     * @return array
+     */
+    function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+    {
+        $options = User::getUserTypes();
+        if( $any ) {
+            $options[$anyValue] = $anyName;
+            ksort($options);
+        }
+        return $options;
+    }
+}

@@ -13,6 +13,23 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="user_type">
+                                        {{ __('validation.attributes.user_type') }}<span class="required">*</span>
+                                    </label>
+                                    <div class="col-12">
+                                        @php($usersTypes = isset($user) ? optionsUserTypes() : optionsUserTypes(true))
+                                        <select id="user_type" name="user_type"  class="form-control form-control-sm">
+                                            @foreach($usersTypes as $val => $name)
+                                                <option value="{{ $val }}" @if(old('user_type', (isset($user) ? $user->user_type : '')) == $val) selected @endif>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_type')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="col-sm-12 control-label" for="username">
                                         {{ __('validation.attributes.username') }}<span class="required">*</span>
                                     </label>
@@ -179,9 +196,7 @@
 
                             <div class="col-md-6 col-sm-12 pl-5">
                                 <label class="control-label" for="roles">{{ trans_choice('custom.roles', 2) }}</label>
-                                @php
-                                    $user_roles = $user->roles()->pluck('id')->toArray();
-                                @endphp
+                                @php($user_roles = $user->roles()->pluck('id')->toArray())
                                 @foreach($roles as $role)
                                     <div class="icheck-primary">
                                         <input class="roles"

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
+include 'eauth.php';
+
 require_once('site.php');
 
 Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {

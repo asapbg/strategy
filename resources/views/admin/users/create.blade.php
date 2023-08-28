@@ -14,6 +14,14 @@
 
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="user_type">
+                                        {{ __('validation.attributes.user_type') }}<span class="required">*</span>
+                                    </label>
+                                    <select class="form-control form-control-sm" name="user_type">
+                                        <option value="{{ \App\Models\User::USER_TYPE_INTERNAL }}">{{ trans_choice('custom.internal_users', 1) }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-12 control-label" for="username">
                                         {{ __('validation.attributes.username') }}<span class="required">*</span>
                                     </label>

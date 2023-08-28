@@ -106,6 +106,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Get user types
+     *
+     * @return array
+     */
+    public static function getUserTypes(): array
+    {
+        return [
+            self::USER_TYPE_INTERNAL     => __('custom.users.type.'.self::USER_TYPE_INTERNAL),
+            self::USER_TYPE_EXTERNAL   => __('custom.users.type.'.self::USER_TYPE_EXTERNAL),
+        ];
+    }
+
+    /**
      * Log user activity
      *
      * @return LogOptions

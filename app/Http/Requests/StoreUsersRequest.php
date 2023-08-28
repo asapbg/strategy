@@ -34,6 +34,7 @@ class StoreUsersRequest extends FormRequest
             'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
             'roles'                 => ['required' ,'array', 'min:1'],
+            'user_type'             => ['required' ,'numeric'],
         ];
 
         if( request()->input('id') ) {

@@ -70,13 +70,21 @@
                                     {{ __('auth.do_not_have_account') }}
                                 </a>
                             </div>
-                            <button class="cstm-btn w-100 btn btn-lg rounded" type="submit"><span class="btn-label"><i
-                                class="fa-solid fa-right-to-bracket main-color"
-                                style="margin-right:10px"></i></span>
-                                {{ __('auth.login') }}
-                                </button>
-                        </div>
 
+                        </div>
+                        <div class="row">
+                            <a class="col-12 cstm-btn btn btn-lg rounded" href="{{ route('eauth.login') }}">
+                                <span class="btn-label"><i
+                                        class="fa-solid fa-lock main-color"
+                                        style="margin-right:10px"></i></span>
+                                {{ __('eauth.with_e_auth') }}
+                            </a>
+                            <button class="col-12 cstm-btn btn btn-lg rounded" type="submit"><span class="btn-label"><i
+                                        class="fa-solid fa-right-to-bracket main-color"
+                                        style="margin-right:10px"></i></span>
+                                {{ __('auth.login') }}
+                            </button>
+                        </div>
 
                     </div>
                 </div>
