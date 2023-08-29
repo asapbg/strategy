@@ -113,7 +113,7 @@
           </li>
 
           <li class="nav-item mx-1">
-            <a class="nav-link" href="#">Новини</a>
+            <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_news')) active @endif" href="#">Новини</a>
           </li>
         </ul>
       </div>
