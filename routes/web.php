@@ -19,7 +19,7 @@ require_once('site.php');
 
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');
-    Route::post('/templates/{slug}',                'show')->name('templates.view');
+    Route::get('/templates/{slug}',                'show')->name('templates.view');
 });
 
 Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {

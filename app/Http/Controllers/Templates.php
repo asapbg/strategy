@@ -31,6 +31,6 @@ class Templates extends Controller
 
     public function show($slug)
     {
-        return view('templates.show_'.$slug);
+        return view('templates.'.$slug);
     }
 }

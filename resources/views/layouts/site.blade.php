@@ -28,18 +28,18 @@
 </head>
 
 <body>
-<header>
+<header class="fixed-top">
 
   <div id="topbar">
     <div class="container">
       <div class="row top">
-        <div class="col-md-5"> 
+        <div class="col-md-5">
           <div class="contact-info d-flex align-items-center">
             <a class="navbar-brand" href="#"><img src="/img/logo_title.png" alt="Logo" id="imageLogo"></a>
           </div>
         </div>
-  
-        <div class="col-md-4">    
+
+        <div class="col-md-4">
           <div class="search">
             <i class="fas fa-search main-color"></i>
             <label for="search-field" class="visually-hidden">Търсене в сайта</label>
@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="col-md-3 text-end">    
+        <div class="col-md-3 text-end">
           <div class="auth">
             @if(app('auth')->check())
             <div class="dropdown">
@@ -90,10 +90,10 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav ">
           <li class="nav-item mx-1">
-            <a class="nav-link active " aria-current="page" href="/">Начало</a>
+            <a class="nav-link @if(request()->route()->getName() == 'home') active @endif" aria-current="page" href="/">Начало</a>
           </li>
           <li class="nav-item mx-1">
-            <a class="nav-link " href="{{ url('/consultations') }}">Обществени консултации</a>
+            <a class="nav-link @if(str_contains(request()->url(), 'public_consultations_view')) active @endif" href="{{ url('/consultations') }}">Обществени консултации</a>
           </li>
           <li class="nav-item mx-1">
             <a class="nav-link" href="#">Актове на МС</a>
@@ -122,7 +122,7 @@
 </header>
 
 
-<section class="slider">
+<section class="slider" style="margin-top: 135px;">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -160,7 +160,7 @@
             <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Мнения</a></li>
           </ul>
         </div>
-  
+
         <div class="col-6 col-md-2 mb-3">
           <h5 class="text-light">Информация</h5>
           <ul class="nav flex-column footer-nav">
@@ -170,7 +170,7 @@
             <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Често задавани въпроси</a></li>
           </ul>
         </div>
-  
+
         <div class="col-6 col-md-2 mb-3">
           <h5 class="text-light">Контакти</h5>
           <ul class="nav flex-column footer-nav">
@@ -180,7 +180,7 @@
             <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Фейсбук</a></li>
           </ul>
         </div>
-  
+
         <div class="col-md-5 offset-md-1 mb-3">
           <form>
             <h5 class="text-light">Абонирайте се за нашия бюлетин</h5>
@@ -193,12 +193,12 @@
           </form>
         </div>
       </div>
-  
+
       <div class="d-flex flex-column flex-sm-row justify-content-between pt-4  border-top">
         <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
       </div>
   </div>
- 
+
 </footer>
 </body>
 </html>

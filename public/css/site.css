@@ -1,3 +1,8 @@
+:root {
+    --primary_btn: #41729F;
+    --primary_icon: #41729F;
+}
+
 @font-face {
     font-family: Fira Sans BGR;
     src: url(../fonts/FiraSansBGR/FiraSansBGR-Regular.woff);
@@ -41,6 +46,7 @@ nav.navbar .btn {
     padding: 10px 0px;
     border-bottom: 1px solid #e4e4e4;
     padding-top: 15px;
+    background: #fff;
 }
 
 
@@ -870,3 +876,35 @@ input[type=checkbox] {
 /**/
 
 /* end */
+
+.obj-section .obj-section-title {
+    color: var(--primary_icon);
+    font-size: 28px;
+    font-weight: bold;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, #000 50%, transparent 50%) 100% 1;
+    margin-bottom: 10px;
+}
+.obg-files-section .obj-file {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+}
+.obg-files-section .obj-file:hover{
+    text-decoration: underline;
+}
+.obg-files-section .obj-file i {
+    color: var(--primary_icon);
+}
+
+.obg-comments-section .obj-comment .info {
+    margin-bottom: 5px;
+}
+.obg-comments-section .obj-comment .comment {
+    margin-bottom: 20px;
+    font-style: italic;
+    background-color:#fafafa;
+    padding: 10px;
+    border-radius: 10px;
+}
+
