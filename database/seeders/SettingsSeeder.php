@@ -19,8 +19,8 @@ class SettingsSeeder extends Seeder
             ],
         ];
 
-        foreach ($settings as $section) {
-            foreach ($section as $key => $value) {
+        foreach ($settings as $section => $entries) {
+            foreach ($entries as $key => $value) {
                 $item = new Setting(compact('key', 'value', 'section'));
                 $item->save();
             }
