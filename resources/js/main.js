@@ -312,21 +312,31 @@ $(document).ready(function (e) {
         $('input[type="text"]').attr('autocomplete', 'off');
     }
 
+    // if($('.summernote').length) {
+    //     $('.summernote').summernote({
+    //         height: 80,
+    //         fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
+    //         styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5'],
+    //         toolbar: [
+    //             // [groupName, [list of button]]
+    //             ['style', ['style','bold', 'italic', 'underline', 'clear']],
+    //             ['font', ['superscript', 'subscript']],
+    //             ['fontsize', ['fontsize']],
+    //             ['color', ['color']],
+    //             ['para', ['ul', 'ol', 'paragraph']],
+    //             ['view', ['fullscreen']],
+    //             ['table', ['table']],
+    //             ['insert', ['hr']]
+    //         ]
+    //     });
+    // }
+
     if($('.summernote').length) {
         $('.summernote').summernote({
-            height: 80,
-            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
-            styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5'],
             toolbar: [
-                // [groupName, [list of button]]
-                ['style', ['style','bold', 'italic', 'underline', 'clear']],
-                ['font', ['superscript', 'subscript']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['view', ['fullscreen']],
-                ['table', ['table']],
-                ['insert', ['hr']]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']],
+                ['view', ['fullscreen']]
             ]
         });
     }
@@ -364,7 +374,7 @@ $(document).ready(function (e) {
             language: "bg"
         });
     }
-    
+
     let start_date = (isEmpty($(".start_date").val())) ? moment().subtract(6, 'days').format('YYYY-MM-DD') : $(".start_date").val();
     let end_date = (isEmpty($(".end_date").val())) ? moment().format('YYYY-MM-DD') : $(".end_date").val();
     $(".start_date").val(start_date);
