@@ -100,8 +100,10 @@
                             <th>ID</th>
                             <th>{{__('validation.attributes.first_name')}}</th>
                             <th>{{__('validation.attributes.username')}}</th>
+                            <th>{{__('validation.attributes.email')}}</th>
                             <th class="d-none">{{__('validation.attributes.email')}}</th>
                             <th>{{__('validation.attributes.role')}}</th>
+                            <th>{{__('validation.attributes.institution')}}</th>
                             <th>{{__('custom.active_m')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -113,8 +115,10 @@
                                     <td>{{$user->id}}</td>
                                     <td>{{$user->fullname()}}</td>
                                     <td>{{$user->username}}</td>
+                                    <td>{{$user->email}}</td>
                                     <td class="d-none">{{$user->email}}</td>
                                     <td>{!! implode('<br>',$user->roles->pluck('display_name')->toArray()) !!}</td>
+                                    <td>@if($user->institution){{ $user->institution->name }}@else{{ '---' }}@endif</td>
                                     <td>
                                         @includeIf('partials.toggle-boolean', ['object' => $user, 'model' => 'User'])
                                     </td>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "998afff4d8550f2e54e4ea1d0eae87ea",
+    "content-hash": "cc500672c2f11c7b5bad4cf51209b567",
     "packages": [
         {
             "name": "astrotomic/laravel-translatable",
@@ -4821,6 +4821,57 @@
                 "source": "https://github.com/sabberworm/PHP-CSS-Parser/tree/8.4.0"
             },
             "time": "2021-12-11T13:40:54+00:00"
+        },
+        {
+            "name": "selective/xmldsig",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/selective-php/xmldsig.git",
+                "reference": "fb9cdf2ecfcf4b65931db8796c7336a43b607d73"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/selective-php/xmldsig/zipball/fb9cdf2ecfcf4b65931db8796c7336a43b607d73",
+                "reference": "fb9cdf2ecfcf4b65931db8796c7336a43b607d73",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-openssl": "*",
+                "php": "~8.0 || ~8.1 || ~8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3",
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^9 || ^10",
+                "squizlabs/php_codesniffer": "^3",
+                "starkbank/ecdsa": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Selective\\XmlDSig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Sign XML Documents with Digital Signatures",
+            "homepage": "https://github.com/selective-php/xmldsig",
+            "keywords": [
+                "signatures",
+                "verify",
+                "xml",
+                "xmldsig"
+            ],
+            "support": {
+                "issues": "https://github.com/selective-php/xmldsig/issues",
+                "source": "https://github.com/selective-php/xmldsig/tree/3.0.0"
+            },
+            "abandoned": "robrichards/xmlseclibs",
+            "time": "2023-01-28T18:17:36+00:00"
         },
         {
             "name": "sentry/sdk",

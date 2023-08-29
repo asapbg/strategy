@@ -13,13 +13,19 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
+include 'eauth.php';
+
 require_once('site.php');
+
+Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
+    Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
+    Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
+    Route::post('/forgot-password/update',                'confirmPassword')->name('forgot_pass.password.update');
+});
 
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
-
-    Route::get('/admin', [AdminHomeController::class, 'index'])->name('admin.home');
-    Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('front.logout');
 
     Route::get('/locale', function (Request $request) {
         if ($request->has('locale')) {
@@ -55,7 +61,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['roles:all
             Route::get('/users/create',         'create')->name('users.create');
             Route::post('/users/store',         'store')->name('users.store');
             Route::get('/users/{user}/edit',    'edit')->name('users.edit');
-            Route::get('/users/{user}/update',  'update')->name('users.update');
+            Route::post('/users/{user}/update',  'update')->name('users.update');
             Route::get('/users/{user}/delete',  'destroy')->name('users.delete');
             Route::get('/users/export',         'export')->name('users.export');
         });

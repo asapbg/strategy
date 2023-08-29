@@ -165,7 +165,7 @@ return [
         'name'                     => 'Наименование',
         'display_name'             => 'Наименование',
         'username'                 => 'Потребител',
-        'email'                    => 'E-mail',
+        'email'                    => 'Ел. поща',
         'first_name'               => 'Име',
         'middle_name'              => 'Презиме',
         'last_name'                => 'Фамилия',
@@ -271,5 +271,8 @@ return [
         'is_org'                    => 'Вид профил',
         'org_name'                  => 'Име на организацията',
         'value'                     => 'Стойност',
+        'institution_id'            => 'Институция',
+        'confirm_password'          => 'Потвърждение на парола',
+        'user_type'                 => 'Тип потребител',
     ],
 ];

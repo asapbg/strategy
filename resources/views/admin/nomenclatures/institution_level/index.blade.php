@@ -21,6 +21,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
+                            <th>{{__('custom.system_name')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
                         </thead>
@@ -30,6 +31,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
+                                    <td>{{ $item->system_name }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

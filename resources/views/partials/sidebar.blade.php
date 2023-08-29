@@ -35,7 +35,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.static_content', 2) }}</p>
                             </a>
                         </li>
@@ -44,7 +44,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.impact_pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'impact_assessment')) active @endif">
-                                <i class="fas fa-file nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.impact_assessment', 2) }}</p>
                             </a>
                         </li>
@@ -53,7 +53,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.static_pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'static_pages')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                             </a>
                         </li>
@@ -62,7 +62,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'multicriteria_analysis')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.multicriteria_analysis', 2) }}</p>
                             </a>
                         </li>
@@ -91,7 +91,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.news.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">
-                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.news', 2) }}</p>
                             </a>
                         </li>
@@ -113,14 +113,14 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.publications.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">
-                                <i class="fas fa-newspaper nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.library', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.nomenclature.publication_category') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'publications/categories')) active @endif">
-                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.publications_categories', 2) }}</p>
                             </a>
                         </li>
@@ -135,15 +135,8 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.strategic_documents.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
-                            <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.strategic_documents.institutions.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'institutions')) active @endif">
-                            <i class="fas fa-info-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.institutions', 2) }}</p>
                             </a>
                         </li>
                     </ul>
@@ -157,35 +150,35 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.consultations.legislative_programs.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'legislative_programs')) active @endif">
-                            <i class="fas fa-university nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.consultations.operational_programs.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
-                            <i class="fas fa-cube nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.consultations.public_consultations.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
-                            <i class="fas fa-bullhorn nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.consultations', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.consultations.comments.index') }}"
                             class="nav-link @if(strstr(url()->current(), 'comments')) active @endif">
-                            <i class="fas fa-comment nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.comments', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.nomenclature.consultation_document_type') }}"
                             class="nav-link @if(strstr(url()->current(), 'consultation_document_type')) active @endif">
-                            <i class="fas fa-cube nav-icon nav-item-sub-icon"></i>
+                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
                             </a>
                         </li>
@@ -200,14 +193,14 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.ogp.plan_elements.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
-                                <i class="fas fa-calendar nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.ogp.articles.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'ogp/articles')) active @endif">
-                                <i class="fas fa-info nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.ogp.articles', 2) }}</p>
                             </a>
                         </li>
@@ -222,14 +215,14 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.nomenclature.link_category') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'link_category')) active @endif">
-                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.link_categories', 2) }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.links.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'links')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.links', 2) }}</p>
                             </a>
                         </li>
@@ -244,7 +237,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.pc_subjects.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'pc_subjects')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.pc_subjects', 2) }}</p>
                             </a>
                         </li>
@@ -259,7 +252,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.legislative_initiatives.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'legislative_initiatives')) active @endif">
-                                <i class="fas fa-list nav-icon nav-item-sub-icon"></i>
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.legislative_initiatives_list', 2) }}</p>
                             </a>
                         </li>

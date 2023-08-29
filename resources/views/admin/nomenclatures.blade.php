@@ -36,6 +36,12 @@
                             </a>
                         </div>
                         <div class="col-sm-3">
+                            <a class="btn btn-info btn-block" href="{{ route('admin.strategic_documents.institutions.index') }}">
+                                <i class="fas fa-university"></i>
+                                {{ trans_choice('custom.institutions', 2) }}
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
                             <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.act_type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.act_type', 2) }}
@@ -47,15 +53,15 @@
                                 {{ trans_choice('custom.nomenclature.legal_act_type', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.strategic_document_type') }}">
+                               href="{{ route('admin.nomenclature.strategic_document_type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.consultation_type') }}">
                                 <i class="fas fa-folder-open"></i>
@@ -74,15 +80,15 @@
                                 {{ trans_choice('custom.nomenclature.link_category', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.strategic_document_level') }}">
+                               href="{{ route('admin.nomenclature.strategic_document_level') }}">
                                 <i class="fad fa-folder"></i>
                                 {{ trans_choice('custom.nomenclature.strategic_document_level', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
                                 href="{{ route('admin.nomenclature.policy_area') }}">
@@ -104,15 +110,15 @@
                                 {{ trans_choice('custom.regulatory_act_types', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.regulatory_act') }}">
+                               href="{{ route('admin.nomenclature.regulatory_act') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.regulatory_acts', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block" href="{{ route('admin.nomenclature.advisory_act_type') }}">
                                 <i class="fas fa-file"></i>
@@ -132,15 +138,15 @@
                                 {{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
-                                href="{{ route('admin.nomenclature.consultation_document_type') }}">
+                               href="{{ route('admin.nomenclature.consultation_document_type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block"
                             href="{{ route('admin.nomenclature.authority_advisory_board') }}">

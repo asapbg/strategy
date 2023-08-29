@@ -335,4 +335,9 @@ return [
     'draft'                           => 'Чернова',
     'completed'                       => 'Завършен',
     'change'                          => 'Промени',
+    'btn.reset_password'              => 'Смени парола',
+    'system_name'                     => 'Системно име',
+    //users
+    'users.type.1'                              => 'Вътрешен',
+    'users.type.2'                              => 'Външен',
 ];

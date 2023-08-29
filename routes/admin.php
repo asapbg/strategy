@@ -46,6 +46,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/settings/store/{item?}', 'store')->name('settings.store');
     });
     
+    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
     // Content
     Route::controller(PageController::class)->group(function () {
         Route::get('/pages', 'index')->name('pages.index')->middleware('can:viewAny,App\Models\Page');
@@ -64,21 +66,21 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/impact_pages/edit/{item?}', 'edit')->name('impact_pages.edit');
         Route::match(['post', 'put'], '/impact_pages/store/{item?}', 'store')->name('impact_pages.store');
     });
-    
+
     // Polls
     Route::controller(PollController::class)->group(function () {
         Route::get('/polls', 'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
         Route::get('/polls/edit/{item?}', 'edit')->name('polls.edit');
         Route::match(['post', 'put'], '/polls/store/{item?}', 'store')->name('polls.store');
     });
-    
+
     // News
     Route::controller(NewsController::class)->group(function () {
         Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
         Route::get('/news/edit/{item?}', 'edit')->name('news.edit');
         Route::match(['post', 'put'], '/news/store/{item?}', 'store')->name('news.store');
     });
-    
+
     // Library
     Route::controller(PublicationController::class)->group(function () {
         Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
@@ -147,7 +149,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::group([], function () {
         Route::view('/consultations/comments', 'admin.consultations.comments.index')
             ->name('consultations.comments.index');
-            
+
         Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
             ->name('ogp.plan_elements.index');
         Route::view('/ogp/plan_elements/edit/{item?}', 'admin.ogp.plan_elements.edit')

@@ -54837,3 +54837,11 @@ table .toggle i { color: #269740 }
     font-size: 1.4rem;
     margin: 0;
 }
+
+/*sidebar sub icons*/
+.nav-treeview > .nav-item {
+    padding-left: 10px;
+}
+.nav-item-sub-icon {
+    font-size: 8px !important;
+}

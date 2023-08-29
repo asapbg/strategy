@@ -6,11 +6,12 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Institution extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable;
+    use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
@@ -24,7 +25,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "institution";
 
-    protected $fillable = ['consultation_level_id'];
+    protected $guarded = [];
 
     /**
      * Get the model name
