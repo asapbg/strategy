@@ -6,8 +6,8 @@
 <nav>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link {{ !$tab || $tab == 'general_info' ? 'active' : '' }}" href="{{ route('profile') }}">
-            {{ __('custom.general_info') }}
+            <a class="nav-link {{ !$tab || $tab == 'change_info' ? 'active' : '' }}" href="{{ route('profile') }}">
+            {{ __('custom.change_info') }}
             </a>
         </li>
         <li class="nav-item">

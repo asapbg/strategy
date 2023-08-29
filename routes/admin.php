@@ -35,10 +35,17 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
 use App\Http\Controllers\Admin\PublicationController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    // Settings
+    Route::controller(SettingsController::class)->group(function () {
+        Route::get('/settings', 'index')->name('settings.index')->middleware('can:viewAny,App\Models\Setting');
+        Route::match(['post', 'put'], '/settings/store/{item?}', 'store')->name('settings.store');
+    });
+    
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
     // Content
