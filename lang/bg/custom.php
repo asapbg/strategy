@@ -327,11 +327,12 @@ return [
     'prev_step'                       => 'Предишна стъпка',
     'submit_form'                     => 'Завършване',
     'register'                        => 'Регистрация',
-    'general_info'                    => 'Основна информация',
+    'change_info'                     => 'Промяна на данни',
     'subscriptions'                   => 'Абонаменти',
     'form_inputs'                     => 'Формуляри',
     'organisation'                    => 'Юридическо лице',
     'person'                          => 'Физическо лице',
     'draft'                           => 'Чернова',
     'completed'                       => 'Завършен',
+    'change'                          => 'Промени',
 ];

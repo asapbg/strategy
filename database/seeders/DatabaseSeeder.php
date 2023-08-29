@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             PublicationCategorySeeder::class,
             RegulatoryActTypesSeeder::class,
             PolicyAreaSeeder::class,
+            SettingsSeeder::class,
         ]);
     }
 }
