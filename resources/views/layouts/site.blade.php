@@ -105,7 +105,7 @@
 
 
           <li class="nav-item mx-1">
-            <a class="nav-link" href="#">Публикации</a>
+            <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_library_list')) active @endif" href="#">Публикации</a>
           </li>
 
           <li class="nav-item mx-1">
