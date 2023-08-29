@@ -54845,3 +54845,7 @@ table .toggle i { color: #269740 }
 .nav-item-sub-icon {
     font-size: 8px !important;
 }
+.nomenclature-btn{
+    min-height: 80px;
+    vertical-align: center;
+}

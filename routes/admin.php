@@ -105,9 +105,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
     });
     Route::controller(InstitutionController::class)->group(function () {
-        Route::get('/strategic_documents/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
-        Route::get('/strategic_documents/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
-        Route::match(['post', 'put'], '/strategic_documents/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
+        Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
+        Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
+        Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });
 
     // Open Govenrnance Partnership

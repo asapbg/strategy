@@ -17,6 +17,11 @@ include 'eauth.php';
 
 require_once('site.php');
 
+Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
+    Route::get('/templates',                'index')->name('templates');
+    Route::post('/templates/{slug}',                'show')->name('templates.view');
+});
+
 Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
     Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
     Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
