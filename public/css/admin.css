@@ -54849,3 +54849,6 @@ table .toggle i { color: #269740 }
     min-height: 80px;
     vertical-align: center;
 }
+img.sm-thumbnail {
+    max-width: 100px;
+}

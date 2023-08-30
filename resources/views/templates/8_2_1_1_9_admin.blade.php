@@ -120,7 +120,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="col-sm-12 control-label" for="deleted">Дата на публикуване: <span class="required">*</span></label>
+                                            <label class="col-sm-12 control-label" for="deleted">Статус: <span class="required">*</span></label>
                                             <select class="form-control form-control-sm">
                                                 <option>Активна</option>
                                                 <option>Неактивна</option>
@@ -139,12 +139,6 @@
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="deleted">Снимка:</label>
                                             <input type="file" class="form-control form-control-sm">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="col-sm-12 control-label" for="deleted">Дата на публикуване:<span class="required">*</span></label>
-                                            <input type="text" data-provide="datepicker" class="form-control form-control-sm value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                 </div>

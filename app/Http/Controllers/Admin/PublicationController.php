@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PublicationTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePublicationRequest;
+use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PublicationController extends AdminController
@@ -16,7 +22,6 @@ class PublicationController extends AdminController
     const STORE_ROUTE = 'admin.publications.store';
     const LIST_VIEW = 'admin.publications.index';
     const EDIT_VIEW = 'admin.publications.edit';
-    const PUBLICATION_TYPE = Publication::TYPE_PUBLICATION;
     const MODEL_NAME = 'custom.publications';
 
     /**
@@ -29,17 +34,18 @@ class PublicationController extends AdminController
         $requestFilter = $request->all();
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? Publication::PAGINATE;
-        $publicationType = static::PUBLICATION_TYPE;
+        if( !isset($requestFilter['active']) ) {
+            $requestFilter['active'] = 1;
+        }
 
-        $items = Publication::with(['translation'])
-            ->whereType($publicationType)
+        $items = Publication::with(['category', 'category.translation', 'translation', 'mainImg'])
+            ->whereIn('type', [PublicationTypesEnum::TYPE_LIBRARY->value, PublicationTypesEnum::TYPE_NEWS->value])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
         $editRouteName = static::EDIT_ROUTE;
         $listRouteName = static::LIST_ROUTE;
-        $modelName = static::MODEL_NAME;
-        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'publicationType', 'modelName'));
+        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
     }
 
     /**
@@ -49,55 +55,76 @@ class PublicationController extends AdminController
      */
     public function edit(Request $request, $item = null)
     {
-        $item = $this->getRecord($item);
+        $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'files', 'translations']);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
-        $publicationType = static::PUBLICATION_TYPE;
-        $modelName = static::MODEL_NAME;
-        
-        $publicationCategories = static::getCategories();
-        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories', 'publicationType', 'modelName'));
+        $publicationCategories = PublicationCategory::optionsList(true);
+        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories'));
     }
 
-    public function store(StorePublicationRequest $request, $item = null)
+    public function store(StorePublicationRequest $request, Publication $item)
+//    public function store(Request $request, Publication $item)
     {
-        $item = $this->getRecord($item);
+//        $r = new StorePublicationRequest();
+//        $validator = Validator::make($request->all(), $r->rules());
+//        dd($request->all(),$validator->errors());
+        $id = $item->id;
         $validated = $request->validated();
+
         if( ($item->id && $request->user()->cannot('update', $item))
             || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-
+        DB::beginTransaction();
         try {
+            if( empty($validated['slug']) ) {
+                $validated['slug'] = Str::slug($validated['title_bg']);
+            }
+
+            $itemImg = $validated['file'] ?? null;
+            unset($validated['file']);
+
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
-            $item->active = $request->input('active') ? 1 : 0;
-            if ($item->id) {
-                if ($request->input('deleted')) {
-                    $item->deleteTranslations();
-                    $item->delete();
-                }
-                else if ($item->deleted_at) {
-                    $item->restore();
+            $item->save();
+
+            // Upload File
+            if( $item && $itemImg ) {
+                $fileNameToStore = round(microtime(true)).'.'.$itemImg->getClientOriginalExtension();
+                // Upload File
+                $itemImg->storeAs(File::PUBLICATION_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
+                $file = new File([
+                    'id_object' => $item->id,
+                    'code_object' => File::CODE_OBJ_PUBLICATION,
+                    'filename' => $fileNameToStore,
+                    'content_type' => $itemImg->getClientMimeType(),
+                    'path' => 'files/'.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'sys_user' => $request->user()->id,
+                ]);
+                $file->save();
+
+                if( $file ) {
+                    $item->file_id = $file->id;
+                    $item->save();
                 }
             }
-            $item->save();
-            $this->storeTranslateOrNewCurrent(Publication::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew(Publication::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $item->id ) {
+            DB::commit();
+            if( $id ) {
                 return redirect(route(static::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.publications', 1)." ".__('messages.updated_successfully_m'));
+                    ->with('success', trans_choice('custom.publications', 1)." ".__('messages.updated_successfully_f'));
             }
 
             return to_route(static::LIST_ROUTE)
-                ->with('success', trans_choice('custom.publications', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.publications', 1)." ".__('messages.created_successfully_f'));
         } catch (\Exception $e) {
-            dd($e, $validated);
-            \Log::error($e);
+            DB::rollBack();
+            Log::error($e->getMessage());
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
@@ -112,26 +139,12 @@ class PublicationController extends AdminController
                 'value' => $request->input('title'),
                 'col' => 'col-md-3'
             ),
-            'category' => array(
+            'type' => array(
                 'type' => 'select',
-                'value' => $request->input('category'),
-                'options' => PublicationCategory::all()->map(function($item) {
-                    return ['value' => $item->id, 'name' => $item->name];
-                })->prepend(['value' => null, 'name' => __('validation.attributes.category')]),
+                'value' => $request->input('type'),
+                'options' => optionsPublicationTypes(true),
                 'col' => 'col-md-2'
-            ),
-            'from' => array(
-                'type' => 'datepicker',
-                'placeholder' => __('validation.attributes.date_from'),
-                'value' => $request->input('from'),
-                'col' => 'col-md-2'
-            ),
-            'to' => array(
-                'type' => 'datepicker',
-                'placeholder' => __('validation.attributes.date_to'),
-                'value' => $request->input('to'),
-                'col' => 'col-md-2'
-            ),
+            )
         );
     }
 
@@ -150,10 +163,5 @@ class PublicationController extends AdminController
             return new Publication();
         }
         return $item;
-    }
-
-    public static function getCategories()
-    {
-        return PublicationCategory::all();
     }
 }

@@ -375,6 +375,15 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.datepicker').length) {
+        $('.datepicker').datepicker({
+            format: 'dd-mm-yyyy',
+            todayHighlight: true,
+            orientation: "bottom left",
+            autoclose: true
+        });
+    }
+
     let start_date = (isEmpty($(".start_date").val())) ? moment().subtract(6, 'days').format('YYYY-MM-DD') : $(".start_date").val();
     let end_date = (isEmpty($(".end_date").val())) ? moment().format('YYYY-MM-DD') : $(".end_date").val();
     $(".start_date").val(start_date);

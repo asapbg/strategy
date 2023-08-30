@@ -9,3 +9,6 @@
     min-height: 80px;
     vertical-align: center;
 }
+img.sm-thumbnail {
+    max-width: 100px;
+}

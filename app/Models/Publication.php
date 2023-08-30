@@ -14,11 +14,9 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['title', 'content'];
+    const TRANSLATABLE_FIELDS = ['title', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = 'custom.publications';
-    const TYPE_PUBLICATION = 1;
-    const TYPE_OGP_NEWS = 2;
-    const TYPE_NEWS = 3;
+//
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -28,7 +26,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "publication";
 
-    protected $fillable = ['type', 'publication_category_id', 'event_date', 'highlighted', 'active'];
+    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active'];
 
     /**
      * Get the model name
@@ -41,28 +39,44 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     {
         return array(
             'title' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:2000']
+            ],
+            'short_content' => [
                 'type' => 'textarea',
                 'rules' => ['required', 'string']
             ],
             'content' => [
-                'type' => 'ckeditor',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
+            'meta_title' => [
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255']
+            ],
+            'meta_keyword' => [
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255']
+            ],
+            'meta_description' => [
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255']
+            ]
         );
     }
 
-    public function publicationCategory()
+    public function category()
     {
         return $this->hasOne(PublicationCategory::class, 'id', 'publication_category_id');
     }
 
-    public static function optionsList()
+    public function mainImg()
     {
-        return DB::table('publication')
-            ->select(['publication.id', 'publication_translations.name'])
-            ->join('publication_translations', 'publication_translations.publication_id', '=', 'publication.id')
-            ->where('publication_translations.locale', '=', app()->getLocale())
-            ->orderBy('publication_translations.name', 'asc')
-            ->get();
+        return $this->hasOne(File::class, 'id', 'file_id');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')->where('code_object', '=', File::CODE_OBJ_PUBLICATION);
     }
 }

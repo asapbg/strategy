@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Filters\PublicationCategory;
+
+use App\Filters\FilterContract;
+use App\Filters\QueryFilter;
+
+
+class Active extends QueryFilter implements FilterContract{
+
+    public function handle($value): void
+    {
+        $value = (int)$value;
+        if( in_array($value, [0,1]) ){
+            $this->query->where('publication_category.active', '=', $value);
+        }
+    }
+}
+

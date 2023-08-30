@@ -53,6 +53,11 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
+        'public_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/files',
+        ],
+
     ],
 
     /*
@@ -69,5 +74,12 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom config
+    |--------------------------------------------------------------------------
+    */
+    'max_upload_file_size' => env('MAX_UPLOAD_FILE_SIZE', 10240) //in kilobytes
 
 ];

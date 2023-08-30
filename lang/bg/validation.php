@@ -274,7 +274,15 @@ return [
         'institution_id'            => 'Институция',
         'confirm_password'          => 'Потвърждение на парола',
         'user_type'                 => 'Тип потребител',
+        'slug'                      => 'Slug',
+        'meta_title'                => 'Заглавие (meta)',
+        'meta_description'          => 'Описание (meta)',
+        'meta_keyword'              => 'Ключови думи (meta)',
+        'short_content'             => 'Кратко описание',
+        'main_img'                  => 'Основна снимка',
+        'published_at'              => 'Публикуване (дата)',
         //settings admin
-        'system_email'              => 'Ел. поща (системни известия)'
+        'system_email'              => 'Ел. поща (системни известия)',
+
     ],
 ];

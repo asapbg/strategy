@@ -15,13 +15,15 @@ return new class extends Migration
     {
         Schema::create('publication', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean('active')->default(1);
             $table->integer('type');
-            $table->bigInteger('publication_category_id');
-            $table->date('event_date');
-            $table->boolean('active')->nullable();
-            $table->boolean('highlighted')->nullable();
-            $table->softDeletes();
+            $table->string('slug', 2000);
+            $table->bigInteger('file_id')->nullable();
+            $table->bigInteger('publication_category_id')->nullable();
+            $table->timestamp('published_at');
+
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('publication_translations', function (Blueprint $table) {
@@ -33,8 +35,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('publication');
 
-            $table->text('title');
-            $table->text('content');
+            $table->string('title', 2000);
+            $table->text('short_content')->nullable();
+            $table->text('content')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_keyword')->nullable();
         });
     }
 

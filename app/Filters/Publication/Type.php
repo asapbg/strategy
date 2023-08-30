@@ -6,12 +6,12 @@ use App\Filters\FilterContract;
 use App\Filters\QueryFilter;
 
 
-class From extends QueryFilter implements FilterContract{
+class Type extends QueryFilter implements FilterContract{
 
     public function handle($value): void
     {
-        if( !empty($value) ){
-            $this->query->where('publication.published_at', '>=', $value);
+        if( !empty($value) && (int)$value > -1 ){
+            $this->query->where('publication.type', $value);
         }
     }
 }

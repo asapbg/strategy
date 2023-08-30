@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PageFileUploadRequest;
+use App\Models\File;
+use App\Models\Publication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 class CommonController extends Controller
 {
@@ -103,5 +110,86 @@ class CommonController extends Controller
             $sequence_key_name = $table . '_' . $primary_key_name . '_seq';
             DB::statement("ALTER SEQUENCE $sequence_key_name RESTART WITH $next_id");
         }
+    }
+
+    public function uploadFile(PageFileUploadRequest $request, $objectId, $typeObject) {
+        try {
+            $validated = $request->validated();
+            $fileNameToStore = round(microtime(true)).'.'.$validated['file']->getClientOriginalExtension();
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
+                default => '',
+            };
+            $validated['file']->storeAs($pDir, $fileNameToStore, 'public_uploads');
+            $item = new File([
+                'id_object' => $objectId,
+                'code_object' => $typeObject,
+                'filename' => $fileNameToStore,
+                'content_type' => $validated['file']->getClientMimeType(),
+                'path' => 'files/'.$pDir.$fileNameToStore,
+                'description' => $validated['description'],
+                'sys_user' => $request->user()->id,
+            ]);
+            $item->save();
+
+            $route = match ((int)$typeObject) {
+                File::CODE_OBJ_PUBLICATION => route('admin.publications.edit', Publication::find($objectId)) . '#ct-files',
+                default => '',
+            };
+            return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
+        } catch (\Exception $e) {
+            logError('Upload file', $e->getMessage());
+            return back()->with(['danger' => 'Възникна грешка. Презаредете страницата и опитайте отново.']);
+        }
+    }
+
+    /**
+     * Download public file
+     * @param Request $request
+     * @param File $file
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @throws \League\Flysystem\FilesystemException
+     */
+    public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
+    {
+        if( $file->code_object != File::CODE_OBJ_PUBLICATION ) {
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+
+        $path = match ($disk){
+            default => str_replace('files/', '', $file->path)
+        };
+
+        if (Storage::disk('public_uploads')->has($path)) {
+            return Storage::disk('public_uploads')->download($path, $file->filename);
+        } else {
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+    }
+
+    /**
+     * Delete public file
+     * @param Request $request
+     * @param File $file
+     * @return bool|RedirectResponse
+     * @throws FilesystemException
+     */
+    public function deleteFile(Request $request, File $file)
+    {
+        $user = $request->user();
+        if( !$user->can('delete', $file) ) {
+            abort(Response::HTTP_UNAUTHORIZED);
+        }
+
+        $route = match ((int)$file->code_object) {
+            File::CODE_OBJ_PUBLICATION => route('admin.publications.edit', Publication::find($file->id_object)) . '#ct-files',
+            default => '',
+        };
+        $file->delete();
+        if (Storage::disk('public_uploads')->has($file->path)) {
+            Storage::disk('public_uploads')->delete($file->path, $file->filename);
+        }
+        return redirect($route)->with('success', 'Файлът е изтрит успешно');
     }
 }

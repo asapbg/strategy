@@ -10,7 +10,7 @@ class To extends QueryFilter implements FilterContract{
     public function handle($value): void
     {
         if( !empty($value) ){
-            $this->query->where('event_date', '<=', $value);
+            $this->query->where('publication.published_at', '<=', $value);
         }
     }
 }

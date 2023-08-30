@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class PublicationCategory extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable;
+    use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
@@ -42,13 +43,17 @@ class PublicationCategory extends ModelActivityExtend implements TranslatableCon
         );
     }
 
-    public static function optionsList()
+    public static function optionsList($onlyActive = false): \Illuminate\Support\Collection
     {
-        return DB::table('publication_category')
+        $list = DB::table('publication_category')
             ->select(['publication_category.id', 'publication_category_translations.name'])
             ->join('publication_category_translations', 'publication_category_translations.publication_category_id', '=', 'publication_category.id')
             ->where('publication_category_translations.locale', '=', app()->getLocale())
-            ->orderBy('publication_category_translations.name', 'asc')
-            ->get();
+            ->orderBy('publication_category_translations.name', 'asc');
+        if($onlyActive) {
+            $list->where('publication_category.active', '=', 1)
+                ->whereNull('publication_category.deleted_at');
+        }
+        return $list->get();
     }
 }

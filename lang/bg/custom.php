@@ -284,12 +284,12 @@ return [
     'document_date'                   => 'Дата на документ',
     'date_valid'                      => 'Дата на валидност',
     'institutions'                    => 'Институция|Институции',
-    'news'                            => 'Новина|Новини',
-    'news_category'                   => 'Категория новини|Категории новини',
+//    'news'                            => 'Новина|Новини',
+//    'news_category'                   => 'Категория новини|Категории новини',
     'polls'                           => 'Анкета|Анкети',
     'publications'                    => 'Публикация|Публикации',
     'publications_categories'         => 'Категория публикации|Категории публикации',
-    'news_categories'                 => 'Категория новини|Категории новини',
+//    'news_categories'                 => 'Категория новини|Категории новини',
     'ogp'                             => 'Партньорство за ОУ',
     'ogp.plan_elements'               => 'Елемент|Планове и оценки',
     'ogp.articles'                    => 'Новини и събития',
@@ -337,10 +337,20 @@ return [
     'change'                          => 'Промени',
     'btn.reset_password'              => 'Смени парола',
     'system_name'                     => 'Системно име',
+    'public_from'                     => 'Дата на публикуване',
+    'general_info'                    => 'Основна информация',
+    'files'                           => 'Файлове',
+    'download'                        => 'Изтегли',
     //users
     'users.type.1'                              => 'Вътрешен',
     'users.type.2'                              => 'Външен',
     //settings
     'settings.sections.system_notifications'    => 'Известия',
     'settings.system_email'                     => 'Ел. поща за получаване на системни известия',
+    //public sections
+    'public_sections'                           => 'Публична секция|Публични секции',
+    'public_sections.types.TYPE_LIBRARY'        => 'Библиотека',
+    'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
+    'public_sections.types.TYPE_NEWS'           => 'Новина',
+
 ];

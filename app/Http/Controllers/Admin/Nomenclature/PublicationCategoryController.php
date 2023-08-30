@@ -23,8 +23,13 @@ class PublicationCategoryController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? PublicationCategory::PAGINATE;
 
+        if( !isset($requestFilter['active']) ) {
+            $requestFilter['active'] = 1;
+        }
+
         $items = PublicationCategory::with(['translation'])
             ->FilterBy($requestFilter)
+            ->orderByTranslation('name')
             ->paginate($paginate);
         $toggleBooleanModel = 'PublicationCategory';
         $editRouteName = self::EDIT_ROUTE;

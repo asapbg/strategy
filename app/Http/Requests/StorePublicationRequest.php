@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\File;
 use App\Models\Publication;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePublicationRequest extends FormRequest
 {
@@ -25,19 +27,23 @@ class StorePublicationRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'id' => ['required', 'numeric'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('publication', 'slug')->ignore((int)request()->input('id'))],
             'type' => ['required', 'numeric'],
-            'publication_category_id' => ['required', 'numeric'],
-            'event_date' => ['required', 'date'],
-            'highlighted' => ['boolean'],
-            'active' => ['boolean'],
+            'publication_category_id' => ['nullable', 'numeric'],
+            'published_at' => ['required'],
+            'active' => ['required', 'numeric', 'in:0,1'],
+            'file' => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['jpg', 'jpeg', 'png'])],
         ];
 
-        if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
+        if( request()->isMethod('put') ) {
+            $rules['id'] = ['required', 'numeric', 'exists:publication,id'];
         }
 
-        foreach (Publication::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+        foreach (config('available_languages') as $lang) {
+            foreach (Publication::translationFieldsProperties() as $field => $properties) {
+                $rules[$field.'_'.$lang['code']] = $properties['rules'];
+            }
         }
 
         return $rules;

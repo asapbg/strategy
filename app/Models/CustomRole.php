@@ -17,6 +17,7 @@ class CustomRole extends Role
     const MODULE_NAME = ('custom.module_roles');
     const PAGINATE = 20;
     const SUPER_USER_ROLE = 'service_user';
+    const ADMIN_USER_ROLE = 'super-admin';
 
     /**
      * The attributes that are mass assignable.

@@ -40,10 +40,23 @@ use App\Http\Controllers\Admin\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
+        Route::get('/download/{file}', 'downloadFile')->name('download.file');
+        Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
+        Route::post('/upload-file/{object_id}/{object_type}','uploadFile')->name('upload.file');
+    });
+
     // Settings
     Route::controller(\App\Http\Controllers\Admin\SettingsController::class)->group(function () {
         Route::get('/settings/{section?}',                'index')->name('settings')->middleware('can:viewAny,App\Models\Settings');
         Route::match(['put'], '/settings',         'store')->name('settings.store');
+    });
+
+    // Publications
+    Route::controller(PublicationController::class)->group(function () {
+        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/publications/edit/{item?}', 'edit')->name('publications.edit');
+        Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
     });
 
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
@@ -74,19 +87,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/polls/store/{item?}', 'store')->name('polls.store');
     });
 
-    // News
-    Route::controller(NewsController::class)->group(function () {
-        Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/news/edit/{item?}', 'edit')->name('news.edit');
-        Route::match(['post', 'put'], '/news/store/{item?}', 'store')->name('news.store');
-    });
-
-    // Library
-    Route::controller(PublicationController::class)->group(function () {
-        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/publications/edit/{item?}', 'edit')->name('publications.edit');
-        Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
-    });
+//    // News
+//    Route::controller(NewsController::class)->group(function () {
+//        Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
+//        Route::get('/news/edit/{item?}', 'edit')->name('news.edit');
+//        Route::match(['post', 'put'], '/news/store/{item?}', 'store')->name('news.store');
+//    });
 
     // Consultations
     Route::controller(PublicConsultationController::class)->group(function () {
@@ -267,11 +273,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/publication_category/store/{item?}', 'store')->name('nomenclature.publication_category.store');
     });
 
-    Route::controller(NewsCategoryController::class)->group(function () {
-        Route::get('/nomenclature/news_category', 'index')->name('nomenclature.news_category')->middleware('can:viewAny,App\Models\NewsCategory');
-        Route::get('/nomenclature/news_category/edit/{item?}', 'edit')->name('nomenclature.news_category.edit');
-        Route::match(['post', 'put'], '/nomenclature/news_category/store/{item?}', 'store')->name('nomenclature.news_category.store');
-    });
+//    Route::controller(NewsCategoryController::class)->group(function () {
+//        Route::get('/nomenclature/news_category', 'index')->name('nomenclature.news_category')->middleware('can:viewAny,App\Models\NewsCategory');
+//        Route::get('/nomenclature/news_category/edit/{item?}', 'edit')->name('nomenclature.news_category.edit');
+//        Route::match(['post', 'put'], '/nomenclature/news_category/store/{item?}', 'store')->name('nomenclature.news_category.store');
+//    });
 
     Route::controller(RegulatoryActTypeController::class)->group(function () {
         Route::get('/nomenclature/regulatory_act_type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\RegulatoryActType');

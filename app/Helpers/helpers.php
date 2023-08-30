@@ -246,4 +246,83 @@ if (!function_exists('optionsUserTypes')) {
         }
         return $options;
     }
+
+    /**
+     * return publication types options
+     *
+     * @method optionsApplicationStatus
+     *
+     * @param bool $any
+     * @param string|int $anyValue
+     * @param string|int $anyName
+     * @return array
+     */
+    function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+    {
+        $options = [];
+        if( $any ) {
+            $options[] = ['value' => $anyValue, 'name' => $anyName];
+        }
+        foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
+            $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.'.$key)];
+        }
+        return $options;
+    }
+
+    if (!function_exists('optionsStatuses')) {
+
+        /**
+         * return regular status options
+         *
+         * @method optionsStatuses
+         *
+         * @param bool $any
+         * @param string|int $anyValue
+         * @param string|int $anyName
+         * @return array
+         */
+        function optionsStatuses(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+        {
+            $options = array(
+                1 => trans_choice('custom.active', 1),
+                0 => trans_choice('custom.inactive', 1),
+            );
+            if( $any ) {
+                $options[$anyValue] = $anyName;
+                ksort($options);
+            }
+            return $options;
+        }
+    }
+
+    if (!function_exists('logError')) {
+
+        /**
+         * Write to error log file
+         *
+         * @method logError
+         * @param string $method
+         * @param string $error
+         */
+        function logError(string $method, string $error): void
+        {
+            \Illuminate\Support\Facades\Log::error($method.': '.$error );
+        }
+    }
+
+    if (!function_exists('stripHtmlTags')) {
+
+        /**
+         * return striped html string
+         *
+         * @param string $html_string
+         * @param array $tags
+         * @return string
+         */
+        function stripHtmlTags(string $html_string, array $tags = [])
+        {
+            $tagsToStrip = sizeof($tags) ? $tags : ['p', 'ul', 'ol', 'li', 'b', 'i', 'u'];
+            return strip_tags($html_string, $tagsToStrip);
+        }
+    }
 }

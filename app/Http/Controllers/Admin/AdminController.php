@@ -28,6 +28,7 @@ class AdminController extends Controller
         $item->save();
     }
 
+    //TODO Why we use only translation for current locale???
     /**
      * @param $fields  //example $item->getFillable();
      * @param $item   //model;

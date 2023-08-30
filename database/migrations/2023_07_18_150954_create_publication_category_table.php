@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('publication_category', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean('active')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('publication_category_translations', function (Blueprint $table) {

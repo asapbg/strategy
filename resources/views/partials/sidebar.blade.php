@@ -10,6 +10,7 @@
 
     @php
         $user = currentUser();
+        $userIsAdmin = $user && $user->hasRole([\App\Models\CustomRole::ADMIN_USER_ROLE]);
     @endphp
     <div class="sidebar">
 
@@ -24,6 +25,32 @@
                     </a>
                 </li>
 
+                @if($userIsAdmin)
+                    @php($activePublicationCategories = str_contains('nomenclature/publication_category', request()->url()))
+                    @php($activePublications = in_array(request()->route()->getName(), ['admin.publications.index', 'admin.publications.edit']))
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if($activePublicationCategories || $activePublications) active @endif">
+                            <i class="nav-icon fas fa-ellipsis-v"></i>
+                            <p>{{ trans_choice('custom.public_sections', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.publications.index') }}"
+                                   class="nav-link @if($activePublications) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.publications', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.nomenclature.publication_category') }}"
+                                   class="nav-link @if($activePublicationCategories) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.publication_category', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
@@ -82,50 +109,50 @@
                         <p>{{ trans_choice('custom.activity_logs', 2) }}</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">
-                        <i class="nav-icon fas fa-cubes"></i>
-                        <p>{{ trans_choice('custom.news', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.news.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.news', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.nomenclature.news_category') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'news_category')) active @endif">
-                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.news_category', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'publications')) active @endif">
-                        <i class="nav-icon fas fa-cubes"></i>
-                        <p>{{ trans_choice('custom.library', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.publications.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.library', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.nomenclature.publication_category') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'publications/categories')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.publications_categories', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">--}}
+{{--                        <i class="nav-icon fas fa-cubes"></i>--}}
+{{--                        <p>{{ trans_choice('custom.news', 2) }}<i class="fas fa-angle-left right"></i></p>--}}
+{{--                    </a>--}}
+{{--                    <ul class="nav nav-treeview" style="display: none;">--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('admin.news.index') }}"--}}
+{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">--}}
+{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
+{{--                                <p>{{ trans_choice('custom.news', 2) }}</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('admin.nomenclature.news_category') }}"--}}
+{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'news_category')) active @endif">--}}
+{{--                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>--}}
+{{--                                <p>{{ trans_choice('custom.news_category', 2) }}</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'publications')) active @endif">--}}
+{{--                        <i class="nav-icon fas fa-cubes"></i>--}}
+{{--                        <p>{{ trans_choice('custom.library', 2) }}<i class="fas fa-angle-left right"></i></p>--}}
+{{--                    </a>--}}
+{{--                    <ul class="nav nav-treeview" style="display: none;">--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('admin.publications.index') }}"--}}
+{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">--}}
+{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
+{{--                                <p>{{ trans_choice('custom.library', 2) }}</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('admin.nomenclature.publication_category') }}"--}}
+{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'publications/categories')) active @endif">--}}
+{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
+{{--                                <p>{{ trans_choice('custom.publications_categories', 2) }}</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
                 <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
                         <i class="nav-icon fas fa-info"></i>
