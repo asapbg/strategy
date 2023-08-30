@@ -274,5 +274,7 @@ return [
         'institution_id'            => 'Институция',
         'confirm_password'          => 'Потвърждение на парола',
         'user_type'                 => 'Тип потребител',
+        //settings admin
+        'system_email'              => 'Ел. поща (системни известия)'
     ],
 ];

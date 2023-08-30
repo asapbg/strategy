@@ -270,13 +270,6 @@
                         </a>
                     </li>
                     @endcan
-                    <li class="nav-item">
-                        <a href="{{ route('admin.settings.index') }}"
-                           class="nav-link @if(strstr(url()->current(), 'settings')) active @endif">
-                            <i class="fas fa-cog"></i>
-                            <p>{{ trans_choice('custom.settings', 2) }}</p>
-                        </a>
-                    </li>
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"
@@ -311,6 +304,17 @@
                         </a>
                     </li>
                 @endif
+
+                @canany(['manage.*', 'manage.settings'])
+                    <hr class="text-white">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.settings') }}"
+                           class="nav-link @if(strstr(url()->current(), 'settings')) active @endif">
+                            <i class="fas fa-cogs"></i>
+                            <p>{{ trans_choice('custom.settings', 1) }}</p>
+                        </a>
+                    </li>
+                @endcanany
             </ul>
         </nav>
     </div>

@@ -340,4 +340,7 @@ return [
     //users
     'users.type.1'                              => 'Вътрешен',
     'users.type.2'                              => 'Външен',
+    //settings
+    'settings.sections.system_notifications'    => 'Известия',
+    'settings.system_email'                     => 'Ел. поща за получаване на системни известия',
 ];

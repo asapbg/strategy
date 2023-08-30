@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CustomRole;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -22,9 +23,11 @@ class PermissionsController extends Controller
      */
     public function index()
     {
-        $roles = Role::whereActive(true)->get();
-        $perms = Permission::with('roles')->get();
-
+        $roles = Role::whereActive(true)
+            ->where('name', '<>', CustomRole::SUPER_USER_ROLE)
+            ->get();
+//        $perms = Permission::with('roles')->get();
+        $perms = Permission::with('roles')->orderBy('id', 'asc')->get();
         return $this->view('admin.permissions.index', compact('roles', 'perms'));
     }
     /**

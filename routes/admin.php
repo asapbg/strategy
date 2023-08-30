@@ -41,11 +41,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
     // Settings
-    Route::controller(SettingsController::class)->group(function () {
-        Route::get('/settings', 'index')->name('settings.index')->middleware('can:viewAny,App\Models\Setting');
-        Route::match(['post', 'put'], '/settings/store/{item?}', 'store')->name('settings.store');
+    Route::controller(\App\Http\Controllers\Admin\SettingsController::class)->group(function () {
+        Route::get('/settings/{section?}',                'index')->name('settings')->middleware('can:viewAny,App\Models\Settings');
+        Route::match(['put'], '/settings',         'store')->name('settings.store');
     });
-    
+
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
     // Content

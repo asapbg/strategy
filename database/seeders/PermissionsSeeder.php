@@ -31,9 +31,13 @@ class PermissionsSeeder extends Seeder
             $this->command->info("Permission with name $display_name created successfully");
         }
 
+        //add permissions to our role
+        $role = Role::whereName('service_user')->first();
+        $role->givePermissionTo('manage.*');
+
         $role = Role::whereName('super-admin')->first();
         $role->givePermissionTo('manage.*');
-        
+
         $moderators = [
             'advisory',
             'strategic',

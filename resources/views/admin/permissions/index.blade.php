@@ -19,7 +19,7 @@
                         <thead>
                         <th>Права/Роли</th>
                         @foreach($roles as $role)
-                            <th>{{$role->name}}</th>
+                            <th>{{$role->display_name}}</th>
                         @endforeach
                         <th>Действия</th>
                         </thead>
@@ -74,7 +74,7 @@
                         <tfoot>
                         <th>Права/Роли</th>
                         @foreach($roles as $role)
-                            <th>{{$role->name}}</th>
+                            <th>{{$role->display_name}}</th>
                         @endforeach
                         <th>Действия</th>
                         </tfoot>

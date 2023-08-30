@@ -1,5 +1,6 @@
 <?php
 return [
+    'service_user' => 'Сервизен потребител',
     'super-admin' => 'Супер Администратор',
     'moderator-advisory' => 'Модератор „Обществени консултации“',
     'moderator-strategic' => 'Модератор „Стратегически документи"',

@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key');
-            $table->string('value');
+            $table->string('name')->unique();
+            $table->tinyInteger('editable')->default(0);
+            $table->tinyInteger('is_required')->default(0);
+            $table->string('value')->nullable();
             $table->string('section');
+            $table->string('type'); //{text,number,...}
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -13,17 +13,27 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        $settings = [
-            'admin' => [
-                'admin_email' => 'admin@asap.bg',
-            ],
-        ];
+        $data = array(
+            [
+                'section' => 'system_notifications',
+                'name' => 'system_email',
+                'type' => 'text',
+                'editable' => 1,
+                'is_required' => 1
+            ]
+        );
 
-        foreach ($settings as $section => $entries) {
-            foreach ($entries as $key => $value) {
-                $item = new Setting(compact('key', 'value', 'section'));
-                $item->save();
+        foreach ($data as $s) {
+            $record = Setting::where('name', $s['name'])->first();
+
+            if ($record) {
+                $this->command->line("Setting ".$s['name']." already exists in db");
+                continue;
             }
+
+            Setting::create($s);
+
+            $this->command->info("Setting with name ".$s['name']." created successfully");
         }
     }
 }

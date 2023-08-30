@@ -2,28 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\ModelActivityExtend;
-use App\Traits\FilterSort;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Setting extends ModelActivityExtend
 {
-    use FilterSort;
-
-    const PAGINATE = 20;
-    const MODULE_NAME = 'custom.settings';
-
+    use SoftDeletes;
+    const MODULE_NAME = 'custom.setting';
+    protected $guarded = [];
     public $timestamps = true;
 
+    const SESSION_LIMIT_KEY = 'session_time_limit';
+
     //activity
-    protected string $logName = "setting";
+    protected string $logName = "settings";
 
-    protected $fillable = ['key', 'value', 'section'];
-
-    /**
-     * Get the model name
-     */
-    public function getModelName() {
-        return $this->key;
+    public function scopeEditable($query)
+    {
+        $query->where('settings.editable', 1);
     }
 }
