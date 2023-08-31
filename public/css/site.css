@@ -908,3 +908,16 @@ input[type=checkbox] {
     border-radius: 10px;
 }
 
+.gradient-one {
+    background: linear-gradient(90deg, rgb(58 112 185) 0%, rgb(2 238 227) 100%);
+}
+.gradient-two{
+    background: linear-gradient(90deg, rgb(74 86 144) 0%, rgb(182 175 242) 100%);
+}
+.gradient-three{
+    background: linear-gradient(90deg, rgb(18 123 118) 0%, rgb(101 218 200) 100%);
+}
+.gradient-four{
+    background: linear-gradient(90deg, rgb(122 104 200) 0%, rgb(14 226 232) 100%);
+}
+

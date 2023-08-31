@@ -33,47 +33,49 @@
   <div id="topbar">
     <div class="container">
       <div class="row top">
-        <div class="col-md-5">
+        <div class="col-md-6">
           <div class="contact-info d-flex align-items-center">
             <a class="navbar-brand" href="#"><img src="/img/logo_title.png" alt="Logo" id="imageLogo"></a>
           </div>
         </div>
 
-        <div class="col-md-4">
-          <div class="search">
-            <i class="fas fa-search main-color"></i>
-            <label for="search-field" class="visually-hidden">Търсене в сайта</label>
-            <input type="text" class="form-control" id="search-field" placeholder="Търсене в сайта">
-            <button class="btn btn-primary">Търсене</button>
-          </div>
-        </div>
+{{--        <div class="col-md-4">--}}
+{{--          <div class="search">--}}
+{{--            <i class="fas fa-search main-color"></i>--}}
+{{--            <label for="search-field" class="visually-hidden">Търсене в сайта</label>--}}
+{{--            <input type="text" class="form-control" id="search-field" placeholder="Търсене в сайта">--}}
+{{--            <button class="btn btn-primary">Търсене</button>--}}
+{{--          </div>--}}
+{{--        </div>--}}
 
-        <div class="col-md-3 text-end">
-          <div class="auth">
+        <div class="col-md-6 text-end">
+          <div class="auth text-right">
             @if(app('auth')->check())
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
-                @php($user = app('auth')->user())
-                {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="profile-menu">
-                <li>
-                  <a class="dropdown-item" href="{{ route('profile') }}">{{ trans_choice('custom.profiles', 1) }}</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:;"
-                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                      {{ __('auth.logout') }}
-                  </a>
-                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                      @csrf
-                  </form>
-                </li>
-              </ul>
-            </div>
+                <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                        @php($user = app('auth')->user())
+                        {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="profile-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile') }}">{{ trans_choice('custom.profiles', 1) }}</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:;"
+                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                              {{ __('auth.logout') }}
+                          </a>
+                          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                              @csrf
+                          </form>
+                        </li>
+                      </ul>
+                </div>
             @else
-            <a class="btn btn-default" href="{{ route('login') }}">{{ __('custom.login') }}</a>
-            <a class="btn btn-default" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                  <div class="registration text-right">
+                    <a class="btn btn-default" href="{{ route('login') }}">{{ __('custom.login') }}</a>
+                    <a class="btn btn-default" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                  </div>
             @endif
           </div>
         </div>
@@ -89,39 +91,51 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav ">
-          <li class="nav-item mx-1">
-            <a class="nav-link @if(request()->route()->getName() == 'home') active @endif" aria-current="page" href="/">Начало</a>
+          <li class="nav-item">
+            <a class="nav-link @if(request()->route()->getName() == 'home') active @endif" aria-current="page" href="/"><i class="bi bi-house-door-fill text-light"></i></a>
           </li>
-          <li class="nav-item mx-1">
+          <li class="nav-item">
             <a class="nav-link @if(str_contains(request()->url(), 'public_consultations_view')) active @endif" href="{{ url('/consultations') }}">Обществени консултации</a>
           </li>
-          <li class="nav-item mx-1">
+            <li class="nav-item ">
+                <a class="nav-link " aria-current="page" href="#">Оценка на въздействие</a>
+            </li>
+          <li class="nav-item">
             <a class="nav-link" href="#">Актове на МС</a>
           </li>
 
-          <li class="nav-item mx-1">
+          <li class="nav-item">
             <a class="nav-link" href="#">Стратегически документи</a>
           </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="#">Консултативни съвети</a>
+            </li>
 
-          <li class="nav-item mx-1">
-            <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_library_list')) active @endif" href="#">Публикации</a>
-          </li>
+            <li class="nav-item ">
+                <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_library_list')) active @endif" href="#">Библиотека</a>
+            </li>
 
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="#">OGP</a>
-          </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="#">OGP</a>
+            </li>
 
-          <li class="nav-item mx-1">
-            <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_news')) active @endif" href="#">Новини</a>
-          </li>
+            <li class="nav-item ">
+                <a class="nav-link @if(str_contains(request()->url(), '8_2_1_1_9_public_news')) active @endif" href="#">Новини</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="#">EN</a>
+            </li>
+            <li class="nav-item" style="padding-right: 0px !important;">
+                <a class="nav-link" href="#"><i class="fa-brands fa-facebook text-light"></i></a>
+            </li>
         </ul>
       </div>
     </div>
   </nav>
 </header>
 
-
+@if(request()->route()->getName() != 'home')
 <section class="slider" style="margin-top: 135px;">
   <div class="container">
     <div class="row">
@@ -140,13 +154,19 @@
     </div>
   </div>
 </section>
+@endif
 
-
+@if(request()->route()->getName() != 'home')
 <section class="public-page">
   <div class="container" id="app">
+@endif
+
     @yield('content')
+
+@if(request()->route()->getName() != 'home')
   </div>
 </section>
+@endif
 
 <footer>
   <div class="container">
