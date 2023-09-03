@@ -172,6 +172,7 @@ return [
     'no_data'                          => 'Няма данни',
     'users_lists'                      => 'Списък с потребители',
     'list_with'                        => 'Списък',
+    'columns'                           => 'Колона|Колони',
     'choose_password'                  => 'Въведете парола',
     'password_changed_at'              => 'Смяна на парола',
     'activity_log_date'                => 'Дата/час на действието',
@@ -341,6 +342,7 @@ return [
     'general_info'                    => 'Основна информация',
     'files'                           => 'Файлове',
     'download'                        => 'Изтегли',
+    'ord'                               => 'Порденост',
     //users
     'users.type.1'                              => 'Вътрешен',
     'users.type.2'                              => 'Външен',
@@ -352,5 +354,9 @@ return [
     'public_sections.types.TYPE_LIBRARY'        => 'Библиотека',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
     'public_sections.types.TYPE_NEWS'           => 'Новина',
+    //dynamic structures
+    'dynamic_structures'                        => 'Динамична структура|Динамични структури',
+    'dynamic_structures.type.LEGISLATIVE_PROGRAM'                        => 'Законодателна програма',
+    'dynamic_structures.type.OPERATIONAL_PROGRAM'                        => 'Оперативна програма',
 
 ];

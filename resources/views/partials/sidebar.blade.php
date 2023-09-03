@@ -291,7 +291,7 @@
                     @can('manage.nomenclatures')
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
-                           class="nav-link @if(strstr(url()->current(), 'nomenclature')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'nomenclature')) active @endif">
                             <i class="fas fa-file"></i>
                             <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
                         </a>
@@ -300,21 +300,21 @@
                     <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.roles')}}"
-                           class="nav-link @if(strstr(url()->current(), 'roles')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'roles')) active @endif">
                             <i class="fas fa-users"></i>
                             <p>{{ trans_choice('custom.roles', 2) }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.users')}}"
-                           class="nav-link @if(strstr(url()->current(), 'users')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'users')) active @endif">
                             <i class="fas fa-user"></i>
                             <p>{{ trans_choice('custom.users', 2) }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.permissions')}}"
-                           class="nav-link @if(strstr(url()->current(), 'permissions')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
                             <i class="fas fa-gavel"></i>
                             <p>{{ trans_choice('custom.permissions', 2) }}</p>
                         </a>
@@ -325,20 +325,29 @@
                     <li class="nav-header">Лични данни</li>
                     <li class="nav-item">
                         <a href="{{ route('admin.users.profile.edit', $user->id) }}"
-                           class="nav-link @if(strstr(url()->current(), 'users/profile/')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'users/profile/')) active @endif">
                             <i class="fas fa-user-cog"></i>
                             <p>{{ trans_choice('custom.profiles', 1) }}</p>
                         </a>
                     </li>
                 @endif
 
+                <hr class="text-white">
                 @canany(['manage.*', 'manage.settings'])
-                    <hr class="text-white">
                     <li class="nav-item">
                         <a href="{{ route('admin.settings') }}"
-                           class="nav-link @if(strstr(url()->current(), 'settings')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'settings')) active @endif">
                             <i class="fas fa-cogs"></i>
                             <p>{{ trans_choice('custom.settings', 1) }}</p>
+                        </a>
+                    </li>
+                @endcanany
+                @canany(['manage.*', 'manage.dynamic_structures'])
+                    <li class="nav-item">
+                        <a href="{{ route('admin.dynamic_structures') }}"
+                           class="nav-link @if(str_contains(url()->current(), 'dynamic-structures')) active @endif">
+                            <i class="fas fa-cogs"></i>
+                            <p>{{ trans_choice('custom.dynamic_structures', 2) }}</p>
                         </a>
                     </li>
                 @endcanany

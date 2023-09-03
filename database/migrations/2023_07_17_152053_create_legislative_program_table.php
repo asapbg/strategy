@@ -15,23 +15,21 @@ return new class extends Migration
     {
         Schema::create('legislative_program', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('effective_from');
-            $table->date('effective_to');
-            $table->boolean('active')->nullable();
+            $table->tinyInteger('public')->default(0);
+            $table->json('active_columns'); //array with columns ids which belongs to this legislative program at moment of creation
+            $table->date('from_date');
+            $table->date('to_date');
             $table->timestamps();
+            $table->softDeletes();
         });
 
-        Schema::create('legislative_program_translations', function (Blueprint $table) {
+        Schema::create('legislative_program_row', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('locale')->index();
             $table->unsignedInteger('legislative_program_id');
-            $table->unique(['legislative_program_id', 'locale']);
-            $table->foreign('legislative_program_id')
-                ->references('id')
-                ->on('legislative_program');
-
-            $table->text('title');
-            $table->text('description');
+            $table->unsignedInteger('dynamic_structures_column_id');
+            $table->tinyInteger('month');
+            $table->string('value')->nullable(); //column value
+            $table->timestamps();
         });
     }
 
@@ -42,7 +40,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('legislative_program_translations');
+        Schema::dropIfExists('legislative_program_row');
         Schema::dropIfExists('legislative_program');
     }
 };

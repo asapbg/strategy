@@ -15,24 +15,23 @@ return new class extends Migration
     {
         Schema::create('operational_program', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('effective_from');
-            $table->date('effective_to');
-            $table->boolean('active')->nullable();
+            $table->tinyInteger('public')->default(0);
+            $table->json('active_columns'); //array with columns ids which belongs to this operational program at moment of creation
+            $table->date('from_date');
+            $table->date('to_date');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('operational_program_row', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedInteger('operational_program_id');
+            $table->unsignedInteger('dynamic_structures_column_id');
+            $table->tinyInteger('month');
+            $table->string('value')->nullable(); //column value
             $table->timestamps();
         });
 
-        Schema::create('operational_program_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('locale')->index();
-            $table->unsignedInteger('operational_program_id');
-            $table->unique(['operational_program_id', 'locale']);
-            $table->foreign('operational_program_id')
-                ->references('id')
-                ->on('operational_program');
-
-            $table->text('title');
-            $table->text('description');
-        });
     }
 
     /**
@@ -42,7 +41,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('operational_program_translations');
+        Schema::dropIfExists('operational_program_row');
         Schema::dropIfExists('operational_program');
     }
 };

@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             RegulatoryActTypesSeeder::class,
             PolicyAreaSeeder::class,
             SettingsSeeder::class,
+            DynamicStructureSeeder::class,
         ]);
     }
 }

@@ -17,8 +17,10 @@ class File extends Model
     const CODE_OBJ_PUBLICATION = 1;
 
     const PUBLICATION_UPLOAD_DIR = 'publications/';
+    const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc/';
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xslx', 'pdf', 'jpeg', 'jpg', 'png'];
+    protected $guarded = [];
 
     /**
      * Content

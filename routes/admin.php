@@ -52,6 +52,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['put'], '/settings',         'store')->name('settings.store');
     });
 
+    //Dynamic Structures
+    Route::controller(\App\Http\Controllers\Admin\DynamicStructureController::class)->group(function () {
+        Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
+        Route::get( '/dynamic-structures/edit/{item}',         'edit')->name('dynamic_structures.edit');
+        Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
+    });
+
     // Publications
     Route::controller(PublicationController::class)->group(function () {
         Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');

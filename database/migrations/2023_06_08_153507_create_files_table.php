@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_object');
             $table->integer('code_object');
+            $table->tinyInteger('doc_type')->nullable();
             $table->string('filename', 200)->nullable();
             $table->string('content_type', 500)->nullable();
 //            $table->binary('content')->nullable();
