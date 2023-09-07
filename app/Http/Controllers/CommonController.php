@@ -153,7 +153,7 @@ class CommonController extends Controller
      */
     public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
     {
-        if( $file->code_object != File::CODE_OBJ_PUBLICATION ) {
+        if( !in_array($file->code_object, [File::CODE_OBJ_PUBLICATION, File::CODE_OBJ_LEGISLATIVE_PROGRAM, File::CODE_OBJ_OPERATIONAL_PROGRAM]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 

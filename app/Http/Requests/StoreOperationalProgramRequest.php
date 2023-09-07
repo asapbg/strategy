@@ -25,18 +25,40 @@ class StoreOperationalProgramRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'effective_from' => ['required', 'date'],
-            'effective_to' => ['required', 'date'],
+            'id' => ['required', 'numeric'],
+            'new_row' => ['nullable', 'numeric'],
+            'save' => ['nullable', 'numeric'],
         ];
 
-        if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:institution'];
+        if( request()->input('save') ) {
+            $rules['from_date'] = ['required', 'string', 'date_format:m-Y'];
+            $rules['to_date'] = ['required', 'string', 'date_format:m-Y'];
+            $rules['assessment'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
+            $rules['opinion'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
+
+            if (request()->input('id')) {
+                $rules['col'] = ['array'];
+                $rules['col.*'] = ['required', 'numeric', 'exists:operational_program_row,id'];
+                $rules['val'] = ['array'];
+                $rules['val.*'] = ['required', 'string', 'max:255'];
+            }
         }
 
-        foreach (OperationalProgram::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+        if( request()->input('new_row') ) {
+            $rules['new_val_col'] = ['array'];
+            $rules['new_val_col.*'] = ['required', 'numeric', 'exists:dynamic_structure_column,id'];
+            $rules['new_val'] = ['array'];
+            $rules['new_val.*'] = ['required', 'string', 'max:255'];
+            $rules['month'] = ['required_with:new_val', 'string', 'max:7'];
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'month.required_with' => 'Задължително поле'
+        ];
     }
 }

@@ -18,7 +18,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script>
-        GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
+        var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
     </script>
     <script src="{{ asset('vendor/ckeditor/ckeditor.min.js') }}"></script>
     <script src="{{ asset('vendor/ckeditor/translations/bg.min.js') }}"></script>
@@ -83,7 +83,7 @@
 <script src="{{ asset('js/admin.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
-    
+
 });
 </script>
 @stack('scripts')

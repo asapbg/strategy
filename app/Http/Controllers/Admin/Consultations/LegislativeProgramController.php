@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers\Admin\Consultations;
 
+use App\Enums\DocTypesEnum;
+use App\Enums\DynamicStructureTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreLegislativeProgramRequest;
 use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\LegislativeProgramRow;
+use App\Models\DynamicStructure;
+use App\Models\DynamicStructureColumn;
+use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,6 +23,7 @@ class LegislativeProgramController extends AdminController
     const STORE_ROUTE = 'admin.consultations.legislative_programs.store';
     const LIST_VIEW = 'admin.consultations.legislative_programs.index';
     const EDIT_VIEW = 'admin.consultations.legislative_programs.edit';
+    const SHOW_VIEW = 'admin.consultations.legislative_programs.show';
 
     public function index(Request $request)
     {
@@ -23,14 +31,28 @@ class LegislativeProgramController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
 
-        $items = LegislativeProgram::with(['translation'])
-            ->FilterBy($requestFilter)
+        $items = LegislativeProgram::FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'LegislativeProgram';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'editRouteName', 'listRouteName'));
+    }
+
+    public function show(Request $request, LegislativeProgram $item)
+    {
+        if( $request->user()->cannot('view', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        $data = $item->getTableData();
+        $columns = $item->id ?
+            DynamicStructureColumn::whereIn('id', json_decode($item->active_columns))->get()
+            : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
+        $listRouteName = self::LIST_ROUTE;
+        $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+
+        return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'columns', 'data', 'months'));
     }
 
     /**
@@ -43,53 +65,142 @@ class LegislativeProgramController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LegislativeProgram::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+        $data = $item->getTableData();
+        $columns = $item->id ?
+            DynamicStructureColumn::whereIn('id', json_decode($item->active_columns))->orderBy('id')->get()
+            : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = LegislativeProgram::translationFieldsProperties();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
+        $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'columns', 'data', 'months'));
     }
 
-    public function store(StoreLegislativeProgramRequest $request, $item = null)
+    public function store(StoreLegislativeProgramRequest $request)
     {
-        $item = $this->getRecord($item);
-        $isEdit = (bool)$item->id;
         $validated = $request->validated();
-        if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', LegislativeProgram::class) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+        $id = (int)$validated['id'];
+
+        if( $request->isMethod('put') ) {
+            $item = $this->getRecord($id);
+            if( $request->user()->cannot('update', $item) ) {
+                abort(Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            $item = new LegislativeProgram();
+            if( $request->user()->cannot('create', LegislativeProgram::class) ) {
+                abort(Response::HTTP_FORBIDDEN);
+            }
         }
-
+        DB::beginTransaction();
         try {
-            $fillable = $this->getFillableValidated($validated, $item);
-            $item->fill($fillable);
-            $item->active = $request->input('active') ? 1 : 0;
-            $item->save();
-            $this->storeTranslateOrNew(LegislativeProgram::TRANSLATABLE_FIELDS, $item, $validated);
-
-            if ($isEdit) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_m'));
+            if( !$id ) {
+                $activeColumns = DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)
+                    ->where('active', '=', 1)
+                    ->first()->columns
+                    ->pluck('id')
+                    ->toArray();
+                $item->active_columns = json_encode($activeColumns);
             }
 
-            return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.created_successfully_m'));
+            //update program
+            if( isset($validated['save']) ) {
+                $item->from_date = databaseDate('01-'.$validated['from_date']);
+                $item->to_date = databaseDate('01-'.$validated['to_date']);
+                $item->save();
+
+                if( $item ) {
+                    // Upload File
+                    foreach (['assessment', 'opinion'] as $typeFile) {
+                        if( isset($validated[$typeFile]) ) {
+                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+                            $this->uploadFile($item, $validated[$typeFile], File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType);
+                        }
+                    }
+                }
+            }
+
+            if( $item ) {
+                //update program
+                if( isset($validated['save']) ) {
+                    if (isset($validated['col']) && sizeof($validated['col'])) {
+                        if (isset($validated['val']) && sizeof($validated['val'])) {
+                            if (sizeof($validated['col']) === sizeof($validated['val'])) {
+                                foreach ($validated['col'] as $k => $c) {
+                                    $item->records()->where('id', '=', (int)$c)->update(['value' => $validated['val'][$k]]);
+                                }
+                            }
+                        }
+                    }
+                }
+                //Add new row
+                if( isset($validated['new_row']) ) {
+                    if (isset($validated['new_val_col']) && sizeof($validated['new_val_col'])) {
+                        if (isset($validated['new_val']) && sizeof($validated['new_val'])) {
+                            if (sizeof($validated['new_val_col']) === sizeof($validated['new_val'])) {
+                                $rowNums = $item->records->pluck('row_num')->toArray();
+                                $rowNums = empty($rowNums) ? 0 : max($rowNums);
+                                foreach ($validated['new_val_col'] as $k => $dsColumnId) {
+                                    $newRows[] = array(
+                                        'month' => $validated['month'],
+                                        'legislative_program_id' => $item->id,
+                                        'dynamic_structures_column_id' => $dsColumnId,
+                                        'value' => $validated['new_val'][$k],
+                                        'row_num' => $rowNums + 1
+                                    );
+                                }
+                                LegislativeProgramRow::insert($newRows);
+                            }
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect(route(self::EDIT_ROUTE, $item) )
+                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
         } catch (\Exception $e) {
-            Log::error($e);
+            DB::rollBack();
+            Log::error($e->getMessage());
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
+    }
 
+    public function removeRow(Request $request, LegislativeProgram $item, int $rowNum)
+    {
+        if( !$item ) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        if( $request->user()->cannot('update', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        $programId = $item->id;
+        $item->records()->where('row_num', '=', $rowNum)->delete();
+        return redirect(route(self::EDIT_ROUTE, $programId) )
+            ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+    }
+
+    public function publish(Request $request, LegislativeProgram $item)
+    {
+        if( $request->user()->cannot('publish', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        if( !$item->assessment || !$item->assessmentOpinion ){
+            return back()->with('danger', __('custom.program_missing_files'));
+        }
+
+        $item->public = 1;
+        $item->save();
+
+        return redirect(route(self::LIST_ROUTE) )
+            ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
     }
 
     private function filters($request)
     {
-        return array(
-            'title' => array(
-                'type' => 'text',
-                'placeholder' => __('validation.attributes.title'),
-                'value' => $request->input('title'),
-                'col' => 'col-md-4'
-            )
-        );
+        return array();
     }
 
     /**
@@ -104,7 +215,7 @@ class LegislativeProgramController extends AdminController
         }
         $item = $qItem->find((int)$id);
         if( !$item ) {
-            return new LegislativeProgram();
+            abort(Response::HTTP_NOT_FOUND);
         }
         return $item;
     }

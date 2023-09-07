@@ -325,4 +325,25 @@ if (!function_exists('optionsUserTypes')) {
             return strip_tags($html_string, $tagsToStrip);
         }
     }
+
+    if (!function_exists('extractMonths')) {
+
+        /**
+         * return months (with or without year) from time period
+         *
+         * @param string $form
+         * @param string $to
+         * @param bool $year
+         * @return array
+         */
+        function extractMonths(string $form, string $to, bool $year = true): array
+        {
+            $months = [];
+            $period = \Carbon\CarbonPeriod::create($form, '1 month', $to);
+            foreach ($period as $d) {
+                $months[] = $year ? $d->format("m.Y") : $d->format("m");
+            }
+            return $months;
+        }
+    }
 }

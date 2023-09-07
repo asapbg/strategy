@@ -95,6 +95,7 @@ return [
     'analyzes'                         => 'Анализ|Анализи',
     'activity_logs'                    => 'История на действията|Обща активност',
     'urgent'                           => 'спешно|спешни',
+    'months'                            => 'Месец|Месеца',
     'internal_users'                   => 'Вътрешен потребител|Вътрешни потребители',
     'external_users'                   => 'Външен потребител|Външни потребители',
     'opened'                           => 'Отворени',
@@ -334,6 +335,7 @@ return [
     'organisation'                    => 'Юридическо лице',
     'person'                          => 'Физическо лице',
     'draft'                           => 'Чернова',
+    'public_f'                        => 'Публична',
     'completed'                       => 'Завършен',
     'change'                          => 'Промени',
     'btn.reset_password'              => 'Смени парола',
@@ -343,6 +345,10 @@ return [
     'files'                           => 'Файлове',
     'download'                        => 'Изтегли',
     'ord'                               => 'Порденост',
+    'period'                               => 'Период',
+    'new_f'                               => 'Нова',
+    'select_file'                               => 'Изберете файл',
+    'no_file_chosen'                               => 'Не е избран файл',
     //users
     'users.type.1'                              => 'Вътрешен',
     'users.type.2'                              => 'Външен',
@@ -358,5 +364,8 @@ return [
     'dynamic_structures'                        => 'Динамична структура|Динамични структури',
     'dynamic_structures.type.LEGISLATIVE_PROGRAM'                        => 'Законодателна програма',
     'dynamic_structures.type.OPERATIONAL_PROGRAM'                        => 'Оперативна програма',
+    //
+    'publish'                                   =>  'Публикувай',
+    'program_missing_files'                     =>  'Не са приложени всички необходими документи към програмата',
 
 ];

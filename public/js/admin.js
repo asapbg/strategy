@@ -2776,7 +2776,22 @@ $(document).ready(function (e) {
             format: 'dd-mm-yyyy',
             todayHighlight: true,
             orientation: "bottom left",
-            autoclose: true
+            autoclose: true,
+        });
+    }
+
+    if($('.datepicker-month').length) {
+        $('.datepicker-month').datepicker({
+            format: 'mm-yyyy',
+            viewMode: "months",
+            minViewMode: "months",
+            changeMonth: true,
+            changeYear: true,
+            orientation: "bottom left",
+            autoclose: true,
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
         });
     }
 
@@ -2870,15 +2885,15 @@ $(document).ready(function (e) {
             language: GlobalLang,
         })
         .catch(error => {
-            console.error(error);
+            //console.error(error);
         });
 
-    $('[data-provide="datepicker"]').datepicker({
-        todayBtn: true,
-        language: GlobalLang,
-        format: 'yyyy-mm-dd',
-        todayHighlight: true,
-        orientation: "bottom left",
-        autoclose: true
-    });
+    // $('[data-provide="datepicker"]').datepicker({
+    //     todayBtn: true,
+    //     language: GlobalLang,
+    //     format: 'yyyy-mm-dd',
+    //     todayHighlight: true,
+    //     orientation: "bottom left",
+    //     autoclose: true
+    // });
 })

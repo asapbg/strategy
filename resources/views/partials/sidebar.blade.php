@@ -51,6 +51,51 @@
                         </ul>
                     </li>
                 @endif
+                @canany(['manage.*', 'manage.advisory'])
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>{{ trans_choice('custom.public_consultations', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.consultations.legislative_programs.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'legislative_programs')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.consultations.operational_programs.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.consultations.public_consultations.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.consultations', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.consultations.comments.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'comments')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.comments', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.nomenclature.consultation_document_type') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'consultation_document_type')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcanany
                 <!-- Admin -->
                 @can('manage.*')
                 <li class="nav-item">
@@ -164,49 +209,6 @@
                             class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
                             <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'consultations')) active @endif">
-                        <i class="nav-icon fas fa-bullhorn"></i>
-                        <p>{{ trans_choice('custom.public_consultations', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.consultations.legislative_programs.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'legislative_programs')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.consultations.operational_programs.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.consultations.public_consultations.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.consultations', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.consultations.comments.index') }}"
-                            class="nav-link @if(strstr(url()->current(), 'comments')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.comments', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.nomenclature.consultation_document_type') }}"
-                            class="nav-link @if(strstr(url()->current(), 'consultation_document_type')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
                             </a>
                         </li>
                     </ul>

@@ -25,11 +25,13 @@ return new class extends Migration
 
         Schema::create('operational_program_row', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('row_num');
             $table->unsignedInteger('operational_program_id');
             $table->unsignedInteger('dynamic_structures_column_id');
-            $table->tinyInteger('month');
+            $table->string('month', 7);
             $table->string('value')->nullable(); //column value
             $table->timestamps();
+            $table->softDeletes();
         });
 
     }

@@ -40,10 +40,37 @@ use App\Http\Controllers\Admin\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
         Route::get('/download/{file}', 'downloadFile')->name('download.file');
         Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
         Route::post('/upload-file/{object_id}/{object_type}','uploadFile')->name('upload.file');
+    });
+
+    // Publications
+    Route::controller(PublicationController::class)->group(function () {
+        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/publications/edit/{item?}', 'edit')->name('publications.edit');
+        Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
+    });
+
+    // Consultations
+    Route::controller(LegislativeProgramController::class)->group(function () {
+        Route::get('/consultations/legislative_programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
+        Route::get('/consultations/legislative_programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
+        Route::get('/consultations/legislative_programs/view/{item}', 'show')->name('consultations.legislative_programs.view');
+        Route::get('/consultations/legislative_programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
+        Route::match(['post', 'put'], '/consultations/legislative_programs/store', 'store')->name('consultations.legislative_programs.store');
+        Route::get('/consultations/legislative_programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
+    });
+    Route::controller(OperationalProgramController::class)->group(function () {
+        Route::get('/consultations/operational_programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
+        Route::get('/consultations/operational_programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
+        Route::get('/consultations/operational_programs/view/{item}', 'show')->name('consultations.operational_programs.view');
+        Route::get('/consultations/operational_programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
+        Route::match(['post', 'put'], '/consultations/operational_programs/store', 'store')->name('consultations.operational_programs.store');
+        Route::get('/consultations/operational_programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
     });
 
     // Settings
@@ -59,14 +86,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
     });
 
-    // Publications
-    Route::controller(PublicationController::class)->group(function () {
-        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/publications/edit/{item?}', 'edit')->name('publications.edit');
-        Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
-    });
 
-    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
+    //=========
 
     // Content
     Route::controller(PageController::class)->group(function () {
@@ -107,16 +129,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/public_consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
         Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
     });
-    Route::controller(LegislativeProgramController::class)->group(function () {
-        Route::get('/consultations/legislative_programs', 'index')->name('consultations.legislative_programs.index');
-        Route::get('/consultations/legislative_programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::match(['post', 'put'], '/consultations/legislative_programs/store/{item?}', 'store')->name('consultations.legislative_programs.store');
-    });
-    Route::controller(OperationalProgramController::class)->group(function () {
-        Route::get('/consultations/operational_programs', 'index')->name('consultations.operational_programs.index');
-        Route::get('/consultations/operational_programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
-        Route::match(['post', 'put'], '/consultations/operational_programs/store/{item?}', 'store')->name('consultations.operational_programs.store');
-    });
+//    Route::controller(LegislativeProgramController::class)->group(function () {
+//        Route::get('/consultations/legislative_programs', 'index')->name('consultations.legislative_programs.index');
+//        Route::get('/consultations/legislative_programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
+//        Route::match(['post', 'put'], '/consultations/legislative_programs/store/{item?}', 'store')->name('consultations.legislative_programs.store');
+//    });
+//    Route::controller(OperationalProgramController::class)->group(function () {
+//        Route::get('/consultations/operational_programs', 'index')->name('consultations.operational_programs.index');
+//        Route::get('/consultations/operational_programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
+//        Route::match(['post', 'put'], '/consultations/operational_programs/store/{item?}', 'store')->name('consultations.operational_programs.store');
+//    });
 
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {

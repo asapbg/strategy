@@ -19,7 +19,8 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ __('custom.period') }}</th>
+                            <th>{{ __('custom.public_f') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -28,8 +29,25 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->title }}</td>
+                                    <td>{{ $item->period }}</td>
+                                    <td>@if($item->public) <i class="fa fa-check text-success"></i> @else <i class="fa fa-minus text-danger"></i> @endif</td>
                                     <td class="text-center">
+                                        @can('view', $item)
+                                            <a href="{{ route('admin.consultations.operational_programs.view', [$item]) }}"
+                                               class="btn btn-sm btn-warning mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.preview') }}">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        @endcan
+                                        @can('publish', $item)
+                                            <a href="{{ route('admin.consultations.operational_programs.publish', [$item]) }}"
+                                               class="btn btn-sm btn-success mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.publish') }}">
+                                                <i class="fa fa-paper-plane"></i>
+                                            </a>
+                                        @endcan
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
                                                class="btn btn-sm btn-info"

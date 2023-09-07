@@ -15,9 +15,11 @@ class File extends Model
     public $timestamps = true;
 
     const CODE_OBJ_PUBLICATION = 1;
+    const CODE_OBJ_LEGISLATIVE_PROGRAM = 2;
+    const CODE_OBJ_OPERATIONAL_PROGRAM = 3;
 
-    const PUBLICATION_UPLOAD_DIR = 'publications/';
-    const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc/';
+    const PUBLICATION_UPLOAD_DIR = 'publications'.DIRECTORY_SEPARATOR;
+    const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xslx', 'pdf', 'jpeg', 'jpg', 'png'];
     protected $guarded = [];

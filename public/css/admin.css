@@ -54852,3 +54852,13 @@ table .toggle i { color: #269740 }
 img.sm-thumbnail {
     max-width: 100px;
 }
+
+.monthonly#ui-datepicker-div .ui-datepicker-calendar
+{
+    display: none;
+}
+
+table.sm-text th,
+table.sm-text td{
+    font-size: 14px !important;
+}

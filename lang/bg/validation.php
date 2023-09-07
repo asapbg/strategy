@@ -142,6 +142,18 @@ return [
         'password' => [
             'Illuminate\Validation\Rules\Password' => 'Паролата трябва да съдържа',
         ],
+        'col.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'val.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'new_val_col.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'new_val.*' => [
+            'required' => 'Полето е задължително'
+        ]
     ],
 
     /*
@@ -262,7 +274,9 @@ return [
         'subtitle'                  => 'Под-заглавие',
         'url'                       => 'URL',
         'date_from'                 => 'От дата',
+        'from_date'                 => 'От дата',
         'date_to'                   => 'До дата',
+        'to_date'                   => 'До дата',
         'objective'                 => 'Предмет на договора',
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
@@ -283,6 +297,7 @@ return [
         'published_at'              => 'Публикуване (дата)',
         //settings admin
         'system_email'              => 'Ел. поща (системни известия)',
-
+        'assessment'                => 'Оценка на въздействието',
+        'opinion'                   => 'Становище',
     ],
 ];
