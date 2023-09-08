@@ -282,7 +282,7 @@ $(document).ready(function (e) {
 
     };
 
-    // $.datepicker.setDefaults( $.datepicker.regional[typeof GlobalLang != 'undefined' ? GlobalLang : ''] );
+    $.datepicker.setDefaults( $.datepicker.regional[typeof GlobalLang != 'undefined' ? GlobalLang : ''] );
 
     $('.table-bordered tbody tr:even').not($('.dataTable tbody tr, .table-with-toggle-content tr')).addClass('odd');
 
