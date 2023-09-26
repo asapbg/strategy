@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\CustomRole;
 use App\Policies\LegislativeProgramPolicy;
 use App\Policies\OperationalProgramPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -31,8 +32,10 @@ class AuthServiceProvider extends ServiceProvider
 
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
-//        Gate::before(function ($user, $ability) {
-//            return $user->hasRole('super-admin') ? true : null;
-//        });
+        Gate::before(function ($user, $ability) {
+            return
+                $user->hasRole(CustomRole::ADMIN_USER_ROLE) ||
+                $user->hasRole(CustomRole::SUPER_USER_ROLE) ? true : null;
+        });
     }
 }

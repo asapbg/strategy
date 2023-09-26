@@ -199,7 +199,7 @@
                                 <label class="control-label" for="roles">{{ trans_choice('custom.roles', 2) }}</label>
                                 @php($user_roles = $user->roles()->pluck('id')->toArray())
                                 @foreach($roles as $role)
-                                    <div class="icheck-primary">
+                                    <div class="icheck-primary @if($role->name == \App\Models\CustomRole::SUPER_USER_ROLE) d-none @endif" >
                                         <input class="roles"
                                                type="checkbox"
                                                name="roles[]"

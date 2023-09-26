@@ -31,6 +31,7 @@
                         <tbody>
                         @if(isset($roles) && $roles->count() > 0)
                             @foreach($roles as $role)
+                                @if($role->name != 'service_user')
                                 <tr>
                                     <td>{{ $role->id }}</td>
                                     <td>{{ $role->display_name }}</td>
@@ -61,6 +62,7 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                         @endif
                         </tbody>
