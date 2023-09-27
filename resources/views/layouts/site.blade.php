@@ -160,10 +160,10 @@
 <section class="public-page">
   <div class="container" id="app">
 @endif
-    
+
       @foreach(['success', 'warning', 'danger', 'info'] as $msgType)
           @if(Session::has($msgType))
-              <div class="alert alert-{{$msgType}} mt-1 alert-dismissible py-2" role="alert">{!! Session::get($msgType) !!}
+              <div class="alert alert-{{$msgType}} mt-1 alert-dismissible py-2" style="z-index: 9999;" role="alert">{!! Session::get($msgType) !!}
                   <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
           @endif
