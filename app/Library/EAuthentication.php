@@ -151,7 +151,7 @@ class EAuthentication
 
         //  Load the RSA private key..
         $privkey = new CkPrivateKey();
-        $success = $privkey->LoadPem(file_get_contents('/home/web/ssl/eauth/selfsigned.key'));
+        $success = $privkey->LoadPem(file_get_contents(config('eauth.certificate_private_key')));
 
         if (!$success) {
             Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: '.$privkey->lastErrorText().PHP_EOL.'Response: '.$message);
