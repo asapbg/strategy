@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers\Admin\Consultations;
 
+use App\Enums\DynamicStructureTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\ActType;
 use App\Models\ConsultationLevel;
+use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
+use App\Models\DynamicStructure;
+use App\Models\DynamicStructureColumn;
 use App\Models\LinkCategory;
 use App\Models\ProgramProject;
+use App\Models\RegulatoryAct;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -44,24 +50,37 @@ class PublicConsultationController extends AdminController
 
     /**
      * @param Request $request
-     * @param PublicConsultation $item
+     * @param PublicConsultation|null $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, PublicConsultation $item)
+    public function edit(Request $request, PublicConsultation|null $item)
     {
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PublicConsultation::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+        $kdRowsDB = $item->id ?
+            DynamicStructureColumn::whereIn('id', json_decode($item->active_columns))->orderBy('id')->get()
+            : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
+
+        $kdRows = $kdRowsDB;
+        foreach ($kdRowsDB as $row) {
+        }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
-        
+
         $consultationTypes = ConsultationType::all();
         $consultationLevels = ConsultationLevel::all();
-        $actTypes = ActType::all();
+        $actTypes = ActType::with(['consultationLevel'])->get();
         $programProjects = ProgramProject::all();
         $linkCategories = LinkCategory::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationTypes', 'consultationLevels', 'actTypes', 'programProjects', 'linkCategories'));
+        $regulatoryActs = RegulatoryAct::all(); //Нормативни актове номенклатура
+        $prisActs = null; //TODO fix me Add them after PRIS module
+        $operationalPrograms = OperationalProgram::get(); //TODO get only not in use and current if item
+        $legislativePrograms = LegislativeProgram::get(); //TODO get only not in use and current if item
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
+            'consultationTypes', 'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
+            'operationalPrograms', 'legislativePrograms', 'kdRows'));
     }
 
     public function store(StorePublicConsultationRequest $request, PublicConsultation $item)

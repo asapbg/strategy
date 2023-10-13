@@ -39,6 +39,17 @@
                                     @enderror
                                 </div>
                             </div>
+                            @if(\App\Enums\DynamicStructureTypesEnum::hasGroupField($item->type))
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="in_group">{{ trans_choice('custom.groups', 1) }} <span class="required">*</span> </label>
+                                        <input type="number" value="{{ old('in_group', 0) }}" name="in_group" class="form-control form-control-sm">
+                                        @error('in_group')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
                             <div class="col-md-2">
                                 <label></label>
                                 <div class="form-group">
@@ -49,12 +60,16 @@
                     @endif
                     <table class="table table-striped">
                         <thead>
+                            @php($colSpan = \App\Enums\DynamicStructureTypesEnum::hasGroupField($item->type) ? 3 : 2)
                             <tr>
-                                <th class="text-center" colspan="{{ sizeof($locales) + 2 }}">{{ trans_choice('custom.columns', 2) }}</th>
+                                <th class="text-center" colspan="{{ sizeof($locales) + $colSpan }}">{{ trans_choice('custom.columns', 2) }}</th>
                             </tr>
                             <tr>
                                 <th>ID</th>
                                 <th>{{ __('custom.type') }}</th>
+                                @if(\App\Enums\DynamicStructureTypesEnum::hasGroupField($item->type))
+                                    <th>{{ trans_choice('custom.groups', 1) }}</th>
+                                @endif
                                 @foreach($locales as $loc)
                                     <th>{{ __('custom.name').' ('.mb_strtoupper($loc['code']).')' }}</th>
                                 @endforeach
@@ -64,9 +79,11 @@
                             @if($item->columns->count())
                                 @foreach($item->columns as $col)
                                     <tr>
-{{--                                    @dd($col)--}}
                                         <td>{{ $col->id }}</td>
                                         <td>{{ $col->type }}</td>
+                                        @if(\App\Enums\DynamicStructureTypesEnum::hasGroupField($item->type))
+                                            <td>{{ $col['in_group'] ? __('custom.dynamic_structures.type.'.\App\Enums\DynamicStructureTypesEnum::keyByValue($item->type).'.'.$col['in_group']) : '' }}</td>
+                                        @endif
                                         @foreach($locales as $loc)
                                             <td>{{ $col->translate($loc['code'])->label }}</td>
                                         @endforeach

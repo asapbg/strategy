@@ -39,6 +39,13 @@ class LegislativeProgram extends ModelActivityExtend
         );
     }
 
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => date('m.Y', strtotime($this->from_date)).' - '.date('m.Y', strtotime($this->to_date))
+        );
+    }
+
     public function records(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LegislativeProgramRow::class, 'legislative_program_id', 'id');

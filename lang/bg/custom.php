@@ -271,11 +271,14 @@ return [
     'start'                           => 'Начало',
     'end'                             => 'Край',
     'diff_days'                       => 'Дни разлика',
+    'days'                          => 'Ден|Дни',
     'attached_documents'              => 'Прикачен документ|Прикачени документи',
     'legislative_program'             => 'Законодателна програма|Законодателни програми',
     'legislative_programs'            => 'Законодателна програма|Законодателни програми',
+    'no_legislative_program'           => 'Законопроектът не е включен в ЗП',
     'operational_program'             => 'Оперативна програма|Оперативни програми',
     'operational_programs'            => 'Оперативна програма|Оперативни програми',
+    'no_operational_program'           => 'Проектът на акт на МС не е включен в ОП',
     'comment'                         => 'Коментар|Коментари',
     'comments'                        => 'Коментар|Коментари',
     'commented_to'                    => 'Коментар към',
@@ -364,8 +367,17 @@ return [
     'dynamic_structures'                        => 'Динамична структура|Динамични структури',
     'dynamic_structures.type.LEGISLATIVE_PROGRAM'                        => 'Законодателна програма',
     'dynamic_structures.type.OPERATIONAL_PROGRAM'                        => 'Оперативна програма',
+    'dynamic_structures.type.CONSULT_DOCUMENTS'                        => 'Консултационен документ',
+    'dynamic_structures.type.CONSULT_DOCUMENTS.1'                  => 'Основна информация за консултацията',
+
     //
     'publish'                                   =>  'Публикувай',
     'program_missing_files'                     =>  'Не са приложени всички необходими документи към програмата',
+    //public consultation
+    'period_in_days'                            => 'Избраният от Вас период е ',
+    'acts_pris'                                  => 'Акт (ПРИС)|Актове (ПРИС)',
+    'consultation_links'                        => 'Връзки към предишни консултации',
+    'proposal_ways'                              => 'Начини за представяне на предложения и становища',
+    'proposal_ways_default_html'                => '<ul><li>Портала за обществени консултации (изисква се регистрация чрез имейл);</li><li>Електронна поща на посочените адреси;</li><li>Системата за сигурно електронно връчване https://edelivery.egov.bg/ (изисква се квалифициран електронен подпис или ПИК на НОИ);</li><li>Официалния адрес за кореспонденция.</li>',
 
 ];

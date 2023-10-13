@@ -23,6 +23,8 @@ class ConsultationLevel extends ModelActivityExtend implements TranslatableContr
     //activity
     protected string $logName = "consultation_level";
 
+    const CENTRAL_LEVEL = 1;
+
     /**
      * Get the model name
      */

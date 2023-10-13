@@ -7,6 +7,7 @@ use App\Http\Requests\StorePollRequest;
 use App\Models\Poll;
 use App\Models\PollAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class PollController extends AdminController
@@ -52,7 +53,7 @@ class PollController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Poll::translationFieldsProperties();
-        
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
@@ -95,14 +96,13 @@ class PollController extends AdminController
 
             if( $item->id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_m'));
+                    ->with('success', trans_choice('custom.polls', 1)." ".__('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.polls', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            dd($e, $validated);
-            \Log::error($e);
+            Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 

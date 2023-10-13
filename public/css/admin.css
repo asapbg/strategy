@@ -54862,3 +54862,13 @@ table.sm-text th,
 table.sm-text td{
     font-size: 14px !important;
 }
+
+/*======================*/
+/*START SELECT 2*/
+/*=======================*/
+.select2-results ul.select2-results__options li.select2-results__option[aria-disabled="true"]{
+    display:none !important;
+}
+/*======================*/
+/*END SELECT 2*/
+/*=======================*/

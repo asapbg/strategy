@@ -3,6 +3,8 @@
 namespace App\Models\Consultations;
 
 use App\Models\ConsultationLevel;
+use App\Models\PublicConsultationContact;
+use App\Models\PublicConsultationUnit;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -28,6 +30,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     protected $fillable = ['consultation_level_id', 'act_type_id', 'program_project_id', 'link_category_id', 'open_from', 'open_to', 'address', 'email', 'phone', 'active'];
 
+    const MIN_DURATION_DAYS = 14;
+    const SHORT_DURATION_DAYS = 29;
+
     /**
      * Get the model name
      */
@@ -43,7 +48,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 'rules' => ['required', 'string', 'max:255']
             ],
             'description' => [
-                'type' => 'ckeditor',
+                'type' => 'summernote',
+                'rules' => ['required', 'string']
+            ],
+            'proposal_ways' => [
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
             'shortTermReason' => [
@@ -64,6 +73,21 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function consultationLevel()
     {
         return $this->hasOne(ConsultationLevel::class, 'id', 'consultation_level_id');
+    }
+
+    public function units(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultationUnit::class, 'public_consultation_id', 'id');
+    }
+
+    public function contactPersons(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultationContact::class, 'public_consultation_id', 'id');
+    }
+
+    public function kd(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultationContact::class, 'public_consultation_id', 'id');
     }
 
     public static function optionsList()

@@ -45,6 +45,18 @@ class DynamicStructureSeeder extends Seeder
                     ['type' => 'text', 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване '],
                     ['type' => 'text', 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
                 ]
+            ],
+            [
+                'type' => DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value,
+                'columns' => [
+                    ['type' => 'text', 'ord' => 1, 'label' => 'Въведение', 'in_group' => 1],
+                    ['type' => 'text', 'ord' => 2, 'label' => 'Цели на консултацията', 'in_group' => 1],
+                    ['type' => 'text', 'ord' => 3, 'label' => 'Консултационен процес', 'in_group' => 1],
+                    ['type' => 'text', 'ord' => 4, 'label' => 'Относими документи и нормативни актове', 'in_group' => 1],
+                    ['type' => 'text', 'ord' => 5, 'label' => 'Описание на предложението', 'in_group' => 0],
+                    ['type' => 'text', 'ord' => 6, 'label' => 'Въпроси за обсъждане', 'in_group' => 0],
+                    ['type' => 'text', 'ord' => 7, 'label' => 'Документи, съпътстващи консултацията', 'in_group' => 0],
+                ]
             ]
         );
 
@@ -61,6 +73,7 @@ class DynamicStructureSeeder extends Seeder
                                 'dynamic_structure_id' => $item->id,
                                 'type' => $col['type'],
                                 'ord' => $col['ord'],
+                                'in_group' => $col['in_group'] ?? 0,
                             ]);
                         if( $column ) {
                             foreach ($locales as $loc) {

@@ -27,6 +27,7 @@ class DynamicStructureColumnStoreRequest extends FormRequest
         $rules = [
             'type' => ['required', 'string', 'in:text,number'],
             'id' => ['required', 'numeric', 'exists:dynamic_structure,id'],
+            'in_group' => ['required', 'numeric', 'gte:0'],
         ];
 
         foreach (config('available_languages') as $lang) {

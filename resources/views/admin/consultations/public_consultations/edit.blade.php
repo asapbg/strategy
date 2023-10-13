@@ -4,166 +4,31 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">Основна информация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ct-kd-tab" data-toggle="pill" href="#ct-kd" role="tab" aria-controls="ct-kd" aria-selected="false">Консултационен документ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Лица за контакт</a>
+                        </li>
+                    </ul>
+                </div>
                 <div class="card-body">
-                    @php($storeRoute = route($storeRouteName, ['item' => $item]))
-                    <form action="{{ $storeRoute }}" method="post" name="form" id="form">
-                        @csrf
-                        @if($item->id)
-                            @method('PUT')
-                        @endif
-                        <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
-                        
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="consultation-type-select">{{ trans_choice('custom.consultation_type', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="consultation-type-select" name="consultation_type_id" class="form-control form-control-sm select2 @error('consultation_type_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($consultationTypes) && $consultationTypes->count())
-                                    @foreach($consultationTypes as $row)
-                                    <option value="{{ $row->id }}" @if(old('consultation_type_id', ($item->id ? $item->consultation_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                                @error('consultation_type_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
+                    <div class="tab-content" id="custom-tabsContent">
+                        <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
+                            @include('admin.consultations.public_consultations.general')
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="program-projectselect">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="program-projectselect" name="consultation_level_id" class="form-control form-control-sm select2 @error('consultation_level_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($consultationLevels) && $consultationLevels->count())
-                                        @foreach($consultationLevels as $row)
-                                            <option value="{{ $row->id }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('consultation_level_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="tab-pane fade" id="ct-kd" role="tabpanel" aria-labelledby="ct-kd-tab">
+                            @include('admin.consultations.public_consultations.kd')
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="act-type-select">{{ trans_choice('custom.act_type', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="act-type-select" name="act_type_id" class="form-control form-control-sm select2 @error('act_type_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($actTypes) && $actTypes->count())
-                                    @foreach($actTypes as $row)
-                                    <option value="{{ $row->id }}" @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                                @error('act_type_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="tab-pane fade" id="ct-contacts" role="tabpanel" aria-labelledby="ct-contacts-tab">
+                            @include('admin.consultations.public_consultations.contact_persons')
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="program-projectselect">{{ trans_choice('custom.program_project', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="program-projectselect" name="program_project_id" class="form-control form-control-sm select2 @error('program_project_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($programProjects) && $programProjects->count())
-                                        @foreach($programProjects as $row)
-                                            <option value="{{ $row->id }}" @if(old('program_project_id', ($item->id ? $item->program_project_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('program_project_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="link-category-select">{{ trans_choice('custom.link_category', 1) }}<span class="required">*</span></label>
-                            <div class="col-12">
-                                <select id="link-category-select" name="link_category_id" class="form-control form-control-sm select2 @error('link_category_id'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($linkCategories) && $linkCategories->count())
-                                        @foreach($linkCategories as $row)
-                                            <option value="{{ $row->id }}" @if(old('link_category_id', ($item->id ? $item->link_category_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('link_category_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        @include('admin.partial.edit_single_translatable', ['field' => 'title', 'required' => true])
-                    
-                        @include('admin.partial.edit_single_translatable', ['field' => 'description', 'required' => true])
-
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
-                                <input type="text" id="open_from" name="open_from" data-provide="datepicker"
-                                    class="form-control form-control-sm @error('open_from'){{ 'is-invalid' }}@enderror"
-                                    value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
-                                <input type="text" id="open_to" name="open_to" data-provide="datepicker"
-                                class="form-control form-control-sm @error('open_to'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('open_to', ($item->id ? $item->open_to : '')) }}">
-                            </div>
-                            
-                            <div class="col-sm-4">
-                                <label class="col-sm-12 control-label">{{ __('custom.diff_days') }}</label>
-                                <p>
-                                    <span id="period-total"></span>
-                                    дни
-                                </p>
-                            </div>
-                        </div>
-
-                        @include('admin.partial.edit_single_translatable', ['field' => 'shortTermReason', 'required' => true])
-                        @include('admin.partial.edit_single_translatable', ['field' => 'responsibleUnit', 'required' => true])
-                        @include('admin.partial.edit_single_translatable', ['field' => 'responsiblePerson', 'required' => true])
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="address">{{ __('validation.attributes.address') }} <span class="required">*</span></label>
-                            <input type="text" id="address" name="address"
-                                class="form-control form-control-sm @error('address'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('address', ($item->id ? $item->address : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="email">{{ __('validation.attributes.email') }} <span class="required">*</span></label>
-                            <input type="email" id="email" name="email"
-                                class="form-control form-control-sm @error('email'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('email', ($item->id ? $item->email : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="phone">{{ __('validation.attributes.phone') }} <span class="required">*</span></label>
-                            <input type="text" id="phone" name="phone"
-                                class="form-control form-control-sm @error('phone'){{ 'is-invalid' }}@enderror"
-                                value="{{ old('phone', ($item->id ? $item->phone : '')) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="active">
-                                <input type="checkbox" id="active" name="active" value="1"
-                                    @if ($item->active) checked @endif
-                                    class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
-                                {{ __('validation.attributes.active') }} <span class="required">*</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 col-md-offset-3">
-                                <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                <a href="{{ route($listRouteName) }}"
-                                   class="btn btn-primary">{{ __('custom.cancel') }}</a>
-                            </div>
-                        </div>
-                    </form>
-
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,16 +38,134 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
+        new cainSelect({
+            mainSelectId: 'consultation_level_id',
+            childSelectClass: 'cl-child',
+            childSelectData: 'cl',
+            anyValue: 'cl',
+        });
+
+        let consultationLevel = $('#consultation_level_id');
+        let actType = $('#act_type');
+        //Normative acts sections
+        let prisNormativeActs = $('#normative_act_pris_section');
+        let normativeActs = $('#normative_act_section');
+        //Consultation level
+        let centralConsultationLevel = parseInt(<?php echo \App\Models\ConsultationLevel::CENTRAL_LEVEL; ?>);
+        //Acts
+        let actLaw = parseInt(<?php echo \App\Models\ActType::ACT_LAW; ?>);
+        let actMinistry = parseInt(<?php echo \App\Models\ActType::ACT_COUNCIL_OF_MINISTERS; ?>);
+        //Programs
+        let legislativePrograms = $('#legislative_programs');
+        let operationalPrograms = $('#operational_programs');
+
+        function hideActSelects()
+        {
+            //hide $regulatoryActs and $pris acts and deselect all
+            normativeActs.addClass('d-none');
+            normativeActs.find('option').each(function(){
+                $(this).prop('selected', false);
+            });
+            prisNormativeActs.addClass('d-none');
+            prisNormativeActs.find('option').each(function(){
+                $(this).prop('selected', false);
+            });
+        }
+
+        function hideProgramSelects()
+        {
+            //hide programs selects and deselect all
+            operationalPrograms.addClass('d-none');
+            operationalPrograms.find('option').each(function(){
+                $(this).prop('selected', false);
+            });
+            legislativePrograms.addClass('d-none');
+            legislativePrograms.find('option').each(function(){
+                $(this).prop('selected', false);
+            });
+        }
+
+        function onDateChange() {
+            let durationErrorHolder = $('#duration-err');
+            durationErrorHolder.html('');
+
+            let diffDays = null;
+            const date1 = $('#open_from').datepicker('getDate');
+            const date2 = $('#open_to').datepicker('getDate');
+            if( date1 && date2 ) {
+                let diffTime = Math.abs(date2 - date1);
+                diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+            $('#period-total').text(diffDays ? diffDays : 0);
+
+            let minDuration = parseInt(<?php echo \App\Models\Consultations\PublicConsultation::MIN_DURATION_DAYS; ?>);
+            let shortDuration = parseInt(<?php echo \App\Models\Consultations\PublicConsultation::SHORT_DURATION_DAYS; ?>);
+            if( diffDays && diffDays < minDuration) {
+                durationErrorHolder.html('Минималната продължителност е '+ minDuration +' дни');
+            }
+
+            let shortDurationReason = $('#shortTermReason_section');
+            if( diffDays && diffDays <= shortDuration ) {
+                shortDurationReason.removeClass('d-none');
+            } else{
+                shortDurationReason.val('');
+                shortDurationReason.addClass('d-none');
+            }
+        }
+
+        function controlForm()
+        {
+            //If central level consultation
+            if( parseInt(consultationLevel.val()) === centralConsultationLevel ) {
+                //Depending on act type
+                if( parseInt(actType.val()) == actLaw ){
+                    //show $pris normative act select and deselect and hide $regulatoryActs
+                    prisNormativeActs.removeClass('d-none');
+                    normativeActs.addClass('d-none');
+                    normativeActs.find('option').each(function(){
+                        $(this).prop('selected', false);
+                    });
+                    //show $zp autocomplete select and checkbox 'Законопроектът не е включен в ЗП'. Submit one of them.
+                    legislativePrograms.removeClass('d-none');
+                    operationalPrograms.addClass('d-none');
+                    operationalPrograms.find('option').each(function(){
+                        $(this).prop('selected', false);
+                    });
+                    legislative_programs
+                } else if( parseInt(actType.val()) == actMinistry ){
+                    //show $regulatoryActs normative act select and deselect and hide $regulatoryActs
+                    normativeActs.removeClass('d-none');
+                    prisNormativeActs.addClass('d-none');
+                    prisNormativeActs.find('option').each(function(){
+                        $(this).prop('selected', false);
+                    });
+                    //show $op autocomplete select and checkbox 'Проектът на акт на МС не е включен в ОП'. Submit one of them.
+                    operationalPrograms.removeClass('d-none');
+                    legislativePrograms.addClass('d-none');
+                    legislativePrograms.find('option').each(function(){
+                        $(this).prop('selected', false);
+                    });
+                } else {
+                    hideActSelects();
+                    hideProgramSelects();
+                }
+            } else {
+                hideActSelects();
+                hideProgramSelects();
+            }
+        }
+
+        //Calculate consultation duration
         $('#open_from, #open_to').on('change', onDateChange);
+
+        $('#consultation_level_id, #act_type').on('change', function (){
+            controlForm();
+        });
+
+        //Init and preset form
         onDateChange();
+        controlForm();
     });
 
-    function onDateChange() {
-        const date1 = new Date($('#open_from').val());
-        const date2 = new Date($('#open_to').val());
-        const diffTime = Math.abs(date2 - date1);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        $('#period-total').text(diffDays ? diffDays : 0);
-    }
 </script>
 @endpush

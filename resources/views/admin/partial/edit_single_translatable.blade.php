@@ -2,7 +2,7 @@
 @if(sizeof($fieldProperties))
     @php($language = app()->getLocale())
     @php($fieldName = $field.'_'.$language)
-    <div class="form-group">
+    <div class="form-group fs-{{ $field }}">
         <label class="col-sm-12 control-label" for="{{ $fieldName }}">{{ __('validation.attributes.'.$field) }} @if(isset($required) && $required)<span class="required">*</span>@endif</label>
         <div class="col-12">
             @switch($fieldProperties['type'])

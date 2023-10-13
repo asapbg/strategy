@@ -25,6 +25,9 @@ class ActType extends ModelActivityExtend implements TranslatableContract
 
     protected $fillable = ['consultation_level_id'];
 
+    const ACT_LAW = 1;
+    const ACT_COUNCIL_OF_MINISTERS = 2;
+
     /**
      * Get the model name
      */

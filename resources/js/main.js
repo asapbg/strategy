@@ -258,7 +258,55 @@ $(document).on("select2:open", () => {
     document.querySelector(".select2-container--open .select2-search__field").focus()
 })
 
+/**
+ * This function listen for change event on specific select and control
+ * which options in specified other selects (by class) will be visible
+ * @param obj
+ * obj.mainSelectId (string) - Dom ID for main select
+ * obj.mainSelectDataType  (string) Default: int - Data type of the specified main select data attribute (int, string).
+ * obj.childSelectClass  (string) - Dom class of children selects
+ * obj.childSelectData  (string) - Which data attribute to get for comparing values between main and child selects
+ * obj.canReset (bool) Default: false - If you need to show all children option when main select has option like 'Any'
+ * obj.anyValue (string|int) - If using option 'canReset', specify main select value when this happen
+ * @constructor
+ */
+var cainSelect = function (obj){
+    // Main select will change other by specific value
+    let mainSelect = $('#' + (typeof obj.mainSelectId != 'undefined' ? obj.mainSelectId : ''));
+    // We will search for this value in children data
+    let valueToType = mainSelect.data(typeof obj.mainSelectDataType != 'undefined' ? obj.mainSelectDataType : 'int');
+    let childSelects = $('.' + (typeof obj.childSelectClass != 'undefined' ? obj.childSelectClass : ''));
+    let childValueData = typeof obj.childSelectData != 'undefined' ? obj.childSelectData : '';
+    let canReset = typeof obj.canReset != 'undefined' ? obj.canReset : false;
+    let resetValue = typeof obj.resetValue != 'undefined' ? obj.resetValue : '';
+
+    mainSelect.on('change', function (){
+        childSelects.find('option').each(function(){
+            let isSelected = $(this).is(':selected');
+            let childValue = $(this).data(childValueData);
+            let parentValue = mainSelect.val();
+            if( valueToType == 'int' ) {
+                childValue = parseInt(childValue);
+                parentValue = parseInt(parentValue);
+            }
+            if( canReset && childValue == resetValue ) {
+                $(this).prop('disabled', false);
+            } else {
+                if( childValue == parentValue ) {
+                    $(this).prop('disabled', false);
+                } else {
+                    if( isSelected ) {
+                        $(this).prop('selected', false);
+                    }
+                    $(this).prop('disabled', true);
+                }
+            }
+        });
+    });
+}
+
 $(document).ready(function (e) {
+
     $.datepicker.regional = {
         bg: {
             days: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота", "Неделя"],
@@ -399,6 +447,14 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.select2-no-clear').length) {
+        $('.select2-no-clear').select2({
+            allowClear: false,
+            placeholder: true,
+            language: "bg"
+        });
+    }
+
     if($('.datepicker').length) {
         $('.datepicker').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
@@ -406,6 +462,19 @@ $(document).ready(function (e) {
             todayHighlight: true,
             orientation: "bottom left",
             autoclose: true,
+            weekStart: 1
+        });
+    }
+
+    if($('.datepicker-today').length) {
+        $('.datepicker-today').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'dd-mm-yyyy',
+            todayHighlight: true,
+            orientation: "bottom left",
+            autoclose: true,
+            weekStart: 1,
+            startDate: new Date()
         });
     }
 
@@ -419,6 +488,7 @@ $(document).ready(function (e) {
             changeYear: true,
             orientation: "bottom left",
             autoclose: true,
+            weekStart: 1,
             onClose: function(dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
             }
