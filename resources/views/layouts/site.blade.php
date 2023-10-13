@@ -134,8 +134,7 @@
     </div>
   </nav>
 </header>
-
-@if(request()->route()->getName() != 'home')
+@if(request()->route()->getName() != 'home' && !request()->input('sk'))
 <section class="slider" style="margin-top: 135px;">
   <div class="container">
     <div class="row">
@@ -156,7 +155,7 @@
 </section>
 @endif
 
-@if(request()->route()->getName() != 'home')
+@if(request()->route()->getName() != 'home' && !request()->input('sk'))
 <section class="public-page">
   <div class="container" id="app">
 @endif
@@ -171,7 +170,7 @@
 
     @yield('content')
 
-@if(request()->route()->getName() != 'home')
+@if(request()->route()->getName() != 'home' && !request()->input('sk'))
   </div>
 </section>
 @endif

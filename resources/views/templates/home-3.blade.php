@@ -1,6 +1,28 @@
 @extends('layouts.site')
 @section('content')
-<section id="usefull-links-two">
+<section id="slider">
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+
+
+                <img class="d-block w-100" src="../img/ms-w-2023.jpg" alt="First slide">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="centered-heading w-100">
+                            <h1 class="text-light text-center">
+                                Добре дошли в сайта на Портал за обществени консултации
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<section id="usefull-links-two" style="margin-top: 20px;">
     <div class="container">
         <div class="row">
             <div class="col-md-3">

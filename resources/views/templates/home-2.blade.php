@@ -7,7 +7,7 @@
             <div class="carousel-item active">
 
 
-                <img class="d-block w-100" src="../images/slider.jpg" alt="First slide">
+                <img class="d-block w-100" src="../img/ms-w-2023.jpg" alt="First slide">
 
                 <div class="row">
                     <div class="col-md-12">
