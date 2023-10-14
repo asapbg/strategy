@@ -368,7 +368,7 @@ return [
     'dynamic_structures.type.LEGISLATIVE_PROGRAM'                        => 'Законодателна програма',
     'dynamic_structures.type.OPERATIONAL_PROGRAM'                        => 'Оперативна програма',
     'dynamic_structures.type.CONSULT_DOCUMENTS'                        => 'Консултационен документ',
-    'dynamic_structures.type.CONSULT_DOCUMENTS.1'                  => 'Основна информация за консултацията',
+//    'dynamic_structures.type.CONSULT_DOCUMENTS.1'                  => 'Основна информация за консултацията',
 
     //
     'publish'                                   =>  'Публикувай',

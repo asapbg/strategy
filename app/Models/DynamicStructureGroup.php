@@ -7,21 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DynamicStructureColumn extends ModelActivityExtend
+class DynamicStructureGroup extends ModelActivityExtend
 {
     use SoftDeletes, Translatable;
     public $timestamps = true;
-    protected $fillable = ['type', 'ord', 'dynamic_structure_id', 'dynamic_structure_groups_id'];
+    protected $fillable = ['ord', 'dynamic_structure_id'];
 
     const TRANSLATABLE_FIELDS = ['label'];
-    const MODULE_NAME = 'dynamic_structures.columns';
+    const MODULE_NAME = 'dynamic_structures.groups';
 //
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
-    protected $table = 'dynamic_structure_column';
+    protected $table = 'dynamic_structure_group';
 
     //activity
-    protected string $logName = "dynamic_structure_columns";
+    protected string $logName = "dynamic_structure_groups";
 
     /**
      * Get model name
@@ -40,10 +40,5 @@ class DynamicStructureColumn extends ModelActivityExtend
                 'rules' => ['required', 'string', 'max:255']
             ],
         );
-    }
-
-    public function group(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(DynamicStructureGroup::class, 'id', 'dynamic_structure_groups_id');
     }
 }

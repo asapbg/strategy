@@ -59,7 +59,7 @@ class DynamicStructureController extends AdminController
             $fillable = $this->getFillableValidated($validated, $newColumn);
             $fillable['ord'] = $maxOrd +1;
             $fillable['dynamic_structure_id'] = $item->id;
-
+            $fillable['dynamic_structure_groups_id'] = $validated['in_group'] ?? null;
 
 //            dd($validated, $fillable);
             $newColumn->fill($fillable);

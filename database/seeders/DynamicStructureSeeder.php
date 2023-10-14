@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
+use App\Models\DynamicStructureGroup;
 use Illuminate\Database\Seeder;
 
 class DynamicStructureSeeder extends Seeder
@@ -48,6 +49,9 @@ class DynamicStructureSeeder extends Seeder
             ],
             [
                 'type' => DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value,
+                'groups' => [
+                    1 => [ 'label' => 'Основна информация за консултацията' , 'ord' => 1]
+                ],
                 'columns' => [
                     ['type' => 'text', 'ord' => 1, 'label' => 'Въведение', 'in_group' => 1],
                     ['type' => 'text', 'ord' => 2, 'label' => 'Цели на консултацията', 'in_group' => 1],
@@ -56,7 +60,7 @@ class DynamicStructureSeeder extends Seeder
                     ['type' => 'text', 'ord' => 5, 'label' => 'Описание на предложението', 'in_group' => 0],
                     ['type' => 'text', 'ord' => 6, 'label' => 'Въпроси за обсъждане', 'in_group' => 0],
                     ['type' => 'text', 'ord' => 7, 'label' => 'Документи, съпътстващи консултацията', 'in_group' => 0],
-                ]
+                ],
             ]
         );
 
@@ -66,6 +70,20 @@ class DynamicStructureSeeder extends Seeder
                 $item = DynamicStructure::create([
                     'type' => (int)$structure['type']
                 ]);
+                if ( $item && isset($structure['groups']) && sizeof($structure['groups']) ) {
+                    foreach ($structure['groups'] as $id => $group) {
+                        $groupDB = DynamicStructureGroup::create([
+                            'dynamic_structure_id' => $item->id,
+                            'ord' => $group['ord'],
+                        ]);
+                        if( $groupDB ) {
+                            foreach ($locales as $loc) {
+                                $groupDB->translateOrNew($loc['code'])->label = $group['label'];
+                            }
+                            $groupDB->save();
+                        }
+                    }
+                }
                 if ( $item && sizeof($structure['columns']) ) {
                     foreach ($structure['columns'] as $col) {
                         //Create
@@ -73,7 +91,7 @@ class DynamicStructureSeeder extends Seeder
                                 'dynamic_structure_id' => $item->id,
                                 'type' => $col['type'],
                                 'ord' => $col['ord'],
-                                'in_group' => $col['in_group'] ?? 0,
+                                'dynamic_structure_groups_id' => $col['in_group'] ?? null,
                             ]);
                         if( $column ) {
                             foreach ($locales as $loc) {
