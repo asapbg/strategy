@@ -23,7 +23,6 @@
     </script>
     <script src="https://strategy.asapbg.com/vendor/ckeditor/ckeditor.min.js"></script>
     <script src="https://strategy.asapbg.com/vendor/ckeditor/translations/bg.min.js"></script>
-    <link rel='stylesheet' type='text/css' property='stylesheet' href='//strategy.test/_debugbar/assets/stylesheets?v=1644393152&theme=auto'><script src='//strategy.test/_debugbar/assets/javascript?v=1644393152'></script><script>jQuery.noConflict(true);</script>
 </head>
 <body class="hold-transition sidebar-mini ">
 <!-- Site wrapper -->
