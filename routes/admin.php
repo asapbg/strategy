@@ -57,25 +57,29 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Consultations
     Route::controller(LegislativeProgramController::class)->group(function () {
-        Route::get('/consultations/legislative_programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
-        Route::get('/consultations/legislative_programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::get('/consultations/legislative_programs/view/{item}', 'show')->name('consultations.legislative_programs.view');
-        Route::get('/consultations/legislative_programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
-        Route::match(['post', 'put'], '/consultations/legislative_programs/store', 'store')->name('consultations.legislative_programs.store');
-        Route::get('/consultations/legislative_programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
+        Route::get('/consultations/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
+        Route::get('/consultations/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
+        Route::get('/consultations/legislative-programs/view/{item}', 'show')->name('consultations.legislative_programs.view');
+        Route::get('/consultations/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
+        Route::match(['post', 'put'], '/consultations/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
+        Route::get('/consultations/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
     });
     Route::controller(OperationalProgramController::class)->group(function () {
-        Route::get('/consultations/operational_programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
-        Route::get('/consultations/operational_programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
-        Route::get('/consultations/operational_programs/view/{item}', 'show')->name('consultations.operational_programs.view');
-        Route::get('/consultations/operational_programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
-        Route::match(['post', 'put'], '/consultations/operational_programs/store', 'store')->name('consultations.operational_programs.store');
-        Route::get('/consultations/operational_programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
+        Route::get('/consultations/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
+        Route::get('/consultations/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
+        Route::get('/consultations/operational-programs/view/{item}', 'show')->name('consultations.operational_programs.view');
+        Route::get('/consultations/operational-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
+        Route::match(['post', 'put'], '/consultations/operational-programs/store', 'store')->name('consultations.operational_programs.store');
+        Route::get('/consultations/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
     });
     Route::controller(PublicConsultationController::class)->group(function () {
-        Route::get('/consultations/public_consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
-        Route::get('/consultations/public_consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
-        Route::match(['post', 'put'], '/consultations/public_consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
+        Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
+        Route::get('/consultations/public-consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
+        Route::match(['post', 'put'], '/consultations/public-consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
+        Route::post('/consultations/public-consultations/store-kd', 'storeKd')->name('consultations.public_consultations.store.kd');
+        Route::post('/consultations/public-consultations/add-contact', 'addContact')->name('consultations.public_consultations.add.contact');
+        Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
+        Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
     });
 
     // Settings
@@ -103,15 +107,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(StaticPageController::class)->group(function () {
-        Route::get('/static_pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/static_pages/edit/{item?}', 'edit')->name('static_pages.edit');
-        Route::match(['post', 'put'], '/static_pages/store/{item?}', 'store')->name('static_pages.store');
+        Route::get('/static-pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/static-pages/edit/{item?}', 'edit')->name('static_pages.edit');
+        Route::match(['post', 'put'], '/static-pages/store/{item?}', 'store')->name('static_pages.store');
     });
 
     Route::controller(ImpactPageController::class)->group(function () {
-        Route::get('/impact_pages', 'index')->name('impact_pages.index')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/impact_pages/edit/{item?}', 'edit')->name('impact_pages.edit');
-        Route::match(['post', 'put'], '/impact_pages/store/{item?}', 'store')->name('impact_pages.store');
+        Route::get('/impact-pages', 'index')->name('impact_pages.index')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/impact-pages/edit/{item?}', 'edit')->name('impact_pages.edit');
+        Route::match(['post', 'put'], '/impact-pages/store/{item?}', 'store')->name('impact_pages.store');
     });
 
     // Polls
@@ -131,9 +135,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
-        Route::get('/strategic_documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic_documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
-        Route::match(['post', 'put'], '/strategic_documents/store/{item?}', 'store')->name('strategic_documents.store');
+        Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
+        Route::get('/strategic-documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
+        Route::match(['post', 'put'], '/strategic-documents/store/{item?}', 'store')->name('strategic_documents.store');
     });
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
@@ -157,16 +161,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // PC Subjects
     Route::controller(PCSubjectController::class)->group(function () {
-        Route::get('/pc_subjects', 'index')->name('pc_subjects.index')->middleware('can:viewAny,App\Models\PCSubject');
-        Route::get('/pc_subjects/edit/{item?}', 'edit')->name('pc_subjects.edit');
-        Route::match(['post', 'put'], '/pc_subjects/store/{item?}', 'store')->name('pc_subjects.store');
+        Route::get('/pc-subjects', 'index')->name('pc_subjects.index')->middleware('can:viewAny,App\Models\PCSubject');
+        Route::get('/pc_-subjects/edit/{item?}', 'edit')->name('pc_subjects.edit');
+        Route::match(['post', 'put'], '/pc-subjects/store/{item?}', 'store')->name('pc_subjects.store');
     });
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative_initiatives', 'index')->name('legislative_initiatives.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/legislative_initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
-        Route::match(['post', 'put'], '/legislative_initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
+        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
+        Route::match(['post', 'put'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
     });
 
     // Mock controllers
@@ -190,105 +194,105 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(InstitutionLevelController::class)->group(function () {
-        Route::get('/nomenclature/institution_level', 'index')->name('nomenclature.institution_level')->middleware('can:viewAny,App\Models\InstitutionLevel');
-        Route::get('/nomenclature/institution_level/edit/{item?}', 'edit')->name('nomenclature.institution_level.edit');
-        Route::match(['post', 'put'], '/nomenclature/institution_level/store/{item?}', 'store')->name('nomenclature.institution_level.store');
+        Route::get('/nomenclature/institution-level', 'index')->name('nomenclature.institution_level')->middleware('can:viewAny,App\Models\InstitutionLevel');
+        Route::get('/nomenclature/institution-level/edit/{item?}', 'edit')->name('nomenclature.institution_level.edit');
+        Route::match(['post', 'put'], '/nomenclature/institution-level/store/{item?}', 'store')->name('nomenclature.institution_level.store');
     });
 
     Route::controller(ConsultationLevelController::class)->group(function () {
-        Route::get('/nomenclature/consultation_level', 'index')->name('nomenclature.consultation_level')->middleware('can:viewAny,App\Models\ConsultationLevel');
-        Route::get('/nomenclature/consultation_level/edit/{item?}', 'edit')->name('nomenclature.consultation_level.edit');
-        Route::match(['post', 'put'], '/nomenclature/consultation_level/store/{item?}', 'store')->name('nomenclature.consultation_level.store');
+        Route::get('/nomenclature/consultation-level', 'index')->name('nomenclature.consultation_level')->middleware('can:viewAny,App\Models\ConsultationLevel');
+        Route::get('/nomenclature/consultation-level/edit/{item?}', 'edit')->name('nomenclature.consultation_level.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation-level/store/{item?}', 'store')->name('nomenclature.consultation_level.store');
     });
 
     Route::controller(ActTypeController::class)->group(function () {
-        Route::get('/nomenclature/act_type', 'index')->name('nomenclature.act_type')->middleware('can:viewAny,App\Models\ActType');
-        Route::get('/nomenclature/act_type/edit/{item?}', 'edit')->name('nomenclature.act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/act_type/store/{item?}', 'store')->name('nomenclature.act_type.store');
+        Route::get('/nomenclature/act-type', 'index')->name('nomenclature.act_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/act-type/edit/{item?}', 'edit')->name('nomenclature.act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/act-type/store/{item?}', 'store')->name('nomenclature.act_type.store');
     });
 
     Route::controller(LegalActTypeController::class)->group(function () {
-        Route::get('/nomenclature/legal_act_type', 'index')->name('nomenclature.legal_act_type')->middleware('can:viewAny,App\Models\LegalActType');
-        Route::get('/nomenclature/legal_act_type/edit/{item?}', 'edit')->name('nomenclature.legal_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/legal_act_type/store/{item?}', 'store')->name('nomenclature.legal_act_type.store');
+        Route::get('/nomenclature/legal-act-type', 'index')->name('nomenclature.legal_act_type')->middleware('can:viewAny,App\Models\LegalActType');
+        Route::get('/nomenclature/legal-act-type/edit/{item?}', 'edit')->name('nomenclature.legal_act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/legal-act-type/store/{item?}', 'store')->name('nomenclature.legal_act_type.store');
     });
 
     Route::controller(StrategicDocumentLevelController::class)->group(function () {
-        Route::get('/nomenclature/strategic_document_level', 'index')->name('nomenclature.strategic_document_level')->middleware('can:viewAny,App\Models\StrategicDocumentLevel');
-        Route::get('/nomenclature/strategic_document_level/edit/{item?}', 'edit')->name('nomenclature.strategic_document_level.edit');
-        Route::match(['post', 'put'], '/nomenclature/strategic_document_level/store/{item?}', 'store')->name('nomenclature.strategic_document_level.store');
+        Route::get('/nomenclature/strategic-document-level', 'index')->name('nomenclature.strategic_document_level')->middleware('can:viewAny,App\Models\StrategicDocumentLevel');
+        Route::get('/nomenclature/strategic-document-level/edit/{item?}', 'edit')->name('nomenclature.strategic_document_level.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic-document-level/store/{item?}', 'store')->name('nomenclature.strategic_document_level.store');
     });
 
     Route::controller(StrategicDocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/strategic_document_type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicDocumentType');
-        Route::get('/nomenclature/strategic_document_type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/strategic_document_type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
+        Route::get('/nomenclature/strategic-document-type', 'index')->name('nomenclature.strategic_document_type')->middleware('can:viewAny,App\Models\StrategicDocumentType');
+        Route::get('/nomenclature/strategic-document-type/edit/{item?}', 'edit')->name('nomenclature.strategic_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic-document-type/store/{item?}', 'store')->name('nomenclature.strategic_document_type.store');
     });
 
     Route::controller(AuthorityAcceptingStrategicController::class)->group(function () {
-        Route::get('/nomenclature/authority_accepting_strategic', 'index')->name('nomenclature.authority_accepting_strategic')->middleware('can:viewAny,App\Models\AuthorityAcceptingStrategic');
-        Route::get('/nomenclature/authority_accepting_strategic/edit/{item?}', 'edit')->name('nomenclature.authority_accepting_strategic.edit');
-        Route::match(['post', 'put'], '/nomenclature/authority_accepting_strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
+        Route::get('/nomenclature/authority-accepting-strategic', 'index')->name('nomenclature.authority_accepting_strategic')->middleware('can:viewAny,App\Models\AuthorityAcceptingStrategic');
+        Route::get('/nomenclature/authority-accepting-strategic/edit/{item?}', 'edit')->name('nomenclature.authority_accepting_strategic.edit');
+        Route::match(['post', 'put'], '/nomenclature/authority-accepting-strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
     });
 
     Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
-        Route::get('/nomenclature/authority_advisory_board', 'index')->name('nomenclature.authority_advisory_board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
-        Route::get('/nomenclature/authority_advisory_board/edit/{item?}', 'edit')->name('nomenclature.authority_advisory_board.edit');
-        Route::match(['post', 'put'], '/nomenclature/authority_advisory_board/store/{item?}', 'store')->name('nomenclature.authority_advisory_board.store');
+        Route::get('/nomenclature/authority-advisory-board', 'index')->name('nomenclature.authority_advisory_board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
+        Route::get('/nomenclature/authority-advisory-board/edit/{item?}', 'edit')->name('nomenclature.authority_advisory_board.edit');
+        Route::match(['post', 'put'], '/nomenclature/authority-advisory-board/store/{item?}', 'store')->name('nomenclature.authority_advisory_board.store');
     });
 
     Route::controller(AdvisoryActTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory_act_type', 'index')->name('nomenclature.advisory_act_type')->middleware('can:viewAny,App\Models\AdvisoryActType');
-        Route::get('/nomenclature/advisory_act_type/edit/{item?}', 'edit')->name('nomenclature.advisory_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory_act_type/store/{item?}', 'store')->name('nomenclature.advisory_act_type.store');
+        Route::get('/nomenclature/advisory-act-type', 'index')->name('nomenclature.advisory_act_type')->middleware('can:viewAny,App\Models\AdvisoryActType');
+        Route::get('/nomenclature/advisory-act-type/edit/{item?}', 'edit')->name('nomenclature.advisory_act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/advisory-act-type/store/{item?}', 'store')->name('nomenclature.advisory_act_type.store');
     });
 
     Route::controller(StrategicActTypeController::class)->group(function () {
-        Route::get('/nomenclature/strategic_act_type', 'index')->name('nomenclature.strategic_act_type')->middleware('can:viewAny,App\Models\StrategicActType');
-        Route::get('/nomenclature/strategic_act_type/edit/{item?}', 'edit')->name('nomenclature.strategic_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/strategic_act_type/store/{item?}', 'store')->name('nomenclature.strategic_act_type.store');
+        Route::get('/nomenclature/strategic-act-type', 'index')->name('nomenclature.strategic_act_type')->middleware('can:viewAny,App\Models\StrategicActType');
+        Route::get('/nomenclature/strategic-act-type/edit/{item?}', 'edit')->name('nomenclature.strategic_act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/strategic-act-type/store/{item?}', 'store')->name('nomenclature.strategic_act_type.store');
     });
 
     Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory_chairman_type', 'index')->name('nomenclature.advisory_chairman_type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
-        Route::get('/nomenclature/advisory_chairman_type/edit/{item?}', 'edit')->name('nomenclature.advisory_chairman_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory_chairman_type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
+        Route::get('/nomenclature/advisory-chairman-type', 'index')->name('nomenclature.advisory_chairman_type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
+        Route::get('/nomenclature/advisory-chairman-type/edit/{item?}', 'edit')->name('nomenclature.advisory_chairman_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/advisory-chairman-type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
     });
 
     Route::controller(ConsultationDocumentTypeController::class)->group(function () {
-        Route::get('/nomenclature/consultation_document_type', 'index')->name('nomenclature.consultation_document_type')->middleware('can:viewAny,App\Models\ConsultationDocumentType');
-        Route::get('/nomenclature/consultation_document_type/edit/{item?}', 'edit')->name('nomenclature.consultation_document_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/consultation_document_type/store/{item?}', 'store')->name('nomenclature.consultation_document_type.store');
+        Route::get('/nomenclature/consultation-document-type', 'index')->name('nomenclature.consultation_document_type')->middleware('can:viewAny,App\Models\ConsultationDocumentType');
+        Route::get('/nomenclature/consultation-document-type/edit/{item?}', 'edit')->name('nomenclature.consultation_document_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation-document-type/store/{item?}', 'store')->name('nomenclature.consultation_document_type.store');
     });
 
     Route::controller(ConsultationTypeController::class)->group(function () {
-        Route::get('/nomenclature/consultation_type', 'index')->name('nomenclature.consultation_type')->middleware('can:viewAny,App\Models\ConsultationType');
-        Route::get('/nomenclature/consultation_type/edit/{item?}', 'edit')->name('nomenclature.consultation_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/consultation_type/store/{item?}', 'store')->name('nomenclature.consultation_type.store');
+        Route::get('/nomenclature/consultation-type', 'index')->name('nomenclature.consultation_type')->middleware('can:viewAny,App\Models\ConsultationType');
+        Route::get('/nomenclature/consultation-type/edit/{item?}', 'edit')->name('nomenclature.consultation_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/consultation-type/store/{item?}', 'store')->name('nomenclature.consultation_type.store');
     });
 
     Route::controller(ProgramProjectController::class)->group(function () {
-        Route::get('/nomenclature/program_project', 'index')->name('nomenclature.program_project')->middleware('can:viewAny,App\Models\ProgramProject');
-        Route::get('/nomenclature/program_project/edit/{item?}', 'edit')->name('nomenclature.program_project.edit');
-        Route::match(['post', 'put'], '/nomenclature/program_project/store/{item?}', 'store')->name('nomenclature.program_project.store');
+        Route::get('/nomenclature/program-project', 'index')->name('nomenclature.program_project')->middleware('can:viewAny,App\Models\ProgramProject');
+        Route::get('/nomenclature/program-project/edit/{item?}', 'edit')->name('nomenclature.program_project.edit');
+        Route::match(['post', 'put'], '/nomenclature/program-project/store/{item?}', 'store')->name('nomenclature.program_project.store');
     });
 
     Route::controller(LinkCategoryController::class)->group(function () {
-        Route::get('/nomenclature/link_category', 'index')->name('nomenclature.link_category')->middleware('can:viewAny,App\Models\LinkCategory');
-        Route::get('/nomenclature/link_category/edit/{item?}', 'edit')->name('nomenclature.link_category.edit');
-        Route::match(['post', 'put'], '/nomenclature/link_category/store/{item?}', 'store')->name('nomenclature.link_category.store');
+        Route::get('/nomenclature/link-category', 'index')->name('nomenclature.link_category')->middleware('can:viewAny,App\Models\LinkCategory');
+        Route::get('/nomenclature/link-category/edit/{item?}', 'edit')->name('nomenclature.link_category.edit');
+        Route::match(['post', 'put'], '/nomenclature/link-category/store/{item?}', 'store')->name('nomenclature.link_category.store');
     });
 
     Route::controller(PolicyAreaController::class)->group(function () {
-        Route::get('/nomenclature/policy_area', 'index')->name('nomenclature.policy_area')->middleware('can:viewAny,App\Models\LinkCategory');
-        Route::get('/nomenclature/policy_area/edit/{item?}', 'edit')->name('nomenclature.policy_area.edit');
-        Route::match(['post', 'put'], '/nomenclature/policy_area/store/{item?}', 'store')->name('nomenclature.policy_area.store');
+        Route::get('/nomenclature/policy-area', 'index')->name('nomenclature.policy_area')->middleware('can:viewAny,App\Models\LinkCategory');
+        Route::get('/nomenclature/policy-area/edit/{item?}', 'edit')->name('nomenclature.policy_area.edit');
+        Route::match(['post', 'put'], '/nomenclature/policy-area/store/{item?}', 'store')->name('nomenclature.policy_area.store');
     });
 
     Route::controller(PublicationCategoryController::class)->group(function () {
-        Route::get('/nomenclature/publication_category', 'index')->name('nomenclature.publication_category')->middleware('can:viewAny,App\Models\PublicationCategory');
-        Route::get('/nomenclature/publication_category/edit/{item?}', 'edit')->name('nomenclature.publication_category.edit');
-        Route::match(['post', 'put'], '/nomenclature/publication_category/store/{item?}', 'store')->name('nomenclature.publication_category.store');
+        Route::get('/nomenclature/publication-category', 'index')->name('nomenclature.publication_category')->middleware('can:viewAny,App\Models\PublicationCategory');
+        Route::get('/nomenclature/publication-category/edit/{item?}', 'edit')->name('nomenclature.publication_category.edit');
+        Route::match(['post', 'put'], '/nomenclature/publication-category/store/{item?}', 'store')->name('nomenclature.publication_category.store');
     });
 
 //    Route::controller(NewsCategoryController::class)->group(function () {
@@ -298,14 +302,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 //    });
 
     Route::controller(RegulatoryActTypeController::class)->group(function () {
-        Route::get('/nomenclature/regulatory_act_type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\RegulatoryActType');
-        Route::get('/nomenclature/regulatory_act_type/edit/{item?}', 'edit')->name('nomenclature.regulatory_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/regulatory_act_type/store/{item?}', 'store')->name('nomenclature.regulatory_act_type.store');
+        Route::get('/nomenclature/regulatory-act-type', 'index')->name('nomenclature.regulatory_act_type')->middleware('can:viewAny,App\Models\RegulatoryActType');
+        Route::get('/nomenclature/regulatory-act-type/edit/{item?}', 'edit')->name('nomenclature.regulatory_act_type.edit');
+        Route::match(['post', 'put'], '/nomenclature/regulatory-act-type/store/{item?}', 'store')->name('nomenclature.regulatory_act_type.store');
     });
 
     Route::controller(RegulatoryActController::class)->group(function () {
-        Route::get('/nomenclature/regulatory_act', 'index')->name('nomenclature.regulatory_act')->middleware('can:viewAny,App\Models\RegulatoryAct');
-        Route::get('/nomenclature/regulatory_act/edit/{item?}', 'edit')->name('nomenclature.regulatory_act.edit');
-        Route::match(['post', 'put'], '/nomenclature/regulatory_act/store/{item?}', 'store')->name('nomenclature.regulatory_act.store');
+        Route::get('/nomenclature/regulatory-act', 'index')->name('nomenclature.regulatory_act')->middleware('can:viewAny,App\Models\RegulatoryAct');
+        Route::get('/nomenclature/regulatory-act/edit/{item?}', 'edit')->name('nomenclature.regulatory_act.edit');
+        Route::match(['post', 'put'], '/nomenclature/regulatory-act/store/{item?}', 'store')->name('nomenclature.regulatory_act.store');
     });
 });

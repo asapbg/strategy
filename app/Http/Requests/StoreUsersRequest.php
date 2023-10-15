@@ -35,6 +35,7 @@ class StoreUsersRequest extends FormRequest
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
             'roles'                 => ['required' ,'array', 'min:1'],
             'user_type'             => ['required' ,'numeric'],
+            'institution_id'        => ['nullable' ,'numeric'],
         ];
 
         if( request()->input('id') ) {

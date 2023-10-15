@@ -29,6 +29,7 @@ class DynamicStructure extends ModelActivityExtend
 
     public function groups(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(DynamicStructureGroup::class, 'dynamic_structure_id', 'id');
+        return $this->hasMany(DynamicStructureGroup::class, 'dynamic_structure_id', 'id')
+            ->orderBy('ord');
     }
 }

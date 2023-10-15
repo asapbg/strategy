@@ -139,6 +139,7 @@ return [
     'update'                           => 'Обнови',
     'updated'                          => 'Обновяване',
     'save'                             => 'Запази',
+    'save_and_stay'                    => 'Запази и остани',
     'send'                             => 'Изпрати',
     'back'                             => 'Обратно',
     'generate'                         => 'Генерирай',
@@ -368,7 +369,7 @@ return [
     'dynamic_structures.type.LEGISLATIVE_PROGRAM'                        => 'Законодателна програма',
     'dynamic_structures.type.OPERATIONAL_PROGRAM'                        => 'Оперативна програма',
     'dynamic_structures.type.CONSULT_DOCUMENTS'                        => 'Консултационен документ',
-//    'dynamic_structures.type.CONSULT_DOCUMENTS.1'                  => 'Основна информация за консултацията',
+    'consult_documents'                  => 'Консултационен документ|Консултационни документи',
 
     //
     'publish'                                   =>  'Публикувай',
@@ -379,5 +380,6 @@ return [
     'consultation_links'                        => 'Връзки към предишни консултации',
     'proposal_ways'                              => 'Начини за представяне на предложения и становища',
     'proposal_ways_default_html'                => '<ul><li>Портала за обществени консултации (изисква се регистрация чрез имейл);</li><li>Електронна поща на посочените адреси;</li><li>Системата за сигурно електронно връчване https://edelivery.egov.bg/ (изисква се квалифициран електронен подпис или ПИК на НОИ);</li><li>Официалния адрес за кореспонденция.</li>',
-
+    'act_links'                                 => 'Връзки към предишни консултации',
+    'person_contacts'                           => 'Лице за контакт|Лица за контакт',
 ];

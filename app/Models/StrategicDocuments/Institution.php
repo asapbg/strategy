@@ -14,7 +14,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['name'];
+    const TRANSLATABLE_FIELDS = ['name', 'address', 'add_info'];
     const MODULE_NAME = 'custom.nomenclatures.institution';
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

@@ -44,21 +44,21 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="act_type">{{ trans_choice('custom.act_type', 1) }}<span class="required">*</span></label>
+                <label class="col-sm-12 control-label" for="act_type_id">{{ trans_choice('validation.attributes.act_type_id', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
-                    <select id="act_type" name="act_type" class="cl-child form-control form-control-sm select2 select2-no-clear @error('act_type'){{ 'is-invalid' }}@enderror">
+                    <select id="act_type_id" name="act_type_id" class="cl-child form-control form-control-sm select2 select2-no-clear @error('act_type_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($actTypes) && $actTypes->count())
                             @foreach($actTypes as $row)
                                 <option value="{{ $row->id }}"
-                                        @if(old('act_type', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
+                                        @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
                                         data-id="{{ $row->id }}"
                                         data-cl="{{ $row->consultationLevel->id }}"
                                 >{{ $row->name }}</option>
                             @endforeach
                         @endif
                     </select>
-                    @error('act_type')
+                    @error('act_type_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -68,19 +68,20 @@
     <div class="row">
         <div class="col-md-4" id="normative_act_pris_section">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="normative_act_pris">{{ trans_choice('custom.acts_pris', 1) }}</label>
+                <label class="col-sm-12 control-label" for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
                 <div class="col-12">
-                    <select id="normative_act_pris" name="normative_act_pris" class="form-control form-control-sm select2 @error('normative_act_pris'){{ 'is-invalid' }}@enderror">
+                    <select id="pris_act_id" name="pris_act_id" class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
+                        <option value="">---</option>
                         @if(isset($prisActs) && $prisActs->count())
                             @foreach($prisActs as $row)
                                 <option value="{{ $row->id }}"
-                                        @if(old('normative_act_pris', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
+                                        @if(old('pris_act_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
                                         data-id="{{ $row->id }}"
                                 >{{ $row->name }}</option>
                             @endforeach
                         @endif
                     </select>
-                    @error('normative_act_pris')
+                    @error('pris_act_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -88,19 +89,20 @@
         </div>
         <div class="col-md-4" id="normative_act_section">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="normative_act">{{ trans_choice('custom.regulatory_acts', 1) }}</label>
+                <label class="col-sm-12 control-label" for="regulatory_act_id">{{ trans_choice('custom.regulatory_acts', 1) }}</label>
                 <div class="col-12">
-                    <select id="normative_act" name="normative_act" class="form-control form-control-sm select2 @error('normative_act'){{ 'is-invalid' }}@enderror">
+                    <select id="regulatory_act_id" name="regulatory_act_id" class="form-control form-control-sm select2 @error('regulatory_act_id'){{ 'is-invalid' }}@enderror">
+                        <option value="">---</option>
                         @if(isset($regulatoryActs) && $regulatoryActs->count())
                             @foreach($regulatoryActs as $row)
                                 <option value="{{ $row->id }}"
-                                        @if(old('normative_act', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
+                                        @if(old('regulatory_act_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
                                         data-id="{{ $row->id }}"
                                 >{{ $row->name }}</option>
                             @endforeach
                         @endif
                     </select>
-                    @error('normative_act')
+                    @error('regulatory_act_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -172,6 +174,9 @@
                 <input type="text" id="open_from" name="open_from"
                        class="form-control form-control-sm datepicker-today @error('open_from'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
+                @error('open_from')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
             </div>
         </div>
         <div class="col-md-3">
@@ -180,6 +185,9 @@
                 <input type="text" id="open_to" name="open_to"
                        class="form-control form-control-sm datepicker-today @error('open_to'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_to', ($item->id ? $item->open_to : '')) }}">
+                @error('open_to')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
             </div>
         </div>
         <div class="col-md-4">
@@ -194,8 +202,7 @@
     </div>
 
     <div class="row" id="shortTermReason_section">
-        {{-- TODO fix me hide if duration is more then 30 days --}}
-        @include('admin.partial.edit_field_translate', ['field' => 'shortTermReason', 'required' => true])
+        @include('admin.partial.edit_field_translate', ['field' => 'short_term_reason'])
     </div>
 
     <hr class="mb-5">
@@ -208,31 +215,37 @@
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'proposal_ways', 'required' => true, 'default_val' => __('custom.proposal_ways_default_html')])
     </div>
-
     <div class="row">
         <div class="form-group">
-            <label class="col-sm-12 control-label" for="consultation_links">Звена</label>
+            <label class="col-sm-12 control-label" for="act_links">{{ __('custom.act_links') }}</label>
             <div class="col-12">
-                <textarea name="consultation_links" class="form-control form-control-sm summernote @error('consultation_links'){{ 'is-invalid' }}@enderror">{{ old('consultation_links', ($item->id ? $item->consultation_links : '')) }}</textarea>
-                @error('consultation_links')
+                <textarea id="act_links" name="act_links"
+                          class="form-control form-control-sm summernote @error('act_links'){{ 'is-invalid' }}@enderror">{{ old('act_links', ($item->id ? $item->act_links : ($default_val ?? '' ) )) }}</textarea>
+                @error('act_links')
                 <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
             </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <label class="col-sm-12 control-label" for="active">
-            <input type="checkbox" id="active" name="active" value="1"
-                   @if ($item->active) checked @endif
-                   class="checkbox @error('active'){{ 'is-invalid' }}@enderror">
-            {{ __('validation.attributes.active') }} <span class="required">*</span>
-        </label>
+    <div class="row">
+        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="active"></label>
+                <select id="active" name="active" class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">
+                    <option value="0" @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.inactive') }}</option>
+                    <option value="1" @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.active') }}</option>
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="form-group row">
         <div class="col-md-6 col-md-offset-3">
             <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+            <button id="save" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
             <a href="{{ route($listRouteName) }}"
                class="btn btn-primary">{{ __('custom.cancel') }}</a>
         </div>

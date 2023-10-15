@@ -153,6 +153,12 @@ return [
         ],
         'new_val.*' => [
             'required' => 'Полето е задължително'
+        ],
+        'name.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'email.*' => [
+            'required' => 'Полето е задължително'
         ]
     ],
 
@@ -210,8 +216,12 @@ return [
         'minute'                   => 'Минута',
         'second'                   => 'Секунда',
         'title'                    => 'Заглавие',
+        'title_bg'                    => 'Заглавие (BG)',
+        'title_en'                    => 'Заглавие (EN)',
         'content'                  => 'Съдържание',
         'description'              => 'Описание',
+        'description_bg'              => 'Описание  (BG)',
+        'description_en'              => 'Описание (EN)',
         'excerpt'                  => 'Откъс',
         'date'                     => 'Дата',
         'time'                     => 'Време',
@@ -238,9 +248,10 @@ return [
         'model'                     => 'Модел',
         'open_from'                 => 'Дата на откриване',
         'open_to'                   => 'Дата на приключване',
-        'shortTermReason'           => 'Причина за кратък срок',
-        'responsibleUnit'           => 'Отговорно звено',
-        'responsiblePerson'         => 'Отговорно лице',
+        'short_term_reason_bg'           => 'Причина за кратък срок (BG)',
+        'short_term_reason_en'           => 'Причина за кратък срок (EN)',
+        'responsible_unit_bg'           => 'Отговорно звено  (BG)',
+        'responsible_unit_en'           => 'Отговорно звено  (EN)',
         'active'                    => 'Активна',
         'deleted'                   => 'Изтрита',
         'effective_from'            => 'В сила от',
@@ -299,6 +310,11 @@ return [
         'system_email'              => 'Ел. поща (системни известия)',
         'assessment'                => 'Оценка на въздействието',
         'opinion'                   => 'Становище',
-        'proposal_ways'                   => 'Начини за представяне на предложения и становища',
+        'proposal_ways_bg'          => 'Начини за представяне на предложения и становища (BG)',
+        'proposal_ways_en'          => 'Начини за представяне на предложения и становища (EN)',
+        //Обществени консултации
+        'consultation_type_id'      => 'Тип обществена консултация',
+        'consultation_level_id'      => 'Категория (ниво) обществени консултации',
+        'act_type_id'                  => 'Вид акт',
     ],
 ];

@@ -15,16 +15,20 @@ return new class extends Migration
     {
         Schema::create('public_consultation', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('consultation_level_id');
-            $table->unsignedInteger('act_type_id');
-            $table->unsignedInteger('program_project_id');
-            $table->unsignedInteger('link_category_id');
+            $table->unsignedBigInteger('consultation_type_id');
+            $table->unsignedBigInteger('consultation_level_id');
+            $table->unsignedBigInteger('act_type_id');
+            $table->unsignedBigInteger('legislative_program_id')->nullable();
+            $table->unsignedBigInteger('operational_program_id')->nullable();
             $table->date('open_from');
             $table->date('open_to');
-            $table->string('email');
-            $table->string('phone');
-            $table->text('address');
-            $table->boolean('active')->nullable();
+            $table->unsignedBigInteger('regulatory_act_id')->nullable();
+            $table->unsignedBigInteger('pris_act_id')->nullable();
+            $table->unsignedBigInteger('importer_institution_id');
+            $table->unsignedBigInteger('responsible_institution_id');
+            $table->string('responsible_institution_address');
+            $table->text('act_links')->nullable();
+            $table->tinyInteger('active')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -40,9 +44,9 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description');
-            $table->text('shortTermReason')->nullable();
-            $table->string('responsibleUnit');
-            $table->string('responsiblePerson');
+            $table->text('short_term_reason')->nullable();
+            $table->text('proposal_ways');
+            $table->string('responsible_unit')->nullable();
         });
     }
 

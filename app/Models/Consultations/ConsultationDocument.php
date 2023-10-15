@@ -2,6 +2,7 @@
 
 namespace App\Models\Consultations;
 
+use App\Models\ConsultationDocumentRow;
 use App\Models\ConsultationLevel;
 use App\Models\PublicConsultationContact;
 use App\Models\PublicConsultationUnit;
@@ -30,6 +31,11 @@ class ConsultationDocument extends ModelActivityExtend
      */
     public function getModelName() {
         return $this->name;
+    }
+
+    public function records(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ConsultationDocumentRow::class, 'consultation_document_id', 'id');
     }
 
 

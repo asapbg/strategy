@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('table_public_consultation_contact', function (Blueprint $table) {
+        Schema::create('public_consultation_contact', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('public_consultation_id');
-            $table->tinyInteger('active')->default(1);
             $table->string('name');
             $table->string('email');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_public_consultation_contact');
+        Schema::dropIfExists('public_consultation_contact');
     }
 };

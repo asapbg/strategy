@@ -9,12 +9,14 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">Основна информация</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="ct-kd-tab" data-toggle="pill" href="#ct-kd" role="tab" aria-controls="ct-kd" aria-selected="false">Консултационен документ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Лица за контакт</a>
-                        </li>
+                        @if($item->id)
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-kd-tab" data-toggle="pill" href="#ct-kd" role="tab" aria-controls="ct-kd" aria-selected="false">Консултационен документ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Лица за контакт</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-body">
@@ -22,12 +24,14 @@
                         <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
                             @include('admin.consultations.public_consultations.general')
                         </div>
-                        <div class="tab-pane fade" id="ct-kd" role="tabpanel" aria-labelledby="ct-kd-tab">
-                            @include('admin.consultations.public_consultations.kd')
-                        </div>
-                        <div class="tab-pane fade" id="ct-contacts" role="tabpanel" aria-labelledby="ct-contacts-tab">
-                            @include('admin.consultations.public_consultations.contact_persons')
-                        </div>
+                        @if($item->id)
+                            <div class="tab-pane fade" id="ct-kd" role="tabpanel" aria-labelledby="ct-kd-tab">
+                                @include('admin.consultations.public_consultations.kd')
+                            </div>
+                            <div class="tab-pane fade" id="ct-contacts" role="tabpanel" aria-labelledby="ct-contacts-tab">
+                                @include('admin.consultations.public_consultations.contact_persons')
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -46,7 +50,7 @@
         });
 
         let consultationLevel = $('#consultation_level_id');
-        let actType = $('#act_type');
+        let actType = $('#act_type_id');
         //Normative acts sections
         let prisNormativeActs = $('#normative_act_pris_section');
         let normativeActs = $('#normative_act_section');

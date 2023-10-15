@@ -2,10 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\Consultations\PublicConsultation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PublicConsultationContact extends Model
+class PublicConsultationContact extends ModelActivityExtend
 {
-    use HasFactory;
+    use SoftDeletes;
+
+    protected $table ='public_consultation_contact';
+    protected $guarded = [];
+
+    const MODULE_NAME = 'custom.consultations.public_consultation.contacts';
+    protected string $logName = "public_consultation_contact";
+
+    public function getModelName() {
+        return $this->name;
+    }
+
+    public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id');
+    }
 }
