@@ -59,7 +59,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['roles:all
         Route::name('users.profile.update')->post('/users/profile/{user}/update', 'updateProfile');
     });
 
-    Route::middleware(['roles:admin'])->group(function () {
+    Route::middleware(['roles:super-admin'])->group(function () {
 
         Route::controller(UsersController::class)->group(function () {
             Route::get('/users',                'index')->name('users');

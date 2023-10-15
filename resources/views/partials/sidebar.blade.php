@@ -38,7 +38,7 @@
                                 <a href="{{ route('admin.publications.index') }}"
                                    class="nav-link @if($activePublications) active @endif">
                                     <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.publications', 2) }}</p>
+                                    <p>{{ trans_choice('custom.publications', 2) }} <span style="font-size: 10px;">({{ __('custom.news_library_ogp') }})</span></p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -46,6 +46,13 @@
                                    class="nav-link @if($activePublicationCategories) active @endif">
                                     <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.publication_category', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.pages.index') }}"
+                                   class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                                 </a>
                             </li>
                         </ul>
@@ -97,7 +104,6 @@
                     </li>
                 @endcanany
                 <!-- Admin -->
-                @can('manage.*')
                 <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">
                         <i class="nav-icon fas fa-cubes"></i>
@@ -105,28 +111,10 @@
                     </a>
                     <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
-                            <a href="{{ route('admin.pages.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.static_content', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
                             <a href="{{ route('admin.impact_pages.index') }}"
                             class="nav-link @if(Str::endsWith(url()->current(), 'impact_assessment')) active @endif">
                                 <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.impact_assessment', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.static_pages.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'static_pages')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                             </a>
                         </li>
                     </ul>
@@ -147,57 +135,6 @@
                         <p>{{ trans_choice('custom.polls', 2) }}</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.activity-logs')}}"
-                       class="nav-link @if(strstr(url()->current(), 'activity-logs')) active @endif">
-                        <i class="fas fa-history"></i>
-                        <p>{{ trans_choice('custom.activity_logs', 2) }}</p>
-                    </a>
-                </li>
-{{--                <li class="nav-item">--}}
-{{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'news')) active @endif">--}}
-{{--                        <i class="nav-icon fas fa-cubes"></i>--}}
-{{--                        <p>{{ trans_choice('custom.news', 2) }}<i class="fas fa-angle-left right"></i></p>--}}
-{{--                    </a>--}}
-{{--                    <ul class="nav nav-treeview" style="display: none;">--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.news.index') }}"--}}
-{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'news')) active @endif">--}}
-{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
-{{--                                <p>{{ trans_choice('custom.news', 2) }}</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.nomenclature.news_category') }}"--}}
-{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'news_category')) active @endif">--}}
-{{--                                <i class="fas fa-folder nav-icon nav-item-sub-icon"></i>--}}
-{{--                                <p>{{ trans_choice('custom.news_category', 2) }}</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
-{{--                <li class="nav-item">--}}
-{{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'publications')) active @endif">--}}
-{{--                        <i class="nav-icon fas fa-cubes"></i>--}}
-{{--                        <p>{{ trans_choice('custom.library', 2) }}<i class="fas fa-angle-left right"></i></p>--}}
-{{--                    </a>--}}
-{{--                    <ul class="nav nav-treeview" style="display: none;">--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.publications.index') }}"--}}
-{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'publications')) active @endif">--}}
-{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
-{{--                                <p>{{ trans_choice('custom.library', 2) }}</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.nomenclature.publication_category') }}"--}}
-{{--                            class="nav-link @if(Str::endsWith(url()->current(), 'publications/categories')) active @endif">--}}
-{{--                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>--}}
-{{--                                <p>{{ trans_choice('custom.publications_categories', 2) }}</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
                 <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
                         <i class="nav-icon fas fa-info"></i>
@@ -224,13 +161,6 @@
                             class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
                                 <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                 <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ogp.articles.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'ogp/articles')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.ogp.articles', 2) }}</p>
                             </a>
                         </li>
                     </ul>
@@ -288,9 +218,7 @@
                     </ul>
                 </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
-                    @canany(['manage.*', 'manage.advisory'])
-                    @endcan
-                    @can('manage.nomenclatures')
+                @canany(['manage.*','manage.nomenclatures'])
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
                            class="nav-link @if(str_contains(url()->current(), 'nomenclature')) active @endif">
@@ -298,30 +226,29 @@
                             <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
                         </a>
                     </li>
-                    @endcan
-                    <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
-                    <li class="nav-item">
-                        <a href="{{route('admin.roles')}}"
-                           class="nav-link @if(str_contains(url()->current(), 'roles')) active @endif">
-                            <i class="fas fa-users"></i>
-                            <p>{{ trans_choice('custom.roles', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('admin.users')}}"
-                           class="nav-link @if(str_contains(url()->current(), 'users')) active @endif">
-                            <i class="fas fa-user"></i>
-                            <p>{{ trans_choice('custom.users', 2) }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('admin.permissions')}}"
-                           class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
-                            <i class="fas fa-gavel"></i>
-                            <p>{{ trans_choice('custom.permissions', 2) }}</p>
-                        </a>
-                    </li>
                 @endcan
+                <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
+                <li class="nav-item">
+                    <a href="{{route('admin.roles')}}"
+                       class="nav-link @if(str_contains(url()->current(), 'roles')) active @endif">
+                        <i class="fas fa-users"></i>
+                        <p>{{ trans_choice('custom.roles', 2) }}</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.users')}}"
+                       class="nav-link @if(str_contains(url()->current(), 'users')) active @endif">
+                        <i class="fas fa-user"></i>
+                        <p>{{ trans_choice('custom.users', 2) }}</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.permissions')}}"
+                       class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
+                        <i class="fas fa-gavel"></i>
+                        <p>{{ trans_choice('custom.permissions', 2) }}</p>
+                    </a>
+                </li>
 
                 @if($user)
                     <li class="nav-header">Лични данни</li>
@@ -335,6 +262,15 @@
                 @endif
 
                 <hr class="text-white">
+                @if(auth()->user()->hasRole([\App\Models\CustomRole::ADMIN_USER_ROLE, \App\Models\CustomRole::SUPER_USER_ROLE]))
+                    <li class="nav-item">
+                        <a href="{{route('admin.activity-logs')}}"
+                           class="nav-link @if(strstr(url()->current(), 'activity-logs')) active @endif">
+                            <i class="fas fa-history"></i>
+                            <p>{{ trans_choice('custom.activity_logs', 2) }}</p>
+                        </a>
+                    </li>
+                @endif
                 @canany(['manage.*', 'manage.settings'])
                     <li class="nav-item">
                         <a href="{{ route('admin.settings') }}"

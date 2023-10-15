@@ -21,3 +21,7 @@
 <br><a href="{{ route('templates.view', ['slug' => 'lp']) }}">ЗО (ПО е подобно)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'lp_edit']) }}">ЗО редакция(ПО е подобно)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'dynamic_structures']) }}">Динамична структура на ЗП(подобно за ПО и Консултационен документ)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp_plan_edit']) }}">OGP Планове за действие (редакция)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp_аssessment_edit']) }}">OGP Оценка (редакция)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp_forum_edit']) }}">OGP FORUM (редакция)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'advisory_board_edit']) }}">Консултативен съвет (редакция)</a>
