@@ -674,13 +674,13 @@
                                     <div class="col-md-3 period d-none">
                                         <div class="form-group">
                                             <label class="control-label" for="active">От дата<span class="required"> *</span></label>
-                                            <input type="text" class="form-control form-control-sm datepicker">
+                                            <input type="text" class="form-control form-control-sm datepicker-template">
                                         </div>
                                     </div>
                                     <div class="col-md-3 period d-none">
                                         <div class="form-group">
                                             <label class="control-label" for="active">До дата<span class="required"> *</span></label>
-                                            <input type="text" class="form-control form-control-sm datepicker">
+                                            <input type="text" class="form-control form-control-sm datepicker-template">
                                         </div>
                                     </div>
                                 </div>
@@ -860,24 +860,26 @@
 <script src="https://strategy.asapbg.com/js/admin.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        let colorDays = ['21-12-2022', '05-02-2023'];
-        function highlightDays(date) {
-            var fDate = $.datepicker.formatDate('dd-mm-yy', date);
-            var result = [false, ""];
-            $.each(colorDays, function(k, d) {
-                if (fDate === d) {
-                    result = [true, "highlight-green"];
-                }
-            });
-            return result;
-        }
+        var colorDays      = ['13.10.2023', '05.10.2023', '21.12.2022', '05.02.2023'];
 
-        $(".period .datepicker").datepicker({
+        $(".period .datepicker-template").datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             dateFormat: "dd.mm.yy",
-            beforeShowDay: highlightDays,
+            todayHighlight: true,
+            orientation: "bottom left",
+            autoclose: true,
+            weekStart: 1,
+            beforeShowDay: function (date) {
+                calender_date = ('0'+date.getDate()).slice(-2)+'.'+(date.getMonth()+1)+'.'+date.getFullYear();
+                var search_index = $.inArray(calender_date, colorDays);
+                if (search_index > -1) {
+                    return {classes: 'bg-success', tooltip: 'Заседание'};
+                }
+            }
         });
+
         $('#period').on('change', function (){
-            if(parseInt($(this).val()) == 2) {
+            if(parseInt($(this).val()) == 3) {
                 $('.period').removeClass('d-none');
             } else{
                 $('.period').addClass('d-none');
