@@ -65,7 +65,7 @@ class PublicConsultationController extends AdminController
      */
     public function edit(Request $request, PublicConsultation|null $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PublicConsultation::class) ) {
+        if( ($item->id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PublicConsultation::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 

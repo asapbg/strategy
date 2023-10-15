@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Consultations\PublicConsultation;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PublicConsultationPolicy
@@ -53,7 +54,7 @@ class PublicConsultationPolicy
      */
     public function update(User $user, PublicConsultation $publicConsultation)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']);
+        return $user->canAny(['manage.*', 'manage.advisory']) && $publicConsultation->open_to >= Carbon::now('UTC')->toDateString();
     }
 
     /**
