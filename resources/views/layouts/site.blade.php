@@ -98,7 +98,7 @@
             <a class="nav-link @if(str_contains(request()->url(), 'public_consultations_view')) active @endif" href="{{ url('/consultations') }}">Обществени консултации</a>
           </li>
             <li class="nav-item ">
-                <a class="nav-link " aria-current="page" href="#">Оценка на въздействие</a>
+                <a class="nav-link " aria-current="page" href="{{ route('impact_assessment.index') }}">Оценка на въздействие</a>
             </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Актове на МС</a>

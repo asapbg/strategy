@@ -6,11 +6,13 @@
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_2_public_legal_information']) }}">Правна информация на Министерски съвет. Търсене</a>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti']) }}">Стратегически документи</a>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti-inner']) }}">Стратегически документи (вътрешна)</a>
+<br><a href="{{ route('impact_assessment.index') }}">Оценка на въздействието</a>
 <br>
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home']).'?sk=1' }}">Начално (версия 1)</a>--}}
 <br><a href="{{ route('templates.view', ['slug' => 'home-2']).'?sk=1' }}">Начално (версия 2)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'home-3']).'?sk=1' }}">Начално (версия 3)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'home-4']).'?sk=1' }}">Начално (версия 4)</a>
+<br><a href="https://strategy.asapbg.com/">Начално (версия 5)</a>
 
 
 <h4>Администрация</h4>
