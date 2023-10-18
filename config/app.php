@@ -70,6 +70,7 @@ return [
     */
 
     'timezone' => env('APP_TIMEZONE', 'Europe/Sofia'),
+    'date_format' => 'd.m.Y',
 
     /*
     |--------------------------------------------------------------------------

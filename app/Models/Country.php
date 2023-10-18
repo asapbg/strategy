@@ -14,7 +14,7 @@ class Country extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.country';
+    const MODULE_NAME = ('custom.country');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

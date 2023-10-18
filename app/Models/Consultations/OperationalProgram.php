@@ -16,7 +16,7 @@ class OperationalProgram extends ModelActivityExtend
     use FilterSort, SoftDeletes;
 
     const PAGINATE = 20;
-    const MODULE_NAME = 'custom.operational_program';
+    const MODULE_NAME = ('custom.operational_program');
     public $timestamps = true;
     protected $table = 'operational_program';
 
@@ -30,6 +30,16 @@ class OperationalProgram extends ModelActivityExtend
      */
     public function getModelName() {
         return __('custom.dynamic_structures.type.'.DynamicStructureTypesEnum::keyByValue($this->type));
+    }
+
+    public function scopeNotLockedOrByCd($query, $excludeCdId = 0)
+    {
+        $query->where(function ($q) use ($excludeCdId) {
+            $q->where('locked', '=', 0);
+            if( $excludeCdId ) {
+                $q->orWhere('public_consultation_id', '=', $excludeCdId);
+            }
+        });
     }
 
     /**

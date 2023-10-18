@@ -14,7 +14,7 @@ class DynamicStructureColumn extends ModelActivityExtend
     protected $fillable = ['type', 'ord', 'dynamic_structure_id', 'dynamic_structure_groups_id'];
 
     const TRANSLATABLE_FIELDS = ['label'];
-    const MODULE_NAME = 'dynamic_structures.columns';
+    const MODULE_NAME = ('custom.dynamic_structures.columns');
 //
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

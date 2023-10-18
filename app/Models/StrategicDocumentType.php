@@ -13,7 +13,7 @@ class StrategicDocumentType extends ModelActivityExtend implements TranslatableC
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.strategic_document_type';
+    const MODULE_NAME = ('custom.nomenclatures.strategic_document_type');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

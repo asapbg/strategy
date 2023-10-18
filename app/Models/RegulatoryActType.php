@@ -13,7 +13,7 @@ class RegulatoryActType extends ModelActivityExtend implements TranslatableContr
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.regulatory_act_type';
+    const MODULE_NAME = ('custom.nomenclatures.regulatory_act_type');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

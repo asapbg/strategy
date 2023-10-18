@@ -15,7 +15,7 @@ class Link extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'text'];
-    const MODULE_NAME = 'custom.nomenclatures.link';
+    const MODULE_NAME = ('custom.nomenclatures.link');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

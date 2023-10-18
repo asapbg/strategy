@@ -316,5 +316,12 @@ return [
         'consultation_type_id'      => 'Тип обществена консултация',
         'consultation_level_id'      => 'Категория (ниво) обществени консултации',
         'act_type_id'                  => 'Вид акт',
+        //polls
+        'once'                 => 'Еднократно попълване',
+        'only_registered'      => 'Само за регистрирани потребители',
+        'start_date'            => 'Начална дата',
+        'end_date'            => 'Крайна дата',
+        'new_question_name'            => 'Въпрос',
+        'new_answers.*'            => 'Отговор',
     ],
 ];

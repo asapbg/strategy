@@ -11,10 +11,7 @@ class Title extends QueryFilter implements FilterContract{
     public function handle($value): void
     {
         if( !empty($value) ){
-            $this->query->whereHas('translations', function ($query) use ($value) {
-                $query->where('locale', app()->getLocale());
-                $query->where('title', 'ilike', '%'.$value.'%');
-            });
+            $this->query->where('name', 'ilike', '%'.$value.'%');
         }
     }
 }

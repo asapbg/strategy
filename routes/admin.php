@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActController;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
@@ -37,6 +40,7 @@ use App\Http\Controllers\Admin\PollController;
 use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StaticPageController;
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
@@ -80,6 +84,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/add-contact', 'addContact')->name('consultations.public_consultations.add.contact');
         Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
+        Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
     });
 
     // Settings
@@ -93,6 +98,46 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
         Route::get( '/dynamic-structures/edit/{item}',         'edit')->name('dynamic_structures.edit');
         Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
+    });
+
+    //Profile
+    Route::controller(UsersController::class)->group(function () {
+        Route::name('users.profile.edit')->get('/users/profile/{user}/edit', 'editProfile');
+        Route::name('users.profile.update')->post('/users/profile/{user}/update', 'updateProfile');
+    });
+
+    Route::controller(UsersController::class)->group(function () {
+        Route::get('/users',                'index')->name('users')->middleware('can:viewAny,App\Models\User');
+        Route::get('/users/create',         'create')->name('users.create');
+        Route::post('/users/store',         'store')->name('users.store');
+        Route::get('/users/{user}/edit',    'edit')->name('users.edit');
+        Route::post('/users/{user}/update',  'update')->name('users.update');
+        Route::get('/users/{user}/delete',  'destroy')->name('users.delete');
+        Route::get('/users/export',         'export')->name('users.export');
+    });
+
+    Route::controller(RolesController::class)->group(function () {
+        Route::get('/roles',                'index')->name('roles')->middleware('can:viewAny,App\Models\CustomRole');
+        Route::get('/roles/create',         'create')->name('roles.create');
+        Route::post('/roles/store',         'store')->name('roles.store');
+        Route::get('/roles/{role}/edit',    'edit')->name('roles.edit');
+        Route::get('/roles/{role}/update',  'update')->name('roles.update');
+        Route::get('/roles/{role}/delete',  'destroy')->name('roles.delete');
+    });
+
+    Route::controller(PermissionsController::class)->group(function () {
+        Route::get('/permissions',                      'index')->name('permissions')->middleware('can:viewAny,App\Models\CustomRole');
+        Route::get('/permissions/create',               'create')->name('permissions.create');
+        Route::post('/permissions/store',               'store')->name('permissions.store');
+        Route::get('/permissions/{permission}/edit',    'edit')->name('permissions.edit');
+        Route::get('/permissions/{permission}/update',  'update')->name('permissions.update');
+        Route::get('/permissions/{permission}/delete',  'destroy')->name('permissions.delete');
+        Route::post('/permissions/roles',               'rolesPermissions')->name('permissions.roles');
+    });
+
+    Route::controller(ActivityLogController::class)->group(function () {
+        Route::get('/activity-logs',                 'index')->name('activity-logs')->middleware('can:viewAny,App\Models\CustomActivity');;
+        Route::get('/activity-logs/{activity}/show', 'show')->name('activity-logs.show');
     });
 
 
@@ -121,8 +166,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     // Polls
     Route::controller(PollController::class)->group(function () {
         Route::get('/polls', 'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
-        Route::get('/polls/edit/{item?}', 'edit')->name('polls.edit');
-        Route::match(['post', 'put'], '/polls/store/{item?}', 'store')->name('polls.store');
+        Route::get('/polls/edit/{id}', 'edit')->name('polls.edit');
+        Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
+        Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
+
+        Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
+        Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');
+        Route::get('/poll/question/delete/{id}', 'questionDelete')->where('id', '([1-9]+[0-9]*)')->name('polls.question.delete');
+        Route::post('/poll/question/delete', 'questionConfirmDelete')->name('polls.question.delete.confirm');
     });
 
 //    // News

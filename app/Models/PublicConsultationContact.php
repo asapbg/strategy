@@ -14,7 +14,7 @@ class PublicConsultationContact extends ModelActivityExtend
     protected $table ='public_consultation_contact';
     protected $guarded = [];
 
-    const MODULE_NAME = 'custom.consultations.public_consultation.contacts';
+    const MODULE_NAME = ('custom.consultations.public_consultation.contacts');
     protected string $logName = "public_consultation_contact";
 
     public function getModelName() {

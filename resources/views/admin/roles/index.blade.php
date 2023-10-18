@@ -48,18 +48,6 @@
                                            title="{{__('custom.edit')}}">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        @if($role->users_count == 0)
-                                            <a href="javascript:;"
-                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                               data-target="#modal-delete-resource"
-                                               data-resource-id="{{ $role->id }}"
-                                               data-resource-name="{{ $role->display_name }}"
-                                               data-resource-delete-url="{{route('admin.roles.delete',$role->id)}}"
-                                               data-toggle="tooltip"
-                                               title="{{__('custom.deletion')}}">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endif
                                     </td>
                                 </tr>
                                 @endif

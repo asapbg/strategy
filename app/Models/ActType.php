@@ -13,7 +13,7 @@ class ActType extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.act_type';
+    const MODULE_NAME = ('custom.nomenclatures.act_type');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

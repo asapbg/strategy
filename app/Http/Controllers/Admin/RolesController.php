@@ -35,6 +35,9 @@ class RolesController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->cannot('create', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
         $guards = array_keys(config('auth.guards'));
 
         return $this->view('admin.roles.create', compact('guards'));
@@ -48,6 +51,10 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->cannot('create', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $request->validate([
             'alias' => 'required|string|min:3|max:255',
             'display_name' => 'required|string|min:3|max:255'
@@ -80,6 +87,9 @@ class RolesController extends Controller
      */
     public function show(CustomRole $role)
     {
+        if(auth()->user()->cannot('view', $role)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
         $this->authorize('view', CustomRole::class);
     }
 
@@ -91,6 +101,9 @@ class RolesController extends Controller
      */
     public function edit(CustomRole $role)
     {
+        if(auth()->user()->cannot('update', $role)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
         //dd($role->users->count());
         $guards = array_keys(config('auth.guards'));
 
@@ -106,6 +119,10 @@ class RolesController extends Controller
      */
     public function update(Request $request, CustomRole $role)
     {
+        if(auth()->user()->cannot('update', $role)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $request->validate([
             'alias' => 'required|string|min:3|max:255',
             'display_name' => 'required|string|min:3|max:255'
@@ -137,6 +154,10 @@ class RolesController extends Controller
      */
     public function destroy(CustomRole $role)
     {
+        if(auth()->user()->cannot('delete', $role)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         try {
 
             $role->delete();

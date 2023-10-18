@@ -13,7 +13,7 @@ class PolicyArea extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.policy_area';
+    const MODULE_NAME = ('custom.nomenclatures.policy_area');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

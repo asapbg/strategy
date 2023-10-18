@@ -13,7 +13,7 @@ class RegulatoryAct extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name', 'institution'];
-    const MODULE_NAME = 'custom.nomenclatures.regulatory_act';
+    const MODULE_NAME = ('custom.nomenclatures.regulatory_act');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

@@ -13,7 +13,7 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.authority_accepting_strategic';
+    const MODULE_NAME = ('custom.nomenclatures.authority_accepting_strategic');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

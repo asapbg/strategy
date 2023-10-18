@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('poll', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('consultation_id')->nullable();
@@ -29,38 +29,36 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('poll_questions', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('poll_id');
+        Schema::create('poll_question', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('poll_id');
             $table->tinyInteger('type')->default(1);
-            $table->foreign('poll_id')->references('id')->on('polls');
             $table->string('name');
 
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('poll_question_options', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('poll_question_id');
-            $table->foreign('poll_question_id')->references('id')->on('poll_questions');
+        Schema::create('poll_question_option', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('poll_question_id');
             $table->string('name');
 
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('user_polls', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('poll_id');
-            $table->bigInteger('user_id')->nullable();
+        Schema::create('user_poll', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('poll_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('user_poll_options', function (Blueprint $table) {
-            $table->bigInteger('user_poll_id');
-            $table->bigInteger('poll_question_option_id');
+        Schema::create('user_poll_option', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_poll_id');
+            $table->unsignedBigInteger('poll_question_option_id');
         });
     }
 
@@ -71,10 +69,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_poll_options');
-        Schema::dropIfExists('user_polls');
-        Schema::dropIfExists('poll_question_options');
-        Schema::dropIfExists('poll_questions');
+        Schema::dropIfExists('user_poll_option');
+        Schema::dropIfExists('user_poll');
+        Schema::dropIfExists('poll_question_option');
+        Schema::dropIfExists('poll_question');
         Schema::dropIfExists('poll');
     }
 };

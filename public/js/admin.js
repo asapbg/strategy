@@ -2643,6 +2643,17 @@ function ConfirmToggleBoolean(booleanType, entityId, message, title = false) {
     $("#modal-confirm").modal('show');
 }
 
+function adminModal(modalTitle, modalBody) {
+    let adminModal = $('#adminModal');
+    if( typeof modalTitle != 'undefined' ) {
+        adminModal.find('#modal-title').html(modalTitle);
+    }
+    if( typeof modalBody != 'undefined' ) {
+        adminModal.find('#modal-body').html(modalBody);
+    }
+    adminModal.modal('show');
+}
+
 $.fn.appendAttr = function(attrName, suffix) {
     this.attr(attrName, function(i, val) {
         return val + suffix;
@@ -2854,7 +2865,7 @@ $(document).ready(function (e) {
     if($('.datepicker').length) {
         $('.datepicker').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
-            format: 'dd-mm-yyyy',
+            format: 'dd.mm.yyyy',
             todayHighlight: true,
             orientation: "bottom left",
             autoclose: true,
@@ -2865,7 +2876,7 @@ $(document).ready(function (e) {
     if($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
-            format: 'dd-mm-yyyy',
+            format: 'dd.mm.yyyy',
             todayHighlight: true,
             orientation: "bottom left",
             autoclose: true,
@@ -2877,7 +2888,7 @@ $(document).ready(function (e) {
     if($('.datepicker-month').length) {
         $('.datepicker-month').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
-            format: 'mm-yyyy',
+            format: 'mm.yyyy',
             viewMode: "months",
             minViewMode: "months",
             changeMonth: true,

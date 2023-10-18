@@ -15,7 +15,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
-    const MODULE_NAME = 'custom.publications';
+    const MODULE_NAME = ('custom.publications');
 //
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

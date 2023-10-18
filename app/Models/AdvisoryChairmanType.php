@@ -13,7 +13,7 @@ class AdvisoryChairmanType extends ModelActivityExtend implements TranslatableCo
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.advisory_chairman_type';
+    const MODULE_NAME = ('custom.nomenclatures.advisory_chairman_type');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

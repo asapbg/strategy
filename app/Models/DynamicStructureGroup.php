@@ -14,7 +14,7 @@ class DynamicStructureGroup extends ModelActivityExtend
     protected $fillable = ['ord', 'dynamic_structure_id'];
 
     const TRANSLATABLE_FIELDS = ['label'];
-    const MODULE_NAME = 'dynamic_structures.groups';
+    const MODULE_NAME = ('dynamic_structures.groups');
 //
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

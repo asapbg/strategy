@@ -17,7 +17,7 @@ class ConsultationDocument extends ModelActivityExtend
 {
     use FilterSort, SoftDeletes;
 
-    const MODULE_NAME = 'custom.consultations.public_consultation';
+    const MODULE_NAME = ('custom.consultations.public_consultation');
 
     public $timestamps = true;
 

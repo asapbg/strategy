@@ -13,7 +13,7 @@ class ConsultationLevel extends ModelActivityExtend implements TranslatableContr
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.consultation_level';
+    const MODULE_NAME = ('custom.nomenclatures.consultation_level');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

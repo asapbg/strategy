@@ -16,7 +16,7 @@ class AccountPoll extends Model
 
     public function options(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(PollQuestionOption::class, 'user_poll_options', 'user_poll_id');
+        return $this->belongsToMany(PollQuestionOption::class, 'user_poll_option', 'user_poll_id');
     }
 }
 

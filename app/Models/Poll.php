@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\PollStatusEnum;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +15,7 @@ class Poll extends ModelActivityExtend
     use FilterSort, SoftDeletes;
 
     const PAGINATE = 20;
-    const MODULE_NAME = 'custom.polls';
+    const MODULE_NAME = ('custom.polls');
 
     public $timestamps = true;
 
@@ -32,6 +31,18 @@ class Poll extends ModelActivityExtend
      */
     public function getModelName() {
         return $this->name;
+    }
+
+    public function scopeActive($query)
+    {
+        $query->where('status', '=', PollStatusEnum::ACTIVE->value);
+    }
+
+    public function scopeNotExpired($query)
+    {
+        $query->where(function ($query) {
+            $query->where('end_date', '>', databaseDate(Carbon::now()))->orWhereNull('end_date');
+        });
     }
 
     protected function startDate(): Attribute
@@ -63,19 +74,19 @@ class Poll extends ModelActivityExtend
         return DB::table('polls')
             ->select(
 //                DB::raw('poll_questions.id as question_id'),
-                DB::raw('poll_question_options.id as option_id'),
+                DB::raw('poll_question_option.id as option_id'),
                 DB::raw('sum(CASE WHEN account_poll_options.poll_question_option_id IS NOT NULL THEN 1 ELSE 0 END) as option_cnt'))
-            ->join('poll_questions', 'poll_questions.poll_id', '=', 'polls.id')
-            ->join('poll_question_options', 'poll_question_options.poll_question_id', '=', 'poll_questions.id')
+            ->join('poll_question', 'poll_question.poll_id', '=', 'polls.id')
+            ->join('poll_question_option', 'poll_question_option.poll_question_id', '=', 'poll_question.id')
             ->join('account_polls', 'account_polls.poll_id', '=', 'polls.id')
-            ->leftJoin('account_poll_options', 'account_poll_options.poll_question_option_id', '=', 'poll_question_options.id')
+            ->leftJoin('account_poll_options', 'account_poll_options.poll_question_option_id', '=', 'poll_question_option.id')
             ->where('polls.id', (int)$id)
             ->whereNull('polls.deleted_at')
             ->whereNull('account_polls.deleted_at')
-            ->whereNull('poll_questions.deleted_at')
-            ->whereNull('poll_question_options.deleted_at')
+            ->whereNull('poll_question.deleted_at')
+            ->whereNull('poll_question_option.deleted_at')
             ->whereColumn('account_poll_options.account_poll_id', '=', 'account_polls.id')
-            ->groupBy(['poll_questions.id', 'poll_question_options.id'])
+            ->groupBy(['poll_question.id', 'poll_question_option.id'])
             ->get();
     }
 

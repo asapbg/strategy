@@ -16,7 +16,7 @@ class PollQuestionOption extends Model
     protected string $logName = "answer_option";
     const MODULE_NAME = ('custom.poll_answers');
 
-    protected $table = 'poll_question_options';
+    protected $table = 'poll_question_option';
     public $timestamps = true;
     protected $guarded = [];
 

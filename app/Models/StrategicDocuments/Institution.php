@@ -15,7 +15,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name', 'address', 'add_info'];
-    const MODULE_NAME = 'custom.nomenclatures.institution';
+    const MODULE_NAME = ('custom.nomenclatures.institution');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

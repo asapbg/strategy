@@ -15,7 +15,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['description', 'author'];
-    const MODULE_NAME = 'custom.nomenclatures.legislative_initiative';
+    const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

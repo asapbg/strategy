@@ -37,6 +37,10 @@ class PermissionsController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         if(!auth()->user()->can('manage.roles-permissions')) {
             return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
         }
@@ -52,6 +56,10 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $request->validate([
             'name' => 'required|min:2',
             'display_name' => 'required|min:2',
@@ -95,8 +103,8 @@ class PermissionsController extends Controller
      */
     public function edit(Permission $permission)
     {
-        if(!auth()->user()->can('manage.roles-permissions')) {
-            //return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 
         return $this->view('admin.permissions.edit', compact('permission'));
@@ -111,6 +119,10 @@ class PermissionsController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $request->validate([
             'name' => 'required|min:3'
         ]);
@@ -137,6 +149,10 @@ class PermissionsController extends Controller
      */
     public function destroy(Permission $permission)
     {
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         try {
             $users_count = DB::table('role_has_permissions')
                 ->where('permission_id', $permission->id)
@@ -167,6 +183,10 @@ class PermissionsController extends Controller
      * @return JsonResponse
      */
     public function rolesPermissions() {
+        if(auth()->user()->cannot('editPermissions', CustomRole::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $res = [];
 
         try {

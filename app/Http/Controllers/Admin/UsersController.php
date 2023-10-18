@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use App\Models\CustomRole;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\RedirectResponse;
@@ -29,14 +30,10 @@ class  UsersController extends Controller
      * Display Users Table
      *
      * @param Request $request
-     * @return View
+     * @return RedirectResponse|View
      */
     public function index(Request $request)
     {
-        if(!auth()->user()->can('manage.users-roles')) {
-            return back()->with('danger', __('messages.no_rights_to_view_content'));
-        }
-
         $name = ($request->filled('name')) ? $request->get('name') : null;
         $username = ($request->filled('username')) ? $request->get('username') : null;
         $email = ($request->filled('email')) ? $request->get('email') : null;
@@ -83,6 +80,9 @@ class  UsersController extends Controller
      */
     public function export()
     {
+        if(auth()->user()->cannot('export', User::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
         $users = User::with('roles')->get();
 
         try {
@@ -103,7 +103,7 @@ class  UsersController extends Controller
      */
     public function create()
     {
-        if(!auth()->user()->can('manage.users-roles')) {
+        if(auth()->user()->cannot('create', User::class)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 
@@ -121,6 +121,10 @@ class  UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
+        if(auth()->user()->cannot('create', User::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         $must_change_password = ($request->filled('must_change_password')) ? true : null;
         $data = $request->except(['_token','password_confirmation','roles']);
         $roles = $request->offsetGet('roles');
@@ -171,7 +175,7 @@ class  UsersController extends Controller
      */
     public function edit(User $user)
     {
-        if(!auth()->user()->can('manage.users-roles')) {
+        if(auth()->user()->cannot('update', $user)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 
@@ -190,6 +194,10 @@ class  UsersController extends Controller
      */
     public function update(User $user, UpdateUsersRequest $request)
     {
+        if(auth()->user()->cannot('update', $user)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+        
         $data = $request->except(['_token','roles']);
         $roles = $request->offsetGet('roles');
         $rolesNames = sizeof($roles) ? rolesNames($roles) : [];

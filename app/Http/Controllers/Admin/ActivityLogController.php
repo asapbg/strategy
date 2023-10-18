@@ -61,6 +61,10 @@ class ActivityLogController extends Controller
      */
     public function show(CustomActivity $activity)
     {
+        if(auth()->user()->cannot('create', CustomActivity::class)) {
+            return back()->with('danger', __('messages.no_rights_to_view_content'));
+        }
+
         return view('admin.activity-logs.show', compact('activity'));
     }
 

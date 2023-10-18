@@ -14,7 +14,7 @@ class PCSubject extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['contractor', 'executor', 'objective', 'description'];
-    const MODULE_NAME = 'custom.nomenclatures.pc_subject';
+    const MODULE_NAME = ('custom.nomenclatures.pc_subject');
     const TYPE_INDIVIDUAL = 1;
     const TYPE_LEGAL_ENTITY = 2;
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;

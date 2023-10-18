@@ -14,7 +14,7 @@ class PublicationCategory extends ModelActivityExtend implements TranslatableCon
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.publication_category';
+    const MODULE_NAME = ('custom.nomenclatures.publication_category');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

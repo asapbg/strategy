@@ -14,9 +14,9 @@ class PollQuestion extends Model
     use HasFactory, SoftDeletes, LogsActivity, CausesActivity;
 
     protected string $logName = "question";
-    const MODULE_NAME = ('custom.poll_question');
+    const MODULE_NAME = ('custom.poll_questions');
 
-    protected $table = 'poll_questions';
+    protected $table = 'poll_question';
     public $timestamps = true;
     protected $guarded = [];
 

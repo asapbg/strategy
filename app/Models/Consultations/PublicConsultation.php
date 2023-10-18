@@ -4,6 +4,7 @@ namespace App\Models\Consultations;
 
 use App\Models\ActType;
 use App\Models\ConsultationLevel;
+use App\Models\Poll;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
@@ -21,7 +22,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways'];
-    const MODULE_NAME = 'custom.consultations.public_consultation';
+    const MODULE_NAME = ('custom.consultations.public_consultation');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -131,6 +132,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function kd(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(ConsultationDocument::class, 'public_consultation_id', 'id');
+    }
+
+    public function polls()
+    {
+        return $this->belongsToMany(Poll::class, 'public_consultation_poll', 'public_consultation_id', 'poll_id');
     }
 
     public static function optionsList()

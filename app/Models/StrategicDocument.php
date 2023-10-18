@@ -15,7 +15,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description'];
-    const MODULE_NAME = 'custom.nomenclatures.strategic_document';
+    const MODULE_NAME = ('custom.nomenclatures.strategic_document');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

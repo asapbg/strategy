@@ -2,13 +2,11 @@
 
 namespace App\Policies;
 
-use App\Enums\PollStatusEnum;
-use App\Models\Poll;
+use App\Models\CustomRole;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PollPolicy
+class CustomRolePolicy
 {
     use HandlesAuthorization;
 
@@ -20,19 +18,19 @@ class PollPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAny(['manage.*','manage.pools']);
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Poll $poll)
+    public function view(User $user, CustomRole $customRole)
     {
-        return $user->canAny(['manage.*','manage.pools']);
+        return false;
     }
 
     /**
@@ -43,76 +41,66 @@ class PollPolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*','manage.pools']);
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Poll $poll)
+    public function update(User $user, CustomRole $customRole)
     {
-        return $user->canAny(['manage.*','manage.pools'])
-            && $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Poll $poll)
+    public function delete(User $user, CustomRole $customRole)
     {
-        return $user->canAny(['manage.*','manage.pools'])
-            && $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Poll $poll)
+    public function restore(User $user, CustomRole $customRole)
     {
-        return $user->canAny(['manage.*','manage.pools'])
-            && $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+        return false;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Poll $poll)
+    public function forceDelete(User $user, CustomRole $customRole)
     {
         return false;
     }
 
     /**
-     * Determine whether the user can preview result the model.
+     * Determine whether the user can edit permissions the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\CustomRole  $customRole
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function preview(User $user, Poll $poll)
+    public function editPermissions(User $user): \Illuminate\Auth\Access\Response|bool
     {
-        return $user->canAny(['manage.*','manage.pools'])
-            && $poll->status == PollStatusEnum::EXPIRED->value;
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
     }
 }

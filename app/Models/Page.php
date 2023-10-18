@@ -15,7 +15,7 @@ class Page extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'content'];
-    const MODULE_NAME = 'custom.pages';
+    const MODULE_NAME = ('custom.pages');
     const TYPE_STATIC_CONTENT = 1;
     const TYPE_STATIC_PAGE = 2;
     const TYPE_IMPACT_ASSESSMENT = 3;

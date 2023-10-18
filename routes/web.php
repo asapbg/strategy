@@ -51,53 +51,6 @@ Route::group(['middleware' => ['auth']], function() {
     });
 });
 
-// Admin
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['roles:all','auth']], function() {
-
-    Route::controller(UsersController::class)->group(function () {
-        Route::name('users.profile.edit')->get('/users/profile/{user}/edit', 'editProfile');
-        Route::name('users.profile.update')->post('/users/profile/{user}/update', 'updateProfile');
-    });
-
-    Route::middleware(['roles:super-admin'])->group(function () {
-
-        Route::controller(UsersController::class)->group(function () {
-            Route::get('/users',                'index')->name('users');
-            Route::get('/users/create',         'create')->name('users.create');
-            Route::post('/users/store',         'store')->name('users.store');
-            Route::get('/users/{user}/edit',    'edit')->name('users.edit');
-            Route::post('/users/{user}/update',  'update')->name('users.update');
-            Route::get('/users/{user}/delete',  'destroy')->name('users.delete');
-            Route::get('/users/export',         'export')->name('users.export');
-        });
-
-        Route::controller(RolesController::class)->group(function () {
-            Route::get('/roles',                'index')->name('roles');
-            Route::get('/roles/create',         'create')->name('roles.create');
-            Route::post('/roles/store',         'store')->name('roles.store');
-            Route::get('/roles/{role}/edit',    'edit')->name('roles.edit');
-            Route::get('/roles/{role}/update',  'update')->name('roles.update');
-            Route::get('/roles/{role}/delete',  'destroy')->name('roles.delete');
-        });
-
-        Route::controller(PermissionsController::class)->group(function () {
-            Route::get('/permissions',                      'index')->name('permissions');
-            Route::get('/permissions/create',               'create')->name('permissions.create');
-            Route::post('/permissions/store',               'store')->name('permissions.store');
-            Route::get('/permissions/{permission}/edit',    'edit')->name('permissions.edit');
-            Route::get('/permissions/{permission}/update',  'update')->name('permissions.update');
-            Route::get('/permissions/{permission}/delete',  'destroy')->name('permissions.delete');
-            Route::post('/permissions/roles',               'rolesPermissions')->name('permissions.roles');
-        });
-
-        Route::controller(ActivityLogController::class)->group(function () {
-            Route::get('/activity-logs',                 'index')->name('activity-logs');
-            Route::get('/activity-logs/{activity}/show', 'show')->name('activity-logs.show');
-        });
-
-    });
-
-});
 
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');

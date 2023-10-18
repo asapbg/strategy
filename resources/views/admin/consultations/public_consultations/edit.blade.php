@@ -16,6 +16,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Лица за контакт</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-polls-tab" data-toggle="pill" href="#ct-polls" role="tab" aria-controls="ct-polls" aria-selected="false">Анкети</a>
+                            </li>
                         @endif
                     </ul>
                 </div>
@@ -30,6 +33,9 @@
                             </div>
                             <div class="tab-pane fade" id="ct-contacts" role="tabpanel" aria-labelledby="ct-contacts-tab">
                                 @include('admin.consultations.public_consultations.contact_persons')
+                            </div>
+                            <div class="tab-pane fade" id="ct-polls" role="tabpanel" aria-labelledby="ct-polls-tab">
+                                @include('admin.consultations.public_consultations.polls')
                             </div>
                         @endif
                     </div>

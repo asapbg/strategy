@@ -8,9 +8,8 @@
 
             <div class="card">
                 <div class="card-body table-responsive">
-
                     <div class="mb-3">
-                        <a href="{{ route('admin.polls.edit') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.polls', 1) }}
                         </a>
                     </div>
@@ -41,7 +40,7 @@
                                     <td>@if((int)$row->status)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
                                     <td>
                                         @if($user->can('update', $row))
-                                            <a href="{{route('admin.poll.edit',$row->id)}}"
+                                            <a href="{{route($editRouteName,['id' => $row->id])}}"
                                                class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
                                                title="{{__('custom.edit')}}">
@@ -49,19 +48,11 @@
                                             </a>
                                         @endif
                                         @if($row->status == \App\Enums\PollStatusEnum::EXPIRED->value)
-                                            <a href="{{route('admin.poll.preview',$row->id)}}"
+                                            <a href="{{route($previewRouteName,$row)}}"
                                                class="btn btn-sm btn-success mr-2"
                                                data-toggle="tooltip"
                                                title="{{__('custom.result')}}">
                                                 <i class="fas fa-poll"></i>
-                                            </a>
-                                        @endif
-                                        @if($user->can('delete', $row))
-                                            <a href="{{route('admin.poll.deactivate',$row->id)}}"
-                                               class="btn btn-sm btn-danger mr-2"
-                                               data-toggle="tooltip"
-                                               title="{{__('custom.deactivate')}}">
-                                                <i class="fas fa-minus-circle"></i>
                                             </a>
                                         @endif
                                     </td>

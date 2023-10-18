@@ -18,6 +18,7 @@ use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\LinkCategory;
+use App\Models\Poll;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
@@ -103,16 +104,24 @@ class PublicConsultationController extends AdminController
         $linkCategories = LinkCategory::all();
         $regulatoryActs = RegulatoryAct::all(); //Нормативни актове номенклатура
         $prisActs = null; //TODO fix me Add them after PRIS module
-        $operationalPrograms = OperationalProgram::get(); //TODO get only not in use and current if item
-        $legislativePrograms = LegislativeProgram::get(); //TODO get only not in use and current if item
+        $operationalPrograms = OperationalProgram::NotLockedOrByCd($item->id ?? 0)->get();
+        $legislativePrograms = LegislativeProgram::NotLockedOrByCd($item->id ?? 0)->get();
+
+        $polls = $item ? Poll::Active()->NotExpired()->get() : null;
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationTypes', 'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
-            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues'));
+            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls'));
     }
 
     public function store(Request $request, PublicConsultation $item)
     {
         $user = $request->user();
+
+        if( !$user->institution_id ) {
+            return back()->withInput($request->all())->with('danger', __('messages.you_are_not_associate_with_institution'));
+        }
+
         $storeRequest = new StorePublicConsultationRequest();
         $validator = Validator::make($request->all(), $storeRequest->rules());
         if( $validator->fails() ) {
@@ -142,8 +151,20 @@ class PublicConsultationController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
+            //Locke program if is selected
+            if( isset($validated['legislative_program_id']) ) {
+                LegislativeProgram::where('id', '=', (int)$validated['legislative_program_id'])
+                    ->where('locked', '=', 0)
+                    ->update(['locked' => 1, 'public_consultation_id' => $item->id]);
+            }
+            if( isset($validated['operational_program_id']) ) {
+                OperationalProgram::where('id', '=', (int)$validated['operational_program_id'])
+                    ->where('locked', '=', 0)
+                    ->update(['locked' => 1, 'public_consultation_id' => $item->id]);
+            }
+
             DB::commit();
-            if( $validated['stay'] ) {
+            if( isset($validated['stay']) && $validated['stay']) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
                     ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
@@ -322,6 +343,29 @@ class PublicConsultationController extends AdminController
                 'col' => 'col-md-4'
             )
         );
+    }
+
+    public function attachPoll(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric', 'exists:public_consultation,id'],
+            'poll' => ['required', 'numeric', 'exists:poll,id'],
+        ]);
+
+        if( $validator->fails() ){
+            return back()->withErrors($validator->errors()->all());
+        }
+
+        try {
+            $validated = $validator->validated();
+            $consultation = PublicConsultation::find($validated['id']);
+            $consultation->polls()->attach($validated['poll']);
+            return redirect(route(self::EDIT_ROUTE, $consultation).'#cd-polls')
+                ->with('success', trans_choice('custom.public_consultations', 2)." ".__('messages.updated_successfully_pl'));
+        } catch (\Exception $e) {
+            Log::error('Error attach poll to public consultation'.$e);
+            return back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 
     /**

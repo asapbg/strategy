@@ -13,7 +13,7 @@ class AuthorityAdvisoryBoard extends ModelActivityExtend implements Translatable
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
-    const MODULE_NAME = 'custom.nomenclatures.authority_advisory_board';
+    const MODULE_NAME = ('custom.nomenclatures.authority_advisory_board');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

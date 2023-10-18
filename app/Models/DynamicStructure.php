@@ -14,7 +14,7 @@ class DynamicStructure extends ModelActivityExtend
     public $timestamps = true;
     protected $guarded = [];
 
-    const MODULE_NAME = 'dynamic_structures';
+    const MODULE_NAME = ('dynamic_structures');
     protected $table = 'dynamic_structure';
 
     //activity

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Setting extends ModelActivityExtend
 {
     use SoftDeletes;
-    const MODULE_NAME = 'custom.setting';
+    const MODULE_NAME = ('custom.setting');
     protected $guarded = [];
     public $timestamps = true;
 
