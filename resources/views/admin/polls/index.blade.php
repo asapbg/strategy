@@ -14,32 +14,56 @@
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.polls', 1) }}
                         </a>
                     </div>
-
+                    @php($user = auth()->user())
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>{{ __('validation.attributes.title') }}</th>
-                            <th>{{ __('validation.attributes.created_at') }}</th>
-                            <th>{{ __('custom.actions') }}</th>
-                        </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>{{ __('custom.name') }}</th>
+                                <th>{{ trans_choice('custom.questions', 2) }}</th>
+                                <th>{{ __('custom.begin_date') }}</th>
+                                <th>{{ __('custom.end_date') }}</th>
+                                <th>{{ __('custom.once') }}</th>
+                                <th>{{ __('custom.status') }}</th>
+                                <th>{{ __('custom.actions') }}</th>
+                            </tr>
                         </thead>
                         <tbody>
                         @if(isset($items) && $items->count() > 0)
-                            @foreach($items as $item)
+                            @foreach($items as $row)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->title }}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td class="text-center">
-                                        @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                               class="btn btn-sm btn-info"
+                                    <td>{{ $row->id }}</td>
+                                    <td>{{ $row->name }}</td>
+                                    <td>{{ $row->questions->count() }}</td>
+                                    <td>{{ $row->start_date }}</td>
+                                    <td>{{ $row->end_date }}</td>
+                                    <td>@if((int)$row->is_once)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>@if((int)$row->status)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>
+                                        @if($user->can('update', $row))
+                                            <a href="{{route('admin.poll.edit',$row->id)}}"
+                                               class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
-                                               title="{{ __('custom.edit') }}">
+                                               title="{{__('custom.edit')}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                        @endcan
+                                        @endif
+                                        @if($row->status == \App\Enums\PollStatusEnum::EXPIRED->value)
+                                            <a href="{{route('admin.poll.preview',$row->id)}}"
+                                               class="btn btn-sm btn-success mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.result')}}">
+                                                <i class="fas fa-poll"></i>
+                                            </a>
+                                        @endif
+                                        @if($user->can('delete', $row))
+                                            <a href="{{route('admin.poll.deactivate',$row->id)}}"
+                                               class="btn btn-sm btn-danger mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.deactivate')}}">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

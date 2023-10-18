@@ -6,17 +6,17 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
 
-class Poll extends ModelActivityExtend implements TranslatableContract
+class Poll extends ModelActivityExtend
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['title', 'content'];
     const MODULE_NAME = 'custom.polls';
-    public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
@@ -25,7 +25,7 @@ class Poll extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "poll";
 
-    protected $fillable = ['begin_date', 'end_date', 'consultation_id', 'active'];
+    protected $guarded = [];
 
     /**
      * Get the model name
@@ -34,32 +34,56 @@ class Poll extends ModelActivityExtend implements TranslatableContract
         return $this->name;
     }
 
-    public static function translationFieldsProperties(): array
+    protected function startDate(): Attribute
     {
-        return array(
-            'title' => [
-                'type' => 'textarea',
-                'rules' => ['required', 'string']
-            ],
-            'content' => [
-                'type' => 'ckeditor',
-                'rules' => ['required', 'string']
-            ],
+        return Attribute::make(
+            get: fn ($value) => displayDate($value),
         );
     }
 
-    public function answers()
+    protected function endDate(): Attribute
     {
-        return $this->hasMany(PollAnswer::class, 'poll_id', 'id');
+        return Attribute::make(
+            get: fn ($value) => !is_null($value) ? displayDate($value) : $value,
+        );
+    }
+
+    public function questions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PollQuestion::class, 'poll_id','id');
+    }
+
+    public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AccountPoll::class, 'poll_id','id');
+    }
+
+    public static function getStats($id)
+    {
+        return DB::table('polls')
+            ->select(
+//                DB::raw('poll_questions.id as question_id'),
+                DB::raw('poll_question_options.id as option_id'),
+                DB::raw('sum(CASE WHEN account_poll_options.poll_question_option_id IS NOT NULL THEN 1 ELSE 0 END) as option_cnt'))
+            ->join('poll_questions', 'poll_questions.poll_id', '=', 'polls.id')
+            ->join('poll_question_options', 'poll_question_options.poll_question_id', '=', 'poll_questions.id')
+            ->join('account_polls', 'account_polls.poll_id', '=', 'polls.id')
+            ->leftJoin('account_poll_options', 'account_poll_options.poll_question_option_id', '=', 'poll_question_options.id')
+            ->where('polls.id', (int)$id)
+            ->whereNull('polls.deleted_at')
+            ->whereNull('account_polls.deleted_at')
+            ->whereNull('poll_questions.deleted_at')
+            ->whereNull('poll_question_options.deleted_at')
+            ->whereColumn('account_poll_options.account_poll_id', '=', 'account_polls.id')
+            ->groupBy(['poll_questions.id', 'poll_question_options.id'])
+            ->get();
     }
 
     public static function optionsList()
     {
-        return DB::table('poll')
-            ->select(['poll.id', 'poll_translations.name'])
-            ->join('poll_translations', 'poll_translations.poll_id', '=', 'poll.id')
-            ->where('poll_translations.locale', '=', app()->getLocale())
-            ->orderBy('poll_translations.name', 'asc')
+            return DB::table('poll')
+            ->select(['poll.id', 'poll.name'])
+            ->orderBy('poll.name', 'asc')
             ->get();
     }
 }

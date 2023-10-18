@@ -14,26 +14,53 @@ return new class extends Migration
     public function up()
     {
         Schema::create('poll', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('consultation_id')->nullable();
-            $table->date('begin_date');
-            $table->date('end_date');
-            $table->boolean('active')->nullable();
-            $table->softDeletes();
+            $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('consultation_id')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->tinyInteger('is_once')->default(0);
+            $table->tinyInteger('only_registered')->default(0);
+            $table->tinyInteger('has_entry')->default(0);
+
             $table->timestamps();
+            $table->softDeletes();
         });
 
-        Schema::create('poll_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('locale')->index();
-            $table->unsignedInteger('poll_id');
-            $table->unique(['poll_id', 'locale']);
-            $table->foreign('poll_id')
-                ->references('id')
-                ->on('poll');
+        Schema::create('poll_questions', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('poll_id');
+            $table->tinyInteger('type')->default(1);
+            $table->foreign('poll_id')->references('id')->on('polls');
+            $table->string('name');
 
-            $table->string('title');
-            $table->string('content');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('poll_question_options', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('poll_question_id');
+            $table->foreign('poll_question_id')->references('id')->on('poll_questions');
+            $table->string('name');
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('user_polls', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('poll_id');
+            $table->bigInteger('user_id')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('user_poll_options', function (Blueprint $table) {
+            $table->bigInteger('user_poll_id');
+            $table->bigInteger('poll_question_option_id');
         });
     }
 
@@ -44,7 +71,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('poll_translations');
+        Schema::dropIfExists('user_poll_options');
+        Schema::dropIfExists('user_polls');
+        Schema::dropIfExists('poll_question_options');
+        Schema::dropIfExists('poll_questions');
         Schema::dropIfExists('poll');
     }
 };
