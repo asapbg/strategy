@@ -15,24 +15,28 @@ return new class extends Migration
     {
         Schema::create('page', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('type');
-            $table->boolean('active')->nullable();
-            $table->boolean('highlighted')->nullable();
-            $table->softDeletes();
+            $table->tinyInteger('active')->default(1);
+            $table->string('slug');
+            $table->tinyInteger('in_footer')->default(0);
+            $table->tinyInteger('order_idx')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('page_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('locale')->index();
-            $table->unsignedInteger('page_id');
+            $table->unsignedBigInteger('page_id');
             $table->unique(['page_id', 'locale']);
             $table->foreign('page_id')
                 ->references('id')
                 ->on('page');
-
-            $table->text('title');
-            $table->text('content');
+            $table->string('name');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_keyword')->nullable();
+            $table->string('short_content', 500)->nullable();
+            $table->text('content')->nullable();
         });
     }
 

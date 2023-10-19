@@ -354,6 +354,7 @@ return [
     'period'                               => 'Период',
     'new_f'                               => 'Нова',
     'select_file'                               => 'Изберете файл',
+    'public_name'                               => 'Публично име',
     'no_file_chosen'                               => 'Не е избран файл',
     //users
     'users.type.1'                              => 'Вътрешен',

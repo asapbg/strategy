@@ -146,22 +146,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Content
     Route::controller(PageController::class)->group(function () {
-        Route::get('/pages', 'index')->name('pages.index')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/pages/edit/{item?}', 'edit')->name('pages.edit');
-        Route::match(['post', 'put'], '/pages/store/{item?}', 'store')->name('pages.store');
+        Route::get('/page', 'index')->name('page')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/page/edit/{item?}', 'edit')->name('page.edit');
+        Route::match(['post', 'put'], '/page/store', 'store')->name('page.store');
     });
 
-    Route::controller(StaticPageController::class)->group(function () {
-        Route::get('/static-pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/static-pages/edit/{item?}', 'edit')->name('static_pages.edit');
-        Route::match(['post', 'put'], '/static-pages/store/{item?}', 'store')->name('static_pages.store');
-    });
-
-    Route::controller(ImpactPageController::class)->group(function () {
-        Route::get('/impact-pages', 'index')->name('impact_pages.index')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/impact-pages/edit/{item?}', 'edit')->name('impact_pages.edit');
-        Route::match(['post', 'put'], '/impact-pages/store/{item?}', 'store')->name('impact_pages.store');
-    });
+//    Route::controller(StaticPageController::class)->group(function () {
+//        Route::get('/static-pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
+//        Route::get('/static-pages/edit/{item?}', 'edit')->name('static_pages.edit');
+//        Route::match(['post', 'put'], '/static-pages/store/{item?}', 'store')->name('static_pages.store');
+//    });
+//
+//    Route::controller(ImpactPageController::class)->group(function () {
+//        Route::get('/impact-pages', 'index')->name('impact_pages.index')->middleware('can:viewAny,App\Models\Page');
+//        Route::get('/impact-pages/edit/{item?}', 'edit')->name('impact_pages.edit');
+//        Route::match(['post', 'put'], '/impact-pages/store/{item?}', 'store')->name('impact_pages.store');
+//    });
 
     // Polls
     Route::controller(PollController::class)->group(function () {

@@ -43,6 +43,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::controller(CommonController::class)->group(function () {
         Route::get('/toggle-boolean', 'toggleBoolean')->name('toggle-boolean');
         Route::get('/toggle-permissions', 'togglePermissions')->name('toggle-permissions');
+        //download public page file
+        Route::get('/download/page/{file}', 'downloadPageFile')->name('download.page.file');
     });
 
     Route::fallback(function(){

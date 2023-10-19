@@ -17,8 +17,11 @@ class File extends Model
     const CODE_OBJ_PUBLICATION = 1;
     const CODE_OBJ_LEGISLATIVE_PROGRAM = 2;
     const CODE_OBJ_OPERATIONAL_PROGRAM = 3;
+    const CODE_OBJ_PAGE = 4;
+
 
     const PUBLICATION_UPLOAD_DIR = 'publications'.DIRECTORY_SEPARATOR;
+    const PAGE_UPLOAD_DIR = 'pages'.DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xslx', 'pdf', 'jpeg', 'jpg', 'png'];

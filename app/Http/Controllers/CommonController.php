@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\File;
+use App\Models\Page;
 use App\Models\Publication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -118,6 +119,7 @@ class CommonController extends Controller
             $fileNameToStore = round(microtime(true)).'.'.$validated['file']->getClientOriginalExtension();
             // Upload File
             $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
                 File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
                 default => '',
             };
@@ -127,13 +129,14 @@ class CommonController extends Controller
                 'code_object' => $typeObject,
                 'filename' => $fileNameToStore,
                 'content_type' => $validated['file']->getClientMimeType(),
-                'path' => 'files/'.$pDir.$fileNameToStore,
+                'path' => $pDir.$fileNameToStore,
                 'description' => $validated['description'],
                 'sys_user' => $request->user()->id,
             ]);
             $item->save();
 
             $route = match ((int)$typeObject) {
+                File::CODE_OBJ_PAGE => route('admin.page.edit', Page::find($objectId)) . '#ct-files',
                 File::CODE_OBJ_PUBLICATION => route('admin.publications.edit', Publication::find($objectId)) . '#ct-files',
                 default => '',
             };
@@ -158,7 +161,7 @@ class CommonController extends Controller
         }
 
         $path = match ($disk){
-            default => str_replace('files/', '', $file->path)
+            default => str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)
         };
 
         if (Storage::disk('public_uploads')->has($path)) {
@@ -175,7 +178,7 @@ class CommonController extends Controller
      * @return bool|RedirectResponse
      * @throws FilesystemException
      */
-    public function deleteFile(Request $request, File $file)
+    public function deleteFile(Request $request, File $file, $disk = 'public_uploads')
     {
         $user = $request->user();
         if( !$user->can('delete', $file) ) {
@@ -184,12 +187,33 @@ class CommonController extends Controller
 
         $route = match ((int)$file->code_object) {
             File::CODE_OBJ_PUBLICATION => route('admin.publications.edit', Publication::find($file->id_object)) . '#ct-files',
+            File::CODE_OBJ_PAGE => route('admin.page.edit', Page::find($file->id_object)) . '#ct-files',
             default => '',
         };
         $file->delete();
-        if (Storage::disk('public_uploads')->has($file->path)) {
-            Storage::disk('public_uploads')->delete($file->path, $file->filename);
+        if (Storage::disk($disk)->has($file->path)) {
+            Storage::disk($disk)->delete($file->path, $file->filename);
         }
         return redirect($route)->with('success', 'Файлът е изтрит успешно');
+    }
+
+    /**
+     * Download public file
+     * @param Request $request
+     * @param File $file
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @throws \League\Flysystem\FilesystemException
+     */
+    public function downloadPageFile(Request $request, File $file)
+    {
+        if( $file->code_object != File::CODE_OBJ_PAGE ) {
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+
+        if (Storage::disk('public_uploads')->has($file->path)) {
+            return Storage::disk('public_uploads')->download($file->path, $file->filename);
+        } else {
+            return back()->with('warning', __('custom.record_not_found'));
+        }
     }
 }
