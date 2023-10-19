@@ -49,6 +49,7 @@ class Poll extends ModelActivityExtend
     {
         return Attribute::make(
             get: fn ($value) => displayDate($value),
+            set: fn ($value) => databaseDate($value),
         );
     }
 
@@ -56,6 +57,7 @@ class Poll extends ModelActivityExtend
     {
         return Attribute::make(
             get: fn ($value) => !is_null($value) ? displayDate($value) : $value,
+            set: fn ($value) => !is_null($value) ? databaseDate($value) : null,
         );
     }
 
