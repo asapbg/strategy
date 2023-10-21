@@ -9,20 +9,18 @@
                     @switch($fieldProperties['type'])
                         @case('textarea')
                             <textarea id="{{ $fieldName }}" name="{{ $fieldName }}"
-                                      class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : '')) }}</textarea>
+                                      class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}</textarea>
 {{--                            <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"--}}
 {{--                                   class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"--}}
 {{--                                   value="{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : '')) }}">--}}
                         @break
                         @case('summernote')
-                            <textarea id="{{ $fieldName }}" name="{{ $fieldName }}"
-                                      class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : ($default_val ?? '' ) )) }}</textarea>
+                            <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
                             @break
                         @default
                             <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"
                                    class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"
-                                   value="{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : '')) }}"
-                            >
+                                   value="{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
                     @endswitch
                     @error($fieldName)
                     <div class="text-danger mt-1">{{ $message }}</div>

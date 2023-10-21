@@ -215,6 +215,7 @@ class PublicConsultationController extends AdminController
                 ]);
                 $kd->save();
                 $item->kd()->save($kd);
+                $item->refresh();
             }
 
             if (isset($validated['row_id']) && sizeof($validated['row_id'])) {

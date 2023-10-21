@@ -18,7 +18,7 @@ class LegalActTypePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAny(['manage.*','administration.*', 'administration.system_classification']);
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**
@@ -30,7 +30,7 @@ class LegalActTypePolicy
      */
     public function view(User $user, LegalActType $legalActType)
     {
-        return $user->canAny(['manage.*','administration.*', 'administration.system_classification']);
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**
@@ -41,7 +41,7 @@ class LegalActTypePolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*','administration.*', 'administration.system_classification']);
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**
@@ -53,7 +53,7 @@ class LegalActTypePolicy
      */
     public function update(User $user, LegalActType $legalActType)
     {
-        return $user->canAny(['manage.*','administration.*', 'administration.system_classification']);
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**

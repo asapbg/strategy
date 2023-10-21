@@ -20,6 +20,10 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ trans_choice('custom.strategic_document_types', 1) }}</th>
+                            <th>{{ trans_choice('custom.strategic_document_levels', 1) }}</th>
+                            <th>{{ trans_choice('custom.authority_accepting_strategics', 1) }}</th>
+                            <th>{{ __('custom.active_m') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -29,6 +33,10 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
+                                    <td>{{ $item->documentType->name }}</td>
+                                    <td>{{ $item->documentLevel->name }}</td>
+                                    <td>{{ $item->acceptActInstitution->name }}</td>
+                                    <td>@if($item->active) <i class="fas fa-check text-success"></i> @else <i class="fas fa-minus text-danger"></i> @endif</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

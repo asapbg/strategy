@@ -218,8 +218,8 @@
 {{--      </div>--}}
 
       <div class="d-flex flex-column flex-sm-row justify-content-between pt-4  border-top">
-        <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
-          <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/" target="_blank">Софтуерна разработка и поддръжка АСАП ЕООД</a>
+        <p class="m-0 text-light">© {{ date('Y') }} {{ __('custom.copyright_text') }}</p>
+          <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/" target="_blank">{{ __('custom.asap_support') }}</a>
       </div>
   </div>
 

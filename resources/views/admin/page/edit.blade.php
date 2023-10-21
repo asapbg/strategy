@@ -108,23 +108,33 @@
                         </div>
                         @if($item->id)
                             <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
-                                <form action="{{ route('admin.upload.file', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="description" class="form-label">{{ __('custom.public_name') }} <span class="required">*</span> </label>
-                                        <input value="{{ old('description', '') }}" class="form-control form-control-sm @error('description') is-invalid @enderror" id="description" type="text" name="description">
-                                        @error('description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                <form class="row" action="{{ route('admin.upload.file', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label for="description" class="col-sm-12 control-label">{{ __('custom.public_name') }} <span class="required">*</span> </label>
+                                            <div class="col-12">
+                                                <input value="{{ old('description', '') }}" class="form-control form-control-sm @error('description') is-invalid @enderror" id="description" type="text" name="description">
+                                                @error('description')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="file" class="form-label">{{ __('custom.select_file') }} <span class="required">*</span> </label>
-                                        <input class="form-control form-control-sm @error('file') is-invalid @enderror" id="file" type="file" name="file">
-                                        @error('file')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-sm">
+                                            <label for="file" class="col-sm-12 control-label">{{ __('custom.select_file') }} <span class="required">*</span> </label>
+                                            <div class="col-12">
+                                                <input class="form-control form-control-sm @error('file') is-invalid @enderror" id="file" type="file" name="file">
+                                                @error('file')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                    <div class="col-md-4">
+                                        <br>
+                                        <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                    </div>
                                 </form>
                                 @if($item->files)
                                     <table class="table table-sm table-hover table-bordered mt-4">

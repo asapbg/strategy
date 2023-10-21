@@ -74,6 +74,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
+    public function scopeActive($query){
+        $query->where('active', 1);
+    }
+
     protected function act_links(): Attribute
     {
         return Attribute::make(

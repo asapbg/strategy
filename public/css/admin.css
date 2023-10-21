@@ -54838,6 +54838,10 @@ table .toggle i { color: #269740 }
     margin: 0;
 }
 
+:root {
+    --primary-color:#4a6484;
+}
+
 /*sidebar sub icons*/
 .nav-treeview > .nav-item {
     padding-left: 10px;
@@ -54863,6 +54867,10 @@ table.sm-text td{
     font-size: 14px !important;
 }
 
+.bl-primary-2 {
+    border-left: 2px solid var(--primary-color) !important;
+}
+
 /*======================*/
 /*START SELECT 2*/
 /*=======================*/
@@ -54872,3 +54880,12 @@ table.sm-text td{
 /*======================*/
 /*END SELECT 2*/
 /*=======================*/
+/*==========================*/
+/*START TABLE*/
+/*=============================*/
+.table-az-admin tr.th td, .table-az-admin tr.th th{
+    background: #fff !important;
+}
+/*================================*/
+/*END TABLE*/
+/*================================*/

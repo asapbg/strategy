@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\ActType;
+use App\Models\StrategicDocument;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ActTypePolicy
+class StrategicDocumentPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class ActTypePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.strategic']);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\StrategicDocument  $strategicDocument
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ActType $actType)
+    public function view(User $user, StrategicDocument $strategicDocument)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return false;
     }
 
     /**
@@ -41,29 +41,30 @@ class ActTypePolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.strategic']);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\StrategicDocument  $strategicDocument
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ActType $actType)
+    public function update(User $user, StrategicDocument $strategicDocument)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        //TODO add more scopes
+        return $user->canAny(['manage.*', 'manage.strategic']);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\StrategicDocument  $strategicDocument
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ActType $actType)
+    public function delete(User $user, StrategicDocument $strategicDocument)
     {
         return false;
     }
@@ -72,10 +73,10 @@ class ActTypePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\StrategicDocument  $strategicDocument
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ActType $actType)
+    public function restore(User $user, StrategicDocument $strategicDocument)
     {
         return false;
     }
@@ -84,10 +85,10 @@ class ActTypePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\StrategicDocument  $strategicDocument
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ActType $actType)
+    public function forceDelete(User $user, StrategicDocument $strategicDocument)
     {
         return false;
     }

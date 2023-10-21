@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\ActType;
+use App\Models\ConsultationDocumentType;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ActTypePolicy
+class ConsultationDocumentTypePolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class ActTypePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\ConsultationDocumentType  $consultationDocumentType
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ActType $actType)
+    public function view(User $user, ConsultationDocumentType $consultationDocumentType)
     {
         return $user->canAny(['manage.*','manage.nomenclatures']);
     }
@@ -48,10 +48,10 @@ class ActTypePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\ConsultationDocumentType  $consultationDocumentType
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ActType $actType)
+    public function update(User $user, ConsultationDocumentType $consultationDocumentType)
     {
         return $user->canAny(['manage.*','manage.nomenclatures']);
     }
@@ -60,10 +60,10 @@ class ActTypePolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\ConsultationDocumentType  $consultationDocumentType
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ActType $actType)
+    public function delete(User $user, ConsultationDocumentType $consultationDocumentType)
     {
         return false;
     }
@@ -72,10 +72,10 @@ class ActTypePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\ConsultationDocumentType  $consultationDocumentType
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ActType $actType)
+    public function restore(User $user, ConsultationDocumentType $consultationDocumentType)
     {
         return false;
     }
@@ -84,10 +84,10 @@ class ActTypePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ActType  $actType
+     * @param  \App\Models\ConsultationDocumentType  $consultationDocumentType
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ActType $actType)
+    public function forceDelete(User $user, ConsultationDocumentType $consultationDocumentType)
     {
         return false;
     }

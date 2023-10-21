@@ -27,4 +27,5 @@
     'document_number_exists'    => 'Вече съществува документ с такъв номер, моля генерирайте нов!',
     'you_are_not_associate_with_institution'    => 'Не сте асоцииран с институция!',
     'records_not_found'         => 'Не са намерени записи',
+    'record_not_found'         => 'Записът не е намерен',
 ];

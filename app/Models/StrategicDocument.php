@@ -6,6 +6,7 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,7 +16,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description'];
-    const MODULE_NAME = ('custom.nomenclatures.strategic_document');
+    const MODULE_NAME = ('custom.strategic_documents');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -25,13 +26,26 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     //activity
     protected string $logName = "strategic_document";
 
-    protected $fillable = ['strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id', 'strategic_act_type_id', 'document_number', 'authority_accepting_strategic_id', 'document_date', 'consultation_number', 'active'];
+    protected $fillable = ['strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id',
+        'strategic_act_type_id', 'strategic_act_number', 'strategic_act_link', 'accept_act_institution_type_id',
+        'pris_act_id', 'document_date', 'public_consultation_id', 'active'];
+
+    /**
+     * Dates
+     */
+    protected function documentDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? displayDate($value) : '',
+            set: fn (string|null $value) => !empty($value) ?  databaseDate($value) : null
+        );
+    }
 
     /**
      * Get the model name
      */
     public function getModelName() {
-        return $this->name;
+        return $this->title;
     }
 
     public static function translationFieldsProperties(): array
@@ -42,24 +56,29 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
                 'rules' => ['required', 'string']
             ],
             'description' => [
-                'type' => 'ckeditor',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
         );
     }
 
-    public function consultationLevel()
+    public function files()
     {
-        return $this->hasOne(ConsultationLevel::class, 'id', 'consultation_level_id');
+        return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')->orderBy('ord');
     }
 
-    public static function optionsList()
+    public function documentLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return DB::table('strategic_document')
-            ->select(['strategic_document.id', 'strategic_document_translations.name'])
-            ->join('strategic_document_translations', 'strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
-            ->where('strategic_document_translations.locale', '=', app()->getLocale())
-            ->orderBy('strategic_document_translations.name', 'asc')
-            ->get();
+        return $this->hasOne(StrategicDocumentLevel::class, 'id', 'strategic_document_level_id');
+    }
+
+    public function acceptActInstitution(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(AuthorityAcceptingStrategic::class, 'id', 'accept_act_institution_type_id');
+    }
+
+    public function documentType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
     }
 }

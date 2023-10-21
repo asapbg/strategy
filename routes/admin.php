@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
 use App\Http\Controllers\Admin\ImpactPageController;
 use App\Http\Controllers\Admin\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
-use App\Http\Controllers\Admin\NewsController;
+//use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActController;
 use App\Http\Controllers\Admin\PermissionsController;
@@ -33,7 +33,7 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
-use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
+//use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
@@ -85,6 +85,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
         Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
+    });
+
+    // Strategic Documents
+    Route::controller(StrategicDocumentsController::class)->group(function () {
+        Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
+        Route::get('/strategic-documents/edit/{id?}', 'edit')->name('strategic_documents.edit');
+        Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
+        Route::post( '/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
+        Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
+        Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
+        Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
+    });
+
+    // Static pages
+    Route::controller(PageController::class)->group(function () {
+        Route::get('/page', 'index')->name('page')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/page/edit/{item?}', 'edit')->name('page.edit');
+        Route::match(['post', 'put'], '/page/store', 'store')->name('page.store');
     });
 
     // Settings
@@ -140,17 +158,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/activity-logs/{activity}/show', 'show')->name('activity-logs.show');
     });
 
-
-
-    //=========
-
-    // Content
-    Route::controller(PageController::class)->group(function () {
-        Route::get('/page', 'index')->name('page')->middleware('can:viewAny,App\Models\Page');
-        Route::get('/page/edit/{item?}', 'edit')->name('page.edit');
-        Route::match(['post', 'put'], '/page/store', 'store')->name('page.store');
-    });
-
 //    Route::controller(StaticPageController::class)->group(function () {
 //        Route::get('/static-pages', 'index')->name('static_pages.index')->middleware('can:viewAny,App\Models\Page');
 //        Route::get('/static-pages/edit/{item?}', 'edit')->name('static_pages.edit');
@@ -184,12 +191,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 //    });
 
 
-    // Strategic Documents
-    Route::controller(StrategicDocumentsController::class)->group(function () {
-        Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic-documents/edit/{item?}', 'edit')->name('strategic_documents.edit');
-        Route::match(['post', 'put'], '/strategic-documents/store/{item?}', 'store')->name('strategic_documents.store');
-    });
+
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');

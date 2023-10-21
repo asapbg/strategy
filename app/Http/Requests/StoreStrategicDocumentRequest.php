@@ -25,16 +25,26 @@ class StoreStrategicDocumentRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'strategic_document_level_id' => ['required', 'numeric'],
-            'policy_area_id' => ['required', 'numeric'],
-            'strategic_document_type_id' => ['required', 'numeric'],
-            'strategic_act_type_id' => ['required', 'numeric'],
-            'document_number' => ['required', 'string'],
-            'authority_accepting_strategic_id' => ['required', 'numeric'],
+            'id' => ['required', 'numeric'],
+            'stay' => ['nullable'],
+            'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
+            'policy_area_id' => ['required', 'numeric', 'exists:policy_area,id'],
+            'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
+            'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
+            'public_consultation_id' => ['required', 'numeric', 'exists:public_consultation,id'],
             'document_date' => ['required', 'date'],
-            'consultation_number' => ['required', 'string'],
-            'active' => ['boolean'],
+            'active' => ['required', 'numeric', 'in:0,1'],
+
+            'strategic_act_number' => ['nullable', 'string', 'max:100'],
+            'strategic_act_link' => ['nullable', 'string', 'max:1000'],
+            'pris_act_id' => ['nullable', 'numeric'],
         ];
+
+        if( request()->input('pris_act_id') ) {
+            $rules['pris_act_id'][] = ['exists:pris,id'];
+        }
+
 
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];

@@ -337,5 +337,12 @@ return [
         'name_bg'                       => 'Наименование (BG)',
         'name_en'                       => 'Наименование (EN)',
         'in_footer_menu'                => 'Включено в меню (footer)',
+        'strategic_act_number'                => 'Номер на акта',
+        'strategic_act_link'                => 'Връзка към документа',
+        'display_name_bg'                => 'Публично име (BG)',
+        'display_name_en'                => 'Публично име (EN)',
+        'file_info_bg'                => 'Допълнителна информация (BG)',
+        'file_info_en'                => 'Допълнителна информация (EN)',
+        'public_consultation_id'      => 'Обществена консултация',
     ],
 ];

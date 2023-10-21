@@ -23,6 +23,8 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
     //activity
     protected string $logName = "authority_accepting_strategic";
 
+    const COUNCIL_MINISTERS = 1;
+
     /**
      * Get the model name
      */
