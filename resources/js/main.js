@@ -528,11 +528,11 @@ $(document).ready(function (e) {
             customRangeLabel: 'Персонализиран',
             applyLabel: 'Запази',
             cancelLabel: 'Откажи',
-            format: 'YYYY-MM-DD'
+            format: 'dd.mm.yyyy'
         }
     }, function (start, end) {
-        $(".start_date").val(start.format('YYYY-MM-DD'));
-        $(".end_date").val(end.format('YYYY-MM-DD'));
+        $(".start_date").val(start.format('dd.mm.yyyy'));
+        $(".end_date").val(end.format('dd.mm.yyyy'));
     });
 
     if($('.simple-datatable').length) {

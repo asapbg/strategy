@@ -31,8 +31,8 @@ class StoreOperationalProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m-Y'];
-            $rules['to_date'] = ['required', 'string', 'date_format:m-Y'];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y'];
+            $rules['to_date'] = ['required', 'string', 'date_format:m.Y'];
             $rules['assessment'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
             $rules['opinion'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
 
