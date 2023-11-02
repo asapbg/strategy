@@ -8,7 +8,7 @@
   <title>Портал за обществени консултации</title>
 
 
-    <link href="http://strategy.test/vendor/bootstrap/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="{{ asset('/vendor/bootstrap/bootstrap.css') }}" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 
@@ -16,13 +16,12 @@
     <link href="/vendor/fontawesome-free-6.4.0-web/css/all.css" rel="stylesheet">
 
     <!-- Custom css -->
-    <link href="http://strategy.test/css/app_vendor.css" rel="stylesheet">
-    <link href="http://strategy.test/css/site.css" rel="stylesheet">
+    <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
 
     <!-- Add favicon -->
     <link rel="icon" href="/img/logo_title.jpg" sizes="16x16 32x32" type="image/png" >
-    <script src="http://strategy.test/js/app_vendor.js"></script>
-    <script src="http://strategy.test/js/app.js"></script>
+    <script src="{{ asset('js/app_vendor.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 
 
 </head>
