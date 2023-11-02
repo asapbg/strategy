@@ -17,7 +17,7 @@
 
     <!-- Custom css -->
 <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
-<link href="{{ asset('css/site.css') }}" rel="stylesheet">
+{{--<link href="{{ asset('css/site.css') }}" rel="stylesheet">--}}
 @stack('styles')
 
 <!-- Add favicon -->

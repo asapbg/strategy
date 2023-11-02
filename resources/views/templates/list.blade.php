@@ -13,7 +13,8 @@
 <br><a href="{{ route('templates.view', ['slug' => 'home-3']).'?sk=1' }}">Начално (версия 3)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'home-4']).'?sk=1' }}">Начално (версия 4)</a>
 <br><a href="https://strategy.asapbg.com/">Начално (версия 5)</a>
-
+<br><a href="{{ route('templates.view', ['slug' => 'pris-postanovlenie']) }}">ПРИС (постановление)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'pris-reshenie']) }}">ПРИС (решение)</a>
 
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}

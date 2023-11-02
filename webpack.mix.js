@@ -19,9 +19,15 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-5/js/bootstrap.bundle.min.js',
         'resources/adminlte-3.2/plugins/select2/js/select2.full.min.js',
         'resources/adminlte-3.2/plugins/select2/js/i18n/bg.js',
+        'resources/adminlte-3.2/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js',
+        'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js',
+        'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.bg.min.js',
+        'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.js',
+        'resources/js/site.js',
     ], 'public/js/app_vendor.js')
     .styles([
         'resources/adminlte-3.2/plugins/select2/css/select2.min.css',
+        'resources/css/app.css',
     ], 'public/css/app_vendor.css')
     .sass('resources/sass/app.scss', 'public/css');
 

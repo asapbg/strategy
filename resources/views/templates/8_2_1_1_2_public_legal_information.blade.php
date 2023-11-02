@@ -3,7 +3,7 @@
 @section('pageTitle', 'Правна информация на Министерски съвет')
 
 @section('content')
-    <div class="col-lg-12  home-results home-results-two " style="padding: 0px !important;">
+    <div class="col-lg-12  home-results home-results-two pris-list" style="padding: 0px !important;">
         <hr>
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
@@ -23,16 +23,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Година:</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="1">2023</option>
-                            <option value="1">2022</option>
-                            <option value="1">2021</option>
-                        </select>
-                    </div>
+
+            <div class="col-md-3">
+                <label for="exampleFormControlInput1" class="form-label">Начална дата:</label>
+                <div class="input-group">
+                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker" >
+                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="exampleFormControlInput1" class="form-label">Крайна дата:</label>
+                <div class="input-group">
+                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker" >
+                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                 </div>
             </div>
             <div class="col-md-3">
@@ -43,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-6">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Вносител:</label>
@@ -51,16 +54,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Промени:</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="col-12"></div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Държавен вестник (брой):</label>
@@ -79,13 +73,34 @@
             <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
+                        <label for="exampleFormControlInput1" class="form-label">Промени:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group ">
+                    <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Правно основание:</label>
                         <input type="text" class="form-control">
                     </div>
                 </div>
             </div>
-            <div class="col-12"></div>
-            <div class="col-md-8">
+            <div class="col-md-4">
+                <div class="input-group ">
+                    <div class="mb-3 d-flex flex-column  w-100">
+                        <label for="exampleFormControlInput1" class="form-label">Брой резултати:</label>
+                        <select class="form-select">
+                            <option value="1">10</option>
+                            <option value="1">20</option>
+                            <option value="1">30</option>
+                            <option value="1">40</option>
+                            <option value="1">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Термини:</label>
@@ -96,12 +111,16 @@
             </div>
         </div>
         <div class="row mb-5">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
             </div>
+            <div class="col-md-6 text-end">
+                <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
+                <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+            </div>
 
-            <div class="col-md-4">
-                <div class="info-consul">
+            <div class="col-12 mt-4">
+                <div class="info-consul text-start">
                     <h4>
                         Общо 98 резултата
                     </h4>
@@ -119,6 +138,7 @@
                                     <i class="me-1 dark-blue fw-bold fst-normal" title="Номер">№</i>38.15 |
                                     <i class="fas fa-sitemap me-1 dark-blue" title="Категория"></i>Протокол |
                                     <i class="fas fa-university me-1 dark-blue" title="Вносител"></i>МОН
+                                    <i class="fas fa-pen-to-square float-end dark-blue fs-4" role="button" title="Редакция"></i>
                                 </p>
                                 <div class="anotation text-secondary mb-2">
                                     <span class="dark-blue me-2">Относно:</span> Проект на Решение за одобряване проект на Споразумение относно Централноевропейската програма за обмен в университетското образование (CEEPUS IV)
@@ -144,6 +164,7 @@
                                     <i class="me-1 dark-blue fw-bold fst-normal" title="Номер">№</i>6 |
                                     <i class="fas fa-sitemap me-1 dark-blue" title="Категория"></i>Разпореждане |
                                     <i class="fas fa-university me-1 dark-blue" title="Вносител"></i>МТС
+                                    <i class="fas fa-pen-to-square float-end dark-blue fs-4" role="button" title="Редакция"></i>
                                 </p>
                                 <div class="anotation text-secondary mb-2">
                                     <span class="dark-blue me-2">Относно:</span> За прекратяване на ликвидацията и за продължаване на дейността на еднолично акционерно дружество с държавно участие в капитала "България Хепи Мед Сървиз" ЕАД
@@ -170,6 +191,7 @@
                                     <i class="me-1 dark-blue fw-bold fst-normal" title="Номер">№</i>38 |
                                     <i class="fas fa-sitemap me-1 dark-blue" title="Категория"></i>Стенограми |
                                     <i class="fas fa-link me-1 dark-blue" title="Протокол"></i>37
+                                    <i class="fas fa-pen-to-square float-end dark-blue fs-4" role="button" title="Редакция"></i>
                                 </p>
                                 <div class="anotation text-secondary mb-2">
                                     <span class="dark-blue me-2">Относно:</span> Стенограма за заседание на МС проведено на 23.08.2023
