@@ -28,10 +28,11 @@ class StoreInstitutionRequest extends FormRequest
             $rules['id'] = ['required', 'numeric', 'exists:institution'];
         }
 
-        foreach (Institution::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+        foreach (config('available_languages') as $lang) {
+            foreach (Institution::translationFieldsProperties() as $field => $properties) {
+                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+            }
         }
-
         return $rules;
     }
 }

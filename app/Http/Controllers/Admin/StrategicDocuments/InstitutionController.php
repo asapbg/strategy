@@ -41,7 +41,7 @@ class InstitutionController extends AdminController
      */
     public function edit(Request $request, Institution $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Institution::class) ) {
+        if( ($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', Institution::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -56,7 +56,7 @@ class InstitutionController extends AdminController
         $item = $this->getRecord($item);
         $validated = $request->validated();
         if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', Institution::class) ) {
+            || (!$item->id && $request->user()->cannot('create', Institution::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -74,7 +74,6 @@ class InstitutionController extends AdminController
             return to_route(self::LIST_ROUTE)
                 ->with('success', trans_choice('custom.institution', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            dd($e);
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }

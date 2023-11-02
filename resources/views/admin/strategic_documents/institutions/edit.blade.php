@@ -9,9 +9,9 @@
                     @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
                     <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                         @csrf
-                        
-                        @include('admin.partial.edit_single_translatable', ['field' => 'name', 'required' => true])
-
+                        <div class="row">
+                        @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
+                        </div>
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>

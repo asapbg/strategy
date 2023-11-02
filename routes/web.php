@@ -17,6 +17,8 @@ include 'eauth.php';
 
 require_once('site.php');
 
+//Route::get('test', [\App\Http\Controllers\Test::class, 'index']);
+
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');
     Route::get('/templates/{slug}',                'show')->name('templates.view');

@@ -40,7 +40,7 @@ class UsersAZSeeder extends Seeder
                 $user->last_name = $item['last_name'];
                 $user->username = $item['email'];
                 $user->email = $item['email'];
-                $user->password = bcrypt('pass123');
+                $user->password = bcrypt('1234qweR@');
                 $user->email_verified_at = Carbon::now();
                 $user->password_changed_at = Carbon::now();
                 $user->user_type = User::USER_TYPE_INTERNAL;
