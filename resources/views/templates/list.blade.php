@@ -16,6 +16,10 @@
 <br><a href="{{ route('templates.view', ['slug' => 'pris-postanovlenie']) }}">ПРИС (постановление)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'pris-reshenie']) }}">ПРИС (решение)</a>
 
+<br><a href="{{ route('templates.view', ['slug' => 'abonamenti']) }}">Абонаменти</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ks_filter']) }}">Консултативни съвети (списък)</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети</a>
+
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}
 <a href="{{ route('templates.view', ['slug' => 'publications']) }}">Библиотека & Новини & OGP NEWS</a>
