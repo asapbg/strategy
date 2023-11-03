@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedInteger('operational_program_id');
             $table->unsignedInteger('dynamic_structures_column_id');
             $table->string('month', 7);
-            $table->string('value')->nullable(); //column value
+            $table->text('value')->nullable(); //column value
             $table->timestamps();
             $table->softDeletes();
         });

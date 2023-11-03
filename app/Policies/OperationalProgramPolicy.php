@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Consultations\OperationalProgram;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OperationalProgramPolicy
@@ -30,7 +31,7 @@ class OperationalProgramPolicy
      */
     public function view(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && $operationalProgram->public;
+        return $user->canAny(['manage.*', 'manage.advisory']);
     }
 
     /**
@@ -53,7 +54,8 @@ class OperationalProgramPolicy
      */
     public function update(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public;
+        $now = Carbon::now()->format('Y-m-d');
+        return $user->canAny(['manage.*', 'manage.advisory']) && !($operationalProgram->to_date < $now);
     }
 
     /**
@@ -65,7 +67,8 @@ class OperationalProgramPolicy
      */
     public function publish(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public;
+        $now = Carbon::now()->format('Y-m-d');
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public && !($operationalProgram->to_date < $now);
     }
 
     /**

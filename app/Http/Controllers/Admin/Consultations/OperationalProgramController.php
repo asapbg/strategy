@@ -11,6 +11,7 @@ use App\Models\Consultations\OperationalProgramRow;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -62,7 +63,7 @@ class OperationalProgramController extends AdminController
     public function edit(Request $request, OperationalProgram $item)
     {
         if( ($item && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', OperationalProgram::class) ) {
+            || (!$item->id && $request->user()->cannot('create', OperationalProgram::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $data = $item->getTableData();
@@ -105,57 +106,62 @@ class OperationalProgramController extends AdminController
 
             //update program
             if( isset($validated['save']) ) {
-                $item->from_date = databaseDate('01-' . $validated['from_date']);
-                $item->to_date = databaseDate('01-' . $validated['to_date']);
+                $item->from_date = databaseDate('01.' . $validated['from_date']);
+                $item->to_date = Carbon::parse('01.'.$validated['to_date'])->endOfMonth()->format('Y-m-d');
                 $item->save();
-
-                if( $item ) {
-                    // Upload File
-                    foreach (['assessment', 'opinion'] as $typeFile) {
-                        if( isset($validated[$typeFile]) ) {
-                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-                            $this->uploadFile($item, $validated[$typeFile], File::CODE_OBJ_OPERATIONAL_PROGRAM, $docType);
-                        }
-                    }
-                }
             }
 
-            if( $item ) {
-                //update program
-                if( isset($validated['save']) ) {
-                    if (isset($validated['col']) && sizeof($validated['col'])) {
-                        if (isset($validated['val']) && sizeof($validated['val'])) {
-                            if (sizeof($validated['col']) === sizeof($validated['val'])) {
-                                foreach ($validated['col'] as $k => $c) {
-                                    $item->records()->where('id', '=', (int)$c)->update(['value' => $validated['val'][$k]]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //Add new row
-                if( isset($validated['new_row']) ) {
-                    if (isset($validated['new_val_col']) && sizeof($validated['new_val_col'])) {
-                        if (isset($validated['new_val']) && sizeof($validated['new_val'])) {
-                            if (sizeof($validated['new_val_col']) === sizeof($validated['new_val'])) {
-                                $rowNums = $item->records->pluck('row_num')->toArray();
-                                $rowNums = empty($rowNums) ? 0 : max($rowNums);
-                                foreach ($validated['new_val_col'] as $k => $dsColumnId) {
-                                    $newRows[] = array(
-                                        'month' => $validated['month'],
-                                        'operational_program_id' => $item->id,
-                                        'dynamic_structures_column_id' => $dsColumnId,
-                                        'value' => $validated['new_val'][$k],
-                                        'row_num' => $rowNums + 1
-                                    );
-                                }
-                                OperationalProgramRow::insert($newRows);
+            //update program
+            if( isset($validated['save']) ) {
+                if (isset($validated['col']) && sizeof($validated['col'])) {
+                    if (isset($validated['val']) && sizeof($validated['val'])) {
+                        if (sizeof($validated['col']) === sizeof($validated['val'])) {
+                            foreach ($validated['col'] as $k => $c) {
+                                $item->records()->where('id', '=', (int)$c)->update(['value' => $validated['val'][$k]]);
                             }
                         }
                     }
                 }
             }
+
+            //Add new row
+            if( isset($validated['new_row']) ) {
+                if (isset($validated['new_val_col']) && sizeof($validated['new_val_col'])) {
+                    if (isset($validated['new_val']) && sizeof($validated['new_val'])) {
+                        if (sizeof($validated['new_val_col']) === sizeof($validated['new_val'])) {
+                            $rowNums = $item->records->pluck('row_num')->toArray();
+                            $rowNums = empty($rowNums) ? 0 : max($rowNums);
+                            foreach ($validated['new_val_col'] as $k => $dsColumnId) {
+                                $newRows[] = array(
+                                    'month' => $validated['month'],
+                                    'operational_program_id' => $item->id,
+                                    'dynamic_structures_column_id' => $dsColumnId,
+                                    'value' => $validated['new_val'][$k],
+                                    'row_num' => $rowNums + 1
+                                );
+                            }
+                            OperationalProgramRow::insert($newRows);
+                        }
+                    }
+                }
+            }
+
+//            if( isset($validated['save']) ) {
+//                if( $item ) {
+//                    // Upload File
+//                    foreach (['assessment', 'opinion'] as $typeFile) {
+//                        if( isset($validated[$typeFile]) && sizeof($validated[$typeFile]) ) {
+//                            foreach ($validated[$typeFile] as $row => $f) {
+//                                $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+//                                $file = $this->uploadFile($item, $f, File::CODE_OBJ_OPERATIONAL_PROGRAM, $docType);
+//                                $item->records()->where('row_num', '=', (int)$row)->update([$typeFile => $file->id]);
+//                            }
+//                        } else {
+//                            $item->records()->update(['assessment' => null, 'opinion' => null]);
+//                        }
+//                    }
+//                }
+//            }
 
             DB::commit();
             return redirect(route(self::EDIT_ROUTE, $item) )
@@ -176,6 +182,7 @@ class OperationalProgramController extends AdminController
             abort(Response::HTTP_FORBIDDEN);
         }
         $programId = $item->id;
+        //TODO delete files also
         $item->records()->where('row_num', '=', $rowNum)->delete();
         return redirect(route(self::EDIT_ROUTE, $programId) )
             ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.updated_successfully_f'));
@@ -187,15 +194,19 @@ class OperationalProgramController extends AdminController
             abort(Response::HTTP_FORBIDDEN);
         }
 
-        if( !$item->assessment || !$item->assessmentOpinion ){
-            return back()->with('danger', __('custom.program_missing_files'));
+        DB::beginTransaction();
+        try {
+            $item->public = 1;
+            $item->save();
+            OperationalProgram::where('id', '<>', $item->id)->update(['public' => 0]);
+            DB::commit();
+            return redirect(route(self::LIST_ROUTE) )
+                ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Publish operational program (ID '.$item->id.')', $e);
+            return back()->with('danger', __('messages.system_error'));
         }
-
-        $item->public = 1;
-        $item->save();
-
-        return redirect(route(self::LIST_ROUTE) )
-            ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.updated_successfully_f'));
     }
 
     private function filters($request)

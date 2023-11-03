@@ -2,7 +2,9 @@
 
 namespace App\Models\Consultations;
 
+use App\Enums\DocTypesEnum;
 use App\Models\DynamicStructureColumn;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

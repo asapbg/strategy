@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LegislativeProgramPolicy
@@ -30,7 +31,7 @@ class LegislativeProgramPolicy
      */
     public function view(User $user, LegislativeProgram $legislativeProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && $legislativeProgram->public;
+        return $user->canAny(['manage.*', 'manage.advisory']);
     }
 
     /**
@@ -53,7 +54,8 @@ class LegislativeProgramPolicy
      */
     public function update(User $user, LegislativeProgram $legislativeProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public;
+        $now = Carbon::now()->format('Y-m-d');
+        return $user->canAny(['manage.*', 'manage.advisory']) && !($legislativeProgram->to_date < $now) ;
     }
 
     /**
@@ -65,7 +67,8 @@ class LegislativeProgramPolicy
      */
     public function publish(User $user, LegislativeProgram $legislativeProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public;
+        $now = Carbon::now()->format('Y-m-d');
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public && !($legislativeProgram->to_date < $now);
     }
 
     /**

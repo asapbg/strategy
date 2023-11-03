@@ -61,18 +61,22 @@ class LegislativeProgram extends ModelActivityExtend
         return $this->hasMany(LegislativeProgramRow::class, 'legislative_program_id', 'id');
     }
 
-    public function assessment()
+    public function assessments()
     {
-        return $this->hasOne(File::class, 'id_object', 'id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
-            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION);
+        return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
+            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION)
+            ->withPivot('row')
+            ->withPivot('month');
     }
 
-    public function assessmentOpinion()
+    public function assessmentOpinions()
     {
-        return $this->hasOne(File::class, 'id_object', 'id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
-            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION_OPINION);
+        return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
+            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION_OPINION)
+            ->withPivot('row')
+            ->withPivot('month');
     }
 
     public function getTableData()
@@ -81,9 +85,10 @@ class LegislativeProgram extends ModelActivityExtend
             'select
                         legislative_program_row.month,
                         legislative_program_row.row_num,
-                        json_agg(json_build_object(\'id\', legislative_program_row.id, \'value\', legislative_program_row.value, \'type\', dynamic_structure_column.type)) as columns
+                        json_agg(json_build_object(\'id\', legislative_program_row.id, \'value\', legislative_program_row.value, \'type\', dynamic_structure_column.type, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label)) as columns
                     from legislative_program_row
                     join dynamic_structure_column on dynamic_structure_column.id = legislative_program_row.dynamic_structures_column_id
+                    join dynamic_structure_column_translations on dynamic_structure_column_translations.dynamic_structure_column_id = dynamic_structure_column.id and dynamic_structure_column_translations.locale = \''.app()->getLocale().'\'
                     where
                         legislative_program_row.legislative_program_id = '.(int)$this->id.'
                         and legislative_program_row.deleted_at is null

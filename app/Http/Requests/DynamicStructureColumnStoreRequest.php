@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DynamicStructureColumnTypesEnum;
 use App\Models\DynamicStructureColumn;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +26,7 @@ class DynamicStructureColumnStoreRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'type' => ['required', 'string', 'in:text,number'],
+            'type' => ['required', 'string', 'in:'.implode(',',DynamicStructureColumnTypesEnum::values())],
             'id' => ['required', 'numeric', 'exists:dynamic_structure,id'],
             'in_group' => ['nullable'],
         ];

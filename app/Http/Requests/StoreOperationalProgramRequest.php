@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Consultations\OperationalProgram;
+use App\Rules\DateCrossProgram;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOperationalProgramRequest extends FormRequest
@@ -31,10 +32,14 @@ class StoreOperationalProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m.Y'];
-            $rules['to_date'] = ['required', 'string', 'date_format:m.Y'];
-            $rules['assessment'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
-            $rules['opinion'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id'))];
+            $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'operational', request()->input('id'))];
+//            $rules['assessment'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
+//            $rules['opinion'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
+//            $rules['assessment'] = ['array'];
+//            $rules['assessment.*'] = ['file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
+//            $rules['opinion'] = ['array'];
+//            $rules['opinion.*'] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
 
             if (request()->input('id')) {
                 $rules['col'] = ['array'];

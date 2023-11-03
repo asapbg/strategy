@@ -18,7 +18,7 @@
                                     <div class="form-group">
                                         <label class="control-label" for="label_{{ $loc['code']  }}">{{ __('custom.name').' ('.mb_strtoupper($loc['code']).')' }} <span class="required">*</span> </label>
                                         <div>
-                                            <input name="label_{{ $loc['code']  }}" value="{{ old('label_'.$loc['code'], '') }}" class="form-control form-control-sm @error('label_'.$loc['code']) is-invalid @enderror" type="text" autocomplete="off">
+                                            <input name="label_{{ $loc['code']  }}" value="{{ old('label_'.$loc['code'], '') }}" class="form-control form-control-sm" type="text" autocomplete="off">
                                         </div>
                                         @error('label_'.$loc['code'])
                                             <span class="text-danger">{{ $message }}</span>
@@ -31,8 +31,9 @@
                                     <label class="control-label" for="type">{{ __('custom.type') }} <span class="required">*</span> </label>
                                     <select class="form-control form-control-sm" name="type">
                                         <option value="" @if(old('type', '') == '') selected @endif></option>
-                                        <option value="text" @if(old('type', '') == 'text') selected @endif>{{ __('custom.text') }}</option>
-                                        <option value="number" @if(old('type', '') == 'number') selected @endif>{{ __('custom.number') }}</option>
+                                        @foreach(\App\Enums\DynamicStructureColumnTypesEnum::values() as $t)
+                                            <option value="{{ $t }}" @if(old('type', '') == $t) selected @endif>{{ __('custom.'.$t) }}</option>
+                                        @endforeach
                                     </select>
                                     @error('type')
                                     <span class="text-danger">{{ $message }}</span>

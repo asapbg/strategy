@@ -31,7 +31,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->period }}</td>
                                     <td>@if($item->public) <i class="fa fa-check text-success"></i> @else <i class="fa fa-minus text-danger"></i> @endif</td>
-                                    <td class="text-center">
+                                    <td class="text-start">
                                         @can('view', $item)
                                             <a href="{{ route('admin.consultations.legislative_programs.view', [$item]) }}"
                                                class="btn btn-sm btn-warning mr-2"

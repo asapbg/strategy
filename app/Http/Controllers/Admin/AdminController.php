@@ -72,7 +72,7 @@ class AdminController extends Controller
      * @param $file
      * @param int $codeObject
      * @param $docType
-     * @return void
+     * @return File
      */
     protected function uploadFile($item, $file, int $codeObject, $docType = 0)
     {
@@ -94,6 +94,7 @@ class AdminController extends Controller
             'sys_user' => auth()->user()->id,
         ]);
         $file->save();
+        return $file;
     }
 
 }

@@ -407,5 +407,6 @@ return [
     //Strategic documents
     'strategic_document_files'                  => 'Файл (стартегически документи)|Файлове (стартегически документи)',
     'visible_in_report'                         => 'Видим в справката',
-    'order'                                     => 'Поредност'
+    'order'                                     => 'Поредност',
+    'boolean'                                   => 'Boolean'
 ];
