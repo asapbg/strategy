@@ -53,8 +53,20 @@ class LegislativeProgramController extends AdminController
             : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-
-        return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'columns', 'data', 'months'));
+        $assessmentsFiles = $opinionsFiles = [];
+        $assessments = $item->assessments->count() ? $item->assessments : [];
+        if( !empty($assessments) ) {
+            foreach ($assessments as $f) {
+                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
+        $opinions = $item->opinions->count() ? $item->opinions : [];
+        if( !empty($opinions) ) {
+            foreach ($opinions as $f) {
+                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
+        return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'columns', 'data', 'months', 'assessmentsFiles', 'opinionsFiles'));
     }
 
     /**
@@ -92,13 +104,7 @@ class LegislativeProgramController extends AdminController
     }
 
     public function store(StoreLegislativeProgramRequest $request)
-//    public function store(Request $request)
     {
-//        $r = new StoreLegislativeProgramRequest();
-//        $validator = Validator::make($request->all(), $r->rules());
-//        if($validator->fails()) {
-//            dd($validator->errors());
-//        }
         $validated = $request->validated();
         $id = (int)$validated['id'];
 
