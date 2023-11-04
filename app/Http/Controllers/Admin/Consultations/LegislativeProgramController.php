@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class LegislativeProgramController extends AdminController
@@ -75,23 +76,29 @@ class LegislativeProgramController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
         $assessmentsFiles = $opinionsFiles = [];
-//        $assessments = $item->assessments->count() ? $item->assessments : [];
-//        if( !empty($assessments) ) {
-//            foreach ($assessments as $f) {
-//                dd($f);
-//            }
-//        }
-//        $opinions = $item->assessmentOpinions->count() ? $item->assessmentOpinions : [];
-//        if( !empty($opinions) ) {
-//            foreach ($opinions as $f) {
-//
-//            }
-//        }
+        $assessments = $item->assessments->count() ? $item->assessments : [];
+        if( !empty($assessments) ) {
+            foreach ($assessments as $f) {
+                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
+        $opinions = $item->opinions->count() ? $item->opinions : [];
+        if( !empty($opinions) ) {
+            foreach ($opinions as $f) {
+                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'columns', 'data', 'months', 'assessmentsFiles', 'opinionsFiles'));
     }
 
     public function store(StoreLegislativeProgramRequest $request)
+//    public function store(Request $request)
     {
+//        $r = new StoreLegislativeProgramRequest();
+//        $validator = Validator::make($request->all(), $r->rules());
+//        if($validator->fails()) {
+//            dd($validator->errors());
+//        }
         $validated = $request->validated();
         $id = (int)$validated['id'];
 
@@ -101,10 +108,10 @@ class LegislativeProgramController extends AdminController
                 abort(Response::HTTP_FORBIDDEN);
             }
         } else {
-            $item = new LegislativeProgram();
             if( $request->user()->cannot('create', LegislativeProgram::class) ) {
                 abort(Response::HTTP_FORBIDDEN);
             }
+            $item = new LegislativeProgram();
         }
         DB::beginTransaction();
         try {
@@ -159,25 +166,36 @@ class LegislativeProgramController extends AdminController
                 }
             }
 
-            //update program
-//            if( isset($validated['save']) ) {
-//                if( $item ) {
-//                    // Upload File
-//                    $rows = $item->records->pluck('month', 'row_num')->toArray();
-//                    foreach ($rows as $row){
-//                        foreach (['assessment', 'opinion'] as $typeFile) {
-//                            if( isset($validated[$typeFile]) && sizeof($validated[$typeFile]) && isset($validated[$typeFile][$row]) ) {
-//                                $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-//                                $file = $this->uploadFile($item, $validated[$typeFile][$row], File::CODE_OBJ_OPERATIONAL_PROGRAM, $docType);
-//                                $item->records()->where('row_num', '=', (int)$row)->update([$typeFile => $file->id]);
-////                                dd($file, $item->records);
-//                            } else {
-//                                $item->records()->update(['assessment' => null, 'opinion' => null]);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            //update row files
+            if( isset($validated['save']) ) {
+                if( $item ) {
+                    // Upload File
+                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
+                    if( sizeof($months) ) {
+                        foreach ($months as $m) {
+                            foreach ($rowsNums as $rn) {
+                                foreach (['assessment', 'opinion'] as $typeFile) {
+                                    $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m));
+                                    if( isset($validated[$searchKey]) ) {
+                                        $newFile = $validated[$searchKey];
+                                        $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->first();
+                                        if( $currentFile ) {
+                                            //delete current file of this type
+                                            $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->detach();
+                                            $currentFile->delete();
+                                        }
+                                        //Add file and attach
+                                        $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+                                        $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, $typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion'));
+                                        $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             DB::commit();
             return redirect(route(self::EDIT_ROUTE, $item) )

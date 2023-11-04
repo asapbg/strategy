@@ -34,18 +34,20 @@ class StoreOperationalProgramRequest extends FormRequest
         if( request()->input('save') ) {
             $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id'))];
             $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'operational', request()->input('id'))];
-//            $rules['assessment'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
-//            $rules['opinion'] = ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', ['pdf'])];
-//            $rules['assessment'] = ['array'];
-//            $rules['assessment.*'] = ['file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
-//            $rules['opinion'] = ['array'];
-//            $rules['opinion.*'] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
 
             if (request()->input('id')) {
                 $rules['col'] = ['array'];
                 $rules['col.*'] = ['required', 'numeric', 'exists:operational_program_row,id'];
                 $rules['val'] = ['array'];
                 $rules['val.*'] = ['required', 'string', 'max:255'];
+            }
+
+            foreach (request()->all() as $key => $field) {
+                //detect all row files //input name format {fiel_type}_{row_num}_{row_month}
+                //row_num and row_month are pivot columns in program row files relationship
+                if( str_contains($key,'file_assessment') || str_contains($key, 'file_opinion') ) {
+                    $rules[$key] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
+                }
             }
         }
 
@@ -62,8 +64,23 @@ class StoreOperationalProgramRequest extends FormRequest
 
     public function messages()
     {
-        return [
+        $messages = [
             'month.required_with' => 'Задължително поле'
         ];
+
+        foreach (request()->all() as $key => $field) {
+            if( str_contains($key,'file_assessment') ) {
+                $messages[$key.'.'.'file'] = trans('validation.file', ['attribute' => trans('validation.attributes.assessment')]);
+                $messages[$key.'.'.'max'] = trans('validation.max.file', ['attribute' => trans('validation.attributes.assessment'), 'max' => config('filesystems.max_upload_file_size')]);
+                $messages[$key.'.'.'mimes'] = trans('validation.mimes', ['attribute' => trans('validation.attributes.assessment'), 'values' => implode(',', ['pdf'])]);
+            }
+            if( str_contains($key, 'file_opinion') ) {
+                $messages[$key.'.'.'file'] = trans('validation.file', ['attribute' => trans('validation.attributes.opinion')]);
+                $messages[$key.'.'.'max'] = trans('validation.max.file', ['attribute' => trans('validation.attributes.opinion'), 'max' => config('filesystems.max_upload_file_size')]);
+                $messages[$key.'.'.'mimes'] = trans('validation.mimes', ['attribute' => trans('validation.attributes.opinion'), 'values' => implode(',', ['pdf'])]);
+            }
+        }
+
+        return $messages;
     }
 }

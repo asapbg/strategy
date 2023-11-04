@@ -25,18 +25,4 @@ class LegislativeProgramRow extends Model
     {
         return $this->hasOne(LegislativeProgram::class, 'legislative_program_id', 'id');
     }
-
-    public function assessment()
-    {
-        return $this->hasOne(File::class, 'id_object', 'id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
-            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION);
-    }
-
-    public function assessmentOpinion()
-    {
-        return $this->hasOne(File::class, 'id_object', 'id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
-            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION_OPINION);
-    }
 }

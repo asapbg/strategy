@@ -212,30 +212,38 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
-{{--                                                        <div class="row">--}}
-{{--                                                            <div class="col-md-6">--}}
-{{--                                                                <div class="form-group">--}}
-{{--                                                                    <label class="col-sm-12 control-label" for="{{ 'file_assessment.'.$row->row_num.'_'.$row->month }}">Оценка на въздействието</label>--}}
-{{--                                                                    <div class="col-12">--}}
-{{--                                                                        <input type="file" class="form-control form-control-sm @error('file_assessment.'.$row->row_num.'_'.$row->month) is-invalid @enderror" value="" name="{{ 'file_assessment.'.$row->row_num.'_'.$row->month }}">--}}
-{{--                                                                        @error('file_assessment.'.$row->row_num.'_'.$row->month)--}}
-{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                                        @enderror--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
-{{--                                                            <div class="col-md-6">--}}
-{{--                                                                <div class="form-group">--}}
-{{--                                                                    <label class="col-sm-12 control-label" for="{{ 'file_opinion.'.$row->row_num.'_'.$row->month }}">Становище</label>--}}
-{{--                                                                    <div class="col-12">--}}
-{{--                                                                        <input type="file" class="form-control form-control-sm @error('file_opinion.'.$row->row_num.'_'.$row->month) is-invalid @enderror" value="" name="{{ 'file_opinion.'.$row->row_num.'_'.$row->month }}">--}}
-{{--                                                                        @error('file_opinion.'.$row->row_num.'_'.$row->month)--}}
-{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                                        @enderror--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
+                                                        <div class="row">
+                                                            @php($assessmentField = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
+                                                            @php($opinionField = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-12 control-label" for="{{ $assessmentField }}">Оценка на въздействието</label>
+                                                                    <div class="col-12">
+                                                                        <input type="file" class="form-control form-control-sm @error($assessmentField) is-invalid @enderror" value="" name="{{ $assessmentField }}">
+                                                                        @error($assessmentField)
+                                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-12 control-label" for="{{ $opinionField }}">Становище</label>
+                                                                    <div class="col-12">
+                                                                        <input type="file" class="form-control form-control-sm @error($opinionField) is-invalid @enderror" value="" name="{{ $opinionField }}">
+                                                                        @error($opinionField)
+                                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endif
@@ -255,124 +263,7 @@
                             @endif
                             <a href="{{ route('admin.consultations.operational_programs.index') }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                         </div>
-
-
-
-
-{{--                        <div class="col-12">--}}
-{{--                            <table class="table table-sm table-responsive sm-text table-bordered table-hover">--}}
-{{--                                <thead>--}}
-{{--                                @php($fullColspan = 1)--}}
-{{--                                @if(isset($columns) && $columns)--}}
-{{--                                    <tr>--}}
-{{--                                        @can('update', $item)--}}
-{{--                                            <th>{{ __('custom.actions') }}</th>--}}
-{{--                                            @php($fullColspan +=1)--}}
-{{--                                        @endif--}}
-{{--                                            <th>#</th>--}}
-{{--                                        @foreach($columns as $col)--}}
-{{--                                            <th>{{ $col->label }}</th>--}}
-{{--                                            @php($fullColspan +=1)--}}
-{{--                                        @endforeach--}}
-{{--                                        @can('update', $item)--}}
-{{--                                            <th>{{ __('custom.actions') }}</th>--}}
-{{--                                            @php($fullColspan +=1)--}}
-{{--                                        @endif--}}
-{{--                                    </tr>--}}
-{{--                                @endif--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                @if($item->id && isset($columns) && $columns)--}}
-{{--                                    @can('update', $item)--}}
-{{--                                        <tr>--}}
-{{--                                            <td>--}}
-{{--                                                <button type="submit" class="btn btn-sm btn-success" name="new_row" value="1">{{ __('custom.add') }}</button>--}}
-{{--                                            </td>--}}
-{{--                                            <td style="min-width: 100px;">--}}
-{{--                                                <select class="form-control form-control-sm @error('month') is-invalid @enderror" name="month">--}}
-{{--                                                    <option value="">{{ trans_choice('custom.months', 1) }}</option>--}}
-{{--                                                    @if(isset($months) && sizeof($months))--}}
-{{--                                                        @foreach($months as $m)--}}
-{{--                                                            <option value="{{ $m }}">{{ $m }}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    @endif--}}
-{{--                                                </select>--}}
-{{--                                                @error('month')--}}
-{{--                                                <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                @enderror--}}
-{{--                                                --}}{{--                                                <button type="submit" class="btn btn-sm btn-success">{{ __('custom.add') }}</button>--}}
-{{--                                            </td>--}}
-{{--                                            @foreach($columns as $i => $col)--}}
-{{--                                                <td>--}}
-{{--                                                    <input type="hidden" value="{{ $col->id }}" name="new_val_col[]">--}}
-{{--                                                    <input type="{{ $col['type'] }}" value="{{ old('new_val.'.$i, '') }}" name="new_val[]" class="@error('new_val.'.$i) is-invalid @enderror">--}}
-{{--                                                    @error('new_val.'.$i)--}}
-{{--                                                        <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                    @enderror--}}
-{{--                                                </td>--}}
-{{--                                            @endforeach--}}
-{{--                                            <td>--}}
-{{--                                                <button type="submit" class="btn btn-sm btn-success" name="new_row" value="1">{{ __('custom.add') }}</button>--}}
-{{--                                            </td>--}}
-{{--                                        </tr>--}}
-{{--                                    @endcan--}}
-{{--                                @endif--}}
-{{--                                @if(isset($months) && sizeof($months))--}}
-{{--                                    @foreach($months as $month)--}}
-{{--                                        @php($rIndex = 1)--}}
-{{--                                        @php($hasData = 0)--}}
-{{--                                        <tr class="bg-light">--}}
-{{--                                            <td class="pt-4" style="border-bottom:1px solid #333;border-top:1px solid #333;" colspan="{{ $fullColspan }}">{{ trans_choice('custom.months', 1) }} <strong>{{ $month }}</strong></td class="text-center">--}}
-{{--                                        </tr>--}}
-{{--                                        @if(isset($data) && $data)--}}
-{{--                                            @foreach($data as $i => $row)--}}
-{{--                                                @if($row->month == $month)--}}
-{{--                                                    @php($hasData = 1)--}}
-{{--                                                    <tr>--}}
-{{--                                                        @php($rowColumns = json_decode($row->columns, true))--}}
-{{--                                                        @can('update', $item)--}}
-{{--                                                            <td>--}}
-{{--                                                                <a href="{{ route('admin.consultations.operational_programs.remove_row', ['item' => $item, 'row' => $row->row_num]) }}"><i class="fas fa-trash text-danger"></i></a>--}}
-{{--                                                            </td>--}}
-{{--                                                        @endif--}}
-{{--                                                        @if(!is_null($rowColumns))--}}
-{{--                                                            <td>{{ $rIndex }}</td>--}}
-{{--                                                            @foreach($rowColumns as $k => $col)--}}
-{{--                                                                <td>--}}
-{{--                                                                    <input type="hidden" name="col[]" value="{{ $col['id'] }}">--}}
-{{--                                                                    <input type="{{ $col['type'] }}" class="@error('val.'.$i.'.'.$k) is-invalid @enderror" value="{{ old('val.'.$i.'.'.$k, $col['value']) }}" name="val[]" >--}}
-{{--                                                                    @error('val.'.$i.'.'.$k)--}}
-{{--                                                                    <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                                    @enderror--}}
-{{--                                                                </td>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        @endif--}}
-{{--                                                        @can('update', $item)--}}
-{{--                                                            <td>--}}
-{{--                                                                <a href="{{ route('admin.consultations.operational_programs.remove_row', ['item' => $item, 'row' => $row->row_num]) }}"><i class="fas fa-trash text-danger"></i></a>--}}
-{{--                                                            </td>--}}
-{{--                                                        @endif--}}
-{{--                                                        @php($rIndex += 1)--}}
-{{--                                                    </tr>--}}
-{{--                                                @endif--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
-{{--                                        @if(!$hasData)--}}
-{{--                                            <tr><td colspan="{{ $fullColspan }}">---</td></tr>--}}
-{{--                                        @endif--}}
-{{--                                    @endforeach--}}
-{{--                                @endif--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-12">--}}
-{{--                            <button id="save" type="submit" class="btn btn-success" name="save" value="1">{{ __('custom.save') }}</button>--}}
-{{--                            <a href="{{ route('admin.consultations.operational_programs.index') }}"--}}
-{{--                               class="btn btn-primary">{{ __('custom.cancel') }}</a>--}}
-{{--                        </div>--}}
                     </form>
-
-{{--                    @include('admin.partial.attached_documents')--}}
                 </div>
             </div>
         </div>

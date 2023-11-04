@@ -74,11 +74,11 @@ class AdminController extends Controller
      * @param $docType
      * @return File
      */
-    protected function uploadFile($item, $file, int $codeObject, $docType = 0)
+    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '')
     {
         $path = match ($codeObject) {
             File::CODE_OBJ_LEGISLATIVE_PROGRAM,
-            File::CODE_OBJ_OPERATIONAL_PROGRAM => File::PUBLIC_CONSULTATIONS_UPLOAD_DIR . DIRECTORY_SEPARATOR . $item->id . DIRECTORY_SEPARATOR,
+            File::CODE_OBJ_OPERATIONAL_PROGRAM => File::PUBLIC_CONSULTATIONS_UPLOAD_DIR . $item->id . DIRECTORY_SEPARATOR,
             File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR . DIRECTORY_SEPARATOR,
             default => '',
         };
@@ -90,8 +90,9 @@ class AdminController extends Controller
             'doc_type' => $docType,
             'filename' => $fileNameToStore,
             'content_type' => $file->getClientMimeType(),
-            'path' => 'files/'.$path.$fileNameToStore,
+            'path' => 'files'.DIRECTORY_SEPARATOR.$path.$fileNameToStore,
             'sys_user' => auth()->user()->id,
+            'description' => !empty($description) ? $description : null
         ]);
         $file->save();
         return $file;

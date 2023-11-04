@@ -41,63 +41,6 @@
                                     @enderror
                             </div>
                         </div>
-{{--                        <div class="col-12 my-3">--}}
-{{--                            <table class="table table-sm sm-text">--}}
-{{--                                <thead>--}}
-{{--                                    <tr>--}}
-{{--                                        <th colspan="2">{{ trans_choice('custom.documents', 2) }}</th>--}}
-{{--                                        <th>Текущ файл</th>--}}
-{{--                                        <th colspan="2"></th>--}}
-{{--                                    </tr>--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                    <tr>--}}
-{{--                                        <td>1</td>--}}
-{{--                                        <td>Оценка на въздействието</td>--}}
-{{--                                        <td>--}}
-{{--                                            @if($item->assessment)--}}
-{{--                                                <a href="{{ route('admin.download.file', ['file' => $item->assessment]) }}" target="_blank">--}}
-{{--                                                    <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
-{{--                                                </a>--}}
-{{--                                            @else--}}
-{{--                                                <i class="fas fa-minus text-danger"></i>--}}
-{{--                                            @endif--}}
-{{--                                        </td>--}}
-{{--                                        <td>--}}
-{{--                                            <div class="custom-file">--}}
-{{--                                                <input type="file" name="assessment" class="custom-file-input @error('assessment'){{ 'is-invalid' }}@enderror">--}}
-{{--                                                <label class="custom-file-label" for="assessment" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
-{{--                                                @error('assessment')--}}
-{{--                                                <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                @enderror--}}
-{{--                                            </div>--}}
-{{--                                        </td>--}}
-{{--                                    </tr>--}}
-{{--                                    <tr>--}}
-{{--                                        <td>2</td>--}}
-{{--                                        <td>Становище</td>--}}
-{{--                                        <td>--}}
-{{--                                            @if($item->assessmentOpinion)--}}
-{{--                                                <a href="{{ route('admin.download.file', ['file' => $item->assessmentOpinion]) }}" target="_blank">--}}
-{{--                                                    <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
-{{--                                                </a>--}}
-{{--                                            @else--}}
-{{--                                                <i class="fas fa-minus text-danger"></i>--}}
-{{--                                            @endif--}}
-{{--                                        </td>--}}
-{{--                                        <td>--}}
-{{--                                            <div class="custom-file">--}}
-{{--                                                <input type="file" name="opinion" class="custom-file-input @error('opinion'){{ 'is-invalid' }}@enderror">--}}
-{{--                                                <label class="custom-file-label" for="opinion" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
-{{--                                                @error('opinion')--}}
-{{--                                                <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                @enderror--}}
-{{--                                            </div>--}}
-{{--                                        </td>--}}
-{{--                                    </tr>--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
                         @if($item->id && isset($columns) && $columns)
                             @can('update', $item)
                                 <div class="card card-secondary p-0 mt-4">
@@ -212,24 +155,38 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
-{{--                                                        <div class="row">--}}
-{{--                                                            <div class="col-md-6">--}}
-{{--                                                                <div class="form-group">--}}
-{{--                                                                    <label class="col-sm-12 control-label" for="{{ 'file_assessment.'.$row->row_num.'_'.$row->month }}">Оценка на въздействието</label>--}}
-{{--                                                                    <div class="col-12">--}}
-{{--                                                                        <input type="file" class="form-control form-control-sm @error('file_assessment.'.$row->row_num.'_'.$row->month) is-invalid @enderror" value="" name="{{ 'file_assessment.'.$row->row_num.'_'.$row->month }}">--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
-{{--                                                            <div class="col-md-6">--}}
-{{--                                                                <div class="form-group">--}}
-{{--                                                                    <label class="col-sm-12 control-label" for="{{ 'file_opinion.'.$row->row_num.'_'.$row->month }}">Становище</label>--}}
-{{--                                                                    <div class="col-12">--}}
-{{--                                                                        <input type="file" class="form-control form-control-sm @error('file_opinion.'.$row->row_num.'_'.$row->month) is-invalid @enderror" value="" name="{{ 'file_opinion.'.$row->row_num.'_'.$row->month }}">--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
+                                                        @php($assessmentField = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
+                                                        @php($opinionField = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-12 control-label" for="{{ $assessmentField }}">Оценка на въздействието</label>
+                                                                    <div class="col-12">
+                                                                        <input type="file" class="form-control form-control-sm @error($assessmentField) is-invalid @enderror" value="" name="{{ $assessmentField }}">
+                                                                        @error($assessmentField)
+                                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-12 control-label" for="{{ $opinionField }}">Становище</label>
+                                                                    <div class="col-12">
+                                                                        <input type="file" class="form-control form-control-sm @error($opinionField) is-invalid @enderror" value="" name="{{ $opinionField }}">
+                                                                        @error($opinionField)
+                                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endif
@@ -250,7 +207,6 @@
                             <a href="{{ route('admin.consultations.legislative_programs.index') }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                         </div>
                     </form>
-{{--                    @include('admin.partial.attached_documents')--}}
                 </div>
             </div>
         </div>

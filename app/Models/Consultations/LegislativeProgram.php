@@ -61,22 +61,29 @@ class LegislativeProgram extends ModelActivityExtend
         return $this->hasMany(LegislativeProgramRow::class, 'legislative_program_id', 'id');
     }
 
-    public function assessments()
+    public function rowFiles()
     {
-        return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
-            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION)
-            ->withPivot('row')
-            ->withPivot('month');
+        return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->withPivot('row_num')
+            ->withPivot('row_month');
     }
 
-    public function assessmentOpinions()
+    public function assessments()
     {
-        return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
-            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM_ROW)
+        return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
+            ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION)
+            ->withPivot('row_num')
+            ->withPivot('row_month');
+    }
+
+    public function opinions()
+    {
+        return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
             ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION_OPINION)
-            ->withPivot('row')
-            ->withPivot('month');
+            ->withPivot('row_num')
+            ->withPivot('row_month');
     }
 
     public function getTableData()

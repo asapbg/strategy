@@ -16,9 +16,7 @@ class File extends Model
 
     const CODE_OBJ_PUBLICATION = 1;
     const CODE_OBJ_LEGISLATIVE_PROGRAM = 2;
-    const CODE_OBJ_LEGISLATIVE_PROGRAM_ROW = 5;
     const CODE_OBJ_OPERATIONAL_PROGRAM = 3;
-    const CODE_OBJ_OPERATIONAL_PROGRAM_ROW = 6;
     const CODE_OBJ_PAGE = 4;
 
 

@@ -73,7 +73,21 @@ class OperationalProgramController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'data', 'columns', 'months'));
+        $assessmentsFiles = $opinionsFiles = [];
+        $assessments = $item->assessments->count() ? $item->assessments : [];
+        if( !empty($assessments) ) {
+            foreach ($assessments as $f) {
+                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
+        $opinions = $item->opinions->count() ? $item->opinions : [];
+        if( !empty($opinions) ) {
+            foreach ($opinions as $f) {
+                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+            }
+        }
+
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'data', 'columns', 'months', 'assessmentsFiles', 'opinionsFiles'));
     }
 
     public function store(StoreOperationalProgramRequest $request, $item = null)
@@ -90,12 +104,12 @@ class OperationalProgramController extends AdminController
             if( $request->user()->cannot('create', OperationalProgram::class) ) {
                 abort(Response::HTTP_FORBIDDEN);
             }
+            $item = new OperationalProgram();
         }
 
         DB::beginTransaction();
         try {
             if( !$id ) {
-                $item = new OperationalProgram();
                 $activeColumns = DynamicStructure::where('type', '=', DynamicStructureTypesEnum::OPERATIONAL_PROGRAM->value)
                     ->where('active', '=', 1)
                     ->first()->columns
@@ -146,22 +160,36 @@ class OperationalProgramController extends AdminController
                 }
             }
 
-//            if( isset($validated['save']) ) {
-//                if( $item ) {
-//                    // Upload File
-//                    foreach (['assessment', 'opinion'] as $typeFile) {
-//                        if( isset($validated[$typeFile]) && sizeof($validated[$typeFile]) ) {
-//                            foreach ($validated[$typeFile] as $row => $f) {
-//                                $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-//                                $file = $this->uploadFile($item, $f, File::CODE_OBJ_OPERATIONAL_PROGRAM, $docType);
-//                                $item->records()->where('row_num', '=', (int)$row)->update([$typeFile => $file->id]);
-//                            }
-//                        } else {
-//                            $item->records()->update(['assessment' => null, 'opinion' => null]);
-//                        }
-//                    }
-//                }
-//            }
+            //update row files
+            if( isset($validated['save']) ) {
+                if( $item ) {
+                    // Upload File
+                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
+                    if( sizeof($months) ) {
+                        foreach ($months as $m) {
+                            foreach ($rowsNums as $rn) {
+                                foreach (['assessment', 'opinion'] as $typeFile) {
+                                    $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m));
+                                    if( isset($validated[$searchKey]) ) {
+                                        $newFile = $validated[$searchKey];
+                                        $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->first();
+                                        if( $currentFile ) {
+                                            //delete current file of this type
+                                            $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->detach();
+                                            $currentFile->delete();
+                                        }
+                                        //Add file and attach
+                                        $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+                                        $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_OPERATIONAL_PROGRAM, $docType, $typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion'));
+                                        $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             DB::commit();
             return redirect(route(self::EDIT_ROUTE, $item) )

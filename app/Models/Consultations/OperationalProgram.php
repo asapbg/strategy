@@ -65,22 +65,29 @@ class OperationalProgram extends ModelActivityExtend
         return $this->hasMany(OperationalProgramRow::class, 'operational_program_id', 'id');
     }
 
+    public function rowFiles()
+    {
+        return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
+            ->withPivot('row_num')
+            ->withPivot('row_month');
+    }
+
     public function assessments()
     {
         return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
-            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM_ROW)
+            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM)
             ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION)
-            ->withPivot('row')
-            ->withPivot('month');
+            ->withPivot('row_num')
+            ->withPivot('row_month');
     }
 
-    public function assessmentOpinions()
+    public function opinions()
     {
         return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
-            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM_ROW)
+            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM)
             ->where('doc_type', '=', DocTypesEnum::PC_IMPACT_EVALUATION_OPINION)
-            ->withPivot('row')
-            ->withPivot('month');
+            ->withPivot('row_num')
+            ->withPivot('row_month');
     }
 
     public function getTableData()

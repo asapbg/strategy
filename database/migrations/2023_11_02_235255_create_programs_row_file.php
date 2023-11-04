@@ -16,15 +16,15 @@ return new class extends Migration
         Schema::create('legislative_program_row_file', function (Blueprint $table) {
             $table->unsignedBigInteger('legislative_program_id');
             $table->unsignedBigInteger('file_id');
-            $table->bigInteger('row');
-            $table->string('month');
+            $table->bigInteger('row_num');
+            $table->string('row_month');
         });
 
         Schema::create('operational_program_row_file', function (Blueprint $table) {
             $table->unsignedBigInteger('operational_program_id');
             $table->unsignedBigInteger('file_id');
-            $table->bigInteger('row');
-            $table->string('month');
+            $table->bigInteger('row_num');
+            $table->string('row_month');
         });
     }
 
