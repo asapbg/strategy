@@ -65,7 +65,9 @@ class OperationalProgramController extends AdminController
                 $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
             }
         }
-        return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'data', 'columns', 'months', 'assessmentsFiles', 'opinionsFiles'));
+        $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
+        return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'data', 'columns',
+            'months', 'assessmentsFiles', 'opinionsFiles', 'institutions'));
     }
 
     /**

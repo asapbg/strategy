@@ -44,7 +44,9 @@
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
                                                                         <span class="fw-bold">{{ $col['label'] }}:</span>
-                                                                        @if($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
+                                                                        @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                            {{ $institutions[(int)$col['value']] ?? '---' }}
+                                                                        @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                             {{ $col['value'] ? 'Да' : 'Не' }}
                                                                         @else
                                                                             {{ $col['value'] }}
