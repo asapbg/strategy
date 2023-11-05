@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InstitutionController extends AdminController
 {
-    const LIST_ROUTE = 'admin.strategic_documents.institutions';
+    const LIST_ROUTE = 'admin.strategic_documents.institutions.index';
     const EDIT_ROUTE = 'admin.strategic_documents.institutions.edit';
     const STORE_ROUTE = 'admin.strategic_documents.institutions.store';
     const LIST_VIEW = 'admin.strategic_documents.institutions.index';
