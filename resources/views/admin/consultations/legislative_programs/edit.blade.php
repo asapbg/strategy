@@ -70,27 +70,47 @@
                                                 </div>
                                             </div>
                                             @foreach($columns as $i => $col)
-                                                <div class="col-md-4">
+                                                @php($newFieldName = 'new_val['.$i.']')
+                                                @php($errorNewField = 'new_val.'.$i)
+                                                <div class="@if($col->id == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID) col-12 @else col-md-4 @endif">
                                                     <div class="form-group">
-                                                        <label class="col-sm-12 control-label" for="{{ 'new_val.'.$i }}">
+                                                        <label class="col-sm-12 control-label" for="{{ $newFieldName }}">
                                                             {{ $col->label }}
                                                         </label>
                                                         <div class="col-12">
                                                             <input type="hidden" value="{{ $col->id }}" name="new_val_col[]">
-                                                            @if($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                <input type="text" class="form-control form-control-sm datepicker @error('new_val.'.$i) is-invalid @enderror" value="{{ old('new_val.'.$i, '') }}" name="new_val[]">
+                                                            @if($col->id == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                <div class="col-12 d-flex flex-row px-0">
+                                                                    <div class="input-group">
+                                                                        <select class="form-control form-control-sm select2 @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}" id="institutions_{{ $i }}">
+                                                                            <option value="" @if('' == old($errorNewField, '')) selected @endif>---</option>
+                                                                            @if(isset($institutions) && sizeof($institutions))
+                                                                                @foreach($institutions as $option)
+                                                                                    <option value="{{ $option['value'] }}" @if($option['value'] == old($errorNewField, '')) selected @endif>{{ $option['name'] }}</option>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </select>
+                                                                    </div>
+                                                                    <button type="button" class="btn btn-primary ml-1 pick-institution"
+                                                                            data-title="{{ trans_choice('custom.institutions',2) }}"
+                                                                            data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i }}">
+                                                                        <i class="fas fa-list"></i>
+                                                                    </button>
+                                                                </div>
+                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
+                                                                <input type="text" class="form-control form-control-sm datepicker @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                <select name="new_val[]" class="form-control form-control-sm  @error('new_val.'.$i) is-invalid @enderror" >
-                                                                    <option value="" @if(old('new_val.'.$i, '') == '') selected @endif></option>
-                                                                    <option value="1" @if(old('new_val.'.$i, '') == 1) selected @endif>Да</option>
-                                                                    <option value="0" @if(old('new_val.'.$i, '') == 0) selected @endif>Не</option>
+                                                                <select name="{{ $newFieldName }}" class="form-control form-control-sm  @error($errorNewField) is-invalid @enderror" >
+                                                                    <option value="" @if(old($errorNewField, '') == '') selected @endif></option>
+                                                                    <option value="1" @if(old($errorNewField, '') == 1) selected @endif>Да</option>
+                                                                    <option value="0" @if(old($errorNewField, '') == 0) selected @endif>Не</option>
                                                                 </select>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                <textarea class="form-control form-control-sm @error('new_val.'.$i) is-invalid @enderror" name="new_val[]">{{ old('new_val.'.$i, '') }}</textarea>
+                                                                <textarea class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}">{{ old($errorNewField, '') }}</textarea>
                                                             @else
-                                                                <input type="{{ $col['type'] }}" class="form-control form-control-sm @error('new_val.'.$i) is-invalid @enderror" value="{{ old('new_val.'.$i, '') }}" name="new_val[]">
+                                                                <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
                                                             @endif
-                                                            @error('new_val.'.$i)
+                                                            @error($errorNewField)
                                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                                             @enderror
                                                         </div>
@@ -127,27 +147,47 @@
                                                             @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
                                                             @php(ksort($rowColumns))
                                                             @foreach($rowColumns as $k => $col)
-                                                                <div class="col-md-4">
+                                                                @php($fieldName = 'val['.$i.']['.$k.']')
+                                                                @php($errorField = 'val.'.$i.'.'.$k)
+                                                                <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID) col-12 @else col-md-4 @endif">
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-12 control-label" for="val[]">
+                                                                        <label class="col-sm-12 control-label" for="{{ $fieldName }}">
                                                                             {{ $col['label'] }}
                                                                         </label>
                                                                         <div class="col-12">
-                                                                            <input type="hidden" name="col[]" value="{{ $col['id'] }}">
-                                                                            @if($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                                <input type="text" class="form-control form-control-sm datepicker @error('val.'.$i.'.'.$k) is-invalid @enderror" value="{{ old('val.'.$i.'.'.$k, $col['value']) }}" name="val[]">
+                                                                            <input type="hidden" name="{{ 'col['.$i.']['.$k.']' }}" value="{{ $col['id'] }}">
+                                                                            @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                                <div class="col-12 d-flex flex-row px-0">
+                                                                                    <div class="input-group">
+                                                                                        <select class="form-control form-control-sm select2 select2-hidden-accessible @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" id="institutions_{{ $i.'.'.$k }}">
+                                                                                            <option value="" @if('' == old($errorField, '')) selected @endif>---</option>
+                                                                                            @if(isset($institutions) && sizeof($institutions))
+                                                                                                @foreach($institutions as $option)
+                                                                                                    <option value="{{ $option['value'] }}" @if($option['value'] == old((int)$errorField, (int)$col['value'])) selected @endif>{{ $option['name'] }}</option>
+                                                                                                @endforeach
+                                                                                            @endif
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <button type="button" class="btn btn-primary ml-1 pick-institution"
+                                                                                            data-title="{{ trans_choice('custom.institutions',2) }}"
+                                                                                            data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i.'.'.$k }}">
+                                                                                        <i class="fas fa-list"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
+                                                                                <input type="text" class="form-control form-control-sm datepicker @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
                                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                                <select name="val[]" class="form-control form-control-sm @error('val.'.$i.'.'.$k) is-invalid @enderror" >
-                                                                                    <option value="" @if(old('val.'.$i.'.'.$k, (int)$col['value']) == '') selected @endif></option>
-                                                                                    <option value="1" @if(old('val.'.$i.'.'.$k, (int)$col['value']) == 1) selected @endif>Да</option>
-                                                                                    <option value="0" @if(old('val.'.$i.'.'.$k, (int)$col['value']) == 0) selected @endif>Не</option>
+                                                                                <select name="{{ $fieldName }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" >
+                                                                                    <option value="" @if(old($errorField, (int)$col['value']) == '') selected @endif></option>
+                                                                                    <option value="1" @if(old($errorField, (int)$col['value']) == 1) selected @endif>Да</option>
+                                                                                    <option value="0" @if(old($errorField, (int)$col['value']) == 0) selected @endif>Не</option>
                                                                                 </select>
                                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                                <textarea class="form-control form-control-sm @error('val.'.$i.'.'.$k) is-invalid @enderror" name="val[]">{{ old('val.'.$i.'.'.$k, $col['value']) }}</textarea>
+                                                                                <textarea class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
                                                                             @else
-                                                                                <input type="{{ $col['type'] }}" class="form-control form-control-sm @error('val.'.$i.'.'.$k) is-invalid @enderror" value="{{ old('val.'.$i.'.'.$k, $col['value']) }}" name="val[]">
+                                                                                <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
                                                                             @endif
-                                                                            @error('val.'.$i.'.'.$k)
+                                                                            @error($errorField)
                                                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                                                             @enderror
                                                                         </div>
@@ -169,7 +209,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month]]) : ''])
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -183,7 +223,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => true])
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month]]) : ''])
                                                                 </div>
                                                             </div>
                                                         </div>

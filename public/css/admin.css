@@ -54877,6 +54877,16 @@ table.sm-text td{
 .select2-results ul.select2-results__options li.select2-results__option[aria-disabled="true"]{
     display:none !important;
 }
+select.form-control-sm ~ .select2-container--default{
+/*.select2-container--default .select2-selection--multiple .select2-selection__rendered li{*/
+    text-wrap: wrap;
+    font-size: 16px;
+}
+
+.text-sm .select2-container--default .select2-selection--multiple .select2-selection__rendered,
+select.form-control-sm ~ .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding: 0.2rem 0.25rem 0.5rem;
+}
 /*======================*/
 /*END SELECT 2*/
 /*=======================*/
@@ -54889,3 +54899,17 @@ table.sm-text td{
 /*================================*/
 /*END TABLE*/
 /*================================*/
+
+/*==========================*/
+/*START Subjects modal tree*/
+/*=============================*/
+.modal .modal-body form#institutionTree{
+    max-height: 500px;
+    overflow-y: scroll;
+}
+/*.no-footer .modal-body {*/
+/*    padding-bottom: 0;*/
+/*}*/
+/*==========================*/
+/*END Subjects modal tree*/
+/*=============================*/

@@ -19,6 +19,8 @@ require_once('site.php');
 
 //Route::get('test', [\App\Http\Controllers\Test::class, 'index']);
 
+Route::get('/get-institutions', [CommonController::class, 'modalInstitutions'])->name('modal.institutions');
+
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');
     Route::get('/templates/{slug}',                'show')->name('templates.view');

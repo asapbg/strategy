@@ -6,6 +6,7 @@ use App\Http\Requests\PageFileUploadRequest;
 use App\Models\File;
 use App\Models\Page;
 use App\Models\Publication;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -215,5 +216,15 @@ class CommonController extends Controller
         } else {
             return back()->with('warning', __('custom.record_not_found'));
         }
+    }
+
+    public function modalInstitutions(Request $request)
+    {
+        $canSelect = (boolean)$request->input('select');
+        $multipleSelect = (boolean)$request->input('multiple');
+        $selectId = $request->input('dom') ?? 'institutions';
+        $institutions = Institution::getTree($request->all());
+        $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
+        return view('partials.institutions_tree', compact('institutions', 'canSelect', 'multipleSelect', 'oldBootstrap', 'selectId'));
     }
 }

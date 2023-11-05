@@ -379,4 +379,30 @@ if (!function_exists('optionsUserTypes')) {
             return $icon;
         }
     }
+
+    if (!function_exists('optionsFromModel')) {
+
+        /**
+         * return prepared options for search form from standard model option
+         *
+         * @method optionsFromModel
+         *
+         * @param $dbOptions
+         * @param bool $any
+         * @param string|int $anyValue
+         * @param string|int $anyName
+         * @return array
+         */
+        function optionsFromModel($dbOptions, bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+        {
+            $options = [];
+            if ($any) {
+                $options[] = ['value' => $anyValue, 'name' => $anyName];
+            }
+            foreach ($dbOptions as $option) {
+                $options[] = ['value' => $option->id, 'name' => $option->name];
+            }
+            return $options;
+        }
+    }
 }

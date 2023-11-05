@@ -2846,22 +2846,40 @@ $(document).ready(function (e) {
         })
     }
 
+    //=================================
+    //Select2
+    //===============================
+
+    function select2OptionFilter(option) {
+        if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
+            return false
+        }
+        return option.text;
+    }
+
+    var select2Options = {
+        allowClear: true,
+        placeholder: true,
+        templateResult: select2OptionFilter,
+        language: "bg"
+    };
+
     if($('.select2').length) {
-        $('.select2').select2({
-            allowClear: true,
-            placeholder: true,
-            language: "bg"
-        });
+        $('.select2').select2(select2Options);
     }
 
     if($('.select2-no-clear').length) {
         $('.select2-no-clear').select2({
             allowClear: false,
             placeholder: true,
+            templateResult: select2OptionFilter,
             language: "bg"
         });
     }
 
+    //=================================
+    //Datepicker
+    //===============================
     if($('.datepicker').length) {
         $('.datepicker').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
@@ -2969,7 +2987,6 @@ $(document).ready(function (e) {
                 '_token': token
             },
             url = $(this).data('url');
-        console.log(data, url);
         $(this).prop('disabled', true);
         $.post(url, data)
             .then(res => {
@@ -3003,4 +3020,131 @@ $(document).ready(function (e) {
     //     orientation: "bottom left",
     //     autoclose: true
     // });
+
+    //======================================
+    // START PDOI SUBJECTS SELECT FROM MODAL
+    // use <select name="subjects[]" id="subjects" class="select2">
+    // and button with class 'pick-subject' and data-url attribute to call modal with the tree
+    //you can add to url get parameters to set tree as selectable or just view : select=1
+    // and if you need more than one subject to be selected use parameter 'multiple=1'
+    //======================================
+    if( $('.pick-institution').length ) {
+        $('.pick-institution').on('click', function (){
+            let subjectModal = new MyModal({
+                title: $(this).data('title'),
+                destroyListener: true,
+                bodyLoadUrl: $(this).data('url'),
+                customClass: 'no-footer'
+            });
+
+            $(document).on('click', '#select-institution', function (){
+                let subjectsFormSelect = $('#' + $(this).data('dom'));
+                let checked = $('#'+ subjectModal.id +' input[name="institutions-item"]:checked');
+                if( checked.length ) {
+                    if( checked.length === 1 ) {
+                        subjectsFormSelect.val(checked.val());
+                    } else if( checked.length > 1 ) {
+                        let subjectValues = [];
+                        checked.each(function(){
+                            subjectValues.push($(this).val());
+                        });
+                        subjectsFormSelect.val(subjectValues);
+                    }
+                    subjectsFormSelect.trigger('change');
+                }
+                subjectModal.modalObj.hide();
+            });
+        });
+    }
+
+    //===============================
+    // START MyModal
+    // Create modal and show it with option for load body from url or pass direct content
+    // available params:
+    // title, body (content), destroyListener (boolean : do destroy modal on close), bodyLoadUrl (url for loading body content)
+    //===============================
+
+    function MyModal(obj){
+        var _myModal = Object.create(MyModal.prototype)
+        _myModal.id = (new Date()).getTime();
+        _myModal.title = typeof obj.title != 'undefined' ? obj.title : '';
+        _myModal.dismissible = typeof obj.dismissible != 'undefined' ? obj.dismissible : true;
+        _myModal.body = typeof obj.body != 'undefined' ? obj.body : '';
+        _myModal.footer = typeof obj.footer != 'undefined' ? obj.footer : '';
+        _myModal.bodyLoadUrl = typeof obj.bodyLoadUrl != 'undefined' ? obj.bodyLoadUrl : null;
+        _myModal.destroyListener = typeof obj.destroyListener != 'undefined' ? obj.destroyListener : false;
+        _myModal.customClass = typeof obj.customClass != 'undefined' ? obj.customClass : '';
+        _myModal.modalObj = _myModal.init(_myModal);
+        if( _myModal.destroyListener ) {
+            _myModal.setDestroyListener(_myModal);
+        }
+        if( _myModal.bodyLoadUrl ) {
+            _myModal.loadModalBody(_myModal)
+        } else {
+            _myModal.showModal(_myModal);
+        }
+        return _myModal;
+    }
+
+    MyModal.prototype.init = function (_myModal) {
+        let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal '+ _myModal.customClass +'" role="dialog" style="display: none">\n' +
+            '  <div class="modal-dialog">\n' +
+            '    <!-- Modal content-->\n' +
+            '    <div class="modal-content">\n' +
+            '      <div class="modal-header">\n' +
+            '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
+            (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
+            '      </div>\n' +
+            '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
+            '      </div>\n' +
+            (_myModal.footer ? '<div class="modal-footer">'+ _myModal.footer +'</div>' : '') +
+            '    </div>\n' +
+            '  </div>\n' +
+            '</div>';
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        return  new bootstrap.Modal(document.getElementById(_myModal.id), {
+            keyboard: false,
+            backdrop: 'static'
+        })
+    }
+
+    MyModal.prototype.showModal = function (_myModal){
+        _myModal.modalObj.show();
+    }
+
+    MyModal.prototype.setDestroyListener = function (_myModal){
+        $('#' + _myModal.id).on('hidden.bs.modal', function(){
+            _myModal.modalObj.dispose();
+            $('#' + _myModal.id).remove();
+        });
+    }
+
+    MyModal.prototype.loadModalBody = function (_myModal) {
+        $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function (){
+            _myModal.showModal(_myModal);
+        });
+    }
+
+    //==========================
+    // End MyModal
+    //==========================
+
+    //Approve modal
+    if($('.approveModal').length) {
+        $('.approveModal').on('click', function (event){
+            let btn = $(this);
+            let approveModal = new MyModal({
+                title: btn.data('title'),
+                destroyListener: true,
+                body: '<p class="m-0">' + btn.data('question') +'</p>',
+                footer: '<button class="btn btn-sm btn-danger confirmApproveModal">Да</button>' +
+                    '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="Не">Не</button>'
+            });
+            $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
+                console.log('#approveModalSubmit_' + btn.data('file'));
+                console.log($('#approveModalSubmit_' + btn.data('file')));
+                $('#approveModalSubmit_' + btn.data('file'))[0].click();
+            });
+        });
+    }
 })

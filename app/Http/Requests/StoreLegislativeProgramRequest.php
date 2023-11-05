@@ -36,9 +36,16 @@ class StoreLegislativeProgramRequest extends FormRequest
             $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'legislative', request()->input('id'))];
             if( request()->input('id') ) {
                 $rules['col'] = ['array'];
-                $rules['col.*'] = ['required', 'numeric', 'exists:legislative_program_row,id'];
+                $rules['col.*'] = ['array'];
+                $rules['col.*.*'] = ['required', 'numeric', 'exists:legislative_program_row,id'];
                 $rules['val'] = ['array'];
-                $rules['val.*'] = ['required', 'string', 'max:255'];
+                $rules['val.*'] = ['array'];
+
+                foreach (request()->input('col') as $key => $columns) {
+                    foreach ($columns as $key2 => $ids) {
+                        $rules['val.' . $key . '.'.$key2] = ['required', 'string', 'max:255'];
+                    }
+                }
             }
 
             foreach (request()->all() as $key => $field) {
@@ -54,10 +61,12 @@ class StoreLegislativeProgramRequest extends FormRequest
             $rules['new_val_col'] = ['array'];
             $rules['new_val_col.*'] = ['required', 'numeric', 'exists:dynamic_structure_column,id'];
             $rules['new_val'] = ['array'];
-            $rules['new_val.*'] = ['required', 'string', 'max:255'];
             $rules['month'] = ['required_with:new_val', 'string', 'max:7'];
-        }
 
+            foreach (request()->input('new_val_col') as $key => $input) {
+                $rules['new_val.'.$key] = ['required', 'string', 'max:255'];
+            }
+        }
         return $rules;
     }
 

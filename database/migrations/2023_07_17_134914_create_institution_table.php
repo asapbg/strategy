@@ -33,6 +33,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('institution_level');
 
+            $table->unsignedBigInteger('parent_id')->nullable();
+
             $table->integer('zip_code')->nullable();
             $table->string('nomer_register', 25)->index()->nullable();
             $table->tinyInteger('active')->default(1);

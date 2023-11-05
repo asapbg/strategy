@@ -11,6 +11,7 @@ use App\Models\Consultations\LegislativeProgramRow;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\File;
+use App\Models\StrategicDocuments\Institution;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,8 @@ class LegislativeProgramController extends AdminController
     const LIST_VIEW = 'admin.consultations.legislative_programs.index';
     const EDIT_VIEW = 'admin.consultations.legislative_programs.edit';
     const SHOW_VIEW = 'admin.consultations.legislative_programs.show';
+
+    const DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID = 2;
 
     public function index(Request $request)
     {
@@ -48,9 +51,7 @@ class LegislativeProgramController extends AdminController
         }
 
         $data = $item->getTableData();
-        $columns = $item->id ?
-            DynamicStructureColumn::whereIn('id', json_decode($item->active_columns))->get()
-            : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
+        $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->get();
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
         $assessmentsFiles = $opinionsFiles = [];
@@ -66,6 +67,7 @@ class LegislativeProgramController extends AdminController
                 $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
             }
         }
+
         return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'columns', 'data', 'months', 'assessmentsFiles', 'opinionsFiles'));
     }
 
@@ -82,7 +84,7 @@ class LegislativeProgramController extends AdminController
 
         $data = $item->getTableData();
         $columns = $item->id ?
-            DynamicStructureColumn::whereIn('id', json_decode($item->active_columns))->orderBy('ord')->get()
+            DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord')->get()
             : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
@@ -100,12 +102,21 @@ class LegislativeProgramController extends AdminController
                 $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
             }
         }
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'columns', 'data', 'months', 'assessmentsFiles', 'opinionsFiles'));
+        $institutions = optionsFromModel(Institution::simpleOptionsList());
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'columns', 'data', 'months',
+            'assessmentsFiles', 'opinionsFiles', 'institutions'));
     }
 
     public function store(StoreLegislativeProgramRequest $request)
+//        public function store(Request $request)
     {
+//        $r = new StoreLegislativeProgramRequest();
+//        $validator = Validator::make($request->all(), $r->rules());
+//        if($validator->fails()) {
+//            dd($validator->errors());
+//        }
         $validated = $request->validated();
+//        dd($validated);
         $id = (int)$validated['id'];
 
         if( $request->isMethod('put') ) {
@@ -136,14 +147,14 @@ class LegislativeProgramController extends AdminController
                 $item->to_date = Carbon::parse('01.'.$validated['to_date'])->endOfMonth()->format('Y-m-d');
                 $item->save();
             }
-
             //update program
             if( isset($validated['save']) ) {
                 if (isset($validated['col']) && sizeof($validated['col'])) {
-                    if (isset($validated['val']) && sizeof($validated['val'])) {
-                        if (sizeof($validated['col']) === sizeof($validated['val'])) {
-                            foreach ($validated['col'] as $k => $c) {
-                                $item->records()->where('id', '=', (int)$c)->update(['value' => $validated['val'][$k]]);
+                    foreach ($validated['col'] as $rowKey => $colIds) {
+                        if (isset($validated['val']) && sizeof($validated['val'])
+                            && isset($validated['val'][$rowKey]) && (sizeof($validated['col'][$rowKey]) === sizeof($validated['val'][$rowKey])) ) {
+                            foreach ($colIds as $key => $id) {
+                                $item->records()->where('id', '=', (int)$id)->update(['value' => $validated['val'][$rowKey][$key]]);
                             }
                         }
                     }
@@ -210,6 +221,30 @@ class LegislativeProgramController extends AdminController
             DB::rollBack();
             Log::error($e->getMessage());
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function deleteFile(Request $request, LegislativeProgram $program, File $file)
+    {
+        if( !$program || !$file ) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        if( $request->user()->cannot('update', $program) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        DB::beginTransaction();
+        try {
+            $program->rowFiles()->detach($file->id);
+            $file->delete();
+            DB::commit();
+            return redirect(route(self::EDIT_ROUTE, $program) )
+                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Delete Legislative program file (fileId '.$file->id.') error: '.$e);
+            return back()->with('danger', __('messages.system_error'));
         }
     }
 

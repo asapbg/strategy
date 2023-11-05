@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('institution_level', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('system_name');
+            $table->tinyInteger('active')->default(1);
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
         });
 

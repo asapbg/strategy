@@ -104,7 +104,6 @@ class SyncIisda extends Command
                     foreach ($items as $row) {
                         if( isset($row['@attributes']) ) {
                             $subject = $row['@attributes'];
-//                            dd($subject['IdentificationNumber'], $responseArrayAddress[$subject['IdentificationNumber']]);
                             $addressInfo = $responseArrayAddress[$subject['IdentificationNumber']] ?? null;
                             //add structure if not exist
                             if(!isset($localSections[$subject['AdmStructureKind']])) {
@@ -126,6 +125,7 @@ class SyncIisda extends Command
                             //remove from local subjects array, it means that we found it in sync array.
                             // At the end we will deactivate all items not removed from local subject array
                             if( isset($localSubjects[$subject['IdentificationNumber']]) ) {
+                                Log::error($subject['Name'].': '.(int)($subject['Status'] == 'Active').PHP_EOL);
                                 $updated = false;
                                 $localSubject = $localSubjects[$subject['IdentificationNumber']];
 
@@ -146,35 +146,10 @@ class SyncIisda extends Command
                                         )
                                     )
                                 ) {
-                                    //alert users if change adm_level or status
-//                                    $newLevel = $localSections[$subject['AdmStructureKind']];
-//                                    $newStatus = (int)($subject['Status'] == 'Active');
-//                                    if( $localSubject->adm_level != $newLevel
-//                                        || $localSubject->active != $newStatus ) {
-//                                        if( env('APP_ENV') != 'production' ) {
-//                                            $emailList =[env('LOCAL_TO_MAIL')];
-//                                        } else {
-//                                            $emailList = $localSubject->getAlertUsersEmail();
-//                                        }
-//                                        if( sizeof($emailList) ) {
-//                                            $mailData = array(
-//                                                'subject' => $localSubject
-//                                            );
-//                                            if( $localSubject->adm_level != $newLevel ) {
-//                                                $mailData['new_level'] = $newLevel;
-//                                            }
-//                                            if( $localSubject->active != $newStatus ) {
-//                                                $mailData['new_status'] = $newStatus;
-//                                            }
-//                                            Mail::to($emailList)->send(new AlertForSubjectChanges($mailData));
-//                                        }
-//                                    }
-
-//                                    Log::error('Update base: '.PHP_EOL. $localSubject. PHP_EOL. json_encode($addressInfo));
                                     $localSubject->batch_id = (int)$subject['BatchID'];
                                     $localSubject->eik = $subject['UIC'] ?? 'N/A';
                                     $localSubject->type = $subject['Type'] ?? null;
-                                    $localSubject->adm_level = $localSections[$subject['AdmStructureKind']];
+                                    $localSubject->institution_level_id = $localSections[$subject['AdmStructureKind']];
                                     $localSubject->active = (int)($subject['Status'] == 'Active');
                                     $localSubject->email = $addressInfo ? $addressInfo['email'] : null;
                                     $localSubject->phone = $addressInfo ? $addressInfo['phone'] : null;
@@ -216,7 +191,7 @@ class SyncIisda extends Command
                                     'eik' => $subject['UIC'] ?? 'N/A',
                                     'type' => $subject['Type'] ?? null,
                                     'nomer_register' => $subject['IdentificationNumber'],
-                                    'active' => $subject['IdentificationNumber'] === 'Active',
+                                    'active' => (int)($subject['Status'] == 'Active'),
                                     'institution_level_id' => $localSections[$subject['AdmStructureKind']] ?? 0,
                                     'name' => $subject['Name'],
                                     'adm_register' => 1,
