@@ -72,9 +72,21 @@
                       </ul>
                 </div>
             @else
-                  <div class="registration text-right">
-                    <a class="btn btn-default" href="{{ route('login') }}">{{ __('custom.login') }}</a>
-                    <a class="btn btn-default" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                  <div class="registration text-right justify-content-end align-items-center d-flex">
+                    <!--                    <form class="form-inline me-4">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Търсене" aria-label="Username" aria-describedby="basic-addon1" style="border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;">
+                        <div class="input-group-prepend rounded-0">
+                          <span class="input-group-text search-btn d-block" id="basic-addon1"><i class="fa-solid fa-magnifying-glass main-color"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </form> -->
+                 
+
+                    <a class="main-color me-3" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                    <a class="btn btn-primary me-3" href="{{ route('login') }}"><i class="login-icon fa-solid fa-right-to-bracket main-color"></i> {{ __('custom.login') }}</a>
+                    <a href="" class="cstm-btn btn btn-primary login-search "><i class="login-icon fas fa-search main-color"></i></a>
                   </div>
             @endif
           </div>
@@ -135,7 +147,7 @@
   </nav>
 </header>
 @if(request()->route()->getName() != 'home' && !request()->input('sk'))
-<section class="slider" style="margin-top: 135px;">
+<section class="slider" id="slider">
   <div class="container">
     <div class="row">
       <div class="col-md-12">

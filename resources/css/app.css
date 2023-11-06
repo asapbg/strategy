@@ -1,6 +1,6 @@
 :root {
-    --primary_btn: #41729F;
-    --primary_icon: #41729F;
+    --primary_btn: #21659e;
+    --primary_icon: #21659e;
 }
 
 .table-light {
@@ -57,6 +57,12 @@ h6 {
     font-weight: 600;
 }
 
+/*
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+
+}
+*/
+
 .bgr-main {
     background: #21659e;
 }
@@ -75,6 +81,15 @@ nav.navbar .btn {
 
 
 /* Header and top bar*/
+
+.login-search {
+    border-radius: 18px !important;
+}
+
+.search-btn {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
 
 #topbar {
     min-height: 40px;
@@ -164,6 +179,7 @@ nav.navbar a.nav-link:hover {
 
 .centered-heading h1 {
     text-shadow: 1px 1px 2px #333333;
+    text-transform: uppercase;
 }
 
 /**/
@@ -316,9 +332,6 @@ span.left-link-icon i {
     padding: 0px 30px 30px 15px;
 }
 
-.home-results {
-    padding: 0px 15px 0px 30px;
-}
 
 .home-results .row {
     margin-bottom: 30px;
@@ -367,7 +380,7 @@ a.consul-item p {
 }
 
 .consult-img-holder {
-    min-width: 150px;
+    min-width: 100px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -402,7 +415,7 @@ a.consul-item p {
 }
 
 .consult-img-holder i {
-    font-size: 60px;
+    font-size: 45px;
 }
 
 
@@ -427,29 +440,37 @@ a.box-link {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
+.info-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 a.box-link:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 a.box-link span {
-    color: #fff !important;
-    font-size: 18px;
-    line-height: normal;
+   color: #fff !important;
+    font-size: 24px;
+    width: 100%;
+    display: block;
+    padding-bottom: 10px;
 }
 
 .icon-wrap {
-    padding: 15px;
+    max-height: 84px;
 }
 
 .icon-wrap i {
-    font-size: 64px;
+    font-size: 65px;
 }
 
 .link-heading {
-    padding: 0px 15px 15px 15px;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-
+font-size: 20px;
+text-transform: uppercase;
 }
 
 
@@ -473,17 +494,21 @@ textarea {
     border-radius: 4px !important;
 }
 
-.btn:hover {
-    background: #21659e0d !important;
+.btn.rss-sub, .btn.btn-primary {
+    border: 2px solid #21659e;
+    background: #fff !important;
     color: #21659e !important;
+    border-radius: 30px;
 }
 
-.btn.rss-sub {
-    border: 2px solid #21659e;
-    background: #fff;
-    color: #21659e !important;
-    border-radius: 4px;
+.reg-btn {
+    border-radius: 30px !important;
 }
+
+.btn.rss-sub:hover, .btn.btn-primary:hover {
+background: #eaf3fb !important;
+}
+
 
 .fa-rss {
     color: #21659e !important;
@@ -531,9 +556,9 @@ textarea {
 
 
 /*News*/
-
 #blog {
-    padding: 60px 0px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+    background: #fafafa;
 }
 
 .post-box {
@@ -600,18 +625,19 @@ textarea {
 
 /* Second links */
 #second-links {
-    padding: 60px 0px;
     background: #fafafa;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
 }
 
+/* 
 .service-item {
-    padding: 20px;
+   padding: 20px;
     background: #fff;
     height: 100%;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border-radius: 4px;
 }
+*/
 
 .service-item .icon {
     width: 48px;
@@ -620,14 +646,18 @@ textarea {
     margin-bottom: 40px;
 }
 
+.service-item a {
+ color: #333 !important;
+}
+
 .service-item h3 {
     font-weight: 600;
     margin: 0 0 20px 0;
     padding-bottom: 8px;
-    font-size: 18px;
+    font-size: 20px;
     position: relative;
     display: inline-block;
-    border-bottom: 4px solid #e4e4e4;
+    border-bottom: 4px solid #c0dbf2;
     transition: 0.3s;
 }
 
@@ -656,7 +686,7 @@ textarea {
     content: "";
     height: 100%;
     width: 100%;
-    background: #eeeeee;
+    background: #c0dbf2;
     border-radius: 50px;
     z-index: -5;
     top: 10px;
@@ -665,15 +695,18 @@ textarea {
 }
 
 .service-item:hover .icon:before {
-    background: #68BBE3;
+    background: #57a0db;
 }
 
 .service-item:hover h3 {
-    border-color: #68BBE3;
+    border-color: #57a0db;
 }
 
 /**/
 
+#slider {
+    margin-top: 134px !important;
+}
 
 
 /*Single page - Consultations*/
@@ -710,8 +743,12 @@ input#startdate {
     border-left: 0px !important;
 }
 
+.consul-cat {
+    font-size: 14px !important;
+    color: #333 !important;
+}
 
-.home-results-two h3 {
+.consul-item h3 {
     font-size: 16px;
 }
 
@@ -823,14 +860,18 @@ ul.nav.flex-column.footer-nav a {
 }
 
 
-#register .input-group-text {
+#register .input-group-text, .login-form .input-group-text {
     padding: 6px 20px !important;
     background: #eaf3fb;
+    min-width: 62px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 
 }
 
 
-#register .input-group-text i {
+#register .input-group-text i, .login-form .input-group-text i{
     color: #20659e !important;
 }
 
@@ -850,16 +891,6 @@ ul.nav.flex-column.footer-nav a {
 
 .user-select {
     width: 100%;
-}
-
-.btn-check:checked+.btn,
-.btn.active,
-.btn.show,
-.btn:first-child:active,
-:not(.btn-check)+.btn:active {
-    background: #20659e !important;
-    border-color: #20659e !important;
-    color: #fff !important;
 }
 
 .invalid-feedback {
@@ -898,7 +929,7 @@ input[type=checkbox] {
     accent-color: #20659e !important;
 }
 
-.login-form {
+.login-form, .register-form {
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }

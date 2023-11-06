@@ -3141,8 +3141,6 @@ $(document).ready(function (e) {
                     '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="Не">Не</button>'
             });
             $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
-                console.log('#approveModalSubmit_' + btn.data('file'));
-                console.log($('#approveModalSubmit_' + btn.data('file')));
                 $('#approveModalSubmit_' + btn.data('file'))[0].click();
             });
         });

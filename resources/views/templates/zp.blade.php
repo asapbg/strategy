@@ -100,6 +100,23 @@ background: #ccc;
   background-color: #20659e;
 }
 
+.custom-card {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
+    border-radius: 6px;
+    border-top: 3px solid #20659e;
+}
+
+.custom-hr {
+  border-color:  #c0dbf2 !important;
+  width: 99% !important;
+  margin: 0 auto;
+  opacity: 1 !important;
+}
+
+.fs-18 {
+  font-size: 18px !important;
+}
+
     </style>
 
 
@@ -196,12 +213,9 @@ background: #ccc;
       <div class="row">
         <div class="col-md-12">
           <div class="slider-content">
-            <div class="breadcrumbs">
-              <a href="#">Начало</a> »
-            </div>
             <div class="page-heading">
               <h1>
-                Абонаменти
+                Законодателна програма 1 юли - 31 юли
               </h1>
             </div>
           </div>
@@ -214,120 +228,164 @@ background: #ccc;
   <section class="public-page">
     <div class="container">
 
-      <div class="row filter-results mb-2">
-        <h2 class="mb-4">
-            Управление на абонаменти
-        </h2>
-      </div>
-      <div class="row subscribe-row pb-2 mb-2 align-items-center">
-          <div class="col-md-9">
-            <h3 class="fs-5 mb-0 fw-normal">
-              Обществени консултации
-          </h3>
+      <div class="custom-card py-4 px-3 mb-5">
+
+        <div class="row mb-2">
+          <h2 class="mb-4 text-center">
+              Месец юли
+          </h2>
+          <hr class="custom-hr">
+        </div>
+
+        <div class="row mb-3 mt-3 ">
+          <div class="col-md-6">
+            <p class="fw-bold fs-18 mb-1">
+              Наименование на законопроекта
+            </p>
+  
+            <p>
+              Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване 
+            </p>
           </div>
-          <div class="col-md-3 subscribe-action text-end">
-            <button type="button" class="btn btn-labeled  bgr-main rounded">
-              <i class="fa-solid fa-pen-to-square text-light"></i>
-            </button>
+  
+          <div class="col-md-6">
+            <p class="fw-bold fs-18 mb-1">
+              Вносител
+            </p>
+  
+            <p>
+              Агенция за държавна финансова инспекция
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
 
-           <button type="button" class="btn btn-labeled btn-warning">
-             <i class="fa-solid fa-ban text-light"></i>
-           </button>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <p class="fw-bold fs-18 mb-1">
+              Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
+            </p>
+  
+            <p>
+              Да / Mярка № 87
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
 
-           <button type="button" class="btn btn-labeled btn-danger">
-            <i class="fa fa-trash text-light"></i>
-           </button>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <p class="fw-bold fs-18 mb-1">
+              Цели, основни положения и очаквани резултати
+
+            </p>
+  
+            <p>
+              С проекта на ЗИД на КСО се извършват
+              промени в регламентацията на допълнителното
+              пенсионно осигуряване, като част от тях са
+              свързани с изпълнение на мерките за засилване
+              на надзора и регулациите в областта на
+              небанковия финансов сектор, залегнали в
+              Националната програма за реформи. 
+              
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
+
+
+        <div class="row mb-3">
+          <div class="col-md-6 ">
+            <p class="fw-bold fs-18 mb-1">
+              Изготвяне на цялостна оценка на въздействието (да/не)
+            </p>
+  
+            <p>
+              Да
+            </p>
+          </div>
+  
+          <div class="col-md-6">
+            <p class="fw-bold fs-18 mb-1">
+              Месец на публикуване за обществени консултации
+            </p>
+  
+            <p>
+              юли 2023г.
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
+
+
+        <div class="row mb-3">
+          <div class="col-md-6 ">
+            <p class="fw-bold fs-18 mb-1">
+              Месец на изпращане за предварително съгласуване
+
+            </p>
+  
+            <p>
+              Да / Mярка № 87
+            </p>
+          </div>
+  
+          <div class="col-md-6 ">
+            <p class="fw-bold fs-18 mb-1">
+              Месец на внасяне в Министерския съвет
+
+            </p>
+  
+            <p>
+              юли 2023г.
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <p class="fw-bold fs-18 mb-1">
+              Необходими промени в други закони
+            </p>
+  
+            <p>
+              Не
+            </p>
+          </div>
+          <hr class="custom-hr">
+        </div>
+
+        
+        <div class="row mb-3">
+          <div class="col-md-6 ">
+            <p class="fw-bold fs-18 mb-1">
+              Оценка на въздействието
+
+            </p>
+  
+            <p class="mb-0">
+              <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+            </p>
+          </div>
+  
+          <div class="col-md-6">
+            <p class="fw-bold fs-18 mb-1">
+              Становище
+            </p>
+  
+            <p class="mb-0">
+              <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+            </p>
           </div>
         </div>
-
-      <div class="row subscribe-row pb-2 mb-2 align-items-center">
-        <div class="col-md-9">
-          <h3 class="fs-5 mb-0 fw-normal">
-            Стратегически документи
-        </h3>
-        </div>
-        <div class="col-md-3 subscribe-action text-end">
-          <button type="button" class="btn btn-labeled  bgr-main rounded">
-            <i class="fa-solid fa-pen-to-square text-light"></i>
-          </button>
-
-         <button type="button" class="btn btn-labeled btn-warning">
-           <i class="fa-solid fa-ban text-light"></i>
-         </button>
-
-         <button type="button" class="btn btn-labeled btn-danger">
-          <i class="fa fa-trash text-light"></i>
-         </button>
-        </div>
-    </div>
-
-    <div class="row subscribe-row pb-2 mb-2 align-items-center">
-      <div class="col-md-9">
-        <h3 class="fs-5 mb-0 fw-normal">
-          Kонсултативни съвети
-      </h3>
+        <hr class="custom-hr">
       </div>
-      <div class="col-md-3 subscribe-action text-end">
-        <button type="button" class="btn btn-labeled  bgr-main rounded">
-          <i class="fa-solid fa-pen-to-square text-light"></i>
-        </button>
 
-       <button type="button" class="btn btn-labeled btn-warning">
-         <i class="fa-solid fa-ban text-light"></i>
-       </button>
-
-       <button type="button" class="btn btn-labeled btn-danger">
-        <i class="fa fa-trash text-light"></i>
-       </button>
-      </div>
-  </div>
-
-  <div class="row subscribe-row pb-2 mb-2 align-items-center">
-    <div class="col-md-9">
-      <h3 class="fs-5 mb-0 fw-normal">
-       Новини
-    </h3>
-    </div>
-    <div class="col-md-3 subscribe-action text-end">
-      <button type="button" class="btn btn-labeled  bgr-main rounded">
-        <i class="fa-solid fa-pen-to-square text-light"></i>
-      </button>
-
-     <button type="button" class="btn btn-labeled btn-warning">
-       <i class="fa-solid fa-ban text-light"></i>
-     </button>
-
-     <button type="button" class="btn btn-labeled btn-danger">
-      <i class="fa fa-trash text-light"></i>
-     </button>
-    </div>
-</div>
-
-<div class="row subscribe-row pb-2 mb-2 align-items-center">
-  <div class="col-md-9">
-    <h3 class="fs-5 mb-0 fw-normal">
-     Законодателни инициативи
-  </h3>
-  </div>
-  <div class="col-md-3 subscribe-action text-end">
-    <button type="button" class="btn btn-labeled  bgr-main rounded">
-      <i class="fa-solid fa-pen-to-square text-light"></i>
-    </button>
-
-   <button type="button" class="btn btn-labeled btn-warning">
-     <i class="fa-solid fa-ban text-light"></i>
-   </button>
-
-   <button type="button" class="btn btn-labeled btn-danger">
-    <i class="fa fa-trash text-light"></i>
-   </button>
-  </div>
-</div>
-
-
-      </div>
   </div>
   </section>
+
 
 </body>
 
