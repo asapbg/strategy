@@ -8,27 +8,9 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="consultation-type-select">{{ trans_choice('custom.consultation_type', 1) }}<span class="required">*</span></label>
-                <div class="col-12">
-                    <select id="consultation-type-select" name="consultation_type_id" class="form-control form-control-sm select2 select2-no-clear @error('consultation_type_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
-                        @if(isset($consultationTypes) && $consultationTypes->count())
-                            @foreach($consultationTypes as $row)
-                                <option value="{{ $row->id }}" @if(old('consultation_type_id', ($item->id ? $item->consultation_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('consultation_type_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
                 <label class="col-sm-12 control-label" for="consultation_level_id">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
-                    <select id="consultation_level_id" name="consultation_level_id" data-cl="{{ $row->id }}" class="form-control form-control-sm select2-no-clear @error('consultation_level_id'){{ 'is-invalid' }}@enderror">
+                    <select id="consultation_level_id" name="consultation_level_id" class="form-control form-control-sm select2-no-clear @error('consultation_level_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($consultationLevels) && $consultationLevels->count())
                             @foreach($consultationLevels as $row)

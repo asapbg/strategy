@@ -32,7 +32,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     //activity
     protected string $logName = "public_consultation";
 
-    protected $fillable = ['consultation_type_id', 'consultation_level_id', 'act_type_id',
+    protected $fillable = ['consultation_level_id', 'act_type_id',
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to', 'regulatory_act_id',
         'pris_act_id', 'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
         'act_links', 'active'

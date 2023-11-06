@@ -97,7 +97,6 @@ class PublicConsultationController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
 
-        $consultationTypes = ConsultationType::all();
         $consultationLevels = ConsultationLevel::all();
         $actTypes = ActType::with(['consultationLevel'])->get();
         $programProjects = ProgramProject::all();
@@ -110,7 +109,7 @@ class PublicConsultationController extends AdminController
         $polls = $item ? Poll::Active()->NotExpired()->get() : null;
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
-            'consultationTypes', 'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
+            'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls'));
     }
 

@@ -25,7 +25,6 @@ class StorePublicConsultationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'consultation_type_id' => ['required', 'numeric', 'exists:consultation_type,id'],
             'consultation_level_id' => ['required', 'numeric', 'exists:consultation_level,id'],
             'act_type_id' => ['required', 'numeric'],
             'legislative_program_id' => ['nullable', 'numeric'],
