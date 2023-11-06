@@ -14,16 +14,7 @@
                         <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
 
                         <div class="row mb-4">
-                            @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label" for="in_pris">
-                                <input type="checkbox" id="in_pris" name="in_pris" value="1"
-                                       @if ($item->in_pris) checked @endif
-                                       class="checkbox @error('in_pris'){{ 'is-invalid' }}@enderror">
-                                {{ __('validation.attributes.in_pris') }} <span class="required">*</span>
-                            </label>
+                            @include('admin.partial.edit_field_translate', ['field' => 'label', 'required' => true])
                         </div>
 
                         <div class="form-group row">

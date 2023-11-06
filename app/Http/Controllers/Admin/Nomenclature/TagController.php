@@ -3,30 +3,36 @@
 namespace App\Http\Controllers\Admin\Nomenclature;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StoreLegalActTypeRequest;
-use App\Models\LegalActType;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\TagStoreRequest;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
-class LegalActTypeController extends AdminController
+class TagController extends AdminController
 {
-    const LIST_ROUTE = 'admin.nomenclature.legal_act_type';
-    const EDIT_ROUTE = 'admin.nomenclature.legal_act_type.edit';
-    const STORE_ROUTE = 'admin.nomenclature.legal_act_type.store';
-    const LIST_VIEW = 'admin.nomenclatures.legal_act_type.index';
-    const EDIT_VIEW = 'admin.nomenclatures.legal_act_type.edit';
+    const LIST_ROUTE = 'admin.nomenclature.tag';
+    const EDIT_ROUTE = 'admin.nomenclature.tag.edit';
+    const STORE_ROUTE = 'admin.nomenclature.tag.store';
+    const LIST_VIEW = 'admin.nomenclatures.tag.index';
+    const EDIT_VIEW = 'admin.nomenclatures.tag.edit';
 
     public function index(Request $request)
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? LegalActType::PAGINATE;
+        if( !$request->filled('search') ) {
+            $filter['status']['value'] = 1;
+            $requestFilter['status'] = 1;
+        }
 
-        $items = LegalActType::with(['translation'])
+        $paginate = $filter['paginate'] ?? Tag::PAGINATE;
+
+        $items = Tag::with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
-        $toggleBooleanModel = 'LegalActType';
+        $toggleBooleanModel = 'LinkCategory';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
@@ -35,43 +41,42 @@ class LegalActTypeController extends AdminController
 
     /**
      * @param Request $request
-     * @param LegalActType $item
+     * @param Tag $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, LegalActType $item)
+    public function edit(Request $request, Tag $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LegalActType::class) ) {
+        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LinkCategory::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $translatableFields = LegalActType::translationFieldsProperties();
+        $translatableFields = Tag::translationFieldsProperties();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
-    public function store(StoreLegalActTypeRequest $request, LegalActType $item)
+    public function store(TagStoreRequest $request, Tag $item)
     {
         $id = $item->id;
         $validated = $request->validated();
         if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', LegalActType::class) ) {
+            || $request->user()->cannot('create', Tag::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         try {
             $fillable = $this->getFillableValidated($validated, $item);
-            $item->in_pris = (int)(isset($validated['in_pris']) && $validated['in_pris']);
             $item->fill($fillable);
             $item->save();
-            $this->storeTranslateOrNew(LegalActType::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.nomenclature.legal_act_type', 1)." ".__('messages.updated_successfully_m'));
+                    ->with('success', trans_choice('custom.nomenclature.tag', 1)." ".__('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.nomenclature.legal_act_type', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.tag', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -82,11 +87,19 @@ class LegalActTypeController extends AdminController
     private function filters($request)
     {
         return array(
-            'name' => array(
+            'label' => array(
                 'type' => 'text',
-                'placeholder' => __('validation.attributes.name'),
-                'value' => $request->input('name'),
+                'placeholder' => __('validation.attributes.label'),
+                'value' => $request->input('label'),
                 'col' => 'col-md-4'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'options' => optionsStatusesFilter(true, '', __('custom.status').' ('.__('custom.any').')'),
+                'default' => '',
+                'placeholder' => __('validation.attributes.status'),
+                'value' => $request->input('status'),
+                'col' => 'col-md-2'
             )
         );
     }
@@ -97,7 +110,7 @@ class LegalActTypeController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = LegalActType::query();
+        $qItem = Tag::query();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

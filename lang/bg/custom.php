@@ -271,6 +271,7 @@ return [
     'publication_category'            => 'Категория публикации|Категории публикации',
     'publication_categories'          => 'Категория публикации|Категории публикации',
     'nomenclature.publication_category'=> 'Категория публикации|Категории публикации',
+    'nomenclature.tags'                 => 'Таг|Тагове',
     'start'                           => 'Начало',
     'end'                             => 'Край',
     'diff_days'                       => 'Дни разлика',
@@ -408,5 +409,14 @@ return [
     'strategic_document_files'                  => 'Файл (стартегически документи)|Файлове (стартегически документи)',
     'visible_in_report'                         => 'Видим в справката',
     'order'                                     => 'Поредност',
-    'boolean'                                   => 'Boolean'
+    'boolean'                                   => 'Boolean',
+    'pris'                                      => 'ПРИС',
+    'pris_documents'                            => 'Документ (ПРИС)|Документи (ПРИС)',
+    'tags'                                      => 'Таг|Тагове',
+    'tag'                                      => 'Таг',
+    'any'                                      => 'Всички',
+    'pris_about'                               => 'Заглавие/Относно',
+    'pris_legal_reason'                        => 'Правно основание',
+    'new_record'                                => 'Нов запис',
+    'published_at'                                => 'Публикувано на',
 ];

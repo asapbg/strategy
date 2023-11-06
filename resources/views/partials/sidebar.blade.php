@@ -217,6 +217,13 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.pris') }}"
+                       class="nav-link @if(str_contains(url()->current(), 'pris')) active @endif">
+                        <i class="fal fa-check-square"></i>
+                        <p>{{ __('custom.pris') }}</p>
+                    </a>
+                </li>
                 <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                 @canany(['manage.*','manage.nomenclatures'])
                     <li class="nav-item">

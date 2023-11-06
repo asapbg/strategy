@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ActType;
+use App\Models\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreLegalActTypeRequest extends FormRequest
+class TagStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,13 @@ class StoreLegalActTypeRequest extends FormRequest
      */
     public function rules()
     {
-        $rules['in_pris'] = ['nullable', 'numeric'];
+        $rules = [];
         if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:legal_act_type'];
+            $rules['id'] = ['required', 'numeric', 'exists:tag'];
         }
 
         foreach (config('available_languages') as $lang) {
-            foreach (ActType::translationFieldsProperties() as $field => $properties) {
+            foreach (Tag::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }

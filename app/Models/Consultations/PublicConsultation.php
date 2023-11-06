@@ -146,10 +146,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public static function optionsList()
     {
         return DB::table('public_consultation')
-            ->select(['public_consultation.id', 'public_consultation_translations.name'])
+            ->select(['public_consultation.id', 'public_consultation_translations.title'])
             ->join('public_consultation_translations', 'public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
             ->where('public_consultation_translations.locale', '=', app()->getLocale())
-            ->orderBy('public_consultation_translations.name', 'asc')
+            ->orderBy('public_consultation_translations.title', 'asc')
             ->get();
     }
 }

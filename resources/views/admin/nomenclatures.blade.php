@@ -168,6 +168,15 @@
                             </a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block nomenclature-btn"
+                               href="{{ route('admin.nomenclature.tag') }}">
+                                <i class="fas fa-tags"></i>
+                                {{ trans_choice('custom.nomenclature.tags', 2) }}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

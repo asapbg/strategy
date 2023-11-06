@@ -404,5 +404,31 @@ if (!function_exists('optionsUserTypes')) {
             }
             return $options;
         }
+
+        if (!function_exists('optionsStatusesFilter')) {
+
+            /**
+             * return regular status options for filter
+             *
+             * @method optionsStatusesFilter
+             *
+             * @param bool $any
+             * @param string|int $anyValue
+             * @param string|int $anyName
+             * @return array
+             */
+            function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+            {
+                $options = array(
+                    ['value' => 1, 'name' => trans_choice('custom.active', 1)],
+                    ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
+                );
+                if( $any ) {
+                    $options[] = ['value' => $anyValue, 'name' => $anyName];
+                    ksort($options);
+                }
+                return $options;
+            }
+        }
     }
 }

@@ -113,6 +113,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['put'], '/settings',         'store')->name('settings.store');
     });
 
+    //PRIS
+    Route::controller(\App\Http\Controllers\Admin\PrisController::class)->group(function () {
+        Route::get('/pris',                'index')->name('pris')->middleware('can:viewAny,App\Models\Pris');
+        Route::get( '/pris/edit/{item}',         'edit')->name('pris.edit');
+        Route::match(['put', 'post'],'/pris/edit',         'store')->name('pris.store');
+    });
+
     //Dynamic Structures
     Route::controller(\App\Http\Controllers\Admin\DynamicStructureController::class)->group(function () {
         Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
@@ -366,5 +373,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/regulatory-act', 'index')->name('nomenclature.regulatory_act')->middleware('can:viewAny,App\Models\RegulatoryAct');
         Route::get('/nomenclature/regulatory-act/edit/{item?}', 'edit')->name('nomenclature.regulatory_act.edit');
         Route::match(['post', 'put'], '/nomenclature/regulatory-act/store/{item?}', 'store')->name('nomenclature.regulatory_act.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\Nomenclature\TagController::class)->group(function () {
+        Route::get('/nomenclature/tag', 'index')->name('nomenclature.tag')->middleware('can:viewAny,App\Models\Tag');
+        Route::get('/nomenclature/tag/edit/{item?}', 'edit')->name('nomenclature.tag.edit');
+        Route::match(['post', 'put'], '/nomenclature/tag/store/{item?}', 'store')->name('nomenclature.tag.store');
     });
 });

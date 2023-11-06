@@ -19,6 +19,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     public $timestamps = true;
 
     protected $table = 'legal_act_type';
+    protected $fillable = ['in_pris'];
 
     //activity
     protected string $logName = "legal_act_type";
@@ -28,6 +29,11 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
      */
     public function getModelName() {
         return $this->name;
+    }
+
+    public function scopePris($query)
+    {
+        return $query->where('in_pris', 1);
     }
 
     public static function translationFieldsProperties(): array
