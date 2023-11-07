@@ -81,7 +81,7 @@
                                             </label>
                                             <div class=" col-12 d-flex flex-row">
                                                 <div class="input-group">
-                                                    <select class="form-control form-control-sm @error('institution_id') is-invalid @enderror" name="institution_id" id="institution_id">
+                                                    <select class="form-control form-control-sm select2 @error('institution_id') is-invalid @enderror" name="institution_id" id="institution_id">
                                                         <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
                                                         @if(isset($institutions) && sizeof($institutions))
                                                             @foreach($institutions as $option)
