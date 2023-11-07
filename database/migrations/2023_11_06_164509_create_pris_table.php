@@ -66,6 +66,9 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('pris_tag');
+        Schema::dropIfExists('tag_translations');
+        Schema::dropIfExists('tag');
         Schema::dropIfExists('pris_translations');
         Schema::dropIfExists('pris');
     }

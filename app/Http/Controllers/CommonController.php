@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\File;
 use App\Models\Page;
+use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
@@ -226,5 +227,17 @@ class CommonController extends Controller
         $institutions = Institution::getTree($request->all());
         $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
         return view('partials.institutions_tree', compact('institutions', 'canSelect', 'multipleSelect', 'oldBootstrap', 'selectId'));
+    }
+
+    public function getSelect2Ajax(Request $request, $type = '')
+    {
+        $data = [];
+        switch ($type) {
+            case 'pris_doc':
+                $data = Pris::select2AjaxOptions($request->all());
+                break;
+        }
+
+        return response()->json($data);
     }
 }

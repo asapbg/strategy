@@ -155,6 +155,27 @@
 
                                     <div class="col-12">
                                         <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="change_docs[]">
+                                                {{ __('custom.change_docs') }}
+                                            </label>
+                                            <div class="col-12">
+                                                @php($itemChangedDocIds = $item->changedDocs->pluck('id')->toArray())
+                                                <select id="change_docs" name="change_docs[]" multiple="multiple"  data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="dsfsf" class="form-control form-control-sm select2-autocomplete-ajax @error('change_docs'){{ 'is-invalid' }}@enderror">
+                                                    @if(isset($item->changedDocs) && $item->changedDocs->count())
+                                                        @foreach($item->changedDocs as $row)
+                                                            <option value="{{ $row->id }}" @if(in_array($row->id, old('change_docs', $itemChangedDocIds))) selected @endif>{{ $row->doc_num.' ('.$row->actType->name.')' }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                                @error('change_docs')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
                                             <label class="col-sm-12 control-label" for="tags[]">
                                                 {{ trans_choice('custom.tags', 2) }}
                                             </label>
@@ -175,13 +196,13 @@
                                     </div>
 
                                     @if($item->id)
-                                        <div class="col-md-3 col-12">
+                                        <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label class="col-sm-12 control-label">{{ __('custom.created_at') }}</label>
                                                 <div class="col-12">{{ displayDate($item->created_at) }}</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-12">
+                                        <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label class="col-sm-12 control-label">{{ __('custom.published_at') }}</label>
                                                 <div class="col-12">@if($item->published_at){{ displayDate($item->published_at) }}@else{{ '---' }}@endif</div>

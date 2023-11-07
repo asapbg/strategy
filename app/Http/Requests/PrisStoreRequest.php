@@ -37,6 +37,8 @@ class PrisStoreRequest extends FormRequest
             'tags' => ['array'],
             'tags.*' => ['required', 'exists:tag,id'],
             'publish' => ['nullable', 'numeric'],
+            'change_docs' => ['array'],
+            'change_docs.*' => ['required', 'exists:pris,id'],
         ];
 
         if( request()->isMethod('put') ) {

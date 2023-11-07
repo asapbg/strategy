@@ -419,4 +419,5 @@ return [
     'pris_legal_reason'                        => 'Правно основание',
     'new_record'                                => 'Нов запис',
     'published_at'                                => 'Публикувано на',
+    'change_docs'                                => 'Променя',
 ];

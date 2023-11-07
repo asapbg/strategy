@@ -481,6 +481,14 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.select2-autocomplete-ajax').length) {
+        $('.select2-autocomplete-ajax').each(function (){
+            MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'));
+        });
+    }
+
+
+
     //=================================
     //Datepicker
     //===============================
@@ -726,6 +734,50 @@ $(document).ready(function (e) {
     MyModal.prototype.loadModalBody = function (_myModal) {
         $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function (){
             _myModal.showModal(_myModal);
+        });
+    }
+
+    //==========================
+    // End MyModal
+    //==========================
+
+    //===============================
+    // START Select2 Ajax Autoload
+    // available params:
+    //
+    //===============================
+
+    function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
+        selectDom.select2({
+            allowClear: false,
+            templateResult: select2OptionFilter,
+            language: "bg",
+            placeholder: selectPlaceholder,
+            ajax: {
+                url: selectUrl,
+                data: function (params) {
+                    //TODO extend functionality to get more than one field for search dynamically from select object data
+                    var query = {
+                        search: params.term
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                },
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results:  $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
         });
     }
 

@@ -59,7 +59,7 @@ class PrisController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
-        $item = $id ? $this->getRecord($id, ['translation', 'tags']) : new Pris();
+        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType']) : new Pris();
 
         if( ($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -96,7 +96,8 @@ class PrisController extends AdminController
             $item->save();
 
             $item->tags()->sync($validated['tags'] ?? []);
-            if( isset($validated['tags']))
+            $item->changedDocs()->sync($validated['change_docs'] ?? []);
+
 
             $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();

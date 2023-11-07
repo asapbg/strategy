@@ -50,6 +50,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/download/{file}', 'downloadFile')->name('download.file');
         Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
         Route::post('/upload-file/{object_id}/{object_type}','uploadFile')->name('upload.file');
+        Route::get('/select2-ajax/{type}','getSelect2Ajax')->name('select2.ajax');
     });
 
     // Publications

@@ -57,7 +57,8 @@ class PollController extends AdminController
     {
         $item = $this->getRecord($id);
 
-        if( ($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Poll::class) ) {
+        if( ($id && $request->user()->cannot('update', $item))
+            || (!$id && $request->user()->cannot('create', Poll::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
