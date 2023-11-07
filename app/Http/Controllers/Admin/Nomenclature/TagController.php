@@ -22,7 +22,7 @@ class TagController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        if( !$request->filled('search') ) {
+        if( !$request->filled('search') && !$request->filled('active') ) {
             $filter['status']['value'] = 1;
             $requestFilter['status'] = 1;
         }

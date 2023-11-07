@@ -22,6 +22,7 @@
                     <tr>
                         <th>ID</th>
                         <th>{{ __('custom.pris_about') }}</th>
+                        <th>{{ trans_choice('custom.legal_act_types', 1) }}</th>
                         <th>{{__('custom.published_at')}}</th>
                         <th>{{ __('custom.actions') }}</th>
                     </tr>
@@ -32,6 +33,7 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->about }}</td>
+                            <td>{{ $item->legal_act_type_id ? $item->actType->name : '---' }}</td>
                             <td>{{ $item->published_at ? displayDate($item->published_at) : '---' }}</td>
                             <td class="text-center">
                                 @can('update', $item)

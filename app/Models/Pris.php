@@ -48,6 +48,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    public function actType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LegalActType::class, 'id', 'legal_act_type_id');
+    }
+
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'pris_tag', 'pris_id', 'tag_id');

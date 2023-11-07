@@ -51,7 +51,7 @@
 
                                 @break('checkbox')
                                 @case('select')
-                                    <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif" name="{{ $key }}" >
+                                    <select class="form-control form-control-sm select2" @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}"@endif @if(isset($field['class'])){{$field['class'] }}@endif" name="{{ $key }}" @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                         {{-- select with groups--}}
                                         @if(isset($field['group']) && $field['group'])
                                             @foreach($field['options'] as $group_name => $group)

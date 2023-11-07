@@ -35,7 +35,7 @@ class PrisController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        if( !$request->filled('search') ) {
+        if( !$request->filled('search') && !$request->filled('active') ) {
             $requestFilter['active'] = 1;
         }
 
@@ -117,13 +117,22 @@ class PrisController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('custom.pris_about'),
                 'value' => $request->input('about'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-3'
             ),
             'legal_reason' => array(
                 'type' => 'text',
                 'placeholder' => __('custom.pris_legal_reason'),
                 'value' => $request->input('legal_reason'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-3'
+            ),
+            'legal_act_type' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(LegalActType::Pris()->get()),
+                'multiple' => true,
+                'default' => '',
+                'placeholder' => trans_choice('custom.legal_act_types', 1),
+                'value' => $request->input('legal_act_type'),
+                'col' => 'col-12'
             )
         );
     }
