@@ -41,7 +41,7 @@
                                                             @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
                                                             @php(ksort($rowColumns))
                                                             @foreach($rowColumns as $k => $col)
-                                                                <div class="col-md-6">
+                                                                <div class="col-12">
                                                                     <div class="form-group">
                                                                         <span class="fw-bold">{{ $col['label'] }}:</span>
                                                                         @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
@@ -49,7 +49,7 @@
                                                                         @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                             {{ $col['value'] ? 'Да' : 'Не' }}
                                                                         @else
-                                                                            {{ $col['value'] }}
+                                                                            {!! $col['value'] !!}
                                                                         @endif
                                                                     </div>
                                                                 </div>

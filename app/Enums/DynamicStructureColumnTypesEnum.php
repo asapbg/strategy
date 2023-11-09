@@ -15,6 +15,7 @@ enum DynamicStructureColumnTypesEnum: string
     case NUMBER = 'number';
     case DATE = 'date';
     case BOOLEAN = 'boolean';
+    case TEXTAREA = 'textarea';
 
     // Return enum name by value
     public static function keyByValue($searchVal): string

@@ -72,12 +72,12 @@
                                             @foreach($columns as $i => $col)
                                                 @php($newFieldName = 'new_val['.$i.']')
                                                 @php($errorNewField = 'new_val.'.$i)
-                                                <div class="@if($col->id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID) col-12 @else col-md-4 @endif">
+                                                <div class="col-12">
                                                     <div class="form-group">
                                                         <label class="col-sm-12 control-label" for="{{ $newFieldName }}">
                                                             {{ $col->label }}
                                                         </label>
-                                                        <div class="col-12">
+                                                        <div class="@if($col->id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
                                                             <input type="hidden" value="{{ $col->id }}" name="new_val_col[]">
                                                             @if($col->id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
                                                                 <div class="col-12 d-flex flex-row px-0">
@@ -98,15 +98,17 @@
                                                                     </button>
                                                                 </div>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                <input type="text" class="form-control form-control-sm datepicker @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
+                                                                <input type="text" class="form-control form-control-sm datepicker-month @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                 <select name="{{ $newFieldName }}" class="form-control form-control-sm  @error($errorNewField) is-invalid @enderror" >
                                                                     <option value="" @if(old($errorNewField, '') == '') selected @endif></option>
                                                                     <option value="1" @if(old($errorNewField, '') == 1) selected @endif>Да</option>
                                                                     <option value="0" @if(old($errorNewField, '') == 0) selected @endif>Не</option>
                                                                 </select>
+                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
+                                                                <textarea class="form-control form-control-sm summernote @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}">{{ old($errorNewField, '') }}</textarea>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                <textarea class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}">{{ old($errorNewField, '') }}</textarea>
+                                                                <input type="text" class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}" value="{{ old($errorNewField, '') }}">
                                                             @else
                                                                 <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" @if(old($errorNewField, '') == 0) checked @endif value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
                                                             @endif
@@ -149,12 +151,12 @@
                                                             @foreach($rowColumns as $k => $col)
                                                                 @php($fieldName = 'val['.$i.']['.$k.']')
                                                                 @php($errorField = 'val.'.$i.'.'.$k)
-                                                                <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID) col-12 @else col-md-4 @endif">
+                                                                <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label class="col-sm-12 control-label" for="{{ $fieldName }}">
                                                                             {{ $col['label'] }}
                                                                         </label>
-                                                                        <div class="col-12">
+                                                                        <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
                                                                             <input type="hidden" name="{{ 'col['.$i.']['.$k.']' }}" value="{{ $col['id'] }}">
                                                                             @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
                                                                                 <div class="col-12 d-flex flex-row px-0">
@@ -175,15 +177,17 @@
                                                                                     </button>
                                                                                 </div>
                                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                                <input type="text" class="form-control form-control-sm datepicker @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
+                                                                                <input type="text" class="form-control form-control-sm datepicker-month @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
                                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                                 <select name="{{ $fieldName }}" class="form-control form-control-sm  @error($errorField) is-invalid @enderror" >
                                                                                     <option value="" @if(old($errorField, (int)$col['value']) == '') selected @endif></option>
                                                                                     <option value="1" @if(old($errorField, (int)$col['value']) == 1) selected @endif>Да</option>
                                                                                     <option value="0" @if(old($errorField, (int)$col['value']) == 0) selected @endif>Не</option>
                                                                                 </select>
+                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
+                                                                                <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
                                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                                <textarea class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
+                                                                                <input class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, $col['value']) }}">
                                                                             @else
                                                                                 <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
                                                                             @endif

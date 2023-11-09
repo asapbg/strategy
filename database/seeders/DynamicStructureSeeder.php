@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\DynamicStructureColumnTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
@@ -22,29 +23,29 @@ class DynamicStructureSeeder extends Seeder
             [
                 'type' => DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value,
                 'columns' => [
-                    ['type' => 'text', 'ord' => 1, 'label' => 'Наименование на законопроекта'],
-                    ['type' => 'text', 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => 'text', 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
-                    ['type' => 'text', 'ord' => 4, 'label' => 'Цели, основни положения и очаквани резултати'],
-                    ['type' => 'text', 'ord' => 5, 'label' => 'Необходими промени в други закони'],
-                    ['type' => 'text', 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
-                    ['type' => 'text', 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
-                    ['type' => 'text', 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване'],
-                    ['type' => 'text', 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на законопроекта'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Цели, основни положения и очаквани резултати'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Необходими промени в други закони'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
                 ]
             ],
             [
                 'type' => DynamicStructureTypesEnum::OPERATIONAL_PROGRAM->value,
                 'columns' => [
-                    ['type' => 'text', 'ord' => 1, 'label' => 'Наименование на нормативния акт'],
-                    ['type' => 'text', 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => 'text', 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
-                    ['type' => 'text', 'ord' => 4, 'label' => 'Основни положения и очаквани резултати'],
-                    ['type' => 'text', 'ord' => 5, 'label' => 'Законово основание за приемане'],
-                    ['type' => 'text', 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
-                    ['type' => 'text', 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
-                    ['type' => 'text', 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване '],
-                    ['type' => 'text', 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на нормативния акт'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Основни положения и очаквани резултати'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Законово основание за приемане'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване '],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
                 ]
             ],
             [
@@ -53,13 +54,13 @@ class DynamicStructureSeeder extends Seeder
                     1 => [ 'label' => 'Основна информация за консултацията' , 'ord' => 1]
                 ],
                 'columns' => [
-                    ['type' => 'text', 'ord' => 1, 'label' => 'Въведение', 'in_group' => 1],
-                    ['type' => 'text', 'ord' => 2, 'label' => 'Цели на консултацията', 'in_group' => 1],
-                    ['type' => 'text', 'ord' => 3, 'label' => 'Консултационен процес', 'in_group' => 1],
-                    ['type' => 'text', 'ord' => 4, 'label' => 'Относими документи и нормативни актове', 'in_group' => 1],
-                    ['type' => 'text', 'ord' => 5, 'label' => 'Описание на предложението', 'in_group' => 0],
-                    ['type' => 'text', 'ord' => 6, 'label' => 'Въпроси за обсъждане', 'in_group' => 0],
-                    ['type' => 'text', 'ord' => 7, 'label' => 'Документи, съпътстващи консултацията', 'in_group' => 0],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 1, 'label' => 'Въведение', 'in_group' => 1],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 2, 'label' => 'Цели на консултацията', 'in_group' => 1],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 3, 'label' => 'Консултационен процес', 'in_group' => 1],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Относими документи и нормативни актове', 'in_group' => 1],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Описание на предложението', 'in_group' => 0],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 6, 'label' => 'Въпроси за обсъждане', 'in_group' => 0],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 7, 'label' => 'Документи, съпътстващи консултацията', 'in_group' => 0],
                 ],
             ]
         );
