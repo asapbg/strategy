@@ -420,4 +420,6 @@ return [
     'new_record'                                => 'Нов запис',
     'published_at'                                => 'Публикувано на',
     'change_docs'                                => 'Променя',
+    'actual_f'                         => 'Актуална',
+    'unpublish'                         => 'Премахни от публичната част',
 ];

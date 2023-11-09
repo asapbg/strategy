@@ -7,6 +7,7 @@ use App\Enums\DynamicStructureTypesEnum;
 use App\Models\File;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,21 @@ class LegislativeProgram extends ModelActivityExtend
             if( $excludeCdId ) {
                 $q->orWhere('public_consultation_id', '=', $excludeCdId);
             }
+        });
+    }
+
+    public function scopeExpired($query)
+    {
+        $now = databaseDate(Carbon::now());
+        $query->where('to_date', '<', $now);
+    }
+
+    public function scopeActual($query)
+    {
+        $now = databaseDate(Carbon::now());
+        $query->where(function ($q) use ($now) {
+            $q->where('from_date', '<=', $now)
+                ->where('to_date', '>=', $now);
         });
     }
 

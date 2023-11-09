@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Consultations\LegislativeProgram;
 use App\Rules\DateCrossProgram;
+use App\Rules\ProgramValidPeriod;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLegislativeProgramRequest extends FormRequest
@@ -32,7 +33,7 @@ class StoreLegislativeProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'legislative', request()->input('id'))];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'legislative', request()->input('id')), new ProgramValidPeriod(request()->input('to_date'))];
             $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'legislative', request()->input('id'))];
             if( request()->input('id') ) {
                 $rules['col'] = ['array'];

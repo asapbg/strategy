@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Consultations\OperationalProgram;
 use App\Rules\DateCrossProgram;
+use App\Rules\ProgramValidPeriod;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOperationalProgramRequest extends FormRequest
@@ -32,7 +33,7 @@ class StoreOperationalProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id'))];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id')), new ProgramValidPeriod(request()->input('to_date'))];
             $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'operational', request()->input('id'))];
 
             if (request()->input('id')) {

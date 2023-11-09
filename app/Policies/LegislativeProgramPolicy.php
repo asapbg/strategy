@@ -67,8 +67,19 @@ class LegislativeProgramPolicy
      */
     public function publish(User $user, LegislativeProgram $legislativeProgram)
     {
-        $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public && !($legislativeProgram->to_date < $now);
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public;
+    }
+
+    /**
+     * Determine whether the user can unpublish the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Consultations\LegislativeProgram  $legislativeProgram
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function unPublish(User $user, LegislativeProgram $legislativeProgram)
+    {
+        return $user->canAny(['manage.*', 'manage.advisory']) && $legislativeProgram->public;
     }
 
     /**

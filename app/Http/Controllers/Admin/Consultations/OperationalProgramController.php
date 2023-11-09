@@ -136,8 +136,10 @@ class OperationalProgramController extends AdminController
 
             //update program
             if( isset($validated['save']) ) {
+                $now = Carbon::now()->format('Y-m-d');
                 $item->from_date = databaseDate('01.' . $validated['from_date']);
                 $item->to_date = Carbon::parse('01.'.$validated['to_date'])->endOfMonth()->format('Y-m-d');
+                $item->actual = (int)($now > $item->from_date) && ($now < $item->to_date);
                 $item->save();
             }
 
@@ -267,7 +269,26 @@ class OperationalProgramController extends AdminController
         try {
             $item->public = 1;
             $item->save();
-            OperationalProgram::where('id', '<>', $item->id)->update(['public' => 0]);
+            DB::commit();
+            return redirect(route(self::LIST_ROUTE) )
+                ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Publish operational program (ID '.$item->id.')', $e);
+            return back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function unPublish(Request $request, OperationalProgram $item)
+    {
+        if( $request->user()->cannot('unPublish', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        DB::beginTransaction();
+        try {
+            $item->public = 0;
+            $item->save();
             DB::commit();
             return redirect(route(self::LIST_ROUTE) )
                 ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.updated_successfully_f'));

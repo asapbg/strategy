@@ -55,7 +55,7 @@ class OperationalProgramPolicy
     public function update(User $user, OperationalProgram $operationalProgram)
     {
         $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.advisory']) && !($operationalProgram->to_date < $now);
+        return $user->canAny(['manage.*', 'manage.advisory']) && ($operationalProgram->to_date > $now);
     }
 
     /**
@@ -67,8 +67,19 @@ class OperationalProgramPolicy
      */
     public function publish(User $user, OperationalProgram $operationalProgram)
     {
-        $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public && !($operationalProgram->to_date < $now);
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public;
+    }
+
+    /**
+     * Determine whether the user can unpublish the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function unPublish(User $user, OperationalProgram $operationalProgram)
+    {
+        return $user->canAny(['manage.*', 'manage.advisory']) && $operationalProgram->public;
     }
 
     /**
