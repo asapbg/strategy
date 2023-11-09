@@ -59,7 +59,7 @@ class PollController extends AdminController
 
         if( ($id && $request->user()->cannot('update', $item))
             || (!$id && $request->user()->cannot('create', Poll::class)) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return redirect(route(self::LIST_ROUTE))->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
@@ -81,7 +81,7 @@ class PollController extends AdminController
 
         if( ($id && $request->user()->cannot('update', $item))
             || (!$id && $request->user()->cannot('create', $item)) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return redirect(route(self::LIST_ROUTE))->with('warning', __('messages.unauthorized'));
         }
 
         DB::beginTransaction();

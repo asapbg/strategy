@@ -58,7 +58,7 @@ class PollPolicy
         return $user->canAny(['manage.*','manage.pools'])
             && $poll->status != PollStatusEnum::EXPIRED->value
             && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+            && databaseDate($poll->start_date) > databaseDate(Carbon::now());
     }
 
     /**
@@ -73,7 +73,7 @@ class PollPolicy
         return $user->canAny(['manage.*','manage.pools'])
             && $poll->status != PollStatusEnum::EXPIRED->value
             && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+            && databaseDate($poll->start_date) > databaseDate(Carbon::now());
     }
 
     /**
@@ -88,7 +88,7 @@ class PollPolicy
         return $user->canAny(['manage.*','manage.pools'])
             && $poll->status != PollStatusEnum::EXPIRED->value
             && !$poll->has_entry
-            && $poll->start_date > databaseDate(Carbon::now());
+            && databaseDate($poll->start_date) > databaseDate(Carbon::now());
     }
 
     /**
