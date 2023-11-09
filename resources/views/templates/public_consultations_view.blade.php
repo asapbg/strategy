@@ -235,7 +235,7 @@
               <ul class="list-unstyled">
                 <li class="mb-1">
                   <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                    <i class="fa-solid fa-bars me-2 mb-2"></i>Начало (Меню ТИП 1)
+                    <i class="fa-solid fa-bars me-2 mb-2"></i>Начало
                   </a>
                   <hr class="custom-hr">
                   <div class="collapse show mt-3" id="home-collapse">
@@ -265,6 +265,7 @@
             </div>
         </div>
 
+        <!--
         <div class="side-menu-2 mt-4">
           <ul class="list-unstyled">
             <li class="mb-1">
@@ -307,6 +308,7 @@
             <hr class="custom-hr">
           </ul>
         </div>
+      -->
 
     </div>
 

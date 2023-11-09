@@ -14,7 +14,7 @@
             <div class="col-md-12">
               <div class="centered-heading w-100">
                 <h1 class="text-light text-center" style="background: unset !important;">
-                  Добре дошли в сайта на Портал за обществени консултации
+                  Добре дошли в Портала за обществени консултации
                 </h1>
               </div>
             </div>
