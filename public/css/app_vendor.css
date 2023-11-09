@@ -97,12 +97,15 @@ nav.navbar .btn {
     color: #21659e !important;
 }
 
+
 .main-color-light {
     color: #c0dbf2 !important;
 }
 
+
 .main-color-light-bgr {
-    background: #c0dbf2 !important;
+   /* background: #c0dbf2 !important;*/
+     background: #d5e7f6 !important;
 }
 
 .comment-background {
@@ -261,6 +264,10 @@ span.left-link-icon i {
 /**/
 
 /* Form and Public Consultations*/
+
+.modal-dialog.file-display {
+    max-width: 80%;
+}
 
 .edit-consultation {
     position: absolute;
