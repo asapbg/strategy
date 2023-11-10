@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section id="slider" style="margin-top: 135px;">
+<section id="slider">
     <div id="carouselExampleSlidesOnly" class="carousel slide  bgr-main " data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
