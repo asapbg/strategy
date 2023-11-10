@@ -36,6 +36,14 @@
     margin-bottom: 3px;
 }
 
+.dark-text {
+color: #333 !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .public-page {
     padding: 60px 0px;
 }
@@ -68,6 +76,7 @@ h6 {
     font-size: 18px !important;
 }
 
+
 .fw-600 {
     font-weight: 600 !important;
 }
@@ -88,12 +97,15 @@ nav.navbar .btn {
     color: #21659e !important;
 }
 
+
 .main-color-light {
     color: #c0dbf2 !important;
 }
 
+
 .main-color-light-bgr {
-    background: #c0dbf2 !important;
+   /* background: #c0dbf2 !important;*/
+     background: #d5e7f6 !important;
 }
 
 .comment-background {
@@ -252,6 +264,10 @@ span.left-link-icon i {
 /**/
 
 /* Form and Public Consultations*/
+
+.modal-dialog.file-display {
+    max-width: 80%;
+}
 
 .edit-consultation {
     position: absolute;
@@ -747,12 +763,19 @@ background: #eaf3fb !important;
 }
 
 .breadcrumbs a {
-    color: #fff !important;
     text-decoration: none;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.breadcrumbs a:hover {
+    color: #21659e;
 }
 
 .breadcrumbs {
-    color: #fff !important;
+    background: #f8f8f8;
+    box-shadow: rgb(99 99 99 / 45%) -1px 0px 5px 0px;
 }
 
 
@@ -1045,3 +1068,20 @@ input[type=checkbox] {
     width: 11px;
     content: "";
   }
+
+  /*Left menu*/
+.left-nav-panel {
+    background: #f5f9fd;
+    border-radius: 4px;
+    box-shadow: rgb(33 101 158 / 20%) 0px 0px 3px 0px;
+    border: 1px solid #cae0f4;
+}
+
+.active-item-left {
+    background: #20659e;
+    border-radius: 4px;
+}
+
+.active-item-left a {
+    color:#fff !important;
+}
