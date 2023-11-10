@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +15,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['about', 'legal_reason'];
+    const TRANSLATABLE_FIELDS = ['about', 'legal_reason', 'importer'];
     const MODULE_NAME = ('custom.pris_documents');
 //
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
@@ -35,17 +37,28 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->title;
     }
 
+    protected function regNum(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ('#'.$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y')),
+        );
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
             'about' => [
-                'type' => 'textarea',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
             'legal_reason' => [
-                'type' => 'textarea',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
-            ]
+            ],
+            'importer' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:255']
+            ],
         );
     }
 
@@ -73,8 +86,26 @@ class Pris extends ModelActivityExtend implements TranslatableContract
                 $j->on('legal_act_type.id', '=', 'legal_act_type_translations.legal_act_type_id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             });
-            if(isset($filters['search'])) {
+            if(isset($filters['doc_num'])) {
                 $q->where('pris.doc_num', 'ilike', '%'.$filters['doc_num'].'%');
+            }
+            if(isset($filters['year']) && !empty($filters['year'])) {
+                $yearLength = strlen($filters['year']);
+                $year = $filters['year'];
+                if($yearLength < 4) {
+                    while(strlen($year) < 4) {
+                        $year .= '0';
+                    }
+                }
+                $from = Carbon::parse('01-01-'.$year)->format('Y-m-d');
+
+                $to = $yearLength < 4 ? Carbon::now()->format('Y-m-d') : Carbon::parse($from)->endOfYear()->format('Y-m-d');
+                $q->where(function ($q) use($from, $to){
+                    $q->where('doc_date', '>=', $from)->where('doc_date', '<=', $to);
+                });
+            }
+            if(isset($filters['actType']) && (int)$filters['actType'] > 0) {
+            $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
             }
             $q->orderBy('legal_act_type_translations.name', 'asc')
             ->orderBy('pris.doc_num', 'asc');

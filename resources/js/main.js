@@ -746,7 +746,6 @@ $(document).ready(function (e) {
     // available params:
     //
     //===============================
-
     function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
         selectDom.select2({
             allowClear: false,
@@ -756,12 +755,16 @@ $(document).ready(function (e) {
             ajax: {
                 url: selectUrl,
                 data: function (params) {
-                    //TODO extend functionality to get more than one field for search dynamically from select object data
-                    var query = {
-                        search: params.term
+                    if($(this).data('types2ajax') == 'pris_doc') {
+                        var query = {
+                            actType: $('#legal_act_type_filter').val(),
+                            search: params.term
+                        }
+                    } else {
+                        var query = {
+                            search: params.term
+                        }
                     }
-
-                    // Query parameters will be ?search=[term]&type=public
                     return query;
                 },
                 dataType: 'json',

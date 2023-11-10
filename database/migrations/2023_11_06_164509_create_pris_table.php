@@ -36,6 +36,7 @@ return new class extends Migration
             $table->unique(['pris_id', 'locale']);
             $table->text('about');
             $table->text('legal_reason');
+            $table->string('importer');
         });
 
         Schema::create('tag', function (Blueprint $table) {

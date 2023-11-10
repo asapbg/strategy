@@ -231,10 +231,13 @@ class CommonController extends Controller
 
     public function getSelect2Ajax(Request $request, $type = '')
     {
-        $data = [];
+        $requestData = $request->all();
         switch ($type) {
             case 'pris_doc':
-                $data = Pris::select2AjaxOptions($request->all());
+                $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
+                $requestData['year'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : '';
+                $requestData['doc_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
+                $data = Pris::select2AjaxOptions($requestData);
                 break;
         }
 

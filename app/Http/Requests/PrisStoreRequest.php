@@ -27,7 +27,7 @@ class PrisStoreRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'doc_num' => ['required', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'))],
+            'doc_num' => ['required', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('doc_date'))],
             'doc_date' => ['required', 'date'],
             'legal_act_type_id' => ['required', 'numeric', 'exists:legal_act_type,id'],
             'institution_id' => ['required', 'numeric', 'exists:institution,id'],
@@ -37,13 +37,11 @@ class PrisStoreRequest extends FormRequest
             'tags' => ['array'],
             'tags.*' => ['required', 'exists:tag,id'],
             'publish' => ['nullable', 'numeric'],
-            'change_docs' => ['array'],
-            'change_docs.*' => ['required', 'exists:pris,id'],
         ];
 
         if( request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:pris,id'];
-            $rules['doc_num'] = ['required', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('id'))];
+            $rules['doc_num'] = ['required', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('doc_date'), request()->input('id'))];
         }
 
         foreach (config('available_languages') as $lang) {

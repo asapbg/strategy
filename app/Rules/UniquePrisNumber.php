@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Models\Pris;
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniquePrisNumber implements Rule
@@ -14,9 +15,11 @@ class UniquePrisNumber implements Rule
      *
      * @return void
      */
-    public function __construct($legalActTypeId, $ignoreId = 0)
+    public function __construct($legalActTypeId, $docDate, $ignoreId = 0)
     {
         $this->actType = $legalActTypeId;
+        $this->from = Carbon::parse($docDate.' 00:00:00')->startOfYear()->format('Y-m-d');
+        $this->to = Carbon::parse($docDate.' 00:00:00')->endOfYear()->format('Y-m-d');
         $this->ignoreId = (int)$ignoreId;
     }
 
@@ -29,10 +32,16 @@ class UniquePrisNumber implements Rule
      */
     public function passes($attribute, $value)
     {
-        $q = Pris::where('legal_act_type_id', $this->actType)->where('doc_num', '=', $value);
+        $q = Pris::where('legal_act_type_id', (int)$this->actType)
+            ->where('doc_num', '=', (int)$value)
+            ->where(function ($q){
+                $q->where('doc_date', '>=', $this->from)
+                    ->where('doc_date', '<=', $this->to);
+            });
         if( $this->ignoreId ) {
             $q->where('id', '<>', $this->ignoreId);
         }
+
         $exist = $q->first();
         if( $exist ) {
             return false;

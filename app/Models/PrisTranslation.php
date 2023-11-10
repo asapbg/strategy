@@ -9,5 +9,5 @@ class PrisTranslation extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['locale', 'pris_id', 'title'];
+    protected $fillable = ['locale', 'pris_id', 'about', 'legal_reason', 'importer'];
 }

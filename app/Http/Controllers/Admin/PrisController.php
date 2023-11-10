@@ -89,15 +89,13 @@ class PrisController extends AdminController
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             if(isset($validated['publish']) && $validated['publish']) {
-                $fillable['published_at'] = Carbon::now();
+                $fillable['published_at'] = Carbon::now()->format('Y-m-d H:i:s');
             }
             $item->fill($fillable);
 
             $item->save();
 
             $item->tags()->sync($validated['tags'] ?? []);
-            $item->changedDocs()->sync($validated['change_docs'] ?? []);
-
 
             $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
@@ -109,6 +107,49 @@ class PrisController extends AdminController
             Log::error('Save pris document error: '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
+    }
+
+    public function connectDocuments(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'exists:pris,id'],
+            'connectIds' => ['required', 'array'],
+            'connectIds.*' => ['required', 'exists:pris,id'],
+        ]);
+        if( $validator->fails() ) {
+            return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
+        }
+
+        $validated = $validator->validated();
+        $item = Pris::find((int)$validated['id']);
+        if( $request->user()->cannot('update', $item) ) {
+            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
+        }
+
+        $item->changedDocs()->attach($validated['connectIds']);
+
+        return response()->json(['success' => 1], 200);
+    }
+
+    public function disconnectDocuments(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'exists:pris,id'],
+            'disconnect' => ['required', 'exists:pris,id']
+        ]);
+        if( $validator->fails() ) {
+            return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
+        }
+
+        $validated = $validator->validated();
+        $item = Pris::find((int)$validated['id']);
+        if( $request->user()->cannot('update', $item) ) {
+            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
+        }
+
+        $item->changedDocs()->detach($validated['disconnect']);
+
+        return response()->json(['success' => 1], 200);
     }
 
     private function filters($request)

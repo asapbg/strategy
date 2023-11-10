@@ -72,11 +72,11 @@ class TagController extends AdminController
 
             if( $id ) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.nomenclature.tag', 1)." ".__('messages.updated_successfully_m'));
+                    ->with('success', trans_choice('custom.nomenclature.tags', 1)." ".__('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.nomenclature.tag', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.tags', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));

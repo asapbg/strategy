@@ -419,8 +419,9 @@ return [
     'pris_legal_reason'                        => 'Правно основание',
     'new_record'                                => 'Нов запис',
     'published_at'                                => 'Публикувано на',
-    'change_docs'                                => 'Променя',
+    'change_docs'                                => 'Свързани документи',
     'actual_f'                         => 'Актуална',
     'unpublish'                         => 'Премахни от публичната част',
     'textarea'                         => 'Стилизиран текст',
+    'search_pris_doc_js_placeholder'                         => 'Въведете Номер/Година',
 ];
