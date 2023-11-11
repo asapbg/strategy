@@ -29,9 +29,9 @@
                             <tr>
                                 <td>{{ ($currentGroup ? $currentGroup->ord.'.' : '').$row->ord }}</td>
                                 <td>{{ $row->label }}</td>
-                                <td>
+                                <td style="min-width: 600px;">
                                     <input type="hidden" value="{{ $row->id }}" name="row_id[]">
-                                    <textarea type="{{ $row->type }}" name="val[]" class="form-control form-control-sm">{{ old('val.'.$i, $value) }}</textarea>
+                                    <textarea type="{{ $row->type }}" name="val[]" class="form-control form-control-sm summernote ">{{ old('val.'.$i, $value) }}</textarea>
                                     @error('val.'.$i)
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -40,9 +40,9 @@
                         @else
                             <tr>
                                 <td colspan="2">{{ $row->ord.'. '.$row->label }}</td>
-                                <td>
+                                <td style="min-width: 600px;">
                                     <input type="hidden" value="{{ $row->id }}" name="row_id[]">
-                                    <textarea type="{{ $row->type }}" name="val[]" class="form-control form-control-sm">{{ old('val.'.$i, $value) }}</textarea>
+                                    <textarea type="{{ $row->type }}" name="val[]" class="form-control form-control-sm summernote">{{ old('val.'.$i, $value) }}</textarea>
                                     @error('val.'.$i)
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror

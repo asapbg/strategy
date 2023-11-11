@@ -16,6 +16,7 @@ yarn-error.log
 /.vscode
 /public/files/pc
 /public/files/pages
+/public/files/pris
 /public/files/strategic_doc
 /public/files/publications
 app/Http/Controllers/Test.php

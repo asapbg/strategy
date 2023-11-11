@@ -234,10 +234,10 @@ class PublicConsultationController extends AdminController
 
             DB::commit();
             if( $validated['stay'] ) {
-                return redirect(route(self::EDIT_ROUTE, $item).'#cd-kd' )
+                return redirect(route(self::EDIT_ROUTE, $item).'#ct-kd' )
                     ->with('success', trans_choice('custom.consult_documents', 1)." ".($update ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
             }
-            return redirect(route(self::LIST_ROUTE).'#cd-kd')
+            return redirect(route(self::LIST_ROUTE))
                 ->with('success', trans_choice('custom.consult_documents', 1)." ".($update ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -269,7 +269,7 @@ class PublicConsultationController extends AdminController
             ]);
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, $item).'#cd-contacts')
+            return redirect(route(self::EDIT_ROUTE, $item).'#ct-contacts')
                 ->with('success', trans_choice('custom.person_contacts', 1)." ".__('messages.created_successfully_n'));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -293,7 +293,7 @@ class PublicConsultationController extends AdminController
 
         $contact->delete();
 
-        return redirect(route(self::EDIT_ROUTE, $contact->publicConsultation).'#cd-contacts')
+        return redirect(route(self::EDIT_ROUTE, $contact->publicConsultation).'#ct-contacts')
             ->with('success', trans_choice('custom.person_contacts', 1)." ".__('messages.deleted_successfully_n'));
     }
 
@@ -324,7 +324,7 @@ class PublicConsultationController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, $item).'#cd-contacts')
+            return redirect(route(self::EDIT_ROUTE, $item).'#ct-contacts')
                 ->with('success', trans_choice('custom.person_contacts', 2)." ".__('messages.updated_successfully_pl'));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -360,7 +360,7 @@ class PublicConsultationController extends AdminController
             $validated = $validator->validated();
             $consultation = PublicConsultation::find($validated['id']);
             $consultation->polls()->attach($validated['poll']);
-            return redirect(route(self::EDIT_ROUTE, $consultation).'#cd-polls')
+            return redirect(route(self::EDIT_ROUTE, $consultation).'#ct-polls')
                 ->with('success', trans_choice('custom.public_consultations', 2)." ".__('messages.updated_successfully_pl'));
         } catch (\Exception $e) {
             Log::error('Error attach poll to public consultation'.$e);
