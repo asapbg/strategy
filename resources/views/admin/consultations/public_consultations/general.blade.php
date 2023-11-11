@@ -7,31 +7,18 @@
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
     <div class="row">
         @if($item->id)
-            <div class="col-12">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
                 </div>
-                <hr class="mb-5">
             </div>
         @endif
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="consultation_level_id">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
-                <div class="col-12">
-                    <select id="consultation_level_id" name="consultation_level_id" class="form-control form-control-sm select2-no-clear @error('consultation_level_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
-                        @if(isset($consultationLevels) && $consultationLevels->count())
-                            @foreach($consultationLevels as $row)
-                                <option value="{{ $row->id }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif>{{ $row->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('consultation_level_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label> {{ $item->id ? $item->nomenclatureLevelLabel : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---') }}
                 </div>
             </div>
-        </div>
+        <div class="col-12"></div>
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="act_type_id">{{ trans_choice('validation.attributes.act_type_id', 1) }}<span class="required">*</span></label>
@@ -42,8 +29,8 @@
                             @foreach($actTypes as $row)
                                 <option value="{{ $row->id }}"
                                         @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
-                                        data-id="{{ $row->id }}"
-                                        data-cl="{{ $row->consultationLevel->id }}"
+{{--                                        data-id="{{ $row->id }}"--}}
+{{--                                        data-cl="{{ $row->consultationLevel->id }}"--}}
                                 >{{ $row->name }}</option>
                             @endforeach
                         @endif

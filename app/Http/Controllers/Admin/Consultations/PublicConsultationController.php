@@ -101,8 +101,11 @@ class PublicConsultationController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
 
+        $userInstitutionLevel = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
+
         $consultationLevels = ConsultationLevel::all();
-        $actTypes = ActType::with(['consultationLevel'])->get();
+        $actTypes = ActType::where('consultation_level_id', '=', $item->id ? $item->consultation_level_id : $userInstitutionLevel)
+            ->get();
         $programProjects = ProgramProject::all();
         $linkCategories = LinkCategory::all();
         $regulatoryActs = RegulatoryAct::all(); //Нормативни актове номенклатура
@@ -119,7 +122,7 @@ class PublicConsultationController extends AdminController
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
-            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents'));
+            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -147,6 +150,9 @@ class PublicConsultationController extends AdminController
         try {
             $validated = $validator->validated();
             $fillable = $this->getFillableValidated($validated, $item);
+            if( !$id ) {
+                $fillable['consultation_level_id'] = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
+            }
             $item->fill($fillable);
             $item->active = $request->input('active') ? 1 : 0;
 

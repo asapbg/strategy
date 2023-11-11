@@ -2,6 +2,7 @@
 
 namespace App\Models\Consultations;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\ActType;
 use App\Models\ConsultationLevel;
 use App\Models\File;
@@ -88,10 +89,17 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
-    public function consultationLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
+    protected function nomenclatureLevelLabel(): Attribute
     {
-        return $this->hasOne(ConsultationLevel::class, 'consultation_level_id', 'id');
+        return Attribute::make(
+            get: fn () => $this->consultation_level_id ? __('custom.nomenclature_level.'.InstitutionCategoryLevelEnum::keyByValue($this->consultation_level_id)) : '---',
+        );
     }
+
+//    public function consultationLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
+//    {
+//        return $this->hasOne(ConsultationLevel::class, 'consultation_level_id', 'id');
+//    }
 
     public function op(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
