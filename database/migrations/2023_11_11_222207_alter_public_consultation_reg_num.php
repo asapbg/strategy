@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('public_consultation', function (Blueprint $table){
             $table->string('reg_num')->nullable();
+            $table->string('monitorstat')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('public_consultation', function (Blueprint $table){
             $table->dropColumn('reg_num');
+            $table->dropColumn('monitorstat');
         });
     }
 };

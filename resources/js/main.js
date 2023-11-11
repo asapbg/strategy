@@ -323,6 +323,10 @@ $(document).ready(function (e) {
         $('#'+hash+'-tab').trigger('click');
     }
 
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
     $.datepicker.regional = {
         bg: {
             days: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота", "Неделя"],

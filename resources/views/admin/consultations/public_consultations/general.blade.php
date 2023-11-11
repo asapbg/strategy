@@ -220,10 +220,22 @@
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
     </div>
+
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="active"></label>
+                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>
+                <input type="text" id="monitorstat" name="monitorstat"
+                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"
+                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">
+                @error('monitorstat')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
                 <select id="active" name="active" class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">
                     <option value="0" @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.inactive') }}</option>
                     <option value="1" @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.active') }}</option>

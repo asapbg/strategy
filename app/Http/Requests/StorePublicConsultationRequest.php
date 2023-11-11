@@ -36,6 +36,7 @@ class StorePublicConsultationRequest extends FormRequest
             'act_links' => ['nullable', 'string'],
             'active' => ['boolean', 'nullable'],
             'stay' => ['nullable'],
+            'monitorstat' => ['nullable', 'string', 'max:255'],
         ];
 
         //TODO fxi me if we update record do we have to be able to edit period ????
