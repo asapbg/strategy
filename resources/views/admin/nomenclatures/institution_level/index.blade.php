@@ -22,6 +22,7 @@
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
                             <th>{{__('custom.system_name')}}</th>
+                            <th>{{__('validation.attributes.nomenclature_level')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
                         </thead>
@@ -32,6 +33,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->system_name }}</td>
+                                    <td>{{ $item->nomenclature_level ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->nomenclature_level)) : '---' }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"

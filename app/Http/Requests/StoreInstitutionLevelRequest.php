@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\InstitutionLevel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,6 +28,7 @@ class StoreInstitutionLevelRequest extends FormRequest
     {
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:institution_level'];
+            $rules['nomenclature_level'] = ['required', 'numeric', 'in:'.implode(',', InstitutionCategoryLevelEnum::values())];
         }
 
         foreach (config('available_languages') as $lang) {

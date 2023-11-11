@@ -438,4 +438,8 @@ return [
     'search_pris_doc_js_placeholder'                         => 'Въведете Номер/Година',
     'bg'                                => 'Български',
     'en'                                => 'Английски',
+    'nomenclature_level.CENTRAL'        => 'Централно',
+    'nomenclature_level.CENTRAL_OTHER'        => 'Ценрално друго',
+    'nomenclature_level.AREA'        => 'Областно',
+    'nomenclature_level.MUNICIPAL'        => 'Общинско ниво',
 ];

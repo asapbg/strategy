@@ -15,7 +15,7 @@ class InstitutionLevel extends ModelActivityExtend implements TranslatableContra
     const TRANSLATABLE_FIELDS = ['name'];
     const MODULE_NAME = ('custom.nomenclatures.institution_level');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
-
+    protected $fillable = ['nomenclature_level', 'system_name', 'active', 'parent_id'];
     public $timestamps = true;
 
     protected $table = 'institution_level';

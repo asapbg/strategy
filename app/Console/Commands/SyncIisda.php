@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
 use App\Models\EkatteSettlement;
@@ -40,6 +41,22 @@ class SyncIisda extends Command
     public function handle()
     {
         Log::info("Cron run sync:iisda.");
+
+        $nomenclatureLevel = [
+            'ExecutivePowerAdministrativeStructure' => InstitutionCategoryLevelEnum::CENTRAL_OTHER->value,
+            'ExecutiveAgency' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'Council' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'Act60AdiministrativeStructure' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'SpecializedLocalAdministration' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'StateAgency' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'StateCommisionAdministrion' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'StatePublicConsultativeCommission' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'CouncilOfMinistersAdministration' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'Ministry' => InstitutionCategoryLevelEnum::CENTRAL->value,
+            'RegionalAdminisration' => InstitutionCategoryLevelEnum::AREA->value,
+            'MunicipalAdministration' => InstitutionCategoryLevelEnum::MUNICIPAL->value,
+            'AreaMunicipalAdministration' => InstitutionCategoryLevelEnum::MUNICIPAL->value,
+        ];
 
         $localSubjects = $toInsert = $idArrayToDeactivate = [];
         //Local institutions
@@ -108,7 +125,8 @@ class SyncIisda extends Command
                             //add structure if not exist
                             if(!isset($localSections[$subject['AdmStructureKind']])) {
                                 $newInstLevel = InstitutionLevel::create([
-                                    'system_name' => $subject['AdmStructureKind']
+                                    'system_name' => $subject['AdmStructureKind'],
+                                    'nomenclature_level' => $nomenclatureLevel[$subject['AdmStructureKind']]
                                 ]);
                                 if( !$newInstLevel ) {
                                     Log::error('Sync Institution: Missing AdmStructureKind:'. $subject['AdmStructureKind']);
