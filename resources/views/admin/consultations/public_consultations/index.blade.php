@@ -19,7 +19,7 @@
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>№</th>
                             <th>{{ __('validation.attributes.title') }}</th>
                             <th>{{ trans_choice('custom.start', 1) }}</th>
                             <th>{{ trans_choice('custom.end', 1) }}</th>
@@ -30,7 +30,7 @@
                         @if(isset($items) && $items->count() > 0)
                             @foreach($items as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->reg_num }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ $item->open_from }}</td>
                                     <td>{{ $item->open_to }}</td>

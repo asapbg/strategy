@@ -159,6 +159,11 @@ class PublicConsultationController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
+            if( !$id ) {
+                $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
+                $item->save();
+            }
+
             //Locke program if is selected
             if( isset($validated['legislative_program_id']) ) {
                 LegislativeProgram::where('id', '=', (int)$validated['legislative_program_id'])

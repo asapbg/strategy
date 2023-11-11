@@ -12,6 +12,7 @@ use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
@@ -36,7 +37,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected $fillable = ['consultation_level_id', 'act_type_id',
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to', 'regulatory_act_id',
         'pris_act_id', 'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
-        'act_links', 'active'
+        'act_links', 'active', 'reg_num'
     ];
 
     const MIN_DURATION_DAYS = 14;

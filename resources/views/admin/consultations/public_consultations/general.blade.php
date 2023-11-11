@@ -6,6 +6,14 @@
     @endif
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
     <div class="row">
+        @if($item->id)
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
+                </div>
+                <hr class="mb-5">
+            </div>
+        @endif
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="consultation_level_id">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
