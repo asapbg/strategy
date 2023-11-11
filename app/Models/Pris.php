@@ -44,6 +44,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    protected function docYear(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Carbon::parse($this->doc_date)->format('Y'),
+        );
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
@@ -74,7 +81,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id');
+        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type']);
     }
 
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -89,7 +96,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     public static function select2AjaxOptions($filters)
     {
         $q = DB::table('pris')
-            ->select(['pris.id', DB::raw('pris.doc_num || \' (\' || legal_act_type_translations.name || \')\' as name')])
+            ->select(['pris.id', DB::raw('legal_act_type_translations.name || \' №\' || pris.doc_num || \' от \' || DATE_PART(\'year\', doc_date) || \' г.\' as name')])
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
             ->join('legal_act_type_translations', function ($j){
                 $j->on('legal_act_type.id', '=', 'legal_act_type_translations.legal_act_type_id')

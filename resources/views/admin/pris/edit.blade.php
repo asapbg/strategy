@@ -200,13 +200,29 @@
                                                             <div class="text-danger mt-1">{{ $message }}</div>
                                                             @enderror
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
+                                                            <select id="connect_type" name="connect_type" class="form-control form-control-sm select2 @error('connect_type'){{ 'is-invalid' }}@enderror">
+                                                                <option value="0" @if(old('connect_type', 0) == 0) selected @endif>---</option>
+                                                                @foreach(\App\Enums\PrisDocChangeTypeEnum::options() as $name => $val)
+                                                                    <option value="{{ $val }}" @if(old('connect_type', 0) == $val) selected @endif>{{ __('custom.pris.change_enum.'.$name) }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('connect_type')
+                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-md-2">
                                                             <button type="button" class="btn btn-outline-success" id="connect-documents" data-pris="{{ $item->id }}">{{ __('custom.add') }}</button>
                                                         </div>
                                                         @if($item->changedDocs->count())
-                                                            <div class="col-12" id="connected_documents">
-                                                                @foreach($item->changedDocs as $doc)
-                                                                    <div id="disconnect_{{ $doc->id }}">{{ $doc->regNum }} <i class="text-danger fas fa-trash ml-2 disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $doc->id }}" role="button"></i></div>
+                                                            <div class="col-12 mt-4" id="connected_documents">
+                                                                @foreach($item->changedDocs as $pris)
+                                                                    <div id="disconnect_{{ $pris->id }}">
+                                                                        <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
+                                                                           <i class="text-primary fas fa-link"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} №{{ $pris->regNum }} {{ $pris->docYear }} г.
+                                                                        </a>
+                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                    </div>
                                                                 @endforeach
                                                             </div>
                                                         @endif
@@ -335,7 +351,7 @@
                 $.ajax({
                     url  : '<?php echo route("admin.pris.connect"); ?>',
                     type : 'POST',
-                    data : { _token: '{{ csrf_token() }}', id: $(this).data('pris'), connectIds: $('#change_docs').val() },
+                    data : { _token: '{{ csrf_token() }}', id: $(this).data('pris'), connectIds: $('#change_docs').val(), connect_type: $('#connect_type').val() },
                     success : function(data) {
                         if( typeof data.error != 'undefined' ) {
                             errorContainer.html(data.message);

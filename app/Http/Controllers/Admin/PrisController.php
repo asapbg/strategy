@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PrisDocChangeTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PrisStoreRequest;
 use App\Models\Consultations\PublicConsultation;
@@ -113,6 +114,7 @@ class PrisController extends AdminController
     {
         $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:pris,id'],
+            'connect_type' => ['required', 'numeric', 'in:'.join(',', PrisDocChangeTypeEnum::values())],
             'connectIds' => ['required', 'array'],
             'connectIds.*' => ['required', 'exists:pris,id'],
         ]);
@@ -126,7 +128,7 @@ class PrisController extends AdminController
             return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
         }
 
-        $item->changedDocs()->attach($validated['connectIds']);
+        $item->changedDocs()->attach($validated['connectIds'], ['connect_type' => $validated['connect_type']]);
 
         return response()->json(['success' => 1], 200);
     }

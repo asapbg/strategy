@@ -366,5 +366,6 @@ return [
         'importer_en'     => 'Вносител (EN)',
         'file_bg'           => 'Файл (BG)',
         'file_en'           => 'Файл (EN)',
+        'connect_type'           => 'Тип на изменение',
     ],
 ];
