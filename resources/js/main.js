@@ -1,3 +1,4 @@
+var canAjax = true;
 toastr.options = {
     "closeButton": true,
     "debug": false,
@@ -131,7 +132,6 @@ function ToggleBoolean(booleanType, entityId) {
     let model = $(form + " .model").val();
     let status = $(form + " .status").attr('data-status');
     showModalConfirm();
-    console.log(model, status);
     $.ajax({
         type: 'GET',
         url: '/toggle-boolean',
@@ -317,6 +317,11 @@ var cainSelect = function (obj){
 }
 
 $(document).ready(function (e) {
+
+    let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
+    if (hash) {
+        $('#'+hash+'-tab').trigger('click');
+    }
 
     $.datepicker.regional = {
         bg: {
@@ -669,6 +674,24 @@ $(document).ready(function (e) {
         });
     }
 
+    if( $('.preview-file-modal').length ) {
+        $('.preview-file-modal').on('click', function(){
+            let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
+            let titleTxt = GlobalLang == 'bg' ? 'Преглед на файл' : 'File preview';
+            if( canAjax ) {
+                canAjax = false;
+                new MyModal({
+                    title: titleTxt,
+                    footer: '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    bodyLoadUrl: $(this).data('url'),
+                    customClass: 'file-preview'
+                });
+                canAjax = true;
+            }
+
+        });
+    }
+
     //===============================
     // START MyModal
     // Create modal and show it with option for load body from url or pass direct content
@@ -676,6 +699,12 @@ $(document).ready(function (e) {
     // title, body (content), destroyListener (boolean : do destroy modal on close), bodyLoadUrl (url for loading body content)
     //===============================
 
+    /**
+     *
+     * @param obj
+     * @returns {*}
+     * @constructor
+     */
     function MyModal(obj){
         var _myModal = Object.create(MyModal.prototype)
         _myModal.id = (new Date()).getTime();

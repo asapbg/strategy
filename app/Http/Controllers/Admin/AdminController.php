@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\File;
+use App\Models\Pris;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -64,6 +68,20 @@ class AdminController extends Controller
             }
         }
         return $validatedFillable;
+    }
+
+    protected function uploadFileTwoLanguages(Request $request, $prisId = 0)
+    {
+        $validator = Validator::make($request->all(), [
+            'file_bg' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_PRIS)],
+            'file_en' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_PRIS)],
+        ]);
+
+        $item = Pris::find((int)$prisId);
+        if( !$item ) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
     }
 
     /**

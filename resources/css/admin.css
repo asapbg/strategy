@@ -75,3 +75,11 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 /*==========================*/
 /*END Subjects modal tree*/
 /*=============================*/
+.modal.file-preview .modal-dialog{
+    max-width: 90%;
+}
+.modal.file-preview .modal-body img{
+    max-width: 100% !important;
+    height: auto !important;
+}
+

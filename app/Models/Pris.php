@@ -77,6 +77,15 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id');
     }
 
+    public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PRIS)
+            ->orderBy('created_at')
+            ->orderBy('locale');
+    }
+
+
     public static function select2AjaxOptions($filters)
     {
         $q = DB::table('pris')

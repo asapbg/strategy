@@ -55,7 +55,7 @@ return [
 
         'public_uploads' => [
             'driver' => 'local',
-            'root'   => public_path() . '/files',
+            'root'   => public_path() . DIRECTORY_SEPARATOR .'files',
         ],
 
     ],

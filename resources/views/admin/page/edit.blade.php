@@ -145,7 +145,7 @@
                                         </tr>
                                         @foreach($item->files as $f)
                                             <tr>
-                                                <td>{{ $f->description }}</td>
+                                                <td>{{ ($f->description.'_'.app()->getLocale()) ?? $f->description.'_'.config('app.default_lang') }}</td>
                                                 <td>
                                                     <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">
                                                         <i class="fas fa-download me-1" role="button"

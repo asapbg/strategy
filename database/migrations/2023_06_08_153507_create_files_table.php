@@ -23,7 +23,8 @@ return new class extends Migration
 //            $table->binary('content')->nullable();
             $table->text('file_text')->fullText('file_text_ts')->language('bulgarian')->nullable();
             $table->string('path')->nullable();
-            $table->string('description')->nullable();
+            $table->string('description_bg')->nullable();
+            $table->string('description_en')->nullable();
 
             $table->unsignedBigInteger('sys_user')->nullable();
             $table->foreign('sys_user')

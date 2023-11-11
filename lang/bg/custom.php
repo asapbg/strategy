@@ -115,6 +115,7 @@ return [
     'file'                             => 'Файл',
     'forward'                          => 'Напред',
     'version'                          => 'Версия',
+    'version_short'                    => 'вер.',
     'map'                              => 'Карта',
     'last_activity'                    => 'Дата на посл. актив.',
     'signal'                           => 'Сигнал',
@@ -424,4 +425,6 @@ return [
     'unpublish'                         => 'Премахни от публичната част',
     'textarea'                         => 'Стилизиран текст',
     'search_pris_doc_js_placeholder'                         => 'Въведете Номер/Година',
+    'bg'                                => 'Български',
+    'en'                                => 'Английски',
 ];

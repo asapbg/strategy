@@ -48,8 +48,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
         Route::get('/download/{file}', 'downloadFile')->name('download.file');
+        Route::get('/file-preview-modal/{id}', 'previewModalFile')->name('preview.file.modal');
         Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
         Route::post('/upload-file/{object_id}/{object_type}','uploadFile')->name('upload.file');
+        Route::post('/upload-file-languages/{object_id}/{object_type}','uploadFileLanguages')->name('upload.file.languages');
         Route::get('/select2-ajax/{type}','getSelect2Ajax')->name('select2.ajax');
     });
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\File;
 use App\Models\Page;
 use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocuments\Institution;
+use App\Services\FileOcr;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -149,6 +151,54 @@ class CommonController extends Controller
         }
     }
 
+    public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject) {
+        try {
+            $validated = $request->validated();
+
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
+                default => '',
+            };
+
+            $fileIds = [];
+
+            foreach (['bg', 'en'] as $code) {
+                $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+                $item = new File([
+                    'id_object' => $objectId,
+                    'code_object' => $typeObject,
+                    'filename' => $fileNameToStore,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $pDir.$fileNameToStore,
+                    'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => ($version + 1).'.0'
+                ]);
+                $item->save();
+                $fileIds[] = $item->id;
+                $ocr = new FileOcr($item->refresh());
+                $ocr->extractText();
+            }
+
+            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+
+            $route = match ((int)$typeObject) {
+                File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
+                default => '',
+            };
+            return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
+        } catch (\Exception $e) {
+            logError('Upload file', $e->getMessage());
+            return back()->with(['danger' => 'Възникна грешка. Презаредете страницата и опитайте отново.']);
+        }
+    }
+
     /**
      * Download public file
      * @param Request $request
@@ -158,7 +208,13 @@ class CommonController extends Controller
      */
     public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
     {
-        if( !in_array($file->code_object, [File::CODE_OBJ_PUBLICATION, File::CODE_OBJ_LEGISLATIVE_PROGRAM, File::CODE_OBJ_OPERATIONAL_PROGRAM]) ) {
+        if( !in_array($file->code_object,
+            [
+                File::CODE_OBJ_PUBLICATION,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM,
+                File::CODE_OBJ_PRIS
+            ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 
@@ -171,6 +227,19 @@ class CommonController extends Controller
         } else {
             return back()->with('warning', __('custom.record_not_found'));
         }
+    }
+
+    public function previewModalFile(Request $request, $id = 0)
+    {
+        $file = File::find((int)$id);
+        if( !$file ) {
+            return __('messages.record_not_found');
+        }
+
+        $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+        $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+        return $html->getContent();;
+
     }
 
     /**

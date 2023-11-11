@@ -364,5 +364,7 @@ return [
         'legal_reason_en'     => 'Правно основание (EN)',
         'importer_bg'     => 'Вносител (BG)',
         'importer_en'     => 'Вносител (EN)',
+        'file_bg'           => 'Файл (BG)',
+        'file_en'           => 'Файл (EN)',
     ],
 ];
