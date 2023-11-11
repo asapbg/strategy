@@ -27,6 +27,12 @@ class ActType extends ModelActivityExtend implements TranslatableContract
 
     const ACT_LAW = 1;
     const ACT_COUNCIL_OF_MINISTERS = 2;
+    const ACT_MINISTER = 3; //Акт на министър
+    const ACT_OTHER_CENTRAL_AUTHORITY = 6; //Акт на друг централен орган
+    const ACT_REGIONAL_GOVERNOR = 9; //Акт на областен управител
+    const ACT_MUNICIPAL = 11; //Акт на общински съвет
+    const ACT_MUNICIPAL_MAYOR = 12; //Акт на кмет на община
+    const ACT_NON_NORMATIVE = 13; //Ненормативен акт ??????
 
     /**
      * Get the model name

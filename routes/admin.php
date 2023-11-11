@@ -88,6 +88,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/public-consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
         Route::match(['post', 'put'], '/consultations/public-consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
         Route::post('/consultations/public-consultations/store-kd', 'storeKd')->name('consultations.public_consultations.store.kd');
+        Route::post('/consultations/public-consultations/store-doc', 'storeDocs')->name('consultations.public_consultations.store.documents');
         Route::post('/consultations/public-consultations/add-contact', 'addContact')->name('consultations.public_consultations.add.contact');
         Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');

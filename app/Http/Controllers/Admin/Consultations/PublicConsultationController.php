@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Consultations;
 
+use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
+use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\ActType;
@@ -17,11 +19,13 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
+use App\Models\File;
 use App\Models\LinkCategory;
 use App\Models\Poll;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
+use App\Services\FileOcr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -106,11 +110,16 @@ class PublicConsultationController extends AdminController
         $operationalPrograms = OperationalProgram::NotLockedOrByCd($item->id ?? 0)->get();
         $legislativePrograms = LegislativeProgram::NotLockedOrByCd($item->id ?? 0)->get();
 
+
+        $documents = [];
+        foreach ($item->documents as $document){
+            $documents[$document->doc_type.'_'.$document->locale][] = $document;
+        }
         $polls = $item ? Poll::Active()->NotExpired()->get() : null;
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
-            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls'));
+            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -177,13 +186,136 @@ class PublicConsultationController extends AdminController
 
     }
 
+    public function storeDocs(Request $request)
+    {
+        $storeRequest = new PublicConsultationDocStoreRequest();
+        $validator = Validator::make($request->all(), $storeRequest->rules());
+        if( $validator->fails() ) {
+            return redirect(url()->previous().'#ct-doc')->withInput($request->all())->withErrors($validator->errors());
+        }
+
+        $validated = $validator->validated();
+        $item = PublicConsultation::find($validated['id']);
+
+        if( $request->user()->cannot('update', $item) ) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        // Upload File
+        $dir = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
+
+        DB::beginTransaction();
+        try {
+                foreach (DocTypesEnum::docsByActType($validated['act_type']) as $docType) {
+                    $fileIds = [];
+                    $bgFile = $validated['file_'.$docType.'_bg'] ?? null;
+                    $enFile = $validated['file_'.$docType.'_en'] ?? null;
+                    //If no file for this type skip next
+                    if(!$bgFile && !$enFile){
+                        continue;
+                    }
+                    foreach (['bg', 'en'] as $code) {
+                        $version = File::where('locale', '=', $code)
+                            ->where('id_object', '=', $item->id)
+                            ->where('doc_type', '=', $docType)
+                            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                            ->count();
+
+                        //TODO fix me Ugly way while someone define rules
+                        if( !${$code.'File'} ) {
+                            //There is no previews version
+                            if( !$version ) {
+                                if( $code == 'en' && !$enFile && $bgFile ) {
+                                    $file = $bgFile;
+                                }
+
+                                if( $code == 'bg' && !$bgFile && $enFile ) {
+                                    $file = $enFile;
+                                }
+                            } else {
+                                //we have previews version and do not need to copy file for second language
+                                $file = null;
+                            }
+                        } else{
+                            $file = ${$code.'File'};
+                        }
+
+                        if( is_null($file) ) {
+                            continue;
+                        }
+
+                        $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                        $file->storeAs($dir, $fileNameToStore, 'public_uploads');
+                        $newFile = new File([
+                            'id_object' => $item->id,
+                            'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                            'filename' => $fileNameToStore,
+                            'doc_type' => $docType,
+                            'content_type' => $file->getClientMimeType(),
+                            'path' => $dir.$fileNameToStore,
+                            'description' => __('custom.public_consultation.doc_type.'.$docType),
+                            'sys_user' => $request->user()->id,
+                            'locale' => $code,
+                            'version' => ($version + 1).'.0'
+                        ]);
+                        $newFile->save();
+                        $fileIds[] = $newFile->id;
+                        $ocr = new FileOcr($newFile->refresh());
+                        $ocr->extractText();
+                    }
+                    //File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                    //File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                }
+            DB::commit();
+            if( $validated['stay'] ) {
+                return redirect(route(self::EDIT_ROUTE, $item).'#ct-doc' )
+                    ->with('success', trans_choice('custom.documents', 2)." ".__('messages.updated_successfully_pl'));
+            }
+            return redirect(route(self::LIST_ROUTE))
+                ->with('success', trans_choice('custom.documents', 2)." ".__('messages.updated_successfully_pl'));
+        } catch (\Exception $e){
+            Log::error('Error store public consultation(ID'.$item->id.') documents: '.PHP_EOL.'Files: '.json_encode($validated).PHP_EOL.'Error: '.$e);
+            DB::rollBack();
+            return redirect(url()->previous().'#ct-doc')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+
+//
+//        $fileIds = [];
+//
+//        foreach (['bg', 'en'] as $code) {
+//            $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+//            $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
+//            $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+//            $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+//            $item = new File([
+//                'id_object' => $objectId,
+//                'code_object' => $typeObject,
+//                'filename' => $fileNameToStore,
+//                'content_type' => $file->getClientMimeType(),
+//                'path' => $pDir.$fileNameToStore,
+//                'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
+//                'sys_user' => $request->user()->id,
+//                'locale' => $code,
+//                'version' => ($version + 1).'.0'
+//            ]);
+//            $item->save();
+//            $fileIds[] = $item->id;
+//            $ocr = new FileOcr($item->refresh());
+//            $ocr->extractText();
+//        }
+//
+//        File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+//        File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+
+    }
+
     public function storeKd(Request $request)
     {
         $user = $request->user();
         $storeRequest = new PublicConsultationKdStoreRequest();
         $validator = Validator::make($request->all(), $storeRequest->rules());
         if( $validator->fails() ) {
-            return back()->withInput($request->all())->withErrors($validator->errors());
+            return redirect(url()->previous().'#ct-kd')->withInput($request->all())->withErrors($validator->errors());
         }
 
         $validated = $validator->validated();
@@ -242,7 +374,7 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return redirect(url()->previous().'#ct-kd')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
     }
@@ -258,7 +390,7 @@ class PublicConsultationController extends AdminController
         }
 
         if( $user->cannot('update', $item) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return redirect(url()->previous().'#ct-contacts')->with('warning', __('messages.unauthorized'));
         }
 
         DB::beginTransaction();
@@ -274,7 +406,7 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return redirect(url()->previous().'#ct-contacts')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 
@@ -288,7 +420,7 @@ class PublicConsultationController extends AdminController
         }
 
         if( $user->cannot('update', $contact->publicConsultation) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return redirect(url()->previous().'#ct-contacts')->with('warning', __('messages.unauthorized'));
         }
 
         $contact->delete();
@@ -309,7 +441,7 @@ class PublicConsultationController extends AdminController
         }
 
         if( $user->cannot('update', $item) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return redirect(url()->previous().'#ct-contacts')->with('warning', __('messages.unauthorized'));
         }
 
         DB::beginTransaction();
@@ -329,7 +461,7 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return redirect(url()->previous().'#ct-contacts')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 
@@ -353,7 +485,7 @@ class PublicConsultationController extends AdminController
         ]);
 
         if( $validator->fails() ){
-            return back()->withErrors($validator->errors()->all());
+            return redirect(url()->previous().'#ct-pools')->withErrors($validator->errors()->all());
         }
 
         try {
@@ -364,7 +496,7 @@ class PublicConsultationController extends AdminController
                 ->with('success', trans_choice('custom.public_consultations', 2)." ".__('messages.updated_successfully_pl'));
         } catch (\Exception $e) {
             Log::error('Error attach poll to public consultation'.$e);
-            return back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return redirect(url()->previous().'#ct-polls')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 

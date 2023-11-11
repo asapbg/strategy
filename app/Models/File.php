@@ -19,6 +19,7 @@ class File extends Model
     const CODE_OBJ_OPERATIONAL_PROGRAM = 3;
     const CODE_OBJ_PAGE = 4;
     const CODE_OBJ_PRIS = 5;
+    const CODE_OBJ_PUBLIC_CONSULTATION = 6;
 
 
     const PUBLICATION_UPLOAD_DIR = 'publications'.DIRECTORY_SEPARATOR;

@@ -11,6 +11,9 @@
                         </li>
                         @if($item->id)
                             <li class="nav-item">
+                                <a class="nav-link" id="ct-doc-tab" data-toggle="pill" href="#ct-doc" role="tab" aria-controls="ct-doc" aria-selected="false">Документи</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" id="ct-kd-tab" data-toggle="pill" href="#ct-kd" role="tab" aria-controls="ct-kd" aria-selected="false">Консултационен документ</a>
                             </li>
                             <li class="nav-item">
@@ -28,6 +31,9 @@
                             @include('admin.consultations.public_consultations.general')
                         </div>
                         @if($item->id)
+                            <div class="tab-pane fade" id="ct-doc" role="tabpanel" aria-labelledby="ct-doc-tab">
+                                @include('admin.consultations.public_consultations.doc')
+                            </div>
                             <div class="tab-pane fade" id="ct-kd" role="tabpanel" aria-labelledby="ct-kd-tab">
                                 @include('admin.consultations.public_consultations.kd')
                             </div>

@@ -4,6 +4,7 @@ namespace App\Models\Consultations;
 
 use App\Models\ActType;
 use App\Models\ConsultationLevel;
+use App\Models\File;
 use App\Models\Poll;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
@@ -141,6 +142,14 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function polls()
     {
         return $this->belongsToMany(Poll::class, 'public_consultation_poll', 'public_consultation_id', 'poll_id');
+    }
+
+    public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
     }
 
     public static function optionsList()
