@@ -1,451 +1,469 @@
-<!doctype html>
-<html lang="en">
+@extends('layouts.site', ['fullwidth' => true])
+<style>
+    .public-page {
+        padding: 0px 0px !important;
+    }
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <title>Портал за обществени консултации</title>
+.tablinks.active {
+  color: #21659e !important;
+}
+
+.tablinks {
+  color: #333 !important;
+  font-size: 22px !important; 
+}
+</style>
+
+@section('pageTitle', 'Оперативна програма 1 юли - 31 юли')
+
+@section('content')
+    <section>
+        <div class="container-fluid p-0">
+            <div class="row breadcrumbs py-1">
+                <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Начало</a></li>
+                        <li class="breadcrumb-item"><a href="#">Планиране</a></li>
+                        <li class="breadcrumb-item"><a href="#">Оперативна програма</a></li>
+                        <li class="breadcrumb-item"><a href="#">Оперативна програма 1 юли - 31 юли </a></li>
+                    </ol>
+                    </ol>
+                </nav>
+            </div>
+    </section>
 
 
-    <!-- Bootstrap  CSS -->
-    <link href="{{ asset('/vendor/bootstrap/bootstrap.css') }}" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <section class="public-page">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-lg-2 side-menu pt-5 mt-1" style="background:#f5f9fd;">
+
+                    <div class="left-nav-panel" style="background: #fff !important;">
+                        <div class="flex-shrink-0 p-2">
+                            <ul class="list-unstyled">
+                                <li class="mb-1">
+                                    <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
+                                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                                        <i class="fa-solid fa-bars me-2 mb-2"></i>Начало
+                                    </a>
+                                    <hr class="custom-hr">
+                                    <div class="collapse show mt-3" id="home-collapse">
+                                        <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
+                                            <li class="mb-2  active-item-left p-1"><a href="#"
+                                                    class="link-dark text-decoration-none">Планиране</a></li>
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
+                                                <ul class="list-unstyled ps-3">
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class=" text-decoration-none link-dark">Законодателна
+                                                            програма</a></li>
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class=" text-white active-item-left p-1 text-decoration-none">Оперативна програма</a>
+                                                    </li>
+                                                    <hr class="custom-hr">
+                                                </ul>
+                                            </ul>
+
+                                            <li class="mb-2"><a href="#"
+                                                    class="link-dark text-decoration-none">Актове на МС</a></li>
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">
+                                                <ul class="list-unstyled ps-3">
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class="link-dark  text-decoration-none">Постановления</a></li>
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class="link-dark  text-decoration-none">Решения</a></li>
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class="link-dark  text-decoration-none">Становища</a></li>
+                                                    <hr class="custom-hr">
+                                                    <li class="my-2"><a href="#"
+                                                            class="link-dark  text-decoration-none">Протоколи</a></li>
+                                                    <hr class="custom-hr">
+                                                </ul>
+                                            </ul>
+
+                                </li>
+                                <li class="mb-2"><a href="#" class="link-dark  text-decoration-none">Архив</a></li>
+                            </ul>
+                        </div>
+                        </li>
+                        <hr class="custom-hr">
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
 
 
-    <!-- Font-awesome -->
-    <link href="/vendor/fontawesome-free-6.4.0-web/css/all.css" rel="stylesheet">
-
-    <!-- Custom css -->
-    <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
-    {{--<link href="{{ asset('css/site.css') }}" rel="stylesheet">--}}
-    @stack('styles')
-
-    <!-- Add favicon -->
-    <link rel="icon" href="/img/logo_title.jpg" sizes="16x16 32x32" type="image/png" >
-    <script src="{{ asset('js/app_vendor.js') }}"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+            <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
 
 
-    <style>
-      .table-light {
-        --bs-table-bg: #d5e7f6;
-      }
+              <ul class=" tab nav nav-tabs mb-3">
+                <li class="nav-item pb-0">
+                  <a class="nav-link tablinks" aria-current="page" href="#" onclick="openCity(event, 'July')" id="defaultOpen">Юли</a>
+                </li>
+              </ul>
 
-      .pris-row {
-        border-bottom: 1px solid  #c0dbf2;
-      }
+                <div id="July" class="tabcontent">
 
-      .col-md-3.pris-left-column {
-       font-weight: 500;
-       color: #20659e !important;
-       font-size: 18px;
+
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button text-dark fs-18 fw-600" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    ПМС за изменение и допълнение на нормативни актове на Министерския съвет
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  <div class="custom-card py-4 px-3 mb-5">
+                            
+                                    <div class="row mb-3 mt-1 ">
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Наименование на нормативния акт
+                                        </p>
+                              
+                                        <p>
+                                          ПМС за изменение и допълнение на нормативни актове на Министерския съвет
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Вносител
+                                        </p>
+                              
+                                        <p>
+                                          Агенция за държавна финансова инспекция
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
+                                        </p>
+                              
+                                        <p>
+                                          Да / Mярка № 87
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Основни положения и очаквани резултати
+                                        </p>
+                              
+                                        <p>
+                                          С проекта на ЗИД на КСО се извършват
+                                          промени в регламентацията на допълнителното
+                                          пенсионно осигуряване, като част от тях са
+                                          свързани с изпълнение на мерките за засилване
+                                          на надзора и регулациите в областта на
+                                          небанковия финансов сектор, залегнали в
+                                          Националната програма за реформи. 
+                                          
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Законово основание за приемане
+                            
+                                        </p>
+                              
+                                        <p>
+                                          Да
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Изготвяне на цялостна оценка на въздействието (да/не)
+                            
+                                        </p>
+                              
+                                        <p>
+                                          да
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на публикуване за обществени консултации
+                            
+                                        </p>
+                              
+                                        <p>
+                                          Да / Mярка № 87
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на изпращане за предварително съгласуване
+                            
+                                        </p>
+                              
+                                        <p>
+                                          юли 2023г.
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на внасяне в Министерския съвет
+                            
+                              
+                                        </p><p>
+                                          юли 2023г.
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Оценка на въздействието
+                            
+                                        </p>
+                              
+                                        <p class="mb-0">
+                                          <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Становище
+                                        </p>
+                              
+                                        <p class="mb-0">
+                                          <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <hr class="custom-hr">
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed fs-18 fw-600" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    ПМС за изменение и допълнение на Устройствения правилник на Министерството на здравеопазването
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  <div class="custom-card py-4 px-3 mb-5">
+                            
+                                    <div class="row mb-3 mt-1 ">
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Наименование на нормативния акт
+                                        </p>
+                              
+                                        <p>
+                                          ПМС за изменение и допълнение на Устройствения правилник на Министерството на здравеопазването
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Вносител
+                                        </p>
+                              
+                                        <p>
+                                          Агенция за държавна финансова инспекция
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
+                                        </p>
+                              
+                                        <p>
+                                          Да / Mярка № 87
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Основни положения и очаквани резултати
+                                        </p>
+                              
+                                        <p>
+                                          С проекта на ЗИД на КСО се извършват
+                                          промени в регламентацията на допълнителното
+                                          пенсионно осигуряване, като част от тях са
+                                          свързани с изпълнение на мерките за засилване
+                                          на надзора и регулациите в областта на
+                                          небанковия финансов сектор, залегнали в
+                                          Националната програма за реформи. 
+                                          
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Законово основание за приемане
+                            
+                                        </p>
+                              
+                                        <p>
+                                          Да
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Изготвяне на цялостна оценка на въздействието (да/не)
+                            
+                                        </p>
+                              
+                                        <p>
+                                          да
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на публикуване за обществени консултации
+                            
+                                        </p>
+                              
+                                        <p>
+                                          Да / Mярка № 87
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на изпращане за предварително съгласуване
+                            
+                                        </p>
+                              
+                                        <p>
+                                          юли 2023г.
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Месец на внасяне в Министерския съвет
+                            
+                              
+                                        </p><p>
+                                          юли 2023г.
+                                        </p>
+                                      </div>
+                                      <hr class="custom-hr">
+                                    </div>
+                            
+                                    
+                                    <div class="row mb-3">
+                                      <div class="col-md-6 ">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Оценка на въздействието
+                            
+                                        </p>
+                              
+                                        <p class="mb-0">
+                                          <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+                                        </p>
+                                      </div>
+                              
+                                      <div class="col-md-6">
+                                        <p class="fw-bold fs-18 mb-1">
+                                          Становище
+                                        </p>
+                              
+                                        <p class="mb-0">
+                                          <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <hr class="custom-hr">
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+        </div>
+    </section>
+
+
+    </body>
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
 
-        .col-md-3.pris-left-column i {
-    font-size: 20px;
-    width: 30px;
-}
-
-.pris-tag {
-  background: #20659e;
-    color: #fff !important;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 15px;
-    display: inline-flex;
-    margin-right: 5px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-}
-
-.public-page {
-  padding: 60px 0px;
-}
-
-.active-ks {
-color:#fff !important;
-background: rgba(var(--bs-success-rgb));
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 13px;
-    display: inline-flex;
-}
-
-
-.inactive-ks {
-background: #ccc;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 13px;
-    display: inline-flex;
-}
-
-.subscribe-row{
-  border-bottom: 1px solid #c0dbf2;
-}
-
-.btn-primary {
-  --bs-btn-bg: #20659e;
-}
-
-
-.btn-check:checked + .btn, :not(.btn-check) + .btn:active, .btn:first-child:active, .btn.active, .btn.show{
-  color: #fff;
-  background-color: #20659e;
-  border-color: #20659e;
-}
-
-.btn.btn-labeled.bgr-main.rounded {
-  background-color: #20659e;
-}
-
-.custom-card {
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
-    border-radius: 6px;
-    border-top: 3px solid #20659e;
-}
-
-.custom-hr {
-  border-color:  #c0dbf2 !important;
-  width: 99% !important;
-  margin: 0 auto;
-  opacity: 1 !important;
-}
-
-.fs-18 {
-  font-size: 18px !important;
-}
-
-    </style>
-
-
-</head>
-
-<header>
-
-  <div id="topbar">
-    <div class="container">
-      <div class="row top">
-
-        <div class="col-md-6">
-          <div class="contact-info d-flex align-items-center">
-            <a class="navbar-brand" href="#"><img src="../images/logo_title.png" alt="Logo" id="imageLogo"></a>
-          </div>
-        </div>
-
-
-
-          <div class="col-md-6 text-end">
-              <div class="registration text-right">
-                  <a href="#" class="main-color">Регистрация</a>
-                  <button class=" btn rss-sub main-color"><i class="login-icon fa-solid fa-right-to-bracket main-color"></i>Вход</button>
-                  <button class=" btn rss-sub main-color"><i class="login-icon fas fa-search main-color"></i></button>
-              </div>
-          </div>
-
-      </div>
-
-
-
-
-    </div>
-  </div>
-
-  <nav class="navbar navbar-expand-lg justify-content-center d-flex ">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav ">
-          <li class="nav-item ">
-            <a class="nav-link  " aria-current="page" href="#"><i class="bi bi-house-door-fill text-light"></i></a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link " aria-current="page" href="#">Обществени консултации</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link " aria-current="page" href="#">Оценка на въздействие</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="#">Актове на МС</a>
-          </li>
-
-          <li class="nav-item ">
-            <a class="nav-link" href="#">Стратегически документи</a>
-          </li>
-
-
-          <li class="nav-item">
-            <a class="nav-link" href="#">Консултативни съвети</a>
-          </li>
-
-          <li class="nav-item ">
-            <a class="nav-link" href="#">Библиотека</a>
-          </li>
-
-          <li class="nav-item ">
-            <a class="nav-link" href="#">OGP</a>
-          </li>
-
-          <li class="nav-item ">
-            <a class="nav-link" href="#">Новини</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="#">EN</a>
-          </li>
-          <li class="nav-item" style="padding-right: 0px !important;">
-            <a class="nav-link" href="#"><i class="fa-brands fa-facebook text-light"></i></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<body>
-
-
-  <section class="slider">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="slider-content">
-            <div class="page-heading">
-              <h1>
-               Оперативна програма 1 юли - 31 юли
-              </h1> 
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="public-page">
-    <div class="container">
-
-      <div class="custom-card py-4 px-3 mb-5">
-
-        <div class="row mb-2">
-          <h2 class="mb-4 text-center">
-              Месец юли
-          </h2>
-          <hr class="custom-hr">
-        </div>
-
-        <div class="row mb-3 mt-3 ">
-          <div class="col-md-6">
-            <p class="fw-bold fs-18 mb-1">
-              Наименование на нормативния акт
-            </p>
-  
-            <p>
-              Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване 
-            </p>
-          </div>
-  
-          <div class="col-md-6">
-            <p class="fw-bold fs-18 mb-1">
-              Вносител
-            </p>
-  
-            <p>
-              Агенция за държавна финансова инспекция
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <p class="fw-bold fs-18 mb-1">
-              Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
-            </p>
-  
-            <p>
-              Да / Mярка № 87
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <p class="fw-bold fs-18 mb-1">
-              Основни положения и очаквани резултати
-            </p>
-  
-            <p>
-              С проекта на ЗИД на КСО се извършват
-              промени в регламентацията на допълнителното
-              пенсионно осигуряване, като част от тях са
-              свързани с изпълнение на мерките за засилване
-              на надзора и регулациите в областта на
-              небанковия финансов сектор, залегнали в
-              Националната програма за реформи. 
-              
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-
-        <div class="row mb-3">
-          <div class="col-md-6 ">
-            <p class="fw-bold fs-18 mb-1">
-              Законово основание за приемане
-
-            </p>
-  
-            <p>
-              Да
-            </p>
-          </div>
-  
-          <div class="col-md-6">
-            <p class="fw-bold fs-18 mb-1">
-              Изготвяне на цялостна оценка на въздействието (да/не)
-
-            </p>
-  
-            <p>
-              да
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-
-        <div class="row mb-3">
-          <div class="col-md-6 ">
-            <p class="fw-bold fs-18 mb-1">
-              Месец на публикуване за обществени консултации
-
-            </p>
-  
-            <p>
-              Да / Mярка № 87
-            </p>
-          </div>
-  
-          <div class="col-md-6 ">
-            <p class="fw-bold fs-18 mb-1">
-              Месец на изпращане за предварително съгласуване
-
-            </p>
-  
-            <p>
-              юли 2023г.
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <p class="fw-bold fs-18 mb-1">
-              Месец на внасяне в Министерския съвет
-
-  
-            <p>
-              юли 2023г.
-            </p>
-          </div>
-          <hr class="custom-hr">
-        </div>
-
-        
-        <div class="row mb-3">
-          <div class="col-md-6 ">
-            <p class="fw-bold fs-18 mb-1">
-              Оценка на въздействието
-
-            </p>
-  
-            <p class="mb-0">
-              <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
-            </p>
-          </div>
-  
-          <div class="col-md-6">
-            <p class="fw-bold fs-18 mb-1">
-              Становище
-            </p>
-  
-            <p class="mb-0">
-              <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
-            </p>
-          </div>
-        </div>
-        <hr class="custom-hr">
-      </div>
-
-  </div>
-  </section>
-
-
-</body>
-
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-6 col-md-2 mb-3">
-        <h5 class="text-light">Полезни връзки</h5>
-        <ul class="nav flex-column footer-nav">
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Начало</a></li>
-          <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Новини</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Публикации</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Мнения</a></li>
-        </ul>
-      </div>
-
-      <div class="col-6 col-md-2 mb-3">
-        <h5 class="text-light">Информация</h5>
-        <ul class="nav flex-column footer-nav">
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» За нас</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Карта на сайта</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Условия за ползване</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Често задавани въпроси</a></li>
-        </ul>
-      </div>
-
-      <div class="col-6 col-md-2 mb-3">
-        <h5 class="text-light">Контакти</h5>
-        <ul class="nav flex-column footer-nav">
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Адрес</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Телефон</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Имейл</a></li>
-          <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Фейсбук</a></li>
-        </ul>
-      </div>
-
-      <div class="col-md-5 offset-md-1 mb-3">
-        <form>
-          <h5 class="text-light">Абонирайте се за нашия бюлетин</h5>
-          <p class="text-light">Получавайте актуална информация относно обществени консултации, новини и др.</p>
-          <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-            <label for="newsletter1" class="visually-hidden">Имейл адрес</label>
-            <input id="newsletter1" type="text" class="form-control" placeholder="Имейл адрес">
-            <button class="btn rss-sub" type="button">Абониране</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="d-flex flex-column flex-sm-row justify-content-between pt-4  border-top">
-      <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
-    </div>
-  </div>
-
-</footer>
-
-
-
-</div>
-
-</html>
-
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+
+@endsection
