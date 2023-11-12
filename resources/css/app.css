@@ -43,9 +43,9 @@ color: #333 !important;
     cursor: pointer;
 }
 
-.public-page {
-    padding: 60px 0px;
-}
+/*.public-page {*/
+/*    padding: 60px 0px;*/
+/*}*/
 
 @font-face {
     font-family: Fira Sans BGR;
@@ -303,9 +303,9 @@ span.left-link-icon i {
     font-size: 18px !important;
 }
 
-.public-page {
-    padding: 60px 0px;
-}
+/*.public-page {*/
+/*    padding: 60px 0px;*/
+/*}*/
 
 .form {
     position: relative;
@@ -691,7 +691,7 @@ background: #eaf3fb !important;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
 }
 
-/* 
+/*
 .service-item {
    padding: 20px;
     background: #fff;
@@ -1070,17 +1070,17 @@ input[type=checkbox] {
     position: relative;
     list-style: none;
   }
-  
+
   .timeline .timeline-item {
     position: relative;
   }
-  
+
   .timeline .timeline-item:after {
     position: absolute;
     display: block;
     top: 0;
   }
-  
+
   .timeline .timeline-item:after {
     background-color: #20659e;
     left: -38px;

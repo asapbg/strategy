@@ -12,6 +12,11 @@ Route::get('/consultations', function () {
     return view('site.consultations');
 });
 
+Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {
+    Route::get('/public-consultation', 'index')->name('public_consultation.index');
+    Route::get('/public-consultation/{id}', 'show')->name('public_consultation.view');
+});
+
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessment', 'index')->name('impact_assessment.index');
     Route::get('/impact_assessment/{form}', 'form')->name('impact_assessment.form');

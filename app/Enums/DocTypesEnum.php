@@ -37,6 +37,67 @@ enum DocTypesEnum: int
         return $keyName;
     }
 
+    /**
+     * @param $actType
+     * @param $section {base|kd|report}
+     * @return array
+     */
+    public static function docByActTypeInSections($actType, $section = 'base')
+    {
+        switch ($actType)
+        {
+            case ActType::ACT_LAW:
+            case ActType::ACT_COUNCIL_OF_MINISTERS:
+                $docs = [
+                    'base' => [
+                        self::PC_DRAFT_ACT->value,
+                        self::PC_REPORT->value,
+                        self::PC_MOTIVES->value,
+                        self::PC_OTHER_DOCUMENTS->value,
+                        self::PC_COMMENTS_REPORT->value,
+                    ],
+                    'kd' => [
+                        self::PC_CONSOLIDATED_ACT_VERSION->value,
+                    ],
+                    'report' => [
+                        self::PC_IMPACT_EVALUATION->value,
+                        self::PC_IMPACT_EVALUATION_OPINION->value,
+                    ],
+                ];
+                break;
+            case ActType::ACT_MINISTER:
+            case ActType::ACT_OTHER_CENTRAL_AUTHORITY:
+            case ActType::ACT_REGIONAL_GOVERNOR:
+            case ActType::ACT_MUNICIPAL:
+            case ActType::ACT_MUNICIPAL_MAYOR:
+            $docs = [
+                'base' => [
+                    self::PC_DRAFT_ACT->value,
+                    self::PC_MOTIVES->value,
+                    self::PC_OTHER_DOCUMENTS->value,
+                    self::PC_COMMENTS_REPORT->value,
+                ],
+                'kd' => [
+                    self::PC_CONSOLIDATED_ACT_VERSION->value,
+                ],
+                'report' => [],
+            ];
+                break;
+            default:
+                $docs = [
+                    'base' => [
+                        self::PC_DRAFT_ACT->value,
+                        self::PC_OTHER_DOCUMENTS->value,
+                        self::PC_COMMENTS_REPORT->value,
+                    ],
+                    'kd' => [],
+                    'report' => [],
+                ];
+        }
+
+        return $docs[$section];
+    }
+
     public static function docsByActType($actType)
     {
         switch ($actType)

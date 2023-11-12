@@ -2,6 +2,7 @@
 
 namespace App\Models\Consultations;
 
+use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\ActType;
 use App\Models\ConsultationLevel;
@@ -89,6 +90,23 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
+    protected function inPeriod(): Attribute
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        return Attribute::make(
+            get: fn () => $now >= $this->open_from && $this->open_to <= $now ? __('custom.active_f') : __('custom.inactive_f'),
+        );
+    }
+
+    protected function daysCnt(): Attribute
+    {
+        $from = Carbon::parse($this->open_from);
+        $to = Carbon::parse($this->open_to);
+        return Attribute::make(
+            get: fn () => $from->diffInDays($to),
+        );
+    }
+
     protected function nomenclatureLevelLabel(): Attribute
     {
         return Attribute::make(
@@ -135,7 +153,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function actType(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(ActType::class, 'act_type_id', 'id');
+        return $this->hasOne(ActType::class, 'id', 'act_type_id');
     }
 
     public function contactPersons(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -159,6 +177,28 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
+    }
+
+    public function lastDocumentsByLocaleAndSection()
+    {
+        $documents = [];
+        foreach (DocTypesEnum::docsByActType($this->act_type_id) as $docType) {
+            $doc = DB::table('public_consultation')
+                ->select(['files.id', 'files.doc_type', 'files.description', 'files.content_type', 'files.created_at', 'files.version'])
+                ->join('files', function ($j) use ($docType){
+                    $j->on('files.id_object', '=', 'public_consultation.id')
+                        ->where('files.locale','=', app()->getLocale())
+                        ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                        ->where('files.doc_type', '=', $docType);
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+            if( $doc ) {
+                $documents[] = $doc;
+            }
+        }
+
+        return $documents;
     }
 
     public static function optionsList()

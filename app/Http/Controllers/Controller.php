@@ -72,14 +72,17 @@ class Controller extends BaseController
         $segments = request()->segments();
         $links_count = count(request()->segments())-1;
         $text = __('custom.list_with');
-        $heading = "$text $this->title_plural";
 
-        if ($segments[$links_count] == "create") {
+        if($links_count == -1) {
+            return $breadcrumbs;
+        }
+
+        if ($links_count && $segments[$links_count] == "create") {
             array_pop($segments);
             $heading = __('custom.creation_of').$this->title_singular;
             $segments[] = $heading;
         }
-        if ($segments[$links_count] == "edit") {
+        if ($links_count && $segments[$links_count] == "edit") {
             $links_count--;
             $segments = array_slice(request()->segments(), 0, $links_count);
             $heading = __('custom.create') .' '. $this->title_singular;
@@ -88,7 +91,7 @@ class Controller extends BaseController
             }
             $segments[] = $heading;
         }
-        if ($segments[$links_count - 1] == "edit") {
+        if ($links_count && $segments[$links_count - 1] == "edit") {
             $links_count -= 2;
             $segments = array_slice(request()->segments(), 0, $links_count);
             $heading = __('custom.edit_of').$this->title_singular;
@@ -98,7 +101,7 @@ class Controller extends BaseController
             $segments[] = $heading;
         }
 
-        $breadcrumbs['heading'] = $this->breadcrumb_title ?? $heading;
+        $breadcrumbs['heading'] = $this->breadcrumb_title ?? $heading ?? '';
         $url = '';
 
         foreach ($segments as $segment) {
