@@ -29,6 +29,28 @@ $(function() {
         return _myModal;
     }
 
+    function MyModal(obj){
+        var _myModal = Object.create(MyModal.prototype)
+        _myModal.id = (new Date()).getTime();
+        _myModal.title = typeof obj.title != 'undefined' ? obj.title : '';
+        _myModal.dismissible = typeof obj.dismissible != 'undefined' ? obj.dismissible : true;
+        _myModal.body = typeof obj.body != 'undefined' ? obj.body : '';
+        _myModal.footer = typeof obj.footer != 'undefined' ? obj.footer : '';
+        _myModal.bodyLoadUrl = typeof obj.bodyLoadUrl != 'undefined' ? obj.bodyLoadUrl : null;
+        _myModal.destroyListener = typeof obj.destroyListener != 'undefined' ? obj.destroyListener : false;
+        _myModal.customClass = typeof obj.customClass != 'undefined' ? obj.customClass : '';
+        _myModal.modalObj = _myModal.init(_myModal);
+        if( _myModal.destroyListener ) {
+            _myModal.setDestroyListener(_myModal);
+        }
+        if( _myModal.bodyLoadUrl ) {
+            _myModal.loadModalBody(_myModal)
+        } else {
+            _myModal.showModal(_myModal);
+        }
+        return _myModal;
+    }
+
     MyModal.prototype.init = function (_myModal) {
         let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal '+ _myModal.customClass +'" role="dialog" style="display: none">\n' +
             '  <div class="modal-dialog">\n' +
@@ -36,7 +58,7 @@ $(function() {
             '    <div class="modal-content">\n' +
             '      <div class="modal-header">\n' +
             '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
-            (_myModal.dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>\n' : '') +
+            (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
             '      </div>\n' +
             '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
             '      </div>\n' +
@@ -53,13 +75,6 @@ $(function() {
 
     MyModal.prototype.showModal = function (_myModal){
         _myModal.modalObj.show();
-    }
-
-    MyModal.prototype.hideModal = function (id){
-        $('#' + id).remove();
-        $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
-        $('body').css('overflow','visible');
     }
 
     MyModal.prototype.setDestroyListener = function (_myModal){
@@ -141,5 +156,11 @@ $(function() {
                 changeYear: true,
             });
         }
+
+        var tabEl = $('button[data-bs-toggle="tab"]');
+        tabEl.on('shown.bs.tab', function (event) {
+            event.target // newly activated tab
+            event.relatedTarget // previous active tab
+        })
     });
 });

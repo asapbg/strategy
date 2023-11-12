@@ -41,8 +41,8 @@
                         <li class="nav-item ">
                             <a tabindex="-1" href="#" class="text-decoration-none main-color">Планиране</a>
                             <ul class="sub-menu-three list-unstyled ps-2">
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Законодателна програма</a></li>
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Оперативна програма</a></li>
+                                <li><a tabindex="-1" href="{{ route('lp.index') }}" class="text-decoration-none main-color">Законодателна програма</a></li>
+                                <li><a tabindex="-1" href="{{ route('op.index') }}" class="text-decoration-none main-color">Оперативна програма</a></li>
                             </ul>
                         </li>
                         <li class="nav-item "><a tabindex="-1" href="{{ route('pris.index') }}" class="text-decoration-none main-color">Актове</a>

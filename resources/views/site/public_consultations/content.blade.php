@@ -141,7 +141,7 @@
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'base')))
                                     <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
@@ -185,7 +185,7 @@
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
                                     <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>

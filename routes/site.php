@@ -22,6 +22,16 @@ Route::controller(\App\Http\Controllers\PrisController::class)->group(function (
     Route::get('/pris/{id}', 'show')->name('pris.view');
 });
 
+Route::controller(\App\Http\Controllers\OperationalProgramController::class)->group(function () {
+    Route::get('/operational-program', 'index')->name('op.index');
+    Route::get('/operational-program/{id}', 'show')->name('op.view');
+});
+
+Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->group(function () {
+    Route::get('/legislative-program', 'index')->name('lp.index');
+    Route::get('/legislative-program/{id}', 'show')->name('lp.view');
+});
+
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessment', 'index')->name('impact_assessment.index');
     Route::get('/impact_assessment/{form}', 'form')->name('impact_assessment.form');

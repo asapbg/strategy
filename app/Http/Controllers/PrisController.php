@@ -10,7 +10,9 @@ class PrisController extends Controller
 {
     public function index(Request $request)
     {
-        $items = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])->FilterBy($request->all())->get();
+        $paginate = $filter['paginate'] ?? Pris::PAGINATE;
+        $items = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])
+            ->FilterBy($request->all())->paginate($paginate);
         $pageTitle = __('site.menu.pris');
         $this->setBreadcrumbsTitle($pageTitle);
         return $this->view('site.pris.index', compact('items', 'pageTitle'));

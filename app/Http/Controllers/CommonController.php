@@ -237,9 +237,9 @@ class CommonController extends Controller
         }
 
         switch ($file->content_type){
-
             case 'application/pdf':
-                return '<embed src="'.asset('files/'.$file->path).'" width="800px" height="2100px" />';
+                $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
+                return '<embed src="'.asset($path).'" width="800px" height="2100px" />';
                 break;
             case 'application/msword':
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
