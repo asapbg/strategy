@@ -17,7 +17,7 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
-use illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ModelActivityExtend;
 
 class PublicConsultation extends ModelActivityExtend implements TranslatableContract
