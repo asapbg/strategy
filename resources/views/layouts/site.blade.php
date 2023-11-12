@@ -21,6 +21,9 @@
     <link rel="icon" href="/img/logo_title.jpg" sizes="16x16 32x32" type="image/png" >
     <script src="{{ asset('js/app_vendor.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+      <script type="text/javascript">
+          var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
+      </script>
     @stack('scripts')
 </head>
 

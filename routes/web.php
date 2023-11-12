@@ -20,6 +20,7 @@ require_once('site.php');
 //Route::get('test', [\App\Http\Controllers\Test::class, 'index']);
 
 Route::get('/get-institutions', [CommonController::class, 'modalInstitutions'])->name('modal.institutions');
+Route::get('/file-preview-modal/{id}', [CommonController::class, 'previewModalFile'])->name('modal.file_preview');
 
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');

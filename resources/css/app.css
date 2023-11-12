@@ -1106,3 +1106,12 @@ input[type=checkbox] {
 .active-item-left a {
     color:#fff !important;
 }
+
+/*Modal fiel preview*/
+.modal.file-preview .modal-dialog{
+    max-width: 90%;
+}
+.modal.file-preview .modal-body img{
+    max-width: 100% !important;
+    height: auto !important;
+}

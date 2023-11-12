@@ -163,7 +163,7 @@
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
                                     <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
@@ -230,121 +230,6 @@
                                 @endif
                             @endforeach
                         @endif
-
-{{--                        <div class="col-md-6 mb-4">--}}
-{{--                            <div class="comment-background p-2 rounded">--}}
-{{--                                <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>--}}
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault">--}}
-{{--                                        Отговор 1--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault2">--}}
-{{--                                        Отговор 2--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 3--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 4--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-{{--                            </div>--}}
-
-{{--                        </div>--}}
-{{--                        <div class="col-md-6 mb-4">--}}
-{{--                            <div class="comment-background p-2 rounded">--}}
-{{--                                <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>--}}
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault">--}}
-{{--                                        Отговор 1--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault2">--}}
-{{--                                        Отговор 2--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 3--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 4--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-
-{{--                        </div>--}}
-{{--                        <div class="col-md-6 mb-4">--}}
-{{--                            <div class="comment-background p-2 rounded">--}}
-{{--                                <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>--}}
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault">--}}
-{{--                                        Отговор 1--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault2">--}}
-{{--                                        Отговор 2--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 3--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-
-{{--                                <div class="form-check">--}}
-{{--                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">--}}
-{{--                                    <label class="form-check-label" for="flexCheckDefault3">--}}
-{{--                                        Отговор 4--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-
-{{--                        </div>--}}
-
-
-
-
                         <div class="col-md-12">
                             <button class="btn btn-primary">
                                 Изпращане

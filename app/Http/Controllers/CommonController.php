@@ -236,9 +236,21 @@ class CommonController extends Controller
             return __('messages.record_not_found');
         }
 
-        $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-        $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-        return $html->getContent();;
+        switch ($file->content_type){
+
+            case 'application/pdf':
+                return '<embed src="'.asset('files/'.$file->path).'" width="800px" height="2100px" />';
+                break;
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+                return $html->getContent();
+                break;
+            default:
+                return '';
+        }
+
 
     }
 
