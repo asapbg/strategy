@@ -5,6 +5,7 @@
         @method('PUT')
     @endif
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
+    <input type="hidden" name="nomenclature_level" id="nomenclature_level" value="{{ $item->id ? $item->nomenclatureLevelLabel : $userInstitutionLevel }}">
     <div class="row">
         @if($item->id)
             <div class="col-md-2">
@@ -149,7 +150,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
                 <input type="text" id="open_from" name="open_from"
-                       class="form-control form-control-sm datepicker-today @error('open_from'){{ 'is-invalid' }}@enderror"
+                       class="form-control form-control-sm datepicker-tomorrow @error('open_from'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
                 @error('open_from')
                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -160,7 +161,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
                 <input type="text" id="open_to" name="open_to"
-                       class="form-control form-control-sm datepicker-today @error('open_to'){{ 'is-invalid' }}@enderror"
+                       class="form-control form-control-sm datepicker-tomorrow @error('open_to'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_to', ($item->id ? $item->open_to : '')) }}">
                 @error('open_to')
                 <div class="text-danger mt-1">{{ $message }}</div>

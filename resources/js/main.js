@@ -316,6 +316,49 @@ var cainSelect = function (obj){
     });
 }
 
+
+// ;(function($, window, document, undefined){
+    // $("#days").on("change", function(){
+    //     var date = new Date($("#start_date").val()),
+    //         days = parseInt($("#days").val(), 10);
+    //
+    //     if(!isNaN(date.getTime())){
+    //         date.setDate(date.getDate() + days);
+    //
+    //         $("#end_date").val(date.toInputFormat());
+    //     } else {
+    //         alert("Invalid Date");
+    //     }
+    // });
+
+
+    //From: http://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
+    // Date.prototype.toInputFormat = function() {
+    //     var yyyy = this.getFullYear().toString();
+    //     var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    //     var dd  = this.getDate().toString();
+    //     return (dd[1]?dd:"0"+dd[0]) + "." + (mm[1]?mm:"0"+mm[0]) + "." + yyyy;
+    // };
+// })(jQuery, this, document);
+
+//Calculate date
+function addSubDays(currentDate, days = 0, addDays = true, returnObj = false){
+    baseDate = currentDate.split(".");
+    var newDate = new Date(baseDate[2], baseDate[1] - 1, baseDate[0]);
+    if( addDays ) {
+        newDate.setDate(newDate.getDate() + days);
+    } else{
+        newDate.setDate(newDate.getDate() - days);
+    }
+
+    if( returnObj ) {
+        return newDate;
+    } else{
+        return newDate.getDate() + '.' + (newDate.getMonth() + 1) + '.' + newDate.getFullYear();
+    }
+
+}
+
 $(document).ready(function (e) {
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
@@ -521,6 +564,19 @@ $(document).ready(function (e) {
             autoclose: true,
             weekStart: 1,
             startDate: new Date()
+        });
+    }
+
+    if($('.datepicker-tomorrow').length) {
+        $('.datepicker-tomorrow').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'dd.mm.yyyy',
+            todayHighlight: false,
+            orientation: "bottom left",
+            autoclose: true,
+            weekStart: 1,
+            //TODO fix me start form tomorrow
+            startDate: '+1d'
         });
     }
 

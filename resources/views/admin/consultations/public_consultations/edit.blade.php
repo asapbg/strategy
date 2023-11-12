@@ -105,9 +105,15 @@
             let durationErrorHolder = $('#duration-err');
             durationErrorHolder.html('');
 
+            if( $(this).attr('id') == 'open_from' ) {
+                var toDate = addSubDays($(this).val(), 14, true, true);
+                    $('#open_to').datepicker("setDate", new Date(toDate.getFullYear(),toDate.getMonth(),toDate.getDate()) );
+            }
+
             let diffDays = null;
             const date1 = $('#open_from').datepicker('getDate');
             const date2 = $('#open_to').datepicker('getDate');
+            console.log(date1, date2);
             if( date1 && date2 ) {
                 let diffTime = Math.abs(date2 - date1);
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
