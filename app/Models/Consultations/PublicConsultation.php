@@ -94,7 +94,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $now = Carbon::now()->format('Y-m-d');
         return Attribute::make(
-            get: fn () => $now >= $this->open_from && $this->open_to <= $now ? __('custom.active_f') : __('custom.inactive_f'),
+            get: fn () => ($now >= $this->open_from && $this->open_to >= $now) ? __('custom.active_f') : __('custom.inactive_f'),
         );
     }
 

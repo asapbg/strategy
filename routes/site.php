@@ -17,6 +17,11 @@ Route::controller(\App\Http\Controllers\PublicConsultationController::class)->gr
     Route::get('/public-consultation/{id}', 'show')->name('public_consultation.view');
 });
 
+Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
+    Route::get('/pris', 'index')->name('pris.index');
+    Route::get('/pris/{id}', 'show')->name('pris.view');
+});
+
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessment', 'index')->name('impact_assessment.index');
     Route::get('/impact_assessment/{form}', 'form')->name('impact_assessment.form');

@@ -35,7 +35,7 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" type="button" data-toggle="dropdown">Актове на МС
+                    <a class="nav-link dropdown-toggle" type="button" data-toggle="dropdown">{{ __('site.menu.pris') }}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu p-1 ">
                         <li class="nav-item ">
@@ -45,12 +45,12 @@
                                 <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Оперативна програма</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item "><a tabindex="-1" href="#" class="text-decoration-none main-color">Актове</a>
+                        <li class="nav-item "><a tabindex="-1" href="{{ route('pris.index') }}" class="text-decoration-none main-color">Актове</a>
                             <ul class="sub-menu-three list-unstyled ps-2">
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Постановления</a></li>
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Решения</a></li>
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Становища</a></li>
-                                <li><a tabindex="-1" href="#" class="text-decoration-none main-color">Протоколи</a></li>
+                                <li><a tabindex="-1" href="{{ route('pris.index').'?category=1' }}" class="text-decoration-none main-color">Постановления</a></li>
+                                <li><a tabindex="-1" href="{{ route('pris.index').'?category=2' }}" class="text-decoration-none main-color">Решения</a></li>
+                                <li><a tabindex="-1" href="{{ route('pris.index') }}" class="text-decoration-none main-color">Становища</a></li>
+                                <li><a tabindex="-1" href="{{ route('pris.index').'?category=5' }}" class="text-decoration-none main-color">Протоколи</a></li>
                             </ul>
                         </li>
                         <li class="nav-item "><a tabindex="-1" href="#" class="text-decoration-none main-color">Архив</a></li>

@@ -1,4 +1,4 @@
-<section>
+<section @if(!isset($pageTitle)) style="padding-top: 130px;" @endif>
     <div class="container-fluid">
         <div class="row breadcrumbs py-1">
             <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">

@@ -4,7 +4,7 @@ return [
     'year_short' => 'г.',
     'history' => 'История',
     'menu.public_consultation' => 'Обществени консултации',
-    'menu.pris' => 'Актове',
+    'menu.pris' => 'Актове на МС',
     'public_consultation.form_to' => 'Откриване / Приключване',
     'public_consultation.short_term_warning' => 'По-кратък срок',
     'public_consultation.open_from' => 'Дата на откриване',
@@ -19,4 +19,5 @@ return [
     'public_consultation.kd_documents' => 'Консултационен документ',
     'public_consultation.report_documents' => 'Справка с всички становища',
     'public_consultation.polls' => 'Анкети',
+    'pris.about' => 'Относно',
 ];

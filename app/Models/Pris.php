@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -72,6 +73,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     public function actType(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(LegalActType::class, 'id', 'legal_act_type_id');
+    }
+
+    public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Institution::class, 'id', 'institution_id');
     }
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -442,4 +442,5 @@ return [
     'nomenclature_level.CENTRAL_OTHER'        => 'Ценрално друго',
     'nomenclature_level.AREA'        => 'Областно',
     'nomenclature_level.MUNICIPAL'        => 'Общинско ниво',
+    'number_symbol'        => '№',
 ];
