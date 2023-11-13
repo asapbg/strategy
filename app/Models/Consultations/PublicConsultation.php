@@ -93,7 +93,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function openFrom(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => !empty($value) ? Carbon::parse($value)->format('d-m-Y') : null,
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
             set: fn (string|null $value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
@@ -102,7 +102,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function openTo(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => !empty($value) ? Carbon::parse($value)->format('d-m-Y') : null,
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
             set: fn (string|null $value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
