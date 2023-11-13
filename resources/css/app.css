@@ -88,10 +88,6 @@ nav.navbar .btn {
     color: #fff;
 }
 
-.btn-primary {
-    background: #21659e !important;
-}
-
 .main-color {
     color: #21659e !important;
 }
@@ -218,10 +214,16 @@ ul.dropdown-menu .nav-item a {
 /**/
 
 /* Slider */
+.home-slider {
+    margin-top: -1px !important;
+}
 
 .carousel-item.active img {
     filter: brightness(0.5);
+    min-height: 350px;
 }
+
+
 
 .centered-heading {
     position: absolute;
@@ -421,6 +423,11 @@ a.consul-item p {
     width: 100%;
 }
 
+.consult-item-header-edit {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .meta-consul {
     display: flex;
     align-content: center;
@@ -459,6 +466,10 @@ a.consul-item p {
     height: 100%;
     object-fit: cover;
     width: 200px;
+}
+
+.consult-item-header-link a h3 {
+    font-size: 18px !important;
 }
 
 .fa-arrow-right.read-more,
@@ -561,6 +572,20 @@ textarea {
     background: #fff !important;
     color: #21659e !important;
     border-radius: 30px;
+}
+
+.btn.btn-success {
+    border: 2px solid #198754;
+    background: #fff ;
+    color: #198754;
+    border-radius: 30px !important;
+}
+
+.btn.btn-danger {
+    border: 2px solid #dc3545;
+    background: #fff !important;
+    color: #dc3545 !important;
+    border-radius: 30px !important;
 }
 
 .reg-btn {
@@ -1059,7 +1084,7 @@ input[type=checkbox] {
 /* PRISS*/
 .pris-list a.consul-item p {
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -1114,4 +1139,24 @@ input[type=checkbox] {
 .modal.file-preview .modal-body img{
     max-width: 100% !important;
     height: auto !important;
+}
+
+
+/*Responsive*/
+
+@media (max-width:576px) {
+.single-consultation {
+    flex-direction: column;
+}
+
+.consult-item-header  {
+    flex-direction: column-reverse;
+}
+
+.consult-img-holder {
+    min-height: 125px;
+}
+.consult-img-holder i {
+    font-size: 70px;
+}
 }

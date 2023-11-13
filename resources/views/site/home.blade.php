@@ -2,14 +2,11 @@
 
 @section('content')
 
-<section id="slider">
+<section id="slider" class="home-slider">
     <div id="carouselExampleSlidesOnly" class="carousel slide  bgr-main " data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
-
-
           <img class="d-block w-100" src="/img/ms-w-2023.jpg" alt="First slide">
-
           <div class="row">
             <div class="col-md-12">
               <div class="centered-heading w-100">

@@ -319,19 +319,7 @@
             <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS Абониране</button>
             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
         </div>
-
-        <div class="col-12 mt-4">
-            <div class="info-consul text-start">
-                <h4>
-                    Общо 114 резултата
-                </h4>
-            </div>
-        </div>
     </div>
-
-
-    </div>
-
 
 <div class="row pt-4 pb-2 px-2">
     <div class="col-md-12">
@@ -378,11 +366,24 @@
 </div>  
 
 <div class="row">
+  <div class="col-12 mt-1 mb-2">
+    <div class="info-consul text-start">
+        <p class="fw-600">
+            Общо 114 резултата
+        </p>
+    </div>
+</div>
+</div>
+
+<div class="row">
 <div class="col-md-12">
     <div class="custom-card pt-1 pb-4 px-3 mb-3">
         <div class="row m-0">
             <div class="col-md-12 text-end p-0">
-                    <i class="fas fa-pen-to-square float-end main-color fs-4"></i>
+                   <a href="#"><i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                  </a>
+                  <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
+
             </div>
         </div>
         <div class="row single-record">
@@ -421,6 +422,11 @@
                     22 008 лв.
                 </p>
             </div>
+            <div class="col-md-12">
+              <p class="mb-0 text-end">
+                <strong>Информация за поръчката:</strong> <a href="#" class="text-decoration-none" title="ЦАИС">ЦАИС</a>
+            </p>
+          </div>
         </div>
     </div>
 
@@ -429,7 +435,9 @@
         <div class="custom-card pt-1 pb-4 px-3 mb-3">
             <div class="row m-0">
                 <div class="col-md-12 text-end p-0">
-                        <i class="fas fa-pen-to-square float-end main-color fs-4"></i>
+                  <a href="#"><i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                  </a>
+                  <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
                 </div>
             </div>
             <div class="row single-record">
@@ -440,7 +448,7 @@
                 </div>
                 <div class="col-md-2">
                     <p>
-                        <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон"		</a> 
+                        <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон"</a> 
                     </p>
                 </div>
                 <div class="col-md-1">
@@ -467,6 +475,11 @@
                         27 678 лв.
                     </p>
                 </div>
+                <div class="col-md-12">
+                  <p class="mb-0 text-end">
+                    <strong>Информация за поръчката:</strong> <a href="#" class="text-decoration-none" title="ЦАИС">ЦАИС</a>
+                </p>
+              </div>
             </div>
         </div>
 </div>
@@ -478,7 +491,9 @@
     <div class="custom-card pt-1 pb-4 px-3 mb-3">
         <div class="row m-0">
             <div class="col-md-12 text-end p-0">
-                    <i class="fas fa-pen-to-square float-end main-color fs-4"></i>
+              <a href="#"><i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+              </a>
+              <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
             </div>
         </div>
         <div class="row single-record">
@@ -516,6 +531,11 @@
                     27 678 лв.
                 </p>
             </div>
+            <div class="col-md-12">
+              <p class="mb-0 text-end">
+                <strong>Информация за поръчката:</strong> <a href="#" class="text-decoration-none" title="ЦАИС">ЦАИС</a>
+            </p>
+          </div>
         </div>
     </div>
 </div>
@@ -526,7 +546,9 @@
     <div class="custom-card pt-1 pb-4 px-3 mb-3">
         <div class="row m-0">
             <div class="col-md-12 text-end p-0">
-                    <i class="fas fa-pen-to-square float-end main-color fs-4"></i>
+              <a href="#"><i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+              </a>
+              <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
             </div>
         </div>
         <div class="row single-record">
@@ -564,6 +586,11 @@
                     27 678 лв.
                 </p>
             </div>
+            <div class="col-md-12">
+              <p class="mb-0 text-end">
+                <strong>Информация за поръчката:</strong> <a href="#" class="text-decoration-none" title="ЦАИС">ЦАИС</a>
+            </p>
+          </div>
         </div>
     </div>
 </div>
