@@ -20,6 +20,7 @@ class OperationalProgramController extends Controller
 
     public function show(Request $request, int $id = 0)
     {
+        return $this->view('templates.op');
         $item = OperationalProgram::find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);

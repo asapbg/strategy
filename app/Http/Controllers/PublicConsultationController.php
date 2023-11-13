@@ -10,6 +10,7 @@ class PublicConsultationController extends Controller
 {
     public function index()
     {
+        return $this->view('templates.public_consultation_list');
         $pk = PublicConsultation::with(['translation'])->get();
         $pageTitle = __('site.menu.public_consultation');
         $this->setBreadcrumbsTitle($pageTitle);
@@ -18,6 +19,7 @@ class PublicConsultationController extends Controller
 
     public function show(Request $request, int $id = 0)
     {
+        return $this->view('templates.public_consultations_view');
         $item = PublicConsultation::with(['translation', 'actType', 'actType.translation', 'contactPersons',
             'polls', 'polls.questions', 'polls.questions.answers'])->find($id);
         if( !$item ) {

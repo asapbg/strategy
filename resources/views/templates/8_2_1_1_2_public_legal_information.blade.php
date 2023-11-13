@@ -70,9 +70,9 @@
               </ul>
             </div>
         </div>
-    
+
     </div>
-    
+
         <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5" >
             <div class="row filter-results mb-2">
                 <h2 class="mb-4">
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="col-md-3">
                     <div class="input-group ">
                         <div class="mb-3 d-flex flex-column  w-100">
@@ -225,14 +225,14 @@
                 </div>
                 <div class="col-md-2 cursor-pointer ">
                     <p class="mb-0">
-                        <i class="fa-solid fa-sort me-2"></i>Вносител	
+                        <i class="fa-solid fa-sort me-2"></i>Вносител
                     </p>
                 </div>
-                
-                
+
+
                 <div class="col-md-2">
                     <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>Дата	
+                        <i class="fa-solid fa-sort me-2"></i>Дата
                     </p>
                 </div>
                 <div class="col-md-2">
@@ -251,7 +251,7 @@
                     </p>
                 </div>
             </div>
-    
+
             <div class="row mb-2">
                 <div class="col-12 mt-2">
                     <div class="info-consul text-start">
@@ -267,10 +267,10 @@
                     <div class="consul-wrapper">
                         <div class="single-consultation d-flex">
                             <div class="consult-body">
-                                <a href="#" class="consul-item">
+                                <a href="{{ route('pris.view', ['id' => 1]) }}" class="consul-item">
                                     <p>
                                         <i class="me-1 main-color fw-bold fst-normal" title="Номер">Решение №752</i>на Министерския съвет от 2023 г.
-                                
+
                                         <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
                                         <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
                                     </p>
@@ -287,7 +287,7 @@
                                         <i class="fas fa-arrow-right read-more"></i>
                                     </div>
                                 </a>
-    
+
                             </div>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
                     <div class="consul-wrapper">
                         <div class="single-consultation d-flex">
                             <div class="consult-body">
-                                <a href="#" class="consul-item">
+                                <a href="{{ route('pris.view', ['id' => 1]) }}" class="consul-item">
                                     <p>
                                         <i class="me-1 main-color fw-bold fst-normal" title="Номер"></i>Постановление №52 на Министерския съвет от 2023 г.
                                         <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
@@ -317,21 +317,21 @@
                                         <i class="fas fa-arrow-right read-more"></i>
                                     </div>
                                 </a>
-    
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="consul-wrapper">
                         <div class="single-consultation d-flex">
                             <div class="consult-body">
-                                <a href="#" class="consul-item">
+                                <a href="{{ route('pris.view', ['id' => 1]) }}" class="consul-item">
                                     <p>
-                                        <i class="me-1 main-color fw-bold fst-normal" title="Номер">Протокол №27</i> на Министерския съвет от 2023 г.                    
+                                        <i class="me-1 main-color fw-bold fst-normal" title="Номер">Протокол №27</i> на Министерския съвет от 2023 г.
                                         <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
                                         <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
                                     </p>
@@ -347,13 +347,13 @@
                                         <i class="fas fa-arrow-right read-more"></i>
                                     </div>
                                 </a>
-    
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
+
             <div class="row">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination m-0">

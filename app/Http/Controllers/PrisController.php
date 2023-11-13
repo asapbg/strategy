@@ -10,6 +10,7 @@ class PrisController extends Controller
 {
     public function index(Request $request)
     {
+        return $this->view('templates.8_2_1_1_2_public_legal_information');
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
         $items = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])
             ->FilterBy($request->all())->paginate($paginate);
@@ -20,6 +21,7 @@ class PrisController extends Controller
 
     public function show(Request $request, int $id = 0)
     {
+        return $this->view('templates.pris-postanovlenie');
         $item = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
             'tags', 'tags.translation', 'changedDocs',
             'changedDocs.actType', 'changedDocs.actType.translation',
