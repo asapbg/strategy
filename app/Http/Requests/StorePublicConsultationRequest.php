@@ -27,8 +27,10 @@ class StorePublicConsultationRequest extends FormRequest
         $rules = [
 //            'consultation_level_id' => ['required', 'numeric', 'exists:consultation_level,id'],
             'act_type_id' => ['required', 'numeric'],
-            'legislative_program_id' => ['nullable', 'numeric'],
-            'operational_program_id' => ['nullable', 'numeric'],
+            'legislative_program_id' => ['nullable', 'required_with:legislative_program_row_id', 'numeric'],
+            'legislative_program_row_id' => ['nullable', 'numeric'],
+            'operational_program_id' => ['nullable', 'required_with:operational_program_row_id', 'numeric'],
+            'operational_program_row_id' => ['nullable', 'numeric'],
             'open_from' => ['required', 'date'],
             'open_to' => ['required', 'date', 'after:open_from'],
             'regulatory_act_id' => ['nullable', 'numeric'],

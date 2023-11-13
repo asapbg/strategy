@@ -39,7 +39,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected $fillable = ['consultation_level_id', 'act_type_id',
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to', 'regulatory_act_id',
         'pris_act_id', 'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
-        'act_links', 'active', 'reg_num', 'monitorstat'
+        'act_links', 'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id'
     ];
 
     const MIN_DURATION_DAYS = 14;
@@ -93,7 +93,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function openFrom(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => !empty($value) ? Carbon::parse($value)->format('d-m-Y') : null,
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
             set: fn (string|null $value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
@@ -102,7 +102,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function openTo(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => !empty($value) ? Carbon::parse($value)->format('d-m-Y') : null,
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
             set: fn (string|null $value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
@@ -181,6 +181,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function kd(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(ConsultationDocument::class, 'public_consultation_id', 'id');
+    }
+
+    public function lpRow(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LegislativeProgramRow::class, 'id', 'legislative_program_row_id');
+    }
+
+    public function opRow(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LegislativeProgramRow::class, 'id', 'operational_program_row_id');
     }
 
     public function polls()

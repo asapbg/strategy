@@ -849,6 +849,16 @@ $(document).ready(function (e) {
                             actType: $('#legal_act_type_filter').val(),
                             search: params.term
                         }
+                    }else if($(this).data('types2ajax') == 'lp_record') {
+                        var query = {
+                            programId: $('#legislative_program_id').val(),
+                            search: params.term
+                        }
+                    }else if($(this).data('types2ajax') == 'op_record') {
+                        var query = {
+                            programId: $('#operational_program_id').val(),
+                            search: params.term
+                        }
                     } else {
                         var query = {
                             search: params.term

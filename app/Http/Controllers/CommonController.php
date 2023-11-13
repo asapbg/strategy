@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
+use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\OperationalProgram;
 use App\Models\File;
 use App\Models\Page;
 use App\Models\Pris;
@@ -319,6 +321,12 @@ class CommonController extends Controller
                 $requestData['year'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : '';
                 $requestData['doc_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
                 $data = Pris::select2AjaxOptions($requestData);
+                break;
+            case 'lp_record':
+                $data = LegislativeProgram::select2AjaxOptions($requestData);
+                break;
+            case 'op_record':
+                $data = OperationalProgram::select2AjaxOptions($requestData);
                 break;
         }
 

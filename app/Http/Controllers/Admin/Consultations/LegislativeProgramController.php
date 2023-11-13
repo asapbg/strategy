@@ -29,6 +29,7 @@ class LegislativeProgramController extends AdminController
     const SHOW_VIEW = 'admin.consultations.legislative_programs.show';
 
     const DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID = 2;
+    const DYNAMIC_STRUCTURE_COLUMN_TITLE_ID = 1;
 
     public function index(Request $request)
     {

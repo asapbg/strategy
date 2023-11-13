@@ -13,8 +13,8 @@ Route::get('/consultations', function () {
 });
 
 Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {
-    Route::get('/public-consultation', 'index')->name('public_consultation.index');
-    Route::get('/public-consultation/{id}', 'show')->name('public_consultation.view');
+    Route::get('/public-consultations', 'index')->name('public_consultation.index');
+    Route::get('/public-consultations/{id}', 'show')->name('public_consultation.view');
 });
 
 Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
@@ -23,21 +23,27 @@ Route::controller(\App\Http\Controllers\PrisController::class)->group(function (
 });
 
 Route::controller(\App\Http\Controllers\OperationalProgramController::class)->group(function () {
-    Route::get('/operational-program', 'index')->name('op.index');
-    Route::get('/operational-program/{id}', 'show')->name('op.view');
+    Route::get('/operational-programs', 'index')->name('op.index');
+    Route::get('/operational-programs/{id}', 'show')->name('op.view');
 });
 
 Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->group(function () {
-    Route::get('/legislative-program', 'index')->name('lp.index');
-    Route::get('/legislative-program/{id}', 'show')->name('lp.view');
+    Route::get('/legislative-programs', 'index')->name('lp.index');
+    Route::get('/legislative-programs/{id}', 'show')->name('lp.view');
 });
+Route::get('/strategy-documents', function (){
+    return view('templates.strategicheski-dokumenti');
+})->name('strategy_documents');
+Route::get('/strategy-documents/view', function (){
+    return view('templates.strategicheski-dokumenti-inner');
+})->name('strategy_documents.view');
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
-    Route::get('/impact_assessment', 'index')->name('impact_assessment.index');
-    Route::get('/impact_assessment/{form}', 'form')->name('impact_assessment.form');
-    Route::post('/impact_assessment/{form}', 'store')->name('impact_assessment.store');
-    Route::get('/impact_assessment/{form}/pdf/{inputId}', 'pdf')->name('impact_assessment.pdf');
-    Route::get('/impact_assessment/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
+    Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
+    Route::get('/impact_assessments/{form}', 'form')->name('impact_assessment.form');
+    Route::post('/impact_assessments/{form}', 'store')->name('impact_assessment.store');
+    Route::get('/impact_assessments/{form}/pdf/{inputId}', 'pdf')->name('impact_assessment.pdf');
+    Route::get('/impact_assessments/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
 });
 
 

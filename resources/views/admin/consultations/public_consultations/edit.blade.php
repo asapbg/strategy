@@ -55,46 +55,46 @@
 <script>
     $(document).ready(function () {
         new cainSelect({
-            mainSelectId: 'consultation_level_id',
-            childSelectClass: 'cl-child',
+            mainSelectId: 'legislative_program_id',
+            childSelectClass: 'cl-child-lp',
             childSelectData: 'cl',
             anyValue: 'cl',
         });
 
-        let consultationLevel = $('#consultation_level_id');
+        new cainSelect({
+            mainSelectId: 'operational_program_id',
+            childSelectClass: 'cl-child-op',
+            childSelectData: 'cl',
+            anyValue: 'cl',
+        });
+
+        let consultationLevel = parseInt(<?php echo ($item->id ? $item->consultation_level_id : $userInstitutionLevel) ?>);
         let actType = $('#act_type_id');
-        //Normative acts sections
-        let prisNormativeActs = $('#normative_act_pris_section');
-        let normativeActs = $('#normative_act_section');
+
         //Consultation level
-        let centralConsultationLevel = parseInt(<?php echo \App\Models\ConsultationLevel::CENTRAL_LEVEL; ?>);
+        let centralConsultationLevel = parseInt('<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>');
         //Acts
-        let actLaw = parseInt(<?php echo \App\Models\ActType::ACT_LAW; ?>);
-        let actMinistry = parseInt(<?php echo \App\Models\ActType::ACT_COUNCIL_OF_MINISTERS; ?>);
+        let actLaw = parseInt('<?php echo \App\Models\ActType::ACT_LAW; ?>');
+        let actMinistry = parseInt('<?php echo \App\Models\ActType::ACT_COUNCIL_OF_MINISTERS; ?>');
         //Programs
         let legislativePrograms = $('#legislative_programs');
+        let legislativeProgramRows = $('#legislative_program_row_id');
         let operationalPrograms = $('#operational_programs');
+        let operationalProgramsRows = $('#operational_program_row_id');
 
-        function hideActSelects()
-        {
-            //hide $regulatoryActs and $pris acts and deselect all
-            normativeActs.addClass('d-none');
-            normativeActs.find('option').each(function(){
-                $(this).prop('selected', false);
-            });
-            prisNormativeActs.addClass('d-none');
-            prisNormativeActs.find('option').each(function(){
-                $(this).prop('selected', false);
-            });
-        }
+        $('#legislative_program_id').on('change', function (){
+
+        });
 
         function hideProgramSelects()
         {
             //hide programs selects and deselect all
+            operationalProgramsRows.parent().addClass('d-none');
             operationalPrograms.addClass('d-none');
             operationalPrograms.find('option').each(function(){
                 $(this).prop('selected', false);
             });
+            legislativeProgramRows.parent().addClass('d-none');
             legislativePrograms.addClass('d-none');
             legislativePrograms.find('option').each(function(){
                 $(this).prop('selected', false);
@@ -113,7 +113,6 @@
             let diffDays = null;
             const date1 = $('#open_from').datepicker('getDate');
             const date2 = $('#open_to').datepicker('getDate');
-            console.log(date1, date2);
             if( date1 && date2 ) {
                 let diffTime = Math.abs(date2 - date1);
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -138,41 +137,36 @@
         function controlForm()
         {
             //If central level consultation
-            if( parseInt(consultationLevel.val()) === centralConsultationLevel ) {
+            if( consultationLevel == centralConsultationLevel ) {
                 //Depending on act type
                 if( parseInt(actType.val()) == actLaw ){
-                    //show $pris normative act select and deselect and hide $regulatoryActs
-                    prisNormativeActs.removeClass('d-none');
-                    normativeActs.addClass('d-none');
-                    normativeActs.find('option').each(function(){
-                        $(this).prop('selected', false);
-                    });
                     //show $zp autocomplete select and checkbox 'Законопроектът не е включен в ЗП'. Submit one of them.
+                    if($('#no_legislative_program').is(':checked')) {
+                        legislativeProgramRows.parent().addClass('d-none');
+                    } else {
+                        legislativeProgramRows.parent().removeClass('d-none');
+                    }
                     legislativePrograms.removeClass('d-none');
                     operationalPrograms.addClass('d-none');
                     operationalPrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
-                    legislative_programs
                 } else if( parseInt(actType.val()) == actMinistry ){
-                    //show $regulatoryActs normative act select and deselect and hide $regulatoryActs
-                    normativeActs.removeClass('d-none');
-                    prisNormativeActs.addClass('d-none');
-                    prisNormativeActs.find('option').each(function(){
-                        $(this).prop('selected', false);
-                    });
                     //show $op autocomplete select and checkbox 'Проектът на акт на МС не е включен в ОП'. Submit one of them.
+                    if($('#no_operational_program').is(':checked')) {
+                        operationalProgramsRows.parent().addClass('d-none');
+                    } else {
+                        operationalProgramsRows.parent().removeClass('d-none');
+                    }
                     operationalPrograms.removeClass('d-none');
                     legislativePrograms.addClass('d-none');
                     legislativePrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
                 } else {
-                    hideActSelects();
                     hideProgramSelects();
                 }
             } else {
-                hideActSelects();
                 hideProgramSelects();
             }
         }
@@ -180,8 +174,18 @@
         //Calculate consultation duration
         $('#open_from, #open_to').on('change', onDateChange);
 
-        $('#consultation_level_id, #act_type').on('change', function (){
+        $('#act_type_id').on('change', function (){
             controlForm();
+        });
+
+        $('#no_legislative_program, #no_operational_program').on('change', function (){
+            if($(this).is(':checked')) {
+                $('#' + $(this).data('list')).val('').change();
+                legislativeProgramRows.parent().addClass('d-none');
+                operationalProgramsRows.parent().addClass('d-none');
+            } else {
+                controlForm();
+            }
         });
 
         //Init and preset form

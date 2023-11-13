@@ -27,6 +27,7 @@ class OperationalProgramController extends AdminController
     const EDIT_VIEW = 'admin.consultations.operational_programs.edit';
     const SHOW_VIEW = 'admin.consultations.operational_programs.show';
     const DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID = 11;
+    const DYNAMIC_STRUCTURE_COLUMN_TITLE_ID = 10;
 
     public function index(Request $request)
     {

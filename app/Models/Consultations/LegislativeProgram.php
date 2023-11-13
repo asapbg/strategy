@@ -4,6 +4,7 @@ namespace App\Models\Consultations;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
+use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Models\File;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
@@ -118,5 +119,28 @@ class LegislativeProgram extends ModelActivityExtend
                     group by legislative_program_row.month, legislative_program_row.row_num
                     order by legislative_program_row.month, legislative_program_row.row_num asc
                 ');
+    }
+
+    public static function select2AjaxOptions($filters)
+    {
+        $q = DB::table('legislative_program')
+            ->select(['legislative_program_row.id', 'legislative_program_row.value as name'])
+            ->join('legislative_program_row', function ($j){
+                $j->on('legislative_program_row.legislative_program_id', '=', 'legislative_program.id')
+                    ->where('legislative_program_row.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+            })
+            ->leftJoin('public_consultation', function ($j){
+                $j->on('public_consultation.legislative_program_id', '=', 'legislative_program.id')
+                    ->whereColumn('public_consultation.legislative_program_row_id', '=', 'legislative_program_row.id');
+            });
+        if(isset($filters['programId']) && (int)$filters['programId']) {
+            $q->where('legislative_program.id', '=', (int)$filters['programId']);
+        }
+        if(isset($filters['search'])) {
+            $q->where('legislative_program_row.value', 'ilike', '%'.$filters['search'].'%');
+        }
+        $q->whereNull('public_consultation.id');
+
+        return $q->get();
     }
 }
