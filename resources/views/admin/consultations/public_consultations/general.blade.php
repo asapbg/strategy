@@ -44,51 +44,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4" id="normative_act_pris_section">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
-                <div class="col-12">
-                    <select id="pris_act_id" name="pris_act_id" class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
-                        @if(isset($prisActs) && $prisActs->count())
-                            @foreach($prisActs as $row)
-                                <option value="{{ $row->id }}"
-                                        @if(old('pris_act_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
-                                        data-id="{{ $row->id }}"
-                                >{{ $row->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('pris_act_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4" id="normative_act_section">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="regulatory_act_id">{{ trans_choice('custom.regulatory_acts', 1) }}</label>
-                <div class="col-12">
-                    <select id="regulatory_act_id" name="regulatory_act_id" class="form-control form-control-sm select2 @error('regulatory_act_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
-                        @if(isset($regulatoryActs) && $regulatoryActs->count())
-                            @foreach($regulatoryActs as $row)
-                                <option value="{{ $row->id }}"
-                                        @if(old('regulatory_act_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
-                                        data-id="{{ $row->id }}"
-                                >{{ $row->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('regulatory_act_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4" id="legislative_programs">
+        <div class="col-md-4 my-3" id="legislative_programs">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
@@ -109,14 +65,30 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-12 control-label" for="legislative_program_row_id">{{ trans_choice('custom.legislative_programs_rows', 1) }}</label>
+                <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record"
+                        data-urls2="{{ route('admin.select2.ajax', 'lp_record') }}"
+                        data-placeholders2="{{ __('custom.search_lp_record_js_placeholder') }}"
+                        class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
+                    @if(!old('operational_program_row_id') && $item->legislative_program_row_id && $item->lpRow)
+                        <option value="{{ $item->lpRow->id }}" selected="selected">{{ $item->lpRow->value }}</option>
+                    @endif
+                </select>
+                @error('legislative_program_row_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_legislative_program">
-                    <input type="checkbox" id="no_legislative_program" name="no_legislative_program" value="1" class="checkbox ">
+                    <input type="checkbox" id="no_legislative_program" name="no_legislative_program"
+                           @if(!old('no_legislative_program') && $item->legislative_program_id && !$item->lpRow) checked @endif
+                           data-list="legislative_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_legislative_program') }}
                 </label>
             </div>
         </div>
 
-        <div class="col-md-4" id="operational_programs">
+        <div class="col-md-4 my-3" id="operational_programs">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
                 <div class="col-12">
@@ -137,8 +109,24 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-12 control-label" for="operational_program_row_id">{{ trans_choice('custom.operational_programs_rows', 1) }}</label>
+                <select id="operational_program_row_id" name="operational_program_row_id"
+                        data-types2ajax="op_record" data-urls2="{{ route('admin.select2.ajax', 'op_record') }}"
+                        data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
+                        class="form-control form-control-sm select2-autocomplete-ajax @error('operational_program_row_id'){{ 'is-invalid' }}@enderror">
+                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow)
+                        <option value="{{ $item->opRow->id }}" selected="selected">{{ $item->opRow->value }}</option>
+                    @endif
+                </select>
+                @error('operational_program_row_id')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_operational_program">
-                    <input type="checkbox" id="no_operational_program" name="no_operational_program" value="1" class="checkbox ">
+                    <input type="checkbox" id="no_operational_program" name="no_operational_program"
+                           @if(!old('no_legislative_program') && $item->operational_program_id && !$item->opRow) checked @endif
+                           data-list="operational_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_operational_program') }}
                 </label>
             </div>

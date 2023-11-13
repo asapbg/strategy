@@ -74,9 +74,13 @@ class PublicConsultationController extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        if($item->id) {
+            $item = PublicConsultation::with(['translation'])->find($item->id);
+        }
+
         $kdRowsDB = $item->id && $item->kd ?
             DynamicStructureColumn::whereIn('id', json_decode($item->kd->active_columns))->orderBy('id')->get()
-            : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
+            : DynamicStructure::with(['columns', 'columns.translation', 'groups', 'groups.translation'])->where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
         $dsGroups = DynamicStructure::where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->groups;
 
         $kdRows = [];
@@ -103,25 +107,23 @@ class PublicConsultationController extends AdminController
 
         $userInstitutionLevel = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
 
-        $consultationLevels = ConsultationLevel::all();
-        $actTypes = ActType::where('consultation_level_id', '=', $item->id ? $item->consultation_level_id : $userInstitutionLevel)
+        $consultationLevels = ConsultationLevel::with(['translation'])->get();
+        $actTypes = ActType::with(['translation'])
+            ->where('consultation_level_id', '=', $item->id ? $item->consultation_level_id : $userInstitutionLevel)
             ->get();
-        $programProjects = ProgramProject::all();
-        $linkCategories = LinkCategory::all();
-        $regulatoryActs = RegulatoryAct::all(); //Нормативни актове номенклатура
-        $prisActs = null; //TODO fix me Add them after PRIS module
-        $operationalPrograms = OperationalProgram::NotLockedOrByCd($item->id ?? 0)->get();
-        $legislativePrograms = LegislativeProgram::NotLockedOrByCd($item->id ?? 0)->get();
-
+        $programProjects = ProgramProject::with(['translation'])->get();
+        $linkCategories = LinkCategory::with(['translation'])->get();
+        $operationalPrograms = OperationalProgram::Actual()->get();
+        $legislativePrograms = LegislativeProgram::Actual()->get();
 
         $documents = [];
         foreach ($item->documents as $document){
             $documents[$document->doc_type.'_'.$document->locale][] = $document;
         }
-        $polls = $item ? Poll::Active()->NotExpired()->get() : null;
+        $polls = $item->id ? Poll::Active()->NotExpired()->get() : null;
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
-            'consultationLevels', 'actTypes', 'programProjects', 'linkCategories', 'regulatoryActs', 'prisActs',
+            'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel'));
     }
 
@@ -149,6 +151,8 @@ class PublicConsultationController extends AdminController
         DB::beginTransaction();
         try {
             $validated = $validator->validated();
+            $validated['operational_program_row_id'] = $validated['operational_program_row_id'] ?? null;
+            $validated['legislative_program_row_id'] = $validated['legislative_program_row_id'] ?? null;
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {
                 $fillable['consultation_level_id'] = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;

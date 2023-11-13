@@ -21,6 +21,7 @@
                         <tr>
                             <th>№</th>
                             <th>{{ __('validation.attributes.title') }}</th>
+                            <th>{{ trans_choice('custom.consultation_level', 1) }}</th>
                             <th>{{ trans_choice('custom.start', 1) }}</th>
                             <th>{{ trans_choice('custom.end', 1) }}</th>
                             <th>{{ __('custom.actions') }}</th>
@@ -32,6 +33,7 @@
                                 <tr>
                                     <td>{{ $item->reg_num }}</td>
                                     <td>{{ $item->title }}</td>
+                                    <td>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</td>
                                     <td>{{ $item->open_from }}</td>
                                     <td>{{ $item->open_to }}</td>
                                     <td class="text-center">

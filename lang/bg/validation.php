@@ -387,5 +387,7 @@ return [
         'file_8_en'           => 'Справка за получените предложения (EN)',
         'monitorstat'         => 'Връзка към документа в Мониторстат',
         'nomenclature_level'  => 'Ниво (номенклатура)',
+        'legislative program id'  => 'Законодателна програма',
+        'operational_program_id'  => 'Оперативна програма',
     ],
 ];

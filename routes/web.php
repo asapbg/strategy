@@ -21,6 +21,7 @@ require_once('site.php');
 
 Route::get('/get-institutions', [CommonController::class, 'modalInstitutions'])->name('modal.institutions');
 Route::get('/file-preview-modal/{id}', [CommonController::class, 'previewModalFile'])->name('modal.file_preview');
+Route::get('/select2-ajax/{type}', [CommonController::class, 'getSelect2Ajax'])->name('select2.ajax');
 
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');
