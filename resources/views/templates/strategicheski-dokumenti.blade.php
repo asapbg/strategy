@@ -123,7 +123,7 @@
                                     <i class="bi bi-mortarboard-fill light-blue"></i>
                                 </div>
                                 <div class="consult-body">
-                                    <a href="#" class="consul-item">
+                                    <a href="{{ route('strategy_documents.view') }}" class="consul-item">
                                         <p>
                                             <span class="consul-cat">Образование</span>
                                         </p>
@@ -156,7 +156,7 @@
                                     <i class="fa-solid fa-circle-nodes dark-blue"></i>
                                 </div>
                                 <div class="consult-body">
-                                    <a href="#" class="consul-item">
+                                    <a href="{{ route('strategy_documents.view') }}" class="consul-item">
                                         <p>
                                             <span class="consul-cat">Регионална политика</span>
                                         </p>
@@ -190,7 +190,7 @@
                                     <i class="bi bi-shield-fill-check gr-color"></i>
                                 </div>
                                 <div class="consult-body">
-                                    <a href="#" class="consul-item">
+                                    <a href="{{ route('strategy_documents.view') }}" class="consul-item">
                                         <p>
                                             <span class="consul-cat">Външна политика, сигурност и отбрана</span>
                                         </p>
@@ -229,7 +229,7 @@
                                 </div>
                                 <div class="consult-body">
 
-                                    <a href="#" class="consul-item">
+                                    <a href="{{ route('strategy_documents.view') }}" class="consul-item">
                                         <p>
                                             <span class="consul-cat">Регионална политика</span>
                                         </p>

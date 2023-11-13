@@ -31,6 +31,12 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
     Route::get('/legislative-program', 'index')->name('lp.index');
     Route::get('/legislative-program/{id}', 'show')->name('lp.view');
 });
+Route::get('/strategy-documents', function (){
+    return view('templates.strategicheski-dokumenti');
+})->name('strategy_documents');
+Route::get('/strategy-documents/view', function (){
+    return view('templates.strategicheski-dokumenti-inner');
+})->name('strategy_documents.view');
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessment', 'index')->name('impact_assessment.index');

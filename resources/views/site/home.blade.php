@@ -36,7 +36,7 @@
       <div class="row">
         <div class="col-md-4 position-relative">
           <div class="service-item  position-relative">
-            <a href="#" title="Законодателна програма">
+            <a href="{{ route('lp.index') }}" title="Законодателна програма">
             <div class="icon">
               <i class="bi bi-shield-check"></i>
             </div>
@@ -47,7 +47,7 @@
 
         <div class="col-md-4 position-relative">
           <div class="service-item  position-relative">
-            <a href="#" title="Оперативна програма">
+            <a href="{{ route('op.index') }}" title="Оперативна програма">
                 <div class="icon">
                     <i class="bi bi-arrow-up-right-circle"></i>
                   </div>
@@ -58,7 +58,7 @@
 
         <div class="col-md-4 position-relative">
           <div class="service-item  position-relative">
-            <a href="#" title="Стратегически документи">
+            <a href="{{ route('strategy_documents') }}" title="Стратегически документи">
             <div class="icon">
               <i class="bi bi-files"></i>
 
@@ -83,7 +83,7 @@
 
         <div class="col-md-4 position-relative">
           <div class="service-item  position-relative">
-            <a href="#" title="Актове на Министерски съвет">
+            <a href="{{ route('pris.index') }}" title="Актове на Министерски съвет">
                 <div class="icon">
                     <i class="bi bi-file-earmark-medical"></i>
                   </div>
@@ -176,7 +176,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното
@@ -211,7 +211,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на заповед, която се издава от директора на Агенция ,,Митници“ на основание чл. 66б, ал. 2
@@ -247,7 +247,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Закон за изменение и допълнение на Закона за адвокатурата
@@ -286,7 +286,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската
@@ -410,7 +410,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното
@@ -445,7 +445,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на заповед, която се издава от директора на Агенция ,,Митници“ на основание чл. 66б, ал. 2
@@ -481,7 +481,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Закон за изменение и допълнение на Закона за адвокатурата
@@ -520,7 +520,7 @@
                                     </div>
                                     <div class="consult-body">
                                         <a href="#" class="consul-item">
-               
+
 
                                             <h3>
                                                 Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската
