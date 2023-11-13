@@ -43,9 +43,11 @@ class StoreOperationalProgramRequest extends FormRequest
                 $rules['val'] = ['array'];
                 $rules['val.*'] = ['array'];
 
-                foreach (request()->input('col') as $key => $columns) {
-                    foreach ($columns as $key2 => $ids) {
-                        $rules['val.' . $key . '.'.$key2] = ['required', 'string', 'max:255'];
+                if(request()->filled('col')) {
+                    foreach (request()->input('col') as $key => $columns) {
+                        foreach ($columns as $key2 => $ids) {
+                            $rules['val.' . $key . '.'.$key2] = ['required', 'string', 'max:255'];
+                        }
                     }
                 }
             }
