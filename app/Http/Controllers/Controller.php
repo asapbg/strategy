@@ -147,7 +147,10 @@ class Controller extends BaseController
         $breadcrumbs['links_count'] = $links_count;
 
         if (isset($this->breadcrumb_title)) {
-            $breadcrumbs['links'][$links_count]['name'] = $this->breadcrumb_title;
+//            $breadcrumbs['links'][$links_count]['name'] = $this->breadcrumb_title;
+            $breadcrumbs['links'][] = [
+                'name' => $this->breadcrumb_title
+            ];
         }
 
         return $breadcrumbs;
