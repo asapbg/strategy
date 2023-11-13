@@ -90,6 +90,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
+    protected function open_from(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn (string|null $value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+
+
     protected function inPeriod(): Attribute
     {
         $now = Carbon::now()->format('Y-m-d');
