@@ -14,6 +14,7 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -73,10 +74,11 @@ class StrategicDocumentsController extends AdminController
         $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
         $policyAreas = PolicyArea::all();
         $prisActs = null; //TODO fix me Add them after PRIS module
+        $strategicDocumentFiles = StrategicDocumentFile::all();
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -130,8 +132,8 @@ class StrategicDocumentsController extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $validated['strategic_document_type_id'] = $validated['strategic_document_type'];
             unset($validated['strategic_document_type']);
             $file = new StrategicDocumentFile();
@@ -147,6 +149,7 @@ class StrategicDocumentsController extends AdminController
             $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
             $file->sys_user = $request->user()->id;
             $file->filename = $fileNameToStore;
+            $file->parent_id = Arr::get($validated, 'parent_id');
             $strategicDoc->files()->save($file);
 
             $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
