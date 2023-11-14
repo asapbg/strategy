@@ -110,7 +110,7 @@
                                                             <div id="collapseOne" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="headingOne"
                                                                  data-bs-parent="#accordion{{ $m }}">
                                                                 <div class="accordion-body">
-                                                                    <div class="custom-card py-4 px-3 mb-5">
+                                                                    <div class="custom-card p-3 mb-5">
                                                                         @php($cnt = 1)
                                                                         @foreach($rowData as $r)
                                                                             @if($cnt == 1)

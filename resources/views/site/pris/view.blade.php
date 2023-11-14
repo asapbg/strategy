@@ -192,7 +192,7 @@
 
                 </div>
                 <div class="row p-3">
-                    <div class="custom-card py-4 px-3 mb-5">
+                    <div class="custom-card p-3 mb-5">
                         <div class="col-md-12">
                             <h4 class="mb-2">Информация</h4>
                             <p>

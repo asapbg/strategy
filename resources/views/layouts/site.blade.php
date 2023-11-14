@@ -39,7 +39,7 @@
                     <div class="col-md-12">
                         <div class="slider-content">
                             <div class="page-heading">
-                                <h1>
+                                <h1 class="mb-0">
                                     {{ $pageTitle }}
                                 </h1>
                             </div>

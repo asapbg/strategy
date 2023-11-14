@@ -122,7 +122,7 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                  <div class="custom-card py-4 px-3 mb-5">
+                                  <div class="custom-card p-3">
                             
                                     <div class="row mb-3 mt-1 ">
                                       <div class="col-md-6">
@@ -283,7 +283,7 @@
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                  <div class="custom-card py-4 px-3 mb-5">
+                                  <div class="custom-card p-3 mb-5">
                             
                                     <div class="row mb-3 mt-1 ">
                                       <div class="col-md-6">

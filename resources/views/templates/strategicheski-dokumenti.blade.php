@@ -4,7 +4,6 @@
 
 @section('content')
 <section class="public-constultation py-5">
-
     <div class="container">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">

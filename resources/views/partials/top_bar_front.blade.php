@@ -16,11 +16,11 @@
             {{--          </div>--}}
             {{--        </div>--}}
 
-            <div class="col-md-6 text-end">
+            <div class="col-md-6 text-end top-bar-right-column">
                 <div class="auth text-right">
                     @if(app('auth')->check())
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
                                 @php($user = app('auth')->user())
                                 {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
                             </button>
@@ -54,7 +54,7 @@
 
                             <a class="main-color me-3" href="{{ route('register') }}">{{ __('custom.register') }}</a>
                             <a class="btn btn-primary me-3" href="{{ route('login') }}"><i class="login-icon fa-solid fa-right-to-bracket main-color"></i> {{ __('custom.login') }}</a>
-                            <a href="" class="cstm-btn btn btn-primary login-search d-flex align-items-center" style="height: 40px;"><i class="login-icon fas fa-search main-color"></i></a>
+                            <a href="" class="cstm-btn btn btn-primary login-search d-flex align-items-center" style="height: 40px;"><i class="login-icon fas fa-search main-color"><span class="d-none">Search</span></i></a>
                         </div>
                     @endif
                 </div>

@@ -114,8 +114,8 @@
           </div>
         <div class="row ">
 
-         <div class="col-lg-6">
-            <a href="#" class="box-link dark-blue-bgr mb-4">
+         <div class="col-lg-6 col-md-12">
+            <a href="#" class="box-link gr-color-bgr mb-4">
                 <div class="info-box">
                     <div class="icon-wrap">
                         <i class="bi bi-check2-square text-light"></i>
@@ -340,16 +340,25 @@
                                     class="fas fa-long-arrow-right main-color"></i></button>
                         </div>
                     </div>
-
-
-
-
                 </div>
             </div>
+
+            <a href="#" class="box-link light-blue-bgr my-4">
+                <div class="info-box">
+                    <div class="icon-wrap">
+                        <i class="bi bi bi-lightbulb text-light"></i>
+                    </div>
+                    <div class="link-heading">
+            <span>
+            Предложи мерки за добро управление
+            </span>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="col-lg-6">
-            <a href="#" class="box-link navy-marine-bgr mb-4">
+        <div class="col-lg-6 col-md-12">
+            <a href="#" class="box-link navy-marine-bgr  mb-4">
                 <div class="info-box">
                     <div class="icon-wrap">
                         <i class="bi bi-folder-check text-light"></i>
@@ -366,7 +375,7 @@
                 <div class=" item-holder-one">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <h2 class="mb-2" style="font-size: 24px;">Списък отворени ЗИ</h2>
+                            <h2 class="mb-2" style="font-size: 24px;">Списък отворени законодателни инициативи</h2>
                             <p>
                                 Този раздел е предназначен за граждани, които желаят да се включат в обществения дебат и да споделят
                                 мнението си.</p>
@@ -575,10 +584,34 @@
                         </div>
                     </div>
 
-
-
-
                 </div>
+               
+                    <a href="#" class="box-link dark-blue-bgr my-4">
+                        <div class="info-box">
+                            <div class="icon-wrap">
+                                <i class="bi bi-patch-question text-light"></i>
+                            </div>
+                            <div class="link-heading">
+                    <span>
+                    Участвай в анкета
+                    </span>
+                            </div>
+                        </div>
+                    </a>
+<!-- 
+                    <div class="col-md-12">
+                        <h3 class="mb-2" style="font-size: 24px;">Списък отворени анкети</h3>
+                        <ul class="list-group questionnaire">
+                            <li class="list-group-item">
+                                <a href="#" class="text-decoration-none">Анкета 1</a>
+                                <a href="#" ><span><i class="fa-solid fa-chevron-right"></i></span></a>
+                            </li>
+                            <li class="list-group-item"><a href="#" class="text-decoration-none">Анкета 2<span><i class="fa-solid fa-chevron-right"></i></span></a></li>
+                            <li class="list-group-item"><a href="#" class="text-decoration-none">Анкета 2<span><i class="fa-solid fa-chevron-right"></i></span></a></li>
+                            <li class="list-group-item"><a href="#" class="text-decoration-none">Анкета 2<span><i class="fa-solid fa-chevron-right"></i></span></a></li>
+                          </ul>
+                    </div>
+                --> 
             </div>
         </div>
     </div>

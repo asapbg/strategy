@@ -1,5 +1,5 @@
 <div class="col-lg-10">
-    <div class="mt-5">
+    <div>
 
         <div class="row mb-4">
             <div class="col-md-12">
@@ -208,7 +208,7 @@
                     <form class="row" action="">
                         @if($item->polls->count())
                             @foreach($item->polls as $pool)
-                                <p class="text-primary"># {{ $pool->name }}</p>
+                                <p class="main-color fs-18"># {{ $pool->name }}</p>
                                 @if($pool->questions->count())
                                     @foreach($pool->questions as $q)
                                         <div class="col-md-6 mb-4">
