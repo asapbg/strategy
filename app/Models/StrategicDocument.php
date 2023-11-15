@@ -7,6 +7,8 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
 
@@ -80,5 +82,22 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function documentType(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function policyArea(): BelongsTo
+    {
+        return $this->belongsTo(PolicyArea::class);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->where('active', true);
     }
 }

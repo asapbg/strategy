@@ -2,6 +2,7 @@
     @csrf
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'display_name', 'required' => true])
+
     <div class="col-md-3">
         <div class="form-group form-group-sm">
             <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
