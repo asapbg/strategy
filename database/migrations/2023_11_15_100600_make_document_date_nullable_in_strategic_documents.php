@@ -13,10 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // Modify the existing column to make it nullable
-            $table->date('document_date')->nullable()->change();
-        });
+        if (!Schema::hasColumn('strategic_document', 'document_date')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->date('document_date')->nullable();
+            });
+        } else {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->date('document_date')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -26,10 +31,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // If you need to rollback, you can add the reverse operation here
-            // For example, if you made the column nullable, you can make it non-nullable here
-            $table->date('document_date')->change();
-        });
+        if (Schema::hasColumn('strategic_document', 'document_date')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->date('document_date')->nullable(false)->change();
+            });
+        }
     }
 };
