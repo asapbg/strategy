@@ -216,14 +216,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });
 
-    // Open Govenrnance Partnership
-    /* OGPNewsController doesnt exist
-    Route::controller(OGPNewsController::class)->group(function () {
-        Route::get('/ogp/articles', 'index')->name('ogp.articles.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/ogp/articles/edit/{item?}', 'edit')->name('ogp.articles.edit');
-        Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
-    });
-    */
     // Links
     Route::controller(LinkController::class)->group(function () {
         Route::get('/links', 'index')->name('links.index')->middleware('can:viewAny,App\Models\Publication');
