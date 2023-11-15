@@ -33,7 +33,6 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
-//use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
