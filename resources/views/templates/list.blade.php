@@ -23,6 +23,8 @@
 <br><a href="{{ route('templates.view', ['slug' => 'zp']) }}">Законодателна програма</a>
 <br><a href="{{ route('templates.view', ['slug' => 'op']) }}">Оперативна програма</a>
 
+<br><a href="{{ route('templates.view', ['slug' => 'zak-iniciativa-form']) }}">Законодателни инициативи - форма</a>
+
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}
 <a href="{{ route('templates.view', ['slug' => 'publications']) }}">Библиотека & Новини & OGP NEWS</a>
@@ -35,3 +37,5 @@
 <br><a href="{{ route('templates.view', ['slug' => 'ogp_аssessment_edit']) }}">OGP Оценка (редакция)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp_forum_edit']) }}">OGP FORUM (редакция)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'advisory_board_edit']) }}">Консултативен съвет (редакция)</a>
+
+

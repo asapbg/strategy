@@ -3,15 +3,6 @@
     .public-page {
         padding: 0px 0px !important;
     }
-
-.tablinks.active {
-  color: #21659e !important;
-}
-
-.tablinks {
-  color: #333 !important;
-  font-size: 22px !important; 
-}
 </style>
 
 @section('pageTitle', 'Законодателна програма 1 юли - 31 септември')
@@ -99,9 +90,7 @@
             </div>
 
 
-            <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
-
-
+            <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">           
               <ul class=" tab nav nav-tabs mb-3">
                 <li class="nav-item pb-0">
                   <a class="nav-link tablinks" aria-current="page" href="#" onclick="openCity(event, 'July')" id="defaultOpen">Юли</a>
