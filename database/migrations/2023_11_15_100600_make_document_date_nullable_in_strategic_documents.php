@@ -17,10 +17,6 @@ return new class extends Migration
             Schema::table('strategic_document', function (Blueprint $table) {
                 $table->date('document_date')->nullable();
             });
-        } else {
-            Schema::table('strategic_document', function (Blueprint $table) {
-                $table->date('document_date')->nullable()->change();
-            });
         }
     }
 
