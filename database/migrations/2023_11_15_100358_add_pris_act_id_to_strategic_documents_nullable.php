@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // Add a new nullable integer column named pris_act_id
-            $table->integer('pris_act_id')->nullable();
-        });
+        if (!Schema::hasColumn('strategic_document', 'pris_act_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->integer('pris_act_id')->nullable();
+            });
+        }
     }
 
     /**
@@ -26,9 +27,11 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // Reverse the changes made in the 'up' method
-            $table->dropColumn('pris_act_id');
-        });
+        if (Schema::hasColumn('strategic_document', 'pris_act_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                // Reverse the changes made in the 'up' method
+                $table->dropColumn('pris_act_id');
+            });
+        }
     }
 };
