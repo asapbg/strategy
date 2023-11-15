@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // Add a new nullable integer column named strategic_act_number
-            $table->integer('strategic_act_number')->nullable();
-        });
+        if (!Schema::hasColumn('strategic_document', 'strategic_act_number')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->integer('strategic_act_number')->nullable();
+            });
+        }
     }
 
     /**
@@ -26,9 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            // Reverse the changes made in the 'up' method
-            $table->dropColumn('strategic_act_number');
-        });
+        if (Schema::hasColumn('strategic_document', 'strategic_act_number')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->dropColumn('strategic_act_number');
+            });
+        }
     }
 };
