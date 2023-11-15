@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->string('strategic_act_link')->nullable()->after('strategic_act_number');
-        });
+        if (!Schema::hasColumn('strategic_document', 'strategic_act_link')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->string('strategic_act_link')->nullable()->after('strategic_act_number');
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->dropColumn('strategic_act_link');
-        });
+        if (Schema::hasColumn('strategic_document', 'strategic_act_link')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->dropColumn('strategic_act_link');
+            });
+        }
     }
 };
