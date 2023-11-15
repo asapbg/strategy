@@ -192,261 +192,6 @@
 
         {{ $strategicDocuments->links() }}
 
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="consul-wrapper">
-                    <div class="single-consultation d-flex">
-                        <div class="consult-img-holder p-2">
-                            <i class="bi bi-mortarboard-fill light-blue"></i>
-                        </div>
-                        <div class="consult-body">
-                            <div href="#" class="consul-item">
-
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="#" class="text-decoration-none"
-                                            title="Национални програми за развитие на образованието за 2023 г.">
-                                            <h3>Национални програми за развитие на образованието за 2023 г.</h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                                title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <a href="#" title="Образование" class="text-decoration-none mb-3">
-                                    <i class="bi bi-mortarboard-fill me-1" title="Образование"></i>
-                                    Образование
-                                </a>
-
-                                <div class="meta-consul mt-2">
-                                    <span class="text-secondary">
-                                        04.07.2023 г. - 31.12.2024 г.
-                                    </span>
-
-                                    <a href="#" title="Национални програми за развитие на образованието за 2023 г.">
-                                        <i class="fas fa-arrow-right read-more"></i>
-                                    </a>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="consul-wrapper">
-                    <div class="single-consultation d-flex">
-                        <div class="consult-img-holder">
-                            <i class="fa-solid fa-circle-nodes dark-blue"></i>
-                        </div>
-                        <div class="consult-body">
-                            <div href="#" class="consul-item">
-
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="#" class="text-decoration-none"
-                                            title="Морски пространствен план на Република България 2021-2035 г.">
-                                            <h3>
-                                                Морски пространствен план на Република България 2021-2035 г.
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                                title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <a href="#" title="Образование" class="text-decoration-none mb-3">
-                                    <i class="fa-solid fa-circle-nodes me-1" title="Регионална политика"></i>
-                                    Регионална политика
-                                </a>
-
-                                <div class="meta-consul mt-2">
-                                    <span class="text-secondary">
-                                        30.06.2023 г. - 31.12.2024 г.
-                                    </span>
-
-                                    <a href="#" title="Морски пространствен план на Република България 2021-2035 г.">
-                                        <i class="fas fa-arrow-right read-more"></i>
-                                    </a>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="consul-wrapper">
-                    <div class="single-consultation d-flex">
-                        <div class="consult-img-holder">
-                            <i class="bi bi-shield-fill-check gr-color"></i>
-                        </div>
-                        <div class="consult-body">
-                            <div href="#" class="consul-item">
-
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="#" class="text-decoration-none"
-                                            title="Национален план на Република България за развитие на способностите за управление
-                                            на границите и за връщане на незаконно пребиваващи граждани на трети страни.">
-                                            <h3>
-                                                Национален план на Република България за развитие на способностите за управление
-                                                на границите и за връщане на незаконно пребиваващи граждани на трети страни.
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
-                                                role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                                title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <a href="#" title="Образование" class="text-decoration-none mb-3">
-                                    <i class="bi bi-shield-fill-check me-1" title="Външна политика, сигурност и отбрана"></i>
-                                    Външна политика, сигурност и отбрана
-                                </a>
-
-                                <div class="meta-consul mt-2">
-                                    <span class="text-secondary">
-                                        11.05.2023 г. - Не е указан срок
-                                    </span>
-
-                                    <a href="#" title="Национални програми за развитие на образованието за 2023 г.">
-                                        <i class="fas fa-arrow-right read-more"></i>
-                                    </a>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="consul-wrapper">
-                    <div class="single-consultation d-flex">
-                        <div class="consult-img-holder">
-                            <i class="fa-solid fa-flask-vial light-blue"></i>
-                        </div>
-                        <div class="consult-body">
-                            <div href="#" class="consul-item">
-
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="#" class="text-decoration-none"
-                                            title="Национална пътна карта за подобряване на условията за разгръщане на потенциала
-                                            за развитие на водородните технологии и механизмите за производство и доставка
-                                            на водород">
-                                            <h3>
-
-                                        Национална пътна карта за подобряване на условията за разгръщане на потенциала
-                                        за развитие на водородните технологии и механизмите за производство и доставка
-                                        на водород
-
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                                title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <a href="#" title="Образование" class="text-decoration-none mb-3">
-                                    <i class="fa-solid fa-flask-vial me-1" title="Външна политика, сигурност и отбрана"></i>
-                                    Външна политика, сигурност и отбрана
-                                </a>
-
-                                <div class="meta-consul mt-2">
-                                    <span class="text-secondary">
-                                        05.07.2023 г. - Не е указан срок
-                                    </span>
-
-                                    <a href="#" title=" Национална пътна карта за подобряване на условията за разгръщане на потенциала
-                                    за развитие на водородните технологии и механизмите за производство и доставка
-                                    на водород">
-                                        <i class="fas fa-arrow-right read-more"></i>
-                                    </a>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-            <div class="row">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination m-0">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">25</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
 </section>
 <script>
     $(document).ready(function() {
@@ -519,6 +264,24 @@
                 '&prepared-institution=' + encodeURIComponent(preparedInstitutionSelectedIds) +
                 '&pagination-results=' + paginationSelectedResult + '&title=' + encodeURIComponent(titleValue);
             window.location.href = url;
+        });
+
+        $('.pagination a').on('click', function (e) {
+            e.preventDefault();
+            const url = new URL($(this).attr('href'), window.location.href);
+            const params = url.searchParams;
+
+            const policyAreaSelectedIds = policySelect.val();
+            const preparedInstitutionSelectedIds = preparedInstitutionSelect.val();
+            const titleValue = searchInTitle.val();
+            const paginationResultsValue = paginationResults.val();
+
+            params.set('policy-area', policyAreaSelectedIds);
+            params.set('prepared-institution', preparedInstitutionSelectedIds);
+            params.set('title', titleValue);
+            params.set('pagination-results', paginationResultsValue);
+
+            window.location.href = url.toString();
         });
     });
 </script>
