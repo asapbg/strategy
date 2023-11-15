@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->unsignedBigInteger('public_consultation_id');
+        if (!Schema::hasColumn('strategic_document', 'public_consultation_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->unsignedBigInteger('public_consultation_id');
 
-            $table->foreign('public_consultation_id')
-                ->references('id')
-                ->on('public_consultation')
-                ->onDelete('cascade');
-        });
+                $table->foreign('public_consultation_id')
+                    ->references('id')
+                    ->on('public_consultation')
+                    ->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -30,10 +32,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->dropForeign(['public_consultation_id']);
+        if (Schema::hasColumn('strategic_document', 'public_consultation_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->dropForeign(['public_consultation_id']);
 
-            $table->dropColumn('public_consultation_id');
-        });
+                $table->dropColumn('public_consultation_id');
+            });
+        }
     }
 };
