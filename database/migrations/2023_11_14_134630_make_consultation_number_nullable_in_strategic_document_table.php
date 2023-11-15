@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->string('consultation_number')->nullable()->change();
-        });
+        if (!Schema::hasColumn('strategic_document', 'consultation_number')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->string('consultation_number')->nullable();
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->string('consultation_number')->nullable(false)->change();
-        });
+        if (Schema::hasColumn('strategic_document', 'consultation_number')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->dropColumn('consultation_number');
+            });
+        }
     }
 };
