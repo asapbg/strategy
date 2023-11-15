@@ -104,6 +104,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
         Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
         Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
     });
 
     // Static pages
@@ -216,12 +217,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     // Open Govenrnance Partnership
+    /* OGPNewsController doesnt exist
     Route::controller(OGPNewsController::class)->group(function () {
         Route::get('/ogp/articles', 'index')->name('ogp.articles.index')->middleware('can:viewAny,App\Models\Publication');
         Route::get('/ogp/articles/edit/{item?}', 'edit')->name('ogp.articles.edit');
         Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
     });
-
+    */
     // Links
     Route::controller(LinkController::class)->group(function () {
         Route::get('/links', 'index')->name('links.index')->middleware('can:viewAny,App\Models\Publication');

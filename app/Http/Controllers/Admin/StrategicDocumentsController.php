@@ -14,7 +14,9 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -25,6 +27,7 @@ class StrategicDocumentsController extends AdminController
     const LIST_ROUTE = 'admin.strategic_documents.index';
     const EDIT_ROUTE = 'admin.strategic_documents.edit';
     const STORE_ROUTE = 'admin.strategic_documents.store';
+    const DELETE_ROUTE = 'admin.strategic_documents.delete';
     const LIST_VIEW = 'admin.strategic_documents.index';
     const EDIT_VIEW = 'admin.strategic_documents.edit';
 
@@ -73,10 +76,11 @@ class StrategicDocumentsController extends AdminController
         $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
         $policyAreas = PolicyArea::all();
         $prisActs = null; //TODO fix me Add them after PRIS module
+        $strategicDocumentFiles = StrategicDocumentFile::all();
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -91,8 +95,8 @@ class StrategicDocumentsController extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
 
@@ -121,6 +125,40 @@ class StrategicDocumentsController extends AdminController
         }
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
+    public function delete(int $id)
+    {
+        try {
+            $item = $this->getRecord($id);
+            if ($item && request()->user()->cannot('update', $item)) {
+                return back()->with('warning', __('messages.unauthorized'));
+            }
+
+            foreach ($item->files as $file) {
+                $filePath = public_path('files/' . $file->path);
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
+                $file->delete();
+            }
+
+            $item->delete();
+            $item->documentLevel()->delete();
+            $item->acceptActInstitution()->delete();
+            $item->documentType()->delete();
+
+            $item->delete();
+            DB::commit();
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            Log::error('Delete strategic document ID('.$id.'): '.$throwable);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
     public function uploadDcoFile(StrategicDocumentFileUploadRequest $request)
     {
         $validated = $request->validated();
@@ -130,8 +168,8 @@ class StrategicDocumentsController extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $validated['strategic_document_type_id'] = $validated['strategic_document_type'];
             unset($validated['strategic_document_type']);
             $file = new StrategicDocumentFile();
@@ -147,6 +185,7 @@ class StrategicDocumentsController extends AdminController
             $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
             $file->sys_user = $request->user()->id;
             $file->filename = $fileNameToStore;
+            $file->parent_id = Arr::get($validated, 'parent_id');
             $strategicDoc->files()->save($file);
 
             $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);

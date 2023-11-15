@@ -30,6 +30,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
             'valid_at' => ['required', 'date'],
             'strategic_document_type' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
             'visible_in_report' => ['nullable', 'numeric'],
             'file' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)],
             'ord' => ['required', 'numeric']
@@ -38,6 +39,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
+
         return $rules;
     }
 }

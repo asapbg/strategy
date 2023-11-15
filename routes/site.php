@@ -31,9 +31,9 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
     Route::get('/legislative-programs', 'index')->name('lp.index');
     Route::get('/legislative-programs/{id}', 'show')->name('lp.view');
 });
-Route::get('/strategy-documents', function (){
-    return view('templates.strategicheski-dokumenti');
-})->name('strategy_documents');
+
+Route::get('/strategy-documents/{search?}', [\App\Http\Controllers\StrategicDocumentsController::class, 'index'])->name('strategy_documents');
+
 Route::get('/strategy-documents/view', function (){
     return view('templates.strategicheski-dokumenti-inner');
 })->name('strategy_documents.view');

@@ -33,7 +33,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
             'public_consultation_id' => ['required', 'numeric', 'exists:public_consultation,id'],
-            'document_date' => ['required', 'date'],
+            //'document_date' => ['required', 'date'],
             'active' => ['required', 'numeric', 'in:0,1'],
 
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
@@ -44,7 +44,6 @@ class StoreStrategicDocumentRequest extends FormRequest
         if( request()->input('pris_act_id') ) {
             $rules['pris_act_id'][] = ['exists:pris,id'];
         }
-
 
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
