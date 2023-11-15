@@ -70,7 +70,7 @@
                                         @else
                                             {{-- regular select --}}
                                             @foreach($field['options'] as $option)
-                                                <option value="{{ $option['value'] }}" @if($option['value'] == old($key, $field['value'] ?? $field['default'] )) selected @elseif(is_null(old($key, $field['value'])) && isset($field['default']) && $option['value'] == $field['default']) selected @endif>{{ $option['name'] }}</option>
+                                                <option value="{{ $option['value'] }}" @if($option['value'] == old($key, $field['value'] ?? $field['default'] ?? null )) selected @elseif(is_null(old($key, $field['value'])) && isset($field['default']) && $option['value'] == $field['default']) selected @endif>{{ $option['name'] }}</option>
                                             @endforeach
                                         @endif
                                     </select>

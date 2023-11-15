@@ -2,6 +2,7 @@
     @csrf
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'display_name', 'required' => true])
+
     <div class="col-md-3">
         <div class="form-group form-group-sm">
             <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
@@ -63,6 +64,17 @@
             </label>
         </div>
     </div>
+    <div class="col-md-12">
+        <div class="form-group form-group-sm">
+        <label class="col-sm-12 control-label" for="strategic_document_type">Поддокументи<span class="required">*</span></label>
+            <select id="strategic_document_parent" class="form-control form-control-sm select2 @error('parent_file'){{ 'is-invalid' }}@enderror" name="parent_id">
+                <option value="" @if(old('parent_id', '') == '') selected @endif>---</option>
+                @foreach($strategicDocumentFiles as $file)
+                    <option value="{{ $file->id }}">{{ $file->display_name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <div class="col-12">
         <button id="save" type="submit" class="btn btn-success">{{ __('custom.add') }}</button>
     </div>
@@ -75,6 +87,7 @@
                 <th class="bg-primary">{{ __('custom.name') }}</th>
                 <th class="bg-primary">{{ trans_choice('custom.strategic_document_types', 1) }}</th>
                 <th class="bg-primary">{{ __('custom.valid_at') }}</th>
+                <th class="bg-primary">Поддокументи</th>
                 <th class="bg-primary"></th>
             </tr>
         </thead>
@@ -84,6 +97,11 @@
                 <td class="pt-4 bl-primary-2">{{ $f->display_name }}</td>
                 <td class="pt-4">{{ $f->documentType->name }}</td>
                 <td class="pt-4">{{ $f->valid_at }}</td>
+                <td class="pt-4 bl-primary-2">
+                    @foreach ($f->childDocuments as $childDocument)
+                        {{ $childDocument->display_name }} <br>
+                    @endforeach
+                </td>
                 <td class="pt-4">
                     <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.strategic_documents.file.download', $f) }}">
                         <i class="fas fa-download me-1" role="button"
@@ -106,7 +124,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="4" class="edit-file-fields">
+                <td colspan="5" class="edit-file-fields">
                     <form action="{{ route('admin.strategic_documents.file.update', ['id' => $f->id]) }}" method="post">
                         @csrf
                         <input type="hidden" name="id" value="{{ $f->id }}">

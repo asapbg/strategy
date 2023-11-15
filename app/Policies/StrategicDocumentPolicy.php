@@ -66,7 +66,7 @@ class StrategicDocumentPolicy
      */
     public function delete(User $user, StrategicDocument $strategicDocument)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.strategic']);
     }
 
     /**

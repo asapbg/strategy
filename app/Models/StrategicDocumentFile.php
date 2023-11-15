@@ -25,7 +25,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
 
     protected $fillable = ['strategic_document_id', 'strategic_document_type_id', 'valid_at',
         'visible_in_report', 'sys_user', 'path', 'file_text',
-        'filename', 'content_type', 'ord'];
+        'filename', 'content_type', 'ord', 'parent_id'];
 
     const DIR_PATH = 'strategic_doc'.DIRECTORY_SEPARATOR;
 
@@ -69,5 +69,21 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
                 'rules' => ['nullable', 'string']
             ],
         );
+    }
+
+    /**
+     * Get the parent document.
+     */
+    public function parentDocument()
+    {
+        return $this->belongsTo(StrategicDocumentFile::class, 'parent_id');
+    }
+
+    /**
+     * Get the child documents.
+     */
+    public function childDocuments()
+    {
+        return $this->hasMany(StrategicDocumentFile::class, 'parent_id');
     }
 }

@@ -33,7 +33,6 @@ use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
-//use App\Http\Controllers\Admin\OGP\NewsController as OGPNewsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PollController;
@@ -104,6 +103,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
         Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
         Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
     });
 
     // Static pages
@@ -213,13 +213,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
         Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
-    });
-
-    // Open Govenrnance Partnership
-    Route::controller(OGPNewsController::class)->group(function () {
-        Route::get('/ogp/articles', 'index')->name('ogp.articles.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/ogp/articles/edit/{item?}', 'edit')->name('ogp.articles.edit');
-        Route::match(['post', 'put'], '/ogp/articles/store/{item?}', 'store')->name('ogp.articles.store');
     });
 
     // Links
