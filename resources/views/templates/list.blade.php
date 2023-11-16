@@ -22,8 +22,22 @@
 
 <br><a href="{{ route('templates.view', ['slug' => 'zp']) }}">Законодателна програма</a>
 <br><a href="{{ route('templates.view', ['slug' => 'op']) }}">Оперативна програма</a>
+<br>
 
+<br><a href="{{ route('templates.view', ['slug' => 'zak-iniciativa-list']) }}">Законодателни инициативи - списък</a>
+<br><a href="{{ route('templates.view', ['slug' => 'zak-iniciativa-inner']) }}">Законодателни инициативи - вътрешна страница</a>
 <br><a href="{{ route('templates.view', ['slug' => 'zak-iniciativa-form']) }}">Законодателни инициативи - форма</a>
+
+<br>
+
+<br><a href="{{ route('templates.view', ['slug' => 'anketi-list']) }}">Анкети - списък</a>
+<br><a href="{{ route('templates.view', ['slug' => 'anketi-list-inner']) }}">Анкети - вътрешна страница</a>
+
+<br>
+
+<br><a href="{{ route('templates.view', ['slug' => 'rakovodstva-list']) }}">Ръководства - списък</a>
+<br><a href="{{ route('templates.view', ['slug' => 'rakovodstva-inner']) }}">Ръководство- вътрешна страница</a>
+
 
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}
