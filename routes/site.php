@@ -16,6 +16,11 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
     Route::get('/impact-analyze-methods', 'index')->name('impact-analyze-methods.index');
 });
 
+Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
+    Route::get('polls', 'index')->name('poll.index');
+    Route::get('poll/show', 'show')->name('poll.show');
+});
+
 Route::get('/consultations', function () {
     return view('site.consultations');
 });
