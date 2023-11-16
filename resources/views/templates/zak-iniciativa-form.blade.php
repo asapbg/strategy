@@ -62,7 +62,40 @@
             </div>
 
 
-     
+            <div class="col-lg-10">
+                <div class="col-md-12 col-lg-8">
+                    <h1 class="h2 mb-4">Submit issue</h1>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Your name">
+                    </div>
+        
+                    <div class="form-group">
+                      <label for="email">Email address</label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter email">
+                      <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+        
+                    <div class="form-group">
+                      <label>Describe the condition in detail</label>
+                      <textarea id="editor"></textarea>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="phone">Primary phone number</label>
+                        <input type="text" class="form-control" id="phone" placeholder="">
+                    </div>
+        
+                    <hr>
+        
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="terms">
+                        <label class="form-check-label" for="terms">I agree to the <a href="#">terms and conditions</a></label>
+                    </div>
+        
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
 
 
 
@@ -77,3 +110,29 @@
 
 
 @endsection
+<script>
+           tinymce.init({
+            selector:'#editor',
+            menubar: false,
+            statusbar: false,
+            plugins: 'autoresize anchor autolink charmap code codesample directionality fullpage help hr image imagetools insertdatetime link lists media nonbreaking pagebreak preview print searchreplace table template textpattern toc visualblocks visualchars',
+            toolbar: 'h1 h2 bold italic blockquote bullist numlist backcolor| removeformat fullscreen align',
+            skin: 'bootstrap',
+            toolbar_drawer: 'floating',
+            min_height: 200,           
+            autoresize_bottom_margin: 16,
+            setup: (editor) => {
+                editor.on('init', () => {
+                    editor.getContainer().style.transition="border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out"
+                });
+                editor.on('focus', () => {
+                    editor.getContainer().style.boxShadow="0 0 0 .2rem rgba(0, 123, 255, .25)",
+                    editor.getContainer().style.borderColor="#80bdff"
+                });
+                editor.on('blur', () => {
+                    editor.getContainer().style.boxShadow="",
+                    editor.getContainer().style.borderColor=""
+                });
+            }
+        });
+</script>
