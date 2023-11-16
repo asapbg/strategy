@@ -137,7 +137,8 @@ class StrategicDocumentsController extends AdminController
             if ($item && request()->user()->cannot('update', $item)) {
                 return back()->with('warning', __('messages.unauthorized'));
             }
-
+            /*
+             * check if delete files is needed
             foreach ($item->files as $file) {
                 $filePath = public_path('files/' . $file->path);
                 if (File::exists($filePath)) {
@@ -145,7 +146,7 @@ class StrategicDocumentsController extends AdminController
                 }
                 $file->delete();
             }
-
+            */
             $item->delete();
             $item->documentLevel()->delete();
             $item->acceptActInstitution()->delete();

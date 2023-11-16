@@ -198,11 +198,10 @@
             saveTree.on('click', function() {
                 const currentTreeState = $('#fileTree').jstree(true).get_json('#', { flat: false });
                 const filesStructure = extractFilesStructure(currentTreeState);
-                const documentId = 1;
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
                 const strategicDocumentId = $('#strategicDocumentId').val();
                 $.ajax({
-                    url: '/admin/strategic-documents/save-tree/' + documentId,
+                    url: '/admin/strategic-documents/save-tree',
                     type: 'POST',
                     dataType: 'json',
                     data: {
