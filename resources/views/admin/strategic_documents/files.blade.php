@@ -172,6 +172,13 @@
     <style>
         #fileTree .jstree-node {
             padding-left: 30px;
+            padding-top: 7px;
+        }
+        #fileTree .jstree-themeicon {
+            font-size: 20px; /* Adjust the size according to your preference */
+        }
+        #fileTree .jstree-anchor {
+            font-size: 20px; /* Adjust the size according to your preference */
         }
     </style>
 @endpush
@@ -193,6 +200,13 @@
                     }
                 },
                 "plugins": ["types", "dnd", "themes"]
+            }).on('ready.jstree', function() {
+                fileTree.jstree('open_all');
+            });
+
+            fileTree.on('loaded.jstree', function () {
+                console.log('heree');
+                fileTree.jstree('open_all');
             });
 
             saveTree.on('click', function() {
