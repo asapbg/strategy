@@ -29,8 +29,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('legislative_initiative');
 
-            $table->string('description');
-            $table->string('author');
+            $table->longText('description');
+            $table->string('author', 50);
         });
     }
 

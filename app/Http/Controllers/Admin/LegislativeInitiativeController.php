@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Models\LegislativeInitiative;
 use App\Models\RegulatoryAct;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class LegislativeInitiativeController extends AdminController
@@ -16,6 +18,12 @@ class LegislativeInitiativeController extends AdminController
     const STORE_ROUTE = 'admin.legislative_initiatives.store';
     const LIST_VIEW = 'admin.legislative_initiatives.index';
     const EDIT_VIEW = 'admin.legislative_initiatives.edit';
+
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->title_singular = 'Законодателна инициатива';
+    }
 
     /**
      * Show the public consultations.
@@ -28,7 +36,7 @@ class LegislativeInitiativeController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? LegislativeInitiative::PAGINATE;
 
-        $items = LegislativeInitiative::with(['translation'])
+        $items = LegislativeInitiative::withTrashed()->with(['translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'LegislativeInitiative';
@@ -39,61 +47,92 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * @param Request $request
-     * @param LegislativeInitiative $item
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @param Request                    $request
+     * @param LegislativeInitiative|null $item
+     *
+     * @return View|RedirectResponse
      */
-    public function edit(Request $request, $item = null)
+    public function edit(Request $request, LegislativeInitiative $item = null)
     {
         $item = $this->getRecord($item);
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LegislativeInitiative::class) ) {
+
+        if (($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LegislativeInitiative::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
-        
         $regulatoryActs = RegulatoryAct::all();
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs'));
     }
 
-    public function store(StoreLegislativeInitiativeRequest $request, $item = null)
+    /**
+     * Create or store updated values.
+     *
+     * @param StoreLegislativeInitiativeRequest $request
+     * @param LegislativeInitiative|null        $item
+     *
+     * @return RedirectResponse
+     */
+    public function store(StoreLegislativeInitiativeRequest $request, LegislativeInitiative $item = null)
     {
         $item = $this->getRecord($item);
         $validated = $request->validated();
-        if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', LegislativeInitiative::class) ) {
+        $was_restored = false;
+        $was_deleted = false;
+
+        if (
+            ($item->id && $request->user()->cannot('update', $item)) ||
+            $request->user()->cannot('create', LegislativeInitiative::class)
+        ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
-            if ($item->id) {
-                if ($request->input('deleted')) {
-                    $item->deleteTranslations();
-                    $item->delete();
-                }
-                else if ($item->deleted_at) {
-                    $item->restore();
-                }
+
+            if ($item->id && $request->input('deleted')) {
+                $item->delete();
+                $was_deleted = true;
             }
+
+            if (!$request->input('deleted') && $item->id && $item->deleted_at) {
+                $item->restore();
+                $was_restored = true;
+            }
+
             $item->save();
+
             $this->storeTranslateOrNewCurrent(LegislativeInitiative::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $item->id ) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_m'));
+            DB::commit();
+
+            if ($was_deleted) {
+                return redirect(route(self::LIST_VIEW))
+                    ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.deleted_successfully_f'));
+            }
+
+            if ($was_restored) {
+                return redirect(route(self::LIST_VIEW))
+                    ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.restored_successfully_f'));
+            }
+
+            if ($item->id) {
+                return redirect(route(self::EDIT_ROUTE, $item))
+                    ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            dd($e, $validated);
-            \Log::error($e);
+            DB::rollBack();
+            Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
     }
 
     private function filters($request)
@@ -109,19 +148,28 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * @param $id
-     * @param array $with
+     * @param LegislativeInitiative|null $record
+     * @param array                      $with
+     *
+     * @return mixed
      */
-    private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
+    private function getRecord(LegislativeInitiative|null $record, array $with = []): mixed
     {
-        $qItem = LegislativeInitiative::withTrashed();
-        if( sizeof($with) ) {
-            $qItem->with($with);
+        $query = LegislativeInitiative::withTrashed();
+
+        if (sizeof($with)) {
+            $query->with($with);
         }
-        $item = $qItem->find((int)$id);
-        if( !$item ) {
+
+        if (!$record) {
             return new LegislativeInitiative();
         }
+
+        $item = $query->find($record->id);
+        if (!$item) {
+            return new LegislativeInitiative();
+        }
+
         return $item;
     }
 }

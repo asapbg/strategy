@@ -59,7 +59,7 @@
                                             </a>
                                         @endcan
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
+                                            <a href="{{ route( $editRouteName , [$item]) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

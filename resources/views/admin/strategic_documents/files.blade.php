@@ -1,6 +1,6 @@
 <form class="row" action="{{ route('admin.strategic_documents.file.upload') }}" method="post" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
+    <input type="hidden" id="strategicDocumentId" name="id" value="{{ $item->id ?? 0 }}">
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'display_name', 'required' => true])
 
     <div class="col-md-3">
@@ -64,22 +64,48 @@
             </label>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="form-group form-group-sm">
-        <label class="col-sm-12 control-label" for="strategic_document_type">Поддокументи<span class="required">*</span></label>
-            <select id="strategic_document_parent" class="form-control form-control-sm select2 @error('parent_file'){{ 'is-invalid' }}@enderror" name="parent_id">
-                <option value="" @if(old('parent_id', '') == '') selected @endif>---</option>
-                @foreach($strategicDocumentFiles as $file)
-                    <option value="{{ $file->id }}">{{ $file->display_name }}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
     <div class="col-12">
         <button id="save" type="submit" class="btn btn-success">{{ __('custom.add') }}</button>
     </div>
 </form>
-<h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files', 2) }}</h5>
+<h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files_hierarchy', 2) }}</h5>
+<div class="row">
+    <div class="col-12">
+        <br>
+        <div id="fileTree">
+            <ul>
+                <li id="rootNode" data-jstree='{"icon": "fas fa-solid fa-file"}'>{{ trans_choice('custom.files_hierarchy', 2) }}
+                    @if($item->files->count() > 0)
+                        <ul>
+                            @foreach($item->files as $file)
+                                @php
+                                    $iconMapping = [
+                                        'application/pdf' => 'fas fa-file-pdf text-danger me-1',
+                                        'application/msword' => 'fas fa-file-word text-info me-1',
+                                        'application/vnd.ms-excel' => 'fas fa-file-excel',
+                                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
+                                    ];
+
+                                    $fileExtension = $file->content_type;
+                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+                                @endphp
+                                <li id="{{ $file->id }}" data-jstree='{"icon": "{{ $iconClass }}"}'>
+                                    {{ $file->display_name }}
+                                    @include('admin.strategic_documents.tree_children', ['children' => $file->childDocuments])
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <br>
+            <button id="saveTree" class="btn btn-success">{{ __('custom.save') }}</button>
+        </div>
+    </div>
+</div>
+
 @if($item->files)
     <table class="table table-az-admin table-sm table-hover table-bordered mt-4">
         <thead>
@@ -87,7 +113,6 @@
                 <th class="bg-primary">{{ __('custom.name') }}</th>
                 <th class="bg-primary">{{ trans_choice('custom.strategic_document_types', 1) }}</th>
                 <th class="bg-primary">{{ __('custom.valid_at') }}</th>
-                <th class="bg-primary">Поддокументи</th>
                 <th class="bg-primary"></th>
             </tr>
         </thead>
@@ -97,11 +122,6 @@
                 <td class="pt-4 bl-primary-2">{{ $f->display_name }}</td>
                 <td class="pt-4">{{ $f->documentType->name }}</td>
                 <td class="pt-4">{{ $f->valid_at }}</td>
-                <td class="pt-4 bl-primary-2">
-                    @foreach ($f->childDocuments as $childDocument)
-                        {{ $childDocument->display_name }} <br>
-                    @endforeach
-                </td>
                 <td class="pt-4">
                     <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.strategic_documents.file.download', $f) }}">
                         <i class="fas fa-download me-1" role="button"
@@ -146,3 +166,97 @@
     </table>
 @endif
 @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.files', 1)])
+
+@push('styles')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+    <style>
+        #fileTree .jstree-node {
+            padding-left: 30px;
+            padding-top: 7px;
+        }
+        #fileTree .jstree-themeicon {
+            font-size: 20px; /* Adjust the size according to your preference */
+        }
+        #fileTree .jstree-anchor {
+            font-size: 20px; /* Adjust the size according to your preference */
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            const fileTree = $("#fileTree");
+            const saveTree = $('#saveTree');
+            fileTree.jstree({
+                "core" : { "check_callback" : true, "variant" : "large" },
+                "types": {
+                    "default": {
+                        "icon": "glyphicon glyphicon-flash"
+                    },
+                    "demo": {
+                        "icon": "glyphicon glyphicon-ok"
+                    }
+                },
+                "plugins": ["types", "dnd", "themes"]
+            }).on('ready.jstree', function() {
+                fileTree.jstree('open_all');
+            });
+
+            fileTree.on('loaded.jstree', function () {
+                console.log('heree');
+                fileTree.jstree('open_all');
+            });
+
+            saveTree.on('click', function() {
+                const currentTreeState = $('#fileTree').jstree(true).get_json('#', { flat: false });
+                const filesStructure = extractFilesStructure(currentTreeState);
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+                const strategicDocumentId = $('#strategicDocumentId').val();
+                $.ajax({
+                    url: '/admin/strategic-documents/save-tree',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        _token: csrfToken,
+                        filesStructure: filesStructure,
+                        strategicDocumentId: strategicDocumentId,
+                    },
+                    success: function(response) {
+                        location.reload(1);
+                    },
+                    error: function(error) {
+                    }
+                });
+            });
+
+            function extractFilesStructure(treeState) {
+                let filesStructure = [];
+                function traverse(node) {
+                    let file = {
+                        id: node.id,
+                        text: node.text,
+                        icon: node.icon,
+                        children: []
+                    };
+
+                    if (node.children && node.children.length > 0) {
+                        for (let i = 0; i < node.children.length; i++) {
+                            file.children.push(traverse(node.children[i]));
+                        }
+                    }
+
+                    return file;
+                }
+
+                for (let i = 0; i < treeState.length; i++) {
+                    filesStructure.push(traverse(treeState[i]));
+                }
+
+                return filesStructure;
+            }
+        });
+    </script>
+@endpush
+

@@ -8,7 +8,7 @@
                     @php($storeRoute = route($storeRouteName, ['item' => $item]))
                     <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                         @csrf
-                        
+
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="regulatory_act_id">{{ trans_choice('custom.regulatory_acts', 1) }}<span class="required">*</span></label>
                             <div class="col-12">
@@ -26,7 +26,7 @@
                         </div>
 
                         @include('admin.partial.edit_single_translatable', ['field' => 'description', 'required' => true])
-                    
+
                         @include('admin.partial.edit_single_translatable', ['field' => 'author', 'required' => true])
 
                         @if ($item->id)
@@ -39,11 +39,11 @@
                             </label>
                         </div>
                         @endif
-                        
+
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                <a href="{{ route('admin.links.index') }}"
+                                <a href="{{ route('admin.legislative_initiatives.index') }}"
                                 class="btn btn-primary">{{ __('custom.cancel') }}</a>
                             </div>
                         </div>

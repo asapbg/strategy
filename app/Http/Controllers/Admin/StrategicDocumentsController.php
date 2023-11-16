@@ -78,6 +78,7 @@ class StrategicDocumentsController extends AdminController
         $prisActs = null; //TODO fix me Add them after PRIS module
         $strategicDocumentFiles = StrategicDocumentFile::all();
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
             'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles'));
@@ -136,7 +137,8 @@ class StrategicDocumentsController extends AdminController
             if ($item && request()->user()->cannot('update', $item)) {
                 return back()->with('warning', __('messages.unauthorized'));
             }
-
+            /*
+             * check if delete files is needed
             foreach ($item->files as $file) {
                 $filePath = public_path('files/' . $file->path);
                 if (File::exists($filePath)) {
@@ -144,7 +146,7 @@ class StrategicDocumentsController extends AdminController
                 }
                 $file->delete();
             }
-
+            */
             $item->delete();
             $item->documentLevel()->delete();
             $item->acceptActInstitution()->delete();
@@ -296,5 +298,53 @@ class StrategicDocumentsController extends AdminController
             return new StrategicDocument();
         }
         return $item;
+    }
+
+    public function saveFileTree(Request $request)
+    {
+        try {
+            $strategicDocument = StrategicDocument::findOrFail($request->get('strategicDocumentId'));
+            $fileStructures = Arr::get($request->get('filesStructure'), '0') ?? [];
+            foreach ($fileStructures['children'] as $child) {
+                $parentId = $child['id'];
+                $this->processChild($child, $strategicDocument, $parentId);
+            }
+
+            return true;
+        } catch (\Throwable $throwable) {
+            Log::warning('Strategic documents save tree: '. $throwable->getMessage());
+            throw new \Exception('Something went wrong while saving the tree');
+        }
+    }
+
+    /**
+     * @param $node
+     * @param $strategicDocument
+     * @param $parent
+     * @return void
+     */
+    protected function processChild($node, $strategicDocument, $parent)
+    {
+        $id = Arr::get($node, 'id');
+        if ($id === null) {
+            return;
+        }
+        $parentFile = StrategicDocumentFile::find($parent);
+        $currentFile = StrategicDocumentFile::find($id);
+
+        if (!$parentFile || !$currentFile) {
+            return;
+        }
+
+        $currentFile->parent_id = $parentFile->id;
+        if ($parentFile->id !== $currentFile->id) {
+            $currentFile->save();
+        }
+
+        if (isset($node['children'])) {
+            foreach ($node['children'] as $child) {
+                $this->processChild($child, $strategicDocument, $id);
+            }
+        }
     }
 }

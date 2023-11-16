@@ -104,6 +104,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
         Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
+        Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
     });
 
     // Static pages
@@ -224,16 +225,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // PC Subjects
     Route::controller(PCSubjectController::class)->group(function () {
-        Route::get('/pc-subjects', 'index')->name('pc_subjects.index')->middleware('can:viewAny,App\Models\PCSubject');
+        Route::get('/pc-subjects', 'index')->name('pc_subjects.index');
         Route::get('/pc_-subjects/edit/{item?}', 'edit')->name('pc_subjects.edit');
         Route::match(['post', 'put'], '/pc-subjects/store/{item?}', 'store')->name('pc_subjects.store');
     });
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')
+            ->middleware('can:viewAny, App\Models\LegislativeInitiative');
         Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
-        Route::match(['post', 'put'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
+        Route::bind('item', function ($id) {
+            return \App\Models\LegislativeInitiative::withTrashed()->find($id);
+        });
+        Route::match(['post', 'put', 'delete'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
     });
 
     // Mock controllers
