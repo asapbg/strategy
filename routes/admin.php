@@ -232,9 +232,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')
+            ->middleware('can:viewAny, App\Models\LegislativeInitiative');
         Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
-        Route::match(['post', 'put'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
+        Route::bind('item', function ($id) {
+            return \App\Models\LegislativeInitiative::withTrashed()->find($id);
+        });
+        Route::match(['post', 'put', 'delete'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
     });
 
     // Mock controllers

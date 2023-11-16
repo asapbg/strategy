@@ -9,6 +9,9 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ */
 class LegislativeInitiative extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable, SoftDeletes;

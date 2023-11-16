@@ -24,17 +24,27 @@ class StoreLegislativeInitiativeRequest extends FormRequest
      */
     public function rules()
     {
+        $id_rules = ['required', 'numeric', 'exists:legislative_initiative'];
+
+        if (request()->isMethod('delete')) {
+            return ['id' => $id_rules];
+        }
+
+        if (request()->isMethod('put') && request()->offsetGet('restore') === 'true') {
+            return ['id' => $id_rules];
+        }
+
         $rules = [
             'regulatory_act_id' => ['required', 'numeric'],
             'active' => ['boolean'],
         ];
 
-        if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:link'];
+        if (request()->isMethod('put')) {
+            $rules['id'] = $id_rules;
         }
 
         foreach (LegislativeInitiative::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+            $rules[$field . '_' . app()->getLocale()] = $properties['rules'];
         }
 
         return $rules;

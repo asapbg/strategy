@@ -42,6 +42,36 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endcan
+
+                                        @can('delete', $item)
+                                            @if(!$item->deleted_at)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-name="{{ $item->display_name }}"
+                                                   data-resource-delete-url="{{route('admin.legislative_initiatives.store',$item->id)}}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.delete')}}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
+
+                                        @can('restore', $item)
+                                            @if($item->deleted_at)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                   data-target="#modal-restore-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-name="{{ $item->display_name }}"
+                                                   data-resource-restore-url="{{route('admin.legislative_initiatives.store',$item->id)}}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.restore')}}">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -53,6 +83,8 @@
         </div>
     </section>
 
+    @includeIf('modals.restore-resource', ['resource' => $title_singular])
+    @includeIf('modals.delete-resource', ['resource' => $title_singular, 'have_request_param' => true])
 @endsection
 
 
