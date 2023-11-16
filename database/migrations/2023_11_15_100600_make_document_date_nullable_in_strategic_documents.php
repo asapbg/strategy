@@ -29,7 +29,7 @@ return new class extends Migration
     {
         if (Schema::hasColumn('strategic_document', 'document_date')) {
             Schema::table('strategic_document', function (Blueprint $table) {
-                $table->date('document_date')->nullable(false)->change();
+               $table->dropColumn('document_date');
             });
         }
     }

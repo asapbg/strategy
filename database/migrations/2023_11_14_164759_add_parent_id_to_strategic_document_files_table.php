@@ -8,17 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('strategic_document_file', function (Blueprint $table) {
-            // Add nullable parent_id column
-            $table->unsignedBigInteger('parent_id')->nullable();
-        });
+        if (!Schema::hasColumn('strategic_document', 'parent_id')) {
+            Schema::table('strategic_document_file', function (Blueprint $table) {
+                // Add nullable parent_id column
+                $table->unsignedBigInteger('parent_id')->nullable();
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('strategic_document_file', function (Blueprint $table) {
-            // If needed, you can revert the change here
-            $table->dropColumn('parent_id');
-        });
+        if (Schema::hasColumn('strategic_document', 'parent_id')) {
+            Schema::table('strategic_document_file', function (Blueprint $table) {
+                $table->dropColumn('parent_id');
+            });
+        }
     }
 };

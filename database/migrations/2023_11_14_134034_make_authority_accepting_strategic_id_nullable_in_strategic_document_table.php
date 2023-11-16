@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->unsignedBigInteger('authority_accepting_strategic_id')->nullable()->change();
-        });
+        if (!Schema::hasColumn('strategic_document', 'authority_accepting_strategic_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->unsignedBigInteger('authority_accepting_strategic_id')->nullable();
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_document', function (Blueprint $table) {
-            $table->unsignedBigInteger('authority_accepting_strategic_id')->nullable(false)->change();
-        });
+        if (Schema::hasColumn('strategic_document', 'authority_accepting_strategic_id')) {
+            Schema::table('strategic_document', function (Blueprint $table) {
+                $table->dropColumn('authority_accepting_strategic_id');
+            });
+        }
     }
 };
