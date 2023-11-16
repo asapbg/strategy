@@ -46,9 +46,9 @@ class PCSubjectController extends AdminController
     public function edit(Request $request, $item = null)
     {
         $item = $this->getRecord($item);
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PCSubject::class) ) {
-            return back()->with('warning', __('messages.unauthorized'));
-        }
+//        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', PCSubject::class) ) {
+//            return back()->with('warning', __('messages.unauthorized'));
+//        }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PCSubject::translationFieldsProperties();
@@ -60,10 +60,10 @@ class PCSubjectController extends AdminController
     {
         $item = $this->getRecord($item);
         $validated = $request->validated();
-        if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', PCSubject::class) ) {
-            return back()->with('warning', __('messages.unauthorized'));
-        }
+//        if( ($item->id && $request->user()->cannot('update', $item))
+//            || $request->user()->cannot('create', PCSubject::class) ) {
+//            return back()->with('warning', __('messages.unauthorized'));
+//        }
 
         try {
             $fillable = $this->getFillableValidated($validated, $item);
@@ -79,7 +79,6 @@ class PCSubjectController extends AdminController
             return to_route(self::LIST_ROUTE)
                 ->with('success', trans_choice('custom.public_consultation', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            dd($e, $validated);
             \Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }

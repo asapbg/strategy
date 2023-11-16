@@ -225,7 +225,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // PC Subjects
     Route::controller(PCSubjectController::class)->group(function () {
-        Route::get('/pc-subjects', 'index')->name('pc_subjects.index')->middleware('can:viewAny,App\Models\PCSubject');
+        Route::get('/pc-subjects', 'index')->name('pc_subjects.index');
         Route::get('/pc_-subjects/edit/{item?}', 'edit')->name('pc_subjects.edit');
         Route::match(['post', 'put'], '/pc-subjects/store/{item?}', 'store')->name('pc_subjects.store');
     });
