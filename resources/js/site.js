@@ -162,5 +162,17 @@ $(function() {
             event.target // newly activated tab
             event.relatedTarget // previous active tab
         })
+
+        if($('.summernote').length) {
+            $('.summernote').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol','paragraph']],
+                    ['view', ['fullscreen']],
+                    ['insert', ['link']]
+                ]
+            });
+        }
+
     });
 });
