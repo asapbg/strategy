@@ -1223,6 +1223,8 @@ input[type=checkbox] {
 .active-item-left {
     background: #20659e;
     border-radius: 4px;
+    width: auto;
+    display: inline-block;
 }
 
 .active-item-left a {
