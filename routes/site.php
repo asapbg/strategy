@@ -12,6 +12,10 @@ Route::controller(\App\Http\Controllers\ArchiveController::class)->group(functio
     Route::get('/archive', 'index')->name('archive.index');
 });
 
+Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(function () {
+    Route::get('/impact-analyze-methods', 'index')->name('impact-analyze-methods.index');
+});
+
 Route::get('/consultations', function () {
     return view('site.consultations');
 });
