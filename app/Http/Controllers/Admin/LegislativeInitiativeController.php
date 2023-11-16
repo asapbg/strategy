@@ -148,17 +148,21 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * @param LegislativeInitiative $record
-     * @param array                 $with
+     * @param LegislativeInitiative|null $record
+     * @param array                      $with
      *
      * @return mixed
      */
-    private function getRecord(LegislativeInitiative $record, array $with = []): mixed
+    private function getRecord(LegislativeInitiative|null $record, array $with = []): mixed
     {
         $query = LegislativeInitiative::withTrashed();
 
         if (sizeof($with)) {
             $query->with($with);
+        }
+
+        if (!$record) {
+            return new LegislativeInitiative();
         }
 
         $item = $query->find($record->id);
