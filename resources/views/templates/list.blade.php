@@ -38,6 +38,22 @@
 <br><a href="{{ route('templates.view', ['slug' => 'rakovodstva-list']) }}">Ръководства - списък</a>
 <br><a href="{{ route('templates.view', ['slug' => 'rakovodstva-inner']) }}">Ръководство- вътрешна страница</a>
 
+<br>
+<br><a href="{{ route('archive.index') }}">Архив</a>
+
+<br>
+<br><a href="{{ route('strategy-documents.index') }}">Стратегически документи</a>
+<br><a href="{{ route('strategy-document.view') }}">Стратегически документ - Преглед</a>
+
+<br>
+<br><a href="{{ route('impact-analyze-methods.index') }}">Калкулатор за изчисляване на административната тежест</a>
+
+<br>
+<br><a href="{{ route('reports.index') }}">Отчети</a>
+<br><a href="{{ route('report.view') }}">Отчет - Преглед</a>
+
+<br>
+<br><a href="{{ route('partnerships.index') }}">Партньорство за открито управление</a>
 
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}
