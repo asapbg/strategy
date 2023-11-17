@@ -43,7 +43,7 @@
 
 <br>
 <br><a href="{{ route('strategy-documents.index') }}">Стратегически документи</a>
-<br><a href="{{ route('strategy-document.view') }}">Стратегически документ - Преглед</a>
+<br><a href="{{ route('strategy-document.view', ['id' => 1]) }}">Стратегически документ - Преглед</a>
 
 <br>
 <br><a href="{{ route('impact-analyze-methods.index') }}">Калкулатор за изчисляване на административната тежест</a>
