@@ -451,5 +451,8 @@ return [
     'nomenclature_level.AREA'        => 'Областно',
     'nomenclature_level.MUNICIPAL'        => 'Общинско ниво',
     'number_symbol'        => '№',
-    'form1' => 'Частична предварителна оценка на въздействието'
+    'form1' => 'Частична предварителна оценка на въздействието',
+    'archive' => 'Архив',
+    'impact_analyze_methods' => 'Методи за анализ на въздействията',
+
 ];

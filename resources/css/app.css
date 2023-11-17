@@ -305,6 +305,22 @@ span.left-link-icon i {
 
 /**/
 
+/*Summer note Richtext*/
+.summernote-wrapper .panel-heading.note-toolbar{
+    background: #f5f9fd !important;
+    border-bottom: 1px solid #cae0f4 !important;
+}
+
+.summernote-wrapper .note-editor.note-airframe, .summernote-wrapper .note-editor.note-frame {
+    border: 1px solid #cae0f4 !important;
+}
+
+.summernote-wrapper .note-editor.note-airframe .note-statusbar,.summernote-wrapper .note-editor.note-frame .note-statusbar {
+    background-color: #f5f9fd;
+    border-color: #cae0f4 !important;
+}
+/**/
+
 /* Form and Public Consultations*/
 
 .modal-dialog.file-display {
@@ -415,13 +431,17 @@ span.left-link-icon i {
     padding: 0px 30px 30px 15px;
 }
 
-
 .home-results .row {
-    margin-bottom: 30px;
+    margin-bottom: 1.5rem;
 }
 
 .home-results .row:last-child {
     margin-bottom: 0px;
+}
+
+.strip-header-words {
+    height: 65px;
+    overflow: hidden;
 }
 
 .all-consultations h3 {
@@ -498,9 +518,9 @@ a.consul-item p {
     font-weight: 600;
 }
 
-.filter-results label {
+.filter-results label, form label {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .rss-sub i {
@@ -675,6 +695,10 @@ textarea {
 
 .navy-marine-bgr {
     background: #4f9dc3;
+}
+
+.red-color {
+    color:#dc3545;
 }
 
 /**/
@@ -1231,7 +1255,7 @@ input[type=checkbox] {
     color: #fff !important;
 }
 
-/*Modal fiel preview*/
+/*Modal file preview*/
 .modal.file-preview .modal-dialog {
     max-width: 90%;
 }
@@ -1240,13 +1264,60 @@ input[type=checkbox] {
     max-width: 100% !important;
     height: auto !important;
 }
-
+/**/
 
 /*Custom box link*/
 .suggestion-box {
     background: #fafafa;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
+/**/
+
+/*Legislative initiative*/
+.active-li {
+    color: #fff !important;
+    background: rgba(var(--bs-success-rgb));
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.send-li {
+    color: #fff !important;
+    background: #028192;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.closed-li {
+    color: #fff !important;
+    background: rgba(var(--bs-danger-rgb));
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.voted-li {
+    color: #fff !important;
+    background: #20659e;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: -1px;
+}
+
+.support-count-li {
+    font-size: 32px;
+    border: 2px solid #21659e;
+    border-radius: 6px;
+    padding: 5px;
+}
+/**/
 
 
 /*Responsive*/

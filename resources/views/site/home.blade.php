@@ -152,7 +152,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-8">
                                 <button class="btn rss-sub main-color"><i
                                         class="fas fa-search main-color"></i>Търсене</button>
@@ -167,7 +167,7 @@
                             </div>
                         </div>
 
-                        <div class="row mt-5">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
@@ -178,33 +178,40 @@
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                            <h3>Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                            <h3 class="strip-header-words">Проект на Решение на
+                                                                Министерския съвет за приемане на Национален план за
+                                                                развитие на биологичното производство до 2030 г.</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <a href="#" title="Финанси и данъчна политика" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-tractor me-1" title="Финанси и данъчна политика"></i>
+                                                <a href="#" title="Финанси и данъчна политика"
+                                                    class="text-decoration-none mb-3">
                                                     Земеделие и селски райони
                                                 </a>
-                                          
+
                                                 <div class="meta-consul mt-2">
                                                     <span class="text-secondary">
                                                         4.7.2023 г. - 3.8.2023 г. | 1 <i
                                                             class="far fa-comment text-secondary"></i>
                                                     </span>
 
-                                                    <a href="#" title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <a href="#"
+                                                        title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -216,7 +223,7 @@
                         </div>
 
 
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
@@ -227,22 +234,28 @@
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
-                                                            <h3>Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
+                                                            <h3 class="strip-header-words">Проект на заповед, която се
+                                                                издава от директора на Агенция,Митници“ на основание чл.
+                                                                66б, ал. 2 от Закона за митниците</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <a href="#" title="Финанси и данъчна политика" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-euro-sign me-1" title="Финанси и данъчна политика"></i>
+                                                <a href="#" title="Финанси и данъчна политика"
+                                                    class="text-decoration-none mb-3">
+
                                                     Финанси и данъчна политика
                                                 </a>
 
@@ -252,8 +265,10 @@
                                                             class="far fa-comment text-secondary"></i>
                                                     </span>
 
-                                                    <a href="#" title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <a href="#"
+                                                        title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -266,7 +281,7 @@
 
 
 
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
@@ -277,34 +292,40 @@
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
-                                                            <h3>Проект на Закон за изменение и допълнение на Закона за адвокатурата</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
+                                                            <h3 class="strip-header-words">Проект на Закон за изменение
+                                                                и допълнение на Закона за адвокатурата</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
 
                                                 <a href="#" title="Бизнес среда" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-user-tie me-1" title="Бизнес среда"></i>
+
                                                     Бизнес среда
                                                 </a>
-   
+
 
                                                 <div class="meta-consul mt-2">
                                                     <span class="text-secondary">
                                                         03.07.2023 г. - 04.08.2023 г. | 12 <i
                                                             class="far fa-comment text-secondary"></i>
                                                     </span>
-                                                    <a href="#" title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <a href="#"
+                                                        title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -316,7 +337,7 @@
                         </div>
 
 
-                        <div class="row ">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
@@ -327,28 +348,32 @@
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
-                                                            <h3>Проект на Постановление на Министерския съвет за създаване на
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
+                                                            <h3 class="strip-header-words">Проект на Постановление на
+                                                                Министерския съвет за създаване на
                                                                 Консултативен съвет за Европейската
                                                                 зелена сделка</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
 
                                                 <a href="#" title="Околна среда" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-leaf me-1" title="Околна среда"></i>
+
                                                     Околна среда
                                                 </a>
-                                  
+
 
                                                 <div class="meta-consul mt-2">
                                                     <div>
@@ -357,8 +382,10 @@
                                                                 class="far fa-comment text-secondary"></i>
                                                         </span>
                                                     </div>
-                                                    <a href="#" title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <a href="#"
+                                                        title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -368,7 +395,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-4">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination m-0">
                                     <li class="page-item">
@@ -391,7 +418,7 @@
                                 </ul>
                             </nav>
                         </div>
-                    
+
                         <div class="row">
                             <div class="col-md-8">
                                 <button class="btn rss-sub main-color">Всички консултации <i
@@ -483,7 +510,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-8">
                                 <button class="btn rss-sub main-color"><i
                                         class="fas fa-search main-color"></i>Търсене</button>
@@ -497,45 +524,49 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-5">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
                                         <div class="consult-img-holder">
-                                            <i class="fa-solid fa-tractor gr-color"></i>
+                                            <i class="fa-solid fa-hospital light-blue"></i>
                                         </div>
                                         <div class="consult-body">
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                            <h3>Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
+                                                            <h3 class="strip-header-words">Промяна в нормативната уредба
+                                                                на търговията на дребно с лекарствени продукти</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <a href="#" title="Финанси и данъчна политика" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-tractor me-1" title="Финанси и данъчна политика"></i>
-                                                    Земеделие и селски райони
+                                                <a href="#" title=" Партньорство за открито управление"
+                                                    class="text-decoration-none mb-3">
+                                                    Здравеопазване
                                                 </a>
-                                          
                                                 <div class="meta-consul mt-2">
-                                                    <span class="text-secondary">
-                                                        4.7.2023 г. - 3.8.2023 г. | 1 <i class="far fa-comment text-secondary"></i>
-                                                    </span>
-
-                                                    <a href="#" title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <span>Подкрепено: <span class="voted-li">585 пъти</span></span>
+                                                    <a href="#"
+                                                        title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
+
+
                                             </div>
 
                                         </div>
@@ -545,56 +576,7 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="consul-wrapper">
-                                    <div class="single-consultation d-flex">
-                                        <div class="consult-img-holder">
-                                            <i class="fa-solid fa-euro-sign light-blue"></i>
-                                        </div>
-                                        <div class="consult-body">
-                                            <div href="#" class="consul-item">
-                                                <div class="consult-item-header d-flex justify-content-between">
-                                                    <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
-                                                            <h3>Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците</h3>
-                                                        </a>
-                                                    </div>
-                                                    <div class="consult-item-header-edit">
-                                                        <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
-                                                        </a>
-                                                        <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
-                                                            </i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <a href="#" title="Финанси и данъчна политика" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-euro-sign me-1" title="Финанси и данъчна политика"></i>
-                                                    Финанси и данъчна политика
-                                                </a>
-
-                                                <div class="meta-consul mt-2">
-                                                    <span class="text-secondary">
-                                                        30.06.2023 г. - 30.07.2023 г. | 5 <i class="far fa-comment text-secondary"></i>
-                                                    </span>
-
-                                                    <a href="#" title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
@@ -605,33 +587,36 @@
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
-                                                            <h3>Проект на Закон за изменение и допълнение на Закона за адвокатурата</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                            <h3 class="strip-header-words">Участие на гражданите в обсъжданията на законопроектите
+                                                                на Народното събрание.</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
-
-                                                <a href="#" title="Бизнес среда" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-user-tie me-1" title="Бизнес среда"></i>
-                                                    Бизнес среда
+                                                <a href="#" title=" Партньорство за открито управление"
+                                                    class="text-decoration-none mb-3">
+                                                    Партньорство за открито управление
                                                 </a>
-   
+
 
                                                 <div class="meta-consul mt-2">
-                                                    <span class="text-secondary">
-                                                        03.07.2023 г. - 04.08.2023 г. | 12 <i class="far fa-comment text-secondary"></i>
-                                                    </span>
-                                                    <a href="#" title="Проект на Закон за изменение и допълнение на Закона за адвокатурата">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <span>Подкрепено: <span class="voted-li">235 пъти</span></span>
+                                                    <a href="#"
+                                                        title="Проект на заповед, която се издава от директора на Агенция,Митници“ на основание чл. 66б, ал. 2 от Закона за митниците">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -643,58 +628,111 @@
                         </div>
 
 
-                        <div class="row ">
+
+                        <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">
                                     <div class="single-consultation d-flex">
                                         <div class="consult-img-holder">
-                                            <i class="fa-solid fa-leaf gr-color"></i>
+                                            <i class="fa-solid fa-user-tie dark-blue"></i>
                                         </div>
                                         <div class="consult-body">
                                             <div href="#" class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="#" class="text-decoration-none" title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
-                                                            <h3>Проект на Постановление на Министерския съвет за създаване на
-                                                                Консултативен съвет за Европейската
-                                                                зелена сделка</h3>
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                            <h3 class="strip-header-words">Как да накараме населението да се превърне в общество
+                                                                Единно, участващо в управлението на община?</h3>
                                                         </a>
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         <a href="#">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
                                                         </a>
                                                         <a href="#">
-                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
-
-                                                <a href="#" title="Околна среда" class="text-decoration-none mb-3">
-                                                    <i class="fa-solid fa-leaf me-1" title="Околна среда"></i>
-                                                    Околна среда
+                                                <a href="#" title=" Партньорство за открито управление"
+                                                    class="text-decoration-none mb-3">
+                                                    Партньорство за открито управление
                                                 </a>
-                                  
+
 
                                                 <div class="meta-consul mt-2">
-                                                    <div>
-                                                        <span class="text-secondary">
-                                                            30.06.2023 г. - 14.07.2023 г. | 2 <i class="far fa-comment text-secondary"></i>
-                                                        </span>
-                                                    </div>
-                                                    <a href="#" title="Проект на Постановление на Министерския съвет за създаване на Консултативен съвет за Европейската зелена сделка">
-                                                        <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
+                                                    <span>Подкрепено: <span class="voted-li">182 пъти</span></span>
+
+                                                    <a href="#"
+                                                        title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
                                                     </a>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="consul-wrapper">
+                                    <div class="single-consultation d-flex">
+                                        <div class="consult-img-holder">
+                                            <i class="fa-regular fa-file-lines dark-blue"></i>
+                                        </div>
+                                        <div class="consult-body">
+                                            <div href="#" class="consul-item">
+                                                <div class="consult-item-header d-flex justify-content-between">
+                                                    <div class="consult-item-header-link">
+                                                        <a href="#" class="text-decoration-none"
+                                                            title="Адекватни ли са административните услуги и съответно таксите?">
+                                                            <h3 class="strip-header-words">Адекватни ли са административните услуги и съответно
+                                                                таксите?</h3>
+                                                        </a>
+                                                    </div>
+                                                    <div class="consult-item-header-edit">
+                                                        <a href="#">
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                role="button" title="Изтриване"></i>
+                                                        </a>
+                                                        <a href="#">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                                role="button" title="Редакция">
+                                                            </i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <a href="#" title="Административни такси и услуги"
+                                                    class="text-decoration-none mb-3">
+                                                    Административни такси и услуги
+                                                </a>
+                                                <div class="meta-consul mt-2">
+                                                    <span>Подкрепено: <span class="voted-li">84 пъти</span></span>
+
+                                                    <a href="#"
+                                                        title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                        <i class="fas fa-arrow-right read-more"><span
+                                                                class="d-none">Линк</span></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination m-0">
                                     <li class="page-item">
@@ -720,7 +758,7 @@
 
                         <div class="row">
                             <div class="col-md-8">
-                                <button class="btn rss-sub main-color">Всички консултации <i
+                                <button class="btn rss-sub main-color">Всички инициативи <i
                                         class="fas fa-long-arrow-right main-color"></i></button>
                             </div>
                         </div>

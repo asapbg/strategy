@@ -290,27 +290,62 @@
           </div>
 
           <div class="row mb-5">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
             </div>
-            <div class="col-md-6 text-end">
-                <button class="btn rss-sub main-color"><i class="fa-solid fa-download main-color"></i>Експорт</button>
+            <div class="col-md-8 text-end">
+                <button class="btn btn-primary main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
+                <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
+                <button class="btn btn-primary main-color"><i class="fa-solid fa-download main-color me-1"></i>Експорт</button>
+                <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
+    
             </div>
+        </div>
 
-            <div class="col-12 mt-4">
-                <div class="info-consul text-start">
-                    <h4>
-                        Общо 74 резултата
-                    </h4>
-                </div>
+          <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
+            <div class="col-md-2">
+                <p class="mb-0 cursor-pointer ">
+                    <i class="fa-solid fa-sort me-2"></i> Категория
+                </p>
+            </div>
+            <div class="col-md-2 cursor-pointer ">
+                <p class="mb-0">
+                    <i class="fa-solid fa-sort me-2"></i>Заглавие
+                </p>
+            </div>
+    
+    
+            <div class="col-md-2">
+                <p class="mb-0 cursor-pointer">
+                    <i class="fa-solid fa-sort me-2"></i>Вносител
+                </p>
+            </div>
+            <div class="col-md-2">
+                <p class="mb-0 cursor-pointer ">
+                    <i class="fa-solid fa-sort me-2"></i>Номер
+                </p>
+            </div>
+            <div class="col-md-2">
+                <p class="mb-0 cursor-pointer ">
+                    <i class="fa-solid fa-sort me-2"></i>Термини
+            </div>
+            <div class="col-md-2">
+                <p class="mb-0 cursor-pointer ">
+                    <i class="fa-solid fa-sort me-2"></i>Дата
+                </p>
             </div>
         </div>
 
 
-
-
-
-
+        <div class="row mb-2">
+          <div class="col-12 mt-2">
+              <div class="info-consul text-start">
+                  <p class="fw-600">
+                      Общо 98 резултата
+                  </p>
+              </div>
+          </div>
+      </div>
 
         <div class="row mb-3">
           <div class="col-md-12">

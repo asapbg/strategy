@@ -449,4 +449,6 @@ return [
     'nomenclature_level.AREA'        => 'Областно',
     'nomenclature_level.MUNICIPAL'        => 'Общинско ниво',
     'number_symbol'        => '№',
+    'archive' => 'Архив',
+    'impact_analyze_methods' => 'Методи за анализ на въздействията',
 ];

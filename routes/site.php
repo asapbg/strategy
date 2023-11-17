@@ -8,6 +8,23 @@ Route::get('/', function () {
     return view('site.home');
 })->name('home');
 
+Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {
+    Route::get('/archive', 'index')->name('archive.index');
+});
+
+Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(function () {
+    Route::get('/impact-analyze-methods', 'index')->name('impact-analyze-methods.index');
+});
+
+Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
+    Route::get('polls', 'index')->name('poll.index');
+});
+
+Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {
+    Route::get('partnerships', 'index')->name('partnerships.index');
+    Route::get('partnership/show', 'show')->name('partnership.view');
+});
+
 Route::get('/consultations', function () {
     return view('site.consultations');
 });
