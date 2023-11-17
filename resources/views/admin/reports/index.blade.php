@@ -10,7 +10,7 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        <a href="{{ route('admin.strategic_documents.edit') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route('admin.reports.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.report', 1) }}
                         </a>
                     </div>

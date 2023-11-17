@@ -401,6 +401,7 @@ return [
         'operational_program_id'  => 'Оперативна програма',
         'field_of_action'           => 'Field of action|Fields of action',
         'target_group'              => 'Target group|Target groups',
+        'document_accepted_with'    => 'Приет с Решение №',
     ],
 
 ];
