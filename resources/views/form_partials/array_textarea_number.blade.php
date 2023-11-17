@@ -7,7 +7,7 @@
 <tr>
     <td valign="top">
         @php($label = __($buttonLabel) . ' ' . $a+1)
-        @include('form_partials.textarea', ['name' => $nameSimple."[$a][text]", 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.text") : ''])
+        @include('form_partials.textarea', ['name' => $nameSimple."[$a][text]", 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.text") : '', 'class' => $class ?? ''])
     </td>
     <td valign="top" width="100">
         @include('form_partials.text', ['name' => $nameSimple."[$a][number]", 'type' => 'number', 'label' => 'forms.number_people', 'value' => array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.number") : ''])

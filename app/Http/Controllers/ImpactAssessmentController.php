@@ -11,7 +11,14 @@ class ImpactAssessmentController extends Controller
 {
     public function index()
     {
-        return view('impact_assessment.index');
+        $pageTitle = trans_choice('custom.impact_assessment', 2);
+        return $this->view('impact_assessment.index', compact('pageTitle'));
+    }
+
+    public function forms()
+    {
+        $pageTitle = __('site.impact_assessment.forms_and_templates');
+        return $this->view('impact_assessment.forms', compact('pageTitle'));
     }
 
     public function form($formName, Request $request)
@@ -20,9 +27,9 @@ class ImpactAssessmentController extends Controller
         $step = $request->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = $request->input('inputId', 0);
-
+        $pageTitle = $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 2);
         //dd(session()->all());
-        return view('site.impact_assessment', compact('formName', 'state', 'step', 'steps', 'inputId'));
+        return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId'));
     }
 
     public function store($formName, Request $request)
@@ -53,11 +60,11 @@ class ImpactAssessmentController extends Controller
             data_set($data, $key, $value);
             unset($data['add_array_entry']);
         }
-        
+
         $inputId = $request->input('inputId', false);
         $submit = $request->input('submit');
         $state = $this->getState($formName, $inputId);
-        
+
         $data = array_merge($state, $data);
         if ($inputId) $data['inputId'] = $inputId;
         session(["forms.$formName" => $data]);
@@ -76,11 +83,11 @@ class ImpactAssessmentController extends Controller
             $fi->save();
             $inputId = $fi->id;
         }
-        
+
         $step = $request->input('step', 1);
         $currentStep = $request->input('currentStep', 1);
         $rules = config("validation.$formName.step$currentStep");
-        
+
         if ($currentStep <= $step || $submit) {
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {

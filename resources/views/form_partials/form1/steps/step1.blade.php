@@ -35,19 +35,19 @@
     <div class="row">
         <div class="col-sm-12">
             <h4>1. {{ __('forms.problem_to_solve') }}</h4>
-            @include('form_partials.shared.problems')
+            @include('form_partials.shared.problems', ['class' => 'summernote'])
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
             <h4>2. {{ __('forms.goal_goals') }}</h4>
-            @include('form_partials.shared.goals')
+            @include('form_partials.shared.goals', ['class' => 'summernote'])
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
             <h4>3. {{ __('forms.interested_parties') }}</h4>
-            @include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party'])
+            @include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party', 'class' => 'summernote'])
             <p>
                 <i>Посочете всички потенциални заинтересовани страни/групи заинтересовани страни (в рамките на процеса по извършване на частичната предварителна частична оценка на въздействието и/или при обществените консултации по чл. 26 от Закона за нормативните актове), върху които предложенията ще окажат пряко или косвено въздействие (бизнес в дадена област/всички предприемачи, неправителствени организации, граждани/техни представители, държавни органи/общини и др.).</i>
             </p>

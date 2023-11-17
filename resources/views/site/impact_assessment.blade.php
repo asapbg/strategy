@@ -1,7 +1,14 @@
-@extends('layouts.site')
-
-@section('pageTitle', $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 2))
+@extends('layouts.site', ['fullwidth' => true])
 
 @section('content')
-  @include('impact_assessment.form')
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                @include('impact_assessment.sidebar')
+                <div class="col-lg-10  home-results home-results-two pris-list mb-5">
+                    @include('impact_assessment.form')
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection

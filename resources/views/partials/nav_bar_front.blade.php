@@ -16,11 +16,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" type="button">Оценки на въздействието</a>
+                    <a class="nav-link" href="{{ route('impact_assessment.index') }}" type="button">Оценки на въздействието</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ __('site.menu.pris') }}</a>
+                    <a class="nav-link" href="{{ route('pris.index') }}">{{ __('site.menu.pris') }}</a>
                 </li>
 
                 <li class="nav-item ">

@@ -9,7 +9,7 @@
     <tr>
         <td>
             @php($label = __($buttonLabel) . ' ' . $a+1)
-            @include('form_partials.textarea', ['nameDots' => "$nameDots.$a"])
+            @include('form_partials.textarea', ['nameDots' => "$nameDots.$a", "class" => $class ?? ''])
         </td>
         <td width="50">
             @if($a > 0)

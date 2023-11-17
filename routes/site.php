@@ -40,6 +40,7 @@ Route::get('/strategy-documents/view', function (){
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
+    Route::get('/impact_assessments/forms', 'forms')->name('impact_assessment.forms');
     Route::get('/impact_assessments/{form}', 'form')->name('impact_assessment.form');
     Route::post('/impact_assessments/{form}', 'store')->name('impact_assessment.store');
     Route::get('/impact_assessments/{form}/pdf/{inputId}', 'pdf')->name('impact_assessment.pdf');

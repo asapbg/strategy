@@ -11,5 +11,5 @@ $value = isset($value) ? $value : (\Arr::has($state, $nameDots) ? data_get($stat
 @if (isset($readOnly))
 <p>{{ $value }}</p>
 @else
-<textarea id="{{ $name }}" name="{{ $name }}" placeholder="{{ isset($placeholder) ? __($placeholder) : '' }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror">{{ $value }}</textarea>
+<textarea id="{{ $name }}" name="{{ $name }}" placeholder="{{ isset($placeholder) ? __($placeholder) : '' }}" class="form-control form-control-sm @if(isset($class)) {{ $class }} @endif @error($nameDots){{ 'is-invalid' }}@enderror">{{ $value }}</textarea>
 @endif

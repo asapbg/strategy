@@ -34,4 +34,6 @@ return [
     'public_consultation.report_documents' => 'Справка с всички становища',
     'public_consultation.polls' => 'Анкети',
     'pris.about' => 'Относно',
+    'impact_assessment.forms_and_templates' => 'Образци и форми',
+
 ];
