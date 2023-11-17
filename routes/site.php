@@ -23,7 +23,12 @@ Route::controller(\App\Http\Controllers\PollController::class)->group(function (
 
 Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {
     Route::get('partnerships', 'index')->name('partnerships.index');
-    Route::get('partnership/show', 'show')->name('partnership.view');
+    Route::get('partnership/view', 'show')->name('partnership.view');
+});
+
+Route::controller(\App\Http\Controllers\ReportController::class)->group(function () {
+    Route::get('reports', 'index')->name('reports.index');
+    Route::get('report/view', 'show')->name('report.view');
 });
 
 Route::get('/consultations', function () {
