@@ -50,11 +50,10 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
     Route::get('/legislative-programs/{id}', 'show')->name('lp.view');
 });
 
-Route::get('/strategy-documents/{search?}', [\App\Http\Controllers\StrategicDocumentsController::class, 'index'])->name('strategy_documents');
-
-Route::get('/strategy-documents/view', function (){
-    return view('templates.strategicheski-dokumenti-inner');
-})->name('strategy_documents.view');
+Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
+    Route::get('/strategy-documents/{search?}', 'index')->name('strategy-documents.index');
+    Route::get('/strategy-document/view', 'show')->name('strategy-document.view');
+});
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
