@@ -38,7 +38,7 @@
                                     <td>{{ $item->open_to }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
+                                            <a href="{{ route( $editRouteName , ['id' => $item->id]) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

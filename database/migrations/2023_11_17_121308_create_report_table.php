@@ -16,8 +16,10 @@ return new class extends Migration {
     {
         Schema::create((new Report())->getTable(), function (Blueprint $table) {
             $table->id();
+            $table->string('name_bg');
+            $table->string('name_en');
+            $table->tinyInteger('consultation_type_id');
             $table->tinyInteger('field_of_action_id');
-            $table->tinyInteger('target_group_id');
             $table->timestamp('from_date');
             $table->timestamp('to_date');
             $table->tinyInteger('active')->default(1);
