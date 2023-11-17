@@ -18,6 +18,7 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
+    Route::get('poll/show', 'show')->name('poll.show');
 });
 
 Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {
