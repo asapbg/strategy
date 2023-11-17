@@ -148,7 +148,7 @@
                                     <div href="#" class="consul-item">
                                         <div class="consult-item-header d-flex justify-content-between">
                                             <div class="consult-item-header-link">
-                                                <a href="{{ route('strategy-document.view') }}" class="text-decoration-none" title="{{ $document->title }}">
+                                                <a href="{{ route('strategy-document.view', ['id' => $document->id]) }}" class="text-decoration-none" title="{{ $document->title }}">
                                                     <h3>{{ $document->title }}</h3>
                                                 </a>
                                             </div>
