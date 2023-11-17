@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <form
-                        action="{{ route('admin.nomenclatures.field-of-actions.update', ['action' => $action->id]) }}"
+                        action="{{ route('admin.nomenclatures.field_of_actions.update', ['action' => $action->id]) }}"
                         method="post" name="form" id="form">
                         @csrf
                         <input type="hidden" name="id" value="{{ $action->id ?? 0 }}">

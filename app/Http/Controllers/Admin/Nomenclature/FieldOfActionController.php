@@ -95,4 +95,27 @@ class FieldOfActionController extends Controller
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
+
+    /**
+     * Destroy the resource.
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(FieldOfAction $action)
+    {
+        if(request()->user()->cant('delete', $action)) {
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.unauthorized'));
+        }
+
+        try {
+            $action->delete();
+
+            return redirect(route('admin.nomenclature.field_of_actions.index', $action))
+                ->with('success', trans_choice('validation.attributes.field_of_action', 1) . " " . __('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return to_route('admin.work_regime')->with('danger', __('messages.system_error'));
+
+        }
+    }
 }
