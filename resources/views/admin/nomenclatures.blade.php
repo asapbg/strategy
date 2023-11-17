@@ -171,6 +171,13 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
+                               href="{{ route('admin.nomenclature.field_of_actions.index') }}">
+                                <i class="fas fa-file"></i>
+                                {{ trans_choice('validation.attributes.field_of_action', 2) }}
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block nomenclature-btn"
                                href="{{ route('admin.nomenclature.tag') }}">
                                 <i class="fas fa-tags"></i>
                                 {{ trans_choice('custom.nomenclature.tags', 2) }}

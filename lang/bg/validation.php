@@ -390,5 +390,7 @@ return [
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
         'user'  => 'Потребител',
+        'field_of_action'           => 'Сфера на действие|Сфери на действие',
+        'target_group'              => 'Целева група|Целеви групи',
     ],
 ];

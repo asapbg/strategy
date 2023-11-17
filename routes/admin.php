@@ -392,4 +392,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/tag/edit/{item?}', 'edit')->name('nomenclature.tag.edit');
         Route::match(['post', 'put'], '/nomenclature/tag/store/{item?}', 'store')->name('nomenclature.tag.store');
     });
+
+    Route::controller(\App\Http\Controllers\Admin\Nomenclature\FieldOfActionController::class)->group(function () {
+        Route::get('/nomenclature/field-of-actions',                    'index')->name('nomenclature.field_of_actions.index');
+        Route::get('/nomenclature/field-of-actions/create',             'create')->name('nomenclature.field-of-actions.create');
+        Route::post('/nomenclature/field-of-actions/store',             'store')->name('nomenclature.field_of_actions.store');
+        Route::get('/nomenclature/field-of-actions/{action}/edit',      'edit')->name('nomenclature.field_of_actions.edit');
+        Route::post('/nomenclatures/field-of-actions/{action}/update',  'update')->name('nomenclatures.field-of-actions.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function() {
+        Route::get('/reports', 'index')->name('reports.index');
+    });
 });

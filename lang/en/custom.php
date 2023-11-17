@@ -451,5 +451,5 @@ return [
     'number_symbol'        => '№',
     'archive' => 'Архив',
     'impact_analyze_methods' => 'Методи за анализ на въздействията',
-    'report' => 'Отчет|Отчети',
+    'field_of_actions'           => 'Сфера на действие|Сфери на действие',
 ];

@@ -100,6 +100,13 @@
                                     <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.reports.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'reports')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.reports', 2) }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcanany
