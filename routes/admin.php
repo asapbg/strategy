@@ -404,5 +404,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function() {
         Route::get('/reports', 'index')->name('reports.index');
+        Route::get('/reports/create', 'create')->name('reports.create');
+        Route::post('/reports/store', 'store')->name('reports.store');
     });
 });
