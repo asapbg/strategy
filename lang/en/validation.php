@@ -399,6 +399,8 @@ return [
         'nomenclature_level'  => 'Ниво (номенклатура)',
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
+        'field_of_action'           => 'Field of action|Fields of action',
+        'target_group'              => 'Target group|Target groups',
     ],
 
 ];

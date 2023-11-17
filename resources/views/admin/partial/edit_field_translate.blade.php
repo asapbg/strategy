@@ -1,4 +1,5 @@
 @php($fieldProperties = isset($translatableFields) && sizeof($translatableFields) ? $translatableFields[$field] : [])
+
 @if(sizeof($fieldProperties))
     @foreach(config('available_languages') as $language)
         @php($fieldName = $field.'_'.$language['code'])

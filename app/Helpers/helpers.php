@@ -431,4 +431,20 @@ if (!function_exists('optionsUserTypes')) {
             }
         }
     }
+
+    if (!function_exists('is_json')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function is_json(string $string): bool
+        {
+            json_decode($string);
+            return json_last_error() === JSON_ERROR_NONE;
+        }
+    }
 }
