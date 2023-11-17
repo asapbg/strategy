@@ -69,4 +69,9 @@ class StrategicDocumentsController extends Controller
 
         return $strategicDocuments;
     }
+
+    public function show()
+    {
+        return $this->view('site.strategic_documents.view');
+    }
 }

@@ -55,7 +55,7 @@
 
             <div class="col-md-4 position-relative">
                 <div class="service-item  position-relative">
-                    <a href="{{ route('strategy_documents') }}" title="Стратегически документи">
+                    <a href="{{ route('strategy-documents.index') }}" title="Стратегически документи">
                         <div class="icon">
                             <i class="bi bi-files"></i>
 

@@ -18,11 +18,17 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
+    Route::get('poll/show', 'show')->name('poll.show');
 });
 
 Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {
     Route::get('partnerships', 'index')->name('partnerships.index');
-    Route::get('partnership/show', 'show')->name('partnership.view');
+    Route::get('partnership/view', 'show')->name('partnership.view');
+});
+
+Route::controller(\App\Http\Controllers\ReportController::class)->group(function () {
+    Route::get('reports', 'index')->name('reports.index');
+    Route::get('report/view', 'show')->name('report.view');
 });
 
 Route::get('/consultations', function () {
@@ -49,11 +55,10 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
     Route::get('/legislative-programs/{id}', 'show')->name('lp.view');
 });
 
-Route::get('/strategy-documents/{search?}', [\App\Http\Controllers\StrategicDocumentsController::class, 'index'])->name('strategy_documents');
-
-Route::get('/strategy-documents/view', function (){
-    return view('templates.strategicheski-dokumenti-inner');
-})->name('strategy_documents.view');
+Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
+    Route::get('/strategy-documents/{search?}', 'index')->name('strategy-documents.index');
+    Route::get('/strategy-document/view', 'show')->name('strategy-document.view');
+});
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments', 'index')->name('impact_assessment.index');

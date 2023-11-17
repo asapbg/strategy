@@ -29,7 +29,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('strategy_documents') }}">Стратегически документи</a>
+                    <a class="nav-link" href="{{ route('strategy-documents.index') }}">Стратегически документи</a>
                 </li>
 
                 <li class="nav-item">
