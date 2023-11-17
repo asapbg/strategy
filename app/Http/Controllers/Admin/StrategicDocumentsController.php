@@ -77,11 +77,13 @@ class StrategicDocumentsController extends AdminController
         $policyAreas = PolicyArea::all();
         $prisActs = null; //TODO fix me Add them after PRIS module
         $strategicDocumentFiles = StrategicDocumentFile::all();
+        $fileData = $this->prepareFileData($strategicDocumentFiles);
+
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -300,19 +302,32 @@ class StrategicDocumentsController extends AdminController
         return $item;
     }
 
+    /**
+     * @param Request $request
+     * @return true
+     * @throws \Exception
+     */
     public function saveFileTree(Request $request)
     {
         try {
             $strategicDocument = StrategicDocument::findOrFail($request->get('strategicDocumentId'));
             $fileStructures = Arr::get($request->get('filesStructure'), '0') ?? [];
-            foreach ($fileStructures['children'] as $child) {
-                $parentId = $child['id'];
-                $this->processChild($child, $strategicDocument, $parentId);
-            }
+            if (isset($fileStructures['children'])) {
+                foreach ($fileStructures['children'] as $child) {
+                    $currentFile = StrategicDocumentFile::find($child['id']);
+                    $currentFile->parent_id = null;
+                    $currentFile->save();
+                }
 
+                foreach ($fileStructures['children'] as $child) {
+                    $parentId = $child['id'];//$fileStructures['id'];
+                    $this->processChild($child, $strategicDocument, $parentId);
+                }
+                return true;
+            }
             return true;
         } catch (\Throwable $throwable) {
-            Log::warning('Strategic documents save tree: '. $throwable->getMessage());
+            Log::warning('Strategic documents save tree: ' . $throwable->getMessage());
             throw new \Exception('Something went wrong while saving the tree');
         }
     }
@@ -329,22 +344,66 @@ class StrategicDocumentsController extends AdminController
         if ($id === null) {
             return;
         }
-        $parentFile = StrategicDocumentFile::find($parent);
         $currentFile = StrategicDocumentFile::find($id);
+        if ($parent == 'root') {
+            return;
+        }
+        $parentFile = StrategicDocumentFile::find($parent);
 
         if (!$parentFile || !$currentFile) {
             return;
         }
 
         $currentFile->parent_id = $parentFile->id;
+
         if ($parentFile->id !== $currentFile->id) {
             $currentFile->save();
         }
-
         if (isset($node['children'])) {
             foreach ($node['children'] as $child) {
                 $this->processChild($child, $strategicDocument, $id);
             }
         }
+    }
+
+    /**
+     * @param $strategicDocumentFiles
+     * @return array
+     */
+    private function prepareFileData($strategicDocumentFiles): array
+    {
+        $fileData = [];
+
+        $rootNode = [
+            'id' => 'root',
+            'parent' => '#',
+            'text' => 'Файлова йерархия',
+            'icon' => 'fas fa-folder'
+        ];
+
+        $fileData[] = $rootNode;
+
+        foreach ($strategicDocumentFiles as $file) {
+            $iconMapping = [
+                'application/pdf' => 'fas fa-file-pdf text-danger me-1',
+                'application/msword' => 'fas fa-file-word text-info me-1',
+                'application/vnd.ms-excel' => 'fas fa-file-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
+            ];
+
+            $fileExtension = $file->content_type;
+            $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+
+            $fileNode = [
+                'id' => $file->id,
+                'parent' => $file->parent_id ?: 'root',
+                'text' => $file->display_name,
+                'icon' => $iconClass,
+            ];
+
+            $fileData[] = $fileNode;
+        }
+
+        return $fileData;
     }
 }

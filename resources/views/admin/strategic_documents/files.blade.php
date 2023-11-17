@@ -73,31 +73,7 @@
     <div class="col-12">
         <br>
         <div id="fileTree">
-            <ul>
-                <li id="rootNode" data-jstree='{"icon": "fas fa-solid fa-file"}'>{{ trans_choice('custom.files_hierarchy', 2) }}
-                    @if($item->files->count() > 0)
-                        <ul>
-                            @foreach($item->files as $file)
-                                @php
-                                    $iconMapping = [
-                                        'application/pdf' => 'fas fa-file-pdf text-danger me-1',
-                                        'application/msword' => 'fas fa-file-word text-info me-1',
-                                        'application/vnd.ms-excel' => 'fas fa-file-excel',
-                                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
-                                    ];
 
-                                    $fileExtension = $file->content_type;
-                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-                                @endphp
-                                <li id="{{ $file->id }}" data-jstree='{"icon": "{{ $iconClass }}"}'>
-                                    {{ $file->display_name }}
-                                    @include('admin.strategic_documents.tree_children', ['children' => $file->childDocuments])
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </li>
-            </ul>
         </div>
         <div class="col-12">
             <br>
@@ -186,11 +162,22 @@
 @push('scripts')
     <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
     <script type="text/javascript">
+        fileData = {!! json_encode($fileData) !!};
+
         $(document).ready(function() {
             const fileTree = $("#fileTree");
             const saveTree = $('#saveTree');
+
             fileTree.jstree({
-                "core" : { "check_callback" : true, "variant" : "large" },
+                "plugins": ["dnd", "themes"],
+                'core': {
+                    'check_callback': true,
+                    'data': fileData,
+                    'themes': {
+                        'dots': true,
+                        'responsive': true
+                    }
+                },
                 "types": {
                     "default": {
                         "icon": "glyphicon glyphicon-flash"
@@ -199,13 +186,9 @@
                         "icon": "glyphicon glyphicon-ok"
                     }
                 },
-                "plugins": ["types", "dnd", "themes"]
             }).on('ready.jstree', function() {
                 fileTree.jstree('open_all');
-            });
-
-            fileTree.on('loaded.jstree', function () {
-                console.log('heree');
+            }).on('move_node.jstree', function() {
                 fileTree.jstree('open_all');
             });
 
@@ -238,7 +221,7 @@
                         id: node.id,
                         text: node.text,
                         icon: node.icon,
-                        children: []
+                        children: [],
                     };
 
                     if (node.children && node.children.length > 0) {

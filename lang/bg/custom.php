@@ -30,6 +30,7 @@ return [
     'id'                               => 'ID',
     'status'                           => 'Статус',
     'date'                             => 'Дата',
+    'date_small'                       => 'г.',
     'check_status'                     => 'Проверка на статус',
     'seconds'                          => 'секуди',
     'sec'                              => 'сек.',

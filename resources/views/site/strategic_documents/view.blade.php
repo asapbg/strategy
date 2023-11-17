@@ -32,14 +32,14 @@
                     <h3 class="mb-2 fs-18">Дата приемане
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i>24.02.2021г.
+                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i> {{ $strategicDocument->document_date }} {{ trans_choice('custom.date_small', 1) }}
                 </span>
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">Дата на валидност
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>2023 г. </span>
+                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>{{ $strategicDocument->document_date }} {{ trans_choice('custom.date_small', 1) }} </span>
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">Категория</h3>
@@ -96,6 +96,8 @@
                 <div class="col-md-12">
                     <h3 class="mb-3">Описание</h3>
                     <div class="str-doc-info">
+                        {!! $strategicDocument->description !!}
+                        <!--
                         <p><strong>Стратегическата рамка за развитие на образованието, обучението и ученето в Република
                                 България (2021 – 2030)</></strong> (Стратегическа рамка) е изготвена от Министерството на
                             образованието и науката в сътрудничество със заинтересовани страни. Настоящият стратегически
@@ -123,6 +125,7 @@
                             въвеждането на образователни иновации, дигиталната трансформация и устойчивото развитие,
                             реализацията в професиите на настоящето и бъдещето, ученето през целия живот, ефикасното
                             управление.</p>
+                            -->
                     </div>
                 </div>
             </div>

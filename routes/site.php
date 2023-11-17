@@ -52,7 +52,7 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
 
 Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
     Route::get('/strategy-documents/{search?}', 'index')->name('strategy-documents.index');
-    Route::get('/strategy-document/view', 'show')->name('strategy-document.view');
+    Route::get('/strategy-document/{id}', 'show')->name('strategy-document.view');
 });
 
 Route::controller(ImpactAssessmentController::class)->group(function () {

@@ -70,8 +70,14 @@ class StrategicDocumentsController extends Controller
         return $strategicDocuments;
     }
 
-    public function show()
+    /**
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function show(int $id): View
     {
-        return $this->view('site.strategic_documents.view');
+        $strategicDocument = StrategicDocument::findOrFail($id);
+
+        return $this->view('site.strategic_documents.view', compact('strategicDocument'));
     }
 }
