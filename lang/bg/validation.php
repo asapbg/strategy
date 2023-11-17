@@ -389,5 +389,6 @@ return [
         'nomenclature_level'  => 'Ниво (номенклатура)',
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
+        'user'  => 'Потребител',
     ],
 ];

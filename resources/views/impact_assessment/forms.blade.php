@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('impact_assessment.sidebar')
-                <div class="col-lg-10  home-results home-results-two pris-list mb-5">
+                <div class="col-lg-9  col-md-8 home-results home-results-two pris-list mb-5">
                     <div class="row mb-5 action-btn-wrapper">
                         <h2>Калкулатор</h2>
                         <hr class="custom-hr mb-5">

@@ -9,7 +9,7 @@
         <h6 class="mt-3">5.1.{{ $n+1 }}. Проблем {{ $n+1 }}:</h6>
     </div>
 </div>
-<table width="100%">
+<table width="100%" class="table">
 <thead>
     <tr>
         <td></td>
@@ -27,19 +27,19 @@
         <h6>Вариант {{ $m+1 }}:</h6>
     </td>
     <td class="px-4">
-        @include('form_partials.textarea', ['name' => "variants[$n][$m][economic_impacts]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.description")])
+        @include('form_partials.textarea', ['name' => "variants[$n][$m][economic_impacts]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.description"), 'pure_text_class' => 'text-center'])
     </td>
     <td class="px-4">
-        @include('form_partials.textarea', ['name' => "variants[$n][$m][social_impact]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.positive_impact")])
+        @include('form_partials.textarea', ['name' => "variants[$n][$m][social_impact]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.positive_impact"), 'pure_text_class' => 'text-center'])
     </td>
     <td class="px-4">
-        @include('form_partials.textarea', ['name' => "variants[$n][$m][ecologic_impact]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.negative_impact")])
+        @include('form_partials.textarea', ['name' => "variants[$n][$m][ecologic_impact]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.negative_impact"), 'pure_text_class' => 'text-center'])
     </td>
     <td class="px-4">
-        @include('form_partials.textarea', ['name' => "variants[$n][$m][specific_impact_1]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.small_mid_impact")])
+        @include('form_partials.textarea', ['name' => "variants[$n][$m][specific_impact_1]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.small_mid_impact"), 'pure_text_class' => 'text-center'])
     </td>
     <td class="px-4">
-        @include('form_partials.textarea', ['name' => "variants[$n][$m][specific_impact_2]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.admin_weight")])
+        @include('form_partials.textarea', ['name' => "variants[$n][$m][specific_impact_2]", 'label' => '', 'value' => Arr::get($state, "variants.$n.$m.admin_weight"), 'pure_text_class' => 'text-center'])
     </td>
 </tr>
 @endfor

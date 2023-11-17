@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\ImpactAssessmentController;
 use App\Http\Controllers\Admin\ImpactPageController;
 use App\Http\Controllers\Admin\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
@@ -134,6 +135,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
         Route::get( '/dynamic-structures/edit/{item}',         'edit')->name('dynamic_structures.edit');
         Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
+    });
+
+    //Impact assessments
+    Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentController::class)->group(function () {
+        Route::get('/impact-assessments', 'index')->name('impact_assessment.index');
     });
 
     //Profile

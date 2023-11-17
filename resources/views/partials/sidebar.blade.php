@@ -103,6 +103,13 @@
                         </ul>
                     </li>
                 @endcanany
+                <li class="nav-item">
+                    <a href="{{ route('admin.impact_assessment.index') }}"
+                       class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
+                        <i class="fas fa-chart-line"></i>
+                        <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
+                    </a>
+                </li>
                 <!-- Admin -->
 {{--                <li class="nav-item">--}}
 {{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">--}}
