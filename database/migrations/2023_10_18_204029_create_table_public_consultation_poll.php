@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('public_consultation_poll', function (Blueprint $table) {
             $table->unsignedBigInteger('public_consultation_id');
+            $table->foreign('public_consultation_id')->references('id')->on('public_consultation');
             $table->unsignedBigInteger('poll_id');
+            $table->foreign('poll_id')->references('id')->on('poll');
         });
     }
 

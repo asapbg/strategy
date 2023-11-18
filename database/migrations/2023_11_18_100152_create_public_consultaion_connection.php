@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('public_consultation_contact', function (Blueprint $table) {
-            $table->id();
+        Schema::create('public_consultation_connection', function (Blueprint $table) {
             $table->unsignedBigInteger('public_consultation_id');
             $table->foreign('public_consultation_id')->references('id')->on('public_consultation');
-            $table->string('name');
-            $table->string('email');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->unsignedBigInteger('pc_id');
+            $table->foreign('pc_id')->references('id')->on('public_consultation');
         });
     }
 
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('public_consultation_contact');
+        Schema::dropIfExists('public_consultation_connection');
     }
 };

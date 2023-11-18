@@ -6,6 +6,7 @@ use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\Page;
 use App\Models\Pris;
@@ -176,7 +177,7 @@ class CommonController extends Controller
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
-                    'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
+                    'description_'.$code => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
                     'sys_user' => $request->user()->id,
                     'locale' => $code,
                     'version' => ($version + 1).'.0'
@@ -327,6 +328,9 @@ class CommonController extends Controller
                 break;
             case 'op_record':
                 $data = OperationalProgram::select2AjaxOptions($requestData);
+                break;
+            case 'pc':
+                $data = PublicConsultation::select2AjaxOptions($requestData);
                 break;
         }
 

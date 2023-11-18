@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('public_consultation', function (Blueprint $table){
-            $table->string('reg_num')->nullable();
+            $table->string('reg_num')->unique()->nullable();
             $table->string('monitorstat')->nullable();
         });
     }

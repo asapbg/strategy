@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
+use App\Enums\PublicConsultationTimelineEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
@@ -14,7 +15,9 @@ use App\Models\ActType;
 use App\Models\ConsultationLevel;
 use App\Models\Consultations\ConsultationDocument;
 use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\LegislativeProgramRow;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
@@ -25,7 +28,9 @@ use App\Models\Poll;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
+use App\Models\Timeline;
 use App\Services\FileOcr;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -75,9 +80,10 @@ class PublicConsultationController extends AdminController
         }
 
         if($item->id) {
-            $item = PublicConsultation::with(['translation'])->find($item->id);
+            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations'])->find($item->id);
         }
 
+        //TODO optimize next one
         $kdRowsDB = $item->id && $item->kd ?
             DynamicStructureColumn::whereIn('id', json_decode($item->kd->active_columns))->orderBy('id')->get()
             : DynamicStructure::with(['columns', 'columns.translation', 'groups', 'groups.translation'])->where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
@@ -151,8 +157,12 @@ class PublicConsultationController extends AdminController
         DB::beginTransaction();
         try {
             $validated = $validator->validated();
+            $oldOpRow = $item->operational_program_row_id;
+            $oldLpRow = $item->legislative_program_row_id;
+
             $validated['operational_program_row_id'] = $validated['operational_program_row_id'] ?? null;
             $validated['legislative_program_row_id'] = $validated['legislative_program_row_id'] ?? null;
+
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {
                 $fillable['consultation_level_id'] = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
@@ -168,6 +178,53 @@ class PublicConsultationController extends AdminController
 
             $item->save();
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
+
+            $item->consultations()->sync($validated['connected_pc'] ?? []);
+
+            //START Timeline
+            $delete = $update = false;
+            $programType = isset($validated['legislative_program_id']) ? LegislativeProgramRow::class : (isset($validated['operational_program_id']) ? OperationalProgramRow::class : null);
+            $programRowID = $validated['operational_program_row_id'] ?? ($validated['legislative_program_row_id'] ?? null);
+
+            //Check if changes
+            //Programs
+            if( (!is_null($validated['operational_program_row_id']) || !is_null($oldOpRow))
+                && $validated['operational_program_row_id'] != $oldOpRow ) {
+                if( is_null($validated['operational_program_row_id']) ) {
+                    $delete = true;
+                } else {
+                    $update = true;
+                }
+            }
+            if( (!is_null($validated['legislative_program_row_id']) || !is_null($oldLpRow))
+                && $validated['legislative_program_row_id'] != $oldLpRow ) {
+                if( is_null($validated['legislative_program_row_id']) ) {
+                    $delete = true;
+                } else {
+                    $update = true;
+                }
+            }
+            $event =  $item->timeline()->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)->first();
+            if( $delete && $event) {
+                $item->timeline()
+                    ->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)
+                    ->delete();
+            }
+            if( $update ) {
+                if( $event ) {
+                    $item->timeline()
+                        ->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)
+                        ->update(['object_id' => $programRowID, 'object_type' => $programType]);
+                } else{
+                    $item->timeline()->save(new Timeline([
+                        'event_id' => PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
+                        'object_id' => $programRowID,
+                        'object_type' => $programType
+                    ]));
+                }
+            }
+            //END Timeline
+
 
             if( !$id ) {
                 $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
@@ -187,7 +244,7 @@ class PublicConsultationController extends AdminController
             }
 
             DB::commit();
-            if( isset($validated['stay']) && $validated['stay']) {
+            if( isset($validated['stay']) && $validated['stay'] && $user->can('update', $item)) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
                     ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
@@ -268,7 +325,7 @@ class PublicConsultationController extends AdminController
                             'doc_type' => $docType,
                             'content_type' => $file->getClientMimeType(),
                             'path' => $dir.$fileNameToStore,
-                            'description' => __('custom.public_consultation.doc_type.'.$docType),
+                            'description_'.$code => $validated['description_'.$code] ??  __('custom.public_consultation.doc_type.'.$docType, [], $code),
                             'sys_user' => $request->user()->id,
                             'locale' => $code,
                             'version' => ($version + 1).'.0'
@@ -282,7 +339,7 @@ class PublicConsultationController extends AdminController
                     //File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
                 }
             DB::commit();
-            if( $validated['stay'] ) {
+            if( isset($validated['stay']) ) {
                 return redirect(route(self::EDIT_ROUTE, $item).'#ct-doc' )
                     ->with('success', trans_choice('custom.documents', 2)." ".__('messages.updated_successfully_pl'));
             }

@@ -13,6 +13,18 @@
                     <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
                 </div>
             </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ $item->importerInstitution ?  $item->importerInstitution->name : '---'}}
+                </div>
+            </div>
+            @if($item->pris)
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="col-auto control-label">{{ trans_choice('custom.pris_documents', 1) }}: </label> <a class="text-primary" href="{{ route('admin.pris.edit', ['item' => $item->pris->id]) }}" target="_blank"><i class="fas fa-link mr-2"></i>{{ $item->pris->regNum.' ('.$item->pris->actType->name.')' }}</a>
+                    </div>
+                </div>
+            @endif
         @endif
             <div class="col-md-6">
                 <div class="form-group">
@@ -183,11 +195,17 @@
     </div>
     <div class="row">
         <div class="form-group">
-            <label class="col-sm-12 control-label" for="act_links">{{ __('custom.act_links') }}</label>
+            <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
             <div class="col-12">
-                <textarea id="act_links" name="act_links"
-                          class="form-control form-control-sm summernote @error('act_links'){{ 'is-invalid' }}@enderror">{{ old('act_links', ($item->id ? $item->act_links : ($default_val ?? '' ) )) }}</textarea>
-                @error('act_links')
+{{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
+                <select id="connected_pc" name="connected_pc[]" multiple="multiple" data-current="{{ $item->id ?? 0 }}"  data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror">
+                    @if($item->consultations->count())
+                        @foreach($item->consultations as $row)
+                            <option value="{{ $row->id }}" selected>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('connected_pc')
                 <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
             </div>

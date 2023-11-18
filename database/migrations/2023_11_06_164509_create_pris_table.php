@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('version', 10)->nullable();
             $table->string('protocol', 10)->nullable();
             $table->unsignedBigInteger('public_consultation_id')->nullable();
+            $table->foreign('public_consultation_id')->references('id')->on('public_consultation');
             $table->bigInteger('newspaper_number')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->timestamp('published_at')->nullable();
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('locale')->index();
             $table->unsignedBigInteger('pris_id');
+            $table->foreign('pris_id')->references('id')->on('pris');
             $table->unique(['pris_id', 'locale']);
             $table->text('about');
             $table->text('legal_reason');
@@ -50,13 +52,16 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('locale')->index();
             $table->unsignedBigInteger('tag_id');
+            $table->foreign('tag_id')->references('id')->on('tag');
             $table->unique(['tag_id', 'locale']);
             $table->string('label');
         });
 
         Schema::create('pris_tag', function (Blueprint $table) {
             $table->unsignedBigInteger('tag_id');
+            $table->foreign('tag_id')->references('id')->on('tag');
             $table->unsignedBigInteger('pris_id');
+            $table->foreign('pris_id')->references('id')->on('pris');
         });
     }
 
