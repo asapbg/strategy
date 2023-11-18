@@ -20,13 +20,21 @@ class PublicConsultationController extends Controller
     {
 //        return $this->view('templates.public_consultations_view');
         $item = PublicConsultation::with(['translation', 'actType', 'actType.translation', 'contactPersons',
-            'polls', 'polls.questions', 'polls.questions.answers'])->find($id);
+            'polls', 'polls.questions', 'polls.questions.answers', 'timeline', 'timeline.object'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
         $pageTitle = $item->title;
         $this->setBreadcrumbsTitle($pageTitle);
         $documents = $item->lastDocumentsByLocaleAndSection();
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents'));
+        $timeline = [];
+        if( $item->timeline->count() ) {
+            foreach ($item->timeline as $t) {
+                if(!isset($timeline[$t->event_id])) { $timeline[$t->event_id] = [];}
+                $timeline[$t->event_id][] = $t;
+            }
+        }
+
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline'));
     }
 }

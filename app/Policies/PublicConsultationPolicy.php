@@ -54,7 +54,7 @@ class PublicConsultationPolicy
      */
     public function update(User $user, PublicConsultation $publicConsultation)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && $publicConsultation->open_to >= Carbon::now('UTC')->toDateString();
+        return $user->canAny(['manage.*', 'manage.advisory']) && databaseDate($publicConsultation->open_to) >= Carbon::now('UTC')->toDateString();
     }
 
     /**

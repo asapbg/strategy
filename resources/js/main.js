@@ -875,6 +875,12 @@ $(document).ready(function (e) {
                             programId: $('#operational_program_id').val(),
                             search: params.term
                         }
+                    }else if($(this).data('types2ajax') == 'pc') {
+                        var query = {
+                            connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
+                            exclude: $(this).data('current'),
+                            search: params.term
+                        }
                     } else {
                         var query = {
                             search: params.term

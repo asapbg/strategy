@@ -1,6 +1,7 @@
 :root {
     --primary_btn: #21659e;
     --primary_icon: #21659e;
+    --secondary_color: #6c757d;
 }
 
 .table-light {
@@ -110,10 +111,10 @@ nav.navbar .btn {
 .tablinks.active {
     color: #21659e !important;
   }
-  
+
 .tablinks {
     color: #333 !important;
-    font-size: 20px !important; 
+    font-size: 20px !important;
 }
 
 .tab.nav.nav-tabs .nav-item {
@@ -924,18 +925,18 @@ input#startdate {
   .tree-parent.open{
     display: block;
   }
-  
+
   .tree-item{
     position: relative;
     margin-left: 1.25rem;
     margin-left: 1.7rem;
     line-height: 2rem;
   }
-    
+
     .tree-item:last-child{
       border: none;
     }
-    
+
     .tree-item:before{
       content:'';
       display: block;
@@ -949,11 +950,11 @@ input#startdate {
       left: -1.3rem;
       z-index: -1;
     }
-  
+
     .tree-item:last-child:before{
       border-left: none;
     }
-  
+
    .tree-item:first-child:after{
       content:'';
       display: block;
@@ -966,7 +967,7 @@ input#startdate {
       left: -1.3rem;
       z-index: -1;
     }
-  
+
     .tree-item a i{
         margin-right: 0.5rem;
   }
@@ -1236,6 +1237,12 @@ input[type=checkbox] {
     content: "";
 }
 
+.preview-file-modal.btn-outline-secondary:hover{
+    font-weight: bold;
+    color: var(--secondary_color) !important;
+    background: #fff !important;
+}
+
 /*Left menu*/
 .left-nav-panel {
     background: #f5f9fd;
@@ -1405,3 +1412,5 @@ input[type=checkbox] {
         width: 100% !important;
     }
 }
+
+
