@@ -662,7 +662,7 @@ $(document).ready(function (e) {
         e.preventDefault();
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
+    //$('[data-toggle="tooltip"]').tooltip();
 
 
     $(document).keyup(function(e) {
