@@ -476,4 +476,8 @@ return [
     'timeline.ACCEPT_ACT_MC.description'           => 'Окончателен акт.',
     'timeline.PRESENTING_IN_NA'           => 'Представяне на законопроекта',
     'timeline.PRESENTING_IN_NA.description'           => 'Развито в обхвата на текущата поръчка.',
+    'author' => 'Автор',
+    'anonymous' => 'Анонимно',
+    'enter_comment' => 'Въведете коментар',
+    'add_comment' => 'Добавяне на коментар',
 ];

@@ -38,6 +38,7 @@ Route::get('/consultations', function () {
 Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {
     Route::get('/public-consultations', 'index')->name('public_consultation.index');
     Route::get('/public-consultations/{id}', 'show')->name('public_consultation.view');
+    Route::post('/public-consultations/add-comment', 'addComment')->name('public_consultation.comment.add');
 });
 
 Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {

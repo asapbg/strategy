@@ -35,5 +35,6 @@ return [
     'public_consultation.polls' => 'Анкети',
     'pris.about' => 'Относно',
     'impact_assessment.forms_and_templates' => 'Образци и форми',
+    'successful_send_comment' => 'Коментарът е записан успешно',
 
 ];

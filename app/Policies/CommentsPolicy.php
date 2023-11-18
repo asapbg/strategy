@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Consultations\PublicConsultation;
+use App\Models\Comments;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PublicConsultationPolicy
+class CommentsPolicy
 {
     use HandlesAuthorization;
 
@@ -26,12 +25,12 @@ class PublicConsultationPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, PublicConsultation $publicConsultation)
+    public function view(User $user, Comments $comments)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.advisory']);
     }
 
     /**
@@ -42,29 +41,29 @@ class PublicConsultationPolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']);
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, PublicConsultation $publicConsultation)
+    public function update(User $user, Comments $comments)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && databaseDate($publicConsultation->open_to) >= Carbon::now('UTC')->toDateString();
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, PublicConsultation $publicConsultation)
+    public function delete(User $user, Comments $comments)
     {
         return false;
     }
@@ -73,10 +72,10 @@ class PublicConsultationPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, PublicConsultation $publicConsultation)
+    public function restore(User $user, Comments $comments)
     {
         return false;
     }
@@ -85,25 +84,11 @@ class PublicConsultationPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, PublicConsultation $publicConsultation)
+    public function forceDelete(User $user, Comments $comments)
     {
         return false;
-    }
-
-    /**
-     * Determine whether the user can comment the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function comment(User $user, PublicConsultation $publicConsultation)
-    {
-        //TODO uncomment
-        return true;
-        return $publicConsultation->inPeriodBoolean;
     }
 }

@@ -169,7 +169,7 @@ $(function() {
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['para', ['ul', 'ol','paragraph']],
                     ['view', ['fullscreen']],
-                    ['insert', ['link']]
+                    // ['insert', ['link']]
                 ]
             });
         }
