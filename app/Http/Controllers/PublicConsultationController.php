@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends Controller
@@ -36,5 +40,30 @@ class PublicConsultationController extends Controller
         }
 
         return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline'));
+    }
+
+    public function addComment(StoreCommentRequest $request)
+    {
+        $validated = $request->validated();
+        $pc = PublicConsultation::find($validated['id']);
+        if( $request->user()->cannot('comment', $pc) ){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $pc->comments()->save(new Comments([
+                'object_code' => Comments::PC_OBJ_CODE,
+                'content' => $validated['content'],
+                'user_id' => $request->user()->id,
+            ]));
+            DB::commit();
+            return redirect(route('public_consultation.view', ['id' => $pc->id]) )
+                ->with('success', __('site.successful_send_comment'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Save comment error: '.$e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 }

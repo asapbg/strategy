@@ -250,11 +250,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put('/legislative-initiatives/{item}/restore', 'restore')->name('legislative_initiatives.restore');
     });
 
+    // Comments
+    Route::controller(\App\Http\Controllers\Admin\CommentsController::class)->group(function () {
+        Route::get('/consultations/comment', 'index')->name('consultations.comments.index')
+            ->middleware('can:viewAny, App\Models\Comments');
+    });
+
+
+
     // Mock controllers
     Route::group([], function () {
-        Route::view('/consultations/comments', 'admin.consultations.comments.index')
-            ->name('consultations.comments.index');
-
         Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
             ->name('ogp.plan_elements.index');
         Route::view('/ogp/plan_elements/edit/{item?}', 'admin.ogp.plan_elements.edit')

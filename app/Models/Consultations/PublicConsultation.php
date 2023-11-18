@@ -5,6 +5,7 @@ namespace App\Models\Consultations;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\ActType;
+use App\Models\Comments;
 use App\Models\ConsultationLevel;
 use App\Models\File;
 use App\Models\Poll;
@@ -205,6 +206,12 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $this->hasMany(Timeline::class, 'public_consultation_id', 'id');
     }
 
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comments::class, 'object_id', 'id')
+            ->where('object_code', '=', Comments::PC_OBJ_CODE)->orderBy('created_at', 'desc');
+    }
+
     public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(File::class, 'id_object', 'id')
@@ -243,7 +250,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public static function optionsList()
     {
         return DB::table('public_consultation')
-            ->select(['public_consultation.id', 'public_consultation_translations.title'])
+            ->select(['public_consultation.id', DB::raw('public_consultation_translations.title as name')])
             ->join('public_consultation_translations', 'public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
             ->where('public_consultation_translations.locale', '=', app()->getLocale())
             ->orderBy('public_consultation_translations.title', 'asc')
