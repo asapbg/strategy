@@ -18,7 +18,7 @@
                                         @php($isActive = \Carbon\Carbon::parse($item->open_to) <= \Carbon\Carbon::now())
                                         @break
                                     @case(\App\Enums\PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value)
-                                        @php($isActive = $item->pris && \Carbon\Carbon::parse($item->open_to) <= \Carbon\Carbon::now())
+                                        @php($isActive = ($item->pris && \Carbon\Carbon::parse($item->open_to) <= \Carbon\Carbon::now()))
                                         @break
                                     @case(\App\Enums\PublicConsultationTimelineEnum::FILE_CHANGE->value)
                                         @php($isActive = $item->changedFiles()->count())
@@ -48,7 +48,9 @@
                                                 {{ $item->open_to }}
                                                 @break
                                             @case(\App\Enums\PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value)
-                                                <a href="{{ route('pris.view', ['id' => $item->pris->id]) }}" target="_blank">{{ displayDate($item->pris->created_at) }}</a>
+                                                @if($isActive)
+                                                    <a href="{{ route('pris.view', ['id' => $item->pris->id]) }}" target="_blank">{{ displayDate($item->pris->created_at) }}</a>
+                                                @endif
                                                 @break
                                             @case(\App\Enums\PublicConsultationTimelineEnum::FILE_CHANGE->value)
                                                 @if($isActive)
@@ -60,8 +62,6 @@
                                                 @endif
                                                 @break
                                         @endswitch
-                                    @else
-                                        ---
                                     @endif
                                 </p>
                                 <p class="@if(!$isSet && !$isActive) text-muted @endif">{{ __('custom.timeline.'.(\App\Enums\PublicConsultationTimelineEnum::keyByValue($eventId)).'.description') }}</p>

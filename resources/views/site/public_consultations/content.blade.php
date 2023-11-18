@@ -105,28 +105,21 @@
 
 
         <div class="row mb-4 mt-4">
-            <h3 class="mb-3">Полезни линкове</h3>
+            <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
             <div class="col-md-12">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 1</a>
-
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class=" fas fa-regular fa-link main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 2</a>
-
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class="fas fa-regular fa-link main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 3</a>
-
-                    </li>
-                </ul>
+                @if($item->importerInstitution && $item->importerInstitution->links->count())
+                    <ul class="list-group list-group-flush">
+                        @foreach($item->importerInstitution->links as $l)
+                            <li class="list-group-item">
+                                <a href="#" class="main-color text-decoration-none">
+                                    <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
+                                </a><a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none">{{ $l->title }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    ---
+                @endif
             </div>
         </div>
 
@@ -200,7 +193,7 @@
                 </div>
             </div>
         </div>
-        
+
         @include('site.public_consultations.polls')
         @include('site.public_consultations.comments')
 

@@ -480,4 +480,6 @@ return [
     'anonymous' => 'Анонимно',
     'enter_comment' => 'Въведете коментар',
     'add_comment' => 'Добавяне на коментар',
+    'useful_links' => 'Полезни връзки',
+    'institution_links' => 'Полезна връзка|Полезни връзки',
 ];

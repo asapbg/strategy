@@ -3,6 +3,7 @@
 namespace App\Models\StrategicDocuments;
 
 use App\Models\InstitutionLevel;
+use App\Models\InstitutionLink;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -38,6 +39,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function level(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(InstitutionLevel::class, 'id', 'institution_level_id');
+    }
+
+    public function links()
+    {
+        return $this->hasMany(InstitutionLink::class, 'institution_id', 'id');
     }
 
     public static function translationFieldsProperties(): array

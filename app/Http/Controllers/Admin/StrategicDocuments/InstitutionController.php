@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin\StrategicDocuments;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\StoreInstitutionLink;
 use App\Http\Requests\StoreInstitutionRequest;
+use App\Models\InstitutionLink;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\ConsultationLevel;
 use Illuminate\Http\Request;
@@ -78,6 +80,52 @@ class InstitutionController extends AdminController
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
+    }
+
+    public function addLink(StoreInstitutionLink $request){
+        $validated = $request->validated();
+        $institution = Institution::find($validated['id']);
+
+        if( $request->user()->cannot('update', $institution) ) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        try {
+            $item = new InstitutionLink();
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->institution_id = $institution->id;
+            $item->save();
+            $this->storeTranslateOrNew(InstitutionLink::TRANSLATABLE_FIELDS, $item, $validated);
+
+            return redirect(route(self::EDIT_ROUTE, $institution).'#ct-links')
+                ->with('success', trans_choice('custom.institution_links', 1)." ".__('messages.created_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Add institution link error: '. $e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function removeLink(Request $request){
+        $item = InstitutionLink::find((int)$request->input('id'));
+        $institution = $item->institution;
+        if( !$item ){
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if( $request->user()->cannot('update', $institution) ) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        try {
+            $item->delete();
+
+            return redirect(route(self::EDIT_ROUTE, $institution).'#ct-links')
+                ->with('success', trans_choice('custom.institution_links', 1)." ".__('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Remove institution link error: '. $e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 
     private function filters($request)
