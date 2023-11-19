@@ -115,4 +115,16 @@ class PollPolicy
         return $user->canAny(['manage.*','manage.pools'])
             && $poll->status == PollStatusEnum::EXPIRED->value;
     }
+
+    /**
+     * Determine whether the user can send/submit the public model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Poll  $poll
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function send(User $user, Poll $poll)
+    {
+        return $poll->inPeriod;
+    }
 }
