@@ -42,7 +42,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected $fillable = ['consultation_level_id', 'act_type_id',
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to',
         'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
-        'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id'
+        'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id',
+        'proposal_report_comment_id'
     ];
 
     const MIN_DURATION_DAYS = 14;
@@ -216,7 +217,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Comments::class, 'object_id', 'id')
-            ->where('object_code', '=', Comments::PC_OBJ_CODE)->orderBy('created_at', 'desc');
+            ->where('object_code', '=', Comments::PC_OBJ_CODE)
+            ->orderBy('created_at', 'desc');
     }
 
     public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -230,6 +232,20 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function consultations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(PublicConsultation::class, 'public_consultation_connection', 'public_consultation_id', 'pc_id');
+    }
+
+    public function lastDocumentByLocaleAndType($docType)
+    {
+        return DB::table('public_consultation')
+            ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version'])
+            ->join('files', function ($j) use ($docType){
+                $j->on('files.id_object', '=', 'public_consultation.id')
+                    ->where('files.locale','=', app()->getLocale())
+                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->where('files.doc_type', '=', $docType);
+            })
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 
     public function lastDocumentsByLocaleAndSection()

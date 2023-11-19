@@ -36,6 +36,15 @@
                                             @case(\App\Enums\PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)
                                                 <a target="_blank" href="{{ route(($timeline[$eventId][0]->object instanceof \App\Models\Consultations\OperationalProgramRow ? 'op.view' : 'lp.view') , ['id' => $timeline[$eventId][0]->object_id]) }}">{{ displayDate($timeline[$eventId][0]->updated_at) }}</a>
                                                 @break
+                                            @case(\App\Enums\PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value)
+                                                {{ displayDate($timeline[$eventId][0]->object->created_at) }}
+                                                @php($eventFile = $item->lastDocumentByLocaleAndType(\App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value))
+                                                @if($eventFile)
+                                                    <span class="d-inline-block @if(!$loop->last) mb-1 @endif">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="{{ $row->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $row->id]) }}" title="{{ __('custom.preview') }}">{!! fileIcon($row->content_type) !!} {{ $row->description }} {{ __('custom.version_short').' '.$row->version }}</button>
+                                                    </span>
+                                                @endif
+                                                @break
                                             @default
                                                 {{ displayDate($timeline[$eventId][0]->updated_at) }}
                                         @endswitch

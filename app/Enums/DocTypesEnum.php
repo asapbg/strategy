@@ -149,6 +149,12 @@ enum DocTypesEnum: int
                     'en' => ['nullable', 'mimes:docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
                     ];
                 break;
+            case self::PC_COMMENTS_REPORT->value:
+                $rules = [
+                    'bg' => ['required', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'en' => ['nullable', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                ];
+                break;
             default:
                 $rules = [
                     'bg' => ['nullable', 'mimes:docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
@@ -156,7 +162,7 @@ enum DocTypesEnum: int
                 ];
         }
 
-        return $rules[$locale];;
+        return $rules[$locale];
     }
 
 }

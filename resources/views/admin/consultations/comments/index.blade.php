@@ -12,7 +12,8 @@
                             <th>ID</th>
                             <th>{{ trans_choice('custom.public_consultations', 1) }}</th>
                             <th>{{ __('validation.attributes.content') }}</th>
-{{--                            <th>{{ __('custom.actions') }}</th>--}}
+                            <th>{{ __('custom.created_at') }}</th>
+                            <th>{{ trans_choice('custom.users', 1)  }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -20,8 +21,23 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->commented ? $item->commented->title : '---' }}</td>
-                                    <td>{!! $item->content !!}</td>
+                                    <td><a target="_blank" class="text-primary" href="{{ route('admin.consultations.public_consultations.edit', $item->commented) }}">{{ $item->commented ? $item->commented->title : '---' }}</a></td>
+                                    <td>
+                                        <div class="limit-length">
+                                            {!! $item->content !!}
+                                        </div>
+                                        <div class="full-length d-none">
+                                            {!! $item->content !!}
+                                        </div>
+                                    </td>
+                                    <td>{{ displayDateTime($item->created_at) }}</td>
+                                    <td>
+                                        @if($item->user_id)
+                                            <a target="_blank" class="text-primary" href="{{ route('admin.users.edit', $item->author) }}">{{ $item->author->fullName() }}</a>
+                                        @else
+                                            {{ __('custom.anonymous') }}
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         @endif

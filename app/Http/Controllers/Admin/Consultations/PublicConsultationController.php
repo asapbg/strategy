@@ -10,8 +10,10 @@ use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
+use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\ActType;
+use App\Models\Comments;
 use App\Models\ConsultationLevel;
 use App\Models\Consultations\ConsultationDocument;
 use App\Models\Consultations\LegislativeProgram;
@@ -80,7 +82,7 @@ class PublicConsultationController extends AdminController
         }
 
         if($item->id) {
-            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations'])->find($item->id);
+            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author'])->find($item->id);
         }
 
         //TODO optimize next one
@@ -569,6 +571,102 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             Log::error('Error attach poll to public consultation'.$e);
             return redirect(url()->previous().'#ct-polls')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function addProposalReport(StorePublicConsultationProposalReport $request)
+    {
+        $validated = $request->validated();
+        $pc = PublicConsultation::find((int)$validated['id']);
+
+        if(!$request->user()->can('proposalReport', $pc)) {
+            return back()->with('warning', 'Действието не е позволено преди приключване на консултацията.');
+        }
+
+        $docType = DocTypesEnum::PC_COMMENTS_REPORT->value;
+        try {
+            // Upload File
+            $dir = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
+            $fileIds = [];
+            $bgFile = $validated['file_'.$docType.'_bg'] ?? null;
+            $enFile = $validated['file_'.$docType.'_en'] ?? null;
+            foreach (['bg', 'en'] as $code) {
+                $version = File::where('locale', '=', $code)
+                    ->where('id_object', '=', $pc->id)
+                    ->where('doc_type', '=', $docType)
+                    ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->count();
+
+                //TODO fix me Ugly way while someone define rules
+                if( !${$code.'File'} ) {
+                    //There is no previews version
+                    if( !$version ) {
+                        if( $code == 'en' && !$enFile && $bgFile ) {
+                            $file = $bgFile;
+                        }
+
+                        if( $code == 'bg' && !$bgFile && $enFile ) {
+                            $file = $enFile;
+                        }
+                    } else {
+                        //we have previews version and do not need to copy file for second language
+                        $file = null;
+                    }
+                } else{
+                    $file = ${$code.'File'};
+                }
+                if(!$file) {continue;}
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($dir, $fileNameToStore, 'public_uploads');
+                $newFile = new File([
+                    'id_object' => $pc->id,
+                    'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    'filename' => $fileNameToStore,
+                    'doc_type' => $docType,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $dir.$fileNameToStore,
+                    'description_'.$code => $validated['description_'.$code] ??  __('custom.public_consultation.doc_type.'.$docType, [], $code),
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => ($version + 1).'.0'
+                ]);
+                $newFile->save();
+                $ocr = new FileOcr($newFile->refresh());
+                $ocr->extractText();
+            }
+
+            //Save timeline event
+            $event =  $pc->timeline()->where('event_id', '=', PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value)->first();
+            if( !$event ) {
+                //Save comment
+                $comment = new Comments([
+                    'object_code' => Comments::PC_OBJ_CODE,
+                    'object_id' => $pc->id,
+                    'content' => $validated['message'],
+                    'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
+                    'user_id' => $request->user()->id
+                ]);
+                $comment->save();
+                $pc->timeline()->save(new Timeline([
+                    'event_id' => PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value,
+                    'object_id' => $comment->id,
+                    'object_type' => Comments::class
+                ]));
+            } else {
+                //Save comment
+                $comment = Comments::find($event->object_id);
+                $comment->message = $validated['message'];
+                $comment->created_at = Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s');
+                $comment->user_id = $request->user()->id;
+                $comment->save();
+            }
+
+            //Generate comments csv and pfd after pk end and show it in public page
+            return redirect(route(self::EDIT_ROUTE, $pc).'#ct-comments')
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Error save proposal report public consultation'.$e);
+            return redirect(url()->previous().'#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 
