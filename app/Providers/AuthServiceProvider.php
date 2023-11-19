@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Policies\LegislativeProgramPolicy;
 use App\Policies\OperationalProgramPolicy;
+use App\Policies\PublicConsultationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,7 +20,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        PublicConsultation::class => PublicConsultationPolicy::class,
+        LegislativeProgram::class => LegislativeProgramPolicy::class,
+        OperationalProgram::class => OperationalProgram::class
     ];
 
     /**
