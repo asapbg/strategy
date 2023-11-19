@@ -54,6 +54,7 @@ class PublicConsultationPolicy
      */
     public function update(User $user, PublicConsultation $publicConsultation)
     {
+        //TODO fix me split policy for some tabs in consultation
         return $user->canAny(['manage.*', 'manage.advisory']) && databaseDate($publicConsultation->open_to) >= Carbon::now('UTC')->toDateString();
     }
 
@@ -106,5 +107,19 @@ class PublicConsultationPolicy
         //TODO uncomment
         return true;
         return $publicConsultation->inPeriodBoolean;
+    }
+
+    /**
+     * Determine whether the user can comment the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Consultations\PublicConsultation  $publicConsultation
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function proposalReport(User $user, PublicConsultation $publicConsultation)
+    {
+        return true;
+        return $user->canAny(['manage.*', 'manage.advisory'])
+            && databaseDate($publicConsultation->open_to) <= Carbon::now()->format('Y-m-d');
     }
 }

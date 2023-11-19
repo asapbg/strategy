@@ -571,6 +571,17 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.datepicker-time').length) {
+        $('.datepicker-time').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'dd.mm.yyyy H:m',
+            todayHighlight: true,
+            orientation: "bottom left",
+            autoclose: true,
+            weekStart: 1
+        });
+    }
+
     if($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
@@ -923,6 +934,21 @@ $(document).ready(function (e) {
             $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
                 $('#approveModalSubmit_' + btn.data('file'))[0].click();
             });
+        });
+    }
+
+    //Hide/show comment
+    if($('.limit-length').length){
+        $('.limit-length').each(function (index, el){
+            let text = $(this).text();
+            if( text.length > 1000 ){
+                $(this).html(text.substring(0, 1000) + ' <span class="show-more btn btn-primary px-2 py-0 ms-2">...</span>');
+            }
+            //full-length
+        });
+        $(document).on('click', '.show-more', function (){
+            $(this).parent().addClass('d-none');
+            $(this).parent().parent().find('.full-length').removeClass('d-none');
         });
     }
 })

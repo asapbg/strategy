@@ -93,6 +93,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
         Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
+        Route::post('/consultations/public-consultations/add-proposal-report', 'addProposalReport')->name('consultations.public_consultations.proposal_report.store');
     });
 
     // Strategic Documents

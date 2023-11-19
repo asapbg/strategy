@@ -22,6 +22,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="ct-polls-tab" data-toggle="pill" href="#ct-polls" role="tab" aria-controls="ct-polls" aria-selected="false">Анкети</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-comments-tab" data-toggle="pill" href="#ct-comments" role="tab" aria-controls="ct-comments" aria-selected="false">Становище предложения</a>
+                            </li>
                         @endif
                     </ul>
                 </div>
@@ -42,6 +45,9 @@
                             </div>
                             <div class="tab-pane fade" id="ct-polls" role="tabpanel" aria-labelledby="ct-polls-tab">
                                 @include('admin.consultations.public_consultations.polls')
+                            </div>
+                            <div class="tab-pane fade" id="ct-comments" role="tabpanel" aria-labelledby="ct-comments-tab">
+                                @include('admin.consultations.public_consultations.comments')
                             </div>
                         @endif
                     </div>
