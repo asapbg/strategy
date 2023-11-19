@@ -655,7 +655,7 @@ class PublicConsultationController extends AdminController
             } else {
                 //Save comment
                 $comment = Comments::find($event->object_id);
-                $comment->message = $validated['message'];
+                $comment->content = $validated['message'];
                 $comment->created_at = Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s');
                 $comment->user_id = $request->user()->id;
                 $comment->save();
