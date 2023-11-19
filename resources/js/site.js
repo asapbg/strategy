@@ -174,5 +174,19 @@ $(function() {
             });
         }
 
+        if($('.limit-length').length){
+            $('.limit-length').each(function (index, el){
+                let text = $(this).text();
+                if( text.length > 1000 ){
+                    $(this).html(text.substring(0, 1000) + ' <span class="show-more btn btn-primary px-2 py-0 ms-2">...</span>');
+                }
+                //full-length
+            });
+            $(document).on('click', '.show-more', function (){
+                $(this).parent().addClass('d-none');
+                $(this).parent().parent().find('.full-length').removeClass('d-none');
+            });
+        }
+
     });
 });

@@ -46,7 +46,7 @@ class PublicConsultationController extends Controller
     {
         $validated = $request->validated();
         $pc = PublicConsultation::find($validated['id']);
-        if( $request->user()->cannot('comment', $pc) ){
+        if( !$pc->inPeriodBoolean ){
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -55,7 +55,7 @@ class PublicConsultationController extends Controller
             $pc->comments()->save(new Comments([
                 'object_code' => Comments::PC_OBJ_CODE,
                 'content' => $validated['content'],
-                'user_id' => $request->user()->id,
+                'user_id' => $request->user() ? $request->user()->id : null,
             ]));
             DB::commit();
             return redirect(route('public_consultation.view', ['id' => $pc->id]) )

@@ -102,6 +102,7 @@ class PublicConsultationPolicy
      */
     public function comment(User $user, PublicConsultation $publicConsultation)
     {
+        dd('can comment?');
         //TODO uncomment
         return true;
         return $publicConsultation->inPeriodBoolean;
