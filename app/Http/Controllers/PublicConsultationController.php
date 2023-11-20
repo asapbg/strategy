@@ -15,7 +15,7 @@ class PublicConsultationController extends Controller
     public function index()
     {
 //        return $this->view('templates.public_consultation_list');
-        $pk = PublicConsultation::with(['translation'])->get();
+        $pk = PublicConsultation::Active()->with(['translation'])->get();
         $pageTitle = __('site.menu.public_consultation');
         return $this->view('site.public_consultations.index', compact('pk', 'pageTitle'));
     }

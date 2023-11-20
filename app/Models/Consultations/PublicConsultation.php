@@ -404,4 +404,29 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         }
         return $sortedTimeline;
     }
+
+    public function connectedConsultationByProgram()
+    {
+        return DB::table('public_consultation')
+            ->select([
+                'public_consultation.id',
+                'public_consultation_translations.title',
+                'public_consultation.open_from',
+                'public_consultation.open_to'
+            ])
+            ->join('public_consultation_translations', 'public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+            ->where('public_consultation_translations.locale', '=', app()->getLocale())
+            ->where('public_consultation.id', '<>', $this->id)
+            ->where(function ($q){
+                $q->where(function ($q){
+                    $q->whereNotNull('public_consultation.operational_program_row_id')
+                        ->where('public_consultation.operational_program_row_id', '=', $this->operational_program_row_id);
+                })->orWhere(function ($q){
+                    $q->whereNotNull('public_consultation.legislative_program_row_id')
+                        ->where('public_consultation.legislative_program_row_id', '=', $this->legislative_program_row_id);
+                });
+            })
+            ->orderBy('public_consultation_translations.title', 'asc')
+            ->get();
+    }
 }

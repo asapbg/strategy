@@ -161,6 +161,8 @@ class PublicConsultationController extends AdminController
             $validated = $validator->validated();
             $oldOpRow = $item->operational_program_row_id;
             $oldLpRow = $item->legislative_program_row_id;
+            $oldOpenFrom = $item->open_from;
+            $oldOpenTo = $item->open_to;
 
             $validated['operational_program_row_id'] = $validated['operational_program_row_id'] ?? null;
             $validated['legislative_program_row_id'] = $validated['legislative_program_row_id'] ?? null;
@@ -231,6 +233,11 @@ class PublicConsultationController extends AdminController
             if( !$id ) {
                 $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
                 $item->save();
+            }
+
+            //Update polls if need to
+            if( (displayDate($oldOpenFrom) != displayDate($item->open_from)) || (displayDate($oldOpenTo) != displayDate($item->open_from)) ) {
+                $item->polls()->update(['start_date' => databaseDate($item->open_from), 'end_date' => databaseDate($item->open_to)]);
             }
 
             //Locke program if is selected
@@ -549,6 +556,27 @@ class PublicConsultationController extends AdminController
             $validated = $validator->validated();
             $consultation = PublicConsultation::find($validated['id']);
             $consultation->polls()->attach($validated['poll']);
+
+            //update dates if need to
+            $poll = Poll::find((int)$validated['poll']);
+            if( $poll ) {
+                $update = false;
+                if( Carbon::parse($poll->start_date)->format('Y-m-d') != Carbon::parse($consultation->open_from)->format('Y-m-d') ) {
+                    $update = true;
+                    $poll->start_date = $consultation->open_from;
+                }
+                if( Carbon::parse($poll->end_date)->format('Y-m-d') != Carbon::parse($consultation->open_to)->format('Y-m-d') ) {
+                    $update = true;
+                    $poll->end_date = $consultation->open_to;
+                }
+
+                if($update) {
+                    $poll->save();
+                }
+            }
+
+
+
             return redirect(route(self::EDIT_ROUTE, $consultation).'#ct-polls')
                 ->with('success', trans_choice('custom.public_consultations', 2)." ".__('messages.updated_successfully_pl'));
         } catch (\Exception $e) {
