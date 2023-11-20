@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('pris_id');
             $table->foreign('pris_id')->references('id')->on('pris');
             $table->unsignedBigInteger('changed_pris_id');
-            $table->foreign('changed_pris_id')->references('id')->on('changed_pris');
+            $table->foreign('changed_pris_id')->references('id')->on('pris');
         });
     }
 
