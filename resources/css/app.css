@@ -705,9 +705,22 @@ textarea {
 
 
 /*News*/
+.blog-category {
+        color: #fff !important;
+        background:#21659e;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+        text-transform: uppercase;
+}
+
 #blog {
     box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
     background: #fafafa;
+}
+
+.short-decription {
+    font-size:14px;
 }
 
 .post-box {
@@ -715,7 +728,7 @@ textarea {
     transition: 0.3s;
     height: 100%;
     overflow: hidden;
-    padding: 30px;
+    padding: 15px;
     border-radius: 8px;
     position: relative;
     display: flex;

@@ -22,10 +22,10 @@
                         <div class="collapse show mt-3" id="home-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
 
-                                <li class="mb-2  active-item-left p-1"><a href="#"
+                                <li class="mb-2 p-1"><a href="#"
                                         class="link-dark text-decoration-none">Новини</a>
                                 </li>
-                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Публикации</a>
+                                <li class="mb-2 p-1 active-item-left"><a href="#" class="link-dark text-decoration-none">Публикации</a>
                                 </li>
                             </ul>
                         </div>
@@ -54,10 +54,10 @@
             </div>
             <div class="col-md-4 text-end">
                 <button class="btn btn-sm btn-primary main-color">
-                    <i class="fas fa-pen me-2 main-color"></i>Редактиране на новина
+                    <i class="fas fa-pen me-2 main-color"></i>Редактиране на публикация
                 </button>
                 <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на новина
+                    <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на публикация
                 </button>
             </div>
         </div>
