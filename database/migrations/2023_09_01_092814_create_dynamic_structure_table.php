@@ -25,7 +25,7 @@ return new class extends Migration
         Schema::create('dynamic_structure_group', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('dynamic_structure_id');
-            $table->foreign('dynamic_structure_id')->references('id')->on('dynamic_structure');
+            //$table->foreign('dynamic_structure_id')->references('id')->on('dynamic_structure');
             $table->tinyInteger('ord'); //order
             $table->timestamps();
             $table->softDeletes(); //we will use it to hide groups from new structures but still will be able to show it in old structures
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('locale')->index();
             $table->unsignedBigInteger('dynamic_structure_group_id');
-            $table->foreign('dynamic_structure_group')->references('id')->on('dynamic_structure_group');
+            //$table->foreign('dynamic_structure_group_id')->references('id')->on('dynamic_structure_group');
             $table->unique(['dynamic_structure_group_id', 'locale']);
             $table->string('label'); //group label/name
         });
@@ -43,11 +43,11 @@ return new class extends Migration
         Schema::create('dynamic_structure_column', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('dynamic_structure_id');
-            $table->foreign('dynamic_structure_id')->references('id')->on('dynamic_structure');
+            //$table->foreign('dynamic_structure_id')->references('id')->on('dynamic_structure');
             $table->string('type'); //{text, number...}
             $table->tinyInteger('ord'); //order
             $table->unsignedBigInteger('dynamic_structure_groups_id')->nullable();
-            $table->foreign('dynamic_structure_groups_id')->references('id')->on('dynamic_structure_groups');
+            //$table->foreign('dynamic_structure_groups_id')->references('id')->on('dynamic_structure_group');
             $table->timestamps();
             $table->softDeletes(); //we will use it to hide column from new structures but still will be able to show it in old structures
         });
@@ -55,7 +55,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('locale')->index();
             $table->unsignedBigInteger('dynamic_structure_column_id');
-            $table->foreign('dynamic_structure_column_id')->references('id')->on('dynamic_structure_column');
+            //$table->foreign('dynamic_structure_column_id')->references('id')->on('dynamic_structure_column');
             $table->unique(['dynamic_structure_column_id', 'locale']);
             $table->string('label'); //column label/name
         });

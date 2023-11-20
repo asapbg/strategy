@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedInteger('consultation_document_id');
             $table->foreign('consultation_document_id')->references('id')->on('consultation_document');
             $table->unsignedInteger('dynamic_structures_column_id');
-            $table->foreign('dynamic_structures_column_id')->references('id')->on('dynamic_structures_column');
+            $table->foreign('dynamic_structures_column_id')->references('id')->on('dynamic_structure_column');
             $table->text('value')->nullable();
             $table->timestamps();
             $table->softDeletes();
