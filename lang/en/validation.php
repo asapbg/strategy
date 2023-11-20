@@ -190,6 +190,14 @@ return [
     */
 
     'attributes' => [
+        // site part
+
+        'name_organization_names'       => "Name/Organization's name",
+        'email_address'                 => 'Email address',
+        'legislative_initiative_name'   => "Legislative initiative's name",
+
+        // end site part
+
         'analysis_types_text'      => 'Вид анализ',
         'complexity'               => 'Комплексност',
         'roles'                    => 'Роля',
@@ -307,7 +315,9 @@ return [
         'objective'                 => 'Предмет на договора',
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
-        'author'                    => 'Автор',
+        'author'                    => 'Author',
+        'author_bg'                 => 'Author (BG)',
+        'author_en'                 => 'Author (EN)',
         'highlighted_page'          => 'Водеща страница',
         'is_org'                    => 'Вид профил',
         'org_name'                  => 'Име на организацията',
@@ -399,6 +409,9 @@ return [
         'nomenclature_level'  => 'Ниво (номенклатура)',
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
+        'field_of_action'           => 'Field of action|Fields of action',
+        'target_group'              => 'Target group|Target groups',
+        'document_accepted_with'    => 'Приет с Решение №',
         'file_strategic_documents_bg'  => 'Файл (BG)',
         'file_strategic_documents_en'  => 'Файл (EN)',
     ],

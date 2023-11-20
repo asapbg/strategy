@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Consultations\PublicConsultation;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -36,6 +37,18 @@ class Pris extends ModelActivityExtend implements TranslatableContract
      */
     public function getModelName() {
         return $this->title;
+    }
+
+    protected function docDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    public function scopePublished($query){
+        $query->whereNotNull('published_at');
     }
 
     protected function regNum(): Attribute
@@ -73,6 +86,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     public function actType(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(LegalActType::class, 'id', 'legal_act_type_id');
+    }
+
+    public function consultation(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id');
     }
 
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne

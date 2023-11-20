@@ -105,28 +105,21 @@
 
 
         <div class="row mb-4 mt-4">
-            <h3 class="mb-3">Полезни линкове</h3>
+            <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
             <div class="col-md-12">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 1</a>
-
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class=" fas fa-regular fa-link main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 2</a>
-
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#" class="main-color text-decoration-none">
-                            <i class="fas fa-regular fa-link main-color me-2 fs-5"></i>
-                        </a><a href="#" class="main-color text-decoration-none">Полезен линк 3</a>
-
-                    </li>
-                </ul>
+                @if($item->importerInstitution && $item->importerInstitution->links->count())
+                    <ul class="list-group list-group-flush">
+                        @foreach($item->importerInstitution->links as $l)
+                            <li class="list-group-item">
+                                <a href="#" class="main-color text-decoration-none">
+                                    <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
+                                </a><a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none">{{ $l->title }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    ---
+                @endif
             </div>
         </div>
 
@@ -201,83 +194,8 @@
             </div>
         </div>
 
-        <div class="row mb-0 mt-4">
-            <div class="col-md-12">
-                <div class="custom-card py-4 px-3">
-                    <h3 class="mb-3">{{ __('site.public_consultation.polls') }}</h3>
-                    <form class="row" action="">
-                        @if($item->polls->count())
-                            @foreach($item->polls as $pool)
-                                <p class="main-color fs-18"># {{ $pool->name }}</p>
-                                @if($pool->questions->count())
-                                    @foreach($pool->questions as $q)
-                                        <div class="col-md-6 mb-4">
-                                            <div class="comment-background p-2 rounded">
-                                                <p class="fw-bold fs-18 mb-2">{{ $q->name }}</p>
-                                                @if($q->answers->count())
-                                                    @foreach($q->answers as $a)
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                            <label class="form-check-label" for="flexCheckDefault">
-                                                                {{ $a->name }}
-                                                            </label>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
-                        <div class="col-md-12">
-                            <button class="btn btn-primary">
-                                Изпращане
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
-
-
-        </div>
-
-
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <div class="custom-card py-4 px-3">
-                    <h3 class="mb-3">Коментари</h3>
-                    <div class="obj-comment comment-background p-2 rounded mb-3">
-                        <div class="info">
-                      <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                        <i class="fa fa-solid fa-circle-user me-2 main-color" title="Автор"></i>Ivanov </span>
-                            <span class="obj-icon-info me-2 text-muted">12.09.2023 19:05</span>
-                        </div>
-                        <div class="comment rounded py-2">
-                            <p class="mb-0">Проектът на наредба е съгласуван в рамките на Работна група 9 „Транспортна политика“, за което е приложено становище на работната група.</p>
-                        </div>
-                    </div>
-                    <div class="obj-comment comment-background p-2 rounded mb-3">
-                        <div class="info">
-                      <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                        <i class="fa fa-solid fa-circle-user me-2 main-color" title="Автор"></i>Иванов </span>
-                            <span class="obj-icon-info me-2 text-muted">13.09.2023 19:05</span>
-                        </div>
-                        <div class="comment rounded py-2">
-                            <p class="mb-0">Решението за определяне на по-кратък срок за обществено обсъждане на проекта на акт е взето в съответствие с изискванията на чл. 26, ал. 4, изречение второ от Закона за нормативните актове, като е съобразено, че публикуваният за обществено обсъждане проект на наредба включва разпоредби</p>
-                        </div>
-                    </div>
-                    <div class="col-md-12 mt-4">
-                        <div>
-                            <textarea class="form-control mb-3 rounded" id="exampleFormControlTextarea1" rows="2" placeholder="Въведете коментар"></textarea>
-                            <button class=" cstm-btn btn btn-primary login m-0">Добавяне на коментар</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('site.public_consultations.polls')
+        @include('site.public_consultations.comments')
 
     </div>
 </div>

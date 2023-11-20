@@ -431,4 +431,69 @@ if (!function_exists('optionsUserTypes')) {
             }
         }
     }
+
+    if (!function_exists('is_json')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function is_json(string $string): bool
+        {
+            json_decode($string);
+            return json_last_error() === JSON_ERROR_NONE;
+        }
+    }
+
+    if (!function_exists('compareByTimeStamp')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function compareByTimeStamp($time1, $time2)
+        {
+            if (strtotime($time1) > strtotime($time2))
+                return 1;
+            else if (strtotime($time1) < strtotime($time2))
+                return -1;
+            else
+                return 0;
+        }
+    }
+
+    if (!function_exists('fileHtmlContent')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function fileHtmlContent($file)
+        {
+            $content = '';
+            switch ($file->content_type){
+                case 'application/pdf':
+                    $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
+                    $content=  '<embed src="'.asset($path).'" width="800px" height="2100px" />';
+                    break;
+                case 'application/msword':
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                    $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+                    $content = $html->getContent();
+                    break;
+            }
+
+            return $content;
+        }
+    }
 }

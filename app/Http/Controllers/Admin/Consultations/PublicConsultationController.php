@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Admin\Consultations;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
+use App\Enums\PublicConsultationTimelineEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
+use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Models\ActType;
+use App\Models\Comments;
 use App\Models\ConsultationLevel;
 use App\Models\Consultations\ConsultationDocument;
 use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\LegislativeProgramRow;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
@@ -25,7 +30,9 @@ use App\Models\Poll;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
+use App\Models\Timeline;
 use App\Services\FileOcr;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -75,9 +82,10 @@ class PublicConsultationController extends AdminController
         }
 
         if($item->id) {
-            $item = PublicConsultation::with(['translation'])->find($item->id);
+            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author'])->find($item->id);
         }
 
+        //TODO optimize next one
         $kdRowsDB = $item->id && $item->kd ?
             DynamicStructureColumn::whereIn('id', json_decode($item->kd->active_columns))->orderBy('id')->get()
             : DynamicStructure::with(['columns', 'columns.translation', 'groups', 'groups.translation'])->where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
@@ -151,8 +159,14 @@ class PublicConsultationController extends AdminController
         DB::beginTransaction();
         try {
             $validated = $validator->validated();
+            $oldOpRow = $item->operational_program_row_id;
+            $oldLpRow = $item->legislative_program_row_id;
+            $oldOpenFrom = $item->open_from;
+            $oldOpenTo = $item->open_to;
+
             $validated['operational_program_row_id'] = $validated['operational_program_row_id'] ?? null;
             $validated['legislative_program_row_id'] = $validated['legislative_program_row_id'] ?? null;
+
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {
                 $fillable['consultation_level_id'] = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
@@ -169,9 +183,61 @@ class PublicConsultationController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
+            $item->consultations()->sync($validated['connected_pc'] ?? []);
+
+            //START Timeline
+            $delete = $update = false;
+            $programType = isset($validated['legislative_program_id']) ? LegislativeProgramRow::class : (isset($validated['operational_program_id']) ? OperationalProgramRow::class : null);
+            $programRowID = $validated['operational_program_row_id'] ?? ($validated['legislative_program_row_id'] ?? null);
+
+            //Check if changes
+            //Programs
+            if( (!is_null($validated['operational_program_row_id']) || !is_null($oldOpRow))
+                && $validated['operational_program_row_id'] != $oldOpRow ) {
+                if( is_null($validated['operational_program_row_id']) ) {
+                    $delete = true;
+                } else {
+                    $update = true;
+                }
+            }
+            if( (!is_null($validated['legislative_program_row_id']) || !is_null($oldLpRow))
+                && $validated['legislative_program_row_id'] != $oldLpRow ) {
+                if( is_null($validated['legislative_program_row_id']) ) {
+                    $delete = true;
+                } else {
+                    $update = true;
+                }
+            }
+            $event =  $item->timeline()->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)->first();
+            if( $delete && $event) {
+                $item->timeline()
+                    ->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)
+                    ->delete();
+            }
+            if( $update ) {
+                if( $event ) {
+                    $item->timeline()
+                        ->where('event_id', '=', PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)
+                        ->update(['object_id' => $programRowID, 'object_type' => $programType]);
+                } else{
+                    $item->timeline()->save(new Timeline([
+                        'event_id' => PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
+                        'object_id' => $programRowID,
+                        'object_type' => $programType
+                    ]));
+                }
+            }
+            //END Timeline
+
+
             if( !$id ) {
                 $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
                 $item->save();
+            }
+
+            //Update polls if need to
+            if( (displayDate($oldOpenFrom) != displayDate($item->open_from)) || (displayDate($oldOpenTo) != displayDate($item->open_from)) ) {
+                $item->polls()->update(['start_date' => databaseDate($item->open_from), 'end_date' => databaseDate($item->open_to)]);
             }
 
             //Locke program if is selected
@@ -187,12 +253,12 @@ class PublicConsultationController extends AdminController
             }
 
             DB::commit();
-            if( isset($validated['stay']) && $validated['stay']) {
+            if( isset($validated['stay']) && $validated['stay'] && $user->can('update', $item)) {
                 return redirect(route(self::EDIT_ROUTE, $item) )
                     ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.public_consultation', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -259,6 +325,7 @@ class PublicConsultationController extends AdminController
                             continue;
                         }
 
+                        $newVersion = ($version + 1);
                         $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
                         $file->storeAs($dir, $fileNameToStore, 'public_uploads');
                         $newFile = new File([
@@ -268,13 +335,23 @@ class PublicConsultationController extends AdminController
                             'doc_type' => $docType,
                             'content_type' => $file->getClientMimeType(),
                             'path' => $dir.$fileNameToStore,
-                            'description' => __('custom.public_consultation.doc_type.'.$docType),
+                            'description_'.$code => $validated['description_'.$code] ??  __('custom.public_consultation.doc_type.'.$docType, [], $code),
                             'sys_user' => $request->user()->id,
                             'locale' => $code,
-                            'version' => ($version + 1).'.0'
+                            'version' => $newVersion.'.0'
                         ]);
                         $newFile->save();
                         $fileIds[] = $newFile->id;
+
+                        //timeline
+                        if( $newVersion > 0 && $item->inPeriodBoolean) {
+                            $item->timeline()->save(new Timeline([
+                                'event_id' => PublicConsultationTimelineEnum::FILE_CHANGE->value,
+                                'object_id' => $newFile->id,
+                                'object_type' => File::class
+                            ]));
+                        }
+
                         $ocr = new FileOcr($newFile->refresh());
                         $ocr->extractText();
                     }
@@ -282,7 +359,7 @@ class PublicConsultationController extends AdminController
                     //File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
                 }
             DB::commit();
-            if( $validated['stay'] ) {
+            if( isset($validated['stay']) ) {
                 return redirect(route(self::EDIT_ROUTE, $item).'#ct-doc' )
                     ->with('success', trans_choice('custom.documents', 2)." ".__('messages.updated_successfully_pl'));
             }
@@ -293,34 +370,6 @@ class PublicConsultationController extends AdminController
             DB::rollBack();
             return redirect(url()->previous().'#ct-doc')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
-//
-//        $fileIds = [];
-//
-//        foreach (['bg', 'en'] as $code) {
-//            $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-//            $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
-//            $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
-//            $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
-//            $item = new File([
-//                'id_object' => $objectId,
-//                'code_object' => $typeObject,
-//                'filename' => $fileNameToStore,
-//                'content_type' => $file->getClientMimeType(),
-//                'path' => $pDir.$fileNameToStore,
-//                'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
-//                'sys_user' => $request->user()->id,
-//                'locale' => $code,
-//                'version' => ($version + 1).'.0'
-//            ]);
-//            $item->save();
-//            $fileIds[] = $item->id;
-//            $ocr = new FileOcr($item->refresh());
-//            $ocr->extractText();
-//        }
-//
-//        File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-//        File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
 
     }
 
@@ -507,11 +556,124 @@ class PublicConsultationController extends AdminController
             $validated = $validator->validated();
             $consultation = PublicConsultation::find($validated['id']);
             $consultation->polls()->attach($validated['poll']);
+
+            //update dates if need to
+            $poll = Poll::find((int)$validated['poll']);
+            if( $poll ) {
+                $update = false;
+                if( Carbon::parse($poll->start_date)->format('Y-m-d') != Carbon::parse($consultation->open_from)->format('Y-m-d') ) {
+                    $update = true;
+                    $poll->start_date = $consultation->open_from;
+                }
+                if( Carbon::parse($poll->end_date)->format('Y-m-d') != Carbon::parse($consultation->open_to)->format('Y-m-d') ) {
+                    $update = true;
+                    $poll->end_date = $consultation->open_to;
+                }
+
+                if($update) {
+                    $poll->save();
+                }
+            }
+
+
+
             return redirect(route(self::EDIT_ROUTE, $consultation).'#ct-polls')
                 ->with('success', trans_choice('custom.public_consultations', 2)." ".__('messages.updated_successfully_pl'));
         } catch (\Exception $e) {
             Log::error('Error attach poll to public consultation'.$e);
             return redirect(url()->previous().'#ct-polls')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function addProposalReport(StorePublicConsultationProposalReport $request)
+    {
+        $validated = $request->validated();
+        $pc = PublicConsultation::find((int)$validated['id']);
+
+        if(!$request->user()->can('proposalReport', $pc)) {
+            return back()->with('warning', 'Действието не е позволено преди приключване на консултацията.');
+        }
+
+        $docType = DocTypesEnum::PC_COMMENTS_REPORT->value;
+        try {
+            // Upload File
+            $dir = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
+            $bgFile = $validated['file_'.$docType.'_bg'] ?? null;
+            $enFile = $validated['file_'.$docType.'_en'] ?? null;
+            foreach (['bg', 'en'] as $code) {
+                $version = File::where('locale', '=', $code)
+                    ->where('id_object', '=', $pc->id)
+                    ->where('doc_type', '=', $docType)
+                    ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->count();
+
+                //TODO fix me Ugly way while someone define rules
+                if( !${$code.'File'} ) {
+                    //There is no previews version
+                    if( !$version ) {
+                        if( $code == 'en' && !$enFile && $bgFile ) {
+                            $file = $bgFile;
+                        }
+
+                        if( $code == 'bg' && !$bgFile && $enFile ) {
+                            $file = $enFile;
+                        }
+                    } else {
+                        //we have previews version and do not need to copy file for second language
+                        $file = null;
+                    }
+                } else{
+                    $file = ${$code.'File'};
+                }
+                if(!$file) {continue;}
+
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($dir, $fileNameToStore, 'public_uploads');
+                $newFile = new File([
+                    'id_object' => $pc->id,
+                    'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    'filename' => $fileNameToStore,
+                    'doc_type' => $docType,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $dir.$fileNameToStore,
+                    'description_'.$code => $validated['description_'.$code] ??  __('custom.public_consultation.doc_type.'.$docType, [], $code),
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => ($version + 1).'.0'
+                ]);
+                $newFile->save();
+                $newFile->refresh();
+                $ocr = new FileOcr($newFile->refresh());
+                $ocr->extractText();
+
+                if($code == 'bg'){
+                    $fileEvent = $newFile;
+                }
+            }
+
+            //Save comment
+            $comment = new Comments([
+                'object_code' => Comments::PC_OBJ_CODE,
+                'object_id' => $pc->id,
+                'content' => $validated['message'],
+                'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
+                'user_id' => $request->user()->id
+            ]);
+            $comment->save();
+
+            //Save timeline event
+            $pc->timeline()->save(new Timeline([
+                'event_id' => PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value,
+                'object_id' => $fileEvent->id,
+                'object_type' => File::class
+            ]));
+
+            //Generate comments csv and pfd after pk end and show it in public page
+            return redirect(route(self::EDIT_ROUTE, $pc).'#ct-comments')
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Error save proposal report public consultation'.$e);
+            return redirect(url()->previous().'#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 

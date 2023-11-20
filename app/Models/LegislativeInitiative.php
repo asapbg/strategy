@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\ModelActivityExtend;
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +18,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
     use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['description', 'author'];
+    const TRANSLATABLE_FIELDS = ['description', 'author_id'];
     const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
@@ -28,7 +29,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['regulatory_act_id'];
+    protected $fillable = ['regulatory_act_id', 'description'];
 
     /**
      * Get the model name
@@ -40,12 +41,8 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
     public static function translationFieldsProperties(): array
     {
         return array(
-            'author' => [
-                'type' => 'text',
-                'rules' => ['required', 'string']
-            ],
             'description' => [
-                'type' => 'ckeditor',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
         );
@@ -56,6 +53,11 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
         return $this->hasOne(RegulatoryAct::class, 'id', 'regulatory_act_id');
     }
 
+    public function votes(): HasMany
+    {
+        return $this->hasMany(LegislativeInitiativeVote::class);
+    }
+
     public static function optionsList()
     {
         return DB::table('legislative_initiative')
@@ -64,5 +66,15 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
             ->where('legislative_initiative_translations.locale', '=', app()->getLocale())
             ->orderBy('legislative_initiative_translations.name', 'asc')
             ->get();
+    }
+
+    public function getStatus(int $value): LegislativeInitiativeStatusesEnum
+    {
+        return LegislativeInitiativeStatusesEnum::from($value);
+    }
+
+    public function setStatus(LegislativeInitiativeStatusesEnum $value): void
+    {
+        $this->attributes['status'] = $value->value;
     }
 }

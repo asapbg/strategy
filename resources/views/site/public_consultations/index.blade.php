@@ -117,7 +117,7 @@
                                 </i>
                             </a>
                         </div>
-                    </div>                 
+                    </div>
                     <div class="meta-consul mb-2">
                         <span class="text-secondary"><i class="far fa-calendar text-secondary"
                                 title="{{ __('custom.period') }}"></i> {{ displayDate($consultation->open_from) }} -
@@ -125,8 +125,7 @@
                     </div>
                     <div class="meta-consul">
                         <span><strong>{{ __('custom.status') }}:</strong>
-                            {{--Inactive класа, ще е хубаво да го направим динамичен, вътре в спан стойността да е boolen --}}<span
-                                class="inactive-ks">{{ $consultation->inPeriod }}</span>
+                            <span class="{{ $consultation->inPeriodBoolean ? 'active' : 'inactive' }}-ks">{{ $consultation->inPeriod }}</span>
                         </span>
                         <a href="{{ route('public_consultation.view', ['id' => $consultation->id]) }}" title="{{ $consultation->title }}"><i
                                 class="fas fa-arrow-right read-more text-end"></i><span class="d-none">{{ $consultation->title }}</span>

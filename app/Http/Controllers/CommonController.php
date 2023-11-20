@@ -6,6 +6,7 @@ use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\Page;
 use App\Models\Pris;
@@ -176,7 +177,7 @@ class CommonController extends Controller
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
-                    'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
+                    'description_'.$code => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
                     'sys_user' => $request->user()->id,
                     'locale' => $code,
                     'version' => ($version + 1).'.0'
@@ -210,6 +211,7 @@ class CommonController extends Controller
      */
     public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
     {
+        //TODO Do we need other check here? Permission or else in some cases
         if( !in_array($file->code_object,
             [
                 File::CODE_OBJ_PUBLICATION,
@@ -238,22 +240,7 @@ class CommonController extends Controller
             return __('messages.record_not_found');
         }
 
-        switch ($file->content_type){
-            case 'application/pdf':
-                $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
-                return '<embed src="'.asset($path).'" width="800px" height="2100px" />';
-                break;
-            case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-                return $html->getContent();
-                break;
-            default:
-                return '';
-        }
-
-
+        return fileHtmlContent($file);
     }
 
     /**
@@ -327,6 +314,9 @@ class CommonController extends Controller
                 break;
             case 'op_record':
                 $data = OperationalProgram::select2AjaxOptions($requestData);
+                break;
+            case 'pc':
+                $data = PublicConsultation::select2AjaxOptions($requestData);
                 break;
         }
 

@@ -118,7 +118,8 @@ class ImpactAssessmentController extends Controller
         $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly'));
+        $pageTitle = __("forms.$formName");
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle'));
     }
 
     public function pdf($formName, $inputId)

@@ -73,10 +73,10 @@ class OperationalProgramController extends AdminController
 
     /**
      * @param Request $request
-     * @param OperationalProgram $item
+     * @param OperationalProgram|null $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, OperationalProgram $item)
+    public function edit(Request $request, OperationalProgram|null $item)
     {
         if( ($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', OperationalProgram::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));

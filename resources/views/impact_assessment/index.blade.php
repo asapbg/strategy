@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             @include('impact_assessment.sidebar')
-            <div class="col-lg-10  home-results home-results-two pris-list mb-5">
+            <div class="col-lg-9  col-md-8 home-results home-results-two pris-list mb-5">
                 <div class="row filter-results mb-2">
                     <h2 class="mb-4 col-12">
                         Търсене

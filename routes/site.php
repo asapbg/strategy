@@ -19,11 +19,17 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
     Route::get('poll/show', 'show')->name('poll.show');
+    Route::post('poll', 'store')->name('poll.store');
 });
 
 Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {
     Route::get('partnerships', 'index')->name('partnerships.index');
-    Route::get('partnership/show', 'show')->name('partnership.view');
+    Route::get('partnership/view', 'show')->name('partnership.view');
+});
+
+Route::controller(\App\Http\Controllers\ReportController::class)->group(function () {
+    Route::get('reports', 'index')->name('reports.index');
+    Route::get('report/view', 'show')->name('report.view');
 });
 
 Route::get('/consultations', function () {
@@ -33,6 +39,7 @@ Route::get('/consultations', function () {
 Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {
     Route::get('/public-consultations', 'index')->name('public_consultation.index');
     Route::get('/public-consultations/{id}', 'show')->name('public_consultation.view');
+    Route::post('/public-consultations/add-comment', 'addComment')->name('public_consultation.comment.add');
 });
 
 Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
@@ -64,8 +71,16 @@ Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
 });
 
-
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {
     Route::get('/profile/{tab?}', 'index')->name('profile');
     Route::post('/profile/{tab?}', 'store')->name('profile.store');
+});
+
+Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)->group(function() {
+    Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index');
+    Route::get('/legislative-initiatives/create', 'create')->name('legislative_initiatives.create');
+    Route::post('/legislative-initiatives/store', 'store')->name('legislative_initiatives.store');
+    Route::get('/legislative-initiatives/{item}/view', 'show')->name('legislative_initiatives.view');
+    Route::get('/legislative-initiatives/{item}/edit', 'edit')->name('legislative_initiatives.edit');
+    Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
 });

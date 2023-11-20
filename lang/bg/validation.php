@@ -165,6 +165,9 @@ return [
         'pris_unique_doc_num' => 'Вече съществува документ с тази категория и номер в посочената година.',
         'connectIds' => [
             'required' => 'Изберете поне един документ',
+        ],
+        'a' => [
+            'required' => 'Изберете поне един отговор'
         ]
     ],
 
@@ -180,6 +183,14 @@ return [
     */
 
     'attributes' => [
+        // site part
+
+        'name_organization_names'       => 'Имена/Наименование на организация',
+        'email_address'                 => 'Имейл адрес',
+        'legislative_initiative_name'   => 'Наименование на законодателна инициатива',
+
+        // end site part
+
         'analysis_types_text'      => 'Вид анализ',
         'complexity'               => 'Комплексност',
         'roles'                    => 'Роля',
@@ -298,6 +309,8 @@ return [
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
         'author'                    => 'Автор',
+        'author_bg'                 => 'Автор (BG)',
+        'author_en'                 => 'Автор (EN)',
         'highlighted_page'          => 'Водеща страница',
         'is_org'                    => 'Вид профил',
         'org_name'                  => 'Име на организацията',
@@ -389,6 +402,10 @@ return [
         'nomenclature_level'  => 'Ниво (номенклатура)',
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
+        'user'  => 'Потребител',
+        'field_of_action'           => 'Сфера на действие|Сфери на действие',
+        'target_group'              => 'Целева група|Целеви групи',
+        'document_accepted_with'    => 'Приет с Решение №',
         'file_strategic_documents_bg'  => 'Файл (BG)',
         'file_strategic_documents_en'  => 'Файл (EN)',
     ],

@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
             PolicyAreaSeeder::class,
             SettingsSeeder::class,
             DynamicStructureSeeder::class,
-            UsersAZSeeder::class
+            UsersAZSeeder::class,
+            FieldOfActionSeeder::class,
         ]);
     }
 }

@@ -8,9 +8,8 @@
 
             <div class="card">
                 <div class="card-body table-responsive">
-
                     <div class="mb-3">
-                        <a href="{{ route('admin.legislative_initiatives.edit') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route('admin.legislative_initiatives.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.legislative_initiatives_list', 1) }}
                         </a>
                     </div>
@@ -30,7 +29,7 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->regulatoryAct->name }}</td>
+                                    <td>{{ $item->regulatoryAct?->name }}</td>
                                     <td>{{ $item->author }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
@@ -49,8 +48,7 @@
                                                    class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                                                    data-target="#modal-delete-resource"
                                                    data-resource-id="{{ $item->id }}"
-                                                   data-resource-name="{{ $item->display_name }}"
-                                                   data-resource-delete-url="{{route('admin.legislative_initiatives.store',$item->id)}}"
+                                                   data-resource-delete-url="{{ route('admin.legislative_initiatives.delete', $item) }}"
                                                    data-toggle="tooltip"
                                                    title="{{__('custom.delete')}}">
                                                     <i class="fa fa-trash"></i>
@@ -64,8 +62,7 @@
                                                    class="btn btn-sm btn-success js-toggle-restore-resource-modal"
                                                    data-target="#modal-restore-resource"
                                                    data-resource-id="{{ $item->id }}"
-                                                   data-resource-name="{{ $item->display_name }}"
-                                                   data-resource-restore-url="{{route('admin.legislative_initiatives.store',$item->id)}}"
+                                                   data-resource-restore-url="{{ route('admin.legislative_initiatives.restore', $item->id) }}"
                                                    data-toggle="tooltip"
                                                    title="{{__('custom.restore')}}">
                                                     <i class="fa fa-plus"></i>

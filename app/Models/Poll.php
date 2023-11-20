@@ -16,6 +16,7 @@ class Poll extends ModelActivityExtend
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.polls');
+    const MORE_THEN_ONE_ANSWER = true;
 
     public $timestamps = true;
 
@@ -43,6 +44,23 @@ class Poll extends ModelActivityExtend
         $query->where(function ($query) {
             $query->where('end_date', '>', databaseDate(Carbon::now()))->orWhereNull('end_date');
         });
+    }
+
+    public function scopeInPeriod($query)
+    {
+
+    }
+
+    protected function inPeriod(): Attribute
+    {
+        $now = databaseDate(Carbon::now());
+        return Attribute::make(
+            get: fn ($value) => $this->status == PollStatusEnum::ACTIVE->value &&
+                (
+                    databaseDate($this->start_date) <= $now
+                    && (databaseDate($this->end_date) >= $now || is_null($this->end_date))
+                )
+        );
     }
 
     protected function startDate(): Attribute

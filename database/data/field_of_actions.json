@@ -1,0 +1,112 @@
+[
+    {
+        "id": 1,
+        "name_bg": "COVID-19",
+        "name_en": "COVID-19"
+    },
+    {
+        "id": 2,
+        "name_bg": "Бизнес среда",
+        "name_en": "Business environment"
+    },
+    {
+        "id": 3,
+        "name_bg": "Външна политика, сигурност и отбрана",
+        "name_en": "External policy, safety, and discipline"
+    },
+    {
+        "id": 4,
+        "name_bg": "Държавна администрация",
+        "name_en": "Government administration"
+    },
+    {
+        "id": 5,
+        "name_bg": "Енергетика",
+        "name_en": "Energy"
+    },
+    {
+        "id": 6,
+        "name_bg": "Защита на потребителите",
+        "name_en": "Protection of consumers"
+    },
+    {
+        "id": 7,
+        "name_bg": "Здравеопазване",
+        "name_en": "Health"
+    },
+    {
+        "id": 8,
+        "name_bg": "Земеделие и селски райони",
+        "name_en": "Land and community areas"
+    },
+    {
+        "id": 9,
+        "name_bg": "Качество и безопасност на храните",
+        "name_en": "Quality and safety of goods"
+    },
+    {
+        "id": 10,
+        "name_bg": "Култура",
+        "name_en": "Culture"
+    },
+    {
+        "id": 11,
+        "name_bg": "Междусекторни политики",
+        "name_en": "Multisector policies"
+    },
+    {
+        "id": 12,
+        "name_bg": "Младежка политика",
+        "name_en": "Youth policy"
+    },
+    {
+        "id": 13,
+        "name_bg": "Наука и технологии",
+        "name_en": "Science and technology"
+    },
+    {
+        "id": 14,
+        "name_bg": "Образование",
+        "name_en": "Education"
+    },
+    {
+        "id": 15,
+        "name_bg": "Околна среда",
+        "name_en": "Outer environment"
+    },
+    {
+        "id": 16,
+        "name_bg": "Правосъдие и вътрешни работи",
+        "name_en": "Law and internal works"
+    },
+    {
+        "id": 17,
+        "name_bg": "Регионална политика",
+        "name_en": "Regional policy"
+    },
+    {
+        "id": 18,
+        "name_bg": "Социална политика и заетост",
+        "name_en": "Social policy and wealth"
+    },
+    {
+        "id": 19,
+        "name_bg": "Спорт",
+        "name_en": "Sport"
+    },
+    {
+        "id": 20,
+        "name_bg": "Транспорт",
+        "name_en": "Transport"
+    },
+    {
+        "id": 21,
+        "name_bg": "Туризъм",
+        "name_en": "Tourism"
+    },
+    {
+        "id": 22,
+        "name_bg": "Финанси и данъчна политика",
+        "name_en": "Finance and data policy"
+    }
+]

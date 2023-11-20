@@ -20,7 +20,7 @@ class LegislativeInitiativePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory', 'manage.legislative_initiatives']);
+        return $user->canAny(['manage.*', 'manage.legislative_initiatives']);
     }
 
     /**
@@ -33,7 +33,7 @@ class LegislativeInitiativePolicy
      */
     public function view(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory', 'manage.legislative_initiatives']);
+        return $user->canAny(['manage.*', 'manage.legislative_initiatives']);
     }
 
     /**

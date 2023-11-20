@@ -18,4 +18,9 @@ class FormInput extends ModelActivityExtend
     public function getDataParsedAttribute() {
         return json_decode($this->data, true);
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

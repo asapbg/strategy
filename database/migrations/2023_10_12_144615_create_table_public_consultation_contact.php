@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('public_consultation_contact', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('public_consultation_id');
+            $table->foreign('public_consultation_id')->references('id')->on('public_consultation');
             $table->string('name');
             $table->string('email');
             $table->timestamps();

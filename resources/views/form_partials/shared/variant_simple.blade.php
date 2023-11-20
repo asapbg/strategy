@@ -2,7 +2,7 @@
 @for($n=0; $n<$loop; $n++)
 <div class="row">
     <div class="col-sm-12">
-        <h5>{{ isset($point) ? $point : '1.3' }}.{{ $n+1 }}. По проблем {{ $n+1 }}:</h5>
+        <h6>{{ isset($point) ? $point : '1.3' }}.{{ $n+1 }}. По проблем {{ $n+1 }}:</h6>
     </div>
 </div>
 @php($loop2 = Arr::get($state, "variant_simple.$n", false) ? count(Arr::get($state, "variant_simple.$n")) : 1)
