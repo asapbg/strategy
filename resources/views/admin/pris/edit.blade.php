@@ -138,7 +138,7 @@
                                                             <option value="">---</option>
                                                             @if(isset($publicConsultations) && $publicConsultations->count())
                                                                 @foreach($publicConsultations as $row)
-                                                                    <option value="{{ $row->id }}" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == $row->id) selected @endif>{{ $row->title }}</option>
+                                                                    <option value="{{ $row->id }}" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == $row->id) selected @endif>{{ $row->name }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>

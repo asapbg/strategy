@@ -211,6 +211,7 @@ class CommonController extends Controller
      */
     public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
     {
+        //TODO Do we need other check here? Permission or else in some cases
         if( !in_array($file->code_object,
             [
                 File::CODE_OBJ_PUBLICATION,
@@ -239,22 +240,7 @@ class CommonController extends Controller
             return __('messages.record_not_found');
         }
 
-        switch ($file->content_type){
-            case 'application/pdf':
-                $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
-                return '<embed src="'.asset($path).'" width="800px" height="2100px" />';
-                break;
-            case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-                return $html->getContent();
-                break;
-            default:
-                return '';
-        }
-
-
+        return fileHtmlContent($file);
     }
 
     /**

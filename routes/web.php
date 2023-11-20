@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/toggle-permissions', 'togglePermissions')->name('toggle-permissions');
         //download public page file
         Route::get('/download/page/{file}', 'downloadPageFile')->name('download.page.file');
+        Route::get('/download/{file}', 'downloadFile')->name('download.file');
     });
 
     Route::fallback(function(){

@@ -467,4 +467,33 @@ if (!function_exists('optionsUserTypes')) {
                 return 0;
         }
     }
+
+    if (!function_exists('fileHtmlContent')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function fileHtmlContent($file)
+        {
+            $content = '';
+            switch ($file->content_type){
+                case 'application/pdf':
+                    $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
+                    $content=  '<embed src="'.asset($path).'" width="800px" height="2100px" />';
+                    break;
+                case 'application/msword':
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                    $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+                    $content = $html->getContent();
+                    break;
+            }
+
+            return $content;
+        }
+    }
 }
