@@ -241,16 +241,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')
+        Route::get('/legislative-initiatives',                  'index')->name('legislative_initiatives.index')
             ->middleware('can:viewAny, App\Models\LegislativeInitiative');
-        Route::get('/legislative-initiatives/create', 'create')->name('legislative_initiatives.create');
-        Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
+        Route::get('/legislative-initiatives/create',           'create')->name('legislative_initiatives.create');
+        Route::post('/legislative-initiatives/store',           'store')->name('legislative_initiatives.store');
+        Route::get('/legislative-initiatives/edit/{item?}',     'edit')->name('legislative_initiatives.edit');
+        Route::post('/legislative-initiatives/{item}/update',   'update')->name('legislative_initiatives.update');
+        Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
+        Route::put('/legislative-initiatives/{item}/restore',   'restore')->name('legislative_initiatives.restore');
+
         Route::bind('item', function ($id) {
             return \App\Models\LegislativeInitiative::withTrashed()->find($id);
         });
-        Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
-        Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
-        Route::put('/legislative-initiatives/{item}/restore', 'restore')->name('legislative_initiatives.restore');
     });
 
     // Comments

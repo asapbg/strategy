@@ -48,18 +48,9 @@ class StoreLegislativeInitiativeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'regulatory_act_id' => ['required', 'numeric'],
-            'description_' . app()->getLocale() => ['required', 'string'],
-            'author_' . app()->getLocale() => ['required']
+            'description' => ['required', 'string'],
         ];
-
-        foreach (config('available_languages') as $lang) {
-            foreach (LegislativeInitiative::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-
-        return $rules;
     }
 }

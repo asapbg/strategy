@@ -190,6 +190,14 @@ return [
     */
 
     'attributes' => [
+        // site part
+
+        'name_organization_names'       => "Name/Organization's name",
+        'email_address'                 => 'Email address',
+        'legislative_initiative_name'   => "Legislative initiative's name",
+
+        // end site part
+
         'analysis_types_text'      => 'Вид анализ',
         'complexity'               => 'Комплексност',
         'roles'                    => 'Роля',
