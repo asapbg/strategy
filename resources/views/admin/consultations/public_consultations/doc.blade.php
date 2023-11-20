@@ -32,9 +32,31 @@
         @endif
     @endforeach
     <div class="col-md-6 col-md-offset-3">
-        <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-        <button id="stay" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+        <button id="doc_save" type="submit" class="btn btn-success d-none">{{ __('custom.save') }}</button>
+        <button id="doc_save_fake" data-btn="#doc_save" type="button" class="btn btn-success">{{ __('custom.save') }}</button>
+        <button id="doc_stay" type="submit" name="stay" value="1" class="btn btn-success d-none">{{ __('custom.save_and_stay') }}</button>
+        <button id="doc_stay_fake" data-btn="#doc_stay" type="button" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
         <a href="{{ route($listRouteName) }}"
            class="btn btn-primary">{{ __('custom.cancel') }}</a>
     </div>
 </form>
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            let cancelBtnTxt = '{{ __('custom.cancel') }}';
+            let continueTxt = '{{ __('custom.continue') }}';
+            let titleTxt = '{{ __('custom.change_file') }}';
+            let fileChangeWarningTxt = '{{ __('custom.change_file_warning') }}';
+            $('#doc_save_fake, #doc_stay_fake').on('click', function (){
+                let submitId = $(this).data('btn');
+                new MyModal({
+                    title: titleTxt,
+                    footer: '<button class="btn btn-sm btn-success ms-3" onclick="$(\''+ submitId +'\').click();">'+ continueTxt +'</button>' +
+                        '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    body: '<div class="alert alert-danger">'+ fileChangeWarningTxt +'</div>',
+                });
+            });
+        });
+    </script>
+@endpush
