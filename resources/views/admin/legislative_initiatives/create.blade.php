@@ -5,8 +5,8 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    @php($storeRoute = route('admin.legislative_initiatives.update', ['item' => $item]))
-                    <form action="{{ $storeRoute }}" method="post" name="form" id="form">
+                    <form action="{{ route('admin.legislative_initiatives.store') }}" method="post" name="form"
+                          id="form">
                         @csrf
 
                         <div class="form-group">
@@ -18,14 +18,15 @@
                                         class="form-control form-control-sm select2 @error('regulatory_act_id'){{ 'is-invalid' }}@enderror">
                                     <option value="">---</option>
 
-                                    @if(isset($regulatoryActs) && $regulatoryActs->count())
-                                        @foreach($regulatoryActs as $type)
+                                    @if(isset($regulatoryActTypes) && $regulatoryActTypes->count())
+                                        @foreach($regulatoryActTypes as $type)
                                             <option value="{{ $type->id }}"
-                                                    @if(old('regulatory_act_id', $item->regulatory_act_id) == $type->id) selected
+                                                    @if(old('regulatory_act_id', ($type->id ? $type->regulatory_act_id : 0)) == $type->id) selected
                                                     @endif data-id="{{ $type->id }}">{{ $type->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
+
                                 @error('regulatory_act_id')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -35,17 +36,6 @@
                         @include('admin.partial.edit_field_translate', ['field' => 'description', 'required' => true])
 
                         @include('admin.partial.edit_field_translate', ['field' => 'author', 'required' => true])
-
-                        @if ($item->id)
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label" for="deleted">
-                                    <input type="checkbox" id="deleted" name="deleted" class="checkbox" value="1"
-                                           @if ($item->deleted_at) checked @endif
-                                    >
-                                    {{ __('validation.attributes.deleted') }}
-                                </label>
-                            </div>
-                        @endif
 
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">

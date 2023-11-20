@@ -298,6 +298,8 @@ return [
         'executor'                  => 'Изпълнител',
         'institution'               => 'Институция',
         'author'                    => 'Автор',
+        'author_bg'                 => 'Автор (BG)',
+        'author_en'                 => 'Автор (EN)',
         'highlighted_page'          => 'Водеща страница',
         'is_org'                    => 'Вид профил',
         'org_name'                  => 'Име на организацията',
