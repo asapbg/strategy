@@ -1,18 +1,26 @@
 <h4>Публична част</h4>
 <a href="{{ route('templates.view', ['slug' => 'public_consultations_view']) }}">Обществена консултация - Преглед</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_10_public']) }}">Списък на физическите и юридическите лица, на които е възложено от държавата или общините да изработят проекти на нормативни актове, оценки на въздействието - Преглед)</a>
-<br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_news']) }}">Новини преглед</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_library_list']) }}">Библиотека списък</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_2_public_legal_information']) }}">Правна информация на Министерски съвет. Търсене</a>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti']) }}">Стратегически документи</a>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti-inner']) }}">Стратегически документи (вътрешна)</a>
 <br><a href="{{ route('impact_assessment.index') }}">Оценка на въздействието</a>
 <br>
+<br><a href="{{ route('templates.view', ['slug' => 'public-news']) }}">Новини страница</a>
+<br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_news']) }}">Новина преглед</a>
+<br><a href="{{ route('templates.view', ['slug' => 'blog']) }}">Публикации страница</a>
+<br><a href="{{ route('templates.view', ['slug' => 'blog-single']) }}">Публикация преглед</a>
+
+<br>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">OGP страница</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum']) }}">OGP forum</a>
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home']).'?sk=1' }}">Начално (версия 1)</a>--}}
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home-2']).'?sk=1' }}">Начално (версия 2)</a>--}}
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home-3']).'?sk=1' }}">Начално (версия 3)</a>--}}
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home-4']).'?sk=1' }}">Начално (версия 4)</a>--}}
 {{--<br><a href="https://strategy.asapbg.com/">Начално (версия 5)</a>--}}
+<br>
 <br><a href="{{ route('templates.view', ['slug' => 'pris-postanovlenie']) }}">ПРИС (постановление)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'pris-reshenie']) }}">ПРИС (решение)</a>
 
@@ -47,6 +55,7 @@
 
 <br>
 <br><a href="{{ route('impact-analyze-methods.index') }}">Калкулатор за изчисляване на административната тежест</a>
+<br><a href="{{ route('templates.view', ['slug' => 'standard-cost-model']) }}">Модел на стандартните разходи</a>
 
 <br>
 <br><a href="{{ route('reports.index') }}">Отчети</a>
