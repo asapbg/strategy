@@ -14,6 +14,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property int $id
+ */
 class User extends Authenticatable
 {
     use HasFactory;

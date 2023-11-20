@@ -183,6 +183,14 @@ return [
     */
 
     'attributes' => [
+        // site part
+
+        'name_organization_names'       => 'Имена/Наименование на организация',
+        'email_address'                 => 'Имейл адрес',
+        'legislative_initiative_name'   => 'Наименование на законодателна инициатива',
+
+        // end site part
+
         'analysis_types_text'      => 'Вид анализ',
         'complexity'               => 'Комплексност',
         'roles'                    => 'Роля',
