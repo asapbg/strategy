@@ -6,17 +6,22 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreStrategicDocumentRequest;
 use App\Http\Requests\StrategicDocumentFileUploadRequest;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\LegalActType;
 use App\Models\PolicyArea;
+use App\Models\Pris;
 use App\Models\StrategicDocument;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\StrategicActType;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
+use App\Services\FileOcr;
+use App\Services\StrategicDocuments\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use App\Models\File as FileModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -66,24 +71,29 @@ class StrategicDocumentsController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
-
         $strategicDocumentLevels = StrategicDocumentLevel::all();
         $strategicDocumentTypes = StrategicDocumentType::all();
         $strategicActTypes = StrategicActType::all();
         $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
         $policyAreas = PolicyArea::all();
-        $prisActs = null; //TODO fix me Add them after PRIS module
+        $prisActs = Pris::all();
         $strategicDocumentFiles = StrategicDocumentFile::all();
-        $fileData = $this->prepareFileData($strategicDocumentFiles);
-
+        $strategicDocumentFilesBg = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
+        $strategicDocumentFilesEn = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'en')->get();
+        $fileData = $this->prepareFileData($strategicDocumentFilesBg);
+        $fileDataEn = $this->prepareFileData($strategicDocumentFilesEn);
+        $legalActTypes = LegalActType::all();
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
+        $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
+
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -166,11 +176,29 @@ class StrategicDocumentsController extends AdminController
     public function uploadDcoFile(StrategicDocumentFileUploadRequest $request)
     {
         $validated = $request->validated();
-        $strategicDoc = $this->getRecord($validated['id']) ;
+        $strategicDoc = $this->getRecord($validated['id']);
         unset($validated['id']);
         if( $request->user()->cannot('update', $strategicDoc)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
+        try {
+            $bgFile = $validated['file_strategic_documents_bg'] ?? null;
+            $enFile = $validated['file_strategic_documents_en'] ?? null;
+            if (!$bgFile && !$enFile) {
+                throw new \Exception('Files not found!');
+            }
+            $fileService = app(FileService::class);
+            $fileService->uploadFiles($request, $strategicDoc);
+
+            return redirect(route(self::EDIT_ROUTE, ['id' => $strategicDoc->id]))
+                ->with('success', trans_choice('custom.strategic_document_files', 1)." ".__('messages.created_successfully_m'));
+        } catch (\Throwable $throwable) {
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+
+        dd('asdf');
+        dd($fileService->uploadFiles($request, $strategicDoc));
 
         try {
             DB::beginTransaction();

@@ -406,5 +406,7 @@ return [
         'field_of_action'           => 'Сфера на действие|Сфери на действие',
         'target_group'              => 'Целева група|Целеви групи',
         'document_accepted_with'    => 'Приет с Решение №',
+        'file_strategic_documents_bg'  => 'Файл (BG)',
+        'file_strategic_documents_en'  => 'Файл (EN)',
     ],
 ];
