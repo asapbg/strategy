@@ -210,6 +210,17 @@
                 @enderror
             </div>
         </div>
+        @php($pcByOpLp = $item->connectedConsultationByProgram())
+        @if($pcByOpLp->count())
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections_by_op_lp') }}</label>
+                <div class="col-12">
+                    @foreach($pcByOpLp as $row)
+                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
