@@ -29,170 +29,115 @@
 
             <div class="row mb-3">
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Дата приемане
+                    <h3 class="mb-2 fs-18"> {{ trans_choice('custom.accepted_date', 1) }}
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i> {{ $strategicDocument->document_date }} {{ trans_choice('custom.date_small', 1) }}
+                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i> {{ $strategicDocument->publicConsultation->open_from }} {{ trans_choice('custom.date_small', 1) }}
                 </span>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Дата на валидност
+                    <h3 class="mb-2 fs-18"> {{ trans_choice('custom.validation_date', 1) }}
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>{{ $strategicDocument->document_date }} {{ trans_choice('custom.date_small', 1) }} </span>
+                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>{{ $strategicDocument->publicConsultation->open_to }} {{ trans_choice('custom.date_small', 1) }} </span>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Категория</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
+                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fa-solid fa-arrow-right-to-bracket me-2 main-color"
-                           title="Сфера на действие"></i>Централно ниво</span>
+                           title="Сфера на действие"></i>{{ $strategicDocument->documentType->name }}</span>
                     </a>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Област на политика</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.policy_area', 1) }}</h3>
+                    <a href="{{ route('admin.nomenclature.policy_area.edit', [$strategicDocument->policyArea->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="bi bi-mortarboard-fill me-2 main-color"
-                           title="Номер на консултация "></i>Образование</span>
+                           title="Номер на консултация "></i>{{ $strategicDocument->policyArea->name }}</span>
                     </a>
                 </div>
-
             </div>
 
             <div class="row mb-4">
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Вид стратегически документ</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
+                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-bezier-curve me-2 main-color" title="Тип консултация"></i>Стратегия </span>
+                        <i class="fas fa-bezier-curve me-2 main-color" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }} </span>
                     </a>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Вид,с който е приет документа</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_act_type', 1) }}</h3>
+                    <a href="{{ route('admin.nomenclature.strategic_act_type.edit', [$strategicDocument->strategicActType->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-solid fa-file-lines me-2 main-color" title="Вносител"></i>Решение
+                        <i class="fas fa-solid fa-file-lines me-2 main-color" title="Вносител"></i>{{ $strategicDocument->strategicActType->name }}
                     </span>
                     </a>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Орган приел акта</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.accept_act_institution_type', 1) }}</h3>
+                    <a href="{{ route('admin.strategic_documents.institutions.edit', [$strategicDocument->acceptActInstitution->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
-                        <i class="fa-solid fa-school me-2 main-color" title="История"></i>Министерски съвет</span>
+                        <i class="fa-solid fa-school me-2 main-color" title="История"></i>{{ $strategicDocument->acceptActInstitution->name }}</span>
                     </a>
                 </div>
                 <div class="col-md-3 ">
-                    <h3 class="mb-2 fs-18">Уникален номер на консултация</h3>
-                    <a href="#" class="main-color text-decoration-none">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.unique_consultation_number', 1) }}</h3>
+                    <a href="{{ route('admin.consultations.public_consultations.edit', [$strategicDocument->publicConsultation->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
-                        <i class="fa-solid fa-hashtag me-2 main-color" title="История"></i>1515111</span>
+                        <i class="fa-solid fa-hashtag me-2 main-color" title="История"></i>{{ $strategicDocument->publicConsultation?->id }}</span>
                     </a>
                 </div>
             </div>
 
             <div class="row mt-4 mb-4">
                 <div class="col-md-12">
-                    <h3 class="mb-3">Описание</h3>
+                    <h3 class="mb-3">{{ trans_choice('custom.description', 1) }}</h3>
                     <div class="str-doc-info">
                         {!! $strategicDocument->description !!}
-                        <!--
-                        <p><strong>Стратегическата рамка за развитие на образованието, обучението и ученето в Република
-                                България (2021 – 2030)</></strong> (Стратегическа рамка) е изготвена от Министерството на
-                            образованието и науката в сътрудничество със заинтересовани страни. Настоящият стратегически
-                            документ и Стратегията за развитие на висшето образование в Република България в периода от 2020
-                            година до 2030 година очертават общата рамка за развитие на образованието, обучението и ученето
-                            в Република България до 2030 година.&nbsp;</p>
-                        <p>С <strong>Протоколно решение № 13.1 на Министерския съвет от 22.03.2023 г. е приет План за
-                                действие до 2024 година към Стратегическата рамка за развитие на образованието, обучението и
-                                ученето в Република България (2021-2030)</strong>. С приемането на този документ се
-                            изпълнява и ангажиментът на страната по Компонент 1. „Образование и умения“ от Националния план
-                            за възстановяване и устойчивост.</p>
-                        <p>Планът за действие трябва да доведе до подобряване на качеството и приложимостта на
-                            образованието, на комплексната образователна реформа, до засилване и изграждането на уменията и
-                            ключовите компетентности сред децата и учениците. Освен това се предвижда да се повишат
-                            интересът и мотивацията за учене, ангажираността на всички в образователния процес, нивото на
-                            придобитите умения, адаптивността към околната среда и пазара на труда, както и да се ускори
-                            приобщаване на всяко дете и ученик в образователния процес.</p>
-                        <p>В плана са заложени дейности по различните приоритетни области на Стратегическата рамка, срокове
-                            за изпълнението им, предвидени са източници на финансиране, както и индикатори за проследяване и
-                            анализ на изпълнението. Тези дейности ще реализират заложените в Стратегическата рамка цели и
-                            мерки, които обхващат всички значими предизвикателства в системата на образованието и обучението
-                            като: ранното детско развитие, насърчаването на компетентности и таланти, квалификацията на
-                            мотивирани и креативни учители, израждането на сплотени училищни общности и системната работа с
-                            родителите, ефективното включване, трайното приобщаване и образователната интеграция,
-                            въвеждането на образователни иновации, дигиталната трансформация и устойчивото развитие,
-                            реализацията в професиите на настоящето и бъдещето, ученето през целия живот, ефикасното
-                            управление.</p>
-                            -->
                     </div>
                 </div>
             </div>
 
             <div class="row mb-4 mt-4">
-                <h3 class="mb-3">Прилежащи документи</h3>
+                <h3 class="mb-3">{{ trans_choice('custom.associated_documents', 1) }}</h3>
                 <div class="col-md-12">
                     <ul class=" tab nav nav-tabs mb-3" id="myTab">
                         <li class="nav-item pb-0">
-                            <a href="#table-view" class="nav-link tablinks active" data-bs-toggle="tab">Табличен изглед</a>
+                            <a href="#table-view" class="nav-link tablinks active" data-bs-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
                         </li>
                         <li class="nav-item pb-0">
-                            <a href="#tree-view" class="nav-link tablinks" data-bs-toggle="tab">Дървовиден изглед</a>
+                            <a href="#tree-view" class="nav-link tablinks" data-bs-toggle="tab">{{ trans_choice('custom.tree_view', 1) }}</a>
                         </li>
-
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="table-view">
+                            @php
+                                $iconMapping = [
+                                    'application/pdf' => 'fa-regular fa-file-pdf main-color me-2 fs-5',
+                                    'application/msword' => 'fa-regular fa-file-word main-color me-2 fs-5',
+                                    'application/vnd.ms-excel' => 'fa-regular fa-file-excel main-color me-2 fs-5',
+                                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-regular fa-file-excel main-color me-2 fs-5',
+                                ];
+                            @endphp
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <a href="#" class="main-color text-decoration-none">
-                                        <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Извлечение от Протокол №
-                                        13 от
-                                        заседанието на Министерския съвет на 24 февруари 2021 година (публ. 08.03.2021
-                                        г.)</a>
-                                </li>
-
-                                <li class="list-group-item">
-                                    <a href="#" class="main-color text-decoration-none">
-                                        <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Стратегическа рамка за
-                                        развитие
-                                        на образованието, обучението и ученето в Република България (2021 - 2030) (публ.
-                                        11.03.2021
-                                        г.)</a>
-                                </li>
-
-                                <li class="list-group-item">
-                                    <a href="#" class="main-color text-decoration-none"><i
-                                            class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Извлечение от
-                                        Протокол №
-                                        13 от заседанието на Министерския съвет на 22 март 2023 година (публ. на
-                                        29.03.2023
-                                        г.)</a>
-                                </li>
-
-
-                                <li class="list-group-item">
-                                    <a href="#" class="main-color text-decoration-none"><i
-                                            class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>План за
-                                        действие до
-                                        2024 към Стратегическа рамка за развитие на образованието, обучението и
-                                        ученето
-                                        в Република България (2021 – 2030) (публ. на 29.03.2023 г.)</a>
-                                </li>
-
-
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#" class="main-color text-decoration-none"><i
-                                            class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Национална стратегия на
-                                        Република България за равенство, приобщаване и участие на ромите (2021 - 2030),
-                                        приета с
-                                        Решение № 278 от 5 май 2022 година (публ. 11.11.2022 г.) </a>
-                                </li>
+                                @foreach($strategicDocumentFiles as $strategicDocumentFile)
+                                    @php
+                                        $fileExtension = $strategicDocumentFile->content_type;
+                                        $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file'; // Default to a generic file icon if no mapping is found
+                                    @endphp
+                                    <li class="list-group-item">
+                                        <a href="#" class="main-color text-decoration-none">
+                                            <i class="{{ $iconClass }}"></i>{{ $strategicDocumentFile->display_name }}</a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="tree-view">
+                            <div id="fileTree"></div>
+
+                            <!--
                             <ul class="tree list-unstyled">
                                 <li class="tree-item">
                                     <a href="#" class="trigger text-decoration-none"><i
@@ -233,15 +178,9 @@
                                     </li>
                                 </ul>
                             </ul>
+                            -->
                         </div>
-
                     </div>
-
-
-
-
-
-
                 </div>
             </div>
         </div>
@@ -293,3 +232,50 @@
     </div>
     </section>
 @endsection
+@push('styles')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+    <style>
+        #fileTree,#fileTreeEn .jstree-node {
+            padding-left: 30px;
+            padding-top: 7px;
+        }
+        #fileTree,#fileTreeEn .jstree-themeicon {
+            font-size: 20px; /* Adjust the size according to your preference */
+        }
+        #fileTree,#fileTreeEn .jstree-anchor {
+            font-size: 20px; /* Adjust the size according to your preference */
+        }
+    </style>
+@endpush
+@push('scripts')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            fileData = {!! json_encode($fileData) !!};
+            const fileTree = $("#fileTree");
+            fileTree.jstree({
+                "plugins": ["themes"],
+                'core': {
+                    'check_callback': true,
+                    'data': fileData,
+                    'themes': {
+                        'dots': true,
+                        'responsive': true
+                    }
+                },
+                "types": {
+                    "default": {
+                        "icon": "glyphicon glyphicon-flash"
+                    },
+                    "demo": {
+                        "icon": "glyphicon glyphicon-ok"
+                    }
+                },
+            }).on('ready.jstree', function() {
+                fileTree.jstree('open_all');
+            })
+        });
+    </script>
+
+
+@endpush

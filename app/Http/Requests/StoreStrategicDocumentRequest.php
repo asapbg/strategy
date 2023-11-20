@@ -41,10 +41,14 @@ class StoreStrategicDocumentRequest extends FormRequest
             'pris_act_id' => ['nullable', 'numeric'],
         ];
 
-        if( request()->input('pris_act_id') ) {
-            $rules['pris_act_id'][] = ['exists:pris,id'];
+        if( request()->input('pris_act_id')) {
+            //$rules['pris_act_id'][] = ['exists:pris,id'];
         }
-
+        /*
+        request()->validate([
+            'pris_act_id' => 'sometimes|exists:pris,id',
+        ], $rules);
+        */
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
         }
