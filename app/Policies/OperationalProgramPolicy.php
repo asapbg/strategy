@@ -54,8 +54,7 @@ class OperationalProgramPolicy
      */
     public function update(User $user, OperationalProgram $operationalProgram)
     {
-        $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.advisory']) && ($operationalProgram->to_date > $now);
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public;
     }
 
     /**
@@ -79,7 +78,8 @@ class OperationalProgramPolicy
      */
     public function unPublish(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && $operationalProgram->public;
+        return false;
+//        return $user->canAny(['manage.*', 'manage.advisory']) && $operationalProgram->public;
     }
 
     /**

@@ -35,7 +35,7 @@
                                     <td>@if($item->public) <i class="fa fa-check text-success"></i> @else <i class="fa fa-minus text-danger"></i> @endif</td>
                                     <td class="text-start">
                                         @can('view', $item)
-                                            <a href="{{ route('admin.consultations.legislative_programs.view', [$item]) }}"
+                                            <a href="{{ route('admin.consultations.legislative_programs.view', $item) }}"
                                                class="btn btn-sm btn-warning mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
@@ -43,7 +43,7 @@
                                             </a>
                                         @endcan
                                         @can('publish', $item)
-                                            <a href="{{ route('admin.consultations.legislative_programs.publish', [$item]) }}"
+                                            <a href="{{ route('admin.consultations.legislative_programs.publish', $item) }}"
                                                class="btn btn-sm btn-success mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.publish') }}">
@@ -51,7 +51,7 @@
                                             </a>
                                         @endcan
                                         @can('unPublish', $item)
-                                            <a href="{{ route('admin.consultations.legislative_programs.unpublish', [$item]) }}"
+                                            <a href="{{ route('admin.consultations.legislative_programs.unpublish', $item) }}"
                                                class="btn btn-sm btn-danger mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.unpublish') }}">
@@ -59,7 +59,7 @@
                                             </a>
                                         @endcan
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item]) }}"
+                                            <a href="{{ route( $editRouteName , $item) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

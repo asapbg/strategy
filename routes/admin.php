@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Models\Consultations\OperationalProgram;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {

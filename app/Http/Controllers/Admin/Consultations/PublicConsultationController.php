@@ -258,7 +258,7 @@ class PublicConsultationController extends AdminController
                     ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.public_consultation', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);

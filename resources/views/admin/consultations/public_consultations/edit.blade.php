@@ -85,8 +85,10 @@
         //Programs
         let legislativePrograms = $('#legislative_programs');
         let legislativeProgramRows = $('#legislative_program_row_id');
+        let legislativeProgramSelect = $('#legislative_program_id');
         let operationalPrograms = $('#operational_programs');
         let operationalProgramsRows = $('#operational_program_row_id');
+        let operationalProgramsSelect = $('#operational_program_id');
 
         $('#legislative_program_id').on('change', function (){
 
@@ -97,10 +99,14 @@
             //hide programs selects and deselect all
             operationalProgramsRows.parent().addClass('d-none');
             operationalPrograms.addClass('d-none');
+            //
+            operationalProgramsSelect.addClass('d-none');
             operationalPrograms.find('option').each(function(){
                 $(this).prop('selected', false);
             });
             legislativeProgramRows.parent().addClass('d-none');
+            //
+            legislativeProgramSelect.addClass('d-none');
             legislativePrograms.addClass('d-none');
             legislativePrograms.find('option').each(function(){
                 $(this).prop('selected', false);
@@ -149,11 +155,14 @@
                     //show $zp autocomplete select and checkbox 'Законопроектът не е включен в ЗП'. Submit one of them.
                     if($('#no_legislative_program').is(':checked')) {
                         legislativeProgramRows.parent().addClass('d-none');
+                        legislativeProgramSelect.addClass('d-none');
                     } else {
                         legislativeProgramRows.parent().removeClass('d-none');
+                        legislativeProgramSelect.removeClass('d-none');
                     }
                     legislativePrograms.removeClass('d-none');
                     operationalPrograms.addClass('d-none');
+                    operationalProgramsSelect.addClass('d-none');
                     operationalPrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
@@ -161,11 +170,14 @@
                     //show $op autocomplete select and checkbox 'Проектът на акт на МС не е включен в ОП'. Submit one of them.
                     if($('#no_operational_program').is(':checked')) {
                         operationalProgramsRows.parent().addClass('d-none');
+                        operationalProgramsSelect.addClass('d-none');
                     } else {
                         operationalProgramsRows.parent().removeClass('d-none');
+                        operationalProgramsSelect.removeClass('d-none');
                     }
                     operationalPrograms.removeClass('d-none');
                     legislativePrograms.addClass('d-none');
+                    legislativeProgramSelect.addClass('d-none');
                     legislativePrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
@@ -188,7 +200,9 @@
             if($(this).is(':checked')) {
                 $('#' + $(this).data('list')).val('').change();
                 legislativeProgramRows.parent().addClass('d-none');
+                legislativeProgramSelect.addClass('d-none');
                 operationalProgramsRows.parent().addClass('d-none');
+                operationalProgramsSelect.addClass('d-none');
             } else {
                 controlForm();
             }
