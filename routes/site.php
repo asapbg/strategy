@@ -75,3 +75,12 @@ Route::controller(ProfileController::class)->middleware('auth')->group(function 
     Route::get('/profile/{tab?}', 'index')->name('profile');
     Route::post('/profile/{tab?}', 'store')->name('profile.store');
 });
+
+Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)->group(function() {
+    Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index');
+    Route::get('/legislative-initiatives/create', 'create')->name('legislative_initiatives.create');
+    Route::post('/legislative-initiatives/store', 'store')->name('legislative_initiatives.store');
+    Route::get('/legislative-initiatives/{item}/view', 'show')->name('legislative_initiatives.view');
+    Route::get('/legislative-initiatives/{item}/edit', 'edit')->name('legislative_initiatives.edit');
+    Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
+});
