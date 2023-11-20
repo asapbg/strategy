@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentFile;
+use App\Services\StrategicDocuments\FileService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -77,7 +79,11 @@ class StrategicDocumentsController extends Controller
     public function show(int $id): View
     {
         $strategicDocument = StrategicDocument::findOrFail($id);
+        $strategicDocumentFileService = app(FileService::class);
+        $strategicDocumentFiles = StrategicDocumentFile::with(['childDocuments'])->where('strategic_document_id', $id)->where('locale', app()->getLocale())->get();
+        $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
 
-        return $this->view('site.strategic_documents.view', compact('strategicDocument'));
+
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData'));
     }
 }

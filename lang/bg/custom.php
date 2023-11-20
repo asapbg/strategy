@@ -359,7 +359,8 @@ return [
     'public_from'                     => 'Дата на публикуване',
     'general_info'                    => 'Основна информация',
     'files'                           => 'Файлове',
-    'files_hierarchy'                 => 'Файлова йерархия',
+    'files_hierarchy_bg'                 => 'Файлова йерархия (BG)',
+    'files_hierarchy_en'                 => 'Файлова йерархия (EN)',
     'download'                        => 'Изтегли',
     'ord'                               => 'Порденост',
     'period'                               => 'Период',
@@ -455,5 +456,12 @@ return [
     'form1' => 'Частична предварителна оценка на въздействието',
     'archive' => 'Архив',
     'impact_analyze_methods' => 'Методи за анализ на въздействията',
-
+    'category' => 'Категория',
+    'accept_act_institution_type' => 'Орган приел акта',
+    'unique_consultation_number' => 'Уникален номер на консултация',
+    'associated_documents'  => 'Прилежащи документи',
+    'table_view'  => 'Табличен изглед',
+    'tree_view'  => 'Дървовиден изглед',
+    'accepted_date'  => 'Дата приемане',
+    'validation_date'  => 'Дата на валидност',
 ];
