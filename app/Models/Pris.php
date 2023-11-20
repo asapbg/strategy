@@ -39,6 +39,14 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->title;
     }
 
+    protected function docDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
     public function scopePublished($query){
         $query->whereNotNull('published_at');
     }
