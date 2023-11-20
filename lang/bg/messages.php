@@ -28,4 +28,5 @@
     'you_are_not_associate_with_institution'    => 'Не сте асоцииран с институция!',
     'records_not_found'         => 'Не са намерени записи',
     'record_not_found'         => 'Записът не е намерен',
+    'check_for_errors'         => 'Моля проверете за грешки',
 ];

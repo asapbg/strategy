@@ -13,6 +13,18 @@
                     <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
                 </div>
             </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ $item->importerInstitution ?  $item->importerInstitution->name : '---'}}
+                </div>
+            </div>
+            @if($item->pris)
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="col-auto control-label">{{ trans_choice('custom.pris_documents', 1) }}: </label> <a class="text-primary" href="{{ route('admin.pris.edit', ['item' => $item->pris->id]) }}" target="_blank"><i class="fas fa-link mr-2"></i>{{ $item->pris->regNum.' ('.$item->pris->actType->name.')' }}</a>
+                    </div>
+                </div>
+            @endif
         @endif
             <div class="col-md-6">
                 <div class="form-group">
@@ -45,10 +57,10 @@
     </div>
     <div class="row">
         <div class="col-md-4 my-3" id="legislative_programs">
-            <div class="form-group">
+            <div class="form-group" id="legislative_program_id" >
                 <label class="col-sm-12 control-label" for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
-                    <select id="legislative_program_id" name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
+                    <select name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
                             @foreach($legislativePrograms as $row)
@@ -89,10 +101,10 @@
         </div>
 
         <div class="col-md-4 my-3" id="operational_programs">
-            <div class="form-group">
+            <div class="form-group" id="operational_program_id" >
                 <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
                 <div class="col-12">
-                    <select id="operational_program_id" name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
+                    <select name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
                             @foreach($operationalPrograms as $row)
@@ -138,7 +150,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
                 <input type="text" id="open_from" name="open_from"
-                       class="form-control form-control-sm datepicker-tomorrow @error('open_from'){{ 'is-invalid' }}@enderror"
+                       class="form-control form-control-sm datepicker-today @error('open_from'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
                 @error('open_from')
                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -183,32 +195,49 @@
     </div>
     <div class="row">
         <div class="form-group">
-            <label class="col-sm-12 control-label" for="act_links">{{ __('custom.act_links') }}</label>
+            <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
             <div class="col-12">
-                <textarea id="act_links" name="act_links"
-                          class="form-control form-control-sm summernote @error('act_links'){{ 'is-invalid' }}@enderror">{{ old('act_links', ($item->id ? $item->act_links : ($default_val ?? '' ) )) }}</textarea>
-                @error('act_links')
+{{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
+                <select id="connected_pc" name="connected_pc[]" multiple="multiple" data-current="{{ $item->id ?? 0 }}"  data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror">
+                    @if($item->consultations->count())
+                        @foreach($item->consultations as $row)
+                            <option value="{{ $row->id }}" selected>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('connected_pc')
                 <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
             </div>
         </div>
+        @php($pcByOpLp = $item->connectedConsultationByProgram())
+        @if($pcByOpLp->count())
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections_by_op_lp') }}</label>
+                <div class="col-12">
+                    @foreach($pcByOpLp as $row)
+                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
     </div>
 
     <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>
-                <input type="text" id="monitorstat" name="monitorstat"
-                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"
-                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">
-                @error('monitorstat')
-                <div class="text-danger mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
+{{--        <div class="col-md-3">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>--}}
+{{--                <input type="text" id="monitorstat" name="monitorstat"--}}
+{{--                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"--}}
+{{--                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">--}}
+{{--                @error('monitorstat')--}}
+{{--                <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                @enderror--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="col-md-3">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>

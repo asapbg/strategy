@@ -2755,6 +2755,84 @@ function addSubDays(currentDate, days = 0, addDays = true, returnObj = false){
 
 }
 
+//===============================
+// START MyModal
+// Create modal and show it with option for load body from url or pass direct content
+// available params:
+// title, body (content), destroyListener (boolean : do destroy modal on close), bodyLoadUrl (url for loading body content)
+//===============================
+
+/**
+ *
+ * @param obj
+ * @returns {*}
+ * @constructor
+ */
+function MyModal(obj){
+    var _myModal = Object.create(MyModal.prototype)
+    _myModal.id = (new Date()).getTime();
+    _myModal.title = typeof obj.title != 'undefined' ? obj.title : '';
+    _myModal.dismissible = typeof obj.dismissible != 'undefined' ? obj.dismissible : true;
+    _myModal.body = typeof obj.body != 'undefined' ? obj.body : '';
+    _myModal.footer = typeof obj.footer != 'undefined' ? obj.footer : '';
+    _myModal.bodyLoadUrl = typeof obj.bodyLoadUrl != 'undefined' ? obj.bodyLoadUrl : null;
+    _myModal.destroyListener = typeof obj.destroyListener != 'undefined' ? obj.destroyListener : false;
+    _myModal.customClass = typeof obj.customClass != 'undefined' ? obj.customClass : '';
+    _myModal.modalObj = _myModal.init(_myModal);
+    if( _myModal.destroyListener ) {
+        _myModal.setDestroyListener(_myModal);
+    }
+    if( _myModal.bodyLoadUrl ) {
+        _myModal.loadModalBody(_myModal)
+    } else {
+        _myModal.showModal(_myModal);
+    }
+    return _myModal;
+}
+
+MyModal.prototype.init = function (_myModal) {
+    let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal '+ _myModal.customClass +'" role="dialog" style="display: none">\n' +
+        '  <div class="modal-dialog">\n' +
+        '    <!-- Modal content-->\n' +
+        '    <div class="modal-content">\n' +
+        '      <div class="modal-header">\n' +
+        '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
+        (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
+        '      </div>\n' +
+        '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
+        '      </div>\n' +
+        (_myModal.footer ? '<div class="modal-footer">'+ _myModal.footer +'</div>' : '') +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>';
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    return  new bootstrap.Modal(document.getElementById(_myModal.id), {
+        keyboard: false,
+        backdrop: 'static'
+    })
+}
+
+MyModal.prototype.showModal = function (_myModal){
+    _myModal.modalObj.show();
+}
+
+MyModal.prototype.setDestroyListener = function (_myModal){
+    $('#' + _myModal.id).on('hidden.bs.modal', function(){
+        _myModal.modalObj.dispose();
+        $('#' + _myModal.id).remove();
+    });
+}
+
+MyModal.prototype.loadModalBody = function (_myModal) {
+    $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function (){
+        _myModal.showModal(_myModal);
+    });
+}
+
+//==========================
+// End MyModal
+//==========================
+
 $(document).ready(function (e) {
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
@@ -2967,6 +3045,17 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.datepicker-time').length) {
+        $('.datepicker-time').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'dd.mm.yyyy H:m',
+            todayHighlight: true,
+            orientation: "bottom left",
+            autoclose: true,
+            weekStart: 1
+        });
+    }
+
     if($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
@@ -3058,7 +3147,7 @@ $(document).ready(function (e) {
         e.preventDefault();
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
+    //$('[data-toggle="tooltip"]').tooltip();
 
 
     $(document).keyup(function(e) {
@@ -3165,84 +3254,6 @@ $(document).ready(function (e) {
     }
 
     //===============================
-    // START MyModal
-    // Create modal and show it with option for load body from url or pass direct content
-    // available params:
-    // title, body (content), destroyListener (boolean : do destroy modal on close), bodyLoadUrl (url for loading body content)
-    //===============================
-
-    /**
-     *
-     * @param obj
-     * @returns {*}
-     * @constructor
-     */
-    function MyModal(obj){
-        var _myModal = Object.create(MyModal.prototype)
-        _myModal.id = (new Date()).getTime();
-        _myModal.title = typeof obj.title != 'undefined' ? obj.title : '';
-        _myModal.dismissible = typeof obj.dismissible != 'undefined' ? obj.dismissible : true;
-        _myModal.body = typeof obj.body != 'undefined' ? obj.body : '';
-        _myModal.footer = typeof obj.footer != 'undefined' ? obj.footer : '';
-        _myModal.bodyLoadUrl = typeof obj.bodyLoadUrl != 'undefined' ? obj.bodyLoadUrl : null;
-        _myModal.destroyListener = typeof obj.destroyListener != 'undefined' ? obj.destroyListener : false;
-        _myModal.customClass = typeof obj.customClass != 'undefined' ? obj.customClass : '';
-        _myModal.modalObj = _myModal.init(_myModal);
-        if( _myModal.destroyListener ) {
-            _myModal.setDestroyListener(_myModal);
-        }
-        if( _myModal.bodyLoadUrl ) {
-            _myModal.loadModalBody(_myModal)
-        } else {
-            _myModal.showModal(_myModal);
-        }
-        return _myModal;
-    }
-
-    MyModal.prototype.init = function (_myModal) {
-        let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal '+ _myModal.customClass +'" role="dialog" style="display: none">\n' +
-            '  <div class="modal-dialog">\n' +
-            '    <!-- Modal content-->\n' +
-            '    <div class="modal-content">\n' +
-            '      <div class="modal-header">\n' +
-            '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
-            (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
-            '      </div>\n' +
-            '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
-            '      </div>\n' +
-            (_myModal.footer ? '<div class="modal-footer">'+ _myModal.footer +'</div>' : '') +
-            '    </div>\n' +
-            '  </div>\n' +
-            '</div>';
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        return  new bootstrap.Modal(document.getElementById(_myModal.id), {
-            keyboard: false,
-            backdrop: 'static'
-        })
-    }
-
-    MyModal.prototype.showModal = function (_myModal){
-        _myModal.modalObj.show();
-    }
-
-    MyModal.prototype.setDestroyListener = function (_myModal){
-        $('#' + _myModal.id).on('hidden.bs.modal', function(){
-            _myModal.modalObj.dispose();
-            $('#' + _myModal.id).remove();
-        });
-    }
-
-    MyModal.prototype.loadModalBody = function (_myModal) {
-        $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function (){
-            _myModal.showModal(_myModal);
-        });
-    }
-
-    //==========================
-    // End MyModal
-    //==========================
-
-    //===============================
     // START Select2 Ajax Autoload
     // available params:
     //
@@ -3271,6 +3282,12 @@ $(document).ready(function (e) {
                             programId: $('#operational_program_id').val(),
                             search: params.term
                         }
+                    }else if($(this).data('types2ajax') == 'pc') {
+                        var query = {
+                            connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
+                            exclude: $(this).data('current'),
+                            search: params.term
+                        }
                     } else {
                         var query = {
                             search: params.term
@@ -3296,7 +3313,7 @@ $(document).ready(function (e) {
     }
 
     //==========================
-    // End MyModal
+    // End Select2 Ajax Autoload
     //==========================
 
     //Approve modal
@@ -3313,6 +3330,21 @@ $(document).ready(function (e) {
             $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
                 $('#approveModalSubmit_' + btn.data('file'))[0].click();
             });
+        });
+    }
+
+    //Hide/show comment
+    if($('.limit-length').length){
+        $('.limit-length').each(function (index, el){
+            let text = $(this).text();
+            if( text.length > 1000 ){
+                $(this).html(text.substring(0, 1000) + ' <span class="show-more btn btn-primary px-2 py-0 ms-2">...</span>');
+            }
+            //full-length
+        });
+        $(document).on('click', '.show-more', function (){
+            $(this).parent().addClass('d-none');
+            $(this).parent().parent().find('.full-length').removeClass('d-none');
         });
     }
 })

@@ -33,18 +33,15 @@ class StorePublicConsultationRequest extends FormRequest
             'operational_program_row_id' => ['nullable', 'numeric'],
             'open_from' => ['required', 'date'],
             'open_to' => ['required', 'date', 'after:open_from'],
-            'regulatory_act_id' => ['nullable', 'numeric'],
+            //'regulatory_act_id' => ['nullable', 'numeric'],
             'pris_act_id' => ['nullable', 'numeric'],
-            'act_links' => ['nullable', 'string'],
+            //'act_links' => ['nullable', 'string'],
+            'connected_pc' => ['array'],
+            'connected_pc.*' => ['numeric', 'exists:public_consultation,id'],
             'active' => ['boolean', 'nullable'],
             'stay' => ['nullable'],
-            'monitorstat' => ['nullable', 'string', 'max:255'],
+//            'monitorstat' => ['nullable', 'string', 'max:255'],
         ];
-
-        //TODO fxi me if we update record do we have to be able to edit period ????
-        if (request()->isMethod('post') ) {
-            $rules['open_from'][] = 'after:today';
-        }
 
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:public_consultation'];

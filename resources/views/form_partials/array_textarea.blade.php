@@ -7,13 +7,13 @@
 <table width="100%">
     @for($a=0; $a<$loop; $a++)
     <tr>
-        <td>
+        <td @if(!$a) class="pb-4" @endif>
             @php($label = __($buttonLabel) . ' ' . $a+1)
-            @include('form_partials.textarea', ['nameDots' => "$nameDots.$a", "class" => $class ?? ''])
-        </td>
-        <td width="50">
+            @include('form_partials.textarea', ['nameDots' => "$nameDots.$a", "class" => ($class ?? '')])
             @if($a > 0)
-                @include('form_partials.remove_button')
+                <div class="col-12 mt-2 mb-4">
+                    @include('form_partials.remove_button')
+                </div>
             @endif
         </td>
     </tr>

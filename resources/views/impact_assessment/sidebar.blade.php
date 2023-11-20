@@ -1,4 +1,4 @@
-<div class="col-lg-2 side-menu mt-1" style="background:#f5f9fd;">
+<div class="col-lg-3 col-md-4 side-menu mt-1" style="background:#f5f9fd;">
     <div class="left-nav-panel" style="background: #fff !important;">
         <div class="flex-shrink-0 p-2">
             <ul class="list-unstyled">

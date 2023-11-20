@@ -138,7 +138,7 @@
                                                             <option value="">---</option>
                                                             @if(isset($publicConsultations) && $publicConsultations->count())
                                                                 @foreach($publicConsultations as $row)
-                                                                    <option value="{{ $row->id }}" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == $row->id) selected @endif>{{ $row->title }}</option>
+                                                                    <option value="{{ $row->id }}" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == $row->id) selected @endif>{{ $row->name }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
@@ -325,7 +325,7 @@
                                         @foreach($item->files as $f)
                                             <div class="mb-3">
                                                 <a class="mr-3" href="{{ route('admin.download.file', $f) }}" target="_blank" title="{{ __('custom.download') }}">
-                                                    {!! fileIcon($f->content_type) !!} {{ $f->description }} - {{ __('custom.'.$f->locale) }} | {{ __('custom.version_short').' '.$f->version }} | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                    {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }} - {{ __('custom.'.$f->locale) }} | {{ __('custom.version_short').' '.$f->version }} | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $f->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}">{{ __('custom.preview') }}</button>
                                             </div>

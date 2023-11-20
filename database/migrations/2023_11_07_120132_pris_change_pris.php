@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('pris_change_pris', function (Blueprint $table){
             $table->unsignedBigInteger('pris_id');
+            $table->foreign('pris_id')->references('id')->on('pris');
             $table->unsignedBigInteger('changed_pris_id');
+            $table->foreign('changed_pris_id')->references('id')->on('pris');
         });
     }
 

@@ -1,4 +1,4 @@
-<h3>5.2. Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем 1:</h3>
+<h4>5.2. Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем 1:</h4>
 <p>
     <i>
     1. да се идентифицират областите, в които предлаганото действие трябва да доведе до ползи, както и областите, където то може да доведе до преки разходи или непредвидени отрицателни въздействия
@@ -10,22 +10,22 @@
     4. да се оцени значението на въздействията въз основа на двата предходни елемента (Ръководство, РМС № 728 от 2019 г., стр. 36).
     </i>
 </p>
-@include('form_partials.textarea', ['name' => 'quality_assessment', 'label' => '', 'value' => Arr::get($state, 'quality_assessment')])
+@include('form_partials.textarea', ['name' => 'quality_assessment', 'label' => '', 'value' => Arr::get($state, 'quality_assessment'), 'class' => 'mb-4'])
 
 @php($loop = array_key_exists('problem_to_solve', $state) ? count($state['problem_to_solve']) : 1)
 @for($n=0; $n<$loop; $n++)
-    <h4>Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем {{ $n+1 }}:</h4>
+    <h5>Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем {{ $n+1 }}:</h5>
 
     @php($loop2 = Arr::get($state, "variant_simple.$n", false) ? count(Arr::get($state, "variant_simple.$n")) : 1)
     @for($m=0; $m<$loop2; $m++)
     <table width="100%">
         <tr>
-            <td>Проблем {{ $n+1 }}</td>
-            <td class="text-center">Вариант {{ $m+1 }}</td>
+            <th>Проблем {{ $n+1 }}</th>
+            <th class="text-center">Вариант {{ $m+1 }}</th>
         </tr>
     </table>
     @php($loop3 = 3)
-    <table width="100%">
+    <table width="100%" class="table">
         <tr>
             <td class="text-center">Вероятност въздействието да се прояви</td>
             @for($o=0; $o<$loop3; $o++)

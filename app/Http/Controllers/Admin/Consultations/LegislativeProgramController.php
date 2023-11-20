@@ -75,10 +75,10 @@ class LegislativeProgramController extends AdminController
 
     /**
      * @param Request $request
-     * @param LegislativeProgram $item
+     * @param LegislativeProgram|null $item
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(Request $request, LegislativeProgram $item)
+    public function edit(Request $request, LegislativeProgram|null $item)
     {
         if( ($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', LegislativeProgram::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));

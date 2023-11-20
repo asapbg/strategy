@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\ImpactAssessmentController;
 use App\Http\Controllers\Admin\ImpactPageController;
 use App\Http\Controllers\Admin\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
@@ -40,6 +41,7 @@ use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Models\Consultations\OperationalProgram;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
@@ -92,6 +94,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/remove-contact', 'removeContact')->name('consultations.public_consultations.remove.contact');
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
         Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
+        Route::post('/consultations/public-consultations/add-proposal-report', 'addProposalReport')->name('consultations.public_consultations.proposal_report.store');
     });
 
     // Strategic Documents
@@ -135,6 +138,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
         Route::get( '/dynamic-structures/edit/{item}',         'edit')->name('dynamic_structures.edit');
         Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
+    });
+
+    //Impact assessments
+    Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentController::class)->group(function () {
+        Route::get('/impact-assessments', 'index')->name('impact_assessment.index');
     });
 
     //Profile
@@ -214,6 +222,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
+        Route::post('/nomenclature/institutions/add/link', 'addLink')->name('strategic_documents.institutions.link.add');
+        Route::get('/nomenclature/institutions/remove/link', 'removeLink')->name('strategic_documents.institutions.link.remove');
         Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });
 
@@ -233,20 +243,30 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')
+        Route::get('/legislative-initiatives',                  'index')->name('legislative_initiatives.index')
             ->middleware('can:viewAny, App\Models\LegislativeInitiative');
-        Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
+        Route::get('/legislative-initiatives/create',           'create')->name('legislative_initiatives.create');
+        Route::post('/legislative-initiatives/store',           'store')->name('legislative_initiatives.store');
+        Route::get('/legislative-initiatives/edit/{item?}',     'edit')->name('legislative_initiatives.edit');
+        Route::post('/legislative-initiatives/{item}/update',   'update')->name('legislative_initiatives.update');
+        Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
+        Route::put('/legislative-initiatives/{item}/restore',   'restore')->name('legislative_initiatives.restore');
+
         Route::bind('item', function ($id) {
             return \App\Models\LegislativeInitiative::withTrashed()->find($id);
         });
-        Route::match(['post', 'put', 'delete'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
     });
+
+    // Comments
+    Route::controller(\App\Http\Controllers\Admin\CommentsController::class)->group(function () {
+        Route::get('/consultations/comment', 'index')->name('consultations.comments.index')
+            ->middleware('can:viewAny, App\Models\Comments');
+    });
+
+
 
     // Mock controllers
     Route::group([], function () {
-        Route::view('/consultations/comments', 'admin.consultations.comments.index')
-            ->name('consultations.comments.index');
-
         Route::view('/ogp/plan_elements', 'admin.ogp.plan_elements.index')
             ->name('ogp.plan_elements.index');
         Route::view('/ogp/plan_elements/edit/{item?}', 'admin.ogp.plan_elements.edit')
@@ -386,5 +406,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/tag', 'index')->name('nomenclature.tag')->middleware('can:viewAny,App\Models\Tag');
         Route::get('/nomenclature/tag/edit/{item?}', 'edit')->name('nomenclature.tag.edit');
         Route::match(['post', 'put'], '/nomenclature/tag/store/{item?}', 'store')->name('nomenclature.tag.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\Nomenclature\FieldOfActionController::class)->group(function () {
+        Route::get('/nomenclature/field-of-actions',                    'index')->name('nomenclature.field_of_actions.index');
+        Route::get('/nomenclature/field-of-actions/create',             'create')->name('nomenclature.field-of-actions.create');
+        Route::post('/nomenclature/field-of-actions/store',             'store')->name('nomenclature.field_of_actions.store');
+        Route::get('/nomenclature/field-of-actions/{action}/edit',      'edit')->name('nomenclature.field_of_actions.edit');
+        Route::post('/nomenclatures/field-of-actions/{action}/update',  'update')->name('nomenclatures.field_of_actions.update');
+        Route::post('/nomenclatures/field-of-actions/{action}/delete',  'destroy')->name('nomenclatures.field_of_actions.delete');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function() {
+        Route::get('/reports', 'index')->name('reports.index');
+        Route::get('/reports/create', 'create')->name('reports.create');
+        Route::post('/reports/store', 'store')->name('reports.store');
     });
 });

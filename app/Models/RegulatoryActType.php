@@ -7,6 +7,9 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @method static orderBy(string $string)
+ */
 class RegulatoryActType extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable;

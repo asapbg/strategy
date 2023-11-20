@@ -100,9 +100,23 @@
                                     <p>{{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.reports.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'reports')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.reports', 2) }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcanany
+                <li class="nav-item">
+                    <a href="{{ route('admin.impact_assessment.index') }}"
+                       class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
+                        <i class="fas fa-chart-line"></i>
+                        <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
+                    </a>
+                </li>
                 <!-- Admin -->
 {{--                <li class="nav-item">--}}
 {{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">--}}

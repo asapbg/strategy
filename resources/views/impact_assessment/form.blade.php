@@ -1,9 +1,9 @@
 <form id="ia-form" action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]) }}" method="POST">
     @csrf
     <input type="hidden" name="currentStep" value="{{ $step }}">
-    
+
     @if(in_array($formName, ['form2', 'form3']))
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs mb-5">
         <li class="nav-item">
           <a class="nav-link {{ $formName == 'form2' ? 'active' : '' }}" href="{{ route('impact_assessment.form', ['form' => 'form2']) }}">{{ __('forms.form2') }}</a>
         </li>
