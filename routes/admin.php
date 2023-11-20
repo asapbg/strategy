@@ -240,11 +240,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(LegislativeInitiativeController::class)->group(function () {
         Route::get('/legislative-initiatives', 'index')->name('legislative_initiatives.index')
             ->middleware('can:viewAny, App\Models\LegislativeInitiative');
+        Route::get('/legislative-initiatives/create', 'create')->name('legislative_initiatives.create');
         Route::get('/legislative-initiatives/edit/{item?}', 'edit')->name('legislative_initiatives.edit');
         Route::bind('item', function ($id) {
             return \App\Models\LegislativeInitiative::withTrashed()->find($id);
         });
-        Route::match(['post', 'put', 'delete'], '/legislative-initiatives/store/{item?}', 'store')->name('legislative_initiatives.store');
+        Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
+        Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
+        Route::put('/legislative-initiatives/{item}/restore', 'restore')->name('legislative_initiatives.restore');
     });
 
     // Mock controllers

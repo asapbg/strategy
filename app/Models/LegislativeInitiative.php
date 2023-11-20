@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -28,7 +27,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['regulatory_act_id'];
+    protected $fillable = ['regulatory_act_id', 'description', 'author'];
 
     /**
      * Get the model name
@@ -45,7 +44,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
                 'rules' => ['required', 'string']
             ],
             'description' => [
-                'type' => 'ckeditor',
+                'type' => 'summernote',
                 'rules' => ['required', 'string']
             ],
         );

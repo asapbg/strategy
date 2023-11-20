@@ -69,7 +69,6 @@ Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
 });
 
-
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {
     Route::get('/profile/{tab?}', 'index')->name('profile');
     Route::post('/profile/{tab?}', 'store')->name('profile.store');
