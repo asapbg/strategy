@@ -371,14 +371,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                         break;
                     case PublicConsultationTimelineEnum::FILE_CHANGE->value:
                     case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
-                        $timeline[$event->created_at.'_'.$event->event_id] = [
-                            'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
-                            'date' => displayDate($event->created_at),
-                            'isActive' => true,
-                            'description' => '<p><span class="d-inline-block">
+                        if($event->object->{'description_' . app()->getLocale()}) {
+                            $timeline[$event->created_at.'_'.$event->event_id] = [
+                                'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
+                                'date' => displayDate($event->created_at),
+                                'isActive' => true,
+                                'description' => '<p><span class="d-inline-block">
                                                 <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="'.$event->object->id.'" data-url="'.route('admin.preview.file.modal', ['id' => $event->object->id]).'" title="'.__('custom.preview').'">'.fileIcon($event->object->content_type).' '.($event->object->{'description_' . app()->getLocale()}).' '.__('custom.version_short').' '.$event->object->version.'</button>
                                             </span></p>'
-                        ];
+                            ];
+                        }
                         break;
                 }
             }
