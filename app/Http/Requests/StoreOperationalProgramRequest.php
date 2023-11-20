@@ -33,7 +33,7 @@ class StoreOperationalProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id')), new ProgramValidPeriod(request()->input('to_date'))];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id'))]; //, new ProgramValidPeriod(request()->input('to_date'))
             $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'operational', request()->input('id'))];
 
             if (request()->input('id')) {
@@ -46,7 +46,7 @@ class StoreOperationalProgramRequest extends FormRequest
                 if(request()->filled('col')) {
                     foreach (request()->input('col') as $key => $columns) {
                         foreach ($columns as $key2 => $ids) {
-                            $rules['val.' . $key . '.'.$key2] = ['required', 'string', 'max:255'];
+                            $rules['val.' . $key . '.'.$key2] = ['required', 'string'];
                         }
                     }
                 }
@@ -68,7 +68,7 @@ class StoreOperationalProgramRequest extends FormRequest
             $rules['month'] = ['required_with:new_val', 'string', 'max:7'];
 
             foreach (request()->input('new_val_col') as $key => $input) {
-                $rules['new_val.'.$key] = ['required', 'string', 'max:255'];
+                $rules['new_val.'.$key] = ['required', 'string'];
             }
         }
 

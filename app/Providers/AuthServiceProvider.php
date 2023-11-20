@@ -22,7 +22,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         PublicConsultation::class => PublicConsultationPolicy::class,
         LegislativeProgram::class => LegislativeProgramPolicy::class,
-        OperationalProgram::class => OperationalProgram::class
+        OperationalProgram::class => OperationalProgramPolicy::class
     ];
 
     /**

@@ -57,10 +57,10 @@
     </div>
     <div class="row">
         <div class="col-md-4 my-3" id="legislative_programs">
-            <div class="form-group">
+            <div class="form-group" id="legislative_program_id" >
                 <label class="col-sm-12 control-label" for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
-                    <select id="legislative_program_id" name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
+                    <select name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
                             @foreach($legislativePrograms as $row)
@@ -101,10 +101,10 @@
         </div>
 
         <div class="col-md-4 my-3" id="operational_programs">
-            <div class="form-group">
+            <div class="form-group" id="operational_program_id" >
                 <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
                 <div class="col-12">
-                    <select id="operational_program_id" name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
+                    <select name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
                             @foreach($operationalPrograms as $row)
@@ -150,7 +150,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
                 <input type="text" id="open_from" name="open_from"
-                       class="form-control form-control-sm datepicker-tomorrow @error('open_from'){{ 'is-invalid' }}@enderror"
+                       class="form-control form-control-sm datepicker-today @error('open_from'){{ 'is-invalid' }}@enderror"
                        value="{{ old('open_from', ($item->id ? $item->open_from : '')) }}">
                 @error('open_from')
                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -227,17 +227,17 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>
-                <input type="text" id="monitorstat" name="monitorstat"
-                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"
-                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">
-                @error('monitorstat')
-                <div class="text-danger mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
+{{--        <div class="col-md-3">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>--}}
+{{--                <input type="text" id="monitorstat" name="monitorstat"--}}
+{{--                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"--}}
+{{--                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">--}}
+{{--                @error('monitorstat')--}}
+{{--                <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                @enderror--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="col-md-3">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
