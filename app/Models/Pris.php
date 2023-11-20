@@ -39,6 +39,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->title;
     }
 
+    public function scopePublished($query){
+        $query->whereNotNull('published_at');
+    }
+
     protected function regNum(): Attribute
     {
         return Attribute::make(

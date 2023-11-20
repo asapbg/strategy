@@ -12,7 +12,7 @@ class PrisController extends Controller
     {
 //        return $this->view('templates.8_2_1_1_2_public_legal_information');
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
-        $items = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])
+        $items = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])
             ->FilterBy($request->all())->paginate($paginate);
         $pageTitle = __('site.menu.pris');
         return $this->view('site.pris.index', compact('items', 'pageTitle'));
@@ -21,10 +21,10 @@ class PrisController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.pris-postanovlenie');
-        $item = Pris::with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
+        $item = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
             'tags', 'tags.translation', 'changedDocs',
             'changedDocs.actType', 'changedDocs.actType.translation',
-            'changedDocs.institution', 'changedDocs.institution.translation'])->find($id);
+            'changedDocs.institution', 'changedDocs.institution.translation', 'files'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }

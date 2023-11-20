@@ -23,7 +23,7 @@ class PublicConsultationController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.public_consultations_view');
-        $item = PublicConsultation::with(['translation', 'actType', 'actType.translation', 'contactPersons',
+        $item = PublicConsultation::Active()->with(['translation', 'actType', 'actType.translation', 'contactPersons',
             'pollsInPeriod', 'pollsInPeriod.questions', 'pollsInPeriod.questions.answers', 'importerInstitution', 'importerInstitution.links', 'importerInstitution.links.translations'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
