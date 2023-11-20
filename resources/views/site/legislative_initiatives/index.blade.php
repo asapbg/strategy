@@ -1,0 +1,271 @@
+@extends('layouts.site', ['fullwidth' => true])
+<style>
+    .public-page {
+        padding: 0px 0px !important;
+    }
+
+</style>
+
+@section('pageTitle', 'Законодателна инициатива')
+
+@section('content')
+    <div class="row">
+        <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+            <div class="left-nav-panel" style="background: #fff !important;">
+                <div class="flex-shrink-0 p-2">
+                    <ul class="list-unstyled">
+                        <li class="mb-1">
+                            <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
+                               data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                                <i class="fa-solid fa-bars me-2 mb-2"></i>Гражданско участие
+                            </a>
+                            <hr class="custom-hr">
+                            <div class="collapse show mt-3" id="home-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
+
+                                    <li class="mb-2  active-item-left p-1"><a href="#"
+                                                                              class="link-dark text-decoration-none">Законодателни
+                                            инициативи</a>
+                                    </li>
+                                    <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Отворено
+                                            управление</a>
+                                    </li>
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
+                                        <ul class="list-unstyled ps-3">
+                                            <hr class="custom-hr">
+                                            <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Планове
+                                                </a></li>
+                                            <hr class="custom-hr">
+                                            <li class="my-2"><a href="#"
+                                                                class="link-dark  text-decoration-none">Отчети</a>
+                                            </li>
+                                            <hr class="custom-hr">
+                                        </ul>
+                                    </ul>
+
+                                    <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Анкети</a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </li>
+                        <hr class="custom-hr">
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-10 py-5">
+            <div class="row filter-results mb-2">
+                <h2 class="mb-4">
+                    Търсене
+                </h2>
+                <form id="filter" class="row" action="{{ route('legislative_initiatives.index') }}" method="GET">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <div class="mb-3 d-flex flex-column w-100">
+                                <label for="keywords" class="form-label">Ключови думи</label>
+                                <input id="keywords" class="form-control" name="keywords" type="text"
+                                       value="{{ request()->get('keywords', '') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <div class="mb-3 d-flex flex-column w-100">
+                                <label for="politic-range" class="form-label">Област на политика</label>
+
+                                <select id="politic-range" class="politic-range form-select select2"
+                                        name="politic-range" multiple>
+                                    <option value="">--</option>
+                                    @foreach($politicRanges as $politic)
+                                        @php $selected = request()->get('politic-range', '') == $politic->id ? 'selected' : '' @endphp
+                                        <option value="{{ $politic->id }}" {{ $selected }}>{{ $politic->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group ">
+                            <div class="mb-3 d-flex flex-column  w-100">
+                                <label for="institution" class="form-label">Институция</label>
+                                <select id="institution" class="institution form-select select2" name="institution"
+                                        multiple>
+                                    <option value="">--</option>
+                                    @php $selected = request()->get('institution', '') == 1 ? 'selected' : '' @endphp
+                                    <option value="1" {{ $selected }}>Министерство на вътрешните работи</option>
+                                    @php $selected = request()->get('institution', '') == 2 ? 'selected' : '' @endphp
+                                    <option value="2" {{ $selected }}>Министерство на финансите</option>
+                                    @php $selected = request()->get('institution', '') == 3 ? 'selected' : '' @endphp
+                                    <option value="3" {{ $selected }}>Министерство на външните работи</option>
+                                    @php $selected = request()->get('institution', '') == 4 ? 'selected' : '' @endphp
+                                    <option value="4" {{ $selected }}>Министерство на правосъдието</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="input-group ">
+                            <div class="mb-3 d-flex flex-column  w-100">
+                                <label for="count_results" class="form-label">Брой резултати:</label>
+                                <select id="count_results" class="form-select" name="count_results">
+                                    <option value="10">10</option>
+                                    @php $selected = request()->get('count_results', '') == 20 ? 'selected' : '' @endphp
+                                    <option value="20" {{ $selected }}>20</option>
+                                    @php $selected = request()->get('count_results', '') == 30 ? 'selected' : '' @endphp
+                                    <option value="30" {{ $selected }}>30</option>
+                                    @php $selected = request()->get('count_results', '') == 40 ? 'selected' : '' @endphp
+                                    <option value="40" {{ $selected }}>40</option>
+                                    @php $selected = request()->get('count_results', '') == 50 ? 'selected' : '' @endphp
+                                    <option value="50" {{ $selected }}>50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5 mt-5">
+                        <div class="col-md-6">
+                            <button class="btn rss-sub main-color" type="submit"><i
+                                    class="fas fa-search main-color"></i>Търсене
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS
+                            </button>
+                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+                            <a href="{{ route('legislative_initiatives.create') }}"
+                               class="btn btn-success text-success">
+                                <i class="fas fa-circle-plus text-success me-1"></i>
+                                Добави инициатива
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
+                <div class="col-md-3">
+                    <p class="mb-0 cursor-pointer ">
+                        <i class="fa-solid fa-sort me-2"></i> Ключова дума
+                    </p>
+                </div>
+                <div class="col-md-3 cursor-pointer ">
+                    <p class="mb-0">
+                        <i class="fa-solid fa-sort me-2"></i>Област на политика
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="mb-0 cursor-pointer">
+                        <i class="fa-solid fa-sort me-2"></i>Институция
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="mb-0 cursor-pointer">
+                        <i class="fa-solid fa-sort me-2"></i>Дата
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-12 mt-2">
+                    <div class="info-consul text-start">
+                        <p class="fw-600">
+                            Общо {{ $items->count() }} {{ $items->count() == 1 ? trans_choice('custom.results', 1) : trans_choice('custom.results', 2) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            @if(isset($items) && $items->count() > 0)
+                @foreach($items as $item)
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="consul-wrapper">
+                                <div class="single-consultation d-flex">
+                                    <div class="consult-img-holder">
+                                        <i class="fa-solid fa-hospital light-blue"></i>
+                                    </div>
+                                    <div class="consult-body">
+                                        <div href="#" class="consul-item">
+                                            <div class="consult-item-header d-flex justify-content-between">
+                                                <div class="consult-item-header-link">
+                                                    <a href="{{ route('legislative_initiatives.view', $item) }}" class="text-decoration-none"
+                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->name }}">
+                                                        <h3>{{ __('custom.change_f') }} {{ __('custom.in') }}
+                                                            {{ $item->regulatoryAct?->name }}</h3>
+                                                    </a>
+                                                </div>
+                                                <div class="consult-item-header-edit">
+                                                    <a href="#">
+                                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                           role="button" title="Изтриване"></i>
+                                                    </a>
+
+                                                    @can('update', $item)
+                                                        <a href="{{ route('legislative_initiatives.edit', $item) }}">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                               role="button" title="Редакция">
+                                                            </i>
+                                                        </a>
+                                                    @endcan
+                                                </div>
+                                            </div>
+
+                                            <a href="#" title=" Партньорство за открито управление"
+                                               class="text-decoration-none text-capitalize mb-3">
+                                                {{ $item->regulatoryAct?->institution }}
+                                            </a>
+
+                                            <div class="status mt-2">
+                                                <div>
+                                                    <span>{{ __('validation.attributes.status') }}:
+                                                        <span
+                                                            class="active-li">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
+                                                    </span>
+
+                                                    <span class="mx-1">|</span>
+
+                                                    <span>
+                                                        {{ __('custom.supported_f') }}:
+                                                        <span
+                                                            class="voted-li">{{ $item->votes->count() }} {{ __('custom.times_count') }}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="meta-consul mt-2">
+                                                <span class="text-secondary">
+                                                    <i class="far fa-calendar text-secondary me-1"></i> {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}{{ __('custom.year_short') }}
+                                                </span>
+
+                                                <a href="#"
+                                                   title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                    <i class="fas fa-arrow-right read-more"><span
+                                                            class="d-none">Линк</span></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
+            <div class="row">
+                <nav aria-label="Page navigation example">
+                    @if(isset($items) && $items->count() > 0)
+                        {{ $items->appends(request()->query())->links() }}
+                    @endif
+                </nav>
+            </div>
+        </div>
+    </div>
+@endsection

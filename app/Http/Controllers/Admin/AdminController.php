@@ -12,7 +12,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
+
     use ValidatesRequests;
+
+    /**
+     * Store same values for all available languages.
+     *
+     * @param $fields
+     * @param $item
+     * @param $validated
+     *
+     * @return void
+     */
+    protected function storeWithoutTranslate($fields, $item, $validated)
+    {
+        foreach (config('available_languages') as $locale) {
+            foreach ($fields as $field) {
+                if (array_key_exists($field, $validated)) {
+                    $item->translateOrNew($locale['code'])->{$field} = $validated[$field];
+                }
+            }
+        }
+
+        $item->save();
+    }
+
     /**
      * @param $fields  //example $item->getFillable();
      * @param $item   //model;
