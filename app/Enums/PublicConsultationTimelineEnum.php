@@ -47,7 +47,6 @@ enum PublicConsultationTimelineEnum: int
     {
         return [
             self::START->value,
-            self::FILE_CHANGE->value,
             self::END->value,
             self::ACCEPT_ACT_MC->value,
             self::PRESENTING_IN_NA->value,

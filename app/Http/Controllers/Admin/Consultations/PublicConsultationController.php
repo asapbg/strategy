@@ -318,6 +318,7 @@ class PublicConsultationController extends AdminController
                             continue;
                         }
 
+                        $newVersion = ($version + 1);
                         $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
                         $file->storeAs($dir, $fileNameToStore, 'public_uploads');
                         $newFile = new File([
@@ -330,10 +331,20 @@ class PublicConsultationController extends AdminController
                             'description_'.$code => $validated['description_'.$code] ??  __('custom.public_consultation.doc_type.'.$docType, [], $code),
                             'sys_user' => $request->user()->id,
                             'locale' => $code,
-                            'version' => ($version + 1).'.0'
+                            'version' => $newVersion.'.0'
                         ]);
                         $newFile->save();
                         $fileIds[] = $newFile->id;
+
+                        //timeline
+                        if( $newVersion > 0 && $item->inPeriodBoolean) {
+                            $item->timeline()->save(new Timeline([
+                                'event_id' => PublicConsultationTimelineEnum::FILE_CHANGE->value,
+                                'object_id' => $newFile->id,
+                                'object_type' => File::class
+                            ]));
+                        }
+
                         $ocr = new FileOcr($newFile->refresh());
                         $ocr->extractText();
                     }
@@ -352,34 +363,6 @@ class PublicConsultationController extends AdminController
             DB::rollBack();
             return redirect(url()->previous().'#ct-doc')->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
-//
-//        $fileIds = [];
-//
-//        foreach (['bg', 'en'] as $code) {
-//            $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-//            $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
-//            $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
-//            $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
-//            $item = new File([
-//                'id_object' => $objectId,
-//                'code_object' => $typeObject,
-//                'filename' => $fileNameToStore,
-//                'content_type' => $file->getClientMimeType(),
-//                'path' => $pDir.$fileNameToStore,
-//                'description' => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
-//                'sys_user' => $request->user()->id,
-//                'locale' => $code,
-//                'version' => ($version + 1).'.0'
-//            ]);
-//            $item->save();
-//            $fileIds[] = $item->id;
-//            $ocr = new FileOcr($item->refresh());
-//            $ocr->extractText();
-//        }
-//
-//        File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-//        File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
 
     }
 
@@ -587,7 +570,6 @@ class PublicConsultationController extends AdminController
         try {
             // Upload File
             $dir = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
-            $fileIds = [];
             $bgFile = $validated['file_'.$docType.'_bg'] ?? null;
             $enFile = $validated['file_'.$docType.'_en'] ?? null;
             foreach (['bg', 'en'] as $code) {
@@ -616,6 +598,7 @@ class PublicConsultationController extends AdminController
                     $file = ${$code.'File'};
                 }
                 if(!$file) {continue;}
+
                 $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
                 $file->storeAs($dir, $fileNameToStore, 'public_uploads');
                 $newFile = new File([
@@ -631,35 +614,31 @@ class PublicConsultationController extends AdminController
                     'version' => ($version + 1).'.0'
                 ]);
                 $newFile->save();
+                $newFile->refresh();
                 $ocr = new FileOcr($newFile->refresh());
                 $ocr->extractText();
+
+                if($code == 'bg'){
+                    $fileEvent = $newFile;
+                }
             }
 
+            //Save comment
+            $comment = new Comments([
+                'object_code' => Comments::PC_OBJ_CODE,
+                'object_id' => $pc->id,
+                'content' => $validated['message'],
+                'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
+                'user_id' => $request->user()->id
+            ]);
+            $comment->save();
+
             //Save timeline event
-            $event =  $pc->timeline()->where('event_id', '=', PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value)->first();
-            if( !$event ) {
-                //Save comment
-                $comment = new Comments([
-                    'object_code' => Comments::PC_OBJ_CODE,
-                    'object_id' => $pc->id,
-                    'content' => $validated['message'],
-                    'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
-                    'user_id' => $request->user()->id
-                ]);
-                $comment->save();
-                $pc->timeline()->save(new Timeline([
-                    'event_id' => PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value,
-                    'object_id' => $comment->id,
-                    'object_type' => Comments::class
-                ]));
-            } else {
-                //Save comment
-                $comment = Comments::find($event->object_id);
-                $comment->content = $validated['message'];
-                $comment->created_at = Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s');
-                $comment->user_id = $request->user()->id;
-                $comment->save();
-            }
+            $pc->timeline()->save(new Timeline([
+                'event_id' => PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value,
+                'object_id' => $fileEvent->id,
+                'object_type' => File::class
+            ]));
 
             //Generate comments csv and pfd after pk end and show it in public page
             return redirect(route(self::EDIT_ROUTE, $pc).'#ct-comments')

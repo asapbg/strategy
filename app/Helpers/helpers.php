@@ -447,4 +447,24 @@ if (!function_exists('optionsUserTypes')) {
             return json_last_error() === JSON_ERROR_NONE;
         }
     }
+
+    if (!function_exists('compareByTimeStamp')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $string
+         *
+         * @return bool
+         */
+        function compareByTimeStamp($time1, $time2)
+        {
+            if (strtotime($time1) > strtotime($time2))
+                return 1;
+            else if (strtotime($time1) < strtotime($time2))
+                return -1;
+            else
+                return 0;
+        }
+    }
 }

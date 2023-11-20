@@ -31,6 +31,7 @@ class PublicConsultationDocStoreRequest extends FormRequest
         ];
         $request = request()->all();
         foreach (DocTypesEnum::docsByActType($request['act_type']) as $docType) {
+            if($docType != DocTypesEnum::PC_COMMENTS_REPORT->value)
             foreach (config('available_languages') as $lang){
                 $rules['file_'.$docType.'_'.$lang['code']] = DocTypesEnum::validationRules($docType, $lang['code']);
             }
