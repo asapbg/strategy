@@ -412,6 +412,8 @@ return [
         'field_of_action'           => 'Field of action|Fields of action',
         'target_group'              => 'Target group|Target groups',
         'document_accepted_with'    => 'Приет с Решение №',
+        'file_strategic_documents_bg'  => 'Файл (BG)',
+        'file_strategic_documents_en'  => 'Файл (EN)',
     ],
 
 ];

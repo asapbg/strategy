@@ -108,6 +108,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
+        Route::get('strategic-documents/pris-option/{id}', 'prisActOptions')->name('strategic_documents.pris.options');
     });
 
     // Static pages
