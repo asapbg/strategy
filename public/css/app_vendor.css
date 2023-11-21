@@ -1129,6 +1129,11 @@ textarea {
     background: #4f9dc3;
 }
 
+.navy-marine {
+    color: #4f9dc3;
+}
+
+
 .red-color {
     color:#dc3545;
 }
@@ -1302,6 +1307,16 @@ textarea {
     margin-top: 129px;
 }
 
+/*Forum*/
+.forum-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/**/
 
 /*Single page - Consultations*/
 .slider {
@@ -1362,6 +1377,7 @@ input#startdate {
 
 
 /* Strategic documents */
+/*
 .tree-parent{
     margin-top: 0.5rem;
     display: none;
@@ -1414,7 +1430,64 @@ input#startdate {
 
     .tree-item a i{
         margin-right: 0.5rem;
-  }
+  } */
+  .easy-tree li {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 5px 0 5px;
+    position: relative;
+}
+.easy-tree li::before {
+    border-left: 2px solid #c0dbf2;
+    bottom: 50px;
+    height: 100%;
+    top: 0;
+    width: 1px;
+}
+
+.easy-tree li::after {
+    border-top: 2px solid #c0dbf2;
+    height: 20px;
+    top: 25px;
+    width: 35px;
+}
+
+.easy-tree li::before, .easy-tree li::after {
+    content: '';
+    left: -30px;
+    position: absolute;
+    right: auto;
+}
+
+.easy-tree li:last-child::before {
+    height: 25px;
+}
+.easy-tree>ul>li::after, .easy-tree>ul>li::before {
+    border: 0;
+}
+
+.easy-tree li::before, .easy-tree li::after {
+    content: '';
+    left: -30px;
+    position: absolute;
+    right: auto;
+}
+.easy-tree li.parent_li > span {
+    cursor: pointer;
+}
+
+.easy-tree li > span {
+    border: 2px solid #c0dbf2;
+    border-radius: 3px;
+    display: inline-block;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
+.easy-tree li > span > a {
+    color: #333;
+    text-decoration: none;
+}
 /**/
 
 /* Extra links */
