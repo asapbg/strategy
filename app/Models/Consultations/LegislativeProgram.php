@@ -56,6 +56,11 @@ class LegislativeProgram extends ModelActivityExtend
         });
     }
 
+    public function scopePublished($query)
+    {
+        $query->where('public', 1);
+    }
+
     /**
      * Program period
      */

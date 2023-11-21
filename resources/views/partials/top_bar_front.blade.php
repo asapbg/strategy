@@ -17,8 +17,11 @@
             {{--        </div>--}}
 
             <div class="col-md-6 text-end top-bar-right-column">
-                <div class="auth text-right">
+                <div class="auth d-flex justify-content-end">
                     @if(app('auth')->check())
+                        @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
+                            <a href="{{ route('admin.home') }}" class="btn btn-primary main-color me-2"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
+                        @endif
                         <div class="dropdown">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
                                 @php($user = app('auth')->user())

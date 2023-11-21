@@ -36,5 +36,6 @@ return [
     'pris.about' => 'Относно',
     'impact_assessment.forms_and_templates' => 'Образци и форми',
     'successful_send_comment' => 'Коментарът е записан успешно',
+    'to_administration' => 'Към Администрация',
 
 ];
