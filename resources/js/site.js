@@ -68,6 +68,104 @@ MyModal.prototype.loadModalBody = function (_myModal) {
     });
 }
 
+//=================================
+//Select2
+//===============================
+
+function select2OptionFilter(option) {
+    if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
+        return false
+    }
+    return option.text;
+}
+
+var select2Options = {
+    allowClear: true,
+    placeholder: true,
+    templateResult: select2OptionFilter,
+    language: "bg"
+};
+
+if($('.select2').length) {
+    $('.select2').select2(select2Options);
+}
+
+if($('.select2-no-clear').length) {
+    $('.select2-no-clear').select2({
+        allowClear: false,
+        placeholder: true,
+        templateResult: select2OptionFilter,
+        language: "bg"
+    });
+}
+
+if($('.select2-autocomplete-ajax').length) {
+    $('.select2-autocomplete-ajax').each(function (){
+        MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'));
+    });
+}
+
+//===============================
+// START Select2 Ajax Autoload
+// available params:
+//
+//===============================
+
+function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
+    selectDom.select2({
+        allowClear: false,
+        templateResult: select2OptionFilter,
+        language: "bg",
+        placeholder: selectPlaceholder,
+        ajax: {
+            url: selectUrl,
+            data: function (params) {
+                console.log('enters');
+                if($(this).data('types2ajax') == 'pris_doc') {
+                    var query = {
+                        actType: $('#legal_act_type_filter').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'lp_record') {
+                    var query = {
+                        programId: $('#legislative_program_id').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'op_record') {
+                    var query = {
+                        programId: $('#operational_program_id').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'pc') {
+                    var query = {
+                        connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
+                        exclude: $(this).data('current'),
+                        search: params.term
+                    }
+                } else {
+                    var query = {
+                        search: params.term
+                    }
+                }
+                return query;
+            },
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results:  $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        }
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+}
+
 
 $(document).ready(function () {
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
