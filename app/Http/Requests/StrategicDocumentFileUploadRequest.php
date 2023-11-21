@@ -7,6 +7,7 @@ use App\Models\File;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class StrategicDocumentFileUploadRequest extends FormRequest
 {
@@ -30,7 +31,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
             'valid_at' => ['required', 'date'],
-            'strategic_document_type' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
             'visible_in_report' => ['nullable', 'numeric'],
             //'file' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)],

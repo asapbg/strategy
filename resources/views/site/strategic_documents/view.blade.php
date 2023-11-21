@@ -32,18 +32,18 @@
                     <h3 class="mb-2 fs-18"> {{ trans_choice('custom.accepted_date', 1) }}
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i> {{ $strategicDocument->publicConsultation->open_from }} {{ trans_choice('custom.date_small', 1) }}
+                    <i class="far fa-calendar me-2 main-color" title="Дата на откриване"></i> {{ $strategicDocument->publicConsultation?->open_from }} {{ trans_choice('custom.date_small', 1) }}
                 </span>
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18"> {{ trans_choice('custom.validation_date', 1) }}
                     </h3>
                     <span class="obj-icon-info">
-                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>{{ $strategicDocument->publicConsultation->open_to }} {{ trans_choice('custom.date_small', 1) }} </span>
+                    <i class="far fa-calendar-check me-2 main-color" title="Дата на приключване"></i>{{ $strategicDocument->publicConsultation?->open_to }} {{ trans_choice('custom.date_small', 1) }} </span>
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
-                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fa-solid fa-arrow-right-to-bracket me-2 main-color"
                            title="Сфера на действие"></i>{{ $strategicDocument->documentType->name }}</span>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.policy_area', 1) }}</h3>
-                    <a href="{{ route('admin.nomenclature.policy_area.edit', [$strategicDocument->policyArea->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.nomenclature.policy_area.edit', [$strategicDocument->policyArea?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="bi bi-mortarboard-fill me-2 main-color"
                            title="Номер на консултация "></i>{{ $strategicDocument->policyArea->name }}</span>
@@ -62,14 +62,14 @@
             <div class="row mb-4">
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
-                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-bezier-curve me-2 main-color" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }} </span>
                     </a>
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_act_type', 1) }}</h3>
-                    <a href="{{ route('admin.nomenclature.strategic_act_type.edit', [$strategicDocument->strategicActType->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.nomenclature.strategic_act_type.edit', [$strategicDocument->strategicActType?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-solid fa-file-lines me-2 main-color" title="Вносител"></i>{{ $strategicDocument->strategicActType->name }}
                     </span>
@@ -77,14 +77,14 @@
                 </div>
                 <div class="col-md-3 ">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.accept_act_institution_type', 1) }}</h3>
-                    <a href="{{ route('admin.strategic_documents.institutions.edit', [$strategicDocument->acceptActInstitution->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.strategic_documents.institutions.edit', [$strategicDocument->acceptActInstitution?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fa-solid fa-school me-2 main-color" title="История"></i>{{ $strategicDocument->acceptActInstitution->name }}</span>
                     </a>
                 </div>
-                <div class="col-md-3 ">
+                <div class="col-md-3">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.unique_consultation_number', 1) }}</h3>
-                    <a href="{{ route('admin.consultations.public_consultations.edit', [$strategicDocument->publicConsultation->id]) }}" class="main-color text-decoration-none">
+                    <a href="{{ route('admin.consultations.public_consultations.edit', [$strategicDocument->publicConsultation?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fa-solid fa-hashtag me-2 main-color" title="История"></i>{{ $strategicDocument->publicConsultation?->id }}</span>
                     </a>

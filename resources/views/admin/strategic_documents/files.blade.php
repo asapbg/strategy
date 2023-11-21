@@ -18,11 +18,11 @@
         <div class="form-group form-group-sm">
             <label class="col-sm-12 control-label" for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span></label>
             <div class="col-12">
-                <select id="strategic_document_type" name="strategic_document_type" class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
+                <select id="strategic_document_type" name="strategic_document_type_id" class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
                     <option value="" @if(old('strategic_document_type', '') == '') selected @endif>---</option>
                     @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
                         @foreach($strategicDocumentTypes as $row)
-                            <option value="{{ $row->id }}" @if(old('strategic_document_type', 0) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                            <option value="{{ $row->id }}" @if(old('strategic_document_type_id', 0) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -114,7 +114,7 @@
 </div>
 
 @if($item->files)
-    <table class="table table-az-admin table-sm table-hover table-bordered mt-4">
+    <table id="fileTable" class="table table-az-admin table-sm table-hover table-bordered mt-4">
         <thead>
             <tr>
                 <th class="bg-primary">{{ __('custom.name') }}</th>
@@ -125,7 +125,7 @@
         </thead>
         <tbody>
         @foreach($item->files as $f)
-            <tr>
+            <tr id="fileRow_head_{{ $f->id }}">
                 <td class="pt-4 bl-primary-2">{{ $f->display_name }}</td>
                 <td class="pt-4">{{ $f->documentType->name }}</td>
                 <td class="pt-4">{{ $f->valid_at }}</td>
@@ -134,6 +134,7 @@
                         <i class="fas fa-download me-1" role="button"
                            data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                     </a>
+
                     <a href="javascript:;"
                        class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
                        data-target="#modal-delete-resource"
@@ -144,13 +145,14 @@
                        title="{{__('custom.deletion')}}">
                         <i class="fa fa-trash"></i>
                     </a>
+
 {{--                    <a class="btn btn-sm btn-danger" type="button" href="">--}}
 {{--                        <i class="fas fa-trash me-1" role="button"--}}
 {{--                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>--}}
 {{--                    </a>--}}
                 </td>
             </tr>
-            <tr>
+            <tr id="fileRow_body_{{ $f->id }}">
                 <td colspan="5" class="edit-file-fields">
                     <form action="{{ route('admin.strategic_documents.file.update', ['id' => $f->id]) }}" method="post">
                         @csrf
@@ -182,10 +184,19 @@
             padding-top: 7px;
         }
         #fileTree,#fileTreeEn .jstree-themeicon {
-            font-size: 20px; /* Adjust the size according to your preference */
+            font-size: 17px; /* Adjust the size according to your preference */
         }
         #fileTree,#fileTreeEn .jstree-anchor {
-            font-size: 20px; /* Adjust the size according to your preference */
+            font-size: 17px; /* Adjust the size according to your preference */
+        }
+        .edit-button, .delete-button {
+            cursor: pointer;
+            margin-left: 5px; /* Adjust the margin as needed */
+        }
+
+        /* Style the icon within the "Press" and "Delete" buttons */
+        .edit-button i, .delete-button i {
+            margin-right: 5px; /* Adjust the margin as needed */
         }
     </style>
 @endpush
@@ -197,11 +208,11 @@
         fileDataEn = {!! json_encode($fileDataEn) !!};
 
         $(document).ready(function() {
+            $('[id^=fileRow_head_]').hide();
+            $('[id^=fileRow_body_]').hide();
             const fileTree = $("#fileTree");
             const saveTree = $('#saveTree');
-
             function initializeFileTree(treeSelector, data) {
-                console.log(treeSelector);
                 $(treeSelector).jstree({
                     "plugins": ["dnd", "themes"],
                     'core': {
@@ -229,9 +240,7 @@
 
             initializeFileTree("#fileTree", {!! json_encode($fileData) !!});
             initializeFileTree("#fileTreeEn", {!! json_encode($fileDataEn) !!});
-
             initializeSaveTree("#saveTreeEn", "#fileTreeEn");
-
             initializeSaveTree("#saveTree", "#fileTree");
             function initializeSaveTree(saveButtonSelector, treeSelector) {
                 $(saveButtonSelector).on('click', function() {
@@ -267,13 +276,11 @@
                             icon: node.icon,
                             children: [],
                         };
-
                         if (node.children && node.children.length > 0) {
                             for (let i = 0; i < node.children.length; i++) {
                                 file.children.push(traverse(node.children[i]));
                             }
                         }
-
                         return file;
                     }
 
@@ -284,84 +291,37 @@
                     return filesStructure;
                 }
             }
-            /*
-            fileTree.jstree({
-                "plugins": ["dnd", "themes"],
-                'core': {
-                    'check_callback': true,
-                    'data': fileData,
-                    'themes': {
-                        'dots': true,
-                        'responsive': true
-                    }
-                },
-                "types": {
-                    "default": {
-                        "icon": "glyphicon glyphicon-flash"
-                    },
-                    "demo": {
-                        "icon": "glyphicon glyphicon-ok"
-                    }
-                },
-            }).on('ready.jstree', function() {
-                fileTree.jstree('open_all');
-            }).on('move_node.jstree', function() {
-                fileTree.jstree('open_all');
-            });
-            */
 
-            /*
-            saveTree.on('click', function() {
-                const currentTreeState = $('#fileTree').jstree(true).get_json('#', { flat: false });
-                const filesStructure = extractFilesStructure(currentTreeState);
-                const csrfToken = $('meta[name="csrf-token"]').attr('content');
-                const strategicDocumentId = $('#strategicDocumentId').val();
-                $.ajax({
-                    url: '/admin/strategic-documents/save-tree',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        _token: csrfToken,
-                        filesStructure: filesStructure,
-                        strategicDocumentId: strategicDocumentId,
-                    },
-                    success: function(response) {
-                        location.reload(1);
-                    },
-                    error: function(error) {
-                    }
-                });
-            });
-            */
+            $('#fileTree, #fileTreeEn').on("select_node.jstree", function (e, data) {
+                console.log($(data.event.target));
+                if ($(data.event.target).hasClass('fas fa-edit')) {
+                    console.log(data.node);
+                    const fileId = data.node.id;
 
+                    $('[id^=fileRow_head_]').hide();
+                    $('[id^=fileRow_body_]').hide();
+                    $('#fileRow_head_' + fileId).toggle();
+                    $('#fileRow_body_' + fileId).toggle();
+                }
+                if ($(data.event.target).hasClass('fas fa-download')) {
+                    const fileId = data.node.id;
 
-            /*
-            function extractFilesStructure(treeState) {
-                let filesStructure = [];
-                function traverse(node) {
-                    let file = {
-                        id: node.id,
-                        text: node.text,
-                        icon: node.icon,
-                        children: [],
-                    };
-
-                    if (node.children && node.children.length > 0) {
-                        for (let i = 0; i < node.children.length; i++) {
-                            file.children.push(traverse(node.children[i]));
-                        }
-                    }
-
-                    return file;
+                    window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
                 }
 
-                for (let i = 0; i < treeState.length; i++) {
-                    filesStructure.push(traverse(treeState[i]));
-                }
+                if ($(data.event.target).hasClass('fas fa-trash')) {
+                    const fileId = data.node.id;
 
-                return filesStructure;
-            }
-            */
+                    const deleteModal = $('#modal-delete-resource');
+                    const deleteButton = $('.js-toggle-delete-resource-modal');
+                    const deleteForm = deleteModal.find('form');
+                    deleteForm.attr('action', "/admin/strategic-documents/delete/" + fileId);
+                    console.log(deleteButton);
+                    $('#resource_id').val(fileId);
+                    deleteModal.show();
+                    deleteModal.modal('show');
+                }
+            });
         });
     </script>
 @endpush
