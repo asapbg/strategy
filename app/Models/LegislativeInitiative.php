@@ -3,24 +3,24 @@
 namespace App\Models;
 
 use App\Enums\LegislativeInitiativeStatusesEnum;
+use App\Models\Consultations\OperationalProgramRow;
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
-use illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
+ *
+ * @method static find(mixed $legislative_initiative_id)
  */
-class LegislativeInitiative extends ModelActivityExtend implements TranslatableContract
+class LegislativeInitiative extends ModelActivityExtend
 {
-    use FilterSort, Translatable, SoftDeletes;
+
+    use FilterSort, SoftDeletes;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['description', 'author_id'];
     const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
-    public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
 
@@ -29,12 +29,13 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['regulatory_act_id', 'description'];
+    protected $fillable = ['regulatory_act_id', 'author_id', 'description'];
 
     /**
      * Get the model name
      */
-    public function getModelName() {
+    public function getModelName()
+    {
         return $this->name;
     }
 
@@ -50,7 +51,7 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
 
     public function regulatoryAct()
     {
-        return $this->hasOne(RegulatoryAct::class, 'id', 'regulatory_act_id');
+        return $this->belongsTo(OperationalProgramRow::class, 'regulatory_act_id', 'id');
     }
 
     public function votes(): HasMany
@@ -58,14 +59,14 @@ class LegislativeInitiative extends ModelActivityExtend implements TranslatableC
         return $this->hasMany(LegislativeInitiativeVote::class);
     }
 
-    public static function optionsList()
+    public function comments(): HasMany
     {
-        return DB::table('legislative_initiative')
-            ->select(['legislative_initiative.id', 'legislative_initiative_translations.name'])
-            ->join('legislative_initiative_translations', 'legislative_initiative_translations.legislative_initiative_id', '=', 'legislative_initiative.id')
-            ->where('legislative_initiative_translations.locale', '=', app()->getLocale())
-            ->orderBy('legislative_initiative_translations.name', 'asc')
-            ->get();
+        return $this->hasMany(LegislativeInitiativeComment::class);
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class,'author_id');
     }
 
     public function getStatus(int $value): LegislativeInitiativeStatusesEnum
