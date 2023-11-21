@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\StrategicDocumentFileEnum;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentFile;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class StoreStrategicDocumentRequest extends FormRequest
 {
@@ -35,22 +38,29 @@ class StoreStrategicDocumentRequest extends FormRequest
             'public_consultation_id' => ['required', 'numeric', 'exists:public_consultation,id'],
             //'document_date' => ['required', 'date'],
             'active' => ['required', 'numeric', 'in:0,1'],
-
+            'valid_at' => ['required', 'date'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
             'strategic_act_link' => ['nullable', 'string', 'max:1000'],
+            'link_to_monitorstat' => ['nullable', 'string', 'max:1000'],
             'pris_act_id' => ['nullable', 'numeric'],
         ];
 
         if( request()->input('pris_act_id')) {
             //$rules['pris_act_id'][] = ['exists:pris,id'];
         }
-        /*
-        request()->validate([
-            'pris_act_id' => 'sometimes|exists:pris,id',
-        ], $rules);
-        */
+
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
+        }
+
+        foreach (config('available_languages') as $lang) {
+            $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);
+        }
+
+        foreach (config('available_languages') as $lang) {
+            foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
+                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+            }
         }
 
         foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
