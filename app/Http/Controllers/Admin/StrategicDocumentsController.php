@@ -84,16 +84,21 @@ class StrategicDocumentsController extends AdminController
         $strategicDocumentFiles = StrategicDocumentFile::all();
         $strategicDocumentFilesBg = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
         $strategicDocumentFilesEn = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'en')->get();
-        $fileData = $this->prepareFileData($strategicDocumentFilesBg);
-        $fileDataEn = $this->prepareFileData($strategicDocumentFilesEn);
+
+        $strategicDocumentsFileService = app(FileService::class);
+
+        $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
+        $fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
         $legalActTypes = LegalActType::all();
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
+        $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
+        $mainFiles = $item->files;
 
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -123,6 +128,18 @@ class StrategicDocumentsController extends AdminController
             $item->save();
 
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
+            try {
+                $bgFile = $validated['file_strategic_documents_bg'] ?? null;
+                $enFile = $validated['file_strategic_documents_en'] ?? null;
+                if (!$bgFile && !$enFile) {
+                    throw new \Exception('Files not found!');
+                }
+                $fileService = app(FileService::class);
+                $fileService->uploadFiles($request, $item, true);
+            } catch (\Throwable) {
+                return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            }
+
             DB::commit();
 
             if( $stay ) {
@@ -196,7 +213,7 @@ class StrategicDocumentsController extends AdminController
         } catch (\Throwable $throwable) {
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
+        /*
         dd('asdf');
         dd($fileService->uploadFiles($request, $strategicDoc));
 
@@ -229,6 +246,7 @@ class StrategicDocumentsController extends AdminController
             Log::error('Upload file to strategic document ID('.$strategicDoc->id.'): '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
+        */
     }
 
     public function updateDcoFile(Request $request, $id)
@@ -394,44 +412,15 @@ class StrategicDocumentsController extends AdminController
         }
     }
 
-    /**
-     * @param $strategicDocumentFiles
-     * @return array
-     */
-    private function prepareFileData($strategicDocumentFiles): array
+    public function prisActOptions($id)
     {
-        $fileData = [];
+        try {
+            $pris = Pris::findOrFail($id);
+            $docDate = $pris->doc_date;
 
-        $rootNode = [
-            'id' => 'root',
-            'parent' => '#',
-            'text' => 'Файлова йерархия',
-            'icon' => 'fas fa-folder'
-        ];
-
-        $fileData[] = $rootNode;
-
-        foreach ($strategicDocumentFiles as $file) {
-            $iconMapping = [
-                'application/pdf' => 'fas fa-file-pdf text-danger me-1',
-                'application/msword' => 'fas fa-file-word text-info me-1',
-                'application/vnd.ms-excel' => 'fas fa-file-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
-            ];
-
-            $fileExtension = $file->content_type;
-            $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-
-            $fileNode = [
-                'id' => $file->id,
-                'parent' => $file->parent_id ?: 'root',
-                'text' => $file->display_name,
-                'icon' => $iconClass,
-            ];
-
-            $fileData[] = $fileNode;
+            return response()->json(['doc_date' => $docDate]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Resource not found.'], 404);
         }
-
-        return $fileData;
     }
 }

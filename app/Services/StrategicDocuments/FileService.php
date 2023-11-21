@@ -18,16 +18,14 @@ class FileService
      * @param StrategicDocument $strategicDocument
      * @return void
      */
-    public function uploadFiles(Request $request, StrategicDocument $strategicDocument)
+    public function uploadFiles(Request $request, StrategicDocument $strategicDocument, bool $isMain = false)
     {
-        // testing
-        //dd($request->all());
         $validated = $request->validated();
         $bgFileId = null;
         foreach (['en', 'bg'] as $locale) {
             try {
                 DB::beginTransaction();
-                $validated['strategic_document_type_id'] = $validated['strategic_document_type'];
+
                 $file = new StrategicDocumentFile();
                 $fillable = $this->getFillableValidated($validated, $file);
                 $file->fill($fillable);
@@ -56,6 +54,7 @@ class FileService
                 $file->filename = $fileNameToStore;
                 $file->parent_id = Arr::get($validated, 'parent_id');
                 $file->locale = $locale;
+                $file->is_main = $isMain;
                 $strategicDocument->files()->save($file);
 
                 if ($locale === 'bg') {
@@ -103,8 +102,57 @@ class FileService
         $item->save();
     }
 
+
     public function prepareFileData($strategicDocumentFiles, $adminView = true): array
     {
+        $fileData = [];
+        if ($strategicDocumentFiles->isEmpty()) {
+            return [];
+        }
+        $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
+        $iconMapping = [
+            'application/pdf' => 'fas fa-file-pdf text-danger me-1',
+            'application/msword' => 'fas fa-file-word text-info me-1',
+            'application/vnd.ms-excel' => 'fas fa-file-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
+        ];
+        $fileExtension = $mainFile->content_type;
+        $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+
+        $rootNode = [
+            'id' => $mainFile->id,//'id' => 'root',
+            'parent' => '#',
+            'text' => $mainFile->display_name .
+                "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
+                "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>" .
+                "<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
+            'icon' => $iconClass,
+        ];
+
+        $fileData[] = $rootNode;
+
+        foreach ($strategicDocumentFiles as $file) {
+            if ($file->is_main) {
+                continue;
+            }
+            $fileExtension = $file->content_type;
+            $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+
+            $fileNode = [
+                'id' => $file->id,
+                'parent' => $file->parent_id ?: $mainFile->id,//'root',
+                'text' => $file->display_name .
+                    "<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
+                    "<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
+                    "<a href='#' id='deleteButton_{$file->id}' class='delete-button' data-file-id='{$file->id}'><i class='fas fa-trash'></i></a>",
+                'icon' => $iconClass,
+            ];
+
+            $fileData[] = $fileNode;
+        }
+
+        return $fileData;
+
         $fileData = [];
         if ($adminView) {
             $rootNode = [

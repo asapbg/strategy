@@ -86,4 +86,9 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     {
         return $this->hasMany(StrategicDocumentFile::class, 'parent_id');
     }
+
+    public function scopeMain($query)
+    {
+        return $query->where('is_main', 1);
+    }
 }
