@@ -23,9 +23,10 @@
                             <div class="collapse show mt-3" id="home-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
 
-                                    <li class="mb-2  active-item-left p-1"><a href="#"
-                                                                              class="link-dark text-decoration-none">Законодателни
-                                            инициативи</a>
+                                    <li class="mb-2  active-item-left p-1">
+                                        <a href="{{ route('legislative_initiatives.index') }}" class="link-dark text-decoration-none">
+                                            {{ trans_choice('custom.legislative_initiatives', 2) }}
+                                        </a>
                                     </li>
                                     <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Отворено
                                             управление</a>
@@ -59,7 +60,7 @@
         <div class="col-lg-10 py-5">
             <div class="row">
                 <div class="col-lg-10">
-                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->name }}</h2>
+                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}</h2>
                 </div>
 
                 <div class="col-lg-2">
@@ -68,126 +69,145 @@
                             <i class="fa fa-regular fa-thumbs-up main-color" style="font-size:34px;"></i>
                         </a>
                         <a href="#" class="text-decoration-none support-count-li d-flex align-items-center ms-3">
-                            235
+                            {{ $item->votes }}
                         </a>
                     </div>
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-md-8">
-                    <a href="#" class="text-decoration-none"><span class="obj-icon-info me-2"><i
-                                class="far fa-calendar me-1 dark-blue"
-                                title="Дата на публикуване"></i>04.07.2023 г.</span>
-                    </a>
                     <a href="#" class="text-decoration-none">
-                        <span class="obj-icon-info me-2"><i class="fas fa-sitemap me-1 dark-blue"
-                                                            title="Сфера на действие"></i>{{ $item->regulatoryAct?->institution }}</span>
+                        <span class="obj-icon-info me-2">
+                            <i class="far fa-calendar me-1 dark-blue" title="{{ __('custom.public_from') }}"></i>
+                            {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') . ' ' . __('custom.year_short') }}
+                        </span>
+                    </a>
+
+                    <a href="#" class="text-decoration-none">
+                        <span class="obj-icon-info me-2">
+                            <i class="fas fa-sitemap me-1 dark-blue"
+                               title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
+                            {{ $item->regulatoryAct?->institution }}
+                        </span>
                     </a>
                 </div>
+
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-sm btn-primary main-color">
-                        <i class="fas fa-pen me-2 main-color"></i>Редактиране на инициатива
-                    </button>
+                    @if(auth()->check() && auth()->user()->id === $item->author_id)
+                        <a href="{{ route('legislative_initiatives.edit', $item) }}"
+                           class="btn btn-sm btn-primary main-color">
+                            <i class="fas fa-pen me-2 main-color"></i>
+                            {{ __('custom.edit_of') . trans_choice('custom.legislative_initiatives_list', 1) }}
+                        </a>
+                    @endif
                 </div>
             </div>
-            <hr class="custom-hr my-4">
+
+            <hr class="custom-hr my-4"/>
+
             <div class="row">
                 <div class="edit-li">
                     <p class="mb-4">
-                        УВАЖАЕМИ КОЛЕГИ, УВАЖАЕМИ ДАМИ И ГОСПОДА, Предлагам за обсъждане Участието на гражданите в
-                        обсъжданията на законопроектите на Народното събрание. Така по този начин може да се гарантира
-                        истинско гражданско участие във вземането на реални решения за България. Възможности има нека
-                        чуем мнението на някой хора.
+                        {!! $item->description !!}
                     </p>
-                    <hr class="custom-hr">
+
+                    <hr class="custom-hr"/>
                 </div>
             </div>
 
             <div class="row my-4">
                 <div class="col-md-12">
                     <div class="custom-card py-4 px-3">
-                        <h3 class="mb-3">Коментари</h3>
-                        <div class="obj-comment comment-background p-2 rounded mb-3">
-                            <div class="info">
-                    <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                      <i class="fa fa-solid fa-circle-user me-2 main-color" title="Автор"></i>Георги Георгиев</span>
-                                <span class="obj-icon-info me-2 text-muted">12.09.2023 19:05</span>
-                                <a href="#">
-                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                       role="button" title="Изтриване"></i>
-                                </a>
-                            </div>
-                            <div class="comment rounded py-2">
-                                <p class="mb-2">Имате ли предложения за мерки, които ще допринесат за постигане целите
-                                    на инициативата? (за черпене на идеи за формулиране на предложенията може да се
-                                    използва Opening government: A guide to best practice in transparency,
-                                    accountability and civic engagement across the public sector)</p>
-                                <div class="mb-0">
-                                    <a href="#" class="me-2 text-decoration-none">10<i
-                                            class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i></a>
-                                    <a href="#" class="text-decoration-none">1<i
-                                            class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="obj-comment comment-background p-2 rounded mb-3">
-                            <div class="info">
-                    <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                      <i class="fa fa-solid fa-circle-user me-2 main-color" title="Автор"></i>Петър Петров</span>
-                                <span class="obj-icon-info me-2 text-muted">13.09.2023 19:05</span>
-                                <a href="#">
-                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                       role="button" title="Изтриване"></i>
-                                </a>
-                            </div>
-                            <div class="comment rounded py-2">
-                                <p class="mb-2">До всички заинтересовани На портала strategy.bg е публикуван доклада по
-                                    независимия механизъм за оценка България във връзка с инициативата "Партньорство за
-                                    открито управление". Този доклад е основа и препоръка към България в подготовка на
-                                    Втория план за действие по инициативата 2014-2016. Всички заинтересовани имат
-                                    възможност да коментират тук или директно да изпращат своите предложения и препоръки
-                                    до 10.04.2014 г. на vpopova@mrrb.government.bg. Лице за контакт: Владима Попова,
-                                    дирекция „Европейска координация и международно сътрудничество“, Министерство на
-                                    регионалното развитие, тел. 940 5 447.
-                                <div class="mb-0">
-                                    <a href="#" class="me-2 text-decoration-none">3<i
-                                            class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i></a>
-                                    <a href="#" class="text-decoration-none">1<i
-                                            class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i></a>
-                                </div>
+                        <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
+                        @if(isset($item->comments) && $item->comments->count() > 0)
+                            @foreach($item->comments as $comment)
+                                <div class="obj-comment comment-background p-2 rounded mb-3">
+                                    <div class="info">
+                                        <span class="obj-icon-info me-2 main-color fs-18 fw-600">
+                                            <i class="fa fa-solid fa-circle-user me-2 main-color"
+                                               title="{{ __('custom.author') }}"></i>
+                                            {{ $comment->user->fullName() }}
+                                        </span>
 
-                            </div>
-                        </div>
-                        <div class="obj-comment comment-background p-2 rounded mb-3">
-                            <div class="info">
-                      <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                        <i class="fa fa-solid fa-circle-user me-2 main-color" title="Автор"></i>Стоян Иванов </span>
-                                <span class="obj-icon-info me-2 text-muted">13.09.2023 19:05</span>
-                                <a href="#">
-                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                       role="button" title="Изтриване"></i>
-                                </a>
-                            </div>
-                            <div class="comment rounded py-2">
-                                <p class="mb-2">Митнически агент. Необходим ли ни е такъв? Агенция "Митници" стартира
-                                    анкета дали е необходимо да съществува фигурата "митнически агент". Моля гласувайте
-                                    http://customs.bg/bg/poll/10/
-                                </p>
-                                <div class="mb-0">
-                                    <a href="#" class="me-2 text-decoration-none">4<i
-                                            class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i></a>
-                                    <a href="#" class="text-decoration-none">5<i
-                                            class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i></a>
+                                        <span class="obj-icon-info me-2 text-muted">
+                                            {{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.Y h:i') }}
+                                        </span>
+
+                                        @if(auth()->check() && $comment->user_id === auth()->user()->id)
+                                            <form class="d-none"
+                                                  method="POST"
+                                                  action="{{ route('legislative_initiatives.comments.delete', $comment) }}"
+                                                  name="DELETE_COMMENT"
+                                            >
+                                                @csrf
+                                            </form>
+
+                                            <a href="#" id="delete_modal">
+                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                   role="button" title="{{ __('custom.delete') }}"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+
+                                    <div class="comment rounded py-2">
+                                        <p class="mb-2">
+                                            {{ $comment->description }}
+                                        </p>
+
+                                        <div class="mb-0">
+                                            <!-- LIKES -->
+
+                                            {{ $comment->countLikes() }}
+
+                                            @if($comment->userHasLike())
+                                                <a href="{{ route('legislative_initiatives.comments.stats.revert', $comment) }}"
+                                                   class="me-2 text-decoration-none">
+                                                    <i class="fa fa-thumbs-up fs-18" aria-hidden="true"></i>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('legislative_initiatives.comments.stats.store', [$comment, 'like']) }}"
+                                                   class="me-2 text-decoration-none">
+                                                    <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
+                                                </a>
+                                            @endif
+
+                                            <!-- DISLIKES -->
+
+                                            {{ $comment->countDislikes() }}
+                                            @if($comment->userHasDislike())
+                                                <a href="{{ route('legislative_initiatives.comments.stats.revert', [$comment]) }}"
+                                                   class="text-decoration-none">
+                                                    <i class="fa fa-thumbs-down fs-18"></i>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('legislative_initiatives.comments.stats.store', [$comment, 'dislike']) }}"
+                                                   class="text-decoration-none">
+                                                    <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endforeach
+                        @endif
+
                         <div class="col-md-12 mt-4">
                             <div>
-                                <textarea class="form-control mb-3 rounded" id="exampleFormControlTextarea1" rows="2"
-                                          placeholder="Въведете коментар"></textarea>
-                                <button class=" cstm-btn btn btn-primary login m-0">Добавяне на коментар</button>
+                                <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                    @csrf
+
+                                    <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
+
+                                    <div class="form-group">
+                                        <textarea name="description" class="form-control mb-3 rounded"
+                                                  id="exampleFormControlTextarea1" rows="2"
+                                                  placeholder="Въведете коментар"></textarea>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn btn-primary">{{ __('custom.add_comment') }}</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -195,4 +215,23 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script type="text/javascript">
+            $(document).ready(function () {
+                let cancelBtnTxt = '{{ __('custom.cancel') }}';
+                let continueTxt = '{{ __('custom.continue') }}';
+                let titleTxt = '{{ __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1) }}';
+                let fileChangeWarningTxt = '{{ __('custom.legislative_comment_delete_warning') }}';
+                $('#delete_modal').on('click', function () {
+                    new MyModal({
+                        title: titleTxt,
+                        footer: '<button class="btn btn-sm btn-success ms-3" onclick="DELETE_COMMENT.submit();">' + continueTxt + '</button>' +
+                            '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+                        body: '<div class="alert alert-danger">' + fileChangeWarningTxt + '</div>',
+                    });
+                });
+            });
+        </script>
+    @endpush
 @endsection

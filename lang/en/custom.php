@@ -458,8 +458,10 @@ return [
     'legislative_status_active' => 'Active',
     'legislative_status_send' => 'Send to administration',
     'legislative_status_closed' => 'Closed',
+    'legislative_comment_delete_warning' => 'Are you sure you want to delete your comment?',
     'supported_f' => 'Supported',
     'times_count' => 'votes',
     'name_of_normative_act' => 'Name of normative act',
     'description_of_suggested_change' => 'Description of suggested change',
+    'keyword' => 'Keyword|Keywords',
 ];
