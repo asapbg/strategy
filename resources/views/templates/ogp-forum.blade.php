@@ -6,8 +6,9 @@
 </style>
 @section('pageTitle', 'OGP Forum')
 
-@section('content')
 
+
+@section('content')
 <div class="row">
     <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
@@ -44,64 +45,66 @@
 
     <div class="col-lg-10 py-5">
        
-   
-
-    <div class="row">
-        <div class="col-md-3">
-            <a href="#" class="box-link gr-color-bgr mb-4">
-                <div class="info-box">
-                    <div class="icon-wrap mt-2">
-                        <i class="bi bi-check2-square text-light"></i>
-                    </div>
-                    <div class="link-heading">
-                        <span class="fs-5 p-2">
-                            Правомощия, органи и структура на Форума
-                        </span>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-3">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-md-8 col-sm-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="#" class="box-link gr-color-bgr mb-4">
+                        <div class="info-box">
+                            <div class="icon-wrap mt-2">
+                                <i class="bi bi-diagram-3 text-light"></i>
+                            </div>
+                            <div class="link-heading">
+                                <span class="fs-5 p-2">
+                                    Правомощия, органи и структура <br>на Форума
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    
             <a href="#" class="box-link navy-marine-bgr mb-4">
                 <div class="info-box">
                     <div class="icon-wrap mt-2">
-                        <i class="bi bi-check2-square text-light"></i>
+                        <i class="bi bi-people text-light"></i>
                     </div>
                     <div class="link-heading">
                         <span class="fs-5 p-2">
-                            Работни групи 
-                        </span><br>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-3">
-            <a href="#" class="box-link light-blue-bgr mb-4">
-                <div class="info-box">
-                    <div class="icon-wrap mt-2">
-                        <i class="bi bi-check2-square text-light"></i>
-                    </div>
-                    <div class="link-heading">
-                        <span class="fs-5 p-2">
-                           Протоколи от заседания и срещи
-                        </span><br>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-3">
-            <a href="#" class="box-link dark-blue-bgr mb-4">
-                <div class="info-box">
-                    <div class="icon-wrap mt-2">
-                        <i class="bi bi-check2-square text-light"></i>
-                    </div>
-                    <div class="link-heading">
-                        <span class="fs-5 p-2">
-                            Членове на Форума – контактна информация
+                            Работни <br>групи 
                         </span>
                     </div>
                 </div>
             </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="#" class="box-link light-blue-bgr mb-4">
+                        <div class="info-box">
+                            <div class="icon-wrap mt-2">
+                                <i class="bi bi-file-earmark-text text-light"></i>
+                            </div>
+                            <div class="link-heading">
+                                <span class="fs-5 p-2">
+                                   Протоколи от заседания <br>и срещи
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="box-link dark-blue-bgr mb-4">
+                        <div class="info-box">
+                            <div class="icon-wrap mt-2">
+                                <i class="bi bi-info-circle text-light"></i>
+                            </div>
+                            <div class="link-heading">
+                                <span class="fs-5 p-2">
+                                    Членове на Форума – контактна <br>информация
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+  
+
         </div>
     </div>      
            
