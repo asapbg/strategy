@@ -12,7 +12,7 @@ class OperationalProgramController extends Controller
     public function index(Request $request)
     {
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
-        $items = OperationalProgram::FilterBy($request->all())->paginate($paginate);
+        $items = OperationalProgram::Published()->FilterBy($request->all())->paginate($paginate);
         $pageTitle = __('site.menu.op');
         return $this->view('site.op.index', compact('items', 'pageTitle'));
     }
@@ -20,7 +20,7 @@ class OperationalProgramController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.op');
-        $item = OperationalProgram::find($id);
+        $item = OperationalProgram::Published()->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }

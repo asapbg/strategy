@@ -12,7 +12,7 @@ class LegislativeProgramController extends Controller
     public function index(Request $request)
     {
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
-        $items = LegislativeProgram::FilterBy($request->all())->paginate($paginate);
+        $items = LegislativeProgram::Published()->FilterBy($request->all())->paginate($paginate);
         $pageTitle = __('site.menu.lp');
         return $this->view('site.lp.index', compact('items', 'pageTitle'));
     }
@@ -20,7 +20,7 @@ class LegislativeProgramController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.zp');
-        $item = LegislativeProgram::with(['rowFiles'])->find($id);
+        $item = LegislativeProgram::Published()->with(['rowFiles'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
