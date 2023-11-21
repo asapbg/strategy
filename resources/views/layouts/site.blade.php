@@ -74,7 +74,6 @@
 
 <!-- SCRIPTS -->
 <script src="{{ asset('js/app_vendor.js') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
 </body>
 </html>
