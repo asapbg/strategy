@@ -21,6 +21,9 @@ enum DocTypesEnum: int
     case PC_OTHER_DOCUMENTS = 7; //Други документи
     case PC_COMMENTS_REPORT = 8; //Справка за получените предложения/съобщение за неполучени предложения (публикува се по късно, както е обяснено по-долу) - след приключване на консултацията
 
+    case PC_COMMENTS_CSV = 9; //Списък с коментари
+    case PC_COMMENTS_PDF = 10; //Списък с коментари
+
     //TODO ask Izi about next two documents. Are they same as 1 and 2 ???
     //case PC_preliminary_IMPACT_EVALUATION = 6; //Предварителна оценка на въздействието
     //case PC_MC_IMPACT_EVALUATION_OPINION = 6; //Становище на администрацията на Министерския съвет

@@ -321,7 +321,8 @@ if (!function_exists('optionsUserTypes')) {
          */
         function stripHtmlTags(string $html_string, array $tags = [])
         {
-            $tagsToStrip = sizeof($tags) ? $tags : ['p', 'ul', 'ol', 'li', 'b', 'i', 'u', 'a'];
+            $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
+            $tagsToStrip = sizeof($tags) ? $tags : ['p', 'ul', 'ol', 'li', 'b', 'i', 'u'];
             return strip_tags($html_string, $tagsToStrip);
         }
     }
@@ -494,6 +495,22 @@ if (!function_exists('optionsUserTypes')) {
             }
 
             return $content;
+        }
+    }
+
+    if (!function_exists('htmlToText')) {
+
+        /**
+         * return striped html string
+         *
+         * @param string $html_string
+         * @param array $tags
+         * @return string
+         */
+        function htmlToText(string $html_string)
+        {
+            $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
+            return strip_tags($html_string);
         }
     }
 }
