@@ -88,12 +88,25 @@
                             @endforeach
                         @endif
                     </select>
+                    <!--
+                    <select id="strategic_act_type_id" name="strategic_act_type_id" class="form-control form-control-sm select2 @error('strategic_act_type_id'){{ 'is-invalid' }}@enderror">
+                        @if(!$item->id)
+                            <option value="" @if(old('strategic_act_type_id', '') == '') selected @endif>---</option>
+                        @endif
+                        @if(isset($legalActTypes) && $legalActTypes->count())
+                            @foreach($legalActTypes as $row)
+                                <option value="{{ $row->id }}" @if(old('strategic_act_type_id', ($item->id ? $item->strategic_act_type_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    -->
                     @error('strategic_act_type_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="accept_act_institution_type_id"><br>{{ trans_choice('custom.authority_accepting_strategic', 1) }}<span class="required">*</span></label>
@@ -121,13 +134,18 @@
                 <label class="col-sm-12 control-label" for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
                 <div class="col-12">
                     <select id="pris_act_id" name="pris_act_id" class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
-                        <option value=""  @if(old('pris_act_id', '') == '') selected @endif>---</option>
+                        <option value="" {{ old('pris_act_id', $item->pris ? $item->pris->id : null) == null ? 'selected' : '' }}>---</option>
                         @if(isset($prisActs) && $prisActs->count())
                             @foreach($prisActs as $row)
                                 <option value="{{ $row->id }}"
-                                        @if(old('pris_act_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
-                                        data-id="{{ $row->id }}"
-                                >{{ $row->name }}</option>
+                                        {{ old('pris_act_id', ($item->pris ? $item->pris->id : null)) == $row->id ? 'selected' : '' }}
+                                        data-id="{{ $row->id }}">
+                                    @if($row->doc_num)
+                                        {{ $row->doc_num }}
+                                    @else
+                                        {{ $row->doc_date }}
+                                    @endif
+                                </option>
                             @endforeach
                         @endif
                     </select>
@@ -137,6 +155,25 @@
                 </div>
             </div>
         </div>
+        <!--
+        <div class="col-md-3 act-custom-fields d-none">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="strategic_act_number">{{ __('validation.attributes.strategic_act_number') }}</label>
+                <select id="pris_act_id" name="strategic_act_number" class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
+                    <option value=""  @if(old('pris_act_id', '') == '') selected @endif>---</option>
+                    @if(isset($prisActs) && $prisActs->count())
+                        @foreach($prisActs as $row)
+                            <option value="{{ $row->id }}"
+                                    @if(old('strategic_act_number', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
+                                    data-id="{{ $row->id }}"
+                            >{{ $row->name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        </div>
+        -->
+        <!--
         <div class="col-md-3 act-custom-fields d-none">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="strategic_act_number">{{ __('validation.attributes.strategic_act_number') }}</label>
@@ -148,6 +185,7 @@
                 </div>
             </div>
         </div>
+        -->
         <div class="col-md-3 act-custom-fields d-none">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="strategic_act_link">{{ __('validation.attributes.strategic_act_link') }}</label>
@@ -223,3 +261,24 @@
         </div>
     </div>
 </form>
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#strategic_act_type_id').change(function() {
+                let selectedValue = $(this).val();
+                $.ajax({
+                    url: '/admin/strategic-documents/pris-option/' + selectedValue,
+                    method: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        //$('#dynamicDataContainer').html(response);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching dynamic data:', error);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
+

@@ -32,6 +32,7 @@
             </div>
         </div>
     </div>
+    <!--
     <div class="col-md-4">
         <div class="form-group form-group-sm">
             <label for="file" class="col-sm-12 control-label">{{ __('custom.select_file') }} <span class="required">*</span> </label>
@@ -43,8 +44,10 @@
             </div>
         </div>
     </div>
+    -->
     <div class="col-12"></div>
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
+    <!--
     <div class="col-md-4">
         <div class="form-group form-group-sm">
             <label class="col-sm-12 control-label" for="ord">{{ __('custom.order') }}</label>
@@ -56,7 +59,8 @@
             @enderror
         </div>
     </div>
-    <div class="col-md-4">
+    -->
+    <div class="col-md-8">
         <div class="form-group form-group-sm">
             <label class="col-sm-12 control-label" for="visible_in_report"><br>
                 <input type="checkbox" id="visible_in_report" name="visible_in_report" class="checkbox" value="1" @if (old('visible_in_report',0)) checked @endif>
@@ -64,20 +68,47 @@
             </label>
         </div>
     </div>
+    @foreach(config('available_languages') as $lang)
+        @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
+        @php($fieldName = 'file_strategic_documents_'.$lang['code'])
+        <div class="col-md-6 mb-3">
+            <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
+            <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="file" name="{{ $fieldName }}">
+            @error($fieldName)
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+    @endforeach
+
     <div class="col-12">
         <button id="save" type="submit" class="btn btn-success">{{ __('custom.add') }}</button>
     </div>
 </form>
-<h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files_hierarchy', 2) }}</h5>
+
+<h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files_hierarchy_bg', 2) }}</h5>
 <div class="row">
     <div class="col-12">
         <br>
         <div id="fileTree">
-
         </div>
         <div class="col-12">
+            <div class="col-6"></div>
             <br>
             <button id="saveTree" class="btn btn-success">{{ __('custom.save') }}</button>
+        </div>
+    </div>
+
+</div>
+<h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files_hierarchy_en', 2) }}</h5>
+<div class="row">
+    <div class="col-12">
+        <br>
+        <div id="fileTreeEn">
+        </div>
+        <div class="col-12">
+            <div class="col-6"></div>
+            <br>
+            <button id="saveTreeEn" class="btn btn-success">{{ __('custom.save') }}</button>
         </div>
     </div>
 </div>
@@ -146,14 +177,14 @@
 @push('styles')
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
     <style>
-        #fileTree .jstree-node {
+        #fileTree,#fileTreeEn .jstree-node {
             padding-left: 30px;
             padding-top: 7px;
         }
-        #fileTree .jstree-themeicon {
+        #fileTree,#fileTreeEn .jstree-themeicon {
             font-size: 20px; /* Adjust the size according to your preference */
         }
-        #fileTree .jstree-anchor {
+        #fileTree,#fileTreeEn .jstree-anchor {
             font-size: 20px; /* Adjust the size according to your preference */
         }
     </style>
@@ -163,11 +194,97 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
     <script type="text/javascript">
         fileData = {!! json_encode($fileData) !!};
+        fileDataEn = {!! json_encode($fileDataEn) !!};
 
         $(document).ready(function() {
             const fileTree = $("#fileTree");
             const saveTree = $('#saveTree');
 
+            function initializeFileTree(treeSelector, data) {
+                console.log(treeSelector);
+                $(treeSelector).jstree({
+                    "plugins": ["dnd", "themes"],
+                    'core': {
+                        'check_callback': true,
+                        'data': data,
+                        'themes': {
+                            'dots': true,
+                            'responsive': true
+                        }
+                    },
+                    "types": {
+                        "default": {
+                            "icon": "glyphicon glyphicon-flash"
+                        },
+                        "demo": {
+                            "icon": "glyphicon glyphicon-ok"
+                        }
+                    },
+                }).on('ready.jstree', function() {
+                    $(treeSelector).jstree('open_all');
+                }).on('move_node.jstree', function() {
+                    $(treeSelector).jstree('open_all');
+                });
+            }
+
+            initializeFileTree("#fileTree", {!! json_encode($fileData) !!});
+            initializeFileTree("#fileTreeEn", {!! json_encode($fileDataEn) !!});
+
+            initializeSaveTree("#saveTreeEn", "#fileTreeEn");
+
+            initializeSaveTree("#saveTree", "#fileTree");
+            function initializeSaveTree(saveButtonSelector, treeSelector) {
+                $(saveButtonSelector).on('click', function() {
+                    const currentTreeState = $(treeSelector).jstree(true).get_json('#', { flat: false });
+                    const filesStructure = extractFilesStructure(currentTreeState);
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    const strategicDocumentId = $('#strategicDocumentId').val();
+
+                    $.ajax({
+                        url: '/admin/strategic-documents/save-tree',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            _token: csrfToken,
+                            filesStructure: filesStructure,
+                            strategicDocumentId: strategicDocumentId,
+                        },
+                        success: function(response) {
+                            location.reload(1);
+                        },
+                        error: function(error) {
+                            // Handle error
+                        }
+                    });
+                });
+
+                function extractFilesStructure(treeState) {
+                    let filesStructure = [];
+                    function traverse(node) {
+                        let file = {
+                            id: node.id,
+                            text: node.text,
+                            icon: node.icon,
+                            children: [],
+                        };
+
+                        if (node.children && node.children.length > 0) {
+                            for (let i = 0; i < node.children.length; i++) {
+                                file.children.push(traverse(node.children[i]));
+                            }
+                        }
+
+                        return file;
+                    }
+
+                    for (let i = 0; i < treeState.length; i++) {
+                        filesStructure.push(traverse(treeState[i]));
+                    }
+
+                    return filesStructure;
+                }
+            }
+            /*
             fileTree.jstree({
                 "plugins": ["dnd", "themes"],
                 'core': {
@@ -191,7 +308,9 @@
             }).on('move_node.jstree', function() {
                 fileTree.jstree('open_all');
             });
+            */
 
+            /*
             saveTree.on('click', function() {
                 const currentTreeState = $('#fileTree').jstree(true).get_json('#', { flat: false });
                 const filesStructure = extractFilesStructure(currentTreeState);
@@ -213,7 +332,10 @@
                     }
                 });
             });
+            */
 
+
+            /*
             function extractFilesStructure(treeState) {
                 let filesStructure = [];
                 function traverse(node) {
@@ -239,6 +361,7 @@
 
                 return filesStructure;
             }
+            */
         });
     </script>
 @endpush

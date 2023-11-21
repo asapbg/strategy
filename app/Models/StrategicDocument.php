@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Consultations\PublicConsultation;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -84,12 +85,22 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
     }
 
+    public function strategicActType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicActType::class, 'id', 'strategic_act_type_id');
+    }
+
     /**
      * @return BelongsTo
      */
     public function policyArea(): BelongsTo
     {
         return $this->belongsTo(PolicyArea::class);
+    }
+
+    public function pris(): BelongsTo
+    {
+        return $this->belongsTo(Pris::class, 'pris_act_id');
     }
 
     /**
@@ -99,5 +110,13 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('active', true);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function publicConsultation(): BelongsTo
+    {
+        return $this->belongsTo(PublicConsultation::class, 'public_consultation_id');
     }
 }
