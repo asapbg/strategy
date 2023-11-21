@@ -491,6 +491,7 @@ return [
     'legislative_status_active' => 'Активна',
     'legislative_status_send' => 'Изпратена до администрация',
     'legislative_status_closed' => 'Затворена',
+    'legislative_comment_delete_warning' => 'Сигурни ли сте, че искате да изтриете Вашият коментар?',
     'supported_f' => 'Подкрепена',
     'times_count' => 'пъти',
     'name_of_normative_act' => 'Наименование на нормативен акт',
@@ -503,4 +504,5 @@ return [
     'tree_view'  => 'Дървовиден изглед',
     'accepted_date'  => 'Дата приемане',
     'validation_date'  => 'Дата на валидност',
+    'keyword' => 'Ключова дума|Ключови думи',
 ];

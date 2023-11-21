@@ -64,55 +64,36 @@
                     Търсене
                 </h2>
                 <form id="filter" class="row" action="{{ route('legislative_initiatives.index') }}" method="GET">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="input-group">
                             <div class="mb-3 d-flex flex-column w-100">
-                                <label for="keywords" class="form-label">Ключови думи</label>
+                                <label for="keywords" class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
                                 <input id="keywords" class="form-control" name="keywords" type="text"
                                        value="{{ request()->get('keywords', '') }}">
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="input-group">
-                            <div class="mb-3 d-flex flex-column w-100">
-                                <label for="politic-range" class="form-label">Област на политика</label>
 
-                                <select id="politic-range" class="politic-range form-select select2"
-                                        name="politic-range" multiple>
-                                    <option value="">--</option>
-                                    @foreach($politicRanges as $politic)
-                                        @php $selected = request()->get('politic-range', '') == $politic->id ? 'selected' : '' @endphp
-                                        <option value="{{ $politic->id }}" {{ $selected }}>{{ $politic->name }}</option>
+                    <div class="col-md-4">
+                        <div class="input-group ">
+                            <div class="mb-3 d-flex flex-column  w-100">
+                                <label for="institution" class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
+                                <select id="institution" class="institution form-select select2" name="institution"
+                                        multiple>
+                                    <option value="" disabled>--</option>
+                                    @foreach($institutions as $institution)
+                                        @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
+                                        <option value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="input-group ">
-                            <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="institution" class="form-label">Институция</label>
-                                <select id="institution" class="institution form-select select2" name="institution"
-                                        multiple>
-                                    <option value="">--</option>
-                                    @php $selected = request()->get('institution', '') == 1 ? 'selected' : '' @endphp
-                                    <option value="1" {{ $selected }}>Министерство на вътрешните работи</option>
-                                    @php $selected = request()->get('institution', '') == 2 ? 'selected' : '' @endphp
-                                    <option value="2" {{ $selected }}>Министерство на финансите</option>
-                                    @php $selected = request()->get('institution', '') == 3 ? 'selected' : '' @endphp
-                                    <option value="3" {{ $selected }}>Министерство на външните работи</option>
-                                    @php $selected = request()->get('institution', '') == 4 ? 'selected' : '' @endphp
-                                    <option value="4" {{ $selected }}>Министерство на правосъдието</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="input-group ">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="count_results" class="form-label">Брой резултати:</label>
+                                <label for="count_results" class="form-label">{{ __('custom.count') . ' ' . mb_strtolower(trans_choice('custom.results', 2)) }}:</label>
                                 <select id="count_results" class="form-select" name="count_results">
                                     <option value="10">10</option>
                                     @php $selected = request()->get('count_results', '') == 20 ? 'selected' : '' @endphp
@@ -134,15 +115,19 @@
                                     class="fas fa-search main-color"></i>Търсене
                             </button>
                         </div>
+
                         <div class="col-md-6 text-end">
                             <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS
                             </button>
                             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
-                            <a href="{{ route('legislative_initiatives.create') }}"
-                               class="btn btn-success text-success">
-                                <i class="fas fa-circle-plus text-success me-1"></i>
-                                Добави инициатива
-                            </a>
+
+                            @if(auth()->check())
+                                <a href="{{ route('legislative_initiatives.create') }}"
+                                   class="btn btn-success text-success">
+                                    <i class="fas fa-circle-plus text-success me-1"></i>
+                                    {{ __('custom.add') . ' ' . trans_choice('custom.legislative_initiatives_list', 1) }}
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -151,23 +136,23 @@
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
                 <div class="col-md-3">
                     <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i> Ключова дума
+                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.keyword', 1) }}
                     </p>
                 </div>
                 <div class="col-md-3 cursor-pointer ">
                     <p class="mb-0">
-                        <i class="fa-solid fa-sort me-2"></i>Област на политика
+                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.policy_area', 1) }}
                     </p>
                 </div>
                 <div class="col-md-3">
                     <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>Институция
+                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.institutions', 1) }}
                     </p>
                 </div>
 
                 <div class="col-md-3">
                     <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>Дата
+                        <i class="fa-solid fa-sort me-2"></i>{{ __('validation.attributes.date') }}
                     </p>
                 </div>
             </div>
@@ -176,7 +161,7 @@
                 <div class="col-12 mt-2">
                     <div class="info-consul text-start">
                         <p class="fw-600">
-                            Общо {{ $items->count() }} {{ $items->count() == 1 ? trans_choice('custom.results', 1) : trans_choice('custom.results', 2) }}
+                            {{ __('custom.total') }} {{ $items->count() }} {{ $items->count() == 1 ? trans_choice('custom.results', 1) : trans_choice('custom.results', 2) }}
                         </p>
                     </div>
                 </div>
@@ -195,10 +180,11 @@
                                         <div href="#" class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
                                                 <div class="consult-item-header-link">
-                                                    <a href="{{ route('legislative_initiatives.view', $item) }}" class="text-decoration-none"
-                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->name }}">
+                                                    <a href="{{ route('legislative_initiatives.view', $item) }}"
+                                                       class="text-decoration-none"
+                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}">
                                                         <h3>{{ __('custom.change_f') }} {{ __('custom.in') }}
-                                                            {{ $item->regulatoryAct?->name }}</h3>
+                                                            {{ $item->regulatoryAct?->value }}</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
@@ -234,7 +220,7 @@
                                                     <span>
                                                         {{ __('custom.supported_f') }}:
                                                         <span
-                                                            class="voted-li">{{ $item->votes->count() }} {{ __('custom.times_count') }}</span>
+                                                            class="voted-li">{{ $item->votes }} {{ __('custom.times_count') }}</span>
                                                     </span>
                                                 </div>
                                             </div>
