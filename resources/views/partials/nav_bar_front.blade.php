@@ -24,7 +24,7 @@
                 </li>
 
                 <li class="nav-item ">
-                    <a class="nav-link" type="button">Гражданско участие
+                    <a href="{{ route('legislative_initiatives.index') }}" class="nav-link" type="button">Гражданско участие
                     </a>
                 </li>
 
