@@ -87,6 +87,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $query->where('active', 1);
     }
 
+    public function scopeEnded($query){
+        $query->where('open_to', '<', Carbon::now()->format('Y-m-d'));
+    }
+
     protected function openFrom(): Attribute
     {
         return Attribute::make(
@@ -226,6 +230,15 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
+    public function commentsDocuments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereIn('doc_type', [DocTypesEnum::PC_COMMENTS_CSV->value, DocTypesEnum::PC_COMMENTS_CSV->value])
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
     }

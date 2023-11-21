@@ -417,6 +417,8 @@ return [
     'public_consultation.doc_type.6'            => 'Консолидирана версия на акта',
     'public_consultation.doc_type.7'            => 'Други документи',
     'public_consultation.doc_type.8'            => 'Справка за получените предложения/съобщение',
+    'public_consultation.doc_type.9'            => 'Коментари (csv)',
+    'public_consultation.doc_type.10'            => 'Коментари (pdf)',
     //polls
     'questions'                                 => 'Въпрос|Въпроси',
     'once'                                       => 'Еднократна',
