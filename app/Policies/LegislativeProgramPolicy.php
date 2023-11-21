@@ -55,7 +55,7 @@ class LegislativeProgramPolicy
     public function update(User $user, LegislativeProgram $legislativeProgram)
     {
         $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$legislativeProgram->public ;
+        return $user->canAny(['manage.*', 'manage.advisory']);
     }
 
     /**

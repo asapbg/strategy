@@ -54,7 +54,7 @@ class OperationalProgramPolicy
      */
     public function update(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']) && !$operationalProgram->public;
+        return $user->canAny(['manage.*', 'manage.advisory']);
     }
 
     /**
