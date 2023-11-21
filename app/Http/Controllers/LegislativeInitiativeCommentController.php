@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\DeleteLegislativeInitiativeCommentRequest;
+use App\Models\LegislativeInitiative;
+use App\Models\LegislativeInitiativeComment;
+use App\Http\Requests\StoreLegislativeInitiativeCommentRequest;
+use App\Http\Requests\UpdateLegislativeInitiativeCommentRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+
+class LegislativeInitiativeCommentController extends Controller
+{
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreLegislativeInitiativeCommentRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(StoreLegislativeInitiativeCommentRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        try {
+            $validated['user_id'] = auth()->user()->id;
+
+            $new = new LegislativeInitiativeComment();
+            $new->fill($validated);
+            $new->save();
+
+            return to_route('legislative_initiatives.view', LegislativeInitiative::find($validated['legislative_initiative_id']))
+                ->with('success', trans_choice('custom.comments', 1) . " " . __('messages.created_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Models\LegislativeInitiativeComment $legislativeInitiativeComment
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(LegislativeInitiativeComment $legislativeInitiativeComment)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param \App\Models\LegislativeInitiativeComment $legislativeInitiativeComment
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(LegislativeInitiativeComment $legislativeInitiativeComment)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \App\Http\Requests\UpdateLegislativeInitiativeCommentRequest $request
+     * @param \App\Models\LegislativeInitiativeComment                     $legislativeInitiativeComment
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateLegislativeInitiativeCommentRequest $request, LegislativeInitiativeComment $legislativeInitiativeComment)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param DeleteLegislativeInitiativeCommentRequest $request
+     *
+     * @return Response
+     */
+    public function destroy(DeleteLegislativeInitiativeCommentRequest $request, LegislativeInitiativeComment $comment)
+    {
+        try {
+            $comment->delete();
+
+            return redirect()
+                ->back()
+                ->with('success', trans_choice('custom.comments', 1) . " " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+}

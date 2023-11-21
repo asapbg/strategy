@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\LegislativeInitiativeStatusesEnum;
+use App\Models\LegislativeInitiative;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +16,7 @@ return new class extends Migration {
     public function up(): void
     {
 
-        Schema::create('legislative_initiative', function (Blueprint $table) {
+        Schema::create((new LegislativeInitiative())->getTable(), function (Blueprint $table) {
             $statuses = [
                 LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value,
                 LegislativeInitiativeStatusesEnum::STATUS_SEND->value,
@@ -23,27 +25,37 @@ return new class extends Migration {
 
             $table->bigIncrements('id');
             $table->bigInteger('regulatory_act_id');
+            $table->bigInteger('author_id');
+            $table->integer('votes')->default(0);
+            $table->integer('cap')->default(0);
             $table->enum('status', $statuses)->default(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value);
+            $table->longText('description');
+            $table->foreign('author_id')
+                ->references('id')
+                ->on((new User())->getTable())
+                ->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
 
-        Schema::create('legislative_initiative_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('locale')->index();
-            $table->unsignedInteger('legislative_initiative_id');
-            $table->unique(['legislative_initiative_id', 'locale']);
-            $table->foreign('legislative_initiative_id')
-                ->references('id')
-                ->on('legislative_initiative');
+        // Since we moved this to the web part, we no longer need translations.
 
-            $table->longText('description');
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-        });
+//        Schema::create('legislative_initiative_translations', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->string('locale')->index();
+//            $table->unsignedInteger('legislative_initiative_id');
+//            $table->unique(['legislative_initiative_id', 'locale']);
+//            $table->foreign('legislative_initiative_id')
+//                ->references('id')
+//                ->on('legislative_initiative');
+//
+//            $table->longText('description');
+//            $table->unsignedBigInteger('author_id');
+//            $table->foreign('author_id')
+//                ->references('id')
+//                ->on('users')
+//                ->onDelete('cascade');
+//        });
     }
 
     /**
@@ -53,7 +65,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('legislative_initiative_translations');
-        Schema::dropIfExists('legislative_initiative');
+        Schema::dropIfExists((new LegislativeInitiative())->getTable());
     }
 };

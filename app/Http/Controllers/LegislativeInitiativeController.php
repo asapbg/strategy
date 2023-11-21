@@ -8,6 +8,7 @@ use App\Models\LegislativeInitiative;
 use App\Models\PolicyArea;
 use App\Models\RegulatoryAct;
 use App\Models\RegulatoryActType;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,21 +40,28 @@ class LegislativeInitiativeController extends AdminController
     public function index(Request $request)
     {
         $politicRanges = PolicyArea::orderBy('id')->get();
+        $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
+        $keywords = $request->offsetGet('keywords');
+        $politicRange = $request->offsetGet('politic-range');
 
-        $items = LegislativeInitiative::with(['translation'])->paginate($countResults);
-//        $requestFilter = $request->all();
-//        $filter = $this->filters($request);
-//        $paginate = $filter['paginate'] ?? LegislativeInitiative::PAGINATE;
+        $items = LegislativeInitiative::withTrashed()->with(['comments'])
+            ->when(!empty($keywords), function ($query) use ($keywords) {
+                $query->where('description', 'like', '%' . $keywords . '%')
+                    ->orWhereHas('user', function ($query) use ($keywords) {
+                        $query->where('first_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('last_name', 'like', '%' . $keywords . '%');
+                    });
+            })
+            ->when(!empty($politicRange), function ($query) use ($politicRange) {
+                $query->whereHas('regulatoryAct', function ($query) use ($politicRange) {
+//                    $query->where('institution', )
+                });
+            })
+            ->paginate($countResults);
 
-//        $items = LegislativeInitiative::withTrashed()->with(['translation'])
-//            ->FilterBy($requestFilter)
-//            ->paginate($paginate);
-//        $toggleBooleanModel = 'LegislativeInitiative';
-//        $editRouteName = self::EDIT_ROUTE;
-//        $listRouteName = self::LIST_ROUTE;
-
-        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items'));
+        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions'));
     }
 
     /**
@@ -95,12 +103,8 @@ class LegislativeInitiativeController extends AdminController
             $validated['author_id'] = auth()->user()->id;
 
             $new = new LegislativeInitiative();
-
-            $fillable = $this->getFillableValidated($validated, $new);
-            $new->fill($fillable);
+            $new->fill($validated);
             $new->save();
-
-            $this->storeWithoutTranslate(LegislativeInitiative::TRANSLATABLE_FIELDS, $new, $validated);
 
             DB::commit();
 
@@ -127,8 +131,6 @@ class LegislativeInitiativeController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
-
-            $this->storeTranslateOrNew(LegislativeInitiative::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
 
