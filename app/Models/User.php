@@ -40,7 +40,7 @@ class User extends Authenticatable
     const ROLES_WITH_INSTITUTION = [
         'moderator-advisory',
         'moderator-strategic',
-        'moderator-legal',
+//        'moderator-legal',
         'moderator-advisory-boards',
         'moderator-advisory-board',
         'moderator-partnership',
