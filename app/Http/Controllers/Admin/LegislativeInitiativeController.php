@@ -110,11 +110,11 @@ class LegislativeInitiativeController extends AdminController
         try {
             $item->delete();
 
-            return redirect(route(self::LIST_ROUTE, $item))
+            return redirect(route('admin.legislative_initiatives.index', $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
-            return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
+            return redirect(route('admin.legislative_initiatives.index', $item))->with('danger', __('messages.system_error'));
         }
     }
 
@@ -123,11 +123,11 @@ class LegislativeInitiativeController extends AdminController
         try {
             $item->restore();
 
-            return redirect(route(self::LIST_ROUTE, $item))
+            return redirect(route('admin.legislative_initiatives.index', $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.restored_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
-            return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
+            return redirect(route('admin.legislative_initiatives.index', $item))->with('danger', __('messages.system_error'));
         }
     }
 }

@@ -245,7 +245,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(LegislativeInitiativeController::class)->group(function () {
         Route::get('/legislative-initiatives',                  'index')->name('legislative_initiatives.index')
             ->middleware('can:viewAny, App\Models\LegislativeInitiative');
-        Route::get('/legislative-initiatives/view/{item?}',     'show')->name('legislative_initiatives.view');
+        Route::get('/legislative-initiatives/view/{item}',     'show')->name('legislative_initiatives.view');
         Route::post('/legislative-initiatives/{item}/update',   'update')->name('legislative_initiatives.update');
         Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
         Route::put('/legislative-initiatives/{item}/restore',   'restore')->name('legislative_initiatives.restore');
