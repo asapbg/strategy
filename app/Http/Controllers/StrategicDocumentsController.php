@@ -87,7 +87,7 @@ class StrategicDocumentsController extends Controller
         $locale = app()->getLocale();
         $mainDocument = $strategicDocumentFiles->where('is_main', 1)->where('locale', $locale)->first();
         $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
-            $query->where('name', 'like', '%Отчети и доклади%');
+            $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
 
         return $this->view('site.strategic_documents.view-2', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
