@@ -53,9 +53,17 @@
             <div class="col-md-12">
                 <div class="consul-wrapper">
                     <div class="single-consultation">
+                        <div class="forum-header-edit">
+                            <a href="#">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                </i>
+                            </a>
+                        </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">
-                                
+                            <div href="#" class="consul-item row align-items-center">                              
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -106,9 +114,17 @@
             <div class="col-md-12">
                 <div class="consul-wrapper">
                     <div class="single-consultation">
+                        <div class="forum-header-edit">
+                            <a href="#">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                </i>
+                            </a>
+                        </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">
-                                
+                            <div href="#" class="consul-item row align-items-center">                               
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -158,9 +174,17 @@
             <div class="col-md-12">
                 <div class="consul-wrapper">
                     <div class="single-consultation">
+                        <div class="forum-header-edit">
+                            <a href="#">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                </i>
+                            </a>
+                        </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">
-                                
+                            <div href="#" class="consul-item row align-items-center">                               
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -211,6 +235,15 @@
             <div class="col-md-12">
                 <div class="consul-wrapper">
                     <div class="single-consultation">
+                        <div class="forum-header-edit">
+                            <a href="#">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                </i>
+                            </a>
+                        </div>
                         <div class="forum-item-body p-3">
                             <div href="#" class="consul-item row align-items-center">
                                 
@@ -262,9 +295,17 @@
             <div class="col-md-12">
                 <div class="consul-wrapper">
                     <div class="single-consultation">
+                        <div class="forum-header-edit">
+                            <a href="#">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                </i>
+                            </a>
+                        </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">
-                                
+                            <div href="#" class="consul-item row align-items-center">                                
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
