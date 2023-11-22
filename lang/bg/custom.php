@@ -503,6 +503,7 @@ return [
     'legislative_vote_need' => 'Брой изисквана подкрепа',
     'supported_f' => 'Подкрепена',
     'times_count' => 'пъти',
+    'once_count' => 'път',
     'name_of_normative_act' => 'Наименование на нормативен акт',
     'description_of_suggested_change' => 'Описание на предложената промяна',
     'category' => 'Категория',

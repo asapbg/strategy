@@ -73,7 +73,7 @@
                             <i class="fa fa-regular fa-thumbs-up main-color" style="font-size:34px;"></i>
                         </a>
                         <a href="#" class="text-decoration-none support-count-li d-flex align-items-center ms-3">
-                            {{ $item->votes }}
+                            {{ $item->countLikes() }}
                         </a>
                     </div>
                 </div>

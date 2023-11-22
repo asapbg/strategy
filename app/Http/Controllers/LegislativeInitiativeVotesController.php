@@ -2,89 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeVote;
-use App\Http\Requests\StoreLegislativeInitiativeVotesRequest;
-use App\Http\Requests\UpdateLegislativeInitiativeVotesRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class LegislativeInitiativeVotesController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Store like or dislike.
      *
-     * @return \Illuminate\Http\Response
+     * @param LegislativeInitiative $item
+     * @param string                $stat
+     *
+     * @return RedirectResponse
      */
-    public function index()
+    public function store(LegislativeInitiative $item, string $stat)
     {
-        //
+        $is_like = $stat == 'like';
+
+        try {
+            if ($item->userHasLike() || $item->userHasDislike()) {
+                $this->revert($item);
+            }
+
+            $new = new LegislativeInitiativeVote();
+            $new->legislative_initiative_id = $item->id;
+            $new->user_id = auth()->user()->id;
+            $new->is_like = $is_like;
+            $new->save();
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Revert the first vote found in collection.
      *
-     * @return \Illuminate\Http\Response
+     * @param LegislativeInitiative $item
+     *
+     * @return RedirectResponse
      */
-    public function create()
+    public function revert(LegislativeInitiative $item)
     {
-        //
-    }
+        try {
+            $stat = $item->votes->first(fn($vote) => $vote->user_id === auth()->user()->id);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreLegislativeInitiativeVotesRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreLegislativeInitiativeVotesRequest $request)
-    {
-        //
-    }
+            if ($stat) {
+                $stat->delete();
+            }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\LegislativeInitiativeVote $legislativeInitiativeVotes
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LegislativeInitiativeVote $legislativeInitiativeVotes)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\LegislativeInitiativeVote $legislativeInitiativeVotes
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LegislativeInitiativeVote $legislativeInitiativeVotes)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateLegislativeInitiativeVotesRequest $request
-     * @param \App\Models\LegislativeInitiativeVote                       $legislativeInitiativeVotes
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateLegislativeInitiativeVotesRequest $request, LegislativeInitiativeVote $legislativeInitiativeVotes)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\LegislativeInitiativeVote $legislativeInitiativeVotes
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(LegislativeInitiativeVote $legislativeInitiativeVotes)
-    {
-        //
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 }

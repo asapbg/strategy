@@ -39,6 +39,17 @@
                                     </div>
 
                                     <div class="col-12">
+                                        <span class="fw-bold">{{ __('custom.supported_f') }}:</span>
+                                        {{ $item->countLikes() }}
+
+                                        @if($item->countLikes() == 1)
+                                            <span>{{ __('custom.once_count') }}</span>
+                                        @else
+                                            <span>{{ __('custom.times_count') }}</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="col-12">
                                         <div class="row align-items-center">
                                             <div class="col-auto">
                                                 <span class="fw-bold">{{ __('custom.legislative_vote_need') }}:</span>
@@ -214,7 +225,7 @@
             function toggleCapEdit(element) {
                 const form = document.querySelector('form[name=UPDATE_CAP]');
                 const count = document.querySelector('.show-cap');
-                
+
                 element.classList.toggle('d-none');
                 form.classList.toggle('d-none');
                 count.classList.toggle('d-none');
