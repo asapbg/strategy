@@ -195,7 +195,7 @@
                                                     @if(
                                                         auth()->check() &&
                                                         auth()->user()->id === $item->author_id
-                                                        && $item->getStatus($item->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE
+                                                        && $item->getStatus($item->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value
                                                     )
                                                         <form class="d-none"
                                                               method="POST"
