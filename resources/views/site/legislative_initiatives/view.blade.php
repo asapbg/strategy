@@ -6,7 +6,7 @@
 
 </style>
 
-@section('pageTitle', 'Законодателна инициатива')
+@section('pageTitle', trans_choice('custom.legislative_initiatives', 1))
 
 @section('content')
     <div class="row">
@@ -139,7 +139,7 @@
                                                 @csrf
                                             </form>
 
-                                            <a href="#" class="open-delete_modal">
+                                            <a href="#" class="open-delete-modal">
                                                 <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
                                                    role="button" title="{{ __('custom.delete') }}"></i>
                                             </a>
@@ -212,24 +212,10 @@
         </div>
     </div>
 
-    @push('scripts')
-        <script type="text/javascript">
-            $(document).ready(function () {
-                let cancelBtnTxt = '{{ __('custom.cancel') }}';
-                let continueTxt = '{{ __('custom.continue') }}';
-                let titleTxt = '{{ __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1) }}';
-                let fileChangeWarningTxt = '{{ __('custom.legislative_comment_delete_warning') }}';
-                $('.open-delete_modal').on('click', function () {
-                    const form = $(this).parent().find('form').attr('name');
-
-                    new MyModal({
-                        title: titleTxt,
-                        footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + continueTxt + '</button>' +
-                            '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
-                        body: '<div class="alert alert-danger">' + fileChangeWarningTxt + '</div>',
-                    });
-                });
-            });
-        </script>
-    @endpush
+    @include('components.delete-modal', [
+        'cancel_btn_text'           => __('custom.cancel'),
+        'continue_btn_text'         => __('custom.continue'),
+        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1),
+        'file_change_warning_txt'   => __('custom.legislative_comment_delete_warning'),
+    ])
 @endsection

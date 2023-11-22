@@ -83,6 +83,7 @@ Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)-
     Route::get('/legislative-initiatives/{item}/view', 'show')->name('legislative_initiatives.view');
     Route::get('/legislative-initiatives/{item}/edit', 'edit')->name('legislative_initiatives.edit');
     Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
+    Route::post('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
 });
 
 Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments/')->group(function () {
