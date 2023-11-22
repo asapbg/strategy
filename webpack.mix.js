@@ -33,6 +33,7 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css',
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css',
         'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.css',
+        'resources/css/assets/bootstrap-icons.css',
         'resources/css/app.css',
     ], 'public/css/app_vendor.css')
     .sass('resources/sass/app.scss', 'public/css');

@@ -1,9 +1,15 @@
 <div id="topbar">
     <div class="container-fluid">
         <div class="row top">
-            <div class="col-md-6">
-                <div class="contact-info d-flex align-items-center">
-                    <a class="navbar-brand" href="#"><img src="/img/logo_title.png" alt="Logo" id="imageLogo"></a>
+            <div class="col-md-6 align-items-center d-flex">
+                <div class="contact-info d-flex w-100 align-items-center ">
+                    <a class="navbar-brand logo-link pe-2" href="#">
+                        <img src="/img/strategy-logo.svg" alt="Strategy Лого" id="siteLogo">
+                    </a>
+                    <div class="contact-info-text d-flex flex-column ps-2">
+                        <span class="main-color fw-600">Министерски съвет</span>
+                        <span class="fw-600">Портал за обществени консултации</span>
+                    </div>
                 </div>
             </div>
             {{--          @include('partials.breadcrumbs_front')--}}
@@ -20,7 +26,7 @@
                 <div class="auth d-flex justify-content-end">
                     @if(app('auth')->check())
                         @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
-                            <a href="{{ route('admin.home') }}" class="btn btn-primary main-color me-2"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
+                            <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2 me-2"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
                         @endif
                         <div class="dropdown">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
