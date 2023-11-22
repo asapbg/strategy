@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreLegislativeInitiativeRequest;
+use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\PolicyArea;
-use App\Models\RegulatoryAct;
-use App\Models\RegulatoryActType;
 use App\Models\StrategicDocuments\Institution;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use function Clue\StreamFilter\fun;
 
 class LegislativeInitiativeController extends AdminController
 {
@@ -86,7 +82,7 @@ class LegislativeInitiativeController extends AdminController
         return $this->view('admin.legislative_initiatives.show', compact('item', 'comments'));
     }
 
-    public function update(StoreLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         $validated = $request->validated();
 
