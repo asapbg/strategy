@@ -19,18 +19,22 @@
                                data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
                                 <i class="fa-solid fa-bars me-2 mb-2"></i>Гражданско участие
                             </a>
+
                             <hr class="custom-hr">
+
                             <div class="collapse show mt-3" id="home-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-
                                     <li class="mb-2  active-item-left p-1">
-                                        <a href="{{ route('legislative_initiatives.index') }}" class="link-dark text-decoration-none">
+                                        <a href="{{ route('legislative_initiatives.index') }}"
+                                           class="link-dark text-decoration-none">
                                             {{ trans_choice('custom.legislative_initiatives', 2) }}
                                         </a>
                                     </li>
+
                                     <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Отворено
                                             управление</a>
                                     </li>
+
                                     <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                         <ul class="list-unstyled ps-3">
                                             <hr class="custom-hr">
@@ -49,11 +53,11 @@
                                 </ul>
                             </div>
                         </li>
+
                         <hr class="custom-hr">
                     </ul>
                 </div>
             </div>
-
         </div>
 
 
@@ -81,14 +85,6 @@
                         <span class="obj-icon-info me-2">
                             <i class="far fa-calendar me-1 dark-blue" title="{{ __('custom.public_from') }}"></i>
                             {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') . ' ' . __('custom.year_short') }}
-                        </span>
-                    </a>
-
-                    <a href="#" class="text-decoration-none">
-                        <span class="obj-icon-info me-2">
-                            <i class="fas fa-sitemap me-1 dark-blue"
-                               title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
-                            {{ $item->regulatoryAct?->institution }}
                         </span>
                     </a>
                 </div>
@@ -121,7 +117,7 @@
                     <div class="custom-card py-4 px-3">
                         <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
                         @if(isset($item->comments) && $item->comments->count() > 0)
-                            @foreach($item->comments as $comment)
+                            @foreach($item->comments as $key => $comment)
                                 <div class="obj-comment comment-background p-2 rounded mb-3">
                                     <div class="info">
                                         <span class="obj-icon-info me-2 main-color fs-18 fw-600">
@@ -138,13 +134,13 @@
                                             <form class="d-none"
                                                   method="POST"
                                                   action="{{ route('legislative_initiatives.comments.delete', $comment) }}"
-                                                  name="DELETE_COMMENT"
+                                                  name="DELETE_COMMENT_{{ $key }}"
                                             >
                                                 @csrf
                                             </form>
 
-                                            <a href="#" id="delete_modal">
-                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            <a href="#" class="open-delete_modal">
+                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
                                                    role="button" title="{{ __('custom.delete') }}"></i>
                                             </a>
                                         @endif
@@ -201,8 +197,8 @@
 
                                     <div class="form-group">
                                         <textarea name="description" class="form-control mb-3 rounded"
-                                                  id="exampleFormControlTextarea1" rows="2"
-                                                  placeholder="Въведете коментар"></textarea>
+                                                  id="description" rows="2"
+                                                  placeholder="{{ __('custom.enter_comment') }}"></textarea>
                                     </div>
 
                                     <button type="submit"
@@ -223,10 +219,12 @@
                 let continueTxt = '{{ __('custom.continue') }}';
                 let titleTxt = '{{ __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1) }}';
                 let fileChangeWarningTxt = '{{ __('custom.legislative_comment_delete_warning') }}';
-                $('#delete_modal').on('click', function () {
+                $('.open-delete_modal').on('click', function () {
+                    const form = $(this).parent().find('form').attr('name');
+
                     new MyModal({
                         title: titleTxt,
-                        footer: '<button class="btn btn-sm btn-success ms-3" onclick="DELETE_COMMENT.submit();">' + continueTxt + '</button>' +
+                        footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + continueTxt + '</button>' +
                             '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                         body: '<div class="alert alert-danger">' + fileChangeWarningTxt + '</div>',
                     });
