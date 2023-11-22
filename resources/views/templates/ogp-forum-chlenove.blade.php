@@ -17,7 +17,7 @@
                 <ul class="list-unstyled">
                     <li class="mb-1">
                         <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
-                            data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                            data-toggle="collapse" data-target="#home-collapse" aria-expanded="true">
                             <i class="fa-solid fa-bars me-2 mb-2"></i>Партньорство за открито управление
                         </a>
                         <hr class="custom-hr">
@@ -70,8 +70,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 col-4">
                                     <div class="forum-info p-2">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 text-color mb-1"></i>
+                                        <span class="text-color">
                                             141 Гласувания
                                         </span>
                                     </div>  
