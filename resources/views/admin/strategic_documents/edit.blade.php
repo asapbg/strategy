@@ -11,7 +11,7 @@
                         </li>
                         @if($item->id)
                             <li class="nav-item">
-                                <a class="nav-link" id="files-tab" data-toggle="pill" href="#files" role="tab" aria-controls="files" aria-selected="false">Файлове</a>
+                                <a class="nav-link" id="files-tab" data-toggle="pill" href="#files" role="tab" aria-controls="files" aria-selected="false">Приложени Файлове</a>
                             </li>
                         @endif
                     </ul>

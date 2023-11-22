@@ -17,6 +17,7 @@ class FileService
      * @param Request $request
      * @param StrategicDocument $strategicDocument
      * @return void
+     * @throws \Exception
      */
     public function uploadFiles(Request $request, StrategicDocument $strategicDocument, bool $isMain = false)
     {
@@ -25,7 +26,12 @@ class FileService
         foreach (['en', 'bg'] as $locale) {
             try {
                 DB::beginTransaction();
-
+                if ($isMain) {
+                    $mainFile = $strategicDocument->files->where('is_main', true)->where('locale', $locale)->first();
+                    if ($mainFile) {
+                        $mainFile->delete();
+                    }
+                }
                 $file = new StrategicDocumentFile();
                 $fillable = $this->getFillableValidated($validated, $file);
                 $file->fill($fillable);
@@ -105,11 +111,12 @@ class FileService
 
     public function prepareFileData($strategicDocumentFiles, $adminView = true): array
     {
+        $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
         $fileData = [];
-        if ($strategicDocumentFiles->isEmpty()) {
+        if ($strategicDocumentFiles->isEmpty() || !$mainFile) {
             return [];
         }
-        $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
+
         $iconMapping = [
             'application/pdf' => 'fas fa-file-pdf text-danger me-1',
             'application/msword' => 'fas fa-file-word text-info me-1',
@@ -120,12 +127,12 @@ class FileService
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
 
         $rootNode = [
-            'id' => $mainFile->id,//'id' => 'root',
+            'id' => $mainFile->id,
             'parent' => '#',
             'text' => $mainFile->display_name .
                 "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
-                "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>" .
-                "<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
+                "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
+                //"<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
             'icon' => $iconClass,
         ];
 

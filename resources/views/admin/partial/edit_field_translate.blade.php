@@ -3,6 +3,7 @@
 @if(sizeof($fieldProperties))
     @foreach(config('available_languages') as $language)
         @php($fieldName = $field.'_'.$language['code'])
+        @php($value = $value ?? null)
         <div class="col-md-{{ $col ?? 6 }} col-12">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="{{ $fieldName }}">{{ __('validation.attributes.'.$fieldName) }} @if(isset($required) && $required)<span class="required">*</span>@endif</label>
@@ -22,7 +23,7 @@
                             @default
                                 <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"
                                        class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"
-                                       value="{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
+                                       value="{{ $value ?? old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
                         @endswitch
                         @error($fieldName)
                         <div class="text-danger mt-1">{{ $message }}</div>
