@@ -524,4 +524,5 @@ return [
     'applied_documents' => 'Прилежащи документи',
     'reports_and_docs' => 'Отчети и доклади',
     'acceptment_act' => 'Акт на приемане',
+    'edit_document' => 'Редактиране на документ',
 ];

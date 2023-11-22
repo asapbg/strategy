@@ -1,13 +1,11 @@
 @extends('layouts.site', ['fullwidth' => true])
 
 @section('pageTitle', 'Стратегически документи - вътрешна страница')
-
-
 @section('content')
     <div class="row edit-consultation m-0" style="top: 17.5%;">
         <div class="col-md-12 text-end">
             <button class="btn btn-sm btn-primary main-color mt-2">
-                <i class="fas fa-pen me-2 main-color"></i>Редактиране на документ</button>
+                <i class="fas fa-pen me-2 main-color"></i>{{ trans_choice('custom.edit_document', 1) }}</button>
         </div>
     </div>
 
@@ -65,16 +63,15 @@
                         </a>
                     @endcan
                 </div>
+
                 <div class="col-md-4">
-                    <!--
-                    "Документът е към“, в което да се попълва линк и заглавие на родителски стратегически документ, ако такъв е зададен.
-                    -->
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.document_to', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>Линк и заглавие на родителски стратегически документ</span>
                     </a>
                 </div>
+
             </div>
 
             <div class="row mb-2">
@@ -162,13 +159,15 @@
                     @endcan
 
                 </div>
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
-                    <a href="{{ $strategicDocument->link_to_monitorstat  }}" class="main-color text-decoration-none fs-18">
-                    <span class="obj-icon-info me-2">
-                        <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
-                    </a>
-                </div>
+                @if (! $strategicDocument->link_to_monitorstat)
+                    <div class="col-md-4">
+                        <h3 class="mb-2 fs-5">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
+                        <a href="{{ $strategicDocument->link_to_monitorstat  }}" class="main-color text-decoration-none fs-18">
+                        <span class="obj-icon-info me-2">
+                            <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
+                        </a>
+                    </div>
+                @endif
             </div>
 
 
@@ -306,7 +305,10 @@
                                             <span> /</span>
                                             <span class="valid-date fw-bold"> Валидност {{ $document->valid_at ?? 'Няма валидност' }} </span>
                                             <span> /</span>
-                                            <span class="str-doc-type fw-bold">{{ $document->strategicDocument->documentType->name }}</span>
+                                            <!--
+                                            $document->strategicDocument->documentType->name
+                                            -->
+                                            <span class="str-doc-type fw-bold">{{ $document->documentType->name }}</span>
                                             <span class="fw-bold">&#125;</span>
                                         </a>
                                     </li>
