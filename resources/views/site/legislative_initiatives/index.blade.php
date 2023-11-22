@@ -186,9 +186,9 @@
                                                 <div class="consult-item-header-link">
                                                     <a href="{{ route('legislative_initiatives.view', $item) }}"
                                                        class="text-decoration-none"
-                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}">
+                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->operationalProgram?->value }}">
                                                         <h3>{{ __('custom.change_f') }} {{ __('custom.in') }}
-                                                            {{ mb_strtolower($item->regulatoryAct?->value) }}</h3>
+                                                            {{ mb_strtolower($item->operationalProgram?->value) }}</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
@@ -219,9 +219,9 @@
                                                 </div>
                                             </div>
 
-                                            <a href="#" title="{{ $item->regulatoryAct?->institution }}"
+                                            <a href="#" title="{{ $item->operationalProgram?->institution }}"
                                                class="text-decoration-none text-capitalize mb-3">
-                                                {{ $item->regulatoryAct?->institution }}
+                                                {{ $item->operationalProgram?->institution }}
                                             </a>
 
                                             <div class="status mt-2">

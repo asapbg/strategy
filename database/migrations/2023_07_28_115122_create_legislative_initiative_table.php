@@ -24,7 +24,7 @@ return new class extends Migration {
             ];
 
             $table->bigIncrements('id');
-            $table->bigInteger('regulatory_act_id');
+            $table->bigInteger('operational_program_id');
             $table->bigInteger('author_id');
             $table->integer('votes')->default(0);
             $table->integer('cap')->default(0);

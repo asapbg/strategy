@@ -87,8 +87,8 @@
                     <div class="col-md-12">
                         <div class="input-group">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="regulatory_act" class="form-label">{{ __('custom.name_of_normative_act') }}</label>
-                                <select id="legislative_program_row_id" name="regulatory_act_id" data-types2ajax="op_record"
+                                <label for="operational_program_id" class="form-label">{{ __('custom.name_of_normative_act') }}</label>
+                                <select id="operational_program_id" name="operational_program_id" data-types2ajax="op_record"
                                         data-urls2="{{ route('admin.select2.ajax', 'op_record') }}"
                                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                                         class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
