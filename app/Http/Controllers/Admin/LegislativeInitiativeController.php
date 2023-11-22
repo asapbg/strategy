@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Models\LegislativeInitiative;
+use App\Models\LegislativeInitiativeComment;
 use App\Models\PolicyArea;
 use App\Models\RegulatoryAct;
 use App\Models\RegulatoryActType;
@@ -13,15 +14,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use function Clue\StreamFilter\fun;
 
 class LegislativeInitiativeController extends AdminController
 {
-    const LIST_ROUTE = 'admin.legislative_initiatives.index';
-    const EDIT_ROUTE = 'admin.legislative_initiatives.edit';
-    const STORE_ROUTE = 'admin.legislative_initiatives.store';
-    const LIST_VIEW = 'admin.legislative_initiatives.index';
-    const EDIT_VIEW = 'admin.legislative_initiatives.edit';
-    const CREATE_VIEW = 'admin.legislative_initiatives.create';
 
     public function __construct(Request $request)
     {
@@ -52,14 +48,9 @@ class LegislativeInitiativeController extends AdminController
                         $query->orWhere('last_name', 'like', '%' . $keywords . '%');
                     });
             })
-            ->when($politicRange !== '', function ($query) use ($politicRange) {
-                $query->whereHas('regulatoryAct', function ($query) use ($politicRange) {
-//                    $query->where('institution', )
-                });
-            })
             ->paginate($countResults);
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items'));
+        return $this->view('admin.legislative_initiatives.index', compact('filter', 'items'));
     }
 
     private function filters($request)
@@ -75,33 +66,24 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return View
-     */
-    public function create(): View
-    {
-        $regulatoryActTypes = RegulatoryActType::orderBy('id')->get();
-        $translatableFields = LegislativeInitiative::translationFieldsProperties();
-        $item = new LegislativeInitiative();
-
-        return $this->view(self::CREATE_VIEW, compact('regulatoryActTypes', 'translatableFields', 'item'));
-    }
-
-    /**
      * @param Request               $request
      * @param LegislativeInitiative $item
      *
      * @return View
      */
-    public function edit(Request $request, LegislativeInitiative $item): View
+    public function show(Request $request, LegislativeInitiative $item): View
     {
-        $storeRouteName = self::STORE_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
-        $translatableFields = LegislativeInitiative::translationFieldsProperties();
-        $regulatoryActs = RegulatoryAct::all();
+        $show_deleted_comments = $request->offsetGet('show_deleted_comments');
 
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs'));
+        $query = LegislativeInitiativeComment::query();
+
+        if ($show_deleted_comments == '1') {
+            $query = $query->withTrashed();
+        }
+
+        $comments = $query->where('legislative_initiative_id', $item->id)->get();
+
+        return $this->view('admin.legislative_initiatives.show', compact('item', 'comments'));
     }
 
     public function store(StoreLegislativeInitiativeRequest $request)
