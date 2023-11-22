@@ -105,7 +105,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post( '/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
         Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
         Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
-        Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::any( '/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id}', 'prisActOptions')->name('strategic_documents.pris.options');
