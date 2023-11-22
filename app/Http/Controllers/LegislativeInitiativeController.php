@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Models\LegislativeInitiative;
@@ -146,7 +147,8 @@ class LegislativeInitiativeController extends AdminController
     public function destroy(LegislativeInitiative $item)
     {
         try {
-            $item->delete();
+            $item->setStatus(LegislativeInitiativeStatusesEnum::STATUS_CLOSED);
+            $item->save();
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));

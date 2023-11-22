@@ -77,13 +77,15 @@
                     <div class="col-md-4">
                         <div class="input-group ">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="institution" class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
+                                <label for="institution"
+                                       class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
                                 <select id="institution" class="institution form-select select2" name="institution"
                                         multiple>
                                     <option value="" disabled>--</option>
                                     @foreach($institutions as $institution)
                                         @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
-                                        <option value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
+                                        <option
+                                                value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -93,7 +95,9 @@
                     <div class="col-md-4">
                         <div class="input-group ">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="count_results" class="form-label">{{ __('custom.count') . ' ' . mb_strtolower(trans_choice('custom.results', 2)) }}:</label>
+                                <label for="count_results"
+                                       class="form-label">{{ __('custom.count') . ' ' . mb_strtolower(trans_choice('custom.results', 2)) }}
+                                    :</label>
                                 <select id="count_results" class="form-select" name="count_results">
                                     <option value="10">10</option>
                                     @php $selected = request()->get('count_results', '') == 20 ? 'selected' : '' @endphp
@@ -112,7 +116,7 @@
                     <div class="row mb-5 mt-5">
                         <div class="col-md-6">
                             <button class="btn rss-sub main-color" type="submit"><i
-                                    class="fas fa-search main-color"></i>Търсене
+                                        class="fas fa-search main-color"></i>Търсене
                             </button>
                         </div>
 
@@ -184,26 +188,38 @@
                                                        class="text-decoration-none"
                                                        title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}">
                                                         <h3>{{ __('custom.change_f') }} {{ __('custom.in') }}
-                                                            {{ $item->regulatoryAct?->value }}</h3>
+                                                            {{ mb_strtolower($item->regulatoryAct?->value) }}</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
-                                                    <a href="#">
-                                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                           role="button" title="Изтриване"></i>
-                                                    </a>
+                                                    @if(
+                                                        auth()->check() &&
+                                                        auth()->user()->id === $item->author_id
+                                                        && $item->getStatus($item->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE
+                                                    )
+                                                        <form class="d-none"
+                                                              method="POST"
+                                                              action="{{ route('legislative_initiatives.delete', $item) }}"
+                                                              name="DELETE_ITEM_{{ $item->id }}"
+                                                        >
+                                                            @csrf
+                                                        </form>
 
-                                                    @can('update', $item)
+                                                        <a href="#" class="open-delete-modal">
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                               role="button" title="{{ __('custom.deletion') }}"></i>
+                                                        </a>
+
                                                         <a href="{{ route('legislative_initiatives.edit', $item) }}">
                                                             <i class="fas fa-pen-to-square float-end main-color fs-4"
-                                                               role="button" title="Редакция">
+                                                               role="button" title="{{ __('custom.edit') }}">
                                                             </i>
                                                         </a>
-                                                    @endcan
+                                                    @endif
                                                 </div>
                                             </div>
 
-                                            <a href="#" title=" Партньорство за открито управление"
+                                            <a href="#" title="{{ $item->regulatoryAct?->institution }}"
                                                class="text-decoration-none text-capitalize mb-3">
                                                 {{ $item->regulatoryAct?->institution }}
                                             </a>
@@ -211,8 +227,21 @@
                                             <div class="status mt-2">
                                                 <div>
                                                     <span>{{ __('validation.attributes.status') }}:
+                                                        @php
+                                                            $status_class = 'active-li';
+
+                                                            switch ($item->getStatus($item->status)->name) {
+                                                                case 'STATUS_CLOSED':
+                                                                    $status_class = 'closed-li';
+                                                                    break;
+
+                                                                case 'STATUS_SEND':
+                                                                    $status_class = 'send-li';
+                                                                    break;
+                                                            }
+                                                        @endphp
                                                         <span
-                                                            class="active-li">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
+                                                                class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
                                                     </span>
 
                                                     <span class="mx-1">|</span>
@@ -220,19 +249,21 @@
                                                     <span>
                                                         {{ __('custom.supported_f') }}:
                                                         <span
-                                                            class="voted-li">{{ $item->votes }} {{ __('custom.times_count') }}</span>
+                                                                class="voted-li">{{ $item->votes }} {{ __('custom.times_count') }}</span>
                                                     </span>
                                                 </div>
                                             </div>
+
                                             <div class="meta-consul mt-2">
                                                 <span class="text-secondary">
                                                     <i class="far fa-calendar text-secondary me-1"></i> {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}{{ __('custom.year_short') }}
                                                 </span>
 
-                                                <a href="#"
+                                                <a href="{{ route('legislative_initiatives.view', $item) }}"
                                                    title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                    <i class="fas fa-arrow-right read-more"><span
-                                                            class="d-none">Линк</span></i>
+                                                    <i class="fas fa-arrow-right read-more">
+                                                        <span class="d-none"></span>
+                                                    </i>
                                                 </a>
                                             </div>
                                         </div>
@@ -254,4 +285,11 @@
             </div>
         </div>
     </div>
+
+    @include('components.delete-modal', [
+        'cancel_btn_text'           => __('custom.cancel'),
+        'continue_btn_text'         => __('custom.continue'),
+        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.legislative_initiatives', 1),
+        'file_change_warning_txt'   => __('custom.legislative_comment_delete_warning'),
+    ])
 @endsection
