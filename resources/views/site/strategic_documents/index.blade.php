@@ -169,18 +169,18 @@
                                         </div>
                                         {{ $document->category }}
 
-                                        <a href="#" title="Образование" class="text-decoration-none mb-3">
+                                        <a href="{{ route( 'strategy-document.view' , [$document->id]) }}" title="Образование" class="text-decoration-none mb-3">
                                             <i class="bi bi-mortarboard-fill me-1" title="Образование"></i>
                                             {{ $document->policyArea->name }}
                                         </a>
 
                                         <div class="meta-consul mt-2">
-                                        <span class="text-secondary">
-                                            {{ $document->document_date ? $document->document_date . ' г.' : 'Не е указан срок' }}
-                                        </span>
-                                            <a href="#" title="{{ $document->title }}">
-                                                <i class="fas fa-arrow-right read-more"></i>
-                                            </a>
+                                            <span class="text-secondary">
+                                                {{ $document->document_date ? $document->document_date . ' г.' : 'Не е указан срок' }}
+                                            </span>
+                                                <a href="{{ route( 'strategy-document.view' , [$document->id]) }}" title="{{ $document->title }}">
+                                                    <i class="fas fa-arrow-right read-more"></i>
+                                                </a>
                                         </div>
                                     </div>
                                 </div>
@@ -193,6 +193,9 @@
         {{ $strategicDocuments->links() }}
 
     </section>
+
+@endsection
+@push('scripts')
     <script>
         $(document).ready(function() {
             const policySelect = $('#policySelect');
@@ -285,5 +288,5 @@
             });
         });
     </script>
-@endsection
+@endpush
 
