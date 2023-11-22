@@ -70,8 +70,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 col-4">
                                     <div class="forum-info p-2">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             141 Гласувания
                                         </span>
                                     </div>  
@@ -79,16 +79,16 @@
 
                                 <div class="col-md-2 col-sm-4 col-4">
                                     <div class="forum-info p-2">
-                                        <i class="bi bi-chat-text fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-chat-text fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             122 Отговора
                                         </span>
                                     </div> 
                                 </div>
                                 <div class="col-md-2 col-sm-4  col-4">
                                     <div class="forum-info p-2">
-                                        <i class="bi bi-eye fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-eye fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             290 Прегледа
                                         </span>
                                     </div> 
@@ -122,8 +122,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             256 Гласувания
                                         </span>
                                     </div>  
@@ -131,16 +131,16 @@
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-chat-text fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-chat-text fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             251 Отговора
                                         </span>
                                     </div> 
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-eye fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-eye fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             223 Прегледа
                                         </span>
                                     </div> 
@@ -175,8 +175,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             245 Гласувания
                                         </span>
                                     </div>  
@@ -184,16 +184,16 @@
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-chat-text fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-chat-text fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             116 Отговора
                                         </span>
                                     </div> 
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-eye fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-eye fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             257 Прегледа
                                         </span>
                                     </div> 
@@ -228,8 +228,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             775 Гласувания
                                         </span>
                                     </div>  
@@ -237,16 +237,16 @@
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-chat-text fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-chat-text fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             550 Отговора
                                         </span>
                                     </div> 
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-eye fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-eye fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             1097 Прегледа
                                         </span>
                                     </div> 
@@ -279,8 +279,8 @@
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-bar-chart fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-bar-chart fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             275 Гласувания
                                         </span>
                                     </div>  
@@ -288,16 +288,16 @@
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-chat-text fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-chat-text fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             119 Отговора
                                         </span>
                                     </div> 
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
-                                        <i class="bi bi-eye fs-2 main-color mb-1"></i>
-                                        <span class="main-color">
+                                        <i class="bi bi-eye fs-2 dark-text mb-1"></i>
+                                        <span class="dark-text">
                                             227 Прегледа
                                         </span>
                                     </div> 
