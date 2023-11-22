@@ -86,47 +86,18 @@ class LegislativeInitiativeController extends AdminController
         return $this->view('admin.legislative_initiatives.show', compact('item', 'comments'));
     }
 
-    public function store(StoreLegislativeInitiativeRequest $request)
-    {
-        $validated = $request->validated();
-
-        DB::beginTransaction();
-        try {
-            $new = new LegislativeInitiative();
-
-            $fillable = $this->getFillableValidated($validated, $new);
-            $new->fill($fillable);
-            $new->save();
-
-            $this->storeTranslateOrNew(LegislativeInitiative::TRANSLATABLE_FIELDS, $new, $validated);
-
-            DB::commit();
-
-            return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.created_successfully_m'));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
-        }
-    }
-
     public function update(StoreLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         $validated = $request->validated();
 
         DB::beginTransaction();
         try {
-            $fillable = $this->getFillableValidated($validated, $item);
-            $item->fill($fillable);
+            $item->fill($validated);
             $item->save();
-
-            $this->storeTranslateOrNew(LegislativeInitiative::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
 
-            return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.updated_successfully_f'));
+            return redirect()->back()->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);

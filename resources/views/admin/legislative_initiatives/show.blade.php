@@ -39,8 +39,39 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <span class="fw-bold">{{ __('custom.legislative_vote_need') }}:</span>
-                                        {{ $item->cap . ' ' . trans_choice('custom.likes', 2) }}
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <span class="fw-bold">{{ __('custom.legislative_vote_need') }}:</span>
+                                                <span class="show-cap">
+                                                    {{ $item->cap . ' ' . trans_choice('custom.likes', 2) }}
+                                                </span>
+                                                <a href="#" class="btn" id="edit-cap"><i class="fa fa-edit"
+                                                                                         aria-hidden="true"></i></a>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <form class="row d-none align-items-center"
+                                                      method="POST"
+                                                      action="{{ route('admin.legislative_initiatives.update', $item) }}"
+                                                      name="UPDATE_CAP"
+                                                >
+                                                    @csrf
+
+                                                    <div class="col-auto">
+                                                        <input type="number" name="cap" class="form-control"
+                                                               value="{{ $item->cap }}"
+                                                               placeholder="{{ __('custom.legislative_vote_need') }}"/>
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        <button class="btn btn-success">{{ __('custom.save') }}</button>
+                                                    </div>
+
+                                                    <button type="button" class="btn-close" id="close-cap"
+                                                            aria-label="Close"></button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="col-12">
@@ -86,9 +117,9 @@
                                                          aria-atomic="true">
                                                         <div class="toast-header">
                                                             <strong
-                                                                    class="me-auto">{{ $comment->user->fullName() }}</strong>
+                                                                class="me-auto">{{ $comment->user->fullName() }}</strong>
                                                             <small
-                                                                    class="text-muted">{{ $comment->created_at->format('d.m.Y h:i') }}</small>
+                                                                class="text-muted">{{ $comment->created_at->format('d.m.Y h:i') }}</small>
 
                                                             @if(!$comment->deleted_at)
                                                                 <form class="d-none"
@@ -106,7 +137,8 @@
                                                         </div>
                                                         <div class="toast-body">
                                                             @php $deleted_class = $comment->deleted_at ? 'text-decoration-line-through' : '' @endphp
-                                                            <span class="{{ $deleted_class }}">{{ $comment->description }}</span>
+                                                            <span
+                                                                class="{{ $deleted_class }}">{{ $comment->description }}</span>
 
                                                             <div class="row mt-3 justify-content-end">
                                                                 <div class="col-auto p-0">
@@ -168,6 +200,25 @@
 
                 window.location = url;
             })
+
+            document.querySelector('#edit-cap').addEventListener('click', function () {
+                toggleCapEdit(this);
+                document.querySelector('#close-cap').classList.remove('d-none');
+            })
+
+            document.querySelector('#close-cap').addEventListener('click', function () {
+                toggleCapEdit(this);
+                document.querySelector('#edit-cap').classList.toggle('d-none');
+            })
+
+            function toggleCapEdit(element) {
+                const form = document.querySelector('form[name=UPDATE_CAP]');
+                const count = document.querySelector('.show-cap');
+                
+                element.classList.toggle('d-none');
+                form.classList.toggle('d-none');
+                count.classList.toggle('d-none');
+            }
         </script>
     @endpush
 @endsection
