@@ -40,9 +40,11 @@ class StoreStrategicDocumentRequest extends FormRequest
             'active' => ['required', 'numeric', 'in:0,1'],
             'valid_at' => ['required', 'date'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
-            'strategic_act_link' => ['nullable', 'string', 'max:1000'],
-            'link_to_monitorstat' => ['nullable', 'string', 'max:1000'],
+            'strategic_act_link' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
+            'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
             'pris_act_id' => ['nullable', 'numeric'],
+            'document_date_accepted' => 'required|date',
+            'document_date_expiring' => 'required|date',
         ];
 
         if( request()->input('pris_act_id')) {
@@ -65,6 +67,9 @@ class StoreStrategicDocumentRequest extends FormRequest
 
         foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+        }
+        if (request()->has('main_fileId_bg')) {
+            $rules['file_strategic_documents_bg'][] = 'sometimes';
         }
 
         return $rules;

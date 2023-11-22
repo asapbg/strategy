@@ -53,6 +53,7 @@ class StrategicDocumentsController extends AdminController
             'files', 'files.translation', 'files.documentType', 'files.documentType.translation'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
+
         $toggleBooleanModel = 'StrategicDocument';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
@@ -93,8 +94,7 @@ class StrategicDocumentsController extends AdminController
         $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
-        $mainFiles = $item->files;
-
+        $mainFiles = $item->files->where('is_main', true);
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
@@ -131,11 +131,10 @@ class StrategicDocumentsController extends AdminController
             try {
                 $bgFile = $validated['file_strategic_documents_bg'] ?? null;
                 $enFile = $validated['file_strategic_documents_en'] ?? null;
-                if (!$bgFile && !$enFile) {
-                    throw new \Exception('Files not found!');
+                if ($bgFile || $enFile) {
+                    $fileService = app(FileService::class);
+                    $fileService->uploadFiles($request, $item, true);
                 }
-                $fileService = app(FileService::class);
-                $fileService->uploadFiles($request, $item, true);
             } catch (\Throwable) {
                 return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
             }
