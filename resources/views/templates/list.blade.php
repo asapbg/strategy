@@ -3,9 +3,12 @@
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_10_public']) }}">Списък на физическите и юридическите лица, на които е възложено от държавата или общините да изработят проекти на нормативни актове, оценки на въздействието - Преглед)</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_library_list']) }}">Библиотека списък</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_2_public_legal_information']) }}">Правна информация на Министерски съвет. Търсене</a>
+<br><a href="{{ route('impact_assessment.index') }}">Оценка на въздействието</a>
+
+<br>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti']) }}">Стратегически документи</a>
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti-inner']) }}">Стратегически документи (вътрешна)</a>
-<br><a href="{{ route('impact_assessment.index') }}">Оценка на въздействието</a>
+
 <br>
 <br><a href="{{ route('templates.view', ['slug' => 'public-news']) }}">Новини страница</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_news']) }}">Новина преглед</a>
@@ -16,9 +19,10 @@
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">OGP страница</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum']) }}">OGP forum</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">  - OGP forum - Правомощия, органи и структура</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura-inner']) }}">  ---- OGP forum - Правомощия, органи и структура - Вътрешна страница на форум</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-rab-grupi']) }}">  - OGP forum - Работни групи</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-protokoli']) }}">  - OGP forum - Протоколи от заседания и срещи</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">  - OGP forum - Членове на Форума – контактна информация</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-chlenove']) }}">  - OGP forum - Членове на Форума – контактна информация</a>
 
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home']).'?sk=1' }}">Начално (версия 1)</a>--}}
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home-2']).'?sk=1' }}">Начално (версия 2)</a>--}}
@@ -54,9 +58,9 @@
 <br>
 <br><a href="{{ route('archive.index') }}">Архив</a>
 
-<br>
+{{--<br>
 <br><a href="{{ route('strategy-documents.index') }}">Стратегически документи</a>
-<br><a href="{{ route('strategy-document.view', ['id' => 1]) }}">Стратегически документ - Преглед</a>
+<br><a href="{{ route('strategy-document.view', ['id' => 1]) }}">Стратегически документ - Преглед</a> --}}
 
 <br>
 <br><a href="{{ route('impact-analyze-methods.index') }}">Калкулатор за изчисляване на административната тежест</a>
