@@ -194,14 +194,19 @@
                         ];
                     @endphp
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <a href="#" class="main-color text-decoration-none" type="button" data-toggle="modal" data-target="#exampleModal">
-                                @php
-                                    $fileExtension = $mainDocument->content_type;
-                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-                                @endphp
-                                <i class="{{ $iconClass }}"></i>{{ $mainDocument->display_name }}</a>
-                        </li>
+                        @if(!$mainDocument)
+                            <li class="list-group-item">
+                            </li>
+                        @else
+                            <li class="list-group-item">
+                                <a href="#" class="main-color text-decoration-none" type="button" data-toggle="modal" data-target="#exampleModal">
+                                    @php
+                                        $fileExtension = $mainDocument->content_type;
+                                        $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+                                    @endphp
+                                    <i class="{{ $iconClass }}"></i>{{ $mainDocument->display_name }}</a>
+                            </li>
+                        @endif
                     </ul>
                     <!-- Модал -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
