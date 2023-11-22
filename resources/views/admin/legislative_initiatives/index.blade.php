@@ -8,12 +8,6 @@
 
             <div class="card">
                 <div class="card-body table-responsive">
-                    <div class="mb-3">
-                        <a href="{{ route('admin.legislative_initiatives.create') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.legislative_initiatives_list', 1) }}
-                        </a>
-                    </div>
-
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
                         <tr>
@@ -29,16 +23,16 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->regulatoryAct?->name }}</td>
-                                    <td>{{ $item->author }}</td>
+                                    <td>{{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->operationalProgram?->value) }}</td>
+                                    <td>{{ $item->user->fullName() }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
-                                        @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                               class="btn btn-sm btn-info"
+                                        @can('view', $item)
+                                            <a href="{{ route('admin.legislative_initiatives.view', [$item]) }}"
+                                               class="btn btn-sm btn-warning mr-2"
                                                data-toggle="tooltip"
-                                               title="{{ __('custom.edit') }}">
-                                                <i class="fa fa-edit"></i>
+                                               title="{{ __('custom.preview') }}">
+                                                <i class="fa fa-eye"></i>
                                             </a>
                                         @endcan
 
@@ -75,6 +69,14 @@
                         @endif
                         </tbody>
                     </table>
+
+                    <div class="row">
+                        <nav aria-label="Page navigation example">
+                            @if(isset($items) && $items->count() > 0)
+                                {{ $items->appends(request()->query())->links() }}
+                            @endif
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
