@@ -8,7 +8,6 @@
 
     <!-- Bootstrap  CSS -->
     <link href="{{ asset('/vendor/bootstrap/bootstrap.css') }}" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- Font-awesome -->
     <link href="/vendor/fontawesome-free-6.4.0-web/css/all.css" rel="stylesheet">
@@ -18,7 +17,7 @@
     @stack('styles')
 
     <!-- Add favicon -->
-    <link rel="icon" href="/img/logo_title.jpg" sizes="16x16 32x32" type="image/png">
+    <link rel="icon" href="/img/strategy-logo.svg" sizes="16x16 32x32" type="image/png">
     <script type="text/javascript">
         var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
     </script>
