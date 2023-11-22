@@ -85,7 +85,7 @@
                                     @foreach($institutions as $institution)
                                         @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
                                         <option
-                                                value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
+                                            value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -116,7 +116,7 @@
                     <div class="row mb-5 mt-5">
                         <div class="col-md-6">
                             <button class="btn rss-sub main-color" type="submit"><i
-                                        class="fas fa-search main-color"></i>Търсене
+                                    class="fas fa-search main-color"></i>Търсене
                             </button>
                         </div>
 
@@ -165,7 +165,7 @@
                 <div class="col-12 mt-2">
                     <div class="info-consul text-start">
                         <p class="fw-600">
-                            {{ __('custom.total') }} {{ $items->count() }} {{ $items->count() == 1 ? trans_choice('custom.results', 1) : trans_choice('custom.results', 2) }}
+                            {{ __('custom.total') }} {{ $items->count() }} {{ $items->count() == 1 ? mb_strtolower(trans_choice('custom.results', 1)) : mb_strtolower(trans_choice('custom.results', 2)) }}
                         </p>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
                                                             }
                                                         @endphp
                                                         <span
-                                                                class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
+                                                            class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
                                                     </span>
 
                                                     <span class="mx-1">|</span>
@@ -249,25 +249,76 @@
                                                     <span>
                                                         {{ __('custom.supported_f') }}:
                                                         <span
-                                                                class="voted-li">{{ $item->votes }} {{ __('custom.times_count') }}</span>
+                                                            class="voted-li">{{ $item->countLikes() }}
+                                                            @if($item->countLikes() == 1)
+                                                                <span>{{ __('custom.once_count') }}</span>
+                                                            @else
+                                                                <span>{{ __('custom.times_count') }}</span>
+                                                            @endif
+                                                        </span>
                                                     </span>
                                                 </div>
                                             </div>
 
-                                            <div class="meta-consul mt-2">
-                                                <span class="text-secondary">
-                                                    <i class="far fa-calendar text-secondary me-1"></i> {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}{{ __('custom.year_short') }}
-                                                </span>
+                                            <div class="row mt-3 justify-content-between">
+                                                <div class="col-auto">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <span class="text-secondary">
+                                                                <i class="far fa-calendar text-secondary me-1"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
+                                                            </span>
+                                                        </div>
 
-                                                <a href="{{ route('legislative_initiatives.view', $item) }}"
-                                                   title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
-                                                    <i class="fas fa-arrow-right read-more">
-                                                        <span class="d-none"></span>
-                                                    </i>
-                                                </a>
+                                                        <div class="col-auto">
+                                                            <div class="mb-0">
+                                                                <!-- LIKES -->
+
+                                                                {{ $item->countLikes() }}
+
+                                                                @if($item->userHasLike())
+                                                                    <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                                                                       class="me-2 text-decoration-none">
+                                                                        <i class="fa fa-thumbs-up fs-18"
+                                                                           aria-hidden="true"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{ route('legislative_initiatives.vote.store', [$item, 'like']) }}"
+                                                                       class="me-2 text-decoration-none">
+                                                                        <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
+                                                                    </a>
+                                                                @endif
+
+
+                                                                <!-- DISLIKES -->
+
+                                                                {{ $item->countDislikes() }}
+
+                                                                @if($item->userHasDislike())
+                                                                    <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                                                                       class="text-decoration-none">
+                                                                        <i class="fa fa-thumbs-down fs-18"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{ route('legislative_initiatives.vote.store', [$item, 'dislike']) }}"
+                                                                       class="text-decoration-none">
+                                                                        <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <a href="{{ route('legislative_initiatives.view', $item) }}"
+                                                       title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                        <i class="fas fa-arrow-right read-more">
+                                                            <span class="d-none"></span>
+                                                        </i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

@@ -86,6 +86,11 @@ Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)-
     Route::post('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
 });
 
+Route::controller(\App\Http\Controllers\LegislativeInitiativeVotesController::class)->prefix('/legislative-initiatives/{item}/vote/')->group(function () {
+    Route::get('store/{is_like}', 'store')->name('legislative_initiatives.vote.store');
+    Route::get('revert', 'revert')->name('legislative_initiatives.vote.revert');
+});
+
 Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments/')->group(function () {
     Route::post('store', 'store')->name('legislative_initiatives.comments.store');
     Route::post('{comment}/delete', 'destroy')->name('legislative_initiatives.comments.delete');

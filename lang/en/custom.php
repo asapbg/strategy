@@ -465,6 +465,7 @@ return [
     'legislative_vote_need' => 'Number of support required',
     'supported_f' => 'Supported',
     'times_count' => 'votes',
+    'once_count' => 'once',
     'name_of_normative_act' => 'Name of normative act',
     'description_of_suggested_change' => 'Description of suggested change',
     'keyword' => 'Keyword|Keywords',
