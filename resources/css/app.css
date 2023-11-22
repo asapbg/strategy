@@ -85,6 +85,10 @@ h6 {
     font-weight: 600 !important;
 }
 
+.fw-400 {
+    font-weight: 400 !important;
+}
+
 .bgr-main {
     background: #21659e;
 }
@@ -101,6 +105,11 @@ nav.navbar .btn {
 .main-color-light {
     color: #c0dbf2 !important;
 }
+
+.br-30 {
+border-radius: 30px !important;
+}
+
 
 .custom-hr {
     border-color: #c0dbf2 !important;
@@ -133,11 +142,16 @@ nav.navbar .btn {
 }
 
 .comment-background {
-    background: #eaf3fb75;
-    border: 1px solid #cae0f4;
+   /* background: #eaf3fb75;
+    border: 1px solid #cae0f4;*/
+    background: #eaf3fb2e;
+    box-shadow: rgb(33 101 158 / 37%) 0px 0px 5px 0px;
 }
 
 /* Header and top bar*/
+.logo-link {
+    border-right: 2px solid #20659e;
+}
 
 .login-search {
     border-radius: 18px !important;
@@ -172,8 +186,9 @@ header {
     box-shadow: rgb(27 81 126) 0px 1px 4px;
 }
 
-#imageLogo {
-    width: 320px;
+#siteLogo {
+    width: 55px;
+    height: 100%;
 }
 
 .home-icon-menu {
@@ -885,6 +900,15 @@ textarea {
     align-items: center;
 }
 
+.forum-header-edit {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-left: 20px;
+    position: relative;
+    margin-bottom: -25px;
+    top: 5px;
+    right: 5px;
+}
 /**/
 
 /*Single page - Consultations*/
@@ -1017,7 +1041,7 @@ input#startdate {
 .easy-tree li::after {
     border-top: 2px solid #c0dbf2;
     height: 20px;
-    top: 25px;
+    top: 29px;
     width: 35px;
 }
 
@@ -1029,7 +1053,7 @@ input#startdate {
 }
 
 .easy-tree li:last-child::before {
-    height: 25px;
+    height: 29px;
 }
 .easy-tree>ul>li::after, .easy-tree>ul>li::before {
     border: 0;
@@ -1122,6 +1146,9 @@ ul.nav.flex-column.footer-nav a {
     text-decoration: none;
 }
 
+footer .nav-item {
+    padding: 5px;
+}
 /**/
 
 
@@ -1438,12 +1465,23 @@ input[type=checkbox] {
 }
 
 @media(max-width:767px) {
+    .forum-header-edit {
+        display: inline-block;
+        margin-bottom: 0px;
+        width: 100%;
+        margin-left: 0px;
+    }
+
     #slider {
         margin-top: 167px;
     }
 }
 
 @media (max-width:576px) {
+    .contact-info {
+        align-items: stretch !important;
+    }
+
     .profile-tabs {
         flex-direction: column;
         text-align: center;

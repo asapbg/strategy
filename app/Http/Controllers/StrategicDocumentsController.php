@@ -6,6 +6,7 @@ use App\Models\AuthorityAcceptingStrategic;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
+use App\Services\FileOcr;
 use App\Services\StrategicDocuments\FileService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -78,11 +79,18 @@ class StrategicDocumentsController extends Controller
      */
     public function show(int $id): View
     {
-        $strategicDocument = StrategicDocument::findOrFail($id);
+        $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
         $strategicDocumentFileService = app(FileService::class);
-        $strategicDocumentFiles = StrategicDocumentFile::where('strategic_document_id', $id)->where('locale', app()->getLocale())->get();
+        $strategicDocumentFiles = StrategicDocumentFile::where('strategic_document_id', $id)->where('strategic_document_type_id', '!=', 7)->where('locale', app()->getLocale())->get();
         $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
+        $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
+        $locale = app()->getLocale();
+        $mainDocument = $strategicDocumentFiles->where('is_main', 1)->where('locale', $locale)->first();
+        $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
+            $query->where('name', 'like', '%Отчети и доклади%');
+        })->get();
 
-        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData'));
+        return $this->view('site.strategic_documents.view-2', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
+        //return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData'));
     }
 }

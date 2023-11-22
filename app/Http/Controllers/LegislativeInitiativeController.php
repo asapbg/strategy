@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
+use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\PolicyArea;
 use App\Models\RegulatoryAct;
-use App\Models\RegulatoryActType;
 use App\Models\StrategicDocuments\Institution;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -43,7 +43,7 @@ class LegislativeInitiativeController extends AdminController
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
-        $politicRange = $request->offsetGet('politic-range');
+        $institution = $request->offsetGet('institution');
 
         $items = LegislativeInitiative::withTrashed()->with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
@@ -54,9 +54,9 @@ class LegislativeInitiativeController extends AdminController
                         $query->orWhere('last_name', 'like', '%' . $keywords . '%');
                     });
             })
-            ->when(!empty($politicRange), function ($query) use ($politicRange) {
-                $query->whereHas('regulatoryAct', function ($query) use ($politicRange) {
-//                    $query->where('institution', )
+            ->when(!empty($institution), function ($query) use ($institution) {
+                $query->whereHas('operationalProgram', function ($query) use ($institution) {
+                    $query->where('value', $institution);
                 });
             })
             ->paginate($countResults);
@@ -128,8 +128,7 @@ class LegislativeInitiativeController extends AdminController
 
         DB::beginTransaction();
         try {
-            $fillable = $this->getFillableValidated($validated, $item);
-            $item->fill($fillable);
+            $item->fill($validated);
             $item->save();
 
             DB::commit();
@@ -146,7 +145,8 @@ class LegislativeInitiativeController extends AdminController
     public function destroy(LegislativeInitiative $item)
     {
         try {
-            $item->delete();
+            $item->setStatus(LegislativeInitiativeStatusesEnum::STATUS_CLOSED);
+            $item->save();
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));

@@ -105,7 +105,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post( '/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
         Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
         Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
-        Route::post( '/strategic-documents/delete-file/{file}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::any( '/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id}', 'prisActOptions')->name('strategic_documents.pris.options');
@@ -245,9 +245,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(LegislativeInitiativeController::class)->group(function () {
         Route::get('/legislative-initiatives',                  'index')->name('legislative_initiatives.index')
             ->middleware('can:viewAny, App\Models\LegislativeInitiative');
-        Route::get('/legislative-initiatives/create',           'create')->name('legislative_initiatives.create');
-        Route::post('/legislative-initiatives/store',           'store')->name('legislative_initiatives.store');
-        Route::get('/legislative-initiatives/edit/{item?}',     'edit')->name('legislative_initiatives.edit');
+        Route::get('/legislative-initiatives/view/{item}',     'show')->name('legislative_initiatives.view');
         Route::post('/legislative-initiatives/{item}/update',   'update')->name('legislative_initiatives.update');
         Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
         Route::put('/legislative-initiatives/{item}/restore',   'restore')->name('legislative_initiatives.restore');

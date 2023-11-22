@@ -2,24 +2,15 @@
 <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
-    <div class="row">
-        @include('admin.partial.edit_field_translate', [
-         'field' => 'title',
-         'required' => true,
-        ])
-    </div>
-
-    <div class="row">
-        @include('admin.partial.edit_field_translate', ['field' => 'description', 'required' => true])
-    </div>
     <!-- Files -->
+    <h3>Главен файл</h3>
     <div class="row">
         @include('admin.partial.edit_field_translate', [
             'item' => null,
             'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),
             'field' => 'display_name',
             'required' => true,
-            'value' => optional($mainFile)->display_namex
+            'value' => optional($mainFile)->display_name ?? ''
         ])
         <div class="col-md-3">
             <div class="form-group form-group-sm">
@@ -51,7 +42,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-12"></div>
         @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
         <!--
@@ -75,35 +65,53 @@
                 </label>
             </div>
         </div>
-        <!--
-        @foreach(config('available_languages') as $lang)
-            @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
-            @php($fieldName = 'file_strategic_documents_'.$lang['code'])
-            <div class="col-md-6 mb-3">
-                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
-                <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="file" name="{{ $fieldName }}">
-                @error($fieldName)
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-        @endforeach
-        -->
-        @foreach(config('available_languages') as $lang)
-            @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
-            @php($fieldName = 'file_strategic_documents_'.$lang['code'])
-            <div class="col-md-6 mb-3">
-                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
-                {{-- Check if the file is a main file for the specific language --}}
-                @if ($mainFile && $mainFile->locale === $lang['code'])
-                    <input class="form-control form-control-sm" type="file" value="{{ $mainFile->display_name }}">
-                @else
-                    <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="file" name="{{ $fieldName }}">
-                @endif
-                @error($fieldName)
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-        @endforeach
+        <div class="row">
+            @foreach(config('available_languages') as $lang)
+                @php(
+                    $mainFileForLang = $mainFiles->first(function($file) use ($lang) {
+                        return $file->locale === $lang['code'];
+                    })
+                )
+                @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
+                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
+                <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
+                        @if ($mainFileForLang)
+                            {{ $mainFileForLang->display_name }}
+                        @endif
+                    </div>
+                    @if ($mainFileForLang)
+                        <div>
+                            <input class="form-control form-control-sm" type="file" name="{{ $fieldName }}">
+                            <input type="hidden" name="main_fileId_{{ $lang['code'] }}" value="{{ $mainFileForLang->id }}">
+                            @error($fieldName)
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @else
+                        <div>
+                            <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" type="file" name="{{ $fieldName }}">
+                            @error($fieldName)
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <!-- End Files -->
+    <h3>Обща част</h3>
+    <div class="row">
+        @include('admin.partial.edit_field_translate', [
+         'field' => 'title',
+         'required' => true,
+        ])
+    </div>
+
+    <div class="row">
+        @include('admin.partial.edit_field_translate', ['field' => 'description', 'required' => true])
     </div>
 
     <div class="row">

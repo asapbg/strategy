@@ -208,11 +208,11 @@
             <div class="col-md-12">
                 <ul class=" tab nav nav-tabs mb-3" id="myTab">
                     <li class="nav-item pb-0">
-                        <a href="#table-view" class="nav-link tablinks active" data-bs-toggle="tab">Прилежащи
+                        <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">Прилежащи
                             документи</a>
                     </li>
                     <li class="nav-item pb-0">
-                        <a href="#tree-view" class="nav-link tablinks" data-bs-toggle="tab">Отчети и доклади</a>
+                        <a href="#tree-view" class="nav-link tablinks" data-toggle="tab">Отчети и доклади</a>
                     </li>
 
                 </ul>

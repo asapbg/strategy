@@ -32,19 +32,6 @@
             </div>
         </div>
     </div>
-    <!--
-    <div class="col-md-4">
-        <div class="form-group form-group-sm">
-            <label for="file" class="col-sm-12 control-label">{{ __('custom.select_file') }} <span class="required">*</span> </label>
-            <div class="col-12">
-                <input class="form-control form-control-sm @error('file') is-invalid @enderror" id="file" type="file" name="file">
-                @error('file')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-    </div>
-    -->
     <div class="col-12"></div>
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
     <!--
@@ -129,6 +116,7 @@
                 <td class="pt-4 bl-primary-2">{{ $f->display_name }}</td>
                 <td class="pt-4">{{ $f->documentType->name }}</td>
                 <td class="pt-4">{{ $f->valid_at }}</td>
+                <!--
                 <td class="pt-4">
                     <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.strategic_documents.file.download', $f) }}">
                         <i class="fas fa-download me-1" role="button"
@@ -145,7 +133,7 @@
                        title="{{__('custom.deletion')}}">
                         <i class="fa fa-trash"></i>
                     </a>
-
+                    -->
 {{--                    <a class="btn btn-sm btn-danger" type="button" href="">--}}
 {{--                        <i class="fas fa-trash me-1" role="button"--}}
 {{--                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>--}}
@@ -293,9 +281,7 @@
             }
 
             $('#fileTree, #fileTreeEn').on("select_node.jstree", function (e, data) {
-                console.log($(data.event.target));
                 if ($(data.event.target).hasClass('fas fa-edit')) {
-                    console.log(data.node);
                     const fileId = data.node.id;
 
                     $('[id^=fileRow_head_]').hide();
@@ -305,18 +291,18 @@
                 }
                 if ($(data.event.target).hasClass('fas fa-download')) {
                     const fileId = data.node.id;
-
                     window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
                 }
 
                 if ($(data.event.target).hasClass('fas fa-trash')) {
                     const fileId = data.node.id;
-
                     const deleteModal = $('#modal-delete-resource');
-                    const deleteButton = $('.js-toggle-delete-resource-modal');
+                    const nodeName = $('<div/>').html(data.node.text).text();
                     const deleteForm = deleteModal.find('form');
-                    deleteForm.attr('action', "/admin/strategic-documents/delete/" + fileId);
-                    console.log(deleteButton);
+                    const deleteUrl = '/admin/strategic-documents/delete-file/' + fileId;
+                    //deleteModal.find('.modal-body').text(nodeName);
+                    deleteForm.attr('action', deleteUrl);
+                    deleteForm.attr('method', "GET");
                     $('#resource_id').val(fileId);
                     deleteModal.show();
                     deleteModal.modal('show');
