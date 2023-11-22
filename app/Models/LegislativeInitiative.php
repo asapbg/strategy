@@ -29,7 +29,7 @@ class LegislativeInitiative extends ModelActivityExtend
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['regulatory_act_id', 'author_id', 'description'];
+    protected $fillable = ['operational_program_id', 'author_id', 'description'];
 
     /**
      * Get the model name
@@ -49,9 +49,9 @@ class LegislativeInitiative extends ModelActivityExtend
         );
     }
 
-    public function regulatoryAct()
+    public function operationalProgram()
     {
-        return $this->belongsTo(OperationalProgramRow::class, 'regulatory_act_id', 'id');
+        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id');
     }
 
     public function votes(): HasMany

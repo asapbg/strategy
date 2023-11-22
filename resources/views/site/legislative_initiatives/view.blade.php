@@ -64,7 +64,7 @@
         <div class="col-lg-10 py-5">
             <div class="row">
                 <div class="col-lg-10">
-                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}</h2>
+                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ mb_strtolower($item->operationalProgram?->value) }}</h2>
                 </div>
 
                 <div class="col-lg-2">
