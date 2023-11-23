@@ -142,43 +142,47 @@
 {{--                        </li>--}}
 {{--                    </ul>--}}
 {{--                </li>--}}
-                <li class="nav-item">
-                    <a href="{{ route('admin.polls.index') }}"
-                    class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
-                        <i class="fal fa-check-square"></i>
-                        <p>{{ trans_choice('custom.polls', 2) }}</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
-                        <i class="nav-icon fas fa-info"></i>
-                        <p>{{ trans_choice('custom.strategic_documents', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.strategic_documents.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
-                            <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'ogp')) active @endif">
-                        <i class="fas fa-hand-point-up"></i>
-                        <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ogp.plan_elements.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
+                @canany(['manage.*','manage.pools'])
+                    <li class="nav-item">
+                        <a href="{{ route('admin.polls.index') }}"
+                        class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
+                            <i class="fal fa-check-square"></i>
+                            <p>{{ trans_choice('custom.polls', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(strstr(url()->current(), 'strategic_documents')) active @endif">
+                            <i class="nav-icon fas fa-info"></i>
+                            <p>{{ trans_choice('custom.strategic_documents', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.strategic_documents.index') }}"
+                                class="nav-link @if(Str::endsWith(url()->current(), 'strategic_documents')) active @endif">
                                 <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                                    <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
+                @canany(['manage.*','manage.partnership'])
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(strstr(url()->current(), 'ogp')) active @endif">
+                            <i class="fas fa-hand-point-up"></i>
+                            <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.plan_elements.index') }}"
+                                class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
                 <li class="nav-item">
                     <a href="#" class="nav-link @if(strstr(url()->current(), 'links')) active @endif">
                         <i class="nav-icon fas fa-link"></i>
@@ -216,30 +220,34 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link @if(strstr(url()->current(), 'pc_subjects')) active @endif">
-                        <i class="fas fa-weight"></i>
-                        <p>{{ trans_choice('custom.legislative_initiatives', 2) }}<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.legislative_initiatives.index') }}"
-                            class="nav-link @if(Str::endsWith(url()->current(), 'legislative_initiatives')) active @endif">
-                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
-                                <p>{{ trans_choice('custom.legislative_initiatives_list', 2) }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.pris') }}"
-                       class="nav-link @if(str_contains(url()->current(), 'pris')) active @endif">
-                        <i class="fal fa-check-square"></i>
-                        <p>{{ __('custom.pris') }}</p>
-                    </a>
-                </li>
-                <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
+                @canany(['manage.*','manage.legislative_initiatives'])
+                    <li class="nav-item">
+                        <a href="#" class="nav-link @if(strstr(url()->current(), 'pc_subjects')) active @endif">
+                            <i class="fas fa-weight"></i>
+                            <p>{{ trans_choice('custom.legislative_initiatives', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.legislative_initiatives.index') }}"
+                                class="nav-link @if(Str::endsWith(url()->current(), 'legislative_initiatives')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.legislative_initiatives_list', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
+                @canany(['manage.*','manage.pris'])
+                    <li class="nav-item">
+                        <a href="{{ route('admin.pris') }}"
+                           class="nav-link @if(str_contains(url()->current(), 'pris')) active @endif">
+                            <i class="fal fa-check-square"></i>
+                            <p>{{ __('custom.pris') }}</p>
+                        </a>
+                    </li>
+                @endcan
                 @canany(['manage.*','manage.nomenclatures'])
+                    <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
                            class="nav-link @if(str_contains(url()->current(), 'nomenclature')) active @endif">
@@ -248,29 +256,30 @@
                         </a>
                     </li>
                 @endcan
-                <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
-                <li class="nav-item">
-                    <a href="{{route('admin.roles')}}"
-                       class="nav-link @if(str_contains(url()->current(), 'roles')) active @endif">
-                        <i class="fas fa-users"></i>
-                        <p>{{ trans_choice('custom.roles', 2) }}</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.users')}}"
-                       class="nav-link @if(str_contains(url()->current(), 'users')) active @endif">
-                        <i class="fas fa-user"></i>
-                        <p>{{ trans_choice('custom.users', 2) }}</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.permissions')}}"
-                       class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
-                        <i class="fas fa-gavel"></i>
-                        <p>{{ trans_choice('custom.permissions', 2) }}</p>
-                    </a>
-                </li>
-
+                @if(auth()->user()->hasRole([\App\Models\CustomRole::ADMIN_USER_ROLE, \App\Models\CustomRole::SUPER_USER_ROLE]))
+                    <li class="nav-header">{{ trans_choice('custom.users', 2) }}</li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.roles')}}"
+                           class="nav-link @if(str_contains(url()->current(), 'roles')) active @endif">
+                            <i class="fas fa-users"></i>
+                            <p>{{ trans_choice('custom.roles', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.users')}}"
+                           class="nav-link @if(str_contains(url()->current(), 'users')) active @endif">
+                            <i class="fas fa-user"></i>
+                            <p>{{ trans_choice('custom.users', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('admin.permissions')}}"
+                           class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
+                            <i class="fas fa-gavel"></i>
+                            <p>{{ trans_choice('custom.permissions', 2) }}</p>
+                        </a>
+                    </li>
+                @endif
                 @if($user)
                     <li class="nav-header">Лични данни</li>
                     <li class="nav-item">
