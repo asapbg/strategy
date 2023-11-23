@@ -121,51 +121,56 @@
             </div>
         </div>
     </div>
+    <!-- test -->
+
     <div class="row">
-        <div class="col-md-4 d-none" id="pris-act">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
-                <div class="col-12">
-                    <select id="pris_act_id" name="pris_act_id" class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
-                        <option value="" {{ old('pris_act_id', $item->pris ? $item->pris->id : null) == null ? 'selected' : '' }}>---</option>
-                        @if(isset($prisActs) && $prisActs->count())
-                            @foreach($prisActs as $row)
+        <div class="col-md-12 d-none" id="pris-act">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">
+                        Категории:
+                    </label>
+                    <span class="text-danger" id="connect-doc-error"></span>
+                    <select id="the_legal_act_type_filter" name="legal_act_type_filter"
+                            class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
+                        <option value="">--</option>
+                        @if(isset($legalActTypes) && $legalActTypes->count())
+                            @foreach($legalActTypes as $row)
                                 <option value="{{ $row->id }}"
-                                        {{ old('pris_act_id', ($item->pris ? $item->pris->id : null)) == $row->id ? 'selected' : '' }}
-                                        data-id="{{ $row->id }}">
-                                    @if($row->doc_num)
-                                        {{ $row->doc_num }}
-                                    @else
-                                        {{ $row->doc_date }}
-                                    @endif
-                                </option>
+                                        @if(old('legal_act_type_filter', '') == $row->id) selected @endif>{{ $row->name }}</option>
                             @endforeach
                         @endif
+                    </select>
+                    @error('legal_act_type_filter')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-sm-6 control-label"
+                           for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
+                    <select id="pris_act_id" name="pris_act_id"
+                            class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
+                        <option value="{{ $item->pris->id }}"
+                                {{ old('pris_act_id', ($item->pris ? $item->pris->id : null)) == $item->id ? 'selected' : '' }}
+                                data-id="{{ $item->pris->id }}"> {{ $item->pris?->actType?->name . ' N' . $item->pris->doc_num . ' ' . $item->pris->doc_date }} </option>
                     </select>
                     @error('pris_act_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="col-sm-12 control-label" for="document_date_pris">{{ __('custom.date_pris') }} <span class="required">*</span></label>
-                    <div class="col-12">
-                        <input type="text" id="document_date_pris" name="document_date" class="form-control form-control-sm datepicker @error('document_date'){{ 'is-invalid' }}@enderror"
-                               value="{{ old('document_date', ($item->pris ? $item->pris->doc_date : '')) }}" readonly>
-                        @error('document_date')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
         </div>
+     </div>
+
+        <!-- end testing -->
 
         <div class="col-md-3 act-custom-fields d-none">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="strategic_act_link">{{ __('validation.attributes.strategic_act_link') }}</label>
                 <div class="col-12">
-                    <input type="text" name="strategic_act_link" class="form-control form-control-sm @error('strategic_act_link'){{ 'is-invalid' }}@enderror" value="{{ old('strategic_act_link', $item->id ? $item->strategic_act_link : '') }}">
+                    <input type="text" id="strategic_act_link" name="strategic_act_link" class="form-control form-control-sm @error('strategic_act_link'){{ 'is-invalid' }}@enderror" value="{{ old('strategic_act_link', $item->id ? $item->strategic_act_link : '') }}">
                     @error('strategic_act_link')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
@@ -242,7 +247,7 @@
                 <label class="col-sm-12 control-label" for="document_date_accepted">{{ __('custom.date_accepted') }} <span class="required">*</span></label>
                 <div class="col-12">
                     <input type="text" id="document_date_accepted" name="document_date_accepted" class="form-control form-control-sm datepicker @error('date_accepted'){{ 'is-invalid' }}@enderror"
-                           value="{{ old('document_date_accepted', ($item->pris ? $item->pris->doc_date : '')) }}">
+                           value="{{ old('document_date_accepted', ($item->id ? $item->document_date : '')) }}">
                     @error('document_date_accepted')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
@@ -254,7 +259,7 @@
                 <label class="col-sm-12 control-label" for="document_date_pris">{{ __('custom.date_expiring') }} <span class="required">*</span></label>
                 <div class="col-12">
                     <input type="text" id="document_date_expiring" name="document_date_expiring" class="form-control form-control-sm datepicker @error('document_date_expiring'){{ 'is-invalid' }}@enderror"
-                           value="{{ old('document_date_expiring', ($item->pris ? $item->pris->doc_date : '')) }}">
+                           value="{{ old('document_date_expiring', ($item->id ? $item->document_date : '')) }}">
                     @error('document_date_expiring')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
@@ -264,7 +269,7 @@
     </div>
 
     <!-- Files -->
-    <h3>Оновен файл</h3>
+    <h3>Основен файл</h3>
     <div class="row">
         @include('admin.partial.edit_field_translate', [
             'item' => null,
@@ -378,19 +383,62 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#pris_options').select2();
+            $('#the_legal_act_type_filter').on('change', function() {
+                let selectedValue = $(this).val();
+                if (selectedValue) {
+                    $.ajax({
+                        url: `/admin/strategic-documents/pris-option/${selectedValue}`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            let prisOptions = data.prisOptions;
+                            let parentActId = $('#pris_act_id');
+                            parentActId.empty();
+
+                            parentActId.append('<option value="">---</option>');
+
+                            $.each(prisOptions, function(index, option) {
+                                let selected = (option.id == '{{ old('pris_act_id', $item->pris ? $item->pris->id : null) }}') ? 'selected' : '';
+                                parentActId.append('<option value="' + option.id + '" ' + selected + '>' + option.text + '</option>');
+                            });
+
+                            parentActId.trigger('change');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                        }
+                    });
+                }
+            });
+
+            $('#accept_act_institution_type_id').on('change', function () {
+                let selectedValue = $(this).val();
+                if (selectedValue == 1) {
+                    $('#strategic_act_link').val('');
+                    $('#document_date').val('');
+                } else {
+                    $('#document_date_pris').val('');
+                    $('#pris_act_id').val('').trigger('change');
+                }
+            });
+
             $('#pris_act_id').on('change', function () {
                 const selectedValue = $(this).val();
-                $.ajax({
-                    url: `/admin/strategic-documents/pris-option/${selectedValue}`,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#document_date_pris').val(data.doc_date);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                    }
-                });
+                console.log(selectedValue);
+                if (selectedValue) {
+                    $.ajax({
+                        url: `/admin/strategic-documents/pris-option/${selectedValue}`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#document_date_pris').val(data.doc_date);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                        }
+                    });
+                }
             });
         });
     </script>

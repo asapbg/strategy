@@ -36,19 +36,27 @@ class StoreStrategicDocumentRequest extends FormRequest
             'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
             'public_consultation_id' => ['required', 'numeric', 'exists:public_consultation,id'],
-            //'document_date' => ['required', 'date'],
             'active' => ['required', 'numeric', 'in:0,1'],
             'valid_at' => ['required', 'date'],
+            'pris_act_id' => ['required_if:strategic_act_link,null'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
-            'strategic_act_link' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
+            'strategic_act_link' => ['required_if:pris_act_id,null'],
+            'document_date' => ['required_if:pris_act_id,null', 'nullable', 'date'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
-            'pris_act_id' => ['nullable', 'numeric'],
             'document_date_accepted' => 'required|date',
             'document_date_expiring' => 'required|date',
         ];
 
         if( request()->input('pris_act_id')) {
+            $rules['pris_act_id'][] = 'numeric';
+            $rules['pris_act_id'][] = 'exists:pris,id';
             //$rules['pris_act_id'][] = ['exists:pris,id'];
+        }
+        if( request()->input('strategic_act_link')) {
+            $rules['strategic_act_link'][] = 'url';
+            $rules['strategic_act_link'][] = 'string';
+            $rules['strategic_act_link'][] = 'max:1000';
+            $rules['strategic_act_link'][] = 'regex:/^(https?:\/\/)/';
         }
 
         if (request()->isMethod('put') ) {
