@@ -22,7 +22,7 @@
     </div>
 </section>
 
-<section id="second-links" class="public-page ">
+<section id="second-links" class="home-page-section">
     <div class="container">
         <div class="row mb-4">
             <div class="col-md-12">
@@ -105,7 +105,7 @@
 </section>
 
 
-<section class="public-page public-constultation pb-5">
+<section class="home-page-section public-constultation pb-5">
     <div class="container">
         <div class="row mb-4">
             <div class="col-md-12">
@@ -1518,7 +1518,7 @@
 {{--    </section>--}}
 
 </section>
-<section id="blog" class="public-page">
+<section id="blog" class="home-page-section">
     <div class="container">
 
         <div class="row mb-4">

@@ -16,13 +16,17 @@
 <br><a href="{{ route('templates.view', ['slug' => 'blog-single']) }}">Публикация преглед</a>
 
 <br>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">OGP страница</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">Партньорство за открито управление</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum']) }}">OGP forum</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">  - OGP forum - Правомощия, органи и структура</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">    - OGP forum - Правомощия, органи и структура</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura-inner']) }}">  ---- OGP forum - Правомощия, органи и структура - Вътрешна страница на форум</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-rab-grupi']) }}">  - OGP forum - Работни групи</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-protokoli']) }}">  - OGP forum - Протоколи от заседания и срещи</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-chlenove']) }}">  - OGP forum - Членове на Форума – контактна информация</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-rab-grupi']) }}">    - OGP forum - Работни групи</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-rab-grupi-inner']) }}">  ---- OGP forum - Работни групи - Вътрешна страница на форум</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-protokoli']) }}">    - OGP forum - Протоколи от заседания и срещи</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-protokoli-inner']) }}">  ---- OGP forum - Протоколи от заседания и срещи</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-chlenove']) }}">    - OGP forum - Членове на Форума – контактна информация</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-chlenove-inner']) }}">  ---- OGP forum - Членове на Форума – контактна информация</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-list-news-events']) }}">Новини и събития</a>
 
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home']).'?sk=1' }}">Начално (версия 1)</a>--}}
 {{--<br><a href="{{ route('templates.view', ['slug' => 'home-2']).'?sk=1' }}">Начално (версия 2)</a>--}}

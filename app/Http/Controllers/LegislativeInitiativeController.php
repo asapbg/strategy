@@ -70,7 +70,8 @@ class LegislativeInitiativeController extends AdminController
             ->orderBy('status')
             ->paginate($countResults);
 
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions'));
+        $pageTitle = "Закондателни инициативи";
+        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions','pageTitle'));
     }
 
     /**
