@@ -2,107 +2,8 @@
 <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
-    <!-- Files -->
-    <h3>Главен файл</h3>
-    <div class="row">
-        @include('admin.partial.edit_field_translate', [
-            'item' => null,
-            'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),
-            'field' => 'display_name',
-            'required' => true,
-            'value' => optional($mainFile)->display_name ?? ''
-        ])
-        <div class="col-md-3">
-            <div class="form-group form-group-sm">
-                <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
-                <div class="col-12">
-                    <input value="{{ old('valid_at', optional($mainFile)->valid_at) }}" class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror" type="text" name="valid_at">
-                    @error('valid_at')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group form-group-sm">
-                <label class="col-sm-12 control-label" for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span></label>
-                <div class="col-12">
-                    <select id="strategic_document_type" name="strategic_document_type_id" class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
-                        <option value="" @if(old('strategic_document_type_id', '') == '') selected @endif>---</option>
-                        @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
-                            @foreach($strategicDocumentTypes as $row)
-                                <option value="{{ $row->id }}" @if(old('strategic_document_type_id', optional($mainFile)->strategic_document_type_id) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
 
-                    @error('strategic_document_type')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="col-12"></div>
-        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
-        <!--
-    <div class="col-md-4">
-        <div class="form-group form-group-sm">
-            <label class="col-sm-12 control-label" for="ord">{{ __('custom.order') }}</label>
-            <div class="col-12">
-                <input type="number" id="ord" name="ord" class="form-control form-control-sm" value="{{ old('ord', 0) }}">
-            </div>
-            @error('ord')
-        <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    -->
-        <div class="col-md-8">
-            <div class="form-group form-group-sm">
-                <label class="col-sm-12 control-label" for="visible_in_report"><br>
-                    <input type="checkbox" id="visible_in_report" name="visible_in_report" class="checkbox" value="1" @if (old('visible_in_report',0)) checked @endif>
-                    {{ __('custom.visible_in_report') }}
-                </label>
-            </div>
-        </div>
-        <div class="row">
-            @foreach(config('available_languages') as $lang)
-                @php(
-                    $mainFileForLang = $mainFiles->first(function($file) use ($lang) {
-                        return $file->locale === $lang['code'];
-                    })
-                )
-                @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
-                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
-                <div class="col-md-6 mb-3">
-                    <div class="col-md-6 mb-3">
-                        <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
-                        @if ($mainFileForLang)
-                            {{ $mainFileForLang->display_name }}
-                        @endif
-                    </div>
-                    @if ($mainFileForLang)
-                        <div>
-                            <input class="form-control form-control-sm" type="file" name="{{ $fieldName }}">
-                            <input type="hidden" name="main_fileId_{{ $lang['code'] }}" value="{{ $mainFileForLang->id }}">
-                            @error($fieldName)
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    @else
-                        <div>
-                            <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" type="file" name="{{ $fieldName }}">
-                            @error($fieldName)
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-    </div>
-    <!-- End Files -->
-    <h3>Обща част</h3>
+    <h3>Основна информация</h3>
     <div class="row">
         @include('admin.partial.edit_field_translate', [
          'field' => 'title',
@@ -251,7 +152,7 @@
                     <label class="col-sm-12 control-label" for="document_date_pris">{{ __('custom.date_pris') }} <span class="required">*</span></label>
                     <div class="col-12">
                         <input type="text" id="document_date_pris" name="document_date" class="form-control form-control-sm datepicker @error('document_date'){{ 'is-invalid' }}@enderror"
-                               value="{{ old('document_date', ($item->pris ? $item->pris->doc_date : '')) }}">
+                               value="{{ old('document_date', ($item->pris ? $item->pris->doc_date : '')) }}" readonly>
                         @error('document_date')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
@@ -362,6 +263,106 @@
         </div>
     </div>
 
+    <!-- Files -->
+    <h3>Оновен файл</h3>
+    <div class="row">
+        @include('admin.partial.edit_field_translate', [
+            'item' => null,
+            'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),
+            'field' => 'display_name',
+            'required' => true,
+            'value' => optional($mainFile)->display_name ?? ''
+        ])
+        <div class="col-md-3">
+            <div class="form-group form-group-sm">
+                <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
+                <div class="col-12">
+                    <input value="{{ old('valid_at', optional($mainFile)->valid_at) }}" class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror" type="text" name="valid_at">
+                    @error('valid_at')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-12 control-label" for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span></label>
+                <div class="col-12">
+                    <select id="strategic_document_type" name="strategic_document_type_id" class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
+                        <option value="" @if(old('strategic_document_type_id', '') == '') selected @endif>---</option>
+                        @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
+                            @foreach($strategicDocumentTypes as $row)
+                                <option value="{{ $row->id }}" @if(old('strategic_document_type_id', optional($mainFile)->strategic_document_type_id) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+
+                    @error('strategic_document_type')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="col-12"></div>
+        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
+        <!--
+    <div class="col-md-4">
+        <div class="form-group form-group-sm">
+            <label class="col-sm-12 control-label" for="ord">{{ __('custom.order') }}</label>
+            <div class="col-12">
+                <input type="number" id="ord" name="ord" class="form-control form-control-sm" value="{{ old('ord', 0) }}">
+            </div>
+            @error('ord')
+        <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    -->
+        <div class="col-md-8">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-12 control-label" for="visible_in_report"><br>
+                    <input type="checkbox" id="visible_in_report" name="visible_in_report" class="checkbox" value="1" @if (old('visible_in_report',0)) checked @endif>
+                    {{ __('custom.visible_in_report') }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            @foreach(config('available_languages') as $lang)
+                @php(
+                    $mainFileForLang = $mainFiles->first(function($file) use ($lang) {
+                        return $file->locale === $lang['code'];
+                    })
+                )
+                @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
+                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
+                <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
+                        @if ($mainFileForLang)
+                            {{ $mainFileForLang->display_name }}
+                        @endif
+                    </div>
+                    @if ($mainFileForLang)
+                        <div>
+                            <input class="form-control form-control-sm" type="file" name="{{ $fieldName }}">
+                            <input type="hidden" name="main_fileId_{{ $lang['code'] }}" value="{{ $mainFileForLang->id }}">
+                            @error($fieldName)
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @else
+                        <div>
+                            <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" type="file" name="{{ $fieldName }}">
+                            @error($fieldName)
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <!-- End Files -->
 
     <div class="row">
         <div class="form-group row">
