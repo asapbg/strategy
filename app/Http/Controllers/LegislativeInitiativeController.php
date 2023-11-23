@@ -44,6 +44,7 @@ class LegislativeInitiativeController extends AdminController
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
+        $order_by = $request->offsetGet('order_by');
 
         $items = LegislativeInitiative::with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
@@ -67,7 +68,16 @@ class LegislativeInitiativeController extends AdminController
                     ]);
                 });
             })
-            ->orderBy('status')
+            ->when(!empty($order_by), function ($query) use ($order_by) {
+                $query = match ($order_by) {
+                    'keywords' => $query->orderBy('description'),
+                    'institutions' => $query->orderBy('operational_program_id'),
+                    default => $query->orderBy('created_at'),
+                };
+            })
+            ->when(empty($order_by), function ($query) {
+                $query = $query->orderBy('status');
+            })
             ->paginate($countResults);
 
         $pageTitle = "Закондателни инициативи";
