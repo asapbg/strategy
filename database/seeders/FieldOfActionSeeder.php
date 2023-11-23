@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\FieldOfAction;
+use App\Models\FieldOfActionTranslation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 
@@ -27,10 +28,19 @@ class FieldOfActionSeeder extends Seeder
         $actions = json_decode($json, true);
 
         foreach ($actions as $action) {
-            FieldOfAction::create([
-                "name_bg" => $action['name_bg'],
-                "name_en" => $action['name_en'],
-            ]);
+            $field_of_action = new FieldOfAction();
+            $field_of_action->save();
+
+            foreach (config('available_languages') as $locale) {
+                $translation = new FieldOfActionTranslation();
+
+                $code = $locale['code'] ?? '';
+                $translation->locale = $code;
+                $translation->field_of_action_id = $field_of_action->id;
+                $translation->name = $action['name_' . $code];
+
+                $translation->save();
+            }
 
             $imported++;
         }
