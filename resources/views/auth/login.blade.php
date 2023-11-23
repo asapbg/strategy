@@ -5,7 +5,7 @@
 @section('content')
 <form method="POST" action="{{ route('login') }}">
     @csrf
-    <section>
+    <section class="home-page-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
@@ -23,7 +23,7 @@
                     @enderror
 
                     <div class="login-form p-4">
-                        <h2 class="fs-3 mb-3">Вход в системата</h2>
+                        <h2 class="fs-3 mb-3 text-center">Вход в системата</h2>
                         <div class="input-group">
                             <div class="flex-grow-1 form-floating">
 
@@ -80,14 +80,14 @@
 
                         </div>
                         <div class="row">
-                            <button class="col-md-6 offset-md-12 cstm-btn w-auto btn btn-lg  btn-primary mb-2" type="submit"><span class="btn-label"><i
+                            <button class="col-md-6 offset-md-3 cstm-btn btn btn-lg  btn-primary mb-2" type="submit"><span class="btn-label"><i
                                         class="fa-solid fa-right-to-bracket main-color"
                                         ></i></span>
                                 {{ __('auth.login') }}
                             </div>
                             </button>
                             <div class="row">
-                            <a class="col-md-6 offset-md-12 cstm-btn btn  w-auto btn-primary btn-lg" href="{{ route('eauth.login') }}">
+                            <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
                                 <span class="btn-label"><i
                                         class="fa-solid fa-signature main-color "
                                         ></i></span>
