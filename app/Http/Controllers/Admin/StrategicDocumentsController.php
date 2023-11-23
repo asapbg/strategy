@@ -116,6 +116,7 @@ class StrategicDocumentsController extends AdminController
 
         try {
             DB::beginTransaction();
+
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
                 $validated['strategic_act_link'] = null;
@@ -126,6 +127,9 @@ class StrategicDocumentsController extends AdminController
                 }
                 if ($validated['document_date_expiring']) {
                     $validated['document_date_expiring'] = Carbon::parse($validated['document_date_expiring']);
+                }
+                if ($validated['document_date']) {
+                    $validated['document_date'] = Carbon::parse($validated['document_date']);
                 }
 
             } else {
@@ -420,13 +424,23 @@ class StrategicDocumentsController extends AdminController
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function prisActOptions($id)
     {
         try {
-            $pris = Pris::findOrFail($id);
-            $docDate = $pris->doc_date;
+            $prisOptions = [];
+            $prisActs = Pris::where('legal_act_type_id', $id)->get();
+            foreach ($prisActs as $prisAct) {
+                $prisOptions[] = [
+                    'id' => $prisAct->id,
+                    'text' => $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
+                ];
+            }
 
-            return response()->json(['doc_date' => $docDate]);
+            return response()->json(['prisOptions' => $prisOptions]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
