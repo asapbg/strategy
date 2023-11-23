@@ -430,6 +430,11 @@ class PublicConsultationController extends AdminController
                 }
             }
 
+
+            $kdValues = [];
+            if( $item->kd ) {
+                $kdValues = $item->kd->records->pluck('value', 'dynamic_structures_column_id')->toArray();
+            }
             $kdRowsDB = $item->id && $item->kd ?
                 DynamicStructureColumn::whereIn('id', json_decode($item->kd->active_columns))->orderBy('id')->get()
                 : DynamicStructure::with(['columns', 'columns.translation', 'groups', 'groups.translation'])->where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
@@ -451,7 +456,7 @@ class PublicConsultationController extends AdminController
 
             $path = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
             $fileName = 'kd_'.Carbon::now()->format('Y_m_d_H_i_s').'.pdf';
-            $pdf = PDF::loadView('admin.consultations.public_consultations.pdf_kd', ['kdRows' => $kdRows]);
+            $pdf = PDF::loadView('admin.consultations.public_consultations.pdf_kd', ['kdRows' => $kdRows, 'kdValues' => $kdValues]);
             Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
 
             foreach (config('available_languages') as $lang) {
