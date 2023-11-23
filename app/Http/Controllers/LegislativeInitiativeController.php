@@ -9,7 +9,6 @@ use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
-use App\Models\PolicyArea;
 use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
@@ -41,7 +40,6 @@ class LegislativeInitiativeController extends AdminController
      */
     public function index(Request $request)
     {
-        $politicRanges = PolicyArea::orderBy('id')->get();
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
@@ -49,7 +47,12 @@ class LegislativeInitiativeController extends AdminController
 
         $items = LegislativeInitiative::with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->where('description', 'like', '%' . $keywords . '%')
+                $query->whereHas('operationalProgram', function ($query) use ($keywords) {
+                    $operational_program_ids = OperationalProgramRow::select('operational_program_id')->where('value', 'ilike', "%$keywords%")->pluck('operational_program_id');
+
+                    $query->whereIn('operational_program_id', $operational_program_ids);
+                })
+                    ->orWhere('description', 'like', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
                         $query->where('first_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
@@ -67,7 +70,7 @@ class LegislativeInitiativeController extends AdminController
             ->orderBy('status')
             ->paginate($countResults);
 
-        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions'));
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions'));
     }
 
     /**

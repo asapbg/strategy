@@ -7,6 +7,73 @@
             @include('admin.partial.filter_form')
 
             <div class="card">
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="mb-3 d-flex flex-column w-100">
+                                        <label for="keywords"
+                                               class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
+                                        <input id="keywords" class="form-control" name="keywords" type="text"
+                                               value="{{ request()->get('keywords', '') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="mb-3 d-flex flex-column w-100">
+                                        <label for="institution"
+                                               class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
+                                        <select id="institution" class="institution form-select select2"
+                                                name="institution"
+                                                multiple>
+                                            <option value="" disabled>--</option>
+                                            @foreach($institutions as $institution)
+                                                @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
+                                                <option
+                                                    value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="mb-3 d-flex flex-column w-100">
+                                        <label for="status"
+                                               class="form-label">{{ trans_choice('validation.attributes.status', 1) }}</label>
+                                        <select id="status" class="institution form-select select2" name="status"
+                                                multiple>
+                                            <option value="" disabled>--</option>
+                                            @foreach(\App\Enums\LegislativeInitiativeStatusesEnum::options() as $name => $value)
+                                                @php $selected = request()->get('status', '') == $value ? 'selected' : '' @endphp
+                                                <option
+                                                    value="{{ $value }}" {{ $selected }}>{{ __('custom.legislative_'.strtolower($name)) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-md-3 col-sm-4 mb-2">
+                                <button type="submit" name="search" value="1" class="btn btn-sm btn-success">
+                                    <i class="fa fa-search"></i> {{ __('custom.search') }}
+                                </button>
+
+                                <a href="" class="btn btn-sm btn-default">
+                                    <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="card-body table-responsive">
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
