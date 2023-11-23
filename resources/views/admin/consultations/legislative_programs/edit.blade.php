@@ -231,6 +231,63 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+{{--                                                        <div class="col-12 my-3">--}}
+{{--                                                            <table class="table table-sm sm-text">--}}
+{{--                                                                <thead>--}}
+{{--                                                                <tr>--}}
+{{--                                                                    <th colspan="2">{{ trans_choice('custom.documents', 2) }}</th>--}}
+{{--                                                                    <th>Текущ файл</th>--}}
+{{--                                                                    <th colspan="2"></th>--}}
+{{--                                                                </tr>--}}
+{{--                                                                </thead>--}}
+{{--                                                                <tbody>--}}
+{{--                                                                <tr>--}}
+{{--                                                                    <td>1</td>--}}
+{{--                                                                    <td>Оценка на въздействието</td>--}}
+{{--                                                                    <td>--}}
+{{--                                                                        @if($item->assessment)--}}
+{{--                                                                            <a href="{{ route('admin.download.file', ['file' => $item->assessment]) }}" target="_blank">--}}
+{{--                                                                                <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
+{{--                                                                            </a>--}}
+{{--                                                                        @else--}}
+{{--                                                                            <i class="fas fa-minus text-danger"></i>--}}
+{{--                                                                        @endif--}}
+{{--                                                                    </td>--}}
+{{--                                                                    <td>--}}
+{{--                                                                        <div class="custom-file">--}}
+{{--                                                                            <input type="file" name="assessment" class="custom-file-input @error('assessment'){{ 'is-invalid' }}@enderror">--}}
+{{--                                                                            <label class="custom-file-label" for="assessment" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
+{{--                                                                            @error('assessment')--}}
+{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                                            @enderror--}}
+{{--                                                                        </div>--}}
+{{--                                                                    </td>--}}
+{{--                                                                </tr>--}}
+{{--                                                                <tr>--}}
+{{--                                                                    <td>2</td>--}}
+{{--                                                                    <td>Становище</td>--}}
+{{--                                                                    <td>--}}
+{{--                                                                        @if($item->assessmentOpinion)--}}
+{{--                                                                            <a href="{{ route('admin.download.file', ['file' => $item->assessmentOpinion]) }}" target="_blank">--}}
+{{--                                                                                <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
+{{--                                                                            </a>--}}
+{{--                                                                        @else--}}
+{{--                                                                            <i class="fas fa-minus text-danger"></i>--}}
+{{--                                                                        @endif--}}
+{{--                                                                    </td>--}}
+{{--                                                                    <td>--}}
+{{--                                                                        <div class="custom-file">--}}
+{{--                                                                            <input type="file" name="opinion" class="custom-file-input @error('opinion'){{ 'is-invalid' }}@enderror">--}}
+{{--                                                                            <label class="custom-file-label" for="opinion" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
+{{--                                                                            @error('opinion')--}}
+{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                                            @enderror--}}
+{{--                                                                        </div>--}}
+{{--                                                                    </td>--}}
+{{--                                                                </tr>--}}
+{{--                                                                </tbody>--}}
+{{--                                                            </table>--}}
+{{--                                                        </div>--}}
                                                     </div>
                                                 </div>
                                             @endif

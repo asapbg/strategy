@@ -419,6 +419,7 @@ return [
     'public_consultation.doc_type.8'            => 'Справка за получените предложения/съобщение',
     'public_consultation.doc_type.9'            => 'Коментари (csv)',
     'public_consultation.doc_type.10'            => 'Коментари (pdf)',
+    'public_consultation.doc_type.11'            => 'Консултационен документ',
     //polls
     'questions'                                 => 'Въпрос|Въпроси',
     'once'                                       => 'Еднократна',
@@ -473,7 +474,7 @@ return [
     'form3' => 'Доклад на цялостна предварителна оценка на въздействието',
     'form4' => 'Доклад за последваща оценка на въздействието',
     'report' => 'Отчет|Отчети',
-    'field_of_actions'           => 'Сфера на действие|Сфери на действие',
+    'field_of_actions'           => 'Област на политика|Области на политика',
     'importers'           => 'Вносител|Вносители',
     'timeline.INCLUDE_TO_PROGRAM'           => 'Включване на проекта',
     'timeline.INCLUDE_TO_PROGRAM.description'           => 'Tова събитие описва запис на акт в ЗП или ОП.',

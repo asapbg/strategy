@@ -61,8 +61,8 @@
         </div>
 
         <div class="col-lg-2">
-          <div class="col-md-12 d-flex col-md-12 d-flex justify-content-end">        
-            <a href="#" class="text-decoration-none d-flex align-items-center">          
+          <div class="col-md-12 d-flex col-md-12 d-flex justify-content-end">
+            <a href="#" class="text-decoration-none d-flex align-items-center">
                 <i class="fa fa-regular fa-thumbs-up main-color" style="font-size:34px;"></i>
             </a>
             <a href="#" class="text-decoration-none support-count-li d-flex align-items-center ms-3">
@@ -72,13 +72,13 @@
         </div>
       </div>
 
-    
+
         <div class="row">
             <div class="col-md-8">
                 <a href="#" class="text-decoration-none"><span class="obj-icon-info me-2"><i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>04.07.2023 г.</span>
                 </a>
                 <a href="#" class="text-decoration-none">
-                    <span class="obj-icon-info me-2"><i class="fas fa-sitemap me-1 dark-blue" title="Сфера на действие"></i>Партньорство за открито управление</span>       
+                    <span class="obj-icon-info me-2"><i class="fas fa-sitemap me-1 dark-blue" title="Област на политика"></i>Партньорство за открито управление</span>
                 </a>
             </div>
             <div class="col-md-4 text-end">
@@ -91,9 +91,9 @@
         <div class="row">
             <div class="edit-li">
                 <p class="mb-4">
-                    УВАЖАЕМИ КОЛЕГИ, УВАЖАЕМИ ДАМИ И ГОСПОДА, Предлагам за обсъждане Участието на гражданите в обсъжданията на законопроектите на Народното събрание. Така по този начин може да се гарантира истинско гражданско участие във вземането на реални решения за България. Възможности има нека чуем мнението на някой хора. 
+                    УВАЖАЕМИ КОЛЕГИ, УВАЖАЕМИ ДАМИ И ГОСПОДА, Предлагам за обсъждане Участието на гражданите в обсъжданията на законопроектите на Народното събрание. Така по този начин може да се гарантира истинско гражданско участие във вземането на реални решения за България. Възможности има нека чуем мнението на някой хора.
                 </p>
-                <hr class="custom-hr">            
+                <hr class="custom-hr">
             </div>
         </div>
 
@@ -133,7 +133,7 @@
                         <a href="#" class="me-2 text-decoration-none">3<i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i></a>
                         <a href="#" class="text-decoration-none">1<i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i></a>
                     </div>
-                  
+
                   </div>
                 </div>
                 <div class="obj-comment comment-background p-2 rounded mb-3">

@@ -116,7 +116,7 @@ class AdminController extends Controller
      * @param $docType
      * @return File
      */
-    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '')
+    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '', $locale = 'bg')
     {
         $path = match ($codeObject) {
             File::CODE_OBJ_LEGISLATIVE_PROGRAM,
@@ -134,7 +134,7 @@ class AdminController extends Controller
             'content_type' => $file->getClientMimeType(),
             'path' => 'files'.DIRECTORY_SEPARATOR.$path.$fileNameToStore,
             'sys_user' => auth()->user()->id,
-            'description' => !empty($description) ? $description : null
+            'description_'.$locale => !empty($description) ? $description : null
         ]);
         $file->save();
         return $file;

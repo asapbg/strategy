@@ -62,7 +62,7 @@
                 </a>
                 <a href="#" class="text-decoration-none">
                     <span class="obj-icon-info me-2"><i class="bi bi-chat-dots me-1 dark-blue"
-                            title="Сфера на действие"></i>Правомощия, органи и структура</span>
+                            title="Област на политика"></i>Правомощия, органи и структура</span>
                 </a>
             </div>
             <div class="col-md-4 text-end">
