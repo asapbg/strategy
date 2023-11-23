@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int        $id
+ * @property int        $author_id
+ *
  * @property Collection $votes
  *
  * @method static find(mixed $legislative_initiative_id)

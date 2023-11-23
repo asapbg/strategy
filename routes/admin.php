@@ -4,45 +4,40 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
-use App\Http\Controllers\Admin\ImpactAssessmentController;
-use App\Http\Controllers\Admin\ImpactPageController;
-use App\Http\Controllers\Admin\LegislativeInitiativeController;
+use App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
-//use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\Nomenclature\NewsCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
+use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicController;
+use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
+use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
+use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
+use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
+use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
+use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActController;
+use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
+use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
+use App\Http\Controllers\Admin\NomenclatureController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\PollController;
+use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
-use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
-use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
-use App\Http\Controllers\Admin\NomenclatureController;
-use App\Http\Controllers\Admin\Nomenclature\InstitutionLevelController;
-use App\Http\Controllers\Admin\Nomenclature\ConsultationLevelController;
-use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
-use App\Http\Controllers\Admin\Nomenclature\LegalActTypeController;
-use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
-use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
-use App\Http\Controllers\Admin\Nomenclature\AuthorityAcceptingStrategicController;
-use App\Http\Controllers\Admin\Nomenclature\AuthorityAdvisoryBoardController;
-use App\Http\Controllers\Admin\Nomenclature\AdvisoryActTypeController;
-use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
-use App\Http\Controllers\Admin\Nomenclature\AdvisoryChairmanTypeController;
-use App\Http\Controllers\Admin\Nomenclature\ConsultationTypeController;
-use App\Http\Controllers\Admin\Nomenclature\ConsultationDocumentTypeController;
-use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
-use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
-use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
-use App\Http\Controllers\Admin\PageController;
-use App\Http\Controllers\Admin\PCSubjectController;
-use App\Http\Controllers\Admin\PollController;
-use App\Http\Controllers\Admin\PublicationController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Models\Consultations\OperationalProgram;
 use Illuminate\Support\Facades\Route;
+
+//use App\Http\Controllers\Admin\NewsController;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
@@ -242,17 +237,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     // Legislative Initiatives
-    Route::controller(LegislativeInitiativeController::class)->group(function () {
-        Route::get('/legislative-initiatives',                  'index')->name('legislative_initiatives.index')
-            ->middleware('can:viewAny, App\Models\LegislativeInitiative');
-        Route::get('/legislative-initiatives/view/{item}',     'show')->name('legislative_initiatives.view');
-        Route::post('/legislative-initiatives/{item}/update',   'update')->name('legislative_initiatives.update');
-        Route::delete('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
-        Route::put('/legislative-initiatives/{item}/restore',   'restore')->name('legislative_initiatives.restore');
+    Route::controller(LegislativeInitiativeController::class)->prefix('/legislative-initiatives')->group(function () {
+        Route::get('',                  'index')->name('legislative_initiatives.index');
+        Route::get('/view/{item}',      'show')->name('legislative_initiatives.view')->withTrashed();
+        Route::post('/{item}/update',   'update')->name('legislative_initiatives.update');
+        Route::delete('/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
+        Route::put('/restore',          'restore')->name('legislative_initiatives.restore');
+    });
 
-        Route::bind('item', function ($id) {
-            return \App\Models\LegislativeInitiative::withTrashed()->find($id);
-        });
+    Route::controller(\App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments')->group(function () {
+        Route::post('{comment}/delete', 'destroy')->name('legislative_initiatives.comments.delete');
     });
 
     // Comments
@@ -260,8 +254,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/comment', 'index')->name('consultations.comments.index')
             ->middleware('can:viewAny, App\Models\Comments');
     });
-
-
 
     // Mock controllers
     Route::group([], function () {

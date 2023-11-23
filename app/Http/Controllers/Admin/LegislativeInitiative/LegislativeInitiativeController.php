@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\LegislativeInitiative;
 
-use App\Http\Requests\UpdateLegislativeInitiativeRequest;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\Admin\LegislativeInitiative\AdminIndexLegislativeInitiativeRequest;
+use App\Http\Requests\Admin\LegislativeInitiative\AdminUpdateLegislativeInitiativeRequest;
+use App\Http\Requests\Admin\LegislativeInitiative\AdminViewLegislativeInitiativeRequest;
+use App\Http\Requests\DeleteLegislativeInitiativeRequest;
+use App\Http\Requests\RestoreLegislativeInitiativeRequest;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\PolicyArea;
@@ -26,7 +31,7 @@ class LegislativeInitiativeController extends AdminController
      *
      * @return View
      */
-    public function index(Request $request)
+    public function index(AdminIndexLegislativeInitiativeRequest $request)
     {
         $politicRanges = PolicyArea::orderBy('id')->get();
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
@@ -62,12 +67,12 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * @param Request               $request
-     * @param LegislativeInitiative $item
+     * @param AdminViewLegislativeInitiativeRequest $request
+     * @param LegislativeInitiative                 $item
      *
      * @return View
      */
-    public function show(Request $request, LegislativeInitiative $item): View
+    public function show(AdminViewLegislativeInitiativeRequest $request, LegislativeInitiative $item): View
     {
         $show_deleted_comments = $request->offsetGet('show_deleted_comments');
 
@@ -82,7 +87,7 @@ class LegislativeInitiativeController extends AdminController
         return $this->view('admin.legislative_initiatives.show', compact('item', 'comments'));
     }
 
-    public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function update(AdminUpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         $validated = $request->validated();
 
@@ -101,7 +106,7 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function destroy(LegislativeInitiative $item)
+    public function destroy(DeleteLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         try {
             $item->delete();
@@ -114,16 +119,17 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function restore(LegislativeInitiative $item)
+    public function restore(RestoreLegislativeInitiativeRequest $request)
     {
         try {
+            $item = LegislativeInitiative::withTrashed()->where('id', $request->offsetGet('id'))->first();
             $item->restore();
 
             return redirect(route('admin.legislative_initiatives.index', $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.restored_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
-            return redirect(route('admin.legislative_initiatives.index', $item))->with('danger', __('messages.system_error'));
+            return redirect()->back()->with('danger', __('messages.system_error'));
         }
     }
 }

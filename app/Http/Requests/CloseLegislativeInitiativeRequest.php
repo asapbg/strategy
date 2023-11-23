@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @property LegislativeInitiative $item
  */
-class UpdateLegislativeInitiativeRequest extends FormRequest
+class CloseLegislativeInitiativeRequest extends FormRequest
 {
 
     /**
@@ -19,7 +19,7 @@ class UpdateLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && ($this->item->author_id === auth()->user()->id);
+        return auth()->check() && $this->item && (auth()->user()->id === $this->item->author_id);
     }
 
     /**
@@ -41,9 +41,6 @@ class UpdateLegislativeInitiativeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'operational_program_id' => ['required', 'numeric'],
-            'description' => ['required', 'string'],
-        ];
+        return [];
     }
 }

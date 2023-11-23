@@ -15,6 +15,7 @@
                             <th>{{ trans_choice('custom.regulatory_acts', 1) }}</th>
                             <th>{{ __('validation.attributes.author') }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
+                            <th>{{ __('custom.status') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -26,6 +27,7 @@
                                     <td>{{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->operationalProgram?->value) }}</td>
                                     <td>{{ $item->user->fullName() }}</td>
                                     <td>{{ $item->created_at }}</td>
+                                    <td>{{ __('custom.legislative_' . strtolower($item->getStatus($item->status)->name)) }}</td>
                                     <td class="text-center">
                                         @can('view', $item)
                                             <a href="{{ route('admin.legislative_initiatives.view', [$item]) }}"
@@ -56,7 +58,7 @@
                                                    class="btn btn-sm btn-success js-toggle-restore-resource-modal"
                                                    data-target="#modal-restore-resource"
                                                    data-resource-id="{{ $item->id }}"
-                                                   data-resource-restore-url="{{ route('admin.legislative_initiatives.restore', $item->id) }}"
+                                                   data-resource-restore-url="{{ route('admin.legislative_initiatives.restore', $item) }}"
                                                    data-toggle="tooltip"
                                                    title="{{__('custom.restore')}}">
                                                     <i class="fa fa-plus"></i>

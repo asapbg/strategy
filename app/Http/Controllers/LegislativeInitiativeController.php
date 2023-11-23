@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\CloseLegislativeInitiativeRequest;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
+use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\PolicyArea;
@@ -45,7 +47,7 @@ class LegislativeInitiativeController extends AdminController
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
 
-        $items = LegislativeInitiative::withTrashed()->with(['comments'])
+        $items = LegislativeInitiative::with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->where('description', 'like', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
@@ -123,7 +125,7 @@ class LegislativeInitiativeController extends AdminController
         return view(self::SHOW_VIEW, compact('item'));
     }
 
-    public function update(StoreLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         $validated = $request->validated();
 
@@ -143,7 +145,7 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function destroy(LegislativeInitiative $item)
+    public function destroy(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         try {
             $item->setStatus(LegislativeInitiativeStatusesEnum::STATUS_CLOSED);
@@ -151,19 +153,6 @@ class LegislativeInitiativeController extends AdminController
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
-        } catch (\Exception $e) {
-            Log::error($e);
-            return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
-        }
-    }
-
-    public function restore(LegislativeInitiative $item)
-    {
-        try {
-            $item->restore();
-
-            return redirect(route(self::LIST_ROUTE, $item))
-                ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.restored_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
