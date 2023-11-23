@@ -138,26 +138,34 @@
             </div>
 
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
-                <div class="col-md-3">
-                    <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.keyword', 1) }}
-                    </p>
-                </div>
-                <div class="col-md-3 cursor-pointer ">
-                    <p class="mb-0">
-                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.policy_area', 1) }}
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>{{ trans_choice('custom.institutions', 1) }}
-                    </p>
+                <div class="col-md-4">
+                    @php
+                        $text_white = request()->get('order_by', '') === 'keywords' ? 'text-white' : '';
+                    @endphp
+                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'keywords'])) }}"
+                       class="mb-0 text-decoration-none text-dark">
+                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ trans_choice('custom.keyword', 1) }}
+                    </a>
                 </div>
 
-                <div class="col-md-3">
-                    <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>{{ __('validation.attributes.date') }}
-                    </p>
+                <div class="col-md-4 cursor-pointer ">
+                    @php
+                        $text_white = request()->get('order_by', '') === 'institutions' ? 'text-white' : '';
+                    @endphp
+                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'institutions'])) }}"
+                       class="mb-0 text-decoration-none text-dark">
+                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ trans_choice('custom.institutions', 1) }}
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    @php
+                        $text_white = request()->get('order_by', '') === 'date' ? 'text-white' : '';
+                    @endphp
+                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'date'])) }}"
+                       class="mb-0 text-decoration-none text-dark">
+                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ __('validation.attributes.date') }}
+                    </a>
                 </div>
             </div>
 
