@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('strategic_document', function (Blueprint $table) {
-            $table->date('document_date_accepted')->nullable();
+            $table->timestamp('document_date_expiring')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('strategic_documents', function (Blueprint $table) {
-            $table->dropColumn('document_date_accepted');
+        Schema::table('strategic_document', function (Blueprint $table) {
+            $table->dropColumn('document_date_expiring');
         });
     }
 };
