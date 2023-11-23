@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\LegislativeInitiative;
 
-use App\Models\LegislativeInitiative;
-use HttpResponseException;
+use App\Models\LegislativeInitiativeComment;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
- * @property LegislativeInitiative $item
+ * @property LegislativeInitiativeComment $comment
  */
-class UpdateLegislativeInitiativeRequest extends FormRequest
+class AdminDeleteLegislativeInitiativeCommentRequest extends FormRequest
 {
 
     /**
@@ -19,7 +19,7 @@ class UpdateLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && ($this->item->author_id === auth()->user()->id);
+        return auth()->check() && auth()->user()->can('delete', $this->comment);
     }
 
     /**
@@ -41,9 +41,6 @@ class UpdateLegislativeInitiativeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'operational_program_id' => ['required', 'numeric'],
-            'description' => ['required', 'string'],
-        ];
+        return [];
     }
 }

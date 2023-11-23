@@ -15,26 +15,6 @@ class LegislativeInitiativeCommentController extends Controller
 {
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param StoreLegislativeInitiativeCommentRequest $request
@@ -61,48 +41,12 @@ class LegislativeInitiativeCommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\LegislativeInitiativeComment $legislativeInitiativeComment
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\LegislativeInitiativeComment $legislativeInitiativeComment
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \App\Http\Requests\UpdateLegislativeInitiativeCommentRequest $request
-     * @param \App\Models\LegislativeInitiativeComment                     $legislativeInitiativeComment
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateLegislativeInitiativeCommentRequest $request, LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param DeleteLegislativeInitiativeCommentRequest $request
+     * @param LegislativeInitiativeComment              $comment
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy(DeleteLegislativeInitiativeCommentRequest $request, LegislativeInitiativeComment $comment)
     {

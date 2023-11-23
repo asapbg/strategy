@@ -135,7 +135,7 @@
                                                             @if(!$comment->deleted_at)
                                                                 <form class="d-none"
                                                                       method="POST"
-                                                                      action="{{ route('legislative_initiatives.comments.delete', $comment) }}"
+                                                                      action="{{ route('admin.legislative_initiatives.comments.delete', $comment) }}"
                                                                       name="DELETE_COMMENT_{{ $comment->id }}"
                                                                 >
                                                                     @csrf

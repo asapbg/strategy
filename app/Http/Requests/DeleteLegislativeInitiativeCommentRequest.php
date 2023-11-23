@@ -6,6 +6,9 @@ use App\Models\LegislativeInitiativeComment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
+/**
+ * @property LegislativeInitiativeComment $comment
+ */
 class DeleteLegislativeInitiativeCommentRequest extends FormRequest
 {
 
@@ -16,9 +19,7 @@ class DeleteLegislativeInitiativeCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $comment = LegislativeInitiativeComment::find($this->route('comment')->id);
-
-        return $comment && $this->user()->id === $comment->user_id;
+        return $this->comment && $this->user()->id === $this->comment->user_id;
     }
 
     /**
