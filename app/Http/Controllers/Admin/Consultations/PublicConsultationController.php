@@ -32,10 +32,12 @@ use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
 use App\Models\Timeline;
 use App\Services\FileOcr;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use phpDocumentor\Reflection\DocBlock\Tags\Reference\Url;
@@ -426,6 +428,60 @@ class PublicConsultationController extends AdminController
                         }
                     }
                 }
+            }
+
+
+            $kdValues = [];
+            if( $item->kd ) {
+                $kdValues = $item->kd->records->pluck('value', 'dynamic_structures_column_id')->toArray();
+            }
+            $kdRowsDB = $item->id && $item->kd ?
+                DynamicStructureColumn::whereIn('id', json_decode($item->kd->active_columns))->orderBy('id')->get()
+                : DynamicStructure::with(['columns', 'columns.translation', 'groups', 'groups.translation'])->where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->columns;
+            $dsGroups = DynamicStructure::where('type', '=', DynamicStructureTypesEnum::CONSULT_DOCUMENTS->value)->where('active', '=', 1)->first()->groups;
+
+            $kdRows = [];
+            foreach ($dsGroups as $kdGroup) {
+                foreach ($kdRowsDB as $row) {
+                    if( $row->dynamic_structure_groups_id && $row->dynamic_structure_groups_id == $kdGroup->id ) {
+                        $kdRows[] = $row;
+                    }
+                }
+            }
+            foreach ($kdRowsDB as $row) {
+                if( !$row->dynamic_structure_groups_id ) {
+                    $kdRows[] = $row;
+                }
+            }
+
+            $path = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
+            $fileName = 'kd_'.Carbon::now()->format('Y_m_d_H_i_s').'.pdf';
+            $pdf = PDF::loadView('admin.consultations.public_consultations.pdf_kd', ['kdRows' => $kdRows, 'kdValues' => $kdValues]);
+            Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
+
+            foreach (config('available_languages') as $lang) {
+                $version = File::where('locale', '=', $lang['code'])
+                    ->where('id_object', '=', $item->id)
+                    ->where('doc_type', '=', DocTypesEnum::PC_KD_PDF->value)
+                    ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->count();
+
+                $file = new File([
+                    'id_object' => $item->id,
+                    'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    'doc_type' => DocTypesEnum::PC_KD_PDF->value,
+                    'filename' => $fileName,
+                    'content_type' => 'application/pdf',
+                    'path' => $path . $fileName,
+                    'description_' . $lang['code'] => trans('custom.public_consultation.doc_type.' . DocTypesEnum::PC_KD_PDF->value, [], $lang['code']),
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'locale' => $lang['code'],
+                    'version' => ($version + 1).'.0'
+                ]);
+                $file->save();
+                $ocr = new FileOcr($file->refresh());
+                $ocr->extractText();
             }
 
             DB::commit();

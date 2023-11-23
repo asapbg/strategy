@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->foreign('legislative_initiative_id')->references('id')->on('legislative_initiative')->onDelete('cascade');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->boolean('is_like');
             $table->timestamps();
         });
     }

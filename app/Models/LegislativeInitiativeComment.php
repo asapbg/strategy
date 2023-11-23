@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int        $id
+ * @property int        $user_id
+ *
  * @property Collection $stats
  *
  * @method static findOrFail(\Illuminate\Routing\Route|object|string|null $route)

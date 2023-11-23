@@ -6,7 +6,7 @@
 <div class="container" id="register">
     <div class="row justify-content-center">
         <div class="col-md-6 register-form p-4">
-            <h2 class="fs-3 mb-3">Регистрация в системата</h2>
+            <h2 class="fs-3 mb-3 text-center">Регистрация в системата</h2>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="row mb-3">
@@ -134,10 +134,8 @@
                     </a>
                 </div>
 
-                <div class="row mb-0">
-                    <div class="col-md-12">
-                        <button class="cstm-btn  btn btn-primary btn-lg " type="submit"><i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('custom.register') }}</button>
-                    </div>
+                <div class="row mb-0 ">
+                        <button class="col-md-6 offset-md-3 cstm-btn btn btn-lg  btn-primary mb-2" type="submit"><i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('custom.register') }}</button>                
                 </div>
             </form>
         </div>

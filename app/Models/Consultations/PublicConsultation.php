@@ -87,6 +87,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $query->where('active', 1);
     }
 
+    public function scopeEnded($query){
+        $query->where('open_to', '<', Carbon::now()->format('Y-m-d'));
+    }
+
     protected function openFrom(): Attribute
     {
         return Attribute::make(
@@ -230,6 +234,15 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('locale');
     }
 
+    public function commentsDocuments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereIn('doc_type', [DocTypesEnum::PC_COMMENTS_CSV->value, DocTypesEnum::PC_COMMENTS_CSV->value])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
     public function consultations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(PublicConsultation::class, 'public_consultation_connection', 'public_consultation_id', 'pc_id');
@@ -250,10 +263,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->first();
     }
 
-    public function lastDocumentsByLocaleAndSection()
+    public function lastDocumentsByLocaleAndSection($forPublic = false)
     {
         $documents = [];
-        foreach (DocTypesEnum::docsByActType($this->act_type_id) as $docType) {
+        $documentTypes = $forPublic ? DocTypesEnum::docsByActTypePublic($this->act_type_id) : DocTypesEnum::docsByActType($this->act_type_id);
+        foreach ($documentTypes as $docType) {
             $doc = DB::table('public_consultation')
                 ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version'])
                 ->join('files', function ($j) use ($docType){
@@ -347,7 +361,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         //Приемане на акта от Министерския съвет
         $pris = $this->pris;
         if( $pris ) {
-            $actDate = Carbon::parse($pris->doc_date)->format('Y-m-d 23:59:59');
+//            $actDate = Carbon::parse($pris->doc_date)->format('Y-m-d 23:59:59');
+            //Always last
+            $actDate = '2222-00-00 00:00:00';
             $timeline[$actDate.'_'.PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value] = [
                 'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value)),
                 'date' => $pris ? displayDate($pris->doc_date) : null,
@@ -362,7 +378,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             foreach ($events as $event) {
                 switch ($event->event_id) {
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
-                        $timeline[$event->updated_at.'_'.PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value] = [
+                        //always first
+                        $timeline['0000-00-00 00:00:00_'.PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value] = [
                             'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)),
                             'date' => displayDate($event->updated_at),
                             'isActive' => true,

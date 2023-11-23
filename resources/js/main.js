@@ -549,7 +549,8 @@ $(document).ready(function (e) {
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol']],
-                ['view', ['fullscreen']]
+                ['view', ['fullscreen']],
+                ['insert', ['link']]
             ]
         });
     }

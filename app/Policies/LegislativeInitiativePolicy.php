@@ -103,12 +103,11 @@ class LegislativeInitiativePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param User                  $user
-     * @param LegislativeInitiative $legislative_initiative
+     * @param User $user
      *
      * @return bool
      */
-    public function restore(User $user, LegislativeInitiative $legislative_initiative): bool
+    public function restore(User $user): bool
     {
         return $user->canAny(['manage.*', 'manage.legislative_initiatives']);
     }

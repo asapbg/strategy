@@ -63,10 +63,10 @@
                             </a>
                         </div>
                         <div class="col-md-4 ">
-                            <h3 class="mb-2 fs-18">Сфера на действие</h3>
+                            <h3 class="mb-2 fs-18">Област на политика</h3>
                             <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info me-2">
-                    <i class="fas fa-car me-2 main-color" title="Сфера на действие"></i>Бизнес среда</span>
+                    <i class="fas fa-car me-2 main-color" title="Област на политика"></i>Бизнес среда</span>
                             </a>
                         </div>
                     </div>
