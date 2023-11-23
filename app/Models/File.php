@@ -26,6 +26,7 @@ class File extends Model
     const PAGE_UPLOAD_DIR = 'pages'.DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_PRIS = 'pris'.DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR;
+    const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR.'comments'.DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['docx'];

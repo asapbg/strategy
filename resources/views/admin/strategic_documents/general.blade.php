@@ -269,7 +269,7 @@
     </div>
 
     <!-- Files -->
-    <h3>Оновен файл</h3>
+    <h3>Основен файл</h3>
     <div class="row">
         @include('admin.partial.edit_field_translate', [
             'item' => null,

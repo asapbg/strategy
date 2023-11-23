@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\CloseLegislativeInitiativeRequest;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
+use App\Http\Requests\UpdateLegislativeInitiativeRequest;
+use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
-use App\Models\PolicyArea;
 use App\Models\RegulatoryAct;
-use App\Models\RegulatoryActType;
 use App\Models\StrategicDocuments\Institution;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,29 +40,38 @@ class LegislativeInitiativeController extends AdminController
      */
     public function index(Request $request)
     {
-        $politicRanges = PolicyArea::orderBy('id')->get();
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
-        $politicRange = $request->offsetGet('politic-range');
+        $institution = $request->offsetGet('institution');
 
-        $items = LegislativeInitiative::withTrashed()->with(['comments'])
+        $items = LegislativeInitiative::with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->where('description', 'like', '%' . $keywords . '%')
+                $query->whereHas('operationalProgram', function ($query) use ($keywords) {
+                    $operational_program_ids = OperationalProgramRow::select('operational_program_id')->where('value', 'ilike', "%$keywords%")->pluck('operational_program_id');
+
+                    $query->whereIn('operational_program_id', $operational_program_ids);
+                })
+                    ->orWhere('description', 'like', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
                         $query->where('first_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('last_name', 'like', '%' . $keywords . '%');
                     });
             })
-            ->when(!empty($politicRange), function ($query) use ($politicRange) {
-                $query->whereHas('regulatoryAct', function ($query) use ($politicRange) {
-//                    $query->where('institution', )
+            ->when(!empty($institution), function ($query) use ($institution) {
+                $query->whereHas('operationalProgram', function ($query) use ($institution) {
+                    $query->where([
+                        'value' => $institution,
+                        'dynamic_structures_column_id' => \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID
+                    ]);
                 });
             })
+            ->orderBy('status')
             ->paginate($countResults);
 
-        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions'));
+        $pageTitle = "Закондателни инициативи";
+        return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions','pageTitle'));
     }
 
     /**
@@ -122,14 +132,13 @@ class LegislativeInitiativeController extends AdminController
         return view(self::SHOW_VIEW, compact('item'));
     }
 
-    public function update(StoreLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         $validated = $request->validated();
 
         DB::beginTransaction();
         try {
-            $fillable = $this->getFillableValidated($validated, $item);
-            $item->fill($fillable);
+            $item->fill($validated);
             $item->save();
 
             DB::commit();
@@ -143,26 +152,14 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function destroy(LegislativeInitiative $item)
+    public function destroy(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         try {
-            $item->delete();
+            $item->setStatus(LegislativeInitiativeStatusesEnum::STATUS_CLOSED);
+            $item->save();
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
-        } catch (\Exception $e) {
-            Log::error($e);
-            return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
-        }
-    }
-
-    public function restore(LegislativeInitiative $item)
-    {
-        try {
-            $item->restore();
-
-            return redirect(route(self::LIST_ROUTE, $item))
-                ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.restored_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));

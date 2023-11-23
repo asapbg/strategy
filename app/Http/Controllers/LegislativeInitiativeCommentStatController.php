@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 
 use App\Models\LegislativeInitiativeComment;
 use App\Models\LegislativeInitiativeCommentStat;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class LegislativeInitiativeCommentStatController extends Controller
 {
 
+    /**
+     * Store comment's vote, like or dislike.
+     *
+     * @param LegislativeInitiativeComment $comment
+     * @param string                       $stat
+     *
+     * @return RedirectResponse
+     */
     public function store(LegislativeInitiativeComment $comment, string $stat)
     {
         $is_like = $stat == 'like';
@@ -32,6 +41,13 @@ class LegislativeInitiativeCommentStatController extends Controller
         }
     }
 
+    /**
+     * Revert the first vote found for comment.
+     *
+     * @param LegislativeInitiativeComment $comment
+     *
+     * @return RedirectResponse
+     */
     public function revert(LegislativeInitiativeComment $comment)
     {
         try {

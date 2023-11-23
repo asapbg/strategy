@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Nomenclature;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreFieldOfActionRequest;
 use App\Http\Requests\UpdateFieldOfActionRequest;
 use App\Models\FieldOfAction;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class FieldOfActionController extends Controller
+class FieldOfActionController extends AdminController
 {
 
     /**
@@ -46,15 +47,18 @@ class FieldOfActionController extends Controller
     {
         $validated = $request->validated();
 
+        DB::beginTransaction();
         try {
-            $action = FieldOfAction::create([
-                'name_bg' => $validated['name_bg'],
-                'name_en' => $validated['name_en']
-            ]);
+            $field_of_action = new FieldOfAction();
+            $field_of_action->save();
 
-            return redirect(route('admin.nomenclature.field_of_actions.index', $action))
+            $this->storeTranslateOrNew(FieldOfAction::TRANSLATABLE_FIELDS, $field_of_action, $validated);
+
+            DB::commit();
+            return redirect(route('admin.nomenclature.field_of_actions.index'))
                 ->with('success', trans_choice('validation.attributes.field_of_action', 1) . " " . __('messages.created_successfully_f'));
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
@@ -67,9 +71,11 @@ class FieldOfActionController extends Controller
      *
      * @return View
      */
-    public function edit(FieldOfAction $action): View
+    public function edit(FieldOfAction $item): View
     {
-        return $this->view('admin.nomenclatures.field_of_actions.edit', compact('action'));
+        $translatableFields = FieldOfAction::translationFieldsProperties();
+
+        return $this->view('admin.nomenclatures.field_of_actions.edit', compact('item', 'translatableFields'));
     }
 
     /**
@@ -85,8 +91,7 @@ class FieldOfActionController extends Controller
         $validated = $request->validated();
 
         try {
-            $action->fill($validated);
-            $action->save();
+            $this->storeTranslateOrNew(FieldOfAction::TRANSLATABLE_FIELDS, $action, $validated);
 
             return redirect(route('admin.nomenclature.field_of_actions.edit', $action))
                 ->with('success', trans_choice('validation.attributes.field_of_action', 1) . " " . __('messages.updated_successfully_f'));
@@ -103,7 +108,7 @@ class FieldOfActionController extends Controller
      */
     public function destroy(FieldOfAction $action)
     {
-        if(request()->user()->cant('delete', $action)) {
+        if (request()->user()->cant('delete', $action)) {
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.unauthorized'));
         }
 

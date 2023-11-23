@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                             <a href="#" title="Оценка на въздействието" class="text-decoration-none mb-3">
-                                <i class="fas fa-sitemap me-1" title="Сфера на действие"></i>
+                                <i class="fas fa-sitemap me-1" title="Област на политика"></i>
                                 Оценка на въздействието
                             </a>
                             <div class="anotation text-secondary mb-2 mt-2">
@@ -207,7 +207,7 @@
                                 </div>
                             </div>
                             <a href="#" class="text-decoration-none" title=" Стратегическо планиране"> <i
-                                    class="fas fa-sitemap me-1" title="Сфера на действие"></i>
+                                    class="fas fa-sitemap me-1" title="Област на политика"></i>
                                 Стратегическо планиране
                             </a>
                             <div class="anotation text-secondary mb-2 mt-2">
@@ -259,7 +259,7 @@
 
 
                             <a href="#" class="text-decoration-none"><i class="fas fa-sitemap me-1"
-                                    title="Сфера на действие"></i>
+                                    title="Област на политика"></i>
                                 Оценка на въздействието
                             </a>
                             <div class="anotation text-secondary mb-2 mt-2">

@@ -8,9 +8,13 @@ use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
- * @property int $id
+ * @property int        $id
+ * @property int        $author_id
+ *
+ * @property Collection $votes
  *
  * @method static find(mixed $legislative_initiative_id)
  */
@@ -29,7 +33,7 @@ class LegislativeInitiative extends ModelActivityExtend
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['regulatory_act_id', 'author_id', 'description'];
+    protected $fillable = ['operational_program_id', 'author_id', 'description'];
 
     /**
      * Get the model name
@@ -49,9 +53,9 @@ class LegislativeInitiative extends ModelActivityExtend
         );
     }
 
-    public function regulatoryAct()
+    public function operationalProgram()
     {
-        return $this->belongsTo(OperationalProgramRow::class, 'regulatory_act_id', 'id');
+        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id');
     }
 
     public function votes(): HasMany
@@ -66,7 +70,7 @@ class LegislativeInitiative extends ModelActivityExtend
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class,'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     public function getStatus(int $value): LegislativeInitiativeStatusesEnum
@@ -77,5 +81,43 @@ class LegislativeInitiative extends ModelActivityExtend
     public function setStatus(LegislativeInitiativeStatusesEnum $value): void
     {
         $this->attributes['status'] = $value->value;
+    }
+
+    public function userHasLike(): bool
+    {
+        if (auth()->user()) {
+            return $this->likes()->where('user_id', auth()->user()->id)->exists();
+        }
+
+        return false;
+    }
+
+    public function userHasDislike(): bool
+    {
+        if (auth()->user()) {
+            return $this->dislikes()->where('user_id', auth()->user()->id)->exists();
+        }
+
+        return false;
+    }
+
+    public function likes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LegislativeInitiativeVote::class)->where('is_like', true);
+    }
+
+    public function dislikes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LegislativeInitiativeVote::class)->where('is_like', false);
+    }
+
+    public function countLikes(): int
+    {
+        return $this->likes()->count();
+    }
+
+    public function countDislikes(): int
+    {
+        return $this->dislikes()->count();
     }
 }

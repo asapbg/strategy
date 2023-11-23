@@ -2,9 +2,10 @@
 
 
 <style>
-.public-page {
-    padding: 0px 0px !important;
-}
+    .public-page {
+        padding: 0px 0px !important;
+    }
+
 </style>
 @section('pageTitle', 'Стратегически документи - вътрешна страница')
 
@@ -14,10 +15,10 @@
     <div class="col-md-12">
         <ul class=" tab nav nav-tabs mb-3" id="myTab">
             <li class="nav-item pb-0">
-                <a href="#table-view" class="nav-link tablinks active" data-bs-toggle="tab">Табличен изглед</a>
+                <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">Табличен изглед</a>
             </li>
             <li class="nav-item pb-0">
-                <a href="#tree-view" class="nav-link tablinks" data-bs-toggle="tab">Дървовиден изглед</a>
+                <a href="#tree-view" class="nav-link tablinks" data-toggle="tab">Дървовиден изглед</a>
             </li>
 
         </ul>
@@ -494,7 +495,8 @@
                     <div class="col-md-12">
                         <div class="input-group ">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="exampleFormControlInput1" class="form-label">Категории спрямо цикъла си на живот</label>
+                                <label for="exampleFormControlInput1" class="form-label">Категории спрямо цикъла си на
+                                    живот</label>
                                 <select class="form-select select2" multiple aria-label="Default select example">
                                     <option value="1">Действащи</option> <!-- default -->
                                     <option value="1">Изтекли</option>
@@ -596,7 +598,7 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-end my-3">
+                <div class="row justify-content-end mt-3">
                     <div class="col-md-4">
 
                     </div>
@@ -619,15 +621,18 @@
                         <li class="parent_li">
                             <span>
                                 <span class="glyphicon"></span>
-                                <a href="#" class="main-color fs-18 fw-600" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">
+                                <a href="#" class="main-color fs-18 fw-600" data-toggle="collapse"
+                                    href="#multiCollapseExample1" role="button" aria-expanded="true"
+                                    aria-controls="multiCollapseExample1">
                                     <i class="bi bi-pin-map-fill me-1 main-color" title="Национални"></i>
                                     Национални
                                 </a>
-                            </span>                         
+                            </span>
                             <ul>
                                 <li class="active-node parent_li">
                                     <span>
-                                        <a href="#" class="main-color fs-18" data-bs-toggle="collapse" data-bs-target="#center-level">
+                                        <a href="#" class="main-color fs-18" data-toggle="collapse"
+                                            data-target="#center-level">
                                             <i class="fa-solid fa-arrow-right-to-bracket me-1 main-color"
                                                 title="Национални"></i>
                                             Централно ниво
@@ -651,7 +656,27 @@
                                             </span>
                                         </li>
                                     </ul>
+                                </li>
 
+                                <li class="active-node parent_li">
+                                    <span><!-- Това е стр документ без родителска категория                                    
+                                        Във всяка от така дефинираните единици стратегиите са йерархични, 
+                                        като всички без родител са първо ниво, всички със родител са под родителя си с collapse/expand
+                                    -->
+                                        <a href="#" class="dark-text">
+                                            Национални програми за развитие на образованието за 2023 г.    
+                                        </a>
+                                    </span>
+                                </li>
+                                <li class="active-node parent_li">
+                                    <span><!-- Това е стр документ без родителска категория                                    
+                                        Във всяка от така дефинираните единици стратегиите са йерархични, 
+                                        като всички без родител са първо ниво, всички със родител са под родителя си с collapse/expand
+                                    -->
+                                        <a href="#" class="dark-text">    
+                                            Национален план за противодействие на тероризма
+                                        </a>
+                                    </span>
                                 </li>
                             </ul>
                         </li>
@@ -659,19 +684,22 @@
                         <li class="parent_li">
                             <span>
                                 <span class="glyphicon"></span>
-                                <a href="#" class="main-color fs-18 fw-600" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">
+                                <a href="#" class="main-color fs-18 fw-600" data-toggle="collapse"
+                                    href="#multiCollapseExample1" role="button" aria-expanded="true"
+                                    aria-controls="multiCollapseExample1">
                                     <i class="bi bi-pin-map-fill me-1 main-color" title="Национални"></i>
                                     Регионални
                                 </a>
-                            </span>                         
+                            </span>
                             <ul>
                                 <li class="active-node parent_li">
                                     <span>
-                                        <a href="#" class="main-color fs-18" data-bs-toggle="collapse" data-bs-target="#district-level">
+                                        <a href="#" class="main-color fs-18" data-toggle="collapse"
+                                            data-target="#district-level">
                                             <i class="fa-solid fa-arrow-right-to-bracket me-1 main-color"
                                                 title="Национални"></i>
                                             Областно ниво
-                                        </a>                              
+                                        </a>
                                     </span>
                                     <ul class="collapse show" id="district-level">
                                         <li class=" wait active-node" data-href="#">
@@ -685,25 +713,28 @@
                                         <li class=" wait active-node" data-href="#">
                                             <span>
                                                 <a href="#">
-                                                    Областна стратегия за развитие на Област Бургас за периода 2014 -2020 г.
+                                                    Областна стратегия за развитие на Област Бургас за периода 2014
+                                                    -2020 г.
                                                 </a>
                                             </span>
                                         </li>
-                                    </ul>                      
+                                    </ul>
                                 </li>
                                 <li class="active-node parent_li">
                                     <span>
-                                        <a href="#" class="main-color fs-18" data-bs-toggle="collapse" data-bs-target="#regional-level">
+                                        <a href="#" class="main-color fs-18" data-toggle="collapse"
+                                            data-target="#regional-level">
                                             <i class="fa-solid fa-arrow-right-to-bracket me-1 main-color"
                                                 title="Национални"></i>
                                             Регионално ниво
-                                        </a>                              
+                                        </a>
                                     </span>
                                     <ul class="collapse show" id="regional-level">
                                         <li class=" wait active-node" data-href="#">
                                             <span>
                                                 <a href="#">
-                                                    План за интегрирано развитие на община Първомай за периода 2021 – 2027 г.
+                                                    План за интегрирано развитие на община Първомай за периода 2021 –
+                                                    2027 г.
                                                 </a>
                                             </span>
                                         </li>
@@ -716,7 +747,7 @@
                                             </span>
                                         </li>
                                     </ul>
-                              
+
                                 </li>
                             </ul>
                         </li>

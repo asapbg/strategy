@@ -6,7 +6,7 @@
 
 </style>
 
-@section('pageTitle', 'Законодателна инициатива')
+@section('pageTitle', trans_choice('custom.legislative_initiatives', 1))
 
 @section('content')
     <div class="row">
@@ -64,7 +64,7 @@
         <div class="col-lg-10 py-5">
             <div class="row">
                 <div class="col-lg-10">
-                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->regulatoryAct?->value }}</h2>
+                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ mb_strtolower($item->operationalProgram?->value) }}</h2>
                 </div>
 
                 <div class="col-lg-2">
@@ -73,7 +73,7 @@
                             <i class="fa fa-regular fa-thumbs-up main-color" style="font-size:34px;"></i>
                         </a>
                         <a href="#" class="text-decoration-none support-count-li d-flex align-items-center ms-3">
-                            {{ $item->votes }}
+                            {{ $item->countLikes() }}
                         </a>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                                                 @csrf
                                             </form>
 
-                                            <a href="#" class="open-delete_modal">
+                                            <a href="#" class="open-delete-modal">
                                                 <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
                                                    role="button" title="{{ __('custom.delete') }}"></i>
                                             </a>
@@ -188,48 +188,36 @@
                             @endforeach
                         @endif
 
-                        <div class="col-md-12 mt-4">
-                            <div>
-                                <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
-                                    @csrf
+                        @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                            <div class="col-md-12 mt-4">
+                                <div>
+                                    <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                        @csrf
 
-                                    <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
+                                        <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
 
-                                    <div class="form-group">
+                                        <div class="form-group">
                                         <textarea name="description" class="form-control mb-3 rounded"
                                                   id="description" rows="2"
                                                   placeholder="{{ __('custom.enter_comment') }}"></textarea>
-                                    </div>
+                                        </div>
 
-                                    <button type="submit"
-                                            class="btn btn-primary">{{ __('custom.add_comment') }}</button>
-                                </form>
+                                        <button type="submit"
+                                                class="btn btn-primary">{{ __('custom.add_comment') }}</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    @push('scripts')
-        <script type="text/javascript">
-            $(document).ready(function () {
-                let cancelBtnTxt = '{{ __('custom.cancel') }}';
-                let continueTxt = '{{ __('custom.continue') }}';
-                let titleTxt = '{{ __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1) }}';
-                let fileChangeWarningTxt = '{{ __('custom.legislative_comment_delete_warning') }}';
-                $('.open-delete_modal').on('click', function () {
-                    const form = $(this).parent().find('form').attr('name');
-
-                    new MyModal({
-                        title: titleTxt,
-                        footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + continueTxt + '</button>' +
-                            '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
-                        body: '<div class="alert alert-danger">' + fileChangeWarningTxt + '</div>',
-                    });
-                });
-            });
-        </script>
-    @endpush
+    @include('components.delete-modal', [
+        'cancel_btn_text'           => __('custom.cancel'),
+        'continue_btn_text'         => __('custom.continue'),
+        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1),
+        'file_change_warning_txt'   => __('custom.legislative_comment_delete_warning'),
+    ])
 @endsection

@@ -30,6 +30,8 @@
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Разработване на нов план за действие</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">OGP FORUM</a>
+                                </li>   
+                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
                                 </li>                           
                             </ul>
                         </div>

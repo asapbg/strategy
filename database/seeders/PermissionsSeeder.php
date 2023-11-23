@@ -48,6 +48,9 @@ class PermissionsSeeder extends Seeder
         ];
         foreach ($moderators as $section) {
             $role = Role::whereName('moderator-' . $section)->first();
+            if( $section == 'legal' ) {
+                $section = 'pris';
+            }
             $role->givePermissionTo('manage.' . $section);
         }
     }

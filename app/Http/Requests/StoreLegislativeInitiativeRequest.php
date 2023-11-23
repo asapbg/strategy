@@ -19,14 +19,7 @@ class StoreLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if (
-            auth()->user()->cannot('update', $this->item) &&
-            auth()->user()->cannot('create', LegislativeInitiative::class)
-        ) {
-            return false;
-        }
-
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -49,7 +42,7 @@ class StoreLegislativeInitiativeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'regulatory_act_id' => ['required', 'numeric'],
+            'operational_program_id' => ['required', 'numeric'],
             'description' => ['required', 'string'],
         ];
     }
