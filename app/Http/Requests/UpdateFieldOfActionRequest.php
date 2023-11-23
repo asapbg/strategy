@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\FieldOfAction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateFieldOfActionRequest extends FormRequest
@@ -24,9 +25,14 @@ class UpdateFieldOfActionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name_bg' => 'required|string',
-            'name_en' => 'required|string',
-        ];
+        $rules = [];
+
+        foreach (config('available_languages') as $lang) {
+            foreach (FieldOfAction::translationFieldsProperties() as $field => $properties) {
+                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+            }
+        }
+
+        return $rules;
     }
 }
