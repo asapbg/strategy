@@ -36,7 +36,7 @@
                                 <li class="mb-2 active-item-left p-1"><a href="#"
                                         class="link-dark text-decoration-none">OGP FORUM</a>
                                 </li>
-                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
+                                                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
                                 </li>   
                             </ul>
                         </div>
