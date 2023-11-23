@@ -65,7 +65,7 @@
     </div>
     <div class="col-md-3 ">
         <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Сфера на действие
+            <i class="fa-solid fa-sort me-2"></i>Област на политика
         </p>
     </div>
     <div class="col-md-2">

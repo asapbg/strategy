@@ -46,7 +46,7 @@
                     <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}" class="main-color text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="fa-solid fa-arrow-right-to-bracket me-2 main-color"
-                           title="Сфера на действие"></i>{{ $strategicDocument->documentType->name }}</span>
+                           title="Област на политика"></i>{{ $strategicDocument->documentType->name }}</span>
                     </a>
                 </div>
                 <div class="col-md-3 ">

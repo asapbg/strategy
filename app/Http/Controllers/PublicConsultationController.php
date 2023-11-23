@@ -30,7 +30,7 @@ class PublicConsultationController extends Controller
         }
         $pageTitle = $item->title;
         $this->setBreadcrumbsTitle($pageTitle);
-        $documents = $item->lastDocumentsByLocaleAndSection();
+        $documents = $item->lastDocumentsByLocaleAndSection(true);
         $timeline = $item->orderTimeline();
         return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline'));
     }

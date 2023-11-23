@@ -16,7 +16,7 @@
         </div>
 
 
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-md-4 ">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.form_to') }}
                     @if($item->daysCnt <= \App\Models\Consultations\PublicConsultation::SHORT_DURATION_DAYS)
@@ -40,37 +40,37 @@
                 </a>
             </div>
             <div class="col-md-4 ">
-                <h3 class="mb-2 fs-18">Сфера на действие</h3>
+                <h3 class="mb-2 fs-18">Област на политика</h3>
                 <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info me-2">
-                    <i class="fas fa-car me-2 main-color" title="Сфера на действие"></i>Транспорт </span>
+                    <i class="fas fa-car me-2 main-color" title="Област на политика"></i>Транспорт </span>
                 </a>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-md-4 ">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.type_consultation') }}</h3>
-                <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
-                    <i class="fas fa-file-lines me-2 main-color" title="Тип консултация"></i>{{ $item->actType->name }} </span>
-                </a>
-            </div>
-            <div class="col-md-4 ">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
-                <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
-                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }} </span>
-                </a>
-            </div>
-            <div class="col-md-4 ">
-                <h3 class="mb-2 fs-18">Предишна версия</h3>
-                <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
-                    <i class="fa-solid fa-code-compare me-2 main-color" title="История"></i>Версия 1.1 </span>
-                </a>
-            </div>
-        </div>
+{{--        <div class="row mb-4">--}}
+{{--            <div class="col-md-4 ">--}}
+{{--                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.type_consultation') }}</h3>--}}
+{{--                <a href="#" class="main-color text-decoration-none">--}}
+{{--                  <span class="obj-icon-info me-2">--}}
+{{--                    <i class="fas fa-file-lines me-2 main-color" title="Тип консултация"></i>{{ $item->actType->name }} </span>--}}
+{{--                </a>--}}
+{{--            </div>--}}
+{{--            <div class="col-md-4 ">--}}
+{{--                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>--}}
+{{--                <a href="#" class="main-color text-decoration-none">--}}
+{{--                  <span class="obj-icon-info me-2">--}}
+{{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }} </span>--}}
+{{--                </a>--}}
+{{--            </div>--}}
+{{--            <div class="col-md-4 ">--}}
+{{--                <h3 class="mb-2 fs-18">Предишна версия</h3>--}}
+{{--                <a href="#" class="main-color text-decoration-none">--}}
+{{--                  <span class="obj-icon-info me-2">--}}
+{{--                    <i class="fa-solid fa-code-compare me-2 main-color" title="История"></i>Версия 1.1 </span>--}}
+{{--                </a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
 
         <div class="row mt-4 mb-4">
@@ -151,7 +151,7 @@
                 <div class="col-md-4">
                     <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
                     <ul class="list-group list-group-flush">
-                        @php($foundBaseDoc = false)
+                        @php($foundKdDoc = false)
                         @if(isset($documents) && sizeof($documents))
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
@@ -160,11 +160,11 @@
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
-                                    @php($foundBaseDoc = true)
+                                    @php($foundKdDoc = true)
                                 @endif
                             @endforeach
                         @endif
-                        @if(!$foundBaseDoc)
+                        @if(!$foundKdDoc)
                             <p>---</p>
                         @endif
                     </ul>
@@ -173,7 +173,7 @@
                 <div class="col-md-4">
                     <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
                     <ul class="list-group list-group-flush">
-                        @php($foundBaseDoc = false)
+                        @php($foundReportDoc = false)
                         @if(isset($documents) && sizeof($documents))
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
@@ -182,11 +182,11 @@
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
-                                    @php($foundBaseDoc = true)
+                                    @php($foundReportDoc = true)
                                 @endif
                             @endforeach
                         @endif
-                        @if(!$foundBaseDoc)
+                        @if(!$foundReportDoc)
                             <p>---</p>
                         @endif
                     </ul>

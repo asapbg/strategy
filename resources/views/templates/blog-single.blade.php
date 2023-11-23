@@ -48,8 +48,8 @@
                 </a>
                 <a href="#" class="text-decoration-none">
                     <span class="obj-icon-info me-2"><i class="fas fa-sitemap me-1 dark-blue"
-                            title="Сфера на действие"></i>Държавна администрация</span>
-        
+                            title="Област на политика"></i>Държавна администрация</span>
+
                 </a>
             </div>
             <div class="col-md-4 text-end">
