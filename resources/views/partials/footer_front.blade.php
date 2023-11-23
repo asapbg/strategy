@@ -88,11 +88,11 @@
               <form>
                 <h3 class="text-light fs-4 fw-400">Търсене в портала</h3>
                 <div class="row">
-                    <div class="col-md-9">
-                        <label for="newsletter1" class="visually-hidden">Търсене</label>
+                    <div class="col-md-8">
+                        <label for="newsletter1" class="visually-hidden text-light">Търсене</label>
                         <input id="newsletter1" type="text" class="form-control br-30 " placeholder="Въведете дума или израз">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-12 mt-1">
                         <button class="btn btn-primary" type="button"><i class="fas fa-search main-color me-1"><span class="d-none">Search</span></i>Търсене</button>
                     </div>
                 </div>

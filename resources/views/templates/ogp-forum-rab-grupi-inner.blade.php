@@ -52,7 +52,7 @@
     <div class="col-lg-10 py-5">
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="obj-title mb-4">Дискусионен форум за "Протоколи от заседания и срещи"</h2>
+                <h2 class="obj-title mb-4">Дискусионен форум за "Работни групи"</h2>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
                 </a>
                 <a href="#" class="text-decoration-none">
                     <span class="obj-icon-info me-2"><i class="bi bi-chat-dots me-1 dark-blue"
-                            title="Сфера на действие"></i>Протоколи от заседания и срещи</span>
+                            title="Сфера на действие"></i>Работни групи</span>
                 </a>
             </div>
             <div class="col-md-4 text-end">
