@@ -457,7 +457,7 @@ class PublicConsultationController extends AdminController
             $path = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
             $fileName = 'kd_'.Carbon::now()->format('Y_m_d_H_i_s').'.pdf';
             $pdf = PDF::loadView('admin.consultations.public_consultations.pdf_kd', ['kdRows' => $kdRows, 'kdValues' => $kdValues]);
-            Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
+            Storage::disk('public_uploads')->put($path.$fileName, $pdf->output());
 
             foreach (config('available_languages') as $lang) {
                 $version = File::where('locale', '=', $lang['code'])
