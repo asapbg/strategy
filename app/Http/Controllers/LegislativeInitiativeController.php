@@ -59,6 +59,7 @@ class LegislativeInitiativeController extends AdminController
                     $query->where('value', $institution);
                 });
             })
+            ->orderBy('status')
             ->paginate($countResults);
 
         return $this->view(self::LIST_VIEW, compact('politicRanges', 'items', 'institutions'));

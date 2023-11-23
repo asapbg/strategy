@@ -188,24 +188,26 @@
                             @endforeach
                         @endif
 
-                        <div class="col-md-12 mt-4">
-                            <div>
-                                <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
-                                    @csrf
+                        @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                            <div class="col-md-12 mt-4">
+                                <div>
+                                    <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                        @csrf
 
-                                    <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
+                                        <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
 
-                                    <div class="form-group">
+                                        <div class="form-group">
                                         <textarea name="description" class="form-control mb-3 rounded"
                                                   id="description" rows="2"
                                                   placeholder="{{ __('custom.enter_comment') }}"></textarea>
-                                    </div>
+                                        </div>
 
-                                    <button type="submit"
-                                            class="btn btn-primary">{{ __('custom.add_comment') }}</button>
-                                </form>
+                                        <button type="submit"
+                                                class="btn btn-primary">{{ __('custom.add_comment') }}</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
