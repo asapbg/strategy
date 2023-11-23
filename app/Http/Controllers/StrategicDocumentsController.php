@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthorityAcceptingStrategic;
+use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
@@ -81,16 +82,21 @@ class StrategicDocumentsController extends Controller
     {
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
         $strategicDocumentFileService = app(FileService::class);
-        $strategicDocumentFiles = StrategicDocumentFile::where('strategic_document_id', $id)->where('strategic_document_type_id', '!=', 7)->where('locale', app()->getLocale())->get();
+        $locale = app()->getLocale();
+        $strategicDocumentFiles = StrategicDocumentFile::where('strategic_document_id', $id)
+            ->whereDoesntHave('documentType.translations', function($query) {
+                $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
+            })->where('locale', $locale)->get();
         $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
         $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
-        $locale = app()->getLocale();
+
         $mainDocument = $strategicDocumentFiles->where('is_main', 1)->where('locale', $locale)->first();
+
         $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
 
-        return $this->view('site.strategic_documents.view-2', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
         //return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData'));
     }
 }
