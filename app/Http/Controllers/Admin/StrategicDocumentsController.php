@@ -17,6 +17,7 @@ use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\FileService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -115,16 +116,24 @@ class StrategicDocumentsController extends AdminController
 
         try {
             DB::beginTransaction();
-            $fillable = $this->getFillableValidated($validated, $item);
-            $item->fill($fillable);
-
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
                 $validated['strategic_act_link'] = null;
                 $validated['document_date'] = null;
+
+                if ($validated['document_date_accepted']) {
+                    $validated['document_date_accepted'] = Carbon::parse($validated['document_date_expiring']);
+                }
+                if ($validated['document_date_expiring']) {
+                    $validated['document_date_expiring'] = Carbon::parse($validated['document_date_expiring']);
+                }
+
             } else {
                 $validated['pris_act_id'] = null;
             }
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+
             $item->save();
 
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
@@ -135,7 +144,7 @@ class StrategicDocumentsController extends AdminController
                     $fileService = app(FileService::class);
                     $fileService->uploadFiles($request, $item, true);
                 }
-            } catch (\Throwable) {
+            } catch (\Throwable $throwable) {
                 return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
             }
 
