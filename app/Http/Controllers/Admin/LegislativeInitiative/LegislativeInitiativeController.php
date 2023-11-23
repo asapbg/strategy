@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin\LegislativeInitiative;
 
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminIndexLegislativeInitiativeRequest;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminUpdateLegislativeInitiativeRequest;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminViewLegislativeInitiativeRequest;
 use App\Http\Requests\DeleteLegislativeInitiativeRequest;
 use App\Http\Requests\RestoreLegislativeInitiativeRequest;
+use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\PolicyArea;
@@ -33,37 +35,37 @@ class LegislativeInitiativeController extends AdminController
      */
     public function index(AdminIndexLegislativeInitiativeRequest $request)
     {
-        $politicRanges = PolicyArea::orderBy('id')->get();
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
-        $politicRange = $request->offsetGet('politic-range');
-        $filter = $this->filters($request);
+        $status = $request->offsetGet('status');
 
         $items = LegislativeInitiative::withTrashed()->with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->where('description', 'like', '%' . $keywords . '%')
+                $query->whereHas('operationalProgram', function ($query) use ($keywords) {
+                    $operational_program_ids = OperationalProgramRow::select('operational_program_id')->where('value', 'ilike', "%$keywords%")->pluck('operational_program_id');
+
+                    $query->whereIn('operational_program_id', $operational_program_ids);
+                })
+                    ->orWhere('description', 'like', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
                         $query->where('first_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('last_name', 'like', '%' . $keywords . '%');
                     });
             })
+            ->when(!empty($status), function ($query) use ($status) {
+                $legit_values = LegislativeInitiativeStatusesEnum::values();
+
+                if (!in_array($status, $legit_values)) {
+                    return;
+                }
+
+                $query->where('status', $status);
+            })
             ->paginate($countResults);
 
-        return $this->view('admin.legislative_initiatives.index', compact('filter', 'items'));
-    }
-
-    private function filters($request)
-    {
-        return array(
-            'title' => array(
-                'type' => 'text',
-                'placeholder' => __('validation.attributes.title'),
-                'value' => $request->input('title'),
-                'col' => 'col-md-4'
-            ),
-        );
+        return $this->view('admin.legislative_initiatives.index', compact('institutions', 'items'));
     }
 
     /**
