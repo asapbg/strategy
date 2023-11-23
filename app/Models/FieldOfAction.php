@@ -18,7 +18,7 @@ class FieldOfAction extends Model implements TranslatableContract
 {
     use FilterSort, Translatable, SoftDeletes;
 
-    const TRANSLATABLE_FIELDS = ['label'];
+    const TRANSLATABLE_FIELDS = ['name'];
 
     const MODULE_NAME = ('custom.tags');
 
