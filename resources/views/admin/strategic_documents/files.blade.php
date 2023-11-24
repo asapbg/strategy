@@ -199,7 +199,7 @@
         const hasErrors = @json(session('hasErrorsFromFileTab'));
         $(document).ready(function() {
             if (hasErrors) {
-                $('#custom-tabs a[href="#files"]').tab('show');
+                //$('#custom-tabs a[href="#files"]').tab('show');
             }
 
             $('[id^=fileRow_head_]').hide();

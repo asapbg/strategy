@@ -533,4 +533,8 @@ return [
     'reports_and_docs' => 'Отчети и доклади',
     'acceptment_act' => 'Акт на приемане',
     'edit_document' => 'Редактиране на документ',
+    'published' => 'Публикуван',
+    'publish_and_stay' => 'Публикувай и остани',
+    'unpublish_and_stay' => 'Чернова и остани',
+    'unpublish_make' => 'Чернова',
 ];
