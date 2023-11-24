@@ -47,7 +47,6 @@
     $sort_white = $sort_icon !== 'fa-sort' ? 'text-white' : '';
 
     $sort_url = url()->current(). '?' . http_build_query(array_merge(request()->all(), $sort_array));
-    dump($sort_array, $sort_url, $sort_icon, $sort_white)
 @endphp
 
 <a href="{{ $sort_url }}"
