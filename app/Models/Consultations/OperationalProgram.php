@@ -90,6 +90,7 @@ class OperationalProgram extends ModelActivityExtend
     public function rowFiles()
     {
         return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM)
             ->withPivot('row_num')
             ->withPivot('row_month');
     }
