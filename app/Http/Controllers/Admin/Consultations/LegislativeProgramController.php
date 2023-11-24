@@ -59,13 +59,13 @@ class LegislativeProgramController extends AdminController
         $assessments = $item->assessments->count() ? $item->assessments : [];
         if( !empty($assessments) ) {
             foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
             }
         }
         $opinions = $item->opinions->count() ? $item->opinions : [];
         if( !empty($opinions) ) {
             foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
             }
         }
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
@@ -95,13 +95,13 @@ class LegislativeProgramController extends AdminController
         $assessments = $item->assessments->count() ? $item->assessments : [];
         if( !empty($assessments) ) {
             foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
             }
         }
         $opinions = $item->opinions->count() ? $item->opinions : [];
         if( !empty($opinions) ) {
             foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month] = $f;
+                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
             }
         }
         $institutions = optionsFromModel(Institution::simpleOptionsList());
@@ -110,15 +110,8 @@ class LegislativeProgramController extends AdminController
     }
 
     public function store(StoreLegislativeProgramRequest $request)
-//        public function store(Request $request)
     {
-//        $r = new StoreLegislativeProgramRequest();
-//        $validator = Validator::make($request->all(), $r->rules());
-//        if($validator->fails()) {
-//            dd($validator->errors());
-//        }
         $validated = $request->validated();
-//        dd($validated);
         $id = (int)$validated['id'];
 
         if( $request->isMethod('put') ) {
@@ -197,19 +190,21 @@ class LegislativeProgramController extends AdminController
                         foreach ($months as $m) {
                             foreach ($rowsNums as $rn) {
                                 foreach (['assessment', 'opinion'] as $typeFile) {
-                                    $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m));
-                                    if( isset($validated[$searchKey]) ) {
-                                        $newFile = $validated[$searchKey];
-                                        $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->first();
-                                        if( $currentFile ) {
-                                            //delete current file of this type
-                                            $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->detach();
-                                            $currentFile->delete();
+                                    foreach (config('available_languages') as $lang){
+                                        $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m)).'_'.$lang['code'];
+                                        if( isset($validated[$searchKey]) ) {
+                                            $newFile = $validated[$searchKey];
+                                            $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->where('locale', $lang['code'])->first();
+                                            if( $currentFile ) {
+                                                //delete current file of this type
+                                                $item->rowFiles()->detach($currentFile->id);
+                                                $currentFile->delete();
+                                            }
+                                            //Add file and attach
+                                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+                                            $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, ($typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion')), $lang['code']);
+                                            $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
                                         }
-                                        //Add file and attach
-                                        $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-                                        $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, $typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion'));
-                                        $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
                                     }
                                 }
                             }

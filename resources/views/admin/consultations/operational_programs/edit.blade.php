@@ -200,36 +200,40 @@
                                                             @endforeach
                                                         </div>
                                                         <div class="row">
-                                                            @php($assessmentField = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
-                                                            @php($opinionField = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-12 control-label" for="{{ $assessmentField }}">Оценка на въздействието</label>
-                                                                    <div class="col-12">
-                                                                        <input type="file" class="form-control form-control-sm @error($assessmentField) is-invalid @enderror" value="" name="{{ $assessmentField }}">
-                                                                        @error($assessmentField)
+                                                            @foreach(config('available_languages') as $lang)
+                                                                @php($fieldNameLang = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">{{ trans_choice('custom.impact_assessment', 1) }} ({{ strtoupper($lang['code']) }})</label>
+                                                                        <div class="col-12">
+                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                            @error($fieldNameLang)
                                                                             <div class="text-danger mt-1">{{ $message }}</div>
-                                                                        @enderror
+                                                                            @enderror
+                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month]]) : ''])
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-12 control-label" for="{{ $opinionField }}">Становище</label>
-                                                                    <div class="col-12">
-                                                                        <input type="file" class="form-control form-control-sm @error($opinionField) is-invalid @enderror" value="" name="{{ $opinionField }}">
-                                                                        @error($opinionField)
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="row">
+                                                            @foreach(config('available_languages') as $lang)
+                                                                @php($fieldNameLang = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">Становище ({{ strtoupper($lang['code']) }})</label>
+                                                                        <div class="col-12">
+                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                            @error($fieldNameLang)
                                                                             <div class="text-danger mt-1">{{ $message }}</div>
-                                                                        @enderror
+                                                                            @enderror
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month]]) : ''])
-                                                                </div>
-                                                            </div>
+                                                            @endforeach
                                                         </div>
                                                     </div>
                                                 </div>

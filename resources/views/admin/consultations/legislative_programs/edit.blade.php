@@ -199,95 +199,42 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
-                                                        @php($assessmentField = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
-                                                        @php($opinionField = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month))
                                                         <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-12 control-label" for="{{ $assessmentField }}">Оценка на въздействието</label>
-                                                                    <div class="col-12">
-                                                                        <input type="file" class="form-control form-control-sm @error($assessmentField) is-invalid @enderror" value="" name="{{ $assessmentField }}">
-                                                                        @error($assessmentField)
+                                                            @foreach(config('available_languages') as $lang)
+                                                                @php($fieldNameLang = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">{{ trans_choice('custom.impact_assessment', 1) }} ({{ strtoupper($lang['code']) }})</label>
+                                                                        <div class="col-12">
+                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                            @error($fieldNameLang)
                                                                             <div class="text-danger mt-1">{{ $message }}</div>
-                                                                        @enderror
+                                                                            @enderror
+                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month]]) : ''])
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-12 control-label" for="{{ $opinionField }}">Становище</label>
-                                                                    <div class="col-12">
-                                                                        <input type="file" class="form-control form-control-sm @error($opinionField) is-invalid @enderror" value="" name="{{ $opinionField }}">
-                                                                        @error($opinionField)
-                                                                            <div class="text-danger mt-1">{{ $message }}</div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month]]) : ''])
-                                                                </div>
-                                                            </div>
+                                                            @endforeach
                                                         </div>
-{{--                                                        <div class="col-12 my-3">--}}
-{{--                                                            <table class="table table-sm sm-text">--}}
-{{--                                                                <thead>--}}
-{{--                                                                <tr>--}}
-{{--                                                                    <th colspan="2">{{ trans_choice('custom.documents', 2) }}</th>--}}
-{{--                                                                    <th>Текущ файл</th>--}}
-{{--                                                                    <th colspan="2"></th>--}}
-{{--                                                                </tr>--}}
-{{--                                                                </thead>--}}
-{{--                                                                <tbody>--}}
-{{--                                                                <tr>--}}
-{{--                                                                    <td>1</td>--}}
-{{--                                                                    <td>Оценка на въздействието</td>--}}
-{{--                                                                    <td>--}}
-{{--                                                                        @if($item->assessment)--}}
-{{--                                                                            <a href="{{ route('admin.download.file', ['file' => $item->assessment]) }}" target="_blank">--}}
-{{--                                                                                <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
-{{--                                                                            </a>--}}
-{{--                                                                        @else--}}
-{{--                                                                            <i class="fas fa-minus text-danger"></i>--}}
-{{--                                                                        @endif--}}
-{{--                                                                    </td>--}}
-{{--                                                                    <td>--}}
-{{--                                                                        <div class="custom-file">--}}
-{{--                                                                            <input type="file" name="assessment" class="custom-file-input @error('assessment'){{ 'is-invalid' }}@enderror">--}}
-{{--                                                                            <label class="custom-file-label" for="assessment" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
-{{--                                                                            @error('assessment')--}}
-{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                                            @enderror--}}
-{{--                                                                        </div>--}}
-{{--                                                                    </td>--}}
-{{--                                                                </tr>--}}
-{{--                                                                <tr>--}}
-{{--                                                                    <td>2</td>--}}
-{{--                                                                    <td>Становище</td>--}}
-{{--                                                                    <td>--}}
-{{--                                                                        @if($item->assessmentOpinion)--}}
-{{--                                                                            <a href="{{ route('admin.download.file', ['file' => $item->assessmentOpinion]) }}" target="_blank">--}}
-{{--                                                                                <i class="fas fa-file-download text-info" title="{{ __('custom.download') }}"></i>--}}
-{{--                                                                            </a>--}}
-{{--                                                                        @else--}}
-{{--                                                                            <i class="fas fa-minus text-danger"></i>--}}
-{{--                                                                        @endif--}}
-{{--                                                                    </td>--}}
-{{--                                                                    <td>--}}
-{{--                                                                        <div class="custom-file">--}}
-{{--                                                                            <input type="file" name="opinion" class="custom-file-input @error('opinion'){{ 'is-invalid' }}@enderror">--}}
-{{--                                                                            <label class="custom-file-label" for="opinion" data-browse="{{ __('custom.select_file') }}">{{ __('custom.no_file_chosen') }}</label>--}}
-{{--                                                                            @error('opinion')--}}
-{{--                                                                            <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                                                            @enderror--}}
-{{--                                                                        </div>--}}
-{{--                                                                    </td>--}}
-{{--                                                                </tr>--}}
-{{--                                                                </tbody>--}}
-{{--                                                            </table>--}}
-{{--                                                        </div>--}}
+                                                        <div class="row">
+                                                            @foreach(config('available_languages') as $lang)
+                                                                @php($fieldNameLang = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">Становище ({{ strtoupper($lang['code']) }})</label>
+                                                                        <div class="col-12">
+                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                            @error($fieldNameLang)
+                                                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                                                            @enderror
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endif

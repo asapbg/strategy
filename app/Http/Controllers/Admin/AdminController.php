@@ -134,7 +134,8 @@ class AdminController extends Controller
             'content_type' => $file->getClientMimeType(),
             'path' => 'files'.DIRECTORY_SEPARATOR.$path.$fileNameToStore,
             'sys_user' => auth()->user()->id,
-            'description_'.$locale => !empty($description) ? $description : null
+            'description_'.$locale => !empty($description) ? $description : null,
+            'locale' => $locale
         ]);
         $file->save();
         return $file;

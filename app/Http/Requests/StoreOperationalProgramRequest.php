@@ -39,7 +39,7 @@ class StoreOperationalProgramRequest extends FormRequest
             if (request()->input('id')) {
                 $rules['col'] = ['array'];
                 $rules['col.*'] = ['array'];
-                $rules['col.*.*'] = ['required', 'numeric', 'exists:legislative_program_row,id'];
+                $rules['col.*.*'] = ['required', 'numeric', 'exists:operational_program_row,id'];
                 $rules['val'] = ['array'];
                 $rules['val.*'] = ['array'];
 
