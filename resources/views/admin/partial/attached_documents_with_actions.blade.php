@@ -1,8 +1,9 @@
 @if(isset($attFile) && $attFile)
-    @if(!empty($attFile->description))
-        <div class="d-inline-block mr-2">
+{{--    @if(!empty($attFile->{'description_'.app()->getLocale()}))--}}
+    @if(!empty($attFile->{'description_'.$attFile->locale}))
+        <div class="d-inline-block mr-2 mt-2">
             <a target="_blank" href="{{ route('admin.download.file', $attFile) }}" title="{{ __('custom.download') }}">
-                {!! fileIcon($attFile->content_type) !!} {{ !empty($attFile->description) ? $attFile->description : $attFile->filename }}
+                {!! fileIcon($attFile->content_type) !!} {{ !empty($attFile->{'description_'.$attFile->locale}) ? $attFile->{'description_'.$attFile->locale}.' ('.strtoupper($attFile->locale).')' : $attFile->filename }}
             </a>
         </div>
         <div class="d-inline-block">

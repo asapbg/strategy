@@ -54,12 +54,20 @@
                                                                     </div>
                                                                 </div>
                                                             @endforeach
-                                                            <div class="col-12">
-                                                                @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month] ?? null])
-                                                            </div>
-                                                            <div class="col-12">
-                                                                @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month] ?? null])
-                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            @foreach(config('available_languages') as $lang)
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="row">
+                                                            @foreach(config('available_languages') as $lang)
+                                                                <div class="col-12">
+                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                </div>
+                                                            @endforeach
                                                         </div>
                                                     </div>
                                                 </div>
