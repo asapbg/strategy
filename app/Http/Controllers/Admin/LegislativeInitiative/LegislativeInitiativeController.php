@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin\LegislativeInitiative;
 
-use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminIndexLegislativeInitiativeRequest;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminUpdateLegislativeInitiativeRequest;
 use App\Http\Requests\Admin\LegislativeInitiative\AdminViewLegislativeInitiativeRequest;
@@ -12,7 +12,6 @@ use App\Http\Requests\RestoreLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
-use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,34 +35,38 @@ class LegislativeInitiativeController extends AdminController
     public function index(AdminIndexLegislativeInitiativeRequest $request)
     {
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
-        $countResults = $request->get('count_results', 10);
+        $count_results = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
+        $institution = $request->offsetGet('institution');
         $status = $request->offsetGet('status');
 
-        $items = LegislativeInitiative::withTrashed()->with(['comments'])
-            ->when(!empty($keywords), function ($query) use ($keywords) {
+        $items = LegislativeInitiative::where(function ($query) use ($keywords) {
+            // Keywords search
+            $query->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->whereHas('operationalProgram', function ($query) use ($keywords) {
-                    $operational_program_ids = OperationalProgramRow::select('operational_program_id')->where('value', 'ilike', "%$keywords%")->pluck('operational_program_id');
-
-                    $query->whereIn('operational_program_id', $operational_program_ids);
+                    $query->whereIn('operational_program_id', OperationalProgramRow::where('value', 'ilike', "%$keywords%")->where('dynamic_structures_column_id', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID)->pluck('operational_program_id'));
                 })
-                    ->orWhere('description', 'like', '%' . $keywords . '%')
+                    ->orWhere('description', 'ilike', "%$keywords")
                     ->orWhereHas('user', function ($query) use ($keywords) {
-                        $query->where('first_name', 'like', '%' . $keywords . '%');
-                        $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
-                        $query->orWhere('last_name', 'like', '%' . $keywords . '%');
+                        $query->where(function ($query) use ($keywords) {
+                            $query->where('first_name', 'ilike', "%$keywords")
+                                ->orWhere('middle_name', 'ilike', "%$keywords")
+                                ->orWhere('last_name', 'ilike', "%$keywords");
+                        });
                     });
+            });
+        })
+            // Institution search
+            ->when(!empty($institution), function ($query) use ($institution) {
+                $query->whereHas('operationalProgram', function ($query) use ($institution) {
+                    $query->whereIn('operational_program_id', OperationalProgramRow::where(['value' => $institution, 'dynamic_structures_column_id' => OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID])->pluck('operational_program_id'));
+                });
             })
+            // Status search
             ->when(!empty($status), function ($query) use ($status) {
-                $legit_values = LegislativeInitiativeStatusesEnum::values();
-
-                if (!in_array($status, $legit_values)) {
-                    return;
-                }
-
                 $query->where('status', $status);
             })
-            ->paginate($countResults);
+            ->paginate($count_results);
 
         return $this->view('admin.legislative_initiatives.index', compact('institutions', 'items'));
     }

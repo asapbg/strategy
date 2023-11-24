@@ -64,7 +64,7 @@
                                     <i class="fa fa-search"></i> {{ __('custom.search') }}
                                 </button>
 
-                                <a href="" class="btn btn-sm btn-default">
+                                <a href="{{ url()->current() }}" class="btn btn-sm btn-default">
                                     <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
                                 </a>
                             </div>
