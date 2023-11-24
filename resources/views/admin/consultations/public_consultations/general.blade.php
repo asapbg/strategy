@@ -94,7 +94,8 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="legislative_program_row_id">{{ trans_choice('custom.legislative_programs_rows', 1) }}</label>
-                <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc" data-institution="{{ auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0 }}"
+                @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
+                <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc" data-institution="{{ $institutionid }}"
                         data-urls2="{{ route('admin.select2.ajax', 'lp_record_pc') }}"
                         data-placeholders2="{{ __('custom.search_lp_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
@@ -138,8 +139,9 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="operational_program_row_id">{{ trans_choice('custom.operational_programs_rows', 1) }}</label>
+                @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="operational_program_row_id" name="operational_program_row_id"
-                        data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}" data-institution="{{ (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id : 0) }}"
+                        data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}" data-institution="{{ $institutionid }}"
                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('operational_program_row_id'){{ 'is-invalid' }}@enderror">
 {{--                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow)--}}
