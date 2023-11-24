@@ -132,8 +132,14 @@ class OperationalProgram extends ModelActivityExtend
 
     public static function select2AjaxOptions($filters)
     {
+        $select = ['operational_program_row.id', 'operational_program_row.value as name'];
+
+        if (isset($filters['op_record'])) {
+            $select = ['operational_program_row.operational_program_id as id', 'operational_program_row.value as name'];
+        }
+
         $q = DB::table('operational_program')
-            ->select(['operational_program_row.id', 'operational_program_row.value as name'])
+            ->select($select)
             ->join('operational_program_row', function ($j){
                 $j->on('operational_program_row.operational_program_id', '=', 'operational_program.id')
                     ->where('operational_program_row.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
