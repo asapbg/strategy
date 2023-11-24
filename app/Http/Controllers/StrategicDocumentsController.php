@@ -97,6 +97,5 @@ class StrategicDocumentsController extends Controller
         })->get();
 
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
-        //return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData'));
     }
 }

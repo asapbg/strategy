@@ -19,13 +19,13 @@ class FileService
      * @return void
      * @throws \Exception
      */
-    public function uploadFiles(Request $request, StrategicDocument $strategicDocument, bool $isMain = false)
+    public function uploadFiles($validated, StrategicDocument $strategicDocument, bool $isMain = false)
     {
-        $validated = $request->validated();
         $bgFileId = null;
         foreach (['en', 'bg'] as $locale) {
             try {
                 DB::beginTransaction();
+
                 if ($isMain) {
                     $mainFile = $strategicDocument->files->where('is_main', true)->where('locale', $locale)->first();
                     if ($mainFile) {
@@ -36,18 +36,18 @@ class FileService
                 $fillable = $this->getFillableValidated($validated, $file);
                 $file->fill($fillable);
 
-                $uploadedFile = $request->file('file_strategic_documents_' . $locale);
+                $uploadedFile = Arr::get($validated, 'file_strategic_documents_' . $locale);//$request->file('file_strategic_documents_' . $locale);
                 $enFile = $validated['file_strategic_documents_en'] ?? null;
 
                 if ($locale === 'en') {
                     if (!$enFile) {
                         $validated['file_strategic_documents_en'] = $validated['file_strategic_documents_bg'];
                         $displayNames = [
-                            'bg' => $request->get('display_name_bg'),
-                            'en' => $request->get('display_name_en'),
+                            'bg' => Arr::get($validated, 'display_name_bg'),
+                            'en' => Arr::get($validated, 'display_name_en'),
                         ];
                         $validated['display_name_en'] = $displayNames[$locale] ?? null;
-                        $uploadedFile = $request->file('file_strategic_documents_bg');
+                        $uploadedFile = Arr::get($validated, 'file_strategic_documents_bg');//$request->file('file_strategic_documents_bg');
                     }
                 }
 
@@ -56,7 +56,7 @@ class FileService
 
                 $file->content_type = $uploadedFile->getClientMimeType();
                 $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
-                $file->sys_user = $request->user()->id;
+                $file->sys_user = request()->user()->id;
                 $file->filename = $fileNameToStore;
                 $file->parent_id = Arr::get($validated, 'parent_id');
                 $file->locale = $locale;
@@ -159,42 +159,30 @@ class FileService
         }
 
         return $fileData;
+    }
 
-        $fileData = [];
-        if ($adminView) {
-            $rootNode = [
-                'id' => 'root',
-                'parent' => '#',
-                'text' => 'Файлова йерархия',
-                'icon' => 'fas fa-folder'
-            ];
-
-            $fileData[] = $rootNode;
+    public function prepareMainFileFields($validated)
+    {
+        if (Arr::get($validated, 'display_name_main_bg')) {
+            $validated['display_name_bg'] = $validated['display_name_main_bg'];
+            unset($validated['display_name_main_bg']);
+        }
+        if (Arr::get($validated, 'display_name_main_en')) {
+            $validated['display_name_en'] = $validated['display_name_main_en'];
+            unset($validated['display_name_main_en']);
+        }
+        if (Arr::get($validated, 'file_strategic_documents_bg_main')) {
+            $validated['file_strategic_documents_bg'] = $validated['file_strategic_documents_bg_main'];
+            unset($validated['file_strategic_documents_bg_main']);
+        }
+        if (Arr::get($validated, 'file_strategic_documents_en_main')) {
+            $validated['file_strategic_documents_en'] = $validated['file_strategic_documents_en_main'];
+            unset($validated['file_strategic_documents_en_main']);
+        }
+        if (Arr::get($validated, 'valid_at_main')) {
+            $validated['valid_at'] = $validated['valid_at_main'];
         }
 
-        foreach ($strategicDocumentFiles as $file) {
-            $iconMapping = [
-                'application/pdf' => 'fas fa-file-pdf text-danger me-1',
-                'application/msword' => 'fas fa-file-word text-info me-1',
-                'application/vnd.ms-excel' => 'fas fa-file-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
-            ];
-
-            $fileExtension = $file->content_type;
-            $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-            $parentNode = $adminView ? $file->parent_id ?? 'root' : $file->parent_id ?? '#';
-
-
-            $fileNode = [
-                'id' => $file->id,
-                'parent' => $parentNode,//$file->parent_id ?: 'root',
-                'text' => $file->display_name,
-                'icon' => $iconClass,
-            ];
-
-            $fileData[] = $fileNode;
-        }
-
-        return $fileData;
+        return $validated;
     }
 }
