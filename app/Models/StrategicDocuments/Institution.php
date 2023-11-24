@@ -2,6 +2,7 @@
 
 namespace App\Models\StrategicDocuments;
 
+use App\Models\EkatteSettlement;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
 use App\Models\ModelActivityExtend;
@@ -44,6 +45,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function links()
     {
         return $this->hasMany(InstitutionLink::class, 'institution_id', 'id');
+    }
+
+    public function settlement()
+    {
+        return $this->hasOne(EkatteSettlement::class, 'id', 'town');
     }
 
     public static function translationFieldsProperties(): array
