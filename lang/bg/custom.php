@@ -207,6 +207,8 @@ return [
     'date_pris'                        => 'Дата от Акт (ПРИС)',
     'date_accepted'                    => 'Дата на приемане',
     'date_expiring'                    => 'Дата на валидност',
+    'date_indefinite'                  => 'Дата на валидност безсрочна',
+    'date_expring_indefinite'          => 'Дата на валидност безсрочна',
     'are_you_sure_to_delete'           => 'Сигурни ли сте, че искате да изтриете',
     'are_you_sure_to_restore'          => 'Сигурни ли сте, че искате да възстановите',
     'are_you_sure_to_make_active'      => 'Сигурни ли сте, че искате да активирате',

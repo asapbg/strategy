@@ -31,7 +31,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         session(['hasErrorsFromFileTab' => false]);
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
-            'valid_at' => ['required', 'date'],
+            'valid_at' => ['required_if:date_expiring_indefinite,null|date'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
             'visible_in_report' => ['nullable', 'numeric'],
@@ -51,7 +51,11 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-        $validator = Validator::make(request()->all(), $rules);
+
+        if (request()->get('date_exipring_indefinite') == 0) {
+            $rules['valid_at'][] = 'sometimes';
+        }
+        //$validator = Validator::make(request()->all(), $rules);
 
         return $rules;
     }

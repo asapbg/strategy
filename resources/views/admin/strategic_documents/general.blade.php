@@ -188,7 +188,7 @@
         </div>
         <div class="col-md-3 act-custom-fields d-none">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="document_date">{{ __('custom.document_act') }} <span class="required">*</span></label>
+                <label class="col-sm-12 control-label" for="document_date">{{ __('custom.document_act') }}</label>
                 <div class="col-12">
                     <input type="text" id="document_date" name="document_date" class="form-control form-control-sm datepicker @error('document_date'){{ 'is-invalid' }}@enderror"
                            value="{{ old('document_date', ($item->id ? $item->document_date : '')) }}">
@@ -251,7 +251,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="document_date_accepted">{{ __('custom.date_accepted') }} <span class="required">*</span></label>
                 <div class="col-12">
@@ -263,7 +263,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="document_date_pris">{{ __('custom.date_expiring') }} <span class="required">*</span></label>
                 <div class="col-12">
@@ -272,6 +272,20 @@
                     @error('document_date_expiring')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="document_date_pris">{{ __('custom.date_indefinite') }} <span class="required">*</span></label>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input type="hidden" name="date_expiring_indefinite" value="0">
+                        <input type="checkbox" id="date_expiring_indefinite" name="date_expiring_indefinite" class="form-check-input" value="1" {{ $item->expiration_date === null ? 'checked' : '' }}>
+                        <label class="form-check-label" for="unlimited_date_expiring">
+                            {{ __('custom.date_expring_indefinite') }}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -379,13 +393,9 @@
                 @if ($item->active)
                     <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
                        class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
-                    <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => 'true']) }}"
-                       class="btn btn-danger">{{ __('custom.unpublish_and_stay') }}</a>
                 @else
                     <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
                        class="btn btn-success">{{ __('custom.publish') }}</a>
-                    <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => 'true']) }}"
-                       class="btn btn-success">{{ __('custom.publish_and_stay') }}</a>
                 @endif
 
                 <a href="{{ route('admin.strategic_documents.index') }}"
@@ -399,6 +409,27 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#pris_options').select2();
+            const dateExpiring = $('#document_date_expiring');
+            const dateExpiringCheckbox = $('#date_expiring_indefinite');
+            dateExpiring.on('change', function () {
+                dateExpiringCheckbox.prop('checked', false);
+            });
+
+            dateExpiring.on('change', function () {
+                if (!dateExpiringCheckbox.is(':checked')) {
+
+                    dateExpiringCheckbox.prop('checked', $(this).val() === '').trigger('change');
+                }
+            })
+
+            dateExpiringCheckbox.on('change', function () {
+                if ($(this).is(':checked')) {
+                    if (dateExpiring.val() !== '') {
+                        dateExpiring.val('').trigger('change');
+                    }
+                }
+            })
+
             $('#the_legal_act_type_filter').on('change', function() {
                 let selectedValue = $(this).val();
                 if (selectedValue) {
