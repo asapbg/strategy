@@ -28,6 +28,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
      */
     public function rules()
     {
+        session(['hasErrorsFromFileTab' => false]);
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
             'valid_at' => ['required', 'date'],
@@ -41,18 +42,20 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         foreach (config('available_languages') as $lang) {
             $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);//['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
         }
-
         foreach (config('available_languages') as $lang) {
             foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
                 $rules[$field .'_'. $lang['code']] = $properties['rules'];
             }
         }
-        /*
+
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-        */
-        //dd($rules);
+        $validator = Validator::make(request()->all(), $rules);
+        if ($validator->fails()) {
+            session(['hasErrorsFromFileTab' => true]);
+        }
+
         return $rules;
     }
 }

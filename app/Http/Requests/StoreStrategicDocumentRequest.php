@@ -37,7 +37,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
             'public_consultation_id' => ['required', 'numeric', 'exists:public_consultation,id'],
             'active' => ['required', 'numeric', 'in:0,1'],
-            'valid_at' => ['required', 'date'],
+            'valid_at_main' => ['required', 'date'],
             'pris_act_id' => ['required_if:strategic_act_link,null'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
             'strategic_act_link' => ['required_if:pris_act_id,null'],
@@ -62,22 +62,28 @@ class StoreStrategicDocumentRequest extends FormRequest
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
         }
-
-        foreach (config('available_languages') as $lang) {
-            $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);
-        }
-
-        foreach (config('available_languages') as $lang) {
-            foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
-                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+        if (request()->isMethod('put') ) {
+            foreach (config('available_languages') as $lang) {
+                $rules['file_strategic_documents_' .$lang['code'] . '_main'] = StrategicDocumentFileEnum::validationRules($lang['code']);
+            }
+        } else {
+            foreach (config('available_languages') as $lang) {
+                $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);
             }
         }
 
+        //dd($rules, request()->file('file_strategic_documents_bg_main'));
+        foreach (config('available_languages') as $lang) {
+            foreach (StrategicDocumentFile::translationFieldsPropertiesMain() as $field => $properties) {
+                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+            }
+        }
         foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
         if (request()->has('main_fileId_bg')) {
             $rules['file_strategic_documents_bg'][] = 'sometimes';
+            $rules['file_strategic_documents_bg_main'][] = 'sometimes';
         }
 
         return $rules;
