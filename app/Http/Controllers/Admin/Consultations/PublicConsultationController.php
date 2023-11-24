@@ -123,8 +123,8 @@ class PublicConsultationController extends AdminController
             ->get();
         $programProjects = ProgramProject::with(['translation'])->get();
         $linkCategories = LinkCategory::with(['translation'])->get();
-        $operationalPrograms = OperationalProgram::Actual()->get();
-        $legislativePrograms = LegislativeProgram::Actual()->get();
+        $operationalPrograms = OperationalProgram::get();
+        $legislativePrograms = LegislativeProgram::get();
 
         $documents = [];
         foreach ($item->documents as $document){
@@ -179,7 +179,6 @@ class PublicConsultationController extends AdminController
             if( !$id ) {
                 $item->importer_institution_id = $user->institution ? $user->institution->id : null;
                 $item->responsible_institution_id = $user->institution ? $user->institution->id : null;
-                $item->responsible_institution_address = $user->institution ? $user->institution->address : null;
             }
 
             $item->save();

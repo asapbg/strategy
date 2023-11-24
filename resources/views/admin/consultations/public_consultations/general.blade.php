@@ -18,6 +18,11 @@
                     <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ $item->importerInstitution ?  $item->importerInstitution->name : '---'}}
                 </div>
             </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label> {{ $item->importerInstitution ? (($item->importerInstitution->settlement ? $item->importerInstitution->settlement->ime.', ' : '').$item->importerInstitution->address) : '---'}}
+                </div>
+            </div>
             @if($item->pris)
                 <div class="col-12">
                     <div class="form-group">
@@ -25,6 +30,17 @@
                     </div>
                 </div>
             @endif
+        @else
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ auth()->user() && auth()->user()->institution ? auth()->user()->institution->name : '---'}}
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label> {{ auth()->user() && auth()->user()->institution ? ((auth()->user()->institution->settlement ? auth()->user()->institution->settlement->ime.', ' : '').auth()->user()->institution->address) : '---'}}
+                </div>
+            </div>
         @endif
             <div class="col-md-6">
                 <div class="form-group">
@@ -78,13 +94,13 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="legislative_program_row_id">{{ trans_choice('custom.legislative_programs_rows', 1) }}</label>
-                <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record"
-                        data-urls2="{{ route('admin.select2.ajax', 'lp_record') }}"
+                <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc" data-institution="{{ auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0 }}"
+                        data-urls2="{{ route('admin.select2.ajax', 'lp_record_pc') }}"
                         data-placeholders2="{{ __('custom.search_lp_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
-                    @if(!old('operational_program_row_id') && $item->legislative_program_row_id && $item->lpRow)
-                        <option value="{{ $item->lpRow->id }}" selected="selected">{{ $item->lpRow->value }}</option>
-                    @endif
+{{--                    @if(!old('operational_program_row_id') && $item->legislative_program_row_id && $item->lpRow)--}}
+{{--                        <option value="{{ $item->lpRow->id }}" >{{ $item->lpRow->value }}</option>--}}
+{{--                    @endif--}}
                 </select>
                 @error('legislative_program_row_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -123,12 +139,12 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="operational_program_row_id">{{ trans_choice('custom.operational_programs_rows', 1) }}</label>
                 <select id="operational_program_row_id" name="operational_program_row_id"
-                        data-types2ajax="op_record" data-urls2="{{ route('admin.select2.ajax', 'op_record') }}"
+                        data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}" data-institution="{{ (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id : 0) }}"
                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('operational_program_row_id'){{ 'is-invalid' }}@enderror">
-                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow)
-                        <option value="{{ $item->opRow->id }}" selected="selected">{{ $item->opRow->value }}</option>
-                    @endif
+{{--                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow)--}}
+{{--                        <option value="{{ $item->opRow->id }}" selected="selected">{{ $item->opRow->value }}</option>--}}
+{{--                    @endif--}}
                 </select>
                 @error('operational_program_row_id')
                 <div class="text-danger mt-1">{{ $message }}</div>

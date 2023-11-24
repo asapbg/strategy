@@ -3278,8 +3278,20 @@ $(document).ready(function (e) {
                             programId: $('#legislative_program_id').val(),
                             search: params.term
                         }
+                    }else if($(this).data('types2ajax') == 'lp_record_pc') {
+                        var query = {
+                            institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
+                            programId: $('#legislative_program_id').val(),
+                            search: params.term
+                        }
                     }else if($(this).data('types2ajax') == 'op_record') {
                         var query = {
+                            programId: $('#operational_program_id').val(),
+                            search: params.term
+                        }
+                    }else if($(this).data('types2ajax') == 'op_record_pc') {
+                        var query = {
+                            institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
                             programId: $('#operational_program_id').val(),
                             search: params.term
                         }

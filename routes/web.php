@@ -19,6 +19,10 @@ require_once('site.php');
 
 //Route::get('test', [\App\Http\Controllers\Test::class, 'index']);
 
+Route::get('/admin/login', function (){
+    return redirect(route('login'));
+});
+
 Route::get('/get-institutions', [CommonController::class, 'modalInstitutions'])->name('modal.institutions');
 Route::get('/file-preview-modal/{id}', [CommonController::class, 'previewModalFile'])->name('modal.file_preview');
 Route::get('/select2-ajax/{type}', [CommonController::class, 'getSelect2Ajax'])->name('select2.ajax');

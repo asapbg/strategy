@@ -159,4 +159,35 @@ class OperationalProgram extends ModelActivityExtend
 
         return $q->get();
     }
+
+    public static function select2AjaxOptionsFilterByInstitution($filters){
+        $q = DB::table('operational_program')
+            ->select(['operational_program_row.id', DB::raw('max(operational_program_row.value) as name')])
+            ->join('operational_program_row', function ($j){
+                $j->on('operational_program_row.operational_program_id', '=', 'operational_program.id')
+                    ->where('operational_program_row.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+            })
+            ->leftJoin('public_consultation', function ($j){
+                $j->on('public_consultation.operational_program_id', '=', 'operational_program.id')
+                    ->whereColumn('public_consultation.operational_program_row_id', '=', 'operational_program_row.id');
+            });
+
+        if(isset($filters['institution'])) {
+            $q->join('operational_program_row as institution_col', function ($j) use($filters){
+                $j->on('institution_col.operational_program_id', '=', 'operational_program_row.id')
+                    ->where('institution_col.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                    ->where('institution_col.value', '=', (int)$filters['institution']);
+            });
+        }
+        if(isset($filters['programId']) && (int)$filters['programId']) {
+            $q->where('operational_program.id', '=', (int)$filters['programId']);
+        }
+        if(isset($filters['search'])) {
+            $q->where('operational_program_row.value', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        $q->groupBy('operational_program_row.id');
+
+        return $q->get();
+    }
 }
