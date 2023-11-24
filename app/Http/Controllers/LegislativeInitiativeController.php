@@ -45,6 +45,7 @@ class LegislativeInitiativeController extends AdminController
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
         $order_by = $request->offsetGet('order_by');
+        $order_by_direction = $request->offsetGet('direction');
 
         $items = LegislativeInitiative::with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
@@ -68,11 +69,13 @@ class LegislativeInitiativeController extends AdminController
                     ]);
                 });
             })
-            ->when(!empty($order_by), function ($query) use ($order_by) {
+            ->when(!empty($order_by), function ($query) use ($order_by, $order_by_direction) {
+                $direction = !in_array($order_by_direction, ['asc', 'desc']) ? 'asc' : $order_by_direction;
+
                 $query = match ($order_by) {
-                    'keywords' => $query->orderBy('description'),
-                    'institutions' => $query->orderBy('operational_program_id'),
-                    default => $query->orderBy('created_at'),
+                    'keywords' => $query->orderBy('description', $direction),
+                    'institutions' => $query->orderBy('operational_program_id', $direction),
+                    default => $query->orderBy('created_at', $direction),
                 };
             })
             ->when(empty($order_by), function ($query) {
