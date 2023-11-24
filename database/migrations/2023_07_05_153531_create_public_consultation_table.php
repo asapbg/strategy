@@ -26,7 +26,7 @@ return new class extends Migration
             $table->date('open_to');
             $table->unsignedBigInteger('importer_institution_id');
             $table->unsignedBigInteger('responsible_institution_id');
-            $table->string('responsible_institution_address');
+            $table->string('responsible_institution_address')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->softDeletes();
             $table->timestamps();
