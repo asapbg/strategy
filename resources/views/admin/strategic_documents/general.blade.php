@@ -375,6 +375,19 @@
             <div class="col-md-6 col-md-offset-3">
                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                 <button id="stay" type="submit" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+
+                @if ($item->active)
+                    <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
+                       class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
+                    <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => 'true']) }}"
+                       class="btn btn-danger">{{ __('custom.unpublish_and_stay') }}</a>
+                @else
+                    <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
+                       class="btn btn-success">{{ __('custom.publish') }}</a>
+                    <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => 'true']) }}"
+                       class="btn btn-success">{{ __('custom.publish_and_stay') }}</a>
+                @endif
+
                 <a href="{{ route('admin.strategic_documents.index') }}"
                    class="btn btn-primary">{{ __('custom.cancel') }}</a>
             </div>
