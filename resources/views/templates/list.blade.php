@@ -38,9 +38,13 @@
 <br><a href="{{ route('templates.view', ['slug' => 'pris-reshenie']) }}">ПРИС (решение)</a>
 
 <br><a href="{{ route('templates.view', ['slug' => 'abonamenti']) }}">Абонаменти</a>
+<br>
 <br><a href="{{ route('templates.view', ['slug' => 'ks_filter']) }}">Консултативни съвети (списък)</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети</a>
-
+<br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети - вътрешна страница</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ks_news']) }}">Консултативни съвети - Новини</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ks_contacts']) }}">Консултативни съвети - Контакти</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ks_info_events']) }}">Консултативни съвети - Актуална информация и събития</a>
+<br>
 <br><a href="{{ route('templates.view', ['slug' => 'zp']) }}">Законодателна програма</a>
 <br><a href="{{ route('templates.view', ['slug' => 'op']) }}">Оперативна програма</a>
 <br>
