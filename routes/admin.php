@@ -414,4 +414,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/reports/create', 'create')->name('reports.create');
         Route::post('/reports/store', 'store')->name('reports.store');
     });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
+        Route::get('', 'index')->name('advisory-boards.index');
+        Route::get('/create', 'create')->name('advisory-boards.create');
+        Route::post('/store', 'store')->name('advisory-boards.store');
+        Route::get('{item}/view', 'show')->name('advisory-boards.view');
+    });
 });

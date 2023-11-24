@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="content">
-        <div class="container-fluid">
+        <div class="container-fluid pt-3">
             <div class="card">
                 <div class="card-body">
                     <form method="GET">
@@ -18,24 +18,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="institution"
-                                               class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
-                                        <select id="institution" class="institution form-select select2"
-                                                name="institution"
-                                                multiple>
-                                            <option value="" disabled>--</option>
-                                            @foreach($institutions as $institution)
-                                                @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
-                                                <option
-                                                    value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <div class="mb-3 d-flex flex-column w-100">
@@ -72,14 +54,18 @@
 
             <div class="card">
                 <div class="card-body table-responsive">
+                    <div class="mb-3">
+                        <a href="{{ route('admin.advisory-boards.create') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
+                        </a>
+                    </div>
+
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ trans_choice('custom.regulatory_acts', 1) }}</th>
-                            <th>{{ __('validation.attributes.author') }}</th>
+                            <th>{{ trans_choice('validation.attributes.advisory_name', 1) }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
-                            <th>{{ __('custom.status') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -88,46 +74,16 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->operationalProgram?->value) }}</td>
-                                    <td>{{ $item->user->fullName() }}</td>
+                                    <td>{{ $item->name }}</td>
                                     <td>{{ $item->created_at }}</td>
-                                    <td>{{ __('custom.legislative_' . strtolower($item->getStatus($item->status)->name)) }}</td>
                                     <td class="text-center">
                                         @can('view', $item)
-                                            <a href="{{ route('admin.legislative_initiatives.view', [$item]) }}"
+                                            <a href="{{ route('admin.advisory-boards.view', $item) }}"
                                                class="btn btn-sm btn-warning mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                        @endcan
-
-                                        @can('delete', $item)
-                                            @if(!$item->deleted_at)
-                                                <a href="javascript:;"
-                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                   data-target="#modal-delete-resource"
-                                                   data-resource-id="{{ $item->id }}"
-                                                   data-resource-delete-url="{{ route('admin.legislative_initiatives.delete', $item) }}"
-                                                   data-toggle="tooltip"
-                                                   title="{{__('custom.delete')}}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            @endif
-                                        @endcan
-
-                                        @can('restore', $item)
-                                            @if($item->deleted_at)
-                                                <a href="javascript:;"
-                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
-                                                   data-target="#modal-restore-resource"
-                                                   data-resource-id="{{ $item->id }}"
-                                                   data-resource-restore-url="{{ route('admin.legislative_initiatives.restore', $item) }}"
-                                                   data-toggle="tooltip"
-                                                   title="{{__('custom.restore')}}">
-                                                    <i class="fa fa-plus"></i>
-                                                </a>
-                                            @endif
                                         @endcan
                                     </td>
                                 </tr>
@@ -147,9 +103,6 @@
             </div>
         </div>
     </section>
-
-    @includeIf('modals.restore-resource', ['resource' => $title_singular])
-    @includeIf('modals.delete-resource', ['resource' => $title_singular, 'have_request_param' => true])
 @endsection
 
 
