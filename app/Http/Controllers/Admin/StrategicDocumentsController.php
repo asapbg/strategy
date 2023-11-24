@@ -18,6 +18,7 @@ use App\Models\StrategicDocumentType;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,8 @@ class StrategicDocumentsController extends AdminController
     const LIST_ROUTE = 'admin.strategic_documents.index';
     const EDIT_ROUTE = 'admin.strategic_documents.edit';
     const STORE_ROUTE = 'admin.strategic_documents.store';
+    const PUBLISH_ROUTE = 'admin.strategic_documents.publish';
+    const UNPUBLISH_ROUTE = 'admin.strategic_documents.unpublish';
     const DELETE_ROUTE = 'admin.strategic_documents.delete';
     const LIST_VIEW = 'admin.strategic_documents.index';
     const EDIT_VIEW = 'admin.strategic_documents.edit';
@@ -58,14 +61,16 @@ class StrategicDocumentsController extends AdminController
         $toggleBooleanModel = 'StrategicDocument';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
+        $publishRouteName = self::PUBLISH_ROUTE;
+        $unPublishRouteName = self::UNPUBLISH_ROUTE;
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName','publishRouteName', 'unPublishRouteName'));
     }
 
     /**
      * @param Request $request
      * @param int $item
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse
      */
     public function edit(Request $request, $id = 0)
     {
@@ -181,7 +186,7 @@ class StrategicDocumentsController extends AdminController
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
     public function delete(int $id)
     {
@@ -457,5 +462,43 @@ class StrategicDocumentsController extends AdminController
         } catch (\Exception $e) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
+    }
+
+    /**
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function publish(int $id, $stay = false)
+    {
+        $strategicDocument = StrategicDocument::findOrFail($id);
+
+        return $this->publishUnPublish($strategicDocument,true, $stay);
+    }
+
+    /**
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function unPublish(int $id, $stay = false)
+    {
+        $strategicDocument = StrategicDocument::findOrFail($id);
+
+        return $this->publishUnPublish($strategicDocument,false, $stay);
+    }
+
+    /**
+     * @param StrategicDocument $strategicDocument
+     * @param bool $publish
+     * @param $stay
+     * @return RedirectResponse
+     */
+    private function publishUnPublish(StrategicDocument $strategicDocument, bool $publish, $stay)
+    {
+        $strategicDocument->active = $publish;
+        $strategicDocument->save();
+        $redirectRoute = $stay == 'true' ? route(self::EDIT_ROUTE, ['id' => $strategicDocument->id]) : route(self::LIST_ROUTE);
+
+        return redirect($redirectRoute)
+            ->with('success', trans_choice('custom.strategic_documents', 1)." ".($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
     }
 }

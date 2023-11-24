@@ -104,6 +104,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id?}', 'prisActOptions')->name('strategic_documents.pris.options');
+        Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
+        Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
     });
 
     // Static pages
