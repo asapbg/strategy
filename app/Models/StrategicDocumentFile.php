@@ -71,6 +71,20 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         );
     }
 
+    public static function translationFieldsPropertiesMain(): array
+    {
+        return array(
+            'display_name_main' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:500']
+            ],
+            'file_info_main' => [
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string']
+            ],
+        );
+    }
+
     /**
      * Get the parent document.
      */

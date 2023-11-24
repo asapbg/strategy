@@ -1,4 +1,6 @@
 @php($storeRoute = route($storeRouteName))
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
 <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
@@ -152,9 +154,16 @@
                            for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
                     <select id="pris_act_id" name="pris_act_id"
                             class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
-                        <option value="{{ $item->pris->id }}"
-                                {{ old('pris_act_id', ($item->pris ? $item->pris->id : null)) == $item->id ? 'selected' : '' }}
-                                data-id="{{ $item->pris->id }}"> {{ $item->pris?->actType?->name . ' N' . $item->pris->doc_num . ' ' . $item->pris->doc_date }} </option>
+                        <!--
+                        <option value="{{ $item->pris?->id }}"
+                                {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
+                                data-id="{{ $item->pris?->id }}"> {{ $item->pris?->actType?->name . ' N' . $item->pris?->doc_num . ' ' . $item->pris?->doc_date }} </option>
+                                -->
+                        @foreach ($prisActs as $prisAct)
+                            <option value="{{ $prisAct->id }}">
+                                {{ $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date }}
+                            </option>
+                        @endforeach
                     </select>
                     @error('pris_act_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -164,7 +173,7 @@
         </div>
      </div>
 
-        <!-- end testing -->
+     <!-- end testing -->
 
         <div class="col-md-3 act-custom-fields d-none">
             <div class="form-group">
@@ -270,11 +279,12 @@
 
     <!-- Files -->
     <h3>Основен файл</h3>
+
     <div class="row">
         @include('admin.partial.edit_field_translate', [
             'item' => null,
-            'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),
-            'field' => 'display_name',
+            'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesMain(),
+            'field' => 'display_name_main',
             'required' => true,
             'value' => optional($mainFile)->display_name ?? ''
         ])
@@ -282,13 +292,14 @@
             <div class="form-group form-group-sm">
                 <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
                 <div class="col-12">
-                    <input value="{{ old('valid_at', optional($mainFile)->valid_at) }}" class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror" type="text" name="valid_at">
-                    @error('valid_at')
+                    <input value="{{ old('valid_at', optional($mainFile)->valid_at) }}" class="form-control form-control-sm datepicker @error('valid_at_main') is-invalid @enderror" type="text" name="valid_at_main">
+                    @error('valid_at_main')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="form-group form-group-sm">
                 <label class="col-sm-12 control-label" for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span></label>
@@ -308,21 +319,9 @@
                 </div>
             </div>
         </div>
+
         <div class="col-12"></div>
-        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
-        <!--
-    <div class="col-md-4">
-        <div class="form-group form-group-sm">
-            <label class="col-sm-12 control-label" for="ord">{{ __('custom.order') }}</label>
-            <div class="col-12">
-                <input type="number" id="ord" name="ord" class="form-control form-control-sm" value="{{ old('ord', 0) }}">
-            </div>
-            @error('ord')
-        <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    -->
+        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesMain(),'field' => 'file_info_main', 'required' => false])
         <div class="col-md-8">
             <div class="form-group form-group-sm">
                 <label class="col-sm-12 control-label" for="visible_in_report"><br>
@@ -333,13 +332,13 @@
         </div>
         <div class="row">
             @foreach(config('available_languages') as $lang)
+                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
                 @php(
                     $mainFileForLang = $mainFiles->first(function($file) use ($lang) {
                         return $file->locale === $lang['code'];
                     })
                 )
                 @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
-                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
                 <div class="col-md-6 mb-3">
                     <div class="col-md-6 mb-3">
                         <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
@@ -348,6 +347,9 @@
                         @endif
                     </div>
                     @if ($mainFileForLang)
+                        @php(
+                            $fieldName = $fieldName. '_main'
+                        )
                         <div>
                             <input class="form-control form-control-sm" type="file" name="{{ $fieldName }}">
                             <input type="hidden" name="main_fileId_{{ $lang['code'] }}" value="{{ $mainFileForLang->id }}">
@@ -368,7 +370,6 @@
         </div>
     </div>
     <!-- End Files -->
-
     <div class="row">
         <div class="form-group row">
             <div class="col-md-6 col-md-offset-3">
@@ -380,6 +381,7 @@
         </div>
     </div>
 </form>
+</div>
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function() {
@@ -399,7 +401,7 @@
                             parentActId.append('<option value="">---</option>');
 
                             $.each(prisOptions, function(index, option) {
-                                let selected = (option.id == '{{ old('pris_act_id', $item->pris ? $item->pris->id : null) }}') ? 'selected' : '';
+                                let selected = (option.id == '{{ old('pris_act_id', $item->pris ? $item->pris?->id : null) }}') ? 'selected' : '';
                                 parentActId.append('<option value="' + option.id + '" ' + selected + '>' + option.text + '</option>');
                             });
 
