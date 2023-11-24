@@ -86,6 +86,7 @@ class LegislativeProgram extends ModelActivityExtend
     public function rowFiles()
     {
         return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
             ->withPivot('row_num')
             ->withPivot('row_month');
     }
