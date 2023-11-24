@@ -139,33 +139,15 @@
 
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
                 <div class="col-md-4">
-                    @php
-                        $text_white = request()->get('order_by', '') === 'keywords' ? 'text-white' : '';
-                    @endphp
-                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'keywords'])) }}"
-                       class="mb-0 text-decoration-none text-dark">
-                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ trans_choice('custom.keyword', 1) }}
-                    </a>
+                    @include('components.sortable-link', ['sort_by' => 'keywords', 'translation' => trans_choice('custom.keyword', 1)])
                 </div>
 
                 <div class="col-md-4 cursor-pointer ">
-                    @php
-                        $text_white = request()->get('order_by', '') === 'institutions' ? 'text-white' : '';
-                    @endphp
-                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'institutions'])) }}"
-                       class="mb-0 text-decoration-none text-dark">
-                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ trans_choice('custom.institutions', 1) }}
-                    </a>
+                    @include('components.sortable-link', ['sort_by' => 'institutions', 'translation' => trans_choice('custom.institutions', 1)])
                 </div>
 
                 <div class="col-md-4">
-                    @php
-                        $text_white = request()->get('order_by', '') === 'date' ? 'text-white' : '';
-                    @endphp
-                    <a href="{{ url()->current(). '?' . http_build_query(array_merge(request()->all(), ['order_by' => 'date'])) }}"
-                       class="mb-0 text-decoration-none text-dark">
-                        <i class="fa-solid fa-sort me-2 {{ $text_white }}"></i>{{ __('validation.attributes.date') }}
-                    </a>
+                    @include('components.sortable-link', ['sort_by' => 'date', 'translation' => trans_choice('validation.attributes.date', 1)])
                 </div>
             </div>
 
