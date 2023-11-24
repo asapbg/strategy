@@ -1,13 +1,8 @@
 @extends('layouts.site', ['fullwidth' => true])
-<style>
-     .public-page {
-        padding: 0px 0px !important;
-    }
-</style>
-@section('pageTitle', 'Новини')
+
+@section('pageTitle', 'Консултативни съвети - Новини')
 
 @section('content')
-
 <div class="row">
     <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
@@ -15,17 +10,18 @@
                 <ul class="list-unstyled">
                     <li class="mb-1">
                         <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
-                            data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                            <i class="fa-solid fa-bars me-2 mb-2"></i>Библиотека
+                            data-toggle="collapse" data-target="#home-collapse" aria-expanded="true">
+                            <i class="fa-solid fa-bars me-2 mb-2"></i>Консултативни съвети
                         </a>
                         <hr class="custom-hr">
                         <div class="collapse show mt-3" id="home-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
 
-                                <li class="mb-2  active-item-left p-1"><a href="#"
-                                        class="link-dark text-decoration-none">Новини</a>
+                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Контакти</a>
                                 </li>
-                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Публикации</a>
+                                <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Актуална информация и събития</a>
+                                </li>
+                                <li class="mb-2 active-item-left p-1 "><a href="#" class="link-dark text-decoration-none">Новини</a>
                                 </li>
                             </ul>
                         </div>
@@ -37,40 +33,11 @@
 
     </div>
 
-
     <div class="col-lg-10 py-5">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене
             </h2>
-            <div class="col-md-12">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Категория:</label>
-                        <select class="form-select select2" multiple aria-label="Default select example">
-                            <option value="1">Всички</option>
-                            <option value="1">Държавна администрация</option>
-                            <option value="1">България в ОИСР</option>
-                            <option value="1">Правителствени</option>
-                            <option value="1">Бизнес среда</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Вид орган</label>
-                        <select class="form-select select2" multiple aria-label="Default select example">
-                            <option value="1">Всички</option>
-                            <option value="1">Министерски съвет</option>
-                            <option value="1">Министър-председател</option>
-                            <option value="1">Министър</option>
-                            <option value="1">Държавна агенция</option>
-                            <option value="1">Друг централен орган</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -154,7 +121,7 @@
                         въздействието за 2022</h3>                       
                         <div class="row mb-2">
                             <div class="col-md-8">
-                                <span class="blog-category">Държавна администрация</span>
+                                <span class="blog-category">Консултативни съвети</span>
                             </div>
                             <div class="col-md-4">
                                 <div class="consult-item-header-edit">
@@ -183,7 +150,7 @@
                     <h3 class="post-title">Представен е доклад „Икономически преглед на България“ на ОИСР.</h3>
                     <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -212,7 +179,7 @@
                         присъединяване към ОИСР</h3>
                        <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -242,7 +209,7 @@
                         въздействието за 2022</h3>                       
                         <div class="row mb-2">
                             <div class="col-md-8">
-                                <span class="blog-category">Държавна администрация</span>
+                                <span class="blog-category">Консултативни съвети</span>
                             </div>
                             <div class="col-md-4">
                                 <div class="consult-item-header-edit">
@@ -271,7 +238,7 @@
                     <h3 class="post-title">Представен е доклад „Икономически преглед на България“ на ОИСР.</h3>
                     <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -300,7 +267,7 @@
                         присъединяване към ОИСР</h3>
                        <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -330,7 +297,7 @@
                         въздействието за 2022</h3>                       
                         <div class="row mb-2">
                             <div class="col-md-8">
-                                <span class="blog-category">Държавна администрация</span>
+                                <span class="blog-category">Консултативни съвети</span>
                             </div>
                             <div class="col-md-4">
                                 <div class="consult-item-header-edit">
@@ -359,7 +326,7 @@
                     <h3 class="post-title">Представен е доклад „Икономически преглед на България“ на ОИСР.</h3>
                     <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -388,7 +355,7 @@
                         присъединяване към ОИСР</h3>
                        <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">България в ОИСР</span>
+                            <span class="blog-category">Консултативни съвети</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
@@ -436,5 +403,7 @@
             </nav>
         </div>
     </div>
+
 </div>
+
 @endsection
