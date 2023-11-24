@@ -6,6 +6,8 @@ use App\Models\File as FileModel;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
 use App\Services\FileOcr;
+use ArrayAccess;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -126,10 +128,26 @@ class FileService
         $fileExtension = $mainFile->content_type;
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
 
+        /*
+        $validToTexts = [
+            'en' => 'Valid to(year):',
+            'bg' => 'Валиден до(година):',
+        ];
+
+        $indefiniteToTexts = [
+            'en' => 'Indefinite',
+            'bg' => 'Безсрочен',
+        ];
+
+        $year = Carbon::createFromDate($mainFile->valid_at)->format('Y');
+        $validAt = $mainFile->valid_at ? Arr::get($validToTexts, app()->getLocale()) . $year ?? 'Валиден до(година):'. $year : Arr::get($indefiniteToTexts, app()->getLocale());
+        */
+        $validAt = $this->prepareValidAtText($mainFile);
+
         $rootNode = [
             'id' => $mainFile->id,
             'parent' => '#',
-            'text' => $mainFile->display_name .
+            'text' => $mainFile->display_name . ' ' . $validAt .
                 "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
                 "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
                 //"<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
@@ -148,7 +166,7 @@ class FileService
             $fileNode = [
                 'id' => $file->id,
                 'parent' => $file->parent_id ?: $mainFile->id,//'root',
-                'text' => $file->display_name .
+                'text' => $file->display_name . ' ' . $validAt .
                     "<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
                     "<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
                     "<a href='#' id='deleteButton_{$file->id}' class='delete-button' data-file-id='{$file->id}'><i class='fas fa-trash'></i></a>",
@@ -159,6 +177,27 @@ class FileService
         }
 
         return $fileData;
+    }
+
+    /**
+     * @param StrategicDocumentFile $strategicDocumentFile
+     * @return string
+     */
+    private function prepareValidAtText(StrategicDocumentFile $strategicDocumentFile): string
+    {
+        $validToTexts = [
+            'en' => 'Valid to(year):',
+            'bg' => 'Валиден до(година):',
+        ];
+
+        $indefiniteToTexts = [
+            'en' => 'Indefinite',
+            'bg' => 'Безсрочен',
+        ];
+
+        $year = Carbon::createFromDate($strategicDocumentFile->valid_at)->format('Y');
+
+        return $strategicDocumentFile->valid_at ? Arr::get($validToTexts, app()->getLocale()) . $year ?? 'Валиден до(година):'. $year : Arr::get($indefiniteToTexts, app()->getLocale());
     }
 
     public function prepareMainFileFields($validated)
