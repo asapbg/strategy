@@ -1,4 +1,5 @@
-<form class="row" action="{{ route('admin.strategic_documents.file.upload') }}" method="post" enctype="multipart/form-data">
+<div class="tab-pane" id="files" role="tabpanel" aria-labelledby="files-tab">
+    <form class="row" action="{{ route('admin.strategic_documents.file.upload') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" id="strategicDocumentId" name="id" value="{{ $item->id ?? 0 }}">
     @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'display_name', 'required' => true])
@@ -161,6 +162,7 @@
         @endforeach
         </tbody>
     </table>
+</div>
 @endif
 @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.files', 1)])
 
@@ -194,8 +196,12 @@
     <script type="text/javascript">
         fileData = {!! json_encode($fileData) !!};
         fileDataEn = {!! json_encode($fileDataEn) !!};
-
+        const hasErrors = @json(session('hasErrorsFromFileTab'));
         $(document).ready(function() {
+            if (hasErrors) {
+                $('#custom-tabs a[href="#files"]').tab('show');
+            }
+
             $('[id^=fileRow_head_]').hide();
             $('[id^=fileRow_body_]').hide();
             const fileTree = $("#fileTree");

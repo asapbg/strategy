@@ -116,37 +116,49 @@ class StrategicDocumentsController extends AdminController
 
         try {
             DB::beginTransaction();
-
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
                 $validated['strategic_act_link'] = null;
                 $validated['document_date'] = null;
 
-                if ($validated['document_date_accepted']) {
-                    $validated['document_date_accepted'] = Carbon::parse($validated['document_date_expiring']);
-                }
-                if ($validated['document_date_expiring']) {
-                    $validated['document_date_expiring'] = Carbon::parse($validated['document_date_expiring']);
-                }
-                if ($validated['document_date']) {
-                    $validated['document_date'] = Carbon::parse($validated['document_date']);
+                $datesToBeParsedToCarbon = [
+                    'document_date_accepted',
+                    'document_date_expiring',
+                    'document_date',
+                ];
+
+                foreach ($datesToBeParsedToCarbon as $date) {
+                    if (array_key_exists($date, $validated)) {
+                        $validated[$date] = Carbon::parse($validated[$date]);
+                    }
                 }
 
             } else {
                 $validated['pris_act_id'] = null;
             }
+
             $fillable = $this->getFillableValidated($validated, $item);
+
             $item->fill($fillable);
 
             $item->save();
-
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
             try {
-                $bgFile = $validated['file_strategic_documents_bg'] ?? null;
-                $enFile = $validated['file_strategic_documents_en'] ?? null;
+                $fileService = app(FileService::class);
+                $validated = $fileService->prepareMainFileFields($validated);
+
+                $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
+                $enFile =  Arr::get($validated, 'file_strategic_documents_en');
+
                 if ($bgFile || $enFile) {
-                    $fileService = app(FileService::class);
-                    $fileService->uploadFiles($request, $item, true);
+                    $fileService->uploadFiles($validated, $item, true);
+                } else {
+                    $locale = app()->getLocale();
+                    $mainFile = $item->files->where('is_main', true)->where('locale', $locale)->first();
+                    if ($mainFile) {
+                        $validated = $fileService->prepareMainFileFields($validated);
+                        $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $mainFile, $validated);
+                    }
                 }
             } catch (\Throwable $throwable) {
                 return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -217,8 +229,9 @@ class StrategicDocumentsController extends AdminController
             if (!$bgFile && !$enFile) {
                 throw new \Exception('Files not found!');
             }
+
             $fileService = app(FileService::class);
-            $fileService->uploadFiles($request, $strategicDoc);
+            $fileService->uploadFiles($validated, $strategicDoc);
 
             return redirect(route(self::EDIT_ROUTE, ['id' => $strategicDoc->id]))
                 ->with('success', trans_choice('custom.strategic_document_files', 1)." ".__('messages.created_successfully_m'));
