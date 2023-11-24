@@ -91,7 +91,6 @@ class StrategicDocumentsController extends AdminController
         $strategicDocumentFiles = StrategicDocumentFile::all();
         $strategicDocumentFilesBg = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
         $strategicDocumentFilesEn = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'en')->get();
-
         $strategicDocumentsFileService = app(FileService::class);
 
         $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);

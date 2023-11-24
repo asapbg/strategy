@@ -41,10 +41,11 @@ class StoreStrategicDocumentRequest extends FormRequest
             'pris_act_id' => ['required_if:strategic_act_link,null'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
             'strategic_act_link' => ['required_if:pris_act_id,null'],
-            'document_date' => ['required_if:pris_act_id,null', 'nullable', 'date'],
+            'document_date' => ['nullable', 'date'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
             'document_date_accepted' => 'required|date',
-            'document_date_expiring' => 'required|date',
+            'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
+            'document_date_expiring' => ['required_if:date_expiring_indefinite,null|date'],
         ];
 
         if( request()->input('pris_act_id')) {
@@ -85,7 +86,9 @@ class StoreStrategicDocumentRequest extends FormRequest
             $rules['file_strategic_documents_bg'][] = 'sometimes';
             $rules['file_strategic_documents_bg_main'][] = 'sometimes';
         }
-
+        if (request()->get('date_exipring_indefinite') == 0) {
+            $rules['document_date_expiring'][] = 'sometimes';
+        }
         return $rules;
     }
 }

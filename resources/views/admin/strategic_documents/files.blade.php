@@ -8,10 +8,23 @@
         <div class="form-group form-group-sm">
             <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span class="required">*</span> </label>
             <div class="col-12">
-                <input value="{{ old('valid_at', '') }}" class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror" type="text" name="valid_at">
+                <input id="valid_at" value="{{ old('valid_at', '') }}" class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror" type="text" name="valid_at">
                 @error('valid_at')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group form-group-sm">
+            <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }} <span class="required">*</span> </label>
+            <div class="form-check">
+                <input type="hidden" name="date_expiring_indefinite" value="0">
+                <input type="checkbox" id="date_valid_indefinite" name="date_valid_indefinite"
+                       class="form-check-input" value="1" {{ $item->expiration_date === null ? 'checked' : '' }}>
+                <label class="form-check-label" for="unlimited_date_expiring">
+                    {{ __('custom.date_expring_indefinite') }}
+                </label>
             </div>
         </div>
     </div>
@@ -198,6 +211,26 @@
         fileDataEn = {!! json_encode($fileDataEn) !!};
         const hasErrors = @json(session('hasErrorsFromFileTab'));
         $(document).ready(function() {
+            const dateValidAt = $('#valid_at');
+            const dateExpiringCheckbox = $('#date_valid_indefinite');
+            dateValidAt.on('change', function () {
+                dateExpiringCheckbox.prop('checked', false);
+            });
+
+            dateValidAt.on('change', function () {
+                if (!dateExpiringCheckbox.is(':checked')) {
+                    dateExpiringCheckbox.prop('checked', $(this).val() === '').trigger('change');
+                }
+            })
+
+            dateExpiringCheckbox.on('change', function () {
+                if ($(this).is(':checked')) {
+                    if (dateValidAt.val() !== '') {
+                        dateValidAt.val('').trigger('change');
+                    }
+                }
+            })
+
             if (hasErrors) {
                 //$('#custom-tabs a[href="#files"]').tab('show');
             }
