@@ -246,6 +246,21 @@
                         </a>
                     </li>
                 @endcan
+                <li class="nav-item">
+                    <a href="#" class="nav-link @if(strstr(url()->current(), 'advisory-boards')) active @endif">
+                        <i class="fas fa-weight"></i>
+                        <p>{{ trans_choice('custom.advisory_boards', 2) }}<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.advisory-boards.index') }}"
+                               class="nav-link @if(Str::endsWith(url()->current(), 'advisory-boards')) active @endif">
+                                <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                <p>{{ trans_choice('custom.advisory_board_list', 2) }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @canany(['manage.*','manage.nomenclatures'])
                     <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     <li class="nav-item">

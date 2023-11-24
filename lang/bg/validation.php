@@ -413,5 +413,11 @@ return [
         'document_accepted_with'    => 'Приет с Решение №',
         'file_strategic_documents_bg'  => 'Файл (BG)',
         'file_strategic_documents_en'  => 'Файл (EN)',
+        'advisory_name' => 'Име на съвет',
+        'council_attached_to' => 'Съветът е създаден към',
+        'specific_name' => 'Конкретно наименование',
+        'act_of_creation' => 'Акт на създаване',
+        'meetings_per_year' => 'Регламентиран брой заседания на година',
+        'report_at' => 'Отчет на дейност пред',
     ],
 ];

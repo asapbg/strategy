@@ -52,9 +52,6 @@ class StrategicDocumentFileUploadRequest extends FormRequest
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
         $validator = Validator::make(request()->all(), $rules);
-        if ($validator->fails()) {
-            session(['hasErrorsFromFileTab' => true]);
-        }
 
         return $rules;
     }

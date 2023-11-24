@@ -104,6 +104,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id?}', 'prisActOptions')->name('strategic_documents.pris.options');
+        Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
+        Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
     });
 
     // Static pages
@@ -411,5 +413,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/reports', 'index')->name('reports.index');
         Route::get('/reports/create', 'create')->name('reports.create');
         Route::post('/reports/store', 'store')->name('reports.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
+        Route::get('', 'index')->name('advisory-boards.index');
+        Route::get('/create', 'create')->name('advisory-boards.create');
+        Route::post('/store', 'store')->name('advisory-boards.store');
+        Route::get('{item}/view', 'show')->name('advisory-boards.view');
     });
 });

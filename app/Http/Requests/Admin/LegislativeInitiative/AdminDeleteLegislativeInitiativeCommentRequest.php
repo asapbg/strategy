@@ -3,14 +3,16 @@
 namespace App\Http\Requests\Admin\LegislativeInitiative;
 
 use App\Models\LegislativeInitiativeComment;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * @property LegislativeInitiativeComment $comment
  */
 class AdminDeleteLegislativeInitiativeCommentRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -20,18 +22,6 @@ class AdminDeleteLegislativeInitiativeCommentRequest extends FormRequest
     public function authorize(): bool
     {
         return auth()->check() && auth()->user()->can('delete', $this->comment);
-    }
-
-    /**
-     * How to handle failed authorization.
-     *
-     * @return HttpResponseException
-     */
-    public function failedAuthorization(): HttpResponseException
-    {
-        throw new \Illuminate\Http\Exceptions\HttpResponseException(
-            redirect()->back()->with('warning', __('messages.unauthorized'))
-        );
     }
 
     /**

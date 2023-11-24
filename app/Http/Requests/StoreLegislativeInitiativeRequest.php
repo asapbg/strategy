@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\LegislativeInitiative;
+use App\Traits\FailedAuthorization;
 use HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,6 +13,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreLegislativeInitiativeRequest extends FormRequest
 {
 
+    use FailedAuthorization;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -20,18 +23,6 @@ class StoreLegislativeInitiativeRequest extends FormRequest
     public function authorize(): bool
     {
         return auth()->check();
-    }
-
-    /**
-     * How to handle failed authorization.
-     *
-     * @return HttpResponseException
-     */
-    public function failedAuthorization(): HttpResponseException
-    {
-        throw new \Illuminate\Http\Exceptions\HttpResponseException(
-            redirect()->back()->with('warning', __('messages.unauthorized'))
-        );
     }
 
     /**
