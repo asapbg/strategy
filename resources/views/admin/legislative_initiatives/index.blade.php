@@ -148,8 +148,8 @@
         </div>
     </section>
 
-    @includeIf('modals.restore-resource', ['resource' => $title_singular])
     @includeIf('modals.delete-resource', ['resource' => $title_singular, 'have_request_param' => true])
+    @includeIf('modals.restore-resource', ['resource' => $title_singular])
 @endsection
 
 

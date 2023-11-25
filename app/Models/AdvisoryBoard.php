@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property string $name
+ *
  * @method static orderBy(string $string, string $string1)
  */
 class AdvisoryBoard extends Model
