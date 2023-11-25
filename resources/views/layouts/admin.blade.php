@@ -81,11 +81,6 @@
 </div>
 
 <script src="{{ asset('js/admin.js') }}"></script>
-<script type="text/javascript">
-$(document).ready(function () {
-
-});
-</script>
 @stack('scripts')
 
 </body>
