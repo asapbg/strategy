@@ -35,6 +35,6 @@ class LegislativeProgramRow extends Model
 
     public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(LegislativeProgram::class, 'legislative_program_id', 'id');
+        return $this->hasOne(LegislativeProgram::class, 'id', 'legislative_program_id');
     }
 }
