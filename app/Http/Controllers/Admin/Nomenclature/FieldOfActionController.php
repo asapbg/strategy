@@ -50,6 +50,8 @@ class FieldOfActionController extends AdminController
         DB::beginTransaction();
         try {
             $field_of_action = new FieldOfAction();
+            $fillable = $this->getFillableValidated($validated, $field_of_action);
+            $field_of_action->fill($fillable);
             $field_of_action->save();
 
             $this->storeTranslateOrNew(FieldOfAction::TRANSLATABLE_FIELDS, $field_of_action, $validated);
@@ -91,6 +93,9 @@ class FieldOfActionController extends AdminController
         $validated = $request->validated();
 
         try {
+            $fillable = $this->getFillableValidated($validated, $action);
+            $action->fill($fillable);
+            $action->save();
             $this->storeTranslateOrNew(FieldOfAction::TRANSLATABLE_FIELDS, $action, $validated);
 
             return redirect(route('admin.nomenclature.field_of_actions.edit', $action))

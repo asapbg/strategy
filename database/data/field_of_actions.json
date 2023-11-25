@@ -2,111 +2,133 @@
     {
         "id": 1,
         "name_bg": "COVID-19",
-        "name_en": "COVID-19"
+        "name_en": "COVID-19",
+        "icon_class": "fas fa-virus"
     },
     {
         "id": 2,
         "name_bg": "Бизнес среда",
-        "name_en": "Business environment"
+        "name_en": "Business environment",
+        "icon_class": "fas fa-briefcase"
     },
     {
         "id": 3,
         "name_bg": "Външна политика, сигурност и отбрана",
-        "name_en": "External policy, safety, and discipline"
+        "name_en": "External policy, safety, and discipline",
+        "icon_class": "fas fa-shield-alt"
     },
     {
         "id": 4,
         "name_bg": "Държавна администрация",
-        "name_en": "Government administration"
+        "name_en": "Government administration",
+        "icon_class": "fas fa-building"
     },
     {
         "id": 5,
         "name_bg": "Енергетика",
-        "name_en": "Energy"
+        "name_en": "Energy",
+        "icon_class": "fas fa-charging-station"
     },
     {
         "id": 6,
         "name_bg": "Защита на потребителите",
-        "name_en": "Protection of consumers"
+        "name_en": "Protection of consumers",
+        "icon_class": "fas fa-user-shield"
     },
     {
         "id": 7,
         "name_bg": "Здравеопазване",
-        "name_en": "Health"
+        "name_en": "Health",
+        "icon_class": "fas fa-hospital-symbol"
     },
     {
         "id": 8,
         "name_bg": "Земеделие и селски райони",
-        "name_en": "Land and community areas"
+        "name_en": "Land and community areas",
+        "icon_class": "fas fa-tractor"
     },
     {
         "id": 9,
         "name_bg": "Качество и безопасност на храните",
-        "name_en": "Quality and safety of goods"
+        "name_en": "Quality and safety of goods",
+        "icon_class": "fas fa-apple-alt"
     },
     {
         "id": 10,
         "name_bg": "Култура",
-        "name_en": "Culture"
+        "name_en": "Culture",
+        "icon_class": "fas fa-theater-masks"
     },
     {
         "id": 11,
         "name_bg": "Междусекторни политики",
-        "name_en": "Multisector policies"
+        "name_en": "Multisector policies",
+        "icon_class": "fas fa-bezier-curve"
     },
     {
         "id": 12,
         "name_bg": "Младежка политика",
-        "name_en": "Youth policy"
+        "name_en": "Youth policy",
+        "icon_class": "fas fa-certificate"
     },
     {
         "id": 13,
         "name_bg": "Наука и технологии",
-        "name_en": "Science and technology"
+        "name_en": "Science and technology",
+        "icon_class": "fas fa-microscope"
     },
     {
         "id": 14,
         "name_bg": "Образование",
-        "name_en": "Education"
+        "name_en": "Education",
+        "icon_class": "fas fa-graduation-cap"
     },
     {
         "id": 15,
         "name_bg": "Околна среда",
-        "name_en": "Outer environment"
+        "name_en": "Outer environment",
+        "icon_class": "fas fa-tree"
     },
     {
         "id": 16,
         "name_bg": "Правосъдие и вътрешни работи",
-        "name_en": "Law and internal works"
+        "name_en": "Law and internal works",
+        "icon_class": "fas fa-gavel"
     },
     {
         "id": 17,
         "name_bg": "Регионална политика",
-        "name_en": "Regional policy"
+        "name_en": "Regional policy",
+        "icon_class": "fas fa-certificate"
     },
     {
         "id": 18,
         "name_bg": "Социална политика и заетост",
-        "name_en": "Social policy and wealth"
+        "name_en": "Social policy and wealth",
+        "icon_class": "fas fa-certificate"
     },
     {
         "id": 19,
         "name_bg": "Спорт",
-        "name_en": "Sport"
+        "name_en": "Sport",
+        "icon_class": "fas fa-volleyball-ball"
     },
     {
         "id": 20,
         "name_bg": "Транспорт",
-        "name_en": "Transport"
+        "name_en": "Transport",
+        "icon_class": "fas fa-car"
     },
     {
         "id": 21,
         "name_bg": "Туризъм",
-        "name_en": "Tourism"
+        "name_en": "Tourism",
+        "icon_class": "fas fa-mountain"
     },
     {
         "id": 22,
         "name_bg": "Финанси и данъчна политика",
-        "name_en": "Finance and data policy"
+        "name_en": "Finance and data policy",
+        "icon_class": "fas fa-piggy-bank"
     }
 ]

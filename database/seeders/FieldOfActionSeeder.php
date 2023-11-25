@@ -28,7 +28,9 @@ class FieldOfActionSeeder extends Seeder
         $actions = json_decode($json, true);
 
         foreach ($actions as $action) {
-            $field_of_action = new FieldOfAction();
+            $field_of_action = new FieldOfAction([
+                'icon_class' => $action['icon_class']
+            ]);
             $field_of_action->save();
 
             foreach (config('available_languages') as $locale) {
