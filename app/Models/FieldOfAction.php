@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
  * @method static paginate(int $PAGINATION)
  * @method static orderBy(string $string)
  */
-class FieldOfAction extends Model implements TranslatableContract
+class FieldOfAction extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable, SoftDeletes;
 
@@ -28,6 +28,10 @@ class FieldOfAction extends Model implements TranslatableContract
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     protected $table = 'field_of_actions';
+    protected $fillable = ['icon_class'];
+
+    //activity
+    protected string $logName = "field_of_actions";
 
     protected function name(): Attribute
     {
