@@ -15,8 +15,10 @@
         <div class="container-fluid">
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end">
-                    <button class="btn btn-sm btn-primary main-color mt-2">
-                        <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</button>
+                    @can('update', $item)
+                    <a href="{{ route('admin.consultations.operational_programs.edit', $item) }}" target="_blank" class="btn btn-sm btn-primary main-color mt-2">
+                        <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
+                    @endcan
                 </div>
             </div>
         </div>

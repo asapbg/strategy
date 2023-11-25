@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consultations\LegislativeProgram;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +14,9 @@ class LegislativeProgramController extends Controller
     {
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
         $items = LegislativeProgram::Published()->FilterBy($request->all())->paginate($paginate);
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.menu.lp');
-        return $this->view('site.lp.index', compact('items', 'pageTitle'));
+        return $this->view('site.lp.index', compact('items', 'pageTitle', 'pageTopContent'));
     }
 
     public function show(Request $request, int $id = 0)

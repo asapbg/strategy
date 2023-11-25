@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consultations\OperationalProgram;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +14,9 @@ class OperationalProgramController extends Controller
     {
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
         $items = OperationalProgram::Published()->FilterBy($request->all())->paginate($paginate);
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.menu.op');
-        return $this->view('site.op.index', compact('items', 'pageTitle'));
+        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent'));
     }
 
     public function show(Request $request, int $id = 0)
