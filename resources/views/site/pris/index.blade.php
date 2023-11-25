@@ -201,29 +201,47 @@
                             <div class="consul-wrapper">
                                 <div class="single-consultation d-flex">
                                     <div class="consult-body">
-                                        <a href="{{ route('pris.view', ['id' => $item->id]) }}" class="consul-item">
-                                            <p>
-                                                <i class="me-1 main-color fw-bold fst-normal" title="{{ __('custom.number') }}">
-                                                    {{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }}
-                                                </i>
-                                                {{ __('custom.of') }} {{ $item->institution->name }} от {{ $item->docYear }} {{ __('site.year_short') }}
-
-                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
-                                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}"></i>
-                                            </p>
-
-                                            <p>
-                                                <i class="fas fa-sitemap me-2 main-color" title="Категория"><span class="fw-normal main-color"> {{ $item->actType->name }}</span></i>
-                                                <i class="fas fa-university fa-link main-color" title="Протокол"></i><span class="fw-normal main-color"> {{ $item->institution->name }}</span>
-                                            </p>
-                                            <div class="anotation text-secondary mb-2">
-                                                <span class="main-color me-2">{{ __('site.pris.about') }}:</span> {!! $item->about !!}
+                                        <div class="consul-item">
+                                            <div class="consult-item-header d-flex justify-content-between">
+                                                <div class="consult-item-header-link">
+                                                    <a href="{{ route('pris.view', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }}">
+                                                        <h3>{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }} {{ __('custom.of') }} {{ $item->institution->name }} от {{ $item->docYear }} {{ __('site.year_short') }}</h3>
+                                                    </a>
+                                                </div>
+                                                <div class="consult-item-header-edit">
+{{--                                                    @can('delete', $item)--}}
+                                                        <a href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
+                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
+                                                        </a>
+{{--                                                    @endcan--}}
+                                                    @can('update', $item)
+                                                        <a href="{{ route('admin.pris.edit', ['item' => $item->id]) }}" target="_blank">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
+                                                            </i>
+                                                        </a>
+                                                    @endcan
+                                                </div>
+                                            </div>
+                                            <div class="meta-consul mb-2 d-inline-block">
+                                                <a href="#" title="{{ __('custom.category') }}" class="text-decoration-none mb-3 me-2">
+                                                    <i class="fas fa-university fa-link main-color" title="{{ $item->actType->name }}"></i>
+                                                    {{ $item->actType->name }}
+                                                </a>
+                                                <a href="#" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-3">
+                                                    <i class="fas fa-university fa-link main-color" title="{{ $item->institution->name }}"></i>
+                                                    {{ $item->institution->name }}
+                                                </a>
+                                            </div>
+                                            <div class="meta-consul">
+                                                <div class="anotation text-secondary">
+                                                    <span class="main-color me-2">{{ __('site.pris.about') }}:</span> {!! $item->about !!}
+                                                </div>
                                             </div>
                                             <div class="meta-consul">
                                                 <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> {{ displayDate($item->doc_date) }} {{ __('site.year_short') }}</span>
-                                                <i class="fas fa-arrow-right read-more"></i>
+                                                <a href="{{ route('pris.view', ['id' => $item->id]) }}"><i class="fas fa-arrow-right read-more"></i></a>
                                             </div>
-                                        </a>
+                                        </div>
 
                                     </div>
                                 </div>
