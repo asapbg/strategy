@@ -471,4 +471,9 @@ return [
     'name_of_normative_act' => 'Name of normative act',
     'description_of_suggested_change' => 'Description of suggested change',
     'keyword' => 'Keyword|Keywords',
+    'chairmen' => 'Chairman|Chairmen',
+    'chairman' => 'Chairman',
+    'chairmen_list' => 'Chairman list|Chairmen list',
+    'representatives_from' => 'Representative from|Representatives from',
+    'member' => 'Member|Members',
 ];

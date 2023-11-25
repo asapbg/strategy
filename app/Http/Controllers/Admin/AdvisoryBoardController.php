@@ -9,7 +9,9 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
+use App\Models\ConsultationLevel;
 use App\Models\PolicyArea;
+use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -106,7 +108,19 @@ class AdvisoryBoardController extends AdminController
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
 
-        return $this->view('admin.advisory-boards.edit', compact('item', 'policy_areas', 'advisory_chairman_types', 'advisory_act_types', 'institutions'));
+        $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
+
+        return $this->view(
+            'admin.advisory-boards.edit',
+            compact(
+                'item',
+                'policy_areas',
+                'advisory_chairman_types',
+                'advisory_act_types',
+                'institutions',
+                'consultation_levels'
+            )
+        );
     }
 
     /**

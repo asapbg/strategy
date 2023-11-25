@@ -13,7 +13,6 @@ use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\StrategicDocuments\Institution;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
