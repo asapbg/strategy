@@ -3261,7 +3261,7 @@ $(document).ready(function (e) {
     //===============================
     function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
         selectDom.select2({
-            allowClear: false,
+            allowClear: true,
             templateResult: select2OptionFilter,
             language: "bg",
             placeholder: selectPlaceholder,
@@ -3281,7 +3281,7 @@ $(document).ready(function (e) {
                     }else if($(this).data('types2ajax') == 'lp_record_pc') {
                         var query = {
                             institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
-                            programId: $('#legislative_program_id').val(),
+                            programId: $('#legislative_program_id select').val(),
                             search: params.term
                         }
                     }else if($(this).data('types2ajax') == 'op_record') {
@@ -3292,7 +3292,7 @@ $(document).ready(function (e) {
                     }else if($(this).data('types2ajax') == 'op_record_pc') {
                         var query = {
                             institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
-                            programId: $('#operational_program_id').val(),
+                            programId: $('#operational_program_id select').val(),
                             search: params.term
                         }
                     }else if($(this).data('types2ajax') == 'pc') {

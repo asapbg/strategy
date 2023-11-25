@@ -174,7 +174,8 @@ class OperationalProgram extends ModelActivityExtend
 
         if(isset($filters['institution'])) {
             $q->join('operational_program_row as institution_col', function ($j) use($filters){
-                $j->on('institution_col.operational_program_id', '=', 'operational_program_row.id')
+                $j->on('institution_col.operational_program_id', '=', 'operational_program_row.operational_program_id')
+                    ->on('institution_col.row_num', '=', 'legislative_program_row.row_num')
                     ->where('institution_col.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
                     ->where('institution_col.value', '=', (int)$filters['institution']);
             });
