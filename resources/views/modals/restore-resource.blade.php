@@ -20,9 +20,7 @@
             <div class="modal-footer">
                 <form method="POST" action="" class="pull-left mr-4">
                     @csrf
-                    @method('PUT')
-                    <input name="id" value="" id="resource_id" type="hidden"/>
-                    <input name="restore" value="true" type="hidden"/>
+
                     <button type="submit" class="btn btn-success js-restore-resource">
                         <i class="fa fa-plus"></i>&nbsp; {{ __('custom.restore') }}
                     </button>
