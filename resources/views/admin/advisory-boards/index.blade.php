@@ -94,6 +94,34 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endcan
+
+                                        @can('delete', $item)
+                                            @if(!$item->deleted_at)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-delete-url="{{ route('admin.advisory-boards.delete', $item) }}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.delete')}}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
+
+                                        @can('restore', $item)
+                                            @if($item->deleted_at)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                   data-target="#modal-restore-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-restore-url="{{ route('admin.advisory-boards.restore', $item) }}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.restore')}}">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -112,6 +140,9 @@
             </div>
         </div>
     </section>
+
+    @includeIf('modals.delete-resource', ['resource' => $title_singular])
+    @includeIf('modals.restore-resource', ['resource' => $title_singular])
 @endsection
 
 

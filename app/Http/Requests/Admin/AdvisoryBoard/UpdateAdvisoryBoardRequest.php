@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use Illuminate\Foundation\Http\FormRequest;

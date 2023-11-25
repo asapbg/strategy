@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
-use App\Models\LegislativeInitiative;
+use App\Models\AdvisoryBoard;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * @property LegislativeInitiative $item
+ * @property int $item
  */
-class RestoreLegislativeInitiativeRequest extends FormRequest
+class DeleteAdvisoryBoardRequest extends FormRequest
 {
 
     use FailedAuthorization;
@@ -21,7 +21,7 @@ class RestoreLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('restore', $this->item);
+        return $this->user()->can('delete', $this->item);
     }
 
     /**
