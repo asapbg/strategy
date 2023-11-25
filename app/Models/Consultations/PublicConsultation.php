@@ -155,12 +155,6 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $this->hasOne(LegislativeProgram::class, 'id', 'legislative_program_id');
     }
 
-    //TODO fix me uncomment after add pris structure
-//    public function regulatoryAct()
-//    {
-//        return $this->hasOne(RegulatoryAct::class, 'id', 'pris_act_id');
-//    }
-
     public function importerInstitution(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Institution::class, 'id', 'importer_institution_id');

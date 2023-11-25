@@ -104,6 +104,11 @@
             operationalPrograms.find('option').each(function(){
                 $(this).prop('selected', false);
             });
+            legislativeProgramSelect.val('');
+            operationalProgramsSelect.val('');
+            legislativeProgramRows.val('');
+            operationalProgramsRows.val('');
+
             legislativeProgramRows.parent().addClass('d-none');
             //
             legislativeProgramSelect.addClass('d-none');
@@ -125,6 +130,7 @@
             let diffDays = null;
             const date1 = $('#open_from').datepicker('getDate');
             const date2 = $('#open_to').datepicker('getDate');
+
             if( date1 && date2 ) {
                 let diffTime = Math.abs(date2 - date1);
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -166,6 +172,9 @@
                     operationalPrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
+                    operationalProgramsSelect.val('');
+                    operationalProgramsRows.val('');
+
                 } else if( parseInt(actType.val()) == actMinistry ){
                     //show $op autocomplete select and checkbox 'Проектът на акт на МС не е включен в ОП'. Submit one of them.
                     if($('#no_operational_program').is(':checked')) {
@@ -181,6 +190,8 @@
                     legislativePrograms.find('option').each(function(){
                         $(this).prop('selected', false);
                     });
+                    legislativeProgramSelect.val('');
+                    legislativeProgramRows.val('');
                 } else {
                     hideProgramSelects();
                 }

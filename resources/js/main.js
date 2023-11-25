@@ -669,7 +669,8 @@ $(document).ready(function (e) {
             orientation: "bottom left",
             autoclose: true,
             weekStart: 1,
-            startDate: new Date()
+            //TODO fix me if set next date is not recognized on initialization and filed goes empty on focus out
+            //: new Date()
         });
     }
 
