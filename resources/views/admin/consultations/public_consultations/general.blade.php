@@ -50,6 +50,26 @@
         <div class="col-12"></div>
         <div class="col-md-4">
             <div class="form-group">
+                <label class="col-sm-12 control-label" for="field_of_actions_id">{{ __('validation.attributes.field_of_actions_id') }}<span class="required">*</span></label>
+                <div class="col-12">
+                    <select id="field_of_actions_id" name="field_of_actions_id" class="cl-child form-control form-control-sm select2 select2-no-clear @error('field_of_actions_id'){{ 'is-invalid' }}@enderror">
+                        <option value="">---</option>
+                        @if(isset($fieldsOfActions) && $fieldsOfActions->count())
+                            @foreach($fieldsOfActions as $row)
+                                <option value="{{ $row->id }}"
+                                        @if(old('field_of_actions_id', ($item->id ? $item->field_of_actions_id : 0)) == $row->id) selected @endif
+                                >{{ $row->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('field_of_actions_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
                 <label class="col-sm-12 control-label" for="act_type_id">{{ trans_choice('validation.attributes.act_type_id', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
                     <select id="act_type_id" name="act_type_id" class="cl-child form-control form-control-sm select2 select2-no-clear @error('act_type_id'){{ 'is-invalid' }}@enderror">

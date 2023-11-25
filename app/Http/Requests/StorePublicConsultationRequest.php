@@ -41,6 +41,7 @@ class StorePublicConsultationRequest extends FormRequest
             'active' => ['boolean', 'nullable'],
             'stay' => ['nullable'],
 //            'monitorstat' => ['nullable', 'string', 'max:255'],
+            'field_of_actions_id' => ['required', 'numeric', 'exists:field_of_actions,id'],
         ];
 
         if (request()->isMethod('put') ) {

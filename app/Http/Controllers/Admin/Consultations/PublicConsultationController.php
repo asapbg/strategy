@@ -24,6 +24,7 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\LinkCategory;
 use App\Models\Poll;
@@ -84,7 +85,7 @@ class PublicConsultationController extends AdminController
         }
 
         if($item->id) {
-            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author'])->find($item->id);
+            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author', 'fieldOfAction', 'fieldOfAction.translation'])->find($item->id);
         }
 
         //TODO optimize next one
@@ -125,6 +126,7 @@ class PublicConsultationController extends AdminController
         $linkCategories = LinkCategory::with(['translation'])->get();
         $operationalPrograms = OperationalProgram::get();
         $legislativePrograms = LegislativeProgram::get();
+        $fieldsOfActions = FieldOfAction::optionsList(true);
 
         $documents = [];
         foreach ($item->documents as $document){
@@ -134,7 +136,8 @@ class PublicConsultationController extends AdminController
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
-            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel'));
+            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
+            'fieldsOfActions'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -161,6 +164,7 @@ class PublicConsultationController extends AdminController
         DB::beginTransaction();
         try {
             $validated = $validator->validated();
+            //doing this because using strange field name to prevent bad validation message
             $oldOpRow = $item->operational_program_row_id;
             $oldLpRow = $item->legislative_program_row_id;
             $oldOpenFrom = $item->open_from;

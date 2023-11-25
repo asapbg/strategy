@@ -8,6 +8,7 @@ use App\Enums\PublicConsultationTimelineEnum;
 use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\ConsultationLevel;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Poll;
 use App\Models\Pris;
@@ -44,7 +45,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to',
         'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
         'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id',
-        'proposal_report_comment_id'
+        'proposal_report_comment_id', 'field_of_actions_id'
     ];
 
     const MIN_DURATION_DAYS = 14;
@@ -240,6 +241,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function consultations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(PublicConsultation::class, 'public_consultation_connection', 'public_consultation_id', 'pc_id');
+    }
+
+    public function fieldOfAction(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(FieldOfAction::class, 'id', 'field_of_actions_id');
     }
 
     public function lastDocumentByLocaleAndType($docType)
