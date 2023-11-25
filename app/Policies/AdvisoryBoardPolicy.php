@@ -67,11 +67,11 @@ class AdvisoryBoardPolicy
      * @param User          $user
      * @param AdvisoryBoard $advisoryBoard
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function delete(User $user, AdvisoryBoard $advisoryBoard)
+    public function delete(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        //
+        return $user->canAny('manage.*', 'manage.advisory-boards');
     }
 
     /**
@@ -80,11 +80,11 @@ class AdvisoryBoardPolicy
      * @param User          $user
      * @param AdvisoryBoard $advisoryBoard
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function restore(User $user, AdvisoryBoard $advisoryBoard)
+    public function restore(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        //
+        return $user->canAny('manage.*', 'manage.advisory-boards');
     }
 
     /**

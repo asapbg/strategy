@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreAdvisoryBoardRequest;
-use App\Http\Requests\UpdateAdvisoryBoardRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -25,7 +26,7 @@ class AdvisoryBoardController extends AdminController
      */
     public function index(): View
     {
-        $items = AdvisoryBoard::with(['policyArea'])->orderBy('id', 'desc')->paginate(10);
+        $items = AdvisoryBoard::withTrashed()->with(['policyArea'])->orderBy('id', 'desc')->paginate(10);
 
         return $this->view('admin.advisory-boards.index', compact('items'));
     }
@@ -82,7 +83,7 @@ class AdvisoryBoardController extends AdminController
     /**
      * Display the specified resource.
      *
-     * @param AdvisoryBoard $advisory_board
+     * @param AdvisoryBoard $item
      *
      * @return View
      */
@@ -141,12 +142,37 @@ class AdvisoryBoardController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param DeleteAdvisoryBoardRequest $request
+     * @param AdvisoryBoard              $item
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy(AdvisoryBoard $advisoryBoard)
+    public function destroy(DeleteAdvisoryBoardRequest $request, AdvisoryBoard $item): RedirectResponse
     {
-        //
+        try {
+            $item->delete();
+
+            return redirect()->route('admin.advisory-boards.index')
+                ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect(route('admin.legislative_initiatives.index', $item))->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Restore the specified resource.
+     */
+    public function restore(RestoreAdvisoryBoardRequest $request, AdvisoryBoard $item)
+    {
+        try {
+            $item->restore();
+
+            return redirect()->route('admin.advisory-boards.index')
+                ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.restored_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('danger', __('messages.system_error'));
+        }
     }
 }

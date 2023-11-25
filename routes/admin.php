@@ -244,7 +244,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/view/{item}',      'show')->name('legislative_initiatives.view')->withTrashed();
         Route::post('/{item}/update',   'update')->name('legislative_initiatives.update');
         Route::delete('/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
-        Route::put('/restore',          'restore')->name('legislative_initiatives.restore');
+        Route::post('{item}/restore',          'restore')->name('legislative_initiatives.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments')->group(function () {
@@ -416,11 +416,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
-        Route::get('', 'index')->name('advisory-boards.index');
-        Route::get('/create', 'create')->name('advisory-boards.create');
-        Route::post('/store', 'store')->name('advisory-boards.store');
-        Route::get('{item}/view', 'show')->name('advisory-boards.view');
-        Route::get('{item}/edit', 'edit')->name('advisory-boards.edit');
-        Route::post('{item}/update', 'update')->name('advisory-boards.update');
+        Route::get('',                  'index')    ->name('advisory-boards.index');
+        Route::get('/create',           'create')   ->name('advisory-boards.create');
+        Route::post('/store',           'store')    ->name('advisory-boards.store');
+        Route::get('{item}/view',       'show')     ->name('advisory-boards.view');
+        Route::get('{item}/edit',       'edit')     ->name('advisory-boards.edit');
+        Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
+        Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
+        Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed(true);
     });
 });
