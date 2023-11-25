@@ -43,7 +43,7 @@
                 <h3 class="mb-2 fs-18">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
                 <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info me-2">
-                    <i class="{{ $item->fieldOfAction->icon_class }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>{{ $item->fieldOfAction ? $item->fieldOfAction->name : '---'}}</span>
+                    <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>{{ $item->fieldOfAction ? $item->fieldOfAction->name : '---'}}</span>
                 </a>
             </div>
         </div>

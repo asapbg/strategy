@@ -3,6 +3,7 @@
 namespace App\Models\StrategicDocuments;
 
 use App\Models\EkatteSettlement;
+use App\Models\FieldOfAction;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
 use App\Models\ModelActivityExtend;
@@ -50,6 +51,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function settlement()
     {
         return $this->hasOne(EkatteSettlement::class, 'id', 'town');
+    }
+
+    public function fieldsOfAction()
+    {
+        return $this->belongsToMany(FieldOfAction::class, 'institution_field_of_action', 'institution_id', 'field_of_action_id');
     }
 
     public static function translationFieldsProperties(): array
