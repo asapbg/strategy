@@ -85,6 +85,15 @@
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         @endcan
+
+                                        @can('update', $item)
+                                            <a href="{{ route('admin.advisory-boards.edit', $item) }}"
+                                               class="btn btn-sm btn-warning mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.preview') }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AdvisoryBoard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property int $item
+ */
 class UpdateAdvisoryBoardRequest extends FormRequest
 {
     /**
@@ -11,9 +15,9 @@ class UpdateAdvisoryBoardRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->item);
     }
 
     /**
@@ -21,10 +25,22 @@ class UpdateAdvisoryBoardRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'policy_area_id' => 'required|integer|exists:policy_area,id',
+            'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
+            'advisory_act_type_id' => 'required|integer|exists:advisory_act_type,id',
+            'meetings_per_year' => 'required|integer',
+            'report_institution_id' => 'required|integer|exists:institution,id',
         ];
+
+        foreach (config('available_languages') as $lang) {
+            foreach (AdvisoryBoard::translationFieldsProperties() as $field => $properties) {
+                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+            }
+        }
+
+        return $rules;
     }
 }

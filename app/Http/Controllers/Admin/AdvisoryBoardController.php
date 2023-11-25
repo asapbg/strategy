@@ -25,7 +25,7 @@ class AdvisoryBoardController extends AdminController
      */
     public function index(): View
     {
-        $items = AdvisoryBoard::orderBy('id', 'desc')->paginate(10);
+        $items = AdvisoryBoard::with(['policyArea'])->orderBy('id', 'desc')->paginate(10);
 
         return $this->view('admin.advisory-boards.index', compact('items'));
     }
@@ -94,26 +94,48 @@ class AdvisoryBoardController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param AdvisoryBoard $item
      *
-     * @return Response
+     * @return View
      */
-    public function edit(AdvisoryBoard $advisoryBoard)
+    public function edit(AdvisoryBoard $item): View
     {
-        //
+        $policy_areas = PolicyArea::orderBy('id')->get();
+        $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
+        $advisory_act_types = AdvisoryActType::orderBy('id')->get();
+        $institutions = Institution::orderBy('id')->get();
+
+        return $this->view('admin.advisory-boards.edit', compact('item', 'policy_areas', 'advisory_chairman_types', 'advisory_act_types', 'institutions'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateAdvisoryBoardRequest $request
-     * @param \App\Models\AdvisoryBoard                     $advisoryBoard
+     * @param UpdateAdvisoryBoardRequest $request
+     * @param AdvisoryBoard              $item
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(UpdateAdvisoryBoardRequest $request, AdvisoryBoard $advisoryBoard)
+    public function update(UpdateAdvisoryBoardRequest $request, AdvisoryBoard $item): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+        try {
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->save();
+
+            $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
+
+            DB::commit();
+            return redirect()->route('admin.advisory-boards.edit', $item)
+                ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
     }
 
     /**
