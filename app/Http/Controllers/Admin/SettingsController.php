@@ -12,8 +12,8 @@ class SettingsController extends Controller
 {
     public function index($section = 'system_notifications'): \Illuminate\View\View
     {
-        $settings = Setting::Editable()->where('section', '=', $section)->get();
-        $sections = Setting::Editable()->get()->unique('section')->pluck('section')->toArray();
+        $settings = Setting::Editable()->orderBy('id')->where('section', '=', $section)->get();
+        $sections = Setting::Editable()->orderBy('id')->get()->unique('section')->pluck('section')->toArray();
         return $this->view('admin.settings.index', compact('settings', 'section', 'sections'));
     }
 
@@ -31,6 +31,6 @@ class SettingsController extends Controller
             $setting->value = $value;
             $setting->update();
         }
-        return redirect(route('admin.settings', ['section' => $section]))->with('success', __('messages.updated_successfully_n'));
+        return redirect(route('admin.settings', ['section' => $section]))->with('success', __('custom.settings').' '.__('messages.updated_successfully_pl'));
     }
 }
