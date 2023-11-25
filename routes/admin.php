@@ -420,5 +420,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/create', 'create')->name('advisory-boards.create');
         Route::post('/store', 'store')->name('advisory-boards.store');
         Route::get('{item}/view', 'show')->name('advisory-boards.view');
+        Route::get('{item}/edit', 'edit')->name('advisory-boards.edit');
+        Route::post('{item}/update', 'update')->name('advisory-boards.update');
     });
 });
