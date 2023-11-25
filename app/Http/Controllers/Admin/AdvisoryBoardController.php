@@ -41,7 +41,7 @@ class AdvisoryBoardController extends AdminController
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
-        $institutions = Institution::orderBy('id')->get();
+        $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
 
         return $this->view(
             'admin.advisory-boards.create',
@@ -103,7 +103,7 @@ class AdvisoryBoardController extends AdminController
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
-        $institutions = Institution::orderBy('id')->get();
+        $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
 
         return $this->view('admin.advisory-boards.edit', compact('item', 'policy_areas', 'advisory_chairman_types', 'advisory_act_types', 'institutions'));
     }
