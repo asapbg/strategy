@@ -71,6 +71,13 @@ class LegislativeProgram extends ModelActivityExtend
         );
     }
 
+    protected function recordPeriod(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => '['.trans_choice('custom.programs', 1).' '.date('m.Y', strtotime($this->from_date)).' - '.date('m.Y', strtotime($this->to_date)).']'
+        );
+    }
+
     protected function name(): Attribute
     {
         return Attribute::make(
@@ -152,7 +159,8 @@ class LegislativeProgram extends ModelActivityExtend
     public static function select2AjaxOptionsFilterByInstitution($filters)
     {
         $q = DB::table('legislative_program')
-            ->select(['legislative_program_row.id', DB::raw('max(legislative_program_row.value) as name')])
+            ->select(['legislative_program_row.id',
+                DB::raw('max(legislative_program_row.value) || \' [Програма \' || max(to_char(legislative_program.from_date, \'MM.YYYY\')) || \' - \' || max(to_char(legislative_program.to_date, \'MM.YYYY\')) || \']\' as name')])
             ->join('legislative_program_row', function ($j){
                 $j->on('legislative_program_row.legislative_program_id', '=', 'legislative_program.id')
                     ->where('legislative_program_row.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);

@@ -100,7 +100,7 @@
                         data-placeholders2="{{ __('custom.search_lp_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
                     @if(!old('operational_program_row_id') && $item->legislative_program_row_id && $item->lpRow)
-                        <option value="{{ $item->lpRow->id }}" >{{ $item->lpRow->value }}</option>
+                        <option value="{{ $item->lpRow->id }}" >{{ $item->lpRow->value }} {{ $item->lpRow->parent->recordPeriod }}</option>
                     @endif
                 </select>
                 @error('legislative_program_row_id')
