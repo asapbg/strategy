@@ -16,7 +16,7 @@
                     <ul class="list-unstyled">
                         <li class="mb-1">
                             <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
-                               data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                               data-toggle="collapse" data-target="#home-collapse" aria-expanded="true">
                                 <i class="fa-solid fa-bars me-2 mb-2"></i>Гражданско участие
                             </a>
                             <hr class="custom-hr">

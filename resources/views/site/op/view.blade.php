@@ -49,8 +49,8 @@
 {{--                                                        @dd($rowData)--}}
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header" id="headingOne">
-                                                                <button class="accordion-button text-dark fs-18 fw-600" type="button" data-bs-toggle="collapse"
-                                                                        data-bs-target="#collapseOne" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapseOne">
+                                                                <button class="accordion-button text-dark fs-18 fw-600" type="button" data-toggle="collapse"
+                                                                        data-target="#collapseOne" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapseOne">
                                                                     {{ $rowData[0]->value }}
                                                                 </button>
                                                             </h2>
