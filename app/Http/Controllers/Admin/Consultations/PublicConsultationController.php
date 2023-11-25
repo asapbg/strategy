@@ -126,8 +126,7 @@ class PublicConsultationController extends AdminController
         $linkCategories = LinkCategory::with(['translation'])->get();
         $operationalPrograms = OperationalProgram::get();
         $legislativePrograms = LegislativeProgram::get();
-        $fieldsOfActions = FieldOfAction::optionsList(true);
-
+        $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->fieldsOfAction : null);
         $documents = [];
         foreach ($item->documents as $document){
             $documents[$document->doc_type.'_'.$document->locale][] = $document;
