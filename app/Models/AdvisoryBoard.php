@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -28,6 +30,26 @@ class AdvisoryBoard extends Model
     protected string $logName = "advisory_board";
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
+
+    public function reportInstitution(): BelongsTo
+    {
+        return $this->belongsTo(Institution::class, 'report_institution_id');
+    }
+
+    public function advisoryActType(): BelongsTo
+    {
+        return $this->belongsTo(AdvisoryActType::class);
+    }
+
+    public function advisoryChairmanType(): BelongsTo
+    {
+        return $this->belongsTo(AdvisoryChairmanType::class);
+    }
+
+    public function policyArea(): BelongsTo
+    {
+        return $this->belongsTo(PolicyArea::class);
+    }
 
     /**
      * Get the model name

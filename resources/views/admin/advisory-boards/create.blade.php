@@ -44,7 +44,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label" for="policy_area_id">
-                                        {{ trans_choice('custom.policy_area', 1) }}
+                                        {{ trans_choice('custom.field_of_actions', 1) }}
                                         <span class="required">*</span>
                                     </label>
 

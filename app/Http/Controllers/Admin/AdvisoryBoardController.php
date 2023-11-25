@@ -86,9 +86,9 @@ class AdvisoryBoardController extends AdminController
      *
      * @return View
      */
-    public function show(AdvisoryBoard $advisory_board)
+    public function show(AdvisoryBoard $item)
     {
-        return $this->view('admin.advisory-boards.view', compact('advisory_board'));
+        return $this->view('admin.advisory-boards.view', compact('item'));
     }
 
     /**
