@@ -198,7 +198,7 @@ class PublicConsultationController extends AdminController
             //Programs
             if( (!is_null($validated['operational_program_row_id']) || !is_null($oldOpRow))
                 && $validated['operational_program_row_id'] != $oldOpRow ) {
-                if( is_null($validated['operational_program_row_id']) ) {
+                if( is_null($validated['operational_program_row_id']) && is_null($validated['legislative_program_row_id'])) {
                     $delete = true;
                 } else {
                     $update = true;
@@ -206,7 +206,7 @@ class PublicConsultationController extends AdminController
             }
             if( (!is_null($validated['legislative_program_row_id']) || !is_null($oldLpRow))
                 && $validated['legislative_program_row_id'] != $oldLpRow ) {
-                if( is_null($validated['legislative_program_row_id']) ) {
+                if( is_null($validated['legislative_program_row_id']) && is_null($validated['operational_program_row_id']) ) {
                     $delete = true;
                 } else {
                     $update = true;
