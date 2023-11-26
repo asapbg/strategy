@@ -714,7 +714,7 @@ class PublicConsultationController extends AdminController
                 'object_code' => Comments::PC_OBJ_CODE,
                 'object_id' => $pc->id,
                 'content' => $validated['message'],
-                'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
+                'created_at' => Carbon::parse($validated['report_date'].' '.$validated['report_time'])->format('Y-m-d H:i:s'),
                 'user_id' => $request->user()->id
             ]);
             $comment->save();

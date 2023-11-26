@@ -421,5 +421,6 @@ return [
         'report_at' => 'Отчет на дейност пред',
         'field_of_actions_id' => 'Област на политика',
         'icon_class' => 'Икона (клас)',
+        'report_time' => 'Час',
     ],
 ];
