@@ -38,6 +38,7 @@ class LegislativeProgramController extends AdminController
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
 
         $items = LegislativeProgram::FilterBy($requestFilter)
+            ->orderBy('from_date', 'desc')
             ->paginate($paginate);
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
