@@ -3,9 +3,6 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
-
-            @include('admin.partial.filter_form')
-
             <div class="card">
                 <div class="card-body">
                     <form method="GET">
@@ -151,8 +148,8 @@
         </div>
     </section>
 
-    @includeIf('modals.restore-resource', ['resource' => $title_singular])
     @includeIf('modals.delete-resource', ['resource' => $title_singular, 'have_request_param' => true])
+    @includeIf('modals.restore-resource', ['resource' => $title_singular])
 @endsection
 
 

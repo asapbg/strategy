@@ -74,6 +74,13 @@ class OperationalProgram extends ModelActivityExtend
         );
     }
 
+    protected function recordPeriod(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => '['.trans_choice('custom.programs', 1).' '.date('m.Y', strtotime($this->from_date)).' - '.date('m.Y', strtotime($this->to_date)).']'
+        );
+    }
+
     protected function name(): Attribute
     {
         return Attribute::make(
@@ -90,6 +97,7 @@ class OperationalProgram extends ModelActivityExtend
     public function rowFiles()
     {
         return $this->belongsToMany(File::class, 'operational_program_row_file', 'operational_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_OPERATIONAL_PROGRAM)
             ->withPivot('row_num')
             ->withPivot('row_month');
     }
@@ -155,6 +163,39 @@ class OperationalProgram extends ModelActivityExtend
             $q->where('operational_program_row.value', 'ilike', '%'.$filters['search'].'%');
         }
         $q->whereNull('public_consultation.id');
+
+        return $q->get();
+    }
+
+    public static function select2AjaxOptionsFilterByInstitution($filters){
+        $q = DB::table('operational_program')
+            ->select(['operational_program_row.id',
+                DB::raw('max(operational_program_row.value) || \' [Програма \' || max(to_char(operational_program.from_date, \'MM.YYYY\')) || \' - \' || max(to_char(operational_program.to_date, \'MM.YYYY\')) || \']\' as name')])
+            ->join('operational_program_row', function ($j){
+                $j->on('operational_program_row.operational_program_id', '=', 'operational_program.id')
+                    ->where('operational_program_row.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+            })
+            ->leftJoin('public_consultation', function ($j){
+                $j->on('public_consultation.operational_program_id', '=', 'operational_program.id')
+                    ->whereColumn('public_consultation.operational_program_row_id', '=', 'operational_program_row.id');
+            });
+
+        if(isset($filters['institution'])) {
+            $q->join('operational_program_row as institution_col', function ($j) use($filters){
+                $j->on('institution_col.operational_program_id', '=', 'operational_program_row.operational_program_id')
+                    ->on('institution_col.row_num', '=', 'operational_program_row.row_num')
+                    ->where('institution_col.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                    ->where('institution_col.value', '=', (int)$filters['institution']);
+            });
+        }
+        if(isset($filters['programId']) && (int)$filters['programId']) {
+            $q->where('operational_program.id', '=', (int)$filters['programId']);
+        }
+        if(isset($filters['search'])) {
+            $q->where('operational_program_row.value', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        $q->groupBy('operational_program_row.id');
 
         return $q->get();
     }

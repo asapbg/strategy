@@ -56,8 +56,22 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="input-group ">
+                    <div class="mb-3 d-flex flex-column  w-100">
+                        <label for="exampleFormControlInput1" class="form-label">Вид орган</label>
+                        <select class="form-select select2" multiple aria-label="Default select example">
+                            <option value="1">Всички</option>
+                            <option value="1">Министерски съвет</option>
+                            <option value="1">Министър-председател</option>
+                            <option value="1">Министър</option>
+                            <option value="1">Държавна агенция</option>
+                            <option value="1">Друг централен орган</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Търсене в Заглавие/Съдържание</label>
@@ -65,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Дата от:</label>
@@ -76,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
                         <label for="exampleFormControlInput1" class="form-label">Дата до:</label>
@@ -84,20 +98,6 @@
                             <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker">
                             <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Брой резултати:</label>
-                        <select class="form-select" id="paginationResults">
-                            <option value="10" selected>9</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -128,13 +128,21 @@
                 </p>
             </div>
         </div>
-        <div class="row mb-2">
-            <div class="col-12 mt-2">
-                <div class="info-consul text-start">
-                    <p class="fw-600">
-                        Общо 98 резултата
-                    </p>
-                </div>
+        <div class="row justify-content-end my-3">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
+                <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой
+                    резултати:</label>
+                <select class="form-select w-auto">
+                    <option value="1">9</option>
+                    <option value="1">20</option>
+                    <option value="1">30</option>
+                    <option value="1">40</option>
+                    <option value="1">50</option>
+                    <option value="1">100</option>
+                </select>
             </div>
         </div>
         <div class="row">

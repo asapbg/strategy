@@ -13,19 +13,12 @@ use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\StrategicDocuments\Institution;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class LegislativeInitiativeController extends AdminController
 {
-
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = 'Законодателна инициатива';
-    }
 
     /**
      * Show the public consultations.
@@ -40,7 +33,7 @@ class LegislativeInitiativeController extends AdminController
         $institution = $request->offsetGet('institution');
         $status = $request->offsetGet('status');
 
-        $items = LegislativeInitiative::where(function ($query) use ($keywords) {
+        $items = LegislativeInitiative::withTrashed()->where(function ($query) use ($keywords) {
             // Keywords search
             $query->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->whereHas('operationalProgram', function ($query) use ($keywords) {
@@ -124,10 +117,9 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function restore(RestoreLegislativeInitiativeRequest $request)
+    public function restore(RestoreLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
         try {
-            $item = LegislativeInitiative::withTrashed()->where('id', $request->offsetGet('id'))->first();
             $item->restore();
 
             return redirect(route('admin.legislative_initiatives.index', $item))

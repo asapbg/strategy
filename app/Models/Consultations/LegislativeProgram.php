@@ -71,6 +71,13 @@ class LegislativeProgram extends ModelActivityExtend
         );
     }
 
+    protected function recordPeriod(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => '['.trans_choice('custom.programs', 1).' '.date('m.Y', strtotime($this->from_date)).' - '.date('m.Y', strtotime($this->to_date)).']'
+        );
+    }
+
     protected function name(): Attribute
     {
         return Attribute::make(
@@ -86,6 +93,7 @@ class LegislativeProgram extends ModelActivityExtend
     public function rowFiles()
     {
         return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
             ->withPivot('row_num')
             ->withPivot('row_month');
     }
@@ -148,4 +156,37 @@ class LegislativeProgram extends ModelActivityExtend
 
         return $q->get();
     }
+    public static function select2AjaxOptionsFilterByInstitution($filters)
+    {
+        $q = DB::table('legislative_program')
+            ->select(['legislative_program_row.id',
+                DB::raw('max(legislative_program_row.value) || \' [Програма \' || max(to_char(legislative_program.from_date, \'MM.YYYY\')) || \' - \' || max(to_char(legislative_program.to_date, \'MM.YYYY\')) || \']\' as name')])
+            ->join('legislative_program_row', function ($j){
+                $j->on('legislative_program_row.legislative_program_id', '=', 'legislative_program.id')
+                    ->where('legislative_program_row.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+            })
+            ->leftJoin('public_consultation', function ($j){
+                $j->on('public_consultation.legislative_program_id', '=', 'legislative_program.id')
+                    ->whereColumn('public_consultation.legislative_program_row_id', '=', 'legislative_program_row.id');
+            });
+        if(isset($filters['institution'])) {
+            $q->join('legislative_program_row as institution_col', function ($j) use($filters){
+                $j->on('institution_col.legislative_program_id', '=', 'legislative_program_row.legislative_program_id')
+                    ->on('institution_col.row_num', '=', 'legislative_program_row.row_num')
+                    ->where('institution_col.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                    ->where('institution_col.value', '=', (int)$filters['institution']);
+            });
+        }
+        if(isset($filters['programId']) && (int)$filters['programId']) {
+            $q->where('legislative_program.id', '=', (int)$filters['programId']);
+        }
+        if(isset($filters['search'])) {
+            $q->where('legislative_program_row.value', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        $q->groupBy('legislative_program_row.id');
+
+        return $q->get();
+    }
+
 }
