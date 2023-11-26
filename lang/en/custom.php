@@ -476,4 +476,5 @@ return [
     'chairmen_list' => 'Chairman list|Chairmen list',
     'representatives_from' => 'Representative from|Representatives from',
     'member' => 'Member|Members',
+    'loading' => 'Loading...',
 ];

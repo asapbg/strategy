@@ -17,7 +17,7 @@
 
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>
 
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -27,7 +27,9 @@
                                     <div class="col-12">
                                         <input type="text" id="name_bg" name="name_bg"
                                                class="form-control form-control-sm @error('name_bg'){{ 'is-invalid' }}@enderror"
-                                               value="{{ old('name_bg', '') }}" autocomplete="off">
+                                               value="" autocomplete="off"/>
+
+                                        <div class="text-danger mt-1 error_name_bg"></div>
                                     </div>
                                 </div>
                             </div>
@@ -42,14 +44,16 @@
                                     <div class="col-12">
                                         <input type="text" id="name_en" name="name_en"
                                                class="form-control form-control-sm @error('name_bg'){{ 'is-invalid' }}@enderror"
-                                               value="{{ old('name_en', '') }}" autocomplete="off">
+                                               value="" autocomplete="off"/>
+
+                                        <div class="text-danger mt-1 error_name_en"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="control-label" for="advisory_type_id">
@@ -69,14 +73,12 @@
                                     @endforeach
                                 </select>
 
-                                @error('advisory_type_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <div class="text-danger mt-1 error_advisory_type_id"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="control-label" for="advisory_chairman_type_id">
@@ -97,14 +99,12 @@
                                     @endif
                                 </select>
 
-                                @error('advisory_chairman_type_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <div class="text-danger mt-1 error_advisory_chairman_type_id"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-md-6 col-12">
@@ -136,7 +136,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="control-label" for="consultation_level_id">
@@ -157,19 +157,90 @@
                                     @endif
                                 </select>
 
-                                @error('consultation_level_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <div class="text-danger mt-1 error_consultation_level_id"></div>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
+
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('custom.cancel') }}</button>
                 <button type="button" class="btn btn-success"
-                        onclick="CHAIRMAN_FORM.submit()">{{ __('custom.add') }}</button>
+                        onclick="submitMemberAjax(this)">
+                    <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
+                    <span class="text">{{ __('custom.add') }}</span>
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        function submitMemberAjax(element) {
+            // change button state
+            changeButtonState(element);
+
+            // Get the form element
+            const form = document.querySelector('form[name=CHAIRMAN_FORM]');
+            const formData = new FormData(form);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('admin.advisory-boards.members.store') }}",
+                data: formData,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    // Get a reference to the modal
+                    const modal = new bootstrap.Modal(document.getElementById('modal-create-chairman'));
+
+                    // Hide the modal
+                    modal.hide();
+
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    changeButtonState(element, 'finished');
+
+                    // Handle error response
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+
+                        for (let i in errors) {
+                            const search_class = '.error_' + i;
+                            form.querySelector(search_class).textContent = errors[i][0];
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Change button state for ajax forms.
+         * State can be either 'loading' or 'finished'.
+         *
+         * @param element
+         * @param state
+         */
+        function changeButtonState(element, state = 'loading') {
+            const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
+            const loader = element.querySelector('.spinner-grow');
+
+            element.querySelector('.text').innerHTML = button_text_translation;
+            element.disabled = state === 'loading';
+
+            if (state === 'loading') {
+                loader.classList.remove('d-none');
+                return;
+            }
+
+            loader.classList.add('d-none');
+        }
+    </script>
+@endpush

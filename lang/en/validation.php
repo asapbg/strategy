@@ -420,6 +420,8 @@ return [
         'act_of_creation' => 'Act of creation',
         'meetings_per_year' => 'Regulated number of meetings per year',
         'report_at' => 'Report of activity before',
+        'advisory_chairman_type_id' => 'Type',
+        'advisory_type_id' => 'Job',
     ],
 
 ];

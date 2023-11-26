@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAdvisoryBoardMemberRequest;
 use App\Http\Requests\UpdateAdvisoryBoardMemberRequest;
 use App\Models\AdvisoryBoardMember;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Log;
 
@@ -36,9 +37,9 @@ class AdvisoryBoardMemberController extends AdminController
      *
      * @param StoreAdvisoryBoardMemberRequest $request
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function store(StoreAdvisoryBoardMemberRequest $request): RedirectResponse
+    public function ajaxStore(StoreAdvisoryBoardMemberRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -52,14 +53,13 @@ class AdvisoryBoardMemberController extends AdminController
             $validated['advisory_member_id'] = $item->id;
 
             $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated);
-
             DB::commit();
-            return redirect()->route('admin.advisory-boards.index')
-                ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.created_successfully_m'));
+
+            return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return response()->json(['status' => 'error'], 500);
         }
     }
 
