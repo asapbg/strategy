@@ -333,7 +333,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public static function select2AjaxOptions($filters)
     {
         $q = DB::table('public_consultation')
-            ->select(['public_consultation.id', DB::raw('public_consultation_translations.title || \' (\' || public_consultation.open_from || \' - \' || public_consultation.open_to || \')\' as name')])
+            ->select(['public_consultation.id', DB::raw('public_consultation.reg_num || \' / \' || public_consultation_translations.title as name')])
             ->join('public_consultation_translations', function ($j){
                 $j->on('public_consultation.id', '=', 'public_consultation_translations.public_consultation_id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
@@ -345,8 +345,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         if(isset($filters['connections']) && is_array($filters['connections']) && sizeof($filters['connections'])) {
             $q->whereNotIn('public_consultation.id', $filters['connections']);
         }
-        if(isset($filters['search'])) {
-            $q->where('public_consultation_translations.title', 'ilike', '%'.$filters['search'].'%');
+        if(isset($filters['title'])) {
+            $q->where('public_consultation_translations.title', 'ilike', '%'.$filters['title'].'%');
+        }
+        if(isset($filters['reg_num'])) {
+            $q->where('public_consultation.reg_num', 'ilike', '%'.$filters['reg_num'].'%');
         }
 
         return $q->get();

@@ -330,6 +330,9 @@ class CommonController extends Controller
                 $data = OperationalProgram::select2AjaxOptionsFilterByInstitution($requestData);
                 break;
             case 'pc':
+                $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
+                $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
+                $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
                 $data = PublicConsultation::select2AjaxOptions($requestData);
                 break;
         }
