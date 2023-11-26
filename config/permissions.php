@@ -17,4 +17,5 @@
   'manage.pris'                     => 'Права за управление на "ПРИС"',
   'manage.pris_order'               => 'Права за управление на "ПРИС - Заповеди"',
   'manage.legislative_initiatives'  => 'Права за управление на Законодателни инициативи',
+  'manage.legislative_operational_programs'  => 'Права за управление на Законодателни и Оперативни програми',
 );
