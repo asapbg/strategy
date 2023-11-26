@@ -33,8 +33,8 @@ class StoreOperationalProgramRequest extends FormRequest
         ];
 
         if( request()->input('save') ) {
-            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(true, 'operational', request()->input('id'))]; //, new ProgramValidPeriod(request()->input('to_date'))
-            $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(false, 'operational', request()->input('id'))];
+            $rules['from_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(request()->input('to_date'), true, 'operational', request()->input('id'))]; //, new ProgramValidPeriod(request()->input('to_date'))
+            $rules['to_date'] = ['required', 'string', 'date_format:m.Y', new DateCrossProgram(request()->input('from_date'), false, 'operational', request()->input('id'))];
 
             if (request()->input('id')) {
                 $rules['col'] = ['array'];
