@@ -423,12 +423,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('{item}/edit',       'edit')     ->name('advisory-boards.edit');
         Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
         Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
-        Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed(true);
+        Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
         Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.members.store');
         Route::get('{member}/edit', 'ajaxEdit')->name('advisory-boards.members.edit');
         Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.members.update');
+        Route::post('{member}/delete', 'destroy')->name('advisory-boards.members.delete');
+        Route::post('{member}/restore', 'restore')->name('advisory-boards.members.restore')->withTrashed();
     });
 });

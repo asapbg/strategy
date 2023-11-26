@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryChairmanType;
 use App\Models\ConsultationLevel;
 use App\Models\PolicyArea;
@@ -107,7 +108,7 @@ class AdvisoryBoardController extends AdminController
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
-        $members = $item->members->sortBy(['id']);
+        $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
 
         return $this->view(
             'admin.advisory-boards.edit',

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int    $advisory_board_id
+ * @property string $name
+ */
 class AdvisoryBoardMember extends Model
 {
 
