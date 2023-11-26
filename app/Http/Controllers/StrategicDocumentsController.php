@@ -106,17 +106,16 @@ class StrategicDocumentsController extends Controller
 
     public function previewModalFile(Request $request, $id = 0)
     {
-        $file = File::find($id);
-        $strategicDocumentFile = StrategicDocumentFile::find($id);
-        if ($strategicDocumentFile && !$file) {
-            $file = $strategicDocumentFile;
-        }
+        try {
+            $strategicDocumentFile = StrategicDocumentFile::findOrFail($id);
+            if (!$strategicDocumentFile) {
+                return __('messages.record_not_found');
+            }
 
-        if (!$file) {
-            return __('messages.record_not_found');
+            return fileHtmlContent($strategicDocumentFile);
+        } catch (\Throwable $throwable) {
+            return '';
         }
-
-        return fileHtmlContent($file);
     }
 
     public function downloadDocFile($id)
