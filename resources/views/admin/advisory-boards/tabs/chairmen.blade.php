@@ -36,18 +36,9 @@
                                 <td>{{ $member->advisoryChairmanType?->name }}</td>
                                 <td>{{ $member->consultationLevel?->name }}</td>
                                 <td class="text-center">
-                                    {{--                                    @can('view', $item)--}}
-                                    {{--                                        <a href="{{ route('admin.advisory-boards.view', $item) }}"--}}
-                                    {{--                                           class="btn btn-sm btn-warning mr-2"--}}
-                                    {{--                                           data-toggle="tooltip"--}}
-                                    {{--                                           title="{{ __('custom.preview') }}">--}}
-                                    {{--                                            <i class="fa fa-eye"></i>--}}
-                                    {{--                                        </a>--}}
-                                    {{--                                    @endcan--}}
-
                                     @can('update', $item)
                                         <button type="button"
-                                                class="btn btn-warning"
+                                                class="btn btn-sm btn-warning"
                                                 data-toggle="modal"
                                                 data-target="#modal-edit-chairman"
                                                 title="{{ __('custom.edit') }}"
@@ -57,33 +48,33 @@
                                         </button>
                                     @endcan
 
-                                    {{--                                    @can('delete', $item)--}}
-                                    {{--                                        @if(!$item->deleted_at)--}}
-                                    {{--                                            <a href="javascript:;"--}}
-                                    {{--                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"--}}
-                                    {{--                                               data-target="#modal-delete-resource"--}}
-                                    {{--                                               data-resource-id="{{ $item->id }}"--}}
-                                    {{--                                               data-resource-delete-url="{{ route('admin.advisory-boards.delete', $item) }}"--}}
-                                    {{--                                               data-toggle="tooltip"--}}
-                                    {{--                                               title="{{__('custom.delete')}}">--}}
-                                    {{--                                                <i class="fa fa-trash"></i>--}}
-                                    {{--                                            </a>--}}
-                                    {{--                                        @endif--}}
-                                    {{--                                    @endcan--}}
+                                    @can('delete', $item)
+                                        @if(!$member->deleted_at)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $member->id }}"
+                                               data-resource-delete-url="{{ route('admin.advisory-boards.members.delete', $member) }}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.delete')}}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        @endif
+                                    @endcan
 
-                                    {{--                                    @can('restore', $item)--}}
-                                    {{--                                        @if($item->deleted_at)--}}
-                                    {{--                                            <a href="javascript:;"--}}
-                                    {{--                                               class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
-                                    {{--                                               data-target="#modal-restore-resource"--}}
-                                    {{--                                               data-resource-id="{{ $item->id }}"--}}
-                                    {{--                                               data-resource-restore-url="{{ route('admin.advisory-boards.restore', $item) }}"--}}
-                                    {{--                                               data-toggle="tooltip"--}}
-                                    {{--                                               title="{{__('custom.restore')}}">--}}
-                                    {{--                                                <i class="fa fa-plus"></i>--}}
-                                    {{--                                            </a>--}}
-                                    {{--                                        @endif--}}
-                                    {{--                                    @endcan--}}
+                                    @can('restore', $item)
+                                        @if($member->deleted_at)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                               data-target="#modal-restore-resource"
+                                               data-resource-id="{{ $member->id }}"
+                                               data-resource-restore-url="{{ route('admin.advisory-boards.members.restore', $member) }}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.restore')}}">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        @endif
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

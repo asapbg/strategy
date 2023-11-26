@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreAdvisoryBoardMemberRequest;
-use App\Http\Requests\UpdateAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoardMember\DeleteAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoardMember\RestoreAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoardMember\StoreAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoardMember\UpdateAdvisoryBoardMemberRequest;
 use App\Models\AdvisoryBoardMember;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -89,12 +91,41 @@ class AdvisoryBoardMemberController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\AdvisoryBoardMember $advisoryBoardMember
+     * @param DeleteAdvisoryBoardMemberRequest $request
+     * @param AdvisoryBoardMember              $member
      *
-     * @return \Illuminate\Http\Response
+     * @return string
      */
-    public function destroy(AdvisoryBoardMember $advisoryBoardMember)
+    public function destroy(DeleteAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
-        //
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#chairmen';
+
+        try {
+            $member->delete();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.member', 1) . " $member->name " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Restore the specified resource.
+     */
+    public function restore(RestoreAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
+    {
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#chairmen';
+
+        try {
+            $member->restore();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.member', 1) . " $member->name " . __('messages.restored_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
+        }
     }
 }

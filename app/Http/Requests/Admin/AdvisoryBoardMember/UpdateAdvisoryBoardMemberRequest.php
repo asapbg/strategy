@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\AdvisoryBoardMember;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;

@@ -38,6 +38,8 @@
         </div>
     </section>
 
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.scripts')
