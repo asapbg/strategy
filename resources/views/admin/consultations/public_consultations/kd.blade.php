@@ -14,9 +14,10 @@
                 </thead>
                 <tbody>
                 @php($foundedGroups = [])
+                @php($currentGroup = 0)
                 @if(isset($kdRows) && sizeof($kdRows))
                     @foreach($kdRows as $i => $row)
-                        @php($currentGroup = $row->dynamic_structure_groups_id ? $row->group : null)
+                        @php($currentGroup = $row->dynamic_structure_groups_id ? $row->group->ord : $currentGroup + 1)
                         @if($row->dynamic_structure_groups_id && !in_array($row->dynamic_structure_groups_id, $foundedGroups))
                             @php($foundedGroups[] = $row->dynamic_structure_groups_id)
                             <tr>
@@ -27,7 +28,7 @@
                         @php($value = isset($kdValues) && sizeof($kdValues) ? $kdValues[$row->id] ?? '' : '')
                         @if($row->dynamic_structure_groups_id)
                             <tr>
-                                <td>{{ ($currentGroup ? $currentGroup->ord.'.' : '').$row->ord }}</td>
+                                <td>{{ ($currentGroup ? $currentGroup.'.' : '').$row->ord }}</td>
                                 <td>{{ $row->label }}</td>
                                 <td style="min-width: 600px;">
                                     <input type="hidden" value="{{ $row->id }}" name="row_id[]">
@@ -39,7 +40,7 @@
                             </tr>
                         @else
                             <tr>
-                                <td colspan="2">{{ $row->ord.'. '.$row->label }}</td>
+                                <td colspan="2">{{ $currentGroup.'. '.$row->label }}</td>
                                 <td style="min-width: 600px;">
                                     <input type="hidden" value="{{ $row->id }}" name="row_id[]">
                                     <textarea type="{{ $row->type }}" name="val[]" class="form-control form-control-sm summernote">{{ old('val.'.$i, $value) }}</textarea>
