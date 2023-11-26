@@ -107,8 +107,8 @@ class AdvisoryBoardController extends AdminController
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
-
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
+        $members = $item->members;
 
         return $this->view(
             'admin.advisory-boards.edit',
@@ -118,7 +118,8 @@ class AdvisoryBoardController extends AdminController
                 'advisory_chairman_types',
                 'advisory_act_types',
                 'institutions',
-                'consultation_levels'
+                'consultation_levels',
+                'members'
             )
         );
     }

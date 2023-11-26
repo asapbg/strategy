@@ -7,10 +7,14 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
- * @property string $name
+ * @property string     $name
+ *
+ * @property Collection $members
  *
  * @method static orderBy(string $string, string $string1)
  */
@@ -36,6 +40,11 @@ class AdvisoryBoard extends Model
     public function reportInstitution(): BelongsTo
     {
         return $this->belongsTo(Institution::class, 'report_institution_id');
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class);
     }
 
     public function advisoryActType(): BelongsTo

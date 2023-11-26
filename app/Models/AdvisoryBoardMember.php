@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdvisoryBoardMember extends Model
@@ -23,6 +24,16 @@ class AdvisoryBoardMember extends Model
     protected string $logName = "advisory_board_members";
 
     protected $fillable = ['advisory_board_id', 'advisory_type_id', 'advisory_chairman_type_id', 'consultation_level_id'];
+
+    public function consultationLevel(): BelongsTo
+    {
+        return $this->belongsTo(ConsultationLevel::class);
+    }
+
+    public function advisoryChairmanType(): BelongsTo
+    {
+        return $this->belongsTo(AdvisoryChairmanType::class);
+    }
 
     /**
      * Get the model name
