@@ -203,10 +203,10 @@
                             </li>
                         @else
                             <li class="list-group-item">
-                                <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}">
+                                <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $mainDocument->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $mainDocument->id]) }}">
                                 @php
-                                        $fileExtension = $mainDocument->content_type;
-                                        $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+                                    $fileExtension = $mainDocument->content_type;
+                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
                                 @endphp
                                     <i class="{{ $iconClass }}"></i>{{ $mainDocument->display_name }}
                                         <!--
@@ -267,7 +267,7 @@
                             <ul class="list-group list-group-flush">
                                 @foreach($strategicDocumentFiles as $strategicDocumentFile)
                                     <li class="list-group-item">
-                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('admin.preview.file.modal', ['id' => $strategicDocumentFile['id']]) }}">
+                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
                                             <i class="{{ $strategicDocumentFile['icon'] }}"></i>{{ $strategicDocumentFile['text'] }}
                                         </a>
                                     </li>
@@ -310,25 +310,19 @@
                             <ul class="list-group list-group-flush">
                                 @foreach($reportsAndDocs as $document)
                                     <li class="list-group-item">
-                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $document->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $document->id]) }}">
+                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $document->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $document->id]) }}">
                                             <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>{{ $document->display_name }}
                                             <span class="fw-bold">&#123;</span>
-                                            <span class="valid-date fw-bold"> Публикувано {{ $document->created_at->format('d.m.Y') }}</span>
+                                            <span class="valid-date fw-bold"> Публикувано: {{ $document->created_at->format('d.m.Y') }}</span>
                                             <span> /</span>
                                             <span class="valid-date fw-bold"> Валидност: {{ $document->valid_at ?: 'Няма валидност' }} </span>
                                             <span> /</span>
-                                            <!--
-                                            $document->strategicDocument->documentType->name
-                                            -->
                                             <span class="str-doc-type fw-bold">{{ $document->documentType->name }}</span>
                                             <span class="fw-bold">&#125;</span>
                                         </a>
                                     </li>
                                 @endforeach
                             </ul>
-                            <!--
-                            <div id="fileTree"></div>
-                            -->
                         </div>
                     </div>
                 </div>
@@ -369,22 +363,28 @@
                 $('.preview-file-modal2').on('click', function (e) {
                     let fileId = $(this).data('file');
                     let previewUrl = $(this).data('url');
+                    console.log(previewUrl);
                     let titleTxt = '';
                     let continueTxt = 'Изтегляне';
                     let cancelBtnTxt = 'Отказ';
                     const buttonId = id="strategicFileId_" +fileId;
                     new MyModal({
                         title: titleTxt,
-                        footer: '<button id="strategicFileId_' + fileId + '" class="btn btn-sm btn-primary ms-3">' + continueTxt + '</button>' +
-                            '<button id="' + buttonId + '" class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+                        footer: '<button id="strategicFileId_' + fileId + '" class="btn btn-primary">' + continueTxt + '</button>' +
+                            '<button id="stategicFieldCancelButton' + buttonId + '" class="btn btn-danger" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                         body: `<embed src="${previewUrl}" type="application/pdf" width="100%" height="800px" />`,
                         customClass: 'strategicDocumentClass',
                     });
             });
         });
-        $('body').on('click', '[id^="strategicFileId_"]', function() {
+        $('body').on('click', '[id^="strategicFileId_"]', function(event) {
+            event.preventDefault(); // Prevent the default action of the link
             const fileId = this.id.replace('strategicFileId_', '');
-            window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
+            //window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
+            window.location.href = `/strategy-document/download-file/${fileId}`;
+        });
+        $('body').on('click', '#stategicFieldCancelButton', function(event) {
+            event.stopPropagation();
         });
 
         $(document).ready(function() {
