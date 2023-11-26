@@ -83,15 +83,19 @@ class StrategicDocumentsController extends Controller
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
         $strategicDocumentFileService = app(FileService::class);
         $locale = app()->getLocale();
-        $strategicDocumentFiles = StrategicDocumentFile::where('strategic_document_id', $id)
-            ->whereDoesntHave('documentType.translations', function($query) {
-                $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
-            })->where('locale', $locale)->get();
-        $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
-        $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
 
+        $strategicDocumentFiles = StrategicDocumentFile::with('translations')
+            ->where('strategic_document_id', $id)
+            ->where('locale', $locale)
+            ->whereDoesntHave('documentType.translations', function ($query) {
+                $query->where('name', 'like', '%Отчети%')
+                    ->orWhere('name', 'like', '%Доклади%');
+            })
+            ->get();
         $mainDocument = $strategicDocumentFiles->where('is_main', 1)->where('locale', $locale)->first();
-
+        $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
+        $strategicDocumentFiles = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
+        $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
         $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
