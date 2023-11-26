@@ -6,26 +6,29 @@
         <title>{{ $data['title'] }}</title>
         <style>body { font-family: DejaVu Sans, sans-serif !important; }</style>
         <style>
-            td {
-                padding:10px 0 !important;
+            body {
+                font-family: DejaVu Sans, sans-serif;
+                font-size: 22px;
+            }
+            table, th, td {
+                border: 2px solid black;
+                border-collapse: collapse;
+                padding: 10px 15px;
             }
         </style>
     </head>
     <body style="text-align: left;padding-left: 50px; padding-right: 50px;">
         <div style="font-size: 22px;">
 @endif
-            <table class="table table-striped table-responsive" width="100%" cellspacing="0">
-                <thead>
+            <table style="border-collapse:collapse;">
                 <tr>
-                    <th colspan="2"><strong>{{ $data['title'] }}</strong></th>
+                    <td colspan="3" style="background: #d9d7d7; font-weight: bold; text-align: center;"><b>{{ mb_strtoupper($data['title']) }}</b></td>
                 </tr>
                 <tr>
-                    <th>Коментар</th>
-                    <th>Автор</th>
-                    <th>Дата</th>
+                    <td><b>Коментар</b></td>
+                    <td><b>Автор</b></td>
+                    <td><b>Дата</b></td>
                 </tr>
-                </thead>
-                <tbody>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
                         <tr>
@@ -35,7 +38,6 @@
                         </tr>
                     @endforeach
                 @endif
-                </tbody>
             </table>
 @if(isset($isPdf) && $isPdf)
         </div>

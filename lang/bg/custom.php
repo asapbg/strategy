@@ -387,7 +387,13 @@ return [
     'users.type.2'                              => 'Външен',
     //settings
     'settings.sections.system_notifications'    => 'Известия',
+    'settings.sections.system_op'                        => 'Оперативни програми',
+    'settings.sections.system_lp'                        => 'Законодателни програми',
     'settings.system_email'                     => 'Ел. поща за получаване на системни известия',
+    'settings.op_text_bg'                     => 'Начален текст в списъчна страница (BG)',
+    'settings.op_text_en'                     => 'Начален текст в списъчна страница (EN)',
+    'settings.lp_text_bg'                     => 'Начален текст в списъчна страница (BG)',
+    'settings.lp_text_en'                     => 'Начален текст в списъчна страница (EN)',
     //public sections
     'public_sections'                           => 'Публична секция|Публични секции',
     'public_sections.types.TYPE_LIBRARY'        => 'Библиотека',
@@ -463,7 +469,7 @@ return [
     'search_pris_doc_js_placeholder'                         => 'Въведете Номер/Година',
     'search_lp_record_js_placeholder'                         => 'Въведете наименование',
     'search_op_record_js_placeholder'                         => 'Въведете наименование',
-    'search_pc_record_js_placeholder'                         => 'Въведете наименование',
+    'search_pc_record_js_placeholder'                         => 'Въведете Номер/Наименование',
     'bg'                                => 'Български',
     'en'                                => 'Английски',
     'nomenclature_level.CENTRAL'        => 'Централно',

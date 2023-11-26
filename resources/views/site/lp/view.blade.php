@@ -15,8 +15,10 @@
         <div class="container-fluid">
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end">
-                    <button class="btn btn-sm btn-primary main-color mt-2">
-                        <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</button>
+                    @can('update', $item)
+                        <a class="btn btn-sm btn-primary main-color mt-2" target="_blank" href="{{ route('admin.consultations.legislative_programs.edit', $item) }}">
+                        <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -45,6 +47,7 @@
                                             @foreach($data as $row)
                                                 @if(str_contains($row->month, $m))
                                                     @php($rowData = json_decode($row->columns))
+                                                    @php(usort($rowData, function ($a, $b) { return strcmp($a->ord, $b->ord); }))
                                                     @if($rowData)
 {{--                                                        @dd($rowData)--}}
                                                         <div class="accordion-item">

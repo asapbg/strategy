@@ -14,16 +14,18 @@ class DateCrossProgram implements Rule
     private $start;
     private $end;
     private $ignoreId;
+    private $t;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($from = true, $programType = 'operational', $ignoreId = 0)
+    public function __construct($t, $from = true, $programType = 'operational', $ignoreId = 0)
     {
         $this->programType = $programType;
         $this->from = $from;
         $this->ignoreId = $ignoreId;
+        $this->t = $t;
     }
 
     /**
@@ -40,22 +42,36 @@ class DateCrossProgram implements Rule
         }
 
         $date = Carbon::parse('01.'.$value);
+        $dateT = Carbon::parse('01.'.$this->t);
+
         if($this->from) {
             $date = $date->format('Y-m-d');
+            $dateT = $dateT->endOfMonth()->format('Y-m-d');
         } else {
             $date = $date->endOfMonth()->format('Y-m-d');
+            $dateT = $dateT->format('Y-m-d');
         }
+
         if( $this->programType == 'operational' ) {
-            $crossing = OperationalProgram::where('from_date', '<=', $date)
-                ->where('to_date', '>=', $date)
-                ->where('id', '<>', (int)$this->ignoreId)
-                ->first();
+            $query = OperationalProgram::where('id', '<>', (int)$this->ignoreId);
         } else {
-            $crossing = LegislativeProgram::where('from_date', '<=', $date)
-                ->where('to_date', '>=', $date)
-                ->where('id', '<>', (int)$this->ignoreId)
-                ->first();
+            $query = LegislativeProgram::where('id', '<>', (int)$this->ignoreId);
         }
+
+        $crossing = $query->where(function ($q) use($date, $dateT){
+            $q->where(function ($q) use($date, $dateT){
+                $q->where(function ($q) use($date){
+                    $q->where('from_date', '<=', $date)
+                        ->where('to_date', '>=', $date);
+                })->orWhere(function ($q) use($dateT){
+                    $q->where('from_date', '<=', $dateT)
+                        ->where('to_date', '>=', $dateT);
+                });
+            })->orWhere(function ($q) use($date, $dateT){
+                $q->where('from_date', '>=', $date)
+                    ->where('to_date', '<=', $dateT);
+            });
+        })->first();
 
         if($crossing) {
             $this->start = $crossing->from_date;

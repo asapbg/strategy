@@ -10,7 +10,7 @@
                         @if(isset($sections) && sizeof($sections))
                             @foreach($sections as $s)
                                 <li class="nav-item">
-                                    <a class="nav-link @if($section == $s) active @endif" id="{{ $s }}-tab" data-toggle="pill" href="{{ route('admin.settings', ['section' => $s]) }}">{{ __('custom.settings.sections.'.$s) }}</a>
+                                    <a class="nav-link @if($section == $s) active @endif" id="{{ $s }}-tab" href="{{ route('admin.settings', ['section' => $s]) }}">{{ __('custom.settings.sections.'.$s) }}</a>
                                 </li>
                             @endforeach
                         @endif
@@ -26,10 +26,16 @@
                                 <div class="form-group">
                                     <label class="control-label" for="active">{{ __('custom.settings.'.$row->name) }} @if($row->is_required) <span class="required">*</span> @endif</label>
                                     <div>
-                                        <input name="{{ $row->name }}" value="{{ old($row->name, ($row->value)) }}" class="form-control form-control-sm @error($row->name){{ 'is-invalid' }}@enderror" type="{{ $row->type }}">
-                                    @error($row->name)
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
+                                        @switch($row->type)
+                                            @case('summernote')
+                                                <textarea name="{{ $row->name }}" class="form-control form-control-sm summernote @error($row->name){{ 'is-invalid' }}@enderror">{{ old($row->name, ($row->value)) }}</textarea>
+                                            @break
+                                            @default
+                                                <input name="{{ $row->name }}" value="{{ old($row->name, ($row->value)) }}" class="form-control form-control-sm @error($row->name){{ 'is-invalid' }}@enderror" type="{{ $row->type }}">
+                                        @endswitch
+                                        @error($row->name)
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             @endforeach
