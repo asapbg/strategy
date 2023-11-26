@@ -30,7 +30,7 @@
                             @foreach($actions as $action)
                                 <tr>
                                     <td>{{ $action->id }}</td>
-                                    <td>{{ $action->name }}</td>
+                                    <td><i class="text-primary {{ $action->icon_class }} mr-2"></i> {{ $action->name }}</td>
                                     <td class="text-center">
                                         @can('update', $action)
                                             <a href="{{ route( 'admin.nomenclature.field_of_actions.edit', $action) }}"

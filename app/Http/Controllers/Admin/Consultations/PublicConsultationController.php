@@ -24,6 +24,7 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\LinkCategory;
 use App\Models\Poll;
@@ -84,7 +85,7 @@ class PublicConsultationController extends AdminController
         }
 
         if($item->id) {
-            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author'])->find($item->id);
+            $item = PublicConsultation::with(['translation', 'consultations', 'consultations.translations', 'comments', 'comments.author', 'fieldOfAction', 'fieldOfAction.translation'])->find($item->id);
         }
 
         //TODO optimize next one
@@ -123,9 +124,9 @@ class PublicConsultationController extends AdminController
             ->get();
         $programProjects = ProgramProject::with(['translation'])->get();
         $linkCategories = LinkCategory::with(['translation'])->get();
-        $operationalPrograms = OperationalProgram::Actual()->get();
-        $legislativePrograms = LegislativeProgram::Actual()->get();
-
+        $operationalPrograms = OperationalProgram::get();
+        $legislativePrograms = LegislativeProgram::get();
+        $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->fieldsOfAction : null);
         $documents = [];
         foreach ($item->documents as $document){
             $documents[$document->doc_type.'_'.$document->locale][] = $document;
@@ -134,7 +135,8 @@ class PublicConsultationController extends AdminController
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
-            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel'));
+            'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
+            'fieldsOfActions'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -161,6 +163,7 @@ class PublicConsultationController extends AdminController
         DB::beginTransaction();
         try {
             $validated = $validator->validated();
+            //doing this because using strange field name to prevent bad validation message
             $oldOpRow = $item->operational_program_row_id;
             $oldLpRow = $item->legislative_program_row_id;
             $oldOpenFrom = $item->open_from;
@@ -179,7 +182,6 @@ class PublicConsultationController extends AdminController
             if( !$id ) {
                 $item->importer_institution_id = $user->institution ? $user->institution->id : null;
                 $item->responsible_institution_id = $user->institution ? $user->institution->id : null;
-                $item->responsible_institution_address = $user->institution ? $user->institution->address : null;
             }
 
             $item->save();
@@ -196,7 +198,7 @@ class PublicConsultationController extends AdminController
             //Programs
             if( (!is_null($validated['operational_program_row_id']) || !is_null($oldOpRow))
                 && $validated['operational_program_row_id'] != $oldOpRow ) {
-                if( is_null($validated['operational_program_row_id']) ) {
+                if( is_null($validated['operational_program_row_id']) && is_null($validated['legislative_program_row_id'])) {
                     $delete = true;
                 } else {
                     $update = true;
@@ -204,7 +206,7 @@ class PublicConsultationController extends AdminController
             }
             if( (!is_null($validated['legislative_program_row_id']) || !is_null($oldLpRow))
                 && $validated['legislative_program_row_id'] != $oldLpRow ) {
-                if( is_null($validated['legislative_program_row_id']) ) {
+                if( is_null($validated['legislative_program_row_id']) && is_null($validated['operational_program_row_id']) ) {
                     $delete = true;
                 } else {
                     $update = true;

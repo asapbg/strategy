@@ -25,7 +25,9 @@ class UpdateFieldOfActionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
+        $rules = [
+            'icon_class' => ['required', 'string', 'max:255']
+        ];
 
         foreach (config('available_languages') as $lang) {
             foreach (FieldOfAction::translationFieldsProperties() as $field => $properties) {

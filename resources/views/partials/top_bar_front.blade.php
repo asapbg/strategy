@@ -3,7 +3,7 @@
         <div class="row top">
             <div class="col-md-6 align-items-center d-flex">
                 <div class="contact-info d-flex w-100 align-items-center ">
-                    <a class="navbar-brand logo-link pe-2" href="#">
+                    <a class="navbar-brand logo-link pe-2" href="{{ route('home') }}">
                         <img src="/img/strategy-logo.svg" alt="Strategy Лого" id="siteLogo">
                     </a>
                     <div class="contact-info-text d-flex flex-column ps-2">

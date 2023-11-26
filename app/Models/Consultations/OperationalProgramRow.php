@@ -34,7 +34,7 @@ class OperationalProgramRow extends Model
     }
     public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(OperationalProgram::class, 'operational_program_id', 'id');
+        return $this->hasOne(OperationalProgram::class, 'id', 'operational_program_id');
     }
 
 }

@@ -25,7 +25,7 @@ class DynamicStructureSeeder extends Seeder
                 'columns' => [
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на законопроекта'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Цели, основни положения и очаквани резултати'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Необходими промени в други закони'],
                     ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
@@ -39,7 +39,7 @@ class DynamicStructureSeeder extends Seeder
                 'columns' => [
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на нормативния акт'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Основни положения и очаквани резултати'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Законово основание за приемане'],
                     ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],

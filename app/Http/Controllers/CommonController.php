@@ -318,9 +318,15 @@ class CommonController extends Controller
             case 'lp_record':
                 $data = LegislativeProgram::select2AjaxOptions($requestData);
                 break;
+            case 'lp_record_pc':
+                $data = LegislativeProgram::select2AjaxOptionsFilterByInstitution($requestData);
+                break;
             case 'op_record':
                 $requestData['op_record'] = true;
                 $data = OperationalProgram::select2AjaxOptions($requestData);
+                break;
+            case 'op_record_pc':
+                $data = OperationalProgram::select2AjaxOptionsFilterByInstitution($requestData);
                 break;
             case 'pc':
                 $data = PublicConsultation::select2AjaxOptions($requestData);

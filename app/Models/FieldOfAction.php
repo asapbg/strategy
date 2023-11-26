@@ -8,13 +8,14 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @method static create(array $array)
  * @method static paginate(int $PAGINATION)
  * @method static orderBy(string $string)
  */
-class FieldOfAction extends Model implements TranslatableContract
+class FieldOfAction extends ModelActivityExtend implements TranslatableContract
 {
     use FilterSort, Translatable, SoftDeletes;
 
@@ -27,6 +28,10 @@ class FieldOfAction extends Model implements TranslatableContract
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     protected $table = 'field_of_actions';
+    protected $fillable = ['icon_class'];
+
+    //activity
+    protected string $logName = "field_of_actions";
 
     protected function name(): Attribute
     {
@@ -46,4 +51,20 @@ class FieldOfAction extends Model implements TranslatableContract
             ],
         );
     }
+
+    public static function optionsList($active = false)
+    {
+        $q = DB::table('field_of_actions')
+            ->select(['field_of_actions.id', 'field_of_action_translations.name'])
+            ->join('field_of_action_translations', 'field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+            ->where('field_of_action_translations.locale', '=', app()->getLocale());
+
+        if($active) {
+            $q->where('active', '=', 1);
+        }
+
+        return $q->orderBy('field_of_action_translations.name', 'asc')
+            ->get();
+    }
+
 }

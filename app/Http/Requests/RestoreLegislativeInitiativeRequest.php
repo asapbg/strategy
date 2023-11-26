@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\LegislativeInitiative;
-use HttpResponseException;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -12,6 +12,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class RestoreLegislativeInitiativeRequest extends FormRequest
 {
 
+    use FailedAuthorization;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -19,19 +21,7 @@ class RestoreLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('restore', LegislativeInitiative::class);
-    }
-
-    /**
-     * How to handle failed authorization.
-     *
-     * @return HttpResponseException
-     */
-    public function failedAuthorization(): HttpResponseException
-    {
-        throw new \Illuminate\Http\Exceptions\HttpResponseException(
-            redirect()->back()->with('warning', __('messages.unauthorized'))
-        );
+        return auth()->user()->can('restore', $this->item);
     }
 
     /**
@@ -41,8 +31,6 @@ class RestoreLegislativeInitiativeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'id' => ['required', 'numeric'],
-        ];
+        return [];
     }
 }
