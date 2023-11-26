@@ -17,7 +17,7 @@
         <table width="100%" style="border-collapse:collapse;">
             <tbody>
             <tr>
-                <td colspan="2" style="background: #b7b5b5; font-weight: bold; text-align: center;">{{ mb_strtoupper(__('custom.dynamic_structures.type.CONSULT_DOCUMENTS')) }}</td>
+                <td colspan="2" style="background: #d9d7d7; font-weight: bold; text-align: center;">{{ mb_strtoupper(__('custom.dynamic_structures.type.CONSULT_DOCUMENTS')) }}</td>
             </tr>
                 @php($foundedGroups = [])
                 @php($currentGroup = 0)
