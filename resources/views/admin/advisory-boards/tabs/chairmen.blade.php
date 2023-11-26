@@ -45,14 +45,17 @@
                                     {{--                                        </a>--}}
                                     {{--                                    @endcan--}}
 
-                                    {{--                                    @can('update', $item)--}}
-                                    {{--                                        <a href="{{ route('admin.advisory-boards.edit', $item) }}"--}}
-                                    {{--                                           class="btn btn-sm btn-warning mr-2"--}}
-                                    {{--                                           data-toggle="tooltip"--}}
-                                    {{--                                           title="{{ __('custom.preview') }}">--}}
-                                    {{--                                            <i class="fa fa-edit"></i>--}}
-                                    {{--                                        </a>--}}
-                                    {{--                                    @endcan--}}
+                                    @can('update', $item)
+                                        <button type="button"
+                                                class="btn btn-warning"
+                                                data-toggle="modal"
+                                                data-target="#modal-edit-chairman"
+                                                title="{{ __('custom.edit') }}"
+                                                onclick="loadMemberData('{{ route('admin.advisory-boards.members.edit', $member) }}');"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    @endcan
 
                                     {{--                                    @can('delete', $item)--}}
                                     {{--                                        @if(!$item->deleted_at)--}}

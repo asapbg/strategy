@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
  * @property Collection $members
  *
  * @method static orderBy(string $string, string $string1)
+ * @method static find(mixed $get)
  */
 class AdvisoryBoard extends Model
 {

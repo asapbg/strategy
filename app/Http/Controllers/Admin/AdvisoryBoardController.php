@@ -11,7 +11,6 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
 use App\Models\ConsultationLevel;
 use App\Models\PolicyArea;
-use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -108,7 +107,7 @@ class AdvisoryBoardController extends AdminController
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
-        $members = $item->members;
+        $members = $item->members->sortBy(['id']);
 
         return $this->view(
             'admin.advisory-boards.edit',
