@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAdvisoryBoardMemberRequest;
 use App\Http\Requests\UpdateAdvisoryBoardMemberRequest;
 use App\Models\AdvisoryBoardMember;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardMemberController extends AdminController
@@ -33,11 +34,11 @@ class AdvisoryBoardMemberController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StoreAdvisoryBoardMemberRequest $request
+     * @param StoreAdvisoryBoardMemberRequest $request
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function store(StoreAdvisoryBoardMemberRequest $request)
+    public function store(StoreAdvisoryBoardMemberRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -56,7 +57,6 @@ class AdvisoryBoardMemberController extends AdminController
             return redirect()->route('admin.advisory-boards.index')
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
