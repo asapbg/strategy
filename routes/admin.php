@@ -426,7 +426,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed(true);
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function() {
-        Route::post('/store', 'store')->name('advisory-boards.members.store');
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
+        Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.members.store');
     });
 });
