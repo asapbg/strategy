@@ -238,10 +238,6 @@ class CommonController extends Controller
     public function previewModalFile(Request $request, $id = 0)
     {
         $file = File::find($id);
-        $strategicDocumentFile = StrategicDocumentFile::find($id);
-        if ($strategicDocumentFile && !$file) {
-            $file = $strategicDocumentFile;
-        }
 
         if (!$file) {
             return __('messages.record_not_found');
