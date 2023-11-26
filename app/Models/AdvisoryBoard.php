@@ -8,14 +8,16 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
- * @property int        $id
- * @property string     $name
+ * @property int                   $id
+ * @property string                $name
  *
- * @property Collection $members
+ * @property Collection            $members
+ * @property AdvisoryBoardFunction $advisoryFunction
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -23,7 +25,7 @@ use Illuminate\Support\Collection;
 class AdvisoryBoard extends Model
 {
 
-    use FilterSort, SoftDeletes, Translatable;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board');
@@ -38,6 +40,11 @@ class AdvisoryBoard extends Model
     protected string $logName = "advisory_board";
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
+
+    public function advisoryFunction(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoardFunction::class);
+    }
 
     public function reportInstitution(): BelongsTo
     {

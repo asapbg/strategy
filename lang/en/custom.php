@@ -477,4 +477,6 @@ return [
     'representatives_from' => 'Representative from|Representatives from',
     'member' => 'Member|Members',
     'loading' => 'Loading...',
+    'function' => 'Function|Functions',
+    'section' => 'Section|Sections',
 ];
