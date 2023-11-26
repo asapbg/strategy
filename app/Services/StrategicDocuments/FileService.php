@@ -120,11 +120,22 @@ class FileService
         }
 
         $iconMapping = [
+            //
             'application/pdf' => 'fas fa-file-pdf text-danger me-1',
             'application/msword' => 'fas fa-file-word text-info me-1',
             'application/vnd.ms-excel' => 'fas fa-file-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fas fa-file-excel',
         ];
+        $iconMappingFrontEnd = [
+            'application/pdf' => 'fa-regular fa-file-pdf main-color me-2 fs-5',
+            'application/msword' => 'fa-regular fa-file-word main-color me-2 fs-5',
+            'application/vnd.ms-excel' => 'fa-regular fa-file-excel main-color me-2 fs-5',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-regular fa-file-excel main-color me-2 fs-5',
+        ];
+        if ($adminView == false) {
+            $iconMapping = $iconMappingFrontEnd;
+        }
+
         $fileExtension = $mainFile->content_type;
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
         $validAt = $this->prepareValidAtText($mainFile);
