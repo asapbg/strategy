@@ -13,7 +13,7 @@ class LegislativeProgramController extends Controller
     public function index(Request $request)
     {
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
-        $items = LegislativeProgram::Published()->FilterBy($request->all())->paginate($paginate);
+        $items = LegislativeProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.menu.lp');
         return $this->view('site.lp.index', compact('items', 'pageTitle', 'pageTopContent'));

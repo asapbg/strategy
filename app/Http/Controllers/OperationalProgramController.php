@@ -13,7 +13,7 @@ class OperationalProgramController extends Controller
     public function index(Request $request)
     {
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
-        $items = OperationalProgram::Published()->FilterBy($request->all())->paginate($paginate);
+        $items = OperationalProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.menu.op');
         return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent'));
