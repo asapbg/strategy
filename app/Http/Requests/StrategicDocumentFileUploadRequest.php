@@ -31,7 +31,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         session(['hasErrorsFromFileTab' => false]);
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
-            'valid_at' => ['required_if:date_expiring_indefinite,null|date'],
+            'valid_at' => ['required_if:date_valid_indefinite_files,0', 'date', 'nullable'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
             'visible_in_report' => ['nullable', 'numeric'],
@@ -51,12 +51,21 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-
-        if (request()->get('date_exipring_indefinite') == 0) {
+        /*
+        if (request()->get('date_valid_indefinite_files') == 1) {
             $rules['valid_at'][] = 'sometimes';
         }
-        //$validator = Validator::make(request()->all(), $rules);
-
+        */
         return $rules;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'valid_at.required_if' => 'Полето ":attribute" е задължително, когато датата на изтичане не е неограничена.',
+        ];
     }
 }
