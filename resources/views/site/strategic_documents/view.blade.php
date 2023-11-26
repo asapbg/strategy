@@ -380,7 +380,6 @@
         $('body').on('click', '[id^="strategicFileId_"]', function(event) {
             event.preventDefault(); // Prevent the default action of the link
             const fileId = this.id.replace('strategicFileId_', '');
-            //window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
             window.location.href = `/strategy-document/download-file/${fileId}`;
         });
         $('body').on('click', '#stategicFieldCancelButton', function(event) {
