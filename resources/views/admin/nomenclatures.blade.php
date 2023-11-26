@@ -140,13 +140,13 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn"
-                               href="{{ route('admin.nomenclature.consultation_document_type') }}">
-                                <i class="fas fa-file"></i>
-                                {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}
-                            </a>
-                        </div>
+{{--                        <div class="col-sm-3">--}}
+{{--                            <a class="btn btn-info btn-block nomenclature-btn"--}}
+{{--                               href="{{ route('admin.nomenclature.consultation_document_type') }}">--}}
+{{--                                <i class="fas fa-file"></i>--}}
+{{--                                {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                             href="{{ route('admin.nomenclature.authority_advisory_board') }}">
@@ -167,8 +167,6 @@
                                 {{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                href="{{ route('admin.nomenclature.field_of_actions.index') }}">
@@ -176,6 +174,8 @@
                                 {{ trans_choice('validation.attributes.field_of_action', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                href="{{ route('admin.nomenclature.tag') }}">
