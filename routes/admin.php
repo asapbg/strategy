@@ -39,16 +39,16 @@ use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function() {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function () {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
         Route::get('/download/{file}', 'downloadFile')->name('download.file');
         Route::get('/file-preview-modal/{id}', 'previewModalFile')->name('preview.file.modal');
         Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
-        Route::post('/upload-file/{object_id}/{object_type}','uploadFile')->name('upload.file');
-        Route::post('/upload-file-languages/{object_id}/{object_type}','uploadFileLanguages')->name('upload.file.languages');
-        Route::get('/select2-ajax/{type}','getSelect2Ajax')->name('select2.ajax');
+        Route::post('/upload-file/{object_id}/{object_type}', 'uploadFile')->name('upload.file');
+        Route::post('/upload-file-languages/{object_id}/{object_type}', 'uploadFileLanguages')->name('upload.file.languages');
+        Route::get('/select2-ajax/{type}', 'getSelect2Ajax')->name('select2.ajax');
     });
 
     // Publications
@@ -80,7 +80,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
     });
     Route::controller(PublicConsultationController::class)->group(function () {
-            Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
+        Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
         Route::get('/consultations/public-consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
         Route::match(['post', 'put'], '/consultations/public-consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
         Route::post('/consultations/public-consultations/store-kd', 'storeKd')->name('consultations.public_consultations.store.kd');
@@ -97,10 +97,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
         Route::get('/strategic-documents/edit/{id?}', 'edit')->name('strategic_documents.edit');
         Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
-        Route::post( '/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
-        Route::put( '/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
-        Route::get( '/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
-        Route::any( '/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::post('/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
+        Route::put('/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
+        Route::get('/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
+        Route::any('/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
         Route::get('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id?}', 'prisActOptions')->name('strategic_documents.pris.options');
@@ -117,24 +117,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Settings
     Route::controller(\App\Http\Controllers\Admin\SettingsController::class)->group(function () {
-        Route::get('/settings/{section?}',                'index')->name('settings')->middleware('can:viewAny,App\Models\Settings');
-        Route::match(['put'], '/settings',         'store')->name('settings.store');
+        Route::get('/settings/{section?}', 'index')->name('settings')->middleware('can:viewAny,App\Models\Settings');
+        Route::match(['put'], '/settings', 'store')->name('settings.store');
     });
 
     //PRIS
     Route::controller(\App\Http\Controllers\Admin\PrisController::class)->group(function () {
-        Route::get('/pris',                'index')->name('pris')->middleware('can:viewAny,App\Models\Pris');
-        Route::get( '/pris/edit/{item}',         'edit')->name('pris.edit');
-        Route::post( '/pris/connect-documents',         'connectDocuments')->name('pris.connect');
-        Route::post( '/pris/disconnect-documents',         'disconnectDocuments')->name('pris.disconnect');
-        Route::match(['put', 'post'],'/pris/edit',         'store')->name('pris.store');
+        Route::get('/pris', 'index')->name('pris')->middleware('can:viewAny,App\Models\Pris');
+        Route::get('/pris/edit/{item}', 'edit')->name('pris.edit');
+        Route::post('/pris/connect-documents', 'connectDocuments')->name('pris.connect');
+        Route::post('/pris/disconnect-documents', 'disconnectDocuments')->name('pris.disconnect');
+        Route::match(['put', 'post'], '/pris/edit', 'store')->name('pris.store');
     });
 
     //Dynamic Structures
     Route::controller(\App\Http\Controllers\Admin\DynamicStructureController::class)->group(function () {
-        Route::get('/dynamic-structures',                'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
-        Route::get( '/dynamic-structures/edit/{item}',         'edit')->name('dynamic_structures.edit');
-        Route::post( '/dynamic-structures/add-column',         'addColumn')->name('dynamic_structures.add_column');
+        Route::get('/dynamic-structures', 'index')->name('dynamic_structures')->middleware('can:viewAny,App\Models\DynamicStructure');
+        Route::get('/dynamic-structures/edit/{item}', 'edit')->name('dynamic_structures.edit');
+        Route::post('/dynamic-structures/add-column', 'addColumn')->name('dynamic_structures.add_column');
     });
 
     //Impact assessments
@@ -149,36 +149,36 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(UsersController::class)->group(function () {
-        Route::get('/users',                'index')->name('users')->middleware('can:viewAny,App\Models\User');
-        Route::get('/users/create',         'create')->name('users.create');
-        Route::post('/users/store',         'store')->name('users.store');
-        Route::get('/users/{user}/edit',    'edit')->name('users.edit');
-        Route::post('/users/{user}/update',  'update')->name('users.update');
-        Route::get('/users/{user}/delete',  'destroy')->name('users.delete');
-        Route::get('/users/export',         'export')->name('users.export');
+        Route::get('/users', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
+        Route::get('/users/create', 'create')->name('users.create');
+        Route::post('/users/store', 'store')->name('users.store');
+        Route::get('/users/{user}/edit', 'edit')->name('users.edit');
+        Route::post('/users/{user}/update', 'update')->name('users.update');
+        Route::get('/users/{user}/delete', 'destroy')->name('users.delete');
+        Route::get('/users/export', 'export')->name('users.export');
     });
 
     Route::controller(RolesController::class)->group(function () {
-        Route::get('/roles',                'index')->name('roles')->middleware('can:viewAny,App\Models\CustomRole');
-        Route::get('/roles/create',         'create')->name('roles.create');
-        Route::post('/roles/store',         'store')->name('roles.store');
-        Route::get('/roles/{role}/edit',    'edit')->name('roles.edit');
-        Route::get('/roles/{role}/update',  'update')->name('roles.update');
-        Route::get('/roles/{role}/delete',  'destroy')->name('roles.delete');
+        Route::get('/roles', 'index')->name('roles')->middleware('can:viewAny,App\Models\CustomRole');
+        Route::get('/roles/create', 'create')->name('roles.create');
+        Route::post('/roles/store', 'store')->name('roles.store');
+        Route::get('/roles/{role}/edit', 'edit')->name('roles.edit');
+        Route::get('/roles/{role}/update', 'update')->name('roles.update');
+        Route::get('/roles/{role}/delete', 'destroy')->name('roles.delete');
     });
 
     Route::controller(PermissionsController::class)->group(function () {
-        Route::get('/permissions',                      'index')->name('permissions')->middleware('can:viewAny,App\Models\CustomRole');
-        Route::get('/permissions/create',               'create')->name('permissions.create');
-        Route::post('/permissions/store',               'store')->name('permissions.store');
-        Route::get('/permissions/{permission}/edit',    'edit')->name('permissions.edit');
-        Route::get('/permissions/{permission}/update',  'update')->name('permissions.update');
-        Route::get('/permissions/{permission}/delete',  'destroy')->name('permissions.delete');
-        Route::post('/permissions/roles',               'rolesPermissions')->name('permissions.roles');
+        Route::get('/permissions', 'index')->name('permissions')->middleware('can:viewAny,App\Models\CustomRole');
+        Route::get('/permissions/create', 'create')->name('permissions.create');
+        Route::post('/permissions/store', 'store')->name('permissions.store');
+        Route::get('/permissions/{permission}/edit', 'edit')->name('permissions.edit');
+        Route::get('/permissions/{permission}/update', 'update')->name('permissions.update');
+        Route::get('/permissions/{permission}/delete', 'destroy')->name('permissions.delete');
+        Route::post('/permissions/roles', 'rolesPermissions')->name('permissions.roles');
     });
 
     Route::controller(ActivityLogController::class)->group(function () {
-        Route::get('/activity-logs',                 'index')->name('activity-logs')->middleware('can:viewAny,App\Models\CustomActivity');;
+        Route::get('/activity-logs', 'index')->name('activity-logs')->middleware('can:viewAny,App\Models\CustomActivity');;
         Route::get('/activity-logs/{activity}/show', 'show')->name('activity-logs.show');
     });
 
@@ -215,7 +215,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 //    });
 
 
-
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
@@ -240,11 +239,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->prefix('/legislative-initiatives')->group(function () {
-        Route::get('',                  'index')->name('legislative_initiatives.index');
-        Route::get('/view/{item}',      'show')->name('legislative_initiatives.view')->withTrashed();
-        Route::post('/{item}/update',   'update')->name('legislative_initiatives.update');
+        Route::get('', 'index')->name('legislative_initiatives.index');
+        Route::get('/view/{item}', 'show')->name('legislative_initiatives.view')->withTrashed();
+        Route::post('/{item}/update', 'update')->name('legislative_initiatives.update');
         Route::delete('/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
-        Route::post('{item}/restore',          'restore')->name('legislative_initiatives.restore')->withTrashed();
+        Route::post('{item}/restore', 'restore')->name('legislative_initiatives.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments')->group(function () {
@@ -401,29 +400,29 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\Nomenclature\FieldOfActionController::class)->group(function () {
-        Route::get('/nomenclature/field-of-actions',                    'index')->name('nomenclature.field_of_actions.index');
-        Route::get('/nomenclature/field-of-actions/create',             'create')->name('nomenclature.field-of-actions.create');
-        Route::post('/nomenclature/field-of-actions/store',             'store')->name('nomenclature.field_of_actions.store');
-        Route::get('/nomenclature/field-of-actions/{item}/edit',      'edit')->name('nomenclature.field_of_actions.edit');
-        Route::post('/nomenclatures/field-of-actions/{action}/update',  'update')->name('nomenclatures.field_of_actions.update');
-        Route::post('/nomenclatures/field-of-actions/{action}/delete',  'destroy')->name('nomenclatures.field_of_actions.delete');
+        Route::get('/nomenclature/field-of-actions', 'index')->name('nomenclature.field_of_actions.index');
+        Route::get('/nomenclature/field-of-actions/create', 'create')->name('nomenclature.field-of-actions.create');
+        Route::post('/nomenclature/field-of-actions/store', 'store')->name('nomenclature.field_of_actions.store');
+        Route::get('/nomenclature/field-of-actions/{item}/edit', 'edit')->name('nomenclature.field_of_actions.edit');
+        Route::post('/nomenclatures/field-of-actions/{action}/update', 'update')->name('nomenclatures.field_of_actions.update');
+        Route::post('/nomenclatures/field-of-actions/{action}/delete', 'destroy')->name('nomenclatures.field_of_actions.delete');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function () {
         Route::get('/reports', 'index')->name('reports.index');
         Route::get('/reports/create', 'create')->name('reports.create');
         Route::post('/reports/store', 'store')->name('reports.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
-        Route::get('',                  'index')    ->name('advisory-boards.index');
-        Route::get('/create',           'create')   ->name('advisory-boards.create');
-        Route::post('/store',           'store')    ->name('advisory-boards.store');
-        Route::get('{item}/view',       'show')     ->name('advisory-boards.view');
-        Route::get('{item}/edit',       'edit')     ->name('advisory-boards.edit');
-        Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
-        Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
-        Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed();
+        Route::get('', 'index')->name('advisory-boards.index');
+        Route::get('/create', 'create')->name('advisory-boards.create');
+        Route::post('/store', 'store')->name('advisory-boards.store');
+        Route::get('{item}/view', 'show')->name('advisory-boards.view');
+        Route::get('{item}/edit', 'edit')->name('advisory-boards.edit');
+        Route::post('{item}/update', 'update')->name('advisory-boards.update');
+        Route::post('{item}/delete', 'destroy')->name('advisory-boards.delete');
+        Route::post('{item}/restore', 'restore')->name('advisory-boards.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
@@ -432,5 +431,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.members.update');
         Route::post('{member}/delete', 'destroy')->name('advisory-boards.members.delete');
         Route::post('{member}/restore', 'restore')->name('advisory-boards.members.restore')->withTrashed();
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {
+        Route::post('/store', 'store')->name('advisory-boards.function.store');
     });
 });

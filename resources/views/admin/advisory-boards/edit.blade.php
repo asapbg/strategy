@@ -20,6 +20,11 @@
                                aria-controls="chairmen"
                                aria-selected="false">{{ trans_choice('custom.chairmen', 2) }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
+                               aria-controls="functions"
+                               aria-selected="false">{{ trans_choice('custom.function', 2) }}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -31,6 +36,10 @@
 
                         <div class="tab-pane fade" id="chairmen" role="tabpanel" aria-labelledby="chairmen-tab">
                             @include('admin.advisory-boards.tabs.chairmen')
+                        </div>
+
+                        <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
+                            @include('admin.advisory-boards.tabs.functions')
                         </div>
                     </div>
                 </div>

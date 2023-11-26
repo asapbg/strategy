@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\AdvisoryBoardMember\UpdateAdvisoryBoardMemberRequest
 use App\Models\AdvisoryBoardMember;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardMemberController extends AdminController
@@ -94,7 +95,7 @@ class AdvisoryBoardMemberController extends AdminController
      * @param DeleteAdvisoryBoardMemberRequest $request
      * @param AdvisoryBoardMember              $member
      *
-     * @return string
+     * @return RedirectResponse
      */
     public function destroy(DeleteAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
