@@ -29,7 +29,7 @@ class File extends Model
     const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR.'comments'.DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
-    const ALLOWED_FILE_PRIS = ['docx', 'pdf'];
+    const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     protected $guarded = [];
 
     /**
