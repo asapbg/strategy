@@ -423,5 +423,6 @@ return [
         'icon_class' => 'Икона (клас)',
         'advisory_chairman_type_id' => 'Длъжност',
         'advisory_type_id' => 'Тип',
+        'report_time' => 'Час',
     ],
 ];

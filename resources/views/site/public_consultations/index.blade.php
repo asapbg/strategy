@@ -108,14 +108,18 @@
                             </a>
                         </div>
                         <div class="consult-item-header-edit">
-                            <a href="#">
-                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"><span class="d-none">Delete</span></i>
-                            </a>
-                            <a href="#">
-                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
-                                    <span class="d-none">Edit</span>
-                                </i>
-                            </a>
+{{--                            @can('delete', $consultation)--}}
+                                <a href="{{ route('admin.consultations.public_consultations.edit', $consultation) }}">
+                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"><span class="d-none">{{ __('custom.delete') }}</span></i>
+                                </a>
+{{--                            @endcan--}}
+                            @can('update', $consultation)
+                                <a href="{{ route('admin.consultations.public_consultations.edit', $consultation) }}" target="_blank">
+                                    <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
+                                        <span class="d-none">{{ __('custom.edit') }}</span>
+                                    </i>
+                                </a>
+                            @endcan
                         </div>
                     </div>
                     <div class="meta-consul mb-2">

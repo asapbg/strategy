@@ -37,6 +37,7 @@ class OperationalProgramController extends AdminController
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
 
         $items = OperationalProgram::FilterBy($requestFilter)
+            ->orderBy('from_date', 'desc')
             ->paginate($paginate);
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
