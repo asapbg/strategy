@@ -539,4 +539,5 @@ return [
     'publish_and_stay' => 'Публикувай и остани',
     'unpublish_and_stay' => 'Чернова и остани',
     'unpublish_make' => 'Чернова',
+    'link_to_parent_strategic_document' => 'Линк и заглавие на родителски стратегически документ',
 ];

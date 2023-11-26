@@ -31,7 +31,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 
     protected $fillable = ['strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id',
         'strategic_act_type_id', 'strategic_act_number', 'strategic_act_link', 'accept_act_institution_type_id',
-        'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat', 'document_date_accepted', 'document_date_expiring'];
+        'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat', 'document_date_accepted', 'document_date_expiring', 'parent_document_id'];
 
     /**
      * Dates
@@ -118,5 +118,13 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function publicConsultation(): BelongsTo
     {
         return $this->belongsTo(PublicConsultation::class, 'public_consultation_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function parentDocument(): BelongsTo
+    {
+        return $this->belongsTo(StrategicDocument::class, 'parent_document_id');
     }
 }

@@ -19,8 +19,8 @@
         <div class="form-group form-group-sm">
             <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }} <span class="required">*</span> </label>
             <div class="form-check">
-                <input type="hidden" name="date_expiring_indefinite" value="0">
-                <input type="checkbox" id="date_valid_indefinite" name="date_valid_indefinite"
+                <input type="hidden" name="date_valid_indefinite_files" value="0">
+                <input type="checkbox" id="date_valid_indefinite" name="date_valid_indefinite_files"
                        class="form-check-input" value="1" {{ $item->expiration_date === null ? 'checked' : '' }}>
                 <label class="form-check-label" for="unlimited_date_expiring">
                     {{ __('custom.date_expring_indefinite') }}

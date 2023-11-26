@@ -82,28 +82,33 @@ class StrategicDocumentsController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
-        $strategicDocumentLevels = StrategicDocumentLevel::all();
-        $strategicDocumentTypes = StrategicDocumentType::all();
-        $strategicActTypes = StrategicActType::all();
-        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::all();
-        $policyAreas = PolicyArea::all();
-        $prisActs = Pris::all();
-        $strategicDocumentFiles = StrategicDocumentFile::all();
-        $strategicDocumentFilesBg = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
-        $strategicDocumentFilesEn = StrategicDocumentFile::where('strategic_document_id', $item->id)->where('locale', 'en')->get();
+        $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
+        $strategicDocumentTypes = StrategicDocumentType::with('translations')->get();
+        $strategicActTypes = StrategicActType::with('translations')->get();
+        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
+        $policyAreas = PolicyArea::with('translations')->get();
+        $prisActs = Pris::with('translations')->get();
+        $strategicDocumentFiles = StrategicDocumentFile::with('translations')->get();
+        $strategicDocumentFilesBg = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
+        $strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->get();
         $strategicDocumentsFileService = app(FileService::class);
 
         $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
         $fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
-        $legalActTypes = LegalActType::all();
-        $consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
+        $legalActTypes = LegalActType::with('translations')->get();
+
+        //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
+        $consultations = PublicConsultation::Active()->get();
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
+        $strategicDocuments = StrategicDocument::with('translations')->get();
 
+        // testing
+        // end testing
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)

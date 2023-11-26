@@ -127,33 +127,21 @@ class FileService
         ];
         $fileExtension = $mainFile->content_type;
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-
-        /*
-        $validToTexts = [
-            'en' => 'Valid to(year):',
-            'bg' => 'Валиден до(година):',
-        ];
-
-        $indefiniteToTexts = [
-            'en' => 'Indefinite',
-            'bg' => 'Безсрочен',
-        ];
-
-        $year = Carbon::createFromDate($mainFile->valid_at)->format('Y');
-        $validAt = $mainFile->valid_at ? Arr::get($validToTexts, app()->getLocale()) . $year ?? 'Валиден до(година):'. $year : Arr::get($indefiniteToTexts, app()->getLocale());
-        */
         $validAt = $this->prepareValidAtText($mainFile);
+        $editLink = $adminView ? "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" : '';
+        $downloadLink = $adminView ? "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>" : '';
+        $deleteLink = $adminView ? "<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>" : '';
 
         $rootNode = [
             'id' => $mainFile->id,
             'parent' => '#',
             'text' => $mainFile->display_name . ' ' . $validAt .
-                "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
-                "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
+                //"<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
+                //"<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
                 //"<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
+                $editLink . $downloadLink,
             'icon' => $iconClass,
         ];
-
         $fileData[] = $rootNode;
 
         foreach ($strategicDocumentFiles as $file) {
@@ -162,14 +150,16 @@ class FileService
             }
             $fileExtension = $file->content_type;
             $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
+            $validAt = $this->prepareValidAtText($file);
 
             $fileNode = [
                 'id' => $file->id,
-                'parent' => $file->parent_id ?: $mainFile->id,//'root',
+                'parent' => $file->parent_id ?: $mainFile->id,
                 'text' => $file->display_name . ' ' . $validAt .
-                    "<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
-                    "<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
-                    "<a href='#' id='deleteButton_{$file->id}' class='delete-button' data-file-id='{$file->id}'><i class='fas fa-trash'></i></a>",
+                    $editLink . $downloadLink . $deleteLink,
+                    //"<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
+                    //"<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
+                    //"<a href='#' id='deleteButton_{$file->id}' class='delete-button' data-file-id='{$file->id}'><i class='fas fa-trash'></i></a>",
                 'icon' => $iconClass,
             ];
 
