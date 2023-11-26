@@ -6,11 +6,29 @@
         <div class="form-group">
             <label class="col-sm-12 control-label" for="report_date">{{ __('validation.attributes.date') }} <span class="required">*</span></label>
             <input type="text" id="report_date" name="report_date"
-                   class="form-control form-control-sm datepicker-time @error('report_date'){{ 'is-invalid' }}@enderror"
+                   class="form-control form-control-sm datepicker @error('report_date'){{ 'is-invalid' }}@enderror"
                    value="{{ old('report_date', displayDate(\Carbon\Carbon::now())) }}">
             @error('report_date')
                 <div class="text-danger mt-1">{{ $message }}</div>
             @enderror
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="col-sm-12 control-label" for="report_time">{{ __('validation.attributes.hour') }} <span class="required">*</span></label>
+            <div class="input-group bootstrap-timepicker timepicker">
+                <input type="text" class="form-control input-small @error('report_time'){{ 'is-invalid' }}@enderror" name="report_time" value="{{ old('report_time', \Carbon\Carbon::now()->format('H:s')) }}">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                @error('report_time')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+{{--            <input type="text" id="report_time" name="report_time"--}}
+{{--                   class="form-control form-control-sm timepicker @error('report_time'){{ 'is-invalid' }}@enderror"--}}
+{{--                   value="{{ old('report_time', displayDate(\Carbon\Carbon::now())) }}">--}}
+{{--            @error('report_time')--}}
+{{--            <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--            @enderror--}}
         </div>
     </div>
     <div class="col-12"></div>

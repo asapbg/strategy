@@ -28,6 +28,7 @@ class StorePublicConsultationProposalReport extends FormRequest
             'id' => ['required', 'numeric', 'exists:public_consultation'],
             'message' => ['required', 'string'],
             'report_date' => ['required', 'date'],
+            'report_time' => ['required', 'date_format:H:i'],
         ];
 
         $docType = DocTypesEnum::PC_COMMENTS_REPORT->value;
