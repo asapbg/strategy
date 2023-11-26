@@ -24,7 +24,6 @@
                         <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-12 d-flex align-items-center">
                     <h3 class="mb-2 fs-4">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
@@ -59,19 +58,27 @@
                         <a href="#"
                            class="main-color text-decoration-none fs-18">
                          <span class="obj-icon-info me-2">
-                        <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }} </span>
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }}
+                         </span>
                         </a>
                     @endcan
                 </div>
 
                 <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.document_to', 1) }}</h3>
-                    <a href="#" class="main-color text-decoration-none fs-18">
-                    <span class="obj-icon-info me-2">
-                        <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>Линк и заглавие на родителски стратегически документ</span>
-                    </a>
+                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.document_to', 1) }} </h3>
+                    @can('viewAny',  $strategicDocument)
+                        <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->parent_document_id]) }}"
+                           class="main-color text-decoration-none fs-18">
+                         <span class="obj-icon-info me-2">
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_parent_strategic_document', 1) }}</span>
+                        </a>
+                    @else
+                        <a href="#" class="main-color text-decoration-none fs-18">
+                            <span class="obj-icon-info me-2">
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_parent_strategic_document', 1) }}</span>
+                        </a>
+                    @endcan
                 </div>
-
             </div>
 
             <div class="row mb-2">
@@ -79,14 +86,14 @@
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.accepted_date', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ $strategicDocument->document_date_accepted }}</span>
+                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('Y-m-d') }}</span>
                     </a>
                 </div>
                 <div class="col-md-4">
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.date_expiring', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->document_date_expiring }}</span>
+                        <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('Y-m-d') }}</span>
                     </a>
                 </div>
                 <div class="col-md-4">
@@ -144,9 +151,8 @@
                 </div>
                 <div class="col-md-4">
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
-
-                    @can('viewAny',  $strategicDocument->publicConsultation)
-                        <a href="{{ route('admin.consultations.public_consultations.edit', [$strategicDocument->publicConsultation?->id]) }}" class="main-color text-decoration-none fs-18">
+                    @can('viewAny',  $strategicDocument)
+                        <a href="{{ route('admin.consultations.public_consultations.edit', [$strategicDocument->public_consultation_id]) }}" class="main-color text-decoration-none fs-18">
                            <span class="obj-icon-info me-2">
                             <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_oc', 1) }}</span>
                         </a>
@@ -156,7 +162,6 @@
                             <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_oc', 1) }}</span>
                         </a>
                     @endcan
-
                 </div>
                 @if (! $strategicDocument->link_to_monitorstat)
                     <div class="col-md-4">
@@ -261,13 +266,10 @@
                         <div class="tab-pane fade show active" id="table-view">
                             <ul class="list-group list-group-flush">
                                 @foreach($strategicDocumentFiles as $strategicDocumentFile)
-                                    @php
-                                        $fileExtension = $strategicDocumentFile->content_type;
-                                        $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file'; // Default to a generic file icon if no mapping is found
-                                    @endphp
                                     <li class="list-group-item">
-                                        <a href="#" class="main-color text-decoration-none">
-                                            <i class="{{ $iconClass }}"></i>{{ $strategicDocumentFile->display_name }}</a>
+                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('admin.preview.file.modal', ['id' => $strategicDocumentFile['id']]) }}">
+                                            <i class="{{ $strategicDocumentFile['icon'] }}"></i>{{ $strategicDocumentFile['text'] }}
+                                        </a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -308,12 +310,12 @@
                             <ul class="list-group list-group-flush">
                                 @foreach($reportsAndDocs as $document)
                                     <li class="list-group-item">
-                                        <a href="{{ $document->path }}" class="main-color text-decoration-none">
+                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $document->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $document->id]) }}">
                                             <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>{{ $document->display_name }}
                                             <span class="fw-bold">&#123;</span>
                                             <span class="valid-date fw-bold"> Публикувано {{ $document->created_at->format('d.m.Y') }}</span>
                                             <span> /</span>
-                                            <span class="valid-date fw-bold"> Валидност {{ $document->valid_at ?? 'Няма валидност' }} </span>
+                                            <span class="valid-date fw-bold"> Валидност: {{ $document->valid_at ?: 'Няма валидност' }} </span>
                                             <span> /</span>
                                             <!--
                                             $document->strategicDocument->documentType->name
