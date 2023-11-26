@@ -25,7 +25,7 @@ use Illuminate\Support\Collection;
 class AdvisoryBoard extends Model
 {
 
-    use FilterSort, Translatable;
+    use FilterSort, SoftDeletes, Translatable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board');
