@@ -36,7 +36,11 @@ class GenerateComments extends Command
     public function handle()
     {
         //get ended public consultation with comments and where do not have generated documents
-        $items = PublicConsultation::with(['comments', 'comments.author'])->whereHas('comments')->whereDoesntHave('commentsDocuments')->Ended()->get();
+        $items = PublicConsultation::with(['comments', 'comments.author'])
+            ->whereHas('comments')
+            ->whereDoesntHave('commentsDocuments')
+            ->Ended()
+            ->get();
         //Foreach generate csv and pdf with all comments
         foreach ($items as $pc) {
             $exportData = [
@@ -76,11 +80,11 @@ class GenerateComments extends Command
                 $pdf = new File([
                     'id_object' => $pc->id,
                     'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
-                    'doc_type' => DocTypesEnum::PC_COMMENTS_CSV,
+                    'doc_type' => DocTypesEnum::PC_COMMENTS_PDF,
                     'filename' => $fileName.'.pdf',
                     'content_type' => 'application/pdf',
                     'path' => $path.$fileName.'.pdf',
-                    'description_'.$lang['code'] => trans('custom.public_consultation.doc_type.'.DocTypesEnum::PC_COMMENTS_CSV->value, [], $lang['code']),
+                    'description_'.$lang['code'] => trans('custom.public_consultation.doc_type.'.DocTypesEnum::PC_COMMENTS_PDF->value, [], $lang['code']),
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'locale' => $lang['code'],

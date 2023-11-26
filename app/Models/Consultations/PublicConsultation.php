@@ -233,9 +233,27 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
-            ->whereIn('doc_type', [DocTypesEnum::PC_COMMENTS_CSV->value, DocTypesEnum::PC_COMMENTS_CSV->value])
+            ->whereIn('doc_type', [DocTypesEnum::PC_COMMENTS_CSV->value, DocTypesEnum::PC_COMMENTS_PDF->value])
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
+    }
+
+    public function commentsDocumentPdf()
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->where('doc_type', '=', DocTypesEnum::PC_COMMENTS_PDF->value)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale')->first();
+    }
+
+    public function commentsDocumentCsv()
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->where('doc_type', '=', DocTypesEnum::PC_COMMENTS_CSV->value)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale')->first();
     }
 
     public function consultations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

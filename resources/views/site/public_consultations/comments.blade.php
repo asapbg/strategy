@@ -1,7 +1,21 @@
 <div class="row mb-3 mt-4">
     <div class="col-md-12">
         <div class="custom-card py-4 px-3">
-            <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
+            <h3 class="mb-3">
+                {{ trans_choice('custom.comments', 2) }}
+                @php($fPdf = $item->commentsDocumentPdf())
+                @if($fPdf)
+                    | <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $fPdf) }}" target="_blank" title="{{ __('custom.download') }}">
+                        {!! fileIcon($fPdf->content_type) !!} {{ $fPdf->{'description_'.$fPdf->locale} }}
+                    </a>
+                @endif
+                @php($fCsv = $item->commentsDocumentCsv())
+                @if($fCsv)
+                    | <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $fCsv) }}" target="_blank" title="{{ __('custom.download') }}">
+                        {!! fileIcon($fCsv->content_type) !!} {{ $fCsv->{'description_'.$fCsv->locale} }}
+                    </a>
+                @endif
+            </h3>
             @if($item->comments->count())
                 @foreach($item->comments as $c)
                     <div class="obj-comment comment-background p-2 rounded mb-3">
