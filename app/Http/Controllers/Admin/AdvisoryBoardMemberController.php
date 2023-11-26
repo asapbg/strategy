@@ -7,30 +7,10 @@ use App\Http\Requests\UpdateAdvisoryBoardMemberRequest;
 use App\Models\AdvisoryBoardMember;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardMemberController extends AdminController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -64,40 +44,46 @@ class AdvisoryBoardMemberController extends AdminController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\AdvisoryBoardMember $advisoryBoardMember
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AdvisoryBoardMember $advisoryBoardMember)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\AdvisoryBoardMember $advisoryBoardMember
+     * @param AdvisoryBoardMember $member
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function edit(AdvisoryBoardMember $advisoryBoardMember)
+    public function ajaxEdit(AdvisoryBoardMember $member): JsonResponse
     {
-        //
+        return response()->json($member);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateAdvisoryBoardMemberRequest $request
-     * @param \App\Models\AdvisoryBoardMember                     $advisoryBoardMember
+     * @param UpdateAdvisoryBoardMemberRequest $request
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function update(UpdateAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $advisoryBoardMember)
+    public function ajaxUpdate(UpdateAdvisoryBoardMemberRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+        try {
+            $item = AdvisoryBoardMember::find($validated['advisory_board_member_id']);
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->save();
+
+            $validated['advisory_member_id'] = $item->id;
+
+            $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated);
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
+        }
     }
 
     /**

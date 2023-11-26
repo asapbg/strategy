@@ -38,5 +38,7 @@
         </div>
     </section>
 
-    @includeIf('admin.advisory-boards.create-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.scripts')
 @endsection
