@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Admin\StrategicDocumentsController as AdminStrategicDocumentsController;
+use Illuminate\Support\Facades\Storage;
 
 class StrategicDocumentsController extends Controller
 {
@@ -26,7 +27,7 @@ class StrategicDocumentsController extends Controller
     public function index(Request $request): View
     {
         $paginatedResults = $request->get('paginated-results') ?? 10;
-        $strategicDocuments = $this->prepareResults($request)->paginate($paginatedResults);
+        $strategicDocuments = $this->prepareResults($request)->where('active', 1)->paginate($paginatedResults);
         $policyAreas = PolicyArea::all();
         $preparedInstitutions = AuthorityAcceptingStrategic::all();
         $resultCount = $strategicDocuments->total();
@@ -101,5 +102,34 @@ class StrategicDocumentsController extends Controller
         })->get();
 
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
+    }
+
+    public function previewModalFile(Request $request, $id = 0)
+    {
+        $file = File::find($id);
+        $strategicDocumentFile = StrategicDocumentFile::find($id);
+        if ($strategicDocumentFile && !$file) {
+            $file = $strategicDocumentFile;
+        }
+
+        if (!$file) {
+            return __('messages.record_not_found');
+        }
+
+        return fileHtmlContent($file);
+    }
+
+    public function downloadDocFile($id)
+    {
+        try {
+            $file = StrategicDocumentFile::findOrFail($id);
+            if (Storage::disk('public_uploads')->has($file->path)) {
+                return Storage::disk('public_uploads')->download($file->path, $file->filename);
+            } else {
+                return back()->with('warning', __('messages.record_not_found'));
+            }
+        } catch (\Throwable $throwable) {
+            return "Could not download file";
+        }
     }
 }
