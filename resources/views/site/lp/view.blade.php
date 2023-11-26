@@ -47,6 +47,7 @@
                                             @foreach($data as $row)
                                                 @if(str_contains($row->month, $m))
                                                     @php($rowData = json_decode($row->columns))
+                                                    @php(usort($rowData, function ($a, $b) { return strcmp($a->ord, $b->ord); }))
                                                     @if($rowData)
 {{--                                                        @dd($rowData)--}}
                                                         <div class="accordion-item">

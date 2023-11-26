@@ -48,7 +48,7 @@
                                                 @if(str_contains($row->month, $m))
                                                     @php($rowData = json_decode($row->columns))
                                                     @if($rowData)
-{{--                                                        @dd($rowData)--}}
+                                                        @php(usort($rowData, function ($a, $b) { return strcmp($a->ord, $b->ord); }))
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header" id="headingOne">
                                                                 <button class="accordion-button text-dark fs-18 fw-600" type="button" data-toggle="collapse"
