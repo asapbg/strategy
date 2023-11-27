@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LegalActType;
 use App\Models\Pris;
+use App\Models\StrategicDocuments\Institution;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,12 +13,14 @@ class PrisController extends Controller
 {
     public function index(Request $request)
     {
+        $requestFilter = $request->all();
+        $filter = $this->filters($request);
 //        return $this->view('templates.8_2_1_1_2_public_legal_information');
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
-        $items = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation'])
-            ->FilterBy($request->all())->paginate($paginate);
+        $items = Pris::Published()->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
+            ->FilterBy($requestFilter)->paginate($paginate);
         $pageTitle = __('site.menu.pris');
-        return $this->view('site.pris.index', compact('items', 'pageTitle'));
+        return $this->view('site.pris.index', compact('filter','items', 'pageTitle'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -31,5 +36,93 @@ class PrisController extends Controller
         $pageTitle = $item->actType->name.' '.__('custom.number_symbol').' '.$item->actType->doc_num.' '.__('custom.of').' '.$item->institution->name.' от '.$item->docYear.' '.__('site.year_short');
         $this->setBreadcrumbsTitle($pageTitle);
         return $this->view('site.pris.view', compact('item', 'pageTitle'));
+    }
+
+    private function filters($request)
+    {
+        return array(
+            'legalАctТype' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(LegalActType::Pris()->get(), true),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.legal_act_types', 1),
+                'value' => $request->input('legalАctТype'),
+                'col' => 'col-md-12'
+            ),
+            'filesContent' => array(
+                'type' => 'text',
+                'label' => __('custom.content'),
+                'value' => $request->input('filesContent'),
+                'col' => 'col-md-3'
+            ),
+            'about' => array(
+                'type' => 'text',
+                'label' => __('custom.pris_about'),
+                'value' => $request->input('about'),
+                'col' => 'col-md-3'
+            ),
+            'legalReason' => array(
+                'type' => 'text',
+                'label' => __('custom.pris_legal_reason'),
+                'value' => $request->input('legalReason'),
+                'col' => 'col-md-3'
+            ),
+            'tag' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(Tag::get()),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.tags', 2),
+                'value' => $request->input('tag'),
+                'col' => 'col-md-3'
+            ),
+            'institution' => array(
+                'type' => 'subjects',
+                'label' => trans_choice('custom.institutions', 1),
+                'multiple' => false,
+                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
+                'value' => request()->input('institution'),
+                'default' => '',
+                'col' => 'col-md-3'
+            ),
+            'fromDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('fromDate'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-3'
+            ),
+            'toDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('toDate'),
+                'label' => __('custom.end_date'),
+                'col' => 'col-md-3'
+            ),
+            'docNum' => array(
+                'type' => 'text',
+                'label' => __('custom.document_number'),
+                'value' => $request->input('docNum'),
+                'col' => 'col-md-3'
+            ),
+            'newspaperNumber' => array(
+                'type' => 'text',
+                'label' => __('custom.newspaper_number'),
+                'value' => $request->input('newspaperNumber'),
+                'col' => 'col-md-3'
+            ),
+            'newspaperYear' => array(
+                'type' => 'text',
+                'label' => __('custom.newspaper_year'),
+                'value' => $request->input('newspaperYear'),
+                'col' => 'col-md-3'
+            ),
+            'changes' => array(
+                'type' => 'text',
+                'label' => __('custom.change_docs'),
+                'value' => $request->input('changes'),
+                'col' => 'col-md-3'
+            ),
+
+        );
     }
 }

@@ -558,4 +558,8 @@ return [
     'function' => 'Функция|Функции',
     'section' => 'Секция|Секции',
     'link_to_parent_strategic_document' => 'Линк и заглавие на родителски стратегически документ',
+    'newspaper_number' => 'ДВ. (номер)',
+    'newspaper_year' => 'ДВ. (година)',
+    'newspaper' => 'ДВ, бр. :number от :year г.',
+    'filter_pagination' => 'Брой резултати',
 ];

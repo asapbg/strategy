@@ -30,7 +30,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected string $logName = "pris";
 
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', 'institution_id', 'version',
-        'protocol', 'public_consultation_id', 'newspaper_number', 'active', 'published_at'];
+        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at'];
 
     /**
      * Get the model name
@@ -62,6 +62,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     {
         return Attribute::make(
             get: fn () => Carbon::parse($this->doc_date)->format('Y'),
+        );
+    }
+
+    protected function newspaper(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : '---'
         );
     }
 
@@ -100,7 +107,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'pris_tag', 'pris_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'pris_tag', 'tag_id', 'pris_id');
     }
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

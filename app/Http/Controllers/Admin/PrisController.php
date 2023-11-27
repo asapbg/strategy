@@ -43,7 +43,7 @@ class PrisController extends AdminController
 
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
 
-        $items = Pris::FilterBy($requestFilter)
+        $items = Pris::with(['actType', 'actType.translations'])->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'Pris';
         $editRouteName = self::EDIT_ROUTE;
@@ -181,27 +181,86 @@ class PrisController extends AdminController
     private function filters($request)
     {
         return array(
+            'legalАctТype' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(LegalActType::Pris()->get(), true),
+                'multiple' => false,
+                'default' => '',
+                'placeholder' => trans_choice('custom.legal_act_types', 1),
+                'value' => $request->input('legalАctТype'),
+                'col' => 'col-md-3'
+            ),
             'about' => array(
                 'type' => 'text',
                 'placeholder' => __('custom.pris_about'),
                 'value' => $request->input('about'),
                 'col' => 'col-md-3'
             ),
-            'legal_reason' => array(
+            'legalReason' => array(
                 'type' => 'text',
                 'placeholder' => __('custom.pris_legal_reason'),
-                'value' => $request->input('legal_reason'),
+                'value' => $request->input('legalReason'),
                 'col' => 'col-md-3'
             ),
-            'legal_act_type' => array(
+            'tags' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::Pris()->get()),
+                'options' => optionsFromModel(Tag::get()),
                 'multiple' => true,
                 'default' => '',
-                'placeholder' => trans_choice('custom.legal_act_types', 1),
-                'value' => $request->input('legal_act_type'),
-                'col' => 'col-12'
-            )
+                'placeholder' => trans_choice('custom.tags', 2),
+                'value' => $request->input('tags'),
+                'col' => 'col-md-6'
+            ),
+            'institutions' => array(
+                'type' => 'subjects',
+                'placeholder' => trans_choice('custom.institutions', 1),
+                'multiple' => true,
+                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
+                'value' => request()->input('institutions'),
+                'default' => '',
+            ),
+            'fromDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('fromDate'),
+                'placeholder' => __('custom.begin_date'),
+                'col' => 'col-md-2'
+            ),
+            'toDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('toDate'),
+                'placeholder' => __('custom.end_date'),
+                'col' => 'col-md-2'
+            ),
+            'docNum' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.document_number'),
+                'value' => $request->input('docNum'),
+                'col' => 'col-md-2'
+            ),
+            'newspaperNumber' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.newspaper_number'),
+                'value' => $request->input('newspaperNumber'),
+                'col' => 'col-md-2'
+            ),
+            'newspaperYear' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.newspaper_year'),
+                'value' => $request->input('newspaperYear'),
+                'col' => 'col-md-2'
+            ),
+            'changes' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.change_docs'),
+                'value' => $request->input('changes'),
+                'col' => 'col-md-3'
+            ),
+            'filesContent' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.content'),
+                'value' => $request->input('filesContent'),
+                'col' => 'col-md-9'
+            ),
         );
     }
 

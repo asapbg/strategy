@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +33,13 @@ class Tag extends ModelActivityExtend implements TranslatableContract
      */
     public function getModelName() {
         return $this->label;
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->label
+        );
     }
 
     public static function translationFieldsProperties(): array

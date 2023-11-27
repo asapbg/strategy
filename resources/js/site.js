@@ -280,4 +280,40 @@ $(document).ready(function () {
         })
     }
 
+    //======================================
+    // START PDOI SUBJECTS SELECT FROM MODAL
+    // use <select name="subjects[]" id="subjects" class="select2">
+    // and button with class 'pick-subject' and data-url attribute to call modal with the tree
+    //you can add to url get parameters to set tree as selectable or just view : select=1
+    // and if you need more than one subject to be selected use parameter 'multiple=1'
+    //======================================
+    if( $('.pick-institution').length ) {
+        $('.pick-institution').on('click', function (){
+            let subjectModal = new MyModal({
+                title: $(this).data('title'),
+                destroyListener: true,
+                bodyLoadUrl: $(this).data('url'),
+                customClass: 'no-footer'
+            });
+
+            $(document).on('click', '#select-institution', function (){
+                let subjectsFormSelect = $('#' + $(this).data('dom'));
+                let checked = $('#'+ subjectModal.id +' input[name="institutions-item"]:checked');
+                if( checked.length ) {
+                    if( checked.length === 1 ) {
+                        subjectsFormSelect.val(checked.val());
+                    } else if( checked.length > 1 ) {
+                        let subjectValues = [];
+                        checked.each(function(){
+                            subjectValues.push($(this).val());
+                        });
+                        subjectsFormSelect.val(subjectValues);
+                    }
+                    subjectsFormSelect.trigger('change');
+                }
+                subjectModal.modalObj.hide();
+            });
+        });
+    }
+
 });

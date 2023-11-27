@@ -34,6 +34,7 @@ class PrisStoreRequest extends FormRequest
             'protocol' => ['required', 'string'],
             'public_consultation_id' => ['nullable', 'numeric'],
             'newspaper_number' => ['nullable', 'numeric'],
+            'newspaper_year' => ['nullable', 'date_format:Y', 'max:4'],
             'tags' => ['array'],
             'tags.*' => ['required', 'exists:tag,id'],
             'publish' => ['nullable', 'numeric'],
