@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\DocTypesEnum;
 use App\Http\Requests\StoreAdvisoryBoardFunctionFileRequest;
 use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
+use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
@@ -43,22 +44,22 @@ class AdvisoryBoardFunctionFileController extends AdminController
     public function store(StoreAdvisoryBoardFunctionFileRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $advisory_board_id = $request->route()->parameters['item'];
+        $model = AdvisoryBoard::find($request->route()->parameters['item']);
 
         DB::beginTransaction();
         try {
-            $model = new AdvisoryBoardFunctionFile();
-            $model->advisory_board_id = $advisory_board_id;
-
-            $fillable = $this->getFillableValidated($validated, $model);
-            $model->fill($fillable);
-            $model->save();
-
-            //Add file and attach
-            $uploaded_file = $this->uploadFile($model, $validated['file'], File::CODE_AB_FUNCTION, DocTypesEnum::AB_FUNCTION, $validated['file_description']);
-
-            $model->file_id = $uploaded_file->id;
-            $model->save();
+            foreach (config('available_languages') as $lang) {
+                //Add file and attach
+                $this->uploadFile(
+                    $model,
+                    $validated['file_' . $lang['code']],
+                    File::CODE_AB_FUNCTION,
+                    DocTypesEnum::AB_FUNCTION,
+                    $validated['file_description_' . $lang['code']],
+                    $lang['code'],
+                    $validated['file_name_' . $lang['code']]
+                );
+            }
 
             DB::commit();
             return response()->json(['status' => 'success']);

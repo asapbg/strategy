@@ -37,6 +37,15 @@ class File extends Model
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     protected $guarded = [];
 
+    protected function description(): Attribute
+    {
+        $field = "description_" . app()->getLocale();
+
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes[$field],
+        );
+    }
+
     /**
      * Content
      */

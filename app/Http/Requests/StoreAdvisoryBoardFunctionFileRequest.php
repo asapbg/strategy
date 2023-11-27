@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardFunctionFile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
@@ -25,10 +26,16 @@ class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'file' => 'required|file|mimes:pdf,doc,docx,xlsx',
-            'file_name' => 'required|string|min:3',
-            'file_description' => 'nullable|string',
-        ];
+        $rules = [];
+
+        foreach (config('available_languages') as $lang) {
+            $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
+
+            foreach (AdvisoryBoardFunctionFile::translationFieldsProperties() as $field => $properties) {
+                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+            }
+        }
+
+        return $rules;
     }
 }

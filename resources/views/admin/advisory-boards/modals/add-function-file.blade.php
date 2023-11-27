@@ -15,57 +15,73 @@
                     @csrf
 
                     <div class="row">
-                        <div class="col-md-12 col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label" for="file">{{ __('custom.file') }}
-                                    <span class="required">*</span>
-                                </label>
+                        @foreach(config('available_languages') as $lang)
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label"
+                                           for="file_{{ $lang['code'] }}">{{ __('custom.file') }}
+                                        ({{ Str::upper($lang['code']) }})
+                                        <span class="required">*</span>
+                                    </label>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input class="form-control form-control-sm" id="file" type="file" name="file">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input class="form-control form-control-sm" id="file_{{ $lang['code'] }}"
+                                                   type="file"
+                                                   name="file_{{ $lang['code'] }}">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="text-danger mt-1 error_file"></div>
+                                    <div class="text-danger mt-1 error_file_{{ $lang['code'] }}"></div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label" for="file_name">{{ __('custom.name') }}
-                                    <span class="required">*</span>
-                                </label>
+                        @foreach(config('available_languages') as $lang)
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label"
+                                           for="file_name_{{ $lang['code'] }}">{{ __('custom.name') }}
+                                        ({{ Str::upper($lang['code']) }})
+                                        <span class="required">*</span>
+                                    </label>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input class="form-control form-control-sm" id="file_name" type="text"
-                                               name="file_name">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input class="form-control form-control-sm"
+                                                   id="file_name_{{ $lang['code'] }}" type="text"
+                                                   name="file_name_{{ $lang['code'] }}">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="text-danger mt-1 error_file_name"></div>
+                                    <div class="text-danger mt-1 error_file_name_{{ $lang['code'] }}"></div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label"
-                                       for="file_description">{{ __('custom.description') }}
-                                </label>
+                        @foreach(config('available_languages') as $lang)
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label"
+                                           for="file_description_{{ $lang['code'] }}">{{ __('custom.description') }}
+                                        ({{ Str::upper($lang['code']) }})
+                                    </label>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input class="form-control form-control-sm" id="file_description" type="text"
-                                               name="file_description">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input class="form-control form-control-sm"
+                                                   id="file_description_{{ $lang['code'] }}"
+                                                   type="text"
+                                                   name="file_description_{{ $lang['code'] }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
                 </form>
             </div>
@@ -94,8 +110,15 @@
             const formData = new FormData(form);
             console.log(formData.entries());
 
-            console.log(document.querySelector('#file').files[0]);
-            formData.append('file', document.querySelector('#file').files[0]);
+            // Get all file input elements with an ID that starts with "file"
+            const fileInputs = document.querySelectorAll('[id^="file"][type=file]');
+
+            // Loop through the file input elements and append their files to the form data
+            for (let i = 0; i < fileInputs.length; i++) {
+                const fileInput = fileInputs[i];
+                console.log(fileInput);
+                formData.append('file' + i, fileInput.files[0]);
+            }
 
             $.ajax({
                 headers: {

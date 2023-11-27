@@ -42,11 +42,6 @@ class AdvisoryBoard extends Model
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
 
-    public function functionFiles(): HasMany
-    {
-        return $this->hasMany(AdvisoryBoardFunctionFile::class);
-    }
-
     public function advisoryFunction(): HasOne
     {
         return $this->hasOne(AdvisoryBoardFunction::class);

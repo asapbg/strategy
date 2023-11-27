@@ -79,8 +79,8 @@
                         @foreach($files as $file)
                             <tr>
                                 <td>{{ $file->id }}</td>
-                                <td>{{ $file->file_name }}</td>
-                                <td>{{ $file->file_description }}</td>
+                                <td>{{ $file->custom_name ?? $file->filename }}</td>
+                                <td>{{ $file->description }}</td>
                                 <td>{{ $file->created_at }}</td>
                                 <td>
                                     <div class="row align-items-center">
@@ -90,19 +90,18 @@
                                                     <div class="col-auto">
                                                         <button type="button"
                                                                 class="btn btn-sm btn-outline-info preview-file-modal mr-2"
-                                                                data-file="{{ $file->file_id }}"
-                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $file->file_id]) }}">
-                                                            {!! fileIcon($file->storage->content_type) !!}
+                                                                data-file="{{ $file->id }}"
+                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}">
+                                                            {!! fileIcon($file->content_type) !!}
                                                             {{ __('custom.preview') }}
                                                         </button>
                                                     </div>
 
                                                     <div class="col-auto">
                                                         <a class="btn btn-sm btn-info mr-2"
-                                                           href="{{ route('admin.download.file', $file->storage) }}"
+                                                           href="{{ route('admin.download.file', $file) }}"
                                                            target="_blank" title="{{ __('custom.download') }}">
                                                             <i class="fa fa-download"></i>
-                                                            {{ $file->description }}
                                                         </a>
                                                     </div>
                                                 </div>

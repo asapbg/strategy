@@ -11,6 +11,7 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryChairmanType;
 use App\Models\ConsultationLevel;
+use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
@@ -113,7 +114,7 @@ class AdvisoryBoardController extends AdminController
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
-        $files = $item->functionFiles;
+        $files = File::where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
 
         return $this->view(
             'admin.advisory-boards.edit',
@@ -126,7 +127,7 @@ class AdvisoryBoardController extends AdminController
                 'consultation_levels',
                 'members',
                 'function',
-                'files',
+                'files'
             )
         );
     }
