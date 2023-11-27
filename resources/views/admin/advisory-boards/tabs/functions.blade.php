@@ -25,7 +25,7 @@
                                     ({{ Str::upper($lang['code']) }})</label>
 
                                 @php
-                                    $description = $function->translations?->count() === 2 ?
+                                    $description = $function?->translations->count() === 2 ?
                                         $function->translations->first(fn($row) => $row->locale == $lang['code'])->description :
                                         old('description_' . $lang['code'], '');
                                 @endphp
