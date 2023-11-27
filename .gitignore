@@ -19,4 +19,5 @@ yarn-error.log
 /public/files/pris
 /public/files/strategic_doc
 /public/files/publications
+/public/files/advisory-boards
 app/Http/Controllers/Test.php

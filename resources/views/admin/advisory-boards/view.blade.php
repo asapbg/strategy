@@ -154,14 +154,16 @@
 
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    @foreach($functions as $function)
-                                        <div class="row mb-3">
-                                            <div class="col-12">
-                                                <label>{{ __('custom.description') }} ({{ Str::upper($function['locale']) }})</label>
-                                                {!! $function->description !!}
+                                    @if(isset($functions) && sizeof($functions))
+                                        @foreach($functions as $function)
+                                            <div class="row mb-3">
+                                                <div class="col-12">
+                                                    <label>{{ __('custom.description') }} ({{ Str::upper($function['locale']) }})</label>
+                                                    {!! $function->description !!}
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -13,9 +13,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        $table = (new \App\Models\File())->getTable();
-
-        Schema::whenTableDoesntHaveColumn($table, 'custom_name', function ($table) {
+        Schema::table('files', function (Blueprint $table){
             $table->string('custom_name')->nullable();
         });
     }
@@ -27,9 +25,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        $table = (new \App\Models\File())->getTable();
-
-        Schema::whenTableHasColumn($table, 'custom_name', function ($table) {
+        Schema::table('files', function (Blueprint $table){
             $table->dropColumn('custom_name');
         });
     }
