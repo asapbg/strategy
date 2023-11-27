@@ -99,7 +99,7 @@ class AdvisoryBoardMemberController extends AdminController
      */
     public function destroy(DeleteAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
-        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#chairmen';
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#members';
 
         try {
             $member->delete();
@@ -117,7 +117,7 @@ class AdvisoryBoardMemberController extends AdminController
      */
     public function restore(RestoreAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
-        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#chairmen';
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#members';
 
         try {
             $member->restore();

@@ -16,8 +16,8 @@
                                aria-controls="general" aria-selected="true">{{ __('custom.general_info') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="chairmen-tab" data-toggle="pill" href="#chairmen" role="tab"
-                               aria-controls="chairmen"
+                            <a class="nav-link" id="members-tab" data-toggle="pill" href="#members" role="tab"
+                               aria-controls="members"
                                aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
@@ -34,7 +34,7 @@
                             @include('admin.advisory-boards.tabs.general')
                         </div>
 
-                        <div class="tab-pane fade" id="chairmen" role="tabpanel" aria-labelledby="chairmen-tab">
+                        <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
                             @include('admin.advisory-boards.tabs.members')
                         </div>
 

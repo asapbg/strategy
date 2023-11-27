@@ -54,6 +54,10 @@ class AdvisoryBoardFunctionController extends AdminController
             $item->fill($fillable);
             $item->save();
 
+            foreach (config('available_languages') as $lang) {
+                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
+            }
+
             $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
