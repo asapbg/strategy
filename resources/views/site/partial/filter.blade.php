@@ -13,7 +13,7 @@
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column  w-100">
                                         <label for="{{ $key }}" class="form-label">{{ $field['label'] }}:</label>
-                                        <input type="text" id="{{ $key }}" class="form-control" autocomplete="off" value="{{ old($key, $field['value']) }}">
+                                        <input type="text" id="{{ $key }}" class="form-control" autocomplete="off" value="{{ $field['value'] }}" name="{{ $key }}">
                                     </div>
                                 </div>
                                 @break('text')
@@ -39,6 +39,7 @@
                                         <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
                                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
+                                            <option value=""></option>
                                             {{-- select with groups--}}
                                             @if(isset($field['group']) && $field['group'])
                                                 @foreach($field['options'] as $group_name => $group)
@@ -111,6 +112,9 @@
                 <div class="col-md-6 text-end">
                     <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
                     <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+                    @if(isset($btn_add) && $btn_add)
+                        <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</button>
+                    @endif
                 </div>
             </div>
         </form>

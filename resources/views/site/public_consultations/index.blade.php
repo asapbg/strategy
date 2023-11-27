@@ -1,56 +1,7 @@
 @extends('layouts.site', ['fullwidth' => true])
 
 @section('content')
-<div class="row filter-results pt-5">
-    <h2 class="mb-4">
-        Търсене
-    </h2>
-
-    <div class="col-md-4">
-        <div class="input-group ">
-            <div class="mb-3 d-flex flex-column  w-100">
-                <label for="consultation-text" class="form-label">Търсене в Заглавие/Съдържание</label>
-                <input type="text" class="form-control" id="consultation-text">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="input-group ">
-            <div class="mb-3 d-flex flex-column  w-100">
-                <label for="consultation-number" class="form-label">Номер на консултация</label>
-                <input type="text" class="form-control" id="consultation-number">
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="input-group ">
-            <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">Брой резултати:</label>
-                <select class="form-select">
-                    <option value="1">10</option>
-                    <option value="1">20</option>
-                    <option value="1">30</option>
-                    <option value="1">40</option>
-                    <option value="1">50</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mb-5 action-btn-wrapper">
-    <div class="col-md-3 col-sm-12">
-        <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
-    </div>
-    <div class="col-md-9 text-end col-sm-12">
-        <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS
-            Абониране</button>
-        <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
-        <button class="btn btn-success text-success"><i
-                class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
-    </div>
-</div>
+    @include('site.partial.filter', ['btn_add' => true])
 
 <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
     <div class="col-md-2">
@@ -84,7 +35,7 @@
     <div class="col-12 mt-2">
         <div class="info-consul text-start">
             <p class="fw-600">
-                Общо 98 резултата
+                {{ trans_choice('custom.total_pagination_result', $pk->count(), ['number' => $pk->count()]) }}
             </p>
         </div>
     </div>

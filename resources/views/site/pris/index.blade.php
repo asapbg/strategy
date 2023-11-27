@@ -46,7 +46,7 @@
                 <div class="col-12 mt-2">
                     <div class="info-consul text-start">
                         <p class="fw-600">
-                            Общо {{ $items->count() }} резултата
+                            {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->count()]) }}
                         </p>
                     </div>
                 </div>
