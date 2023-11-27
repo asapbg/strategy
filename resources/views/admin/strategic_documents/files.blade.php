@@ -328,6 +328,7 @@
                     $('#fileRow_head_' + fileId).toggle();
                     $('#fileRow_body_' + fileId).toggle();
                 }
+
                 if ($(data.event.target).hasClass('fas fa-download')) {
                     const fileId = data.node.id;
                     window.location.href = `/admin/strategic-documents/download-file/${fileId}`;
