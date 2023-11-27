@@ -65,7 +65,7 @@ class PrisPolicy
      */
     public function delete(User $user, Pris $pris)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.pris.delete']);
     }
 
     /**

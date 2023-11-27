@@ -39,10 +39,21 @@
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , $item) }}"
-                                               class="btn btn-sm btn-info"
+                                               class="btn btn-sm btn-info mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('delete', $item)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $item->id }}"
+                                               data-resource-name="{{ trans_choice('custom.public_consultations', 1) }} {{ $item->reg_num }} {{ $item->title }}"
+                                               data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete', $item) }}"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
                                             </a>
                                         @endcan
                                     </td>

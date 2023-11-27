@@ -299,7 +299,8 @@ class CommonController extends Controller
         $multipleSelect = (boolean)$request->input('multiple');
         $selectId = $request->input('dom') ?? 'institutions';
         $institutions = Institution::getTree($request->all());
-        $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
+//        $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
+        $oldBootstrap = true; //ugly way to fix design for bootstrap
         return view('partials.institutions_tree', compact('institutions', 'canSelect', 'multipleSelect', 'oldBootstrap', 'selectId'));
     }
 

@@ -150,7 +150,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="col-12"></div>
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="newspaper_number">
@@ -160,6 +160,20 @@
                                                         <input type="text" name="newspaper_number" value="{{ old('newspaper_number', $item->id ? $item->newspaper_number : '') }}" class="form-control form-control-sm @error('newspaper_number'){{ 'is-invalid' }}@enderror">
                                                         @error('newspaper_number')
                                                             <div class="text-danger mt-1">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label" for="newspaper_year">
+                                                        {{ __('validation.attributes.newspaper_year') }}
+                                                    </label>
+                                                    <div class="col-12">
+                                                        <input type="text" name="newspaper_year" value="{{ old('newspaper_year', $item->id ? $item->newspaper_year : '') }}" class="form-control form-control-sm @error('newspaper_year'){{ 'is-invalid' }}@enderror">
+                                                        @error('newspaper_year')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>

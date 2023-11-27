@@ -60,10 +60,21 @@
                                             @endcan
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                               class="btn btn-sm btn-info"
+                                               class="btn btn-sm btn-info mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('delete', $item)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $item->id }}"
+                                               data-resource-name="{{ trans_choice('custom.operational_programs', 1) }} {{ $item->name }}"
+                                               data-resource-delete-url="{{ route('admin.consultations.operational_programs.delete', $item) }}"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
                                             </a>
                                         @endcan
                                     </td>
@@ -80,6 +91,7 @@
                     @endif
                 </div>
             </div>
+            @includeIf('modals.delete-resource', ['resource' => $title_singular])
         </div>
     </section>
 

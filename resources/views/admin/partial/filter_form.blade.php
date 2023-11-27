@@ -51,7 +51,9 @@
 
                                 @break('checkbox')
                                 @case('select')
-                                    <select class="form-control form-control-sm select2" @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}"@endif @if(isset($field['class'])){{$field['class'] }}@endif" name="{{ $key }}" @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
+                                    <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
+                                            @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
+                                    @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                         {{-- select with groups--}}
                                         @if(isset($field['group']) && $field['group'])
                                             @foreach($field['options'] as $group_name => $group)
@@ -61,7 +63,7 @@
                                                     <optgroup label="{{ $group_name }}">
                                                         @if(sizeof($group) > 0)
                                                             @foreach($group as $option)
-                                                                <option value="{{ $option['value'] }}" @if($option['value'] == old($key, $field['value'])) selected @elseif(is_null(old($key, $field['value'])) && isset($field['default']) && $option['value'] == $field['default']) selected @endif>{{ $option['name'] }}</option>
+                                                                <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif>{{ $option['name'] }}</option>
                                                             @endforeach
                                                         @endif
                                                     </optgroup>
@@ -70,23 +72,25 @@
                                         @else
                                             {{-- regular select --}}
                                             @foreach($field['options'] as $option)
-                                                <option value="{{ $option['value'] }}" @if($option['value'] == old($key, $field['value'] ?? $field['default'] ?? null )) selected @elseif(is_null(old($key, $field['value'])) && isset($field['default']) && $option['value'] == $field['default']) selected @endif>{{ $option['name'] }}</option>
+                                                <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif>{{ $option['name'] }}</option>
                                             @endforeach
                                         @endif
                                     </select>
                                 @break('select')
                                 @case('subjects')
 {{--                                <div class="input-group input-group-sm d-flex">--}}
-                                    <select class="custom-select form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
-                                            @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif name="{{ $key }}" id="subjects"
+                                    <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
+                                            @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}"
                                             data-placeholder="{{ $field['placeholder'] }}">
                                         @foreach($field['options'] as $option)
-                                            <option value="{{ $option['value'] }}" @if($option['value'] == old($key, $field['value'])) selected @elseif(is_null(old($key, $field['value'])) && isset($field['default']) && $option['value'] == $field['default']) selected @endif>{{ $option['name'] }}</option>
+                                            <option value="{{ $option['value'] }}"
+                                                    @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif
+                                            >{{ $option['name'] }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="button" class="btn btn-sm btn-primary ms-1 pick-subject"
-                                            data-title="{{ trans_choice('custom.pdoi_response_subjects',2) }}"
-                                            data-url="{{ route('modal.pdoi_subjects').'?redirect_only=0&select=1&multiple=0&admin=1' }}">
+                                    <button type="button" class="btn btn-sm btn-primary ms-1 pick-institution"
+                                            data-title="{{ trans_choice('custom.institutions',2) }}"
+                                            data-url="{{ route('modal.institutions').'?select=1&multiple='.(isset($field['multiple']) && $field['multiple'] ? '1' : '0').'&admin=1&dom='.$key }}">
                                         <i class="fa fa-list"></i>
                                     </button>
 {{--                                </div>--}}

@@ -124,7 +124,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="#" class="text-decoration-none"> {{ $item->newspaper_number }}</a>
+                        <a href="#" class="text-decoration-none"> {{ $item->newspaper }}</a>
                     </div>
                 </div>
 

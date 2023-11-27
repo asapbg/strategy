@@ -29,11 +29,17 @@
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
-                                                    {{--                                                    @can('delete', $item)--}}
-                                                    <a href="{{ route('admin.consultations.operational_programs.edit', $item) }}" target="_blank">
-                                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"><span class="d-none">{{ __('custom.delete') }}</span></i>
-                                                    </a>
-                                                    {{--                                                    @endcan--}}
+                                                    @can('delete', $item)
+                                                        <a href="javascript:;"
+                                                           class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
+                                                           data-target="#modal-delete-resource"
+                                                           data-resource-id="{{ $item->id }}"
+                                                           data-resource-name="{{ trans_choice('custom.legislative_program', 1) }} {{ $item->name }}"
+                                                           data-resource-delete-url="{{ route('admin.consultations.legislative_programs.delete', $item) }}"
+                                                           data-toggle="tooltip"
+                                                           title="{{ __('custom.delete') }}"><span class="d-none"></span>
+                                                        </a>
+                                                    @endcan
                                                     @can('update', $item)
                                                         <a href="{{ route('admin.consultations.legislative_programs.edit', $item) }}" target="_blank">
                                                             <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
@@ -59,5 +65,6 @@
                 @endif
             </div>
         </div>
+        @includeIf('modals.delete-resource', ['resource' => $title_singular])
     </div>
 @endsection

@@ -183,6 +183,7 @@ class LegislativeProgram extends ModelActivityExtend
         if(isset($filters['search'])) {
             $q->where('legislative_program_row.value', 'ilike', '%'.$filters['search'].'%');
         }
+        $q->whereNull('legislative_program.deleted_at');
 
         $q->groupBy('legislative_program_row.id');
 

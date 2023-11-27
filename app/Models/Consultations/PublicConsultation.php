@@ -311,6 +311,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->select(['public_consultation.id', DB::raw('public_consultation_translations.title as name')])
             ->join('public_consultation_translations', 'public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
             ->where('public_consultation_translations.locale', '=', app()->getLocale())
+            ->whereNull('public_consultation.deleted_at')
             ->orderBy('public_consultation_translations.title', 'asc')
             ->get();
     }
@@ -351,6 +352,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         if(isset($filters['reg_num'])) {
             $q->where('public_consultation.reg_num', 'ilike', '%'.$filters['reg_num'].'%');
         }
+
+        $q->whereNull('public_consultation.deleted_at');
 
         return $q->get();
     }

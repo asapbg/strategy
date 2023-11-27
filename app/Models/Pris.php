@@ -30,7 +30,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected string $logName = "pris";
 
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', 'institution_id', 'version',
-        'protocol', 'public_consultation_id', 'newspaper_number', 'active', 'published_at'];
+        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at'];
 
     /**
      * Get the model name
@@ -65,6 +65,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    protected function newspaper(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : '---'
+        );
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
@@ -90,7 +97,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function consultation(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id');
+        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id')->withTrashed();
     }
 
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -100,12 +107,12 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'pris_tag', 'pris_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'pris_tag', 'tag_id', 'pris_id');
     }
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type']);
+        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type'])->withTrashed();
     }
 
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -144,9 +151,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
                     $q->where('doc_date', '>=', $from)->where('doc_date', '<=', $to);
                 });
             }
+
             if(isset($filters['actType']) && (int)$filters['actType'] > 0) {
-            $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
+                $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
             }
+
+            $q->whereNull('pris.deleted_at');
+
             $q->orderBy('legal_act_type_translations.name', 'asc')
             ->orderBy('pris.doc_num', 'asc');
 

@@ -91,7 +91,7 @@ class OperationalProgramPolicy
      */
     public function delete(User $user, OperationalProgram $operationalProgram)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete']);
     }
 
     /**
