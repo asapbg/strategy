@@ -10,6 +10,8 @@ use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Log;
 
 class AdvisoryBoardFunctionFileController extends AdminController
@@ -85,13 +87,13 @@ class AdvisoryBoardFunctionFileController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param File $file
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function edit(AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function ajaxEdit(AdvisoryBoard $item, File $file): JsonResponse
     {
-        //
+        return response()->json($file);
     }
 
     /**

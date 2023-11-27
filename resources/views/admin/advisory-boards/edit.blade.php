@@ -52,5 +52,6 @@
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-function-file')
+    @includeIf('admin.advisory-boards.modals.edit-function-file')
     @includeIf('admin.advisory-boards.scripts')
 @endsection

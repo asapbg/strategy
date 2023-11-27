@@ -438,6 +438,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardFunctionFileController::class)->prefix('/advisory-boards/{item}/function/file')->group(function () {
-       Route::post('/store', 'store')->name('advisory-boards.function.file.store');
+        Route::post('/store', 'store')->name('advisory-boards.function.file.store');
+        Route::get('{file}/edit', 'ajaxEdit')->name('advisory-boards.function.file.edit');
     });
 });

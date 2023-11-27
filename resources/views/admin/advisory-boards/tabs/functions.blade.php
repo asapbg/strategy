@@ -110,12 +110,14 @@
 
                                         <div class="col-auto">
                                             @can('update', $item)
-                                                <a href="{{ route('admin.advisory-boards.edit', $item) }}"
-                                                   class="btn btn-sm btn-warning mr-2"
-                                                   data-toggle="tooltip"
-                                                   title="{{ __('custom.preview') }}">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-warning"
+                                                        data-toggle="modal"
+                                                        data-target="#modal-edit-function-file"
+                                                        title="{{ __('custom.edit') }}"
+                                                        onclick="loadFunctionFileData('{{ route('admin.advisory-boards.function.file.edit', ['item' => $item, 'file' => $file]) }}', '{{ $file->locale }}');">
                                                     <i class="fa fa-edit"></i>
-                                                </a>
+                                                </button>
                                             @endcan
                                         </div>
 
