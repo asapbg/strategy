@@ -2431,6 +2431,9 @@ url("/fonts/bootstrap-icons/bootstrap-icons.woff") format("woff");
     border-color: #cae0f4 !important;
 }
 
+.nav-tabs {
+    --bs-nav-tabs-border-color: #cae0f4 !important;
+}
 
 .dark-text {
     color: #333 !important;
@@ -2502,6 +2505,10 @@ h6 {
 
 .br-08 {
     border-radius: 8px !important;
+}
+
+.w-min-content {
+    width: min-content;
 }
 
 .custom-shadow {
@@ -3078,6 +3085,13 @@ a.box-link span {
     border: 2px solid #dc3545;
     background: #fff !important;
     color: #dc3545 !important;
+    border-radius: 30px !important;
+}
+
+.btn.btn-reject {
+    border: 2px solid #dc3545;
+    background:  #dc3545 !important;
+    color: #fff !important;
     border-radius: 30px !important;
 }
 
@@ -3730,6 +3744,10 @@ input[type=checkbox] {
     color: var(--primary_icon);
 }
 
+.alert.alert-success.alert-dismissible {
+    z-index: auto !important;
+}
+
 .obg-comments-section .obj-comment .info {
     margin-bottom: 5px;
 }
@@ -3809,6 +3827,17 @@ input[type=checkbox] {
     border-radius: 12px;
     font-size: 13px;
     display: inline-flex;
+}
+
+.document-info-field {
+    border-bottom: 1px solid #cae0f4;
+}
+
+.doc-info-item {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    width: 100%;
 }
 /**/
 
