@@ -26,7 +26,7 @@ class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:pdf,docx,xlsx',
+            'file' => 'required|file|mimes:pdf,doc,docx,xlsx',
             'file_name' => 'required|string|min:3',
             'file_description' => 'nullable|string',
         ];

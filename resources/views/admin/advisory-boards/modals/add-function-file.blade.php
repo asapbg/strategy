@@ -26,6 +26,8 @@
                                         <input class="form-control form-control-sm" id="file" type="file" name="file">
                                     </div>
                                 </div>
+
+                                <div class="text-danger mt-1 error_file"></div>
                             </div>
                         </div>
                     </div>
@@ -43,6 +45,8 @@
                                                name="file_name">
                                     </div>
                                 </div>
+
+                                <div class="text-danger mt-1 error_file_name"></div>
                             </div>
                         </div>
                     </div>
@@ -52,7 +56,6 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="file_description">{{ __('custom.description') }}
-                                    <span class="required">*</span>
                                 </label>
 
                                 <div class="row">

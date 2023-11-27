@@ -7,7 +7,7 @@
 
             <div class="col-auto">
                 <button type="button" class="btn btn-success" onclick="ADVISORY_BOARD_FUNCTION.submit();">
-                    {{ __('custom.save') }}
+                    {{ __('custom.save') . ' ' . trans_choice('custom.section', 1) }}
                 </button>
             </div>
         </div>
@@ -42,16 +42,120 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+
         <div class="row justify-content-between align-items-center">
             <div class="col-auto">
                 <h3>{{ trans_choice('custom.files', 2) }}</h3>
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-add-function-file">
+                <button type="button" class="btn btn-success" data-toggle="modal"
+                        data-target="#modal-add-function-file">
                     <i class="fa fa-plus mr-3"></i>
-                    {{ __('custom.add') }}
+                    {{ __('custom.add') . ' ' . __('custom.file') }}
                 </button>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>{{ __('custom.name') }}</th>
+                        <th>{{ __('custom.description') }}</th>
+                        <th>{{ __('validation.attributes.created_at') }}</th>
+                        <th>{{ __('custom.actions') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if(isset($files) && $files->count() > 0)
+                        @foreach($files as $file)
+                            <tr>
+                                <td>{{ $file->id }}</td>
+                                <td>{{ $file->file_name }}</td>
+                                <td>{{ $file->file_description }}</td>
+                                <td>{{ $file->created_at }}</td>
+                                <td>
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            @can('view', $item)
+                                                <div class="row">
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                                class="btn btn-sm btn-outline-info preview-file-modal mr-2"
+                                                                data-file="{{ $file->file_id }}"
+                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $file->file_id]) }}">
+                                                            {!! fileIcon($file->storage->content_type) !!}
+                                                            {{ __('custom.preview') }}
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        <a class="btn btn-sm btn-info mr-2"
+                                                           href="{{ route('admin.download.file', $file->storage) }}"
+                                                           target="_blank" title="{{ __('custom.download') }}">
+                                                            <i class="fa fa-download"></i>
+                                                            {{ $file->description }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endcan
+                                        </div>
+
+                                        <div class="col-auto">
+                                            @can('update', $item)
+                                                <a href="{{ route('admin.advisory-boards.edit', $item) }}"
+                                                   class="btn btn-sm btn-warning mr-2"
+                                                   data-toggle="tooltip"
+                                                   title="{{ __('custom.preview') }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            @endcan
+                                        </div>
+
+                                        <div class="col-auto">
+                                            @can('delete', $item)
+                                                @if(!$item->deleted_at)
+                                                    <a href="javascript:;"
+                                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                       data-target="#modal-delete-resource"
+                                                       data-resource-id="{{ $item->id }}"
+                                                       data-resource-delete-url="{{ route('admin.advisory-boards.delete', $item) }}"
+                                                       data-toggle="tooltip"
+                                                       title="{{__('custom.delete')}}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                @endif
+                                            @endcan
+
+                                            @can('restore', $item)
+                                                @if($item->deleted_at)
+                                                    <a href="javascript:;"
+                                                       class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                       data-target="#modal-restore-resource"
+                                                       data-resource-id="{{ $item->id }}"
+                                                       data-resource-restore-url="{{ route('admin.advisory-boards.restore', $item) }}"
+                                                       data-toggle="tooltip"
+                                                       title="{{__('custom.restore')}}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                @endif
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

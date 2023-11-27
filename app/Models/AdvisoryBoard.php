@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  *
  * @property Collection            $members
  * @property AdvisoryBoardFunction $advisoryFunction
+ * @property Collection            $functionFiles
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -40,6 +41,11 @@ class AdvisoryBoard extends Model
     protected string $logName = "advisory_board";
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
+
+    public function functionFiles(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardFunctionFile::class);
+    }
 
     public function advisoryFunction(): HasOne
     {
