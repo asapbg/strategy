@@ -90,7 +90,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function consultation(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id');
+        return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id')->withTrashed();
     }
 
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -105,7 +105,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type']);
+        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type'])->withTrashed();
     }
 
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -144,9 +144,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
                     $q->where('doc_date', '>=', $from)->where('doc_date', '<=', $to);
                 });
             }
+
             if(isset($filters['actType']) && (int)$filters['actType'] > 0) {
-            $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
+                $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
             }
+
+            $q->whereNull('pris.deleted_at');
+
             $q->orderBy('legal_act_type_translations.name', 'asc')
             ->orderBy('pris.doc_num', 'asc');
 

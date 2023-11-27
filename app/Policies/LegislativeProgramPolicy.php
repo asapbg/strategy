@@ -92,7 +92,7 @@ class LegislativeProgramPolicy
      */
     public function delete(User $user, LegislativeProgram $legislativeProgram)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete']);
     }
 
     /**

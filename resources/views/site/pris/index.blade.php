@@ -209,11 +209,17 @@
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
-{{--                                                    @can('delete', $item)--}}
-                                                        <a href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
-                                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
+                                                    @can('delete', $item)
+                                                        <a href="javascript:;"
+                                                           class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
+                                                           data-target="#modal-delete-resource"
+                                                           data-resource-id="{{ $item->id }}"
+                                                           data-resource-name="{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }} {{ __('custom.of') }} {{ $item->institution->name }} от {{ $item->docYear }} {{ __('site.year_short') }}"
+                                                           data-resource-delete-url="{{ route('admin.pris.delete', $item) }}"
+                                                           data-toggle="tooltip"
+                                                           title="{{ __('custom.delete') }}"><span class="d-none"></span>
                                                         </a>
-{{--                                                    @endcan--}}
+                                                    @endcan
                                                     @can('update', $item)
                                                         <a href="{{ route('admin.pris.edit', ['item' => $item->id]) }}" target="_blank">
                                                             <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
@@ -258,5 +264,6 @@
                 @endif
             </div>
         </div>
+        @includeIf('modals.delete-resource', ['resource' => $title_singular])
     </div>
 @endsection

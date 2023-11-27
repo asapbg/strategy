@@ -68,6 +68,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
         Route::get('/consultations/legislative-programs/unpublish/{item}', 'unPublish')->name('consultations.legislative_programs.unpublish');
         Route::get('/consultations/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.legislative_programs.delete.file');
+        Route::post('/consultations/legislative-programs/{item}/delete', 'destroy')->name('consultations.legislative_programs.delete');
     });
     Route::controller(OperationalProgramController::class)->group(function () {
         Route::get('/consultations/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
@@ -78,6 +79,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
         Route::get('/consultations/operational-programs/unpublish/{item}', 'unPublish')->name('consultations.operational_programs.unpublish');
         Route::get('/consultations/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
+        Route::post('/consultations/operational-programs/{item}/delete', 'destroy')->name('consultations.operational_programs.delete');
     });
     Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
@@ -90,6 +92,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/update-contact', 'updateContacts')->name('consultations.public_consultations.update.contacts');
         Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
         Route::post('/consultations/public-consultations/add-proposal-report', 'addProposalReport')->name('consultations.public_consultations.proposal_report.store');
+        Route::post('/consultations/public-consultations/{item}/delete', 'destroy')->name('consultations.public_consultations.delete');
     });
 
     // Strategic Documents
@@ -128,6 +131,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/pris/connect-documents', 'connectDocuments')->name('pris.connect');
         Route::post('/pris/disconnect-documents', 'disconnectDocuments')->name('pris.disconnect');
         Route::match(['put', 'post'], '/pris/edit', 'store')->name('pris.store');
+        Route::post('/pris/{item}/delete', 'destroy')->name('pris.delete');
     });
 
     //Dynamic Structures

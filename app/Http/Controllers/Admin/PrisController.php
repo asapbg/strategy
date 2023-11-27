@@ -11,6 +11,7 @@ use App\Models\Pris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -152,6 +153,29 @@ class PrisController extends AdminController
         $item->changedDocs()->detach($validated['disconnect']);
 
         return response()->json(['success' => 1], 200);
+    }
+
+    /**
+     * Delete existing pris record
+     *
+     * @param Pris $item
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request, Pris $item)
+    {
+        if($request->user()->cannot('delete', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        try {
+            $item->delete();
+            return redirect(url()->previous())
+                ->with('success', trans_choice('custom.pris_documents', 1)." ".__('messages.deleted_successfully_m'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
+        }
     }
 
     private function filters($request)
