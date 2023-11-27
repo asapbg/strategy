@@ -562,4 +562,6 @@ return [
     'newspaper_year' => 'ДВ. (година)',
     'newspaper' => 'ДВ, бр. :number от :year г.',
     'filter_pagination' => 'Брой резултати',
+    'consultation_number_' => 'Номер на консултация',
+    'total_pagination_result' => 'Общо :number резултат|Общо :number резултата',
 ];

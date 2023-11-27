@@ -596,6 +596,12 @@ class PublicConsultationController extends AdminController
                 'placeholder' => __('validation.attributes.name'),
                 'value' => $request->input('name'),
                 'col' => 'col-md-4'
+            ),
+            'consultationNumber' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.consultation_number_'),
+                'value' => $request->input('consultationNumber'),
+                'col' => 'col-md-4'
             )
         );
     }

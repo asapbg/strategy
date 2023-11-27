@@ -12,12 +12,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $requestFilter = $request->all();
+        $filter = $this->filters($request);
+        $paginate = $filter['paginate'] ?? PublicConsultation::PAGINATE;
 //        return $this->view('templates.public_consultation_list');
-        $pk = PublicConsultation::Active()->with(['translation'])->get();
+        $pk = PublicConsultation::Active()->with(['translation'])->FilterBy($requestFilter)->paginate($paginate);
         $pageTitle = __('site.menu.public_consultation');
-        return $this->view('site.public_consultations.index', compact('pk', 'pageTitle'));
+        return $this->view('site.public_consultations.index', compact('filter', 'pk', 'pageTitle'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -59,5 +62,23 @@ class PublicConsultationController extends Controller
             Log::error('Save comment error: '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
+    }
+
+    private function filters($request)
+    {
+        return array(
+            'name' => array(
+                'type' => 'text',
+                'label' => __('validation.attributes.name'),
+                'value' => $request->input('name'),
+                'col' => 'col-md-4'
+            ),
+            'consultationNumber' => array(
+                'type' => 'text',
+                'label' => __('custom.consultation_number_'),
+                'value' => $request->input('consultationNumber'),
+                'col' => 'col-md-4'
+            )
+        );
     }
 }
