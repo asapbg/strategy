@@ -1,7 +1,7 @@
 @extends('layouts.site', ['fullwidth' => true])
 
 @section('content')
-<div class="row filter-results">
+<div class="row filter-results pt-5">
     <h2 class="mb-4">
         Търсене
     </h2>
@@ -90,7 +90,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row pb-5">
 @foreach($pk as $consultation)
     <div class="col-md-12 mb-4">
         <div class="consul-wrapper">
