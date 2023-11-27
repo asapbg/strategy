@@ -24,10 +24,16 @@
                                 <label for="description_{{ $lang['code'] }}">{{ __('custom.description') }}
                                     ({{ Str::upper($lang['code']) }})</label>
 
+                                @php
+                                    $description = $function->translations->count() === 2 ?
+                                        $function->translations->first(fn($row) => $row->locale == $lang['code'])->description :
+                                        old('description_' . $lang['code'], '');
+                                @endphp
+
                                 <textarea class="form-control form-control-sm summernote"
                                           name="description_{{ $lang['code'] }}"
                                           id="description_{{ $lang['code'] }}">
-                                {{ old('description_' . $lang['code'], '') }}
+                                    {{ $description }}
                                 </textarea>
                             </div>
                         </div>

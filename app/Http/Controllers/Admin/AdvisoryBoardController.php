@@ -109,8 +109,7 @@ class AdvisoryBoardController extends AdminController
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
-//        $function = $item->advisoryFunction;
-//        dd($function);
+        $function = $item->advisoryFunction;
 
         return $this->view(
             'admin.advisory-boards.edit',
@@ -121,7 +120,8 @@ class AdvisoryBoardController extends AdminController
                 'advisory_act_types',
                 'institutions',
                 'consultation_levels',
-                'members'
+                'members',
+                'function'
             )
         );
     }

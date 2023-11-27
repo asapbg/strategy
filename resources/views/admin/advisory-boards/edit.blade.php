@@ -18,7 +18,7 @@
                         <li class="nav-item">
                             <a class="nav-link" id="chairmen-tab" data-toggle="pill" href="#chairmen" role="tab"
                                aria-controls="chairmen"
-                               aria-selected="false">{{ trans_choice('custom.chairmen', 2) }}</a>
+                               aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="chairmen" role="tabpanel" aria-labelledby="chairmen-tab">
-                            @include('admin.advisory-boards.tabs.chairmen')
+                            @include('admin.advisory-boards.tabs.members')
                         </div>
 
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
