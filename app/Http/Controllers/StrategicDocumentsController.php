@@ -99,8 +99,11 @@ class StrategicDocumentsController extends Controller
         $dateFrom = $request->input('valid-from');
         $dateTo = $request->input('valid-to');
         if ($dateFrom && $dateTo) {
+            $dateFrom = \Carbon\Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $dateTo = \Carbon\Carbon::createFromFormat('d.m.Y', $dateTo);
             $strategicDocuments->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
         } elseif ($dateFrom) {
+            $dateFrom = \Carbon\Carbon::createFromFormat('d.m.Y', $dateFrom);
             $strategicDocuments->where('document_date_accepted', '>=', $dateFrom)
                 ->orWhereNull('document_date_accepted');
         }
