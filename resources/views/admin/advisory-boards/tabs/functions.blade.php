@@ -41,5 +41,18 @@
                 </form>
             </div>
         </div>
+
+        <div class="row justify-content-between align-items-center">
+            <div class="col-auto">
+                <h3>{{ trans_choice('custom.files', 2) }}</h3>
+            </div>
+
+            <div class="col-auto">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-add-function-file">
+                    <i class="fa fa-plus mr-3"></i>
+                    {{ __('custom.add') }}
+                </button>
+            </div>
+        </div>
     </div>
 </div>

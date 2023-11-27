@@ -122,6 +122,7 @@ class AdminController extends Controller
             File::CODE_OBJ_LEGISLATIVE_PROGRAM,
             File::CODE_OBJ_OPERATIONAL_PROGRAM => File::PUBLIC_CONSULTATIONS_UPLOAD_DIR . $item->id . DIRECTORY_SEPARATOR,
             File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR . DIRECTORY_SEPARATOR,
+            File::CODE_AB_FUNCTION => File::ADVISORY_BOARD_FUNCTION_UPLOAD_DIR . DIRECTORY_SEPARATOR,
             default => '',
         };
         $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();

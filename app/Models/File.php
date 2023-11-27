@@ -21,12 +21,17 @@ class File extends Model
     const CODE_OBJ_PRIS = 5;
     const CODE_OBJ_PUBLIC_CONSULTATION = 6;
 
+    /** @var int Advisory Board */
+    const CODE_AB_FUNCTION = 7;
+
 
     const PUBLICATION_UPLOAD_DIR = 'publications'.DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_DIR = 'pages'.DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_PRIS = 'pris'.DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR.'comments'.DIRECTORY_SEPARATOR;
+    const ADVISORY_BOARD_UPLOAD_DIR = 'advisory-boards' . DIRECTORY_SEPARATOR;
+    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
