@@ -32,7 +32,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document,id'],
             'valid_at' => ['required_if:date_valid_indefinite_files,0', 'date', 'nullable'],
-            'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'strategic_document_type_file_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
             'visible_in_report' => ['nullable', 'numeric'],
             //'file' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)],
@@ -51,11 +51,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-        /*
-        if (request()->get('date_valid_indefinite_files') == 1) {
-            $rules['valid_at'][] = 'sometimes';
-        }
-        */
+
         return $rules;
     }
 
