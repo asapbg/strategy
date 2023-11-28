@@ -2511,6 +2511,10 @@ h6 {
     width: min-content;
 }
 
+#siteLogo, #ok, #ms, #register-link,#login-btn,#search-btn, #back-to-admin, #profile-toggle {
+    transition: 0.4s;
+  }
+
 .custom-shadow {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
@@ -2593,6 +2597,10 @@ max-height: 38px !important;
 }
 
 /* Header and top bar*/
+header .navbar-toggler {
+    font-size: 14px !important;
+}
+
 nav.navbar .btn {
     color: #fff;
 }
@@ -2614,7 +2622,7 @@ nav.navbar .btn {
     min-height: 40px;
     padding: 10px 0px;
     border-bottom: 1px solid #e4e4e4;
-    padding-top: 15px;
+    padding-top: 10px;
     background: #fff;
 }
 
@@ -2636,6 +2644,7 @@ header {
 
 #siteLogo {
     width: 55px;
+    transition: 0.4s;
     height: 100%;
 }
 
@@ -2657,6 +2666,7 @@ nav.navbar a.nav-link {
     color: #fff !important;
     padding: 0px !important;
     line-height: initial;
+    transition: 0.4s;
 }
 
 .navbar-toggler {
@@ -2673,6 +2683,7 @@ nav.navbar a.nav-link {
 
 .nav-item {
     padding: 10px;
+    transition: 0.4s;
 }
 
 nav.navbar a.nav-link:hover {
@@ -3331,7 +3342,7 @@ a.box-link span {
 /**/
 
 #slider {
-    margin-top: 129px;
+    margin-top: 127px;
 }
 
 /*Forum*/
@@ -3829,8 +3840,13 @@ input[type=checkbox] {
     display: inline-flex;
 }
 
-.document-info-field {
+.document-wrapper-ks {
     border-bottom: 1px solid #cae0f4;
+    font-size: 14px;
+}
+
+.document-info-field {
+
 }
 
 .doc-info-item {
@@ -4066,6 +4082,14 @@ ul.list-group.subscribe-items li {
 }
 
 @media(max-width:767px) {
+    .doc-info-item {
+        margin-top: 10px;
+    }
+
+    .document-info-field {
+        flex-direction:column;
+    }
+
     .select2-container--default .select2-selection--multiple .select2-selection__rendered{
         padding-bottom: 5px;
     }

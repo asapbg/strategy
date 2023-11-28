@@ -1,5 +1,12 @@
 @extends('layouts.site', ['fullwidth' => true])
 
+<style>
+#siteLogo, #ok, #ms, .nav-link,.nav-item, #register-link,#login-btn,#search-btn, #back-to-admin, #profile-toggle {
+  transition: 0.4s;
+}
+
+</style>
+
 @section('pageTitle', 'Консултативни съвети - Вътрешна страница')
 
 @section('content')
@@ -183,10 +190,11 @@
             <div class="col-md-12">
               <div class="custom-card p-3">
                 <h3 class="mb-2 fs-4">Правилник за вътрешната организация на дейността</h3>
+
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -218,14 +226,19 @@
                         <strong> Вид:</strong>
                         <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
                 </div> 
+
               </div>  
             </div>
         </div>
@@ -275,7 +288,7 @@
                     <div class="document-wrapper-ks mt-3">
                       <a href="#" class="main-color text-decoration-none fs-18"><i
                         class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                        <div class="document-info-field d-flex mt-3 pb-3">                         
+                        <div class="document-info-field d-flex mt-3 pb-2">                         
                           <div class="doc-info-item">
                            <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                           </div>
@@ -307,20 +320,24 @@
                             <strong> Вид:</strong>
                             <span class="text-success">Действащ документ</span>
                           </div>
-                          <div class="doc-info-item">
-                            <strong> Версии:</strong>
-                            <span>
-                              <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                            </span>
-                          </div>
-                        </div>            
+                        </div>
+                        <div class="file-version pb-2">
+                          <strong> Версии:</strong>
+                          <span>
+                            <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                            <span>&#47;</span>
+                            <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                            <span>&#47;</span>
+                            <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                          </span>
+                        </div>    
                     </div> 
                     <div class="document-wrapper-ks mt-3">
                       <a href="#" class="main-color text-decoration-none fs-18"><i
                         class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                        <div class="document-info-field d-flex mt-3 pb-3">                         
+                        <div class="document-info-field d-flex mt-3 pb-2">                         
                           <div class="doc-info-item">
-                           <strong> Статус:</strong> <span class="closed-li w-min-content">Нективен</span>
+                           <strong> Статус:</strong> <span class="closed-li w-min-content">Неактивен</span>
                           </div>
                           <div class="doc-info-item">
                             <strong> ПМС №:</strong>
@@ -350,13 +367,17 @@
                             <strong> Вид:</strong>
                             <span class="text-danger">Недействащ документ</span>
                           </div>
-                          <div class="doc-info-item">
-                            <strong> Версии:</strong>
-                            <span>
-                              <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                            </span>
-                          </div>
-                        </div>            
+                        </div>
+                        <div class="file-version pb-2">
+                          <strong> Версии:</strong>
+                          <span>
+                            <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                            <span>&#47;</span>
+                            <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                            <span>&#47;</span>
+                            <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                          </span>
+                        </div>    
                     </div> 
               </div>              
             </div>
@@ -370,7 +391,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -402,18 +423,23 @@
                         <strong> Вид:</strong>
                         <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
                 </div> 
+
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -445,14 +471,18 @@
                         <strong> Вид:</strong>
                         <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
-                </div> 
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
+                </div>  
             </div>
             </div>
         </div>
@@ -469,7 +499,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -501,13 +531,17 @@
                         <strong> Вид:</strong>
                         <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
                 </div> 
             </div>
             </div>
@@ -521,9 +555,9 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
-                       <strong> Статус:</strong> <span class="closed-li w-min-content">Неактивен</span>
+                       <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
                       <div class="doc-info-item">
                         <strong> ПМС №:</strong>
@@ -551,15 +585,19 @@
                       </div>
                       <div class="doc-info-item">
                         <strong> Вид:</strong>
-                        <span class="text-danger">Недействащ документ</span>
+                        <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
                 </div> 
             </div>
             </div>
@@ -608,7 +646,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-3">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">                         
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -640,22 +678,89 @@
                         <strong> Вид:</strong>
                         <span class="text-success">Действащ документ</span>
                       </div>
-                      <div class="doc-info-item">
-                        <strong> Версии:</strong>
-                        <span>
-                          <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
-                        </span>
-                      </div>
-                    </div>            
+                    </div>
+                    <div class="file-version pb-2">
+                      <strong> Версии:</strong>
+                      <span>
+                        <a href="#" class="text-decoration-none">Версия 1 - 10.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 2 - 15.05.2023</a>
+                        <span>&#47;</span>
+                        <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
+                      </span>
+                    </div>    
                 </div> 
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 </section>
-
-
-
 @endsection
+
+
+<script>
+  window.onscroll = function() {scrollFunction()};
+  function scrollFunction() {
+
+    let navLink = document.querySelectorAll('nav.navbar a.nav-link'); 
+    let navItem = document.querySelectorAll('li.nav-item');
+    let navBar = document.querySelectorAll('nav.navbar');
+  
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+      document.getElementById("siteLogo").style.width = "45px";
+      document.getElementById("ms").style.fontSize = "12px";
+      document.getElementById("ok").style.fontSize = "12px";
+
+      document.getElementById("register-link").style.fontSize = "14px";
+      document.getElementById("login-btn").style.fontSize = "14px";
+      document.getElementById("search-btn").style.fontSize = "14px";
+      document.getElementById("search-btn").style.height = "37px";
+
+      /*
+      document.getElementById("back-to-admin").style.fontSize = "14px";
+      document.getElementById("profile-toggle").style.fontSize = "14px";
+      */
+
+      navLink.forEach(function(link) {
+        link.style.fontSize = '14px';
+      });
+
+      navItem.forEach(function(item) {
+        item.style.padding = '2px 10px';
+      });
+
+      navBar.forEach(function(nav) {
+        nav.style.boxShadow = 'rgb(27 81 126 / 81%) 0px 1px 4px';
+      });
+
+    } 
+    else {
+      document.getElementById("siteLogo").style.width = "55px";
+      document.getElementById("ms").style.fontSize = "16px";
+      document.getElementById("ok").style.fontSize = "16px";
+
+      document.getElementById("register-link").style.fontSize = "16px";
+      document.getElementById("login-btn").style.fontSize = "16px";
+      document.getElementById("search-btn").style.fontSize = "16px";
+      document.getElementById("search-btn").style.height = "40px";
+
+      /*
+      document.getElementById("back-to-admin").style.fontSize = "16px";
+      document.getElementById("profile-toggle").style.fontSize = "16px";
+      */
+
+      navLink.forEach(function(link) {
+        link.style.fontSize = '15px';
+      });
+
+      navItem.forEach(function(item) {
+        item.style.padding = '10px';
+      });
+
+      navBar.forEach(function(nav) {
+        nav.style.boxShadow = 'rgb(27 81 126) 0px 1px 4px';
+      });
+    }
+  }
+  </script>
