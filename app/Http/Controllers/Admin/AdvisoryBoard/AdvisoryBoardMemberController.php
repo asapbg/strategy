@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
-use App\Http\Requests\Admin\AdvisoryBoardMember\DeleteAdvisoryBoardMemberRequest;
-use App\Http\Requests\Admin\AdvisoryBoardMember\RestoreAdvisoryBoardMemberRequest;
-use App\Http\Requests\Admin\AdvisoryBoardMember\StoreAdvisoryBoardMemberRequest;
-use App\Http\Requests\Admin\AdvisoryBoardMember\UpdateAdvisoryBoardMemberRequest;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardMemberRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMemberRequest;
 use App\Models\AdvisoryBoardMember;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -55,6 +56,8 @@ class AdvisoryBoardMemberController extends AdminController
      */
     public function ajaxEdit(AdvisoryBoardMember $member): JsonResponse
     {
+        $this->authorize('update', $member);
+
         return response()->json($member);
     }
 

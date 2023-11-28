@@ -6,9 +6,7 @@ use App\Http\Requests\DeleteLegislativeInitiativeCommentRequest;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Http\Requests\StoreLegislativeInitiativeCommentRequest;
-use App\Http\Requests\UpdateLegislativeInitiativeCommentRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class LegislativeInitiativeCommentController extends Controller

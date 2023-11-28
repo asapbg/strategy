@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -10,6 +11,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateAdvisoryBoardRequest extends FormRequest
 {
+
+    use FailedAuthorization;
+
     /**
      * Determine if the user is authorized to make this request.
      *
