@@ -132,7 +132,7 @@ class PublicConsultationController extends AdminController
         foreach ($item->documents as $document){
             $documents[$document->doc_type.'_'.$document->locale][] = $document;
         }
-        $polls = $item->id ? Poll::Active()->NotExpired()->get() : null;
+        $polls = $item->id ? Poll::whereDoesntHave('consultations')->Active()->NotExpired()->get() : null;
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',

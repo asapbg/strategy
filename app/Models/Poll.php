@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PollStatusEnum;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
@@ -87,6 +88,11 @@ class Poll extends ModelActivityExtend
     public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AccountPoll::class, 'poll_id','id');
+    }
+
+    public function consultations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(PublicConsultation::class, 'public_consultation_poll', 'poll_id', 'public_consultation_id');
     }
 
     public static function getStats($id)
