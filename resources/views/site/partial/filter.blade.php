@@ -89,20 +89,20 @@
                     </div>
                 @endforeach
 
-                <div class="col-md-3">
-                    <div class="input-group ">
-                        <div class="mb-3 d-flex flex-column  w-100">
-                            <label for="exampleFormControlInput1" class="form-label">{{ __('custom.filter_pagination') }}:</label>
-                            <select class="form-select" name="pagination">
-                                <option value="1">10</option>
-                                <option value="1">20</option>
-                                <option value="1">30</option>
-                                <option value="1">40</option>
-                                <option value="1">50</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+{{--                <div class="col-md-3">--}}
+{{--                    <div class="input-group ">--}}
+{{--                        <div class="mb-3 d-flex flex-column  w-100">--}}
+{{--                            <label for="exampleFormControlInput1" class="form-label">{{ __('custom.filter_pagination') }}:</label>--}}
+{{--                            <select class="form-select" name="pagination">--}}
+{{--                                <option value="1">10</option>--}}
+{{--                                <option value="20">20</option>--}}
+{{--                                <option value="30">30</option>--}}
+{{--                                <option value="40">40</option>--}}
+{{--                                <option value="50">50</option>--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
 
             <div class="row mb-5">
