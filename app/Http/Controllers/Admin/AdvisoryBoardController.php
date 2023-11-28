@@ -94,8 +94,9 @@ class AdvisoryBoardController extends AdminController
     {
         $members = $item->members;
         $functions = $item->advisoryFunction?->translations;
+        $files = File::query()->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
 
-        return $this->view('admin.advisory-boards.view', compact('item', 'members', 'functions'));
+        return $this->view('admin.advisory-boards.view', compact('item', 'members', 'functions', 'files'));
     }
 
     /**
