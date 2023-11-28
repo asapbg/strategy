@@ -53,6 +53,9 @@
                         </div>
                     </div>
                     <div class="meta-consul mb-2">
+                        <span class="text-secondary"> {{ $consultation->reg_num }}</span>
+                    </div>
+                    <div class="meta-consul mb-2">
                         <span class="text-secondary"><i class="far fa-calendar text-secondary"
                                 title="{{ __('custom.period') }}"></i> {{ displayDate($consultation->open_from) }} -
                             {{ displayDate($consultation->open_to) }}</span>
