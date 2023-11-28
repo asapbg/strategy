@@ -12,7 +12,7 @@ class FromDate extends QueryFilter implements FilterContract{
     public function handle($value): void
     {
         if( !empty($value) ){
-            $this->query->where('doc_date', '>=', Carbon::parse($value)->startOfDay());
+            $this->query->where('pris.doc_date', '>=', Carbon::parse($value)->startOfDay());
         }
     }
 }

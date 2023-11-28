@@ -479,4 +479,5 @@ return [
     'loading' => 'Loading...',
     'function' => 'Function|Functions',
     'section' => 'Section|Sections',
+    'old_file_format' => 'Old file format. Information can not be displayed properly.'
 ];

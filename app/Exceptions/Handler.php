@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -48,5 +53,23 @@ class Handler extends ExceptionHandler
         }
 
         parent::report($exception);
+    }
+
+    /**
+     * Rewrite global exceptions logic.
+     *
+     * @param           $request
+     * @param Throwable $e
+     *
+     * @return JsonResponse|RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response|RedirectResponse
+    {
+        if ($e instanceof AuthorizationException) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        return parent::render($request, $e);
     }
 }

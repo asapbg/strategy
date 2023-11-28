@@ -2,34 +2,7 @@
 
 @section('content')
     @include('site.partial.filter', ['btn_add' => true])
-
-<div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
-    <div class="col-md-2">
-        <p class="mb-0 cursor-pointer ">
-            <i class="fa-solid fa-sort me-2"></i>Номер
-        </p>
-    </div>
-    <div class="col-md-3 ">
-        <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Tип консултация
-        </p>
-    </div>
-    <div class="col-md-3 ">
-        <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Област на политика
-        </p>
-    </div>
-    <div class="col-md-2">
-        <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Заглавие
-        </p>
-    </div>
-    <div class="col-md-2">
-        <p class="mb-0 cursor-pointer ">
-            <i class="fa-solid fa-sort me-2"></i>Дата
-        </p>
-    </div>
-</div>
+    @include('site.partial.sorter')
 
 <div class="row mb-2">
     <div class="col-12 mt-2">
@@ -78,6 +51,9 @@
                                 </a>
                             @endcan
                         </div>
+                    </div>
+                    <div class="meta-consul mb-2">
+                        <span class="text-secondary"> {{ $consultation->reg_num }}</span>
                     </div>
                     <div class="meta-consul mb-2">
                         <span class="text-secondary"><i class="far fa-calendar text-secondary"

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\AdvisoryBoardFunction;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreAdvisoryBoardFunctionRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.

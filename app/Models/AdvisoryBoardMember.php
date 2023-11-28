@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int    $advisory_board_id
  * @property string $name
+ *
+ * @method static find(bool|float|int|string|null $get)
  */
 class AdvisoryBoardMember extends Model
 {

@@ -487,6 +487,8 @@ if (!function_exists('optionsUserTypes')) {
                     $content=  '<embed src="'.asset($path).'" width="100%" height="2100px" />';
                     break;
                 case 'application/msword':
+                    $content = __('custom.old_file_format');
+                    break;
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
                     $html = new \PhpOffice\PhpWord\Writer\HTML($content);
@@ -511,6 +513,25 @@ if (!function_exists('optionsUserTypes')) {
         {
             $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
             return strip_tags($html_string);
+        }
+    }
+
+    if (!function_exists('paginationSelect')) {
+
+        /**
+         * return pagination options
+         *
+         * @return array
+         */
+        function paginationSelect()
+        {
+            return $options = [
+                ['value' => 1, 'name' => 10],
+                ['value' => 20, 'name' => 20],
+                ['value' => 30, 'name' => 30],
+                ['value' => 40, 'name' => 40],
+                ['value' => 50, 'name' => 50],
+            ];
         }
     }
 }

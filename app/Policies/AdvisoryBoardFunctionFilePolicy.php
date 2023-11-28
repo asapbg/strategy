@@ -15,7 +15,7 @@ class AdvisoryBoardFunctionFilePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param \App\Models\User $user
+     * @param User $user
      *
      * @return Response|bool
      */
@@ -27,8 +27,8 @@ class AdvisoryBoardFunctionFilePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param \App\Models\User                      $user
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param User                      $user
+     * @param AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
      *
      * @return Response|bool
      */
@@ -40,7 +40,7 @@ class AdvisoryBoardFunctionFilePolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param \App\Models\User $user
+     * @param User $user
      *
      * @return Response|bool
      */
@@ -65,39 +65,39 @@ class AdvisoryBoardFunctionFilePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param \App\Models\User                      $user
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param User $user
+     * @param File $file
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function delete(User $user, AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function delete(User $user, File $file): bool
     {
-        //
+        return $user->canAny('manage.*', 'manage.advisory-boards');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
-     * @param \App\Models\User                      $user
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param User $user
+     * @param File $file
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function restore(User $user, AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function restore(User $user, File $file): bool
     {
-        //
+        return $user->canAny('manage.*', 'manage.advisory-boards');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param \App\Models\User                      $user
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param User $user
+     * @param File $file
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function forceDelete(User $user, AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function forceDelete(User $user, File $file): bool
     {
-        //
+        return false;
     }
 }

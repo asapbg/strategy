@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreAdvisoryBoardFunctionFileRequest;
 use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
 use Exception;
@@ -62,6 +64,8 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function ajaxEdit(AdvisoryBoard $item, File $file): JsonResponse
     {
+        $this->authorize('update', [AdvisoryBoardFunctionFile::class, $file]);
+
         return response()->json($file);
     }
 
@@ -116,6 +120,8 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function destroy(AdvisoryBoard $item, File $file)
     {
+        $this->authorize('delete', [AdvisoryBoardFunctionFile::class, $file]);
+
         $route = route('admin.advisory-boards.edit', $item) . '#functions';
 
         try {
@@ -141,6 +147,8 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function restore(AdvisoryBoard $item, File $file)
     {
+        $this->authorize('restore', [AdvisoryBoardFunctionFile::class, $file]);
+
         $route = route('admin.advisory-boards.edit', $item) . '?show_deleted_files=1#functions';
 
         try {
