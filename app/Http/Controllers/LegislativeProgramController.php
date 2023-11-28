@@ -20,7 +20,9 @@ class LegislativeProgramController extends Controller
         $pageTitle = __('site.menu.lp');
 
         $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)->get();
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
         if( $actTypes->count() ) {
             foreach ($actTypes as $act) {
                 $menuCategories[] = [

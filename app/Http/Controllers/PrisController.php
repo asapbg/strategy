@@ -62,6 +62,52 @@ class PrisController extends Controller
         return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories'));
     }
 
+    public function archive(Request $request)
+    {
+        //Filter
+        $requestFilter = $request->all();
+        $filter = [];
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+
+        $items = Pris::select('pris.*')
+            ->Published()
+            ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
+            ->join('institution', 'institution.id', '=', 'pris.institution_id')
+            ->join('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+//            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+//            ->join('legal_act_type_translations', function ($j){
+//                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+//                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+//            })
+            ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_ARCHIVE)
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)->paginate($paginate);
+        $pageTitle = __('site.pris.archive');
+
+        $menuCategories = [];
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
+        if( $actTypes->count() ) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories'));
+    }
+
     public function show(Request $request, int $id = 0)
     {
         $item = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
