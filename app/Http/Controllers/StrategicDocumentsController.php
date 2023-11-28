@@ -35,7 +35,7 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request): View
     {
-        $paginatedResults = $request->get('paginated-results') ?? 10;
+        $paginatedResults = $request->get('pagination-results') ?? 10;
         $strategicDocuments = $this->prepareResults($request)->where('active', 1);
         $policyAreas = PolicyArea::all();
         $preparedInstitutions = AuthorityAcceptingStrategic::all();
@@ -63,12 +63,29 @@ class StrategicDocumentsController extends Controller
         $orderBy = $request->input('order_by');
         $direction = $request->input('direction') ?? 'asc';
         $currentLocale = app()->getLocale();
+
+        $dateFrom = $request->input('valid-from');
+        $dateTo = $request->input('valid-to');
+
+        $documentDateInfinite = $request->input('date-infinite');
+        if ($dateFrom && $dateTo) {
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
+            $strategicDocuments->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
+        } elseif ($dateFrom && $documentDateInfinite == 'false') {
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $strategicDocuments->where('document_date_accepted', '>=', $dateFrom);
+        }
+
+        if ($documentDateInfinite == 'true') {
+            $strategicDocuments->whereNull('document_date_expiring');
+        }
+
         if ($title) {
             $strategicDocuments->whereHas('translations', function($query) use ($title, $currentLocale) {
                 $query->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
             });
         }
-
         if ($policyArea) {
             $policyAreaArray = explode(',', $policyArea);
             $strategicDocuments->when(in_array('all', $policyAreaArray), function ($query) {
@@ -106,22 +123,7 @@ class StrategicDocumentsController extends Controller
                 $query->where('strategic_document_level_id', $documentLevel);
             });
         }
-        $dateFrom = $request->input('valid-from');
-        $dateTo = $request->input('valid-to');
-        if ($dateFrom && $dateTo) {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
-            $strategicDocuments->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
-        } elseif ($dateFrom) {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $strategicDocuments->where('document_date_accepted', '>=', $dateFrom)
-                ->orWhereNull('document_date_accepted');
-        }
 
-        $documentDateInfinite = $request->input('date-infinite');
-        if ($documentDateInfinite == 'true') {
-            $strategicDocuments->orWhereNull('document_date_expiring');
-        }
 
         if ($orderBy == 'policy-area') {
             $strategicDocuments->join('policy_area_translations', 'strategic_document.policy_area_id', '=', 'policy_area_translations.policy_area_id')
@@ -131,7 +133,7 @@ class StrategicDocumentsController extends Controller
 
         if ($orderBy == 'title') {
             $strategicDocuments->join('strategic_document_translations', 'strategic_document.id', '=', 'strategic_document_translations.strategic_document_id')
-                ->where('locale', $currentLocale)
+                ->where('strategic_document_translations.locale', $currentLocale)
                 ->orderBy('strategic_document_translations.title', $direction);
         }
 

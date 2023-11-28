@@ -43,6 +43,8 @@
                 return params;
             }
             const urlParams = getUrlParameters();
+            console.log(urlParams);
+
             const viewParam = urlParams.view;
             if (viewParam === 'tree-view') {
                 $('#myTab a[href="#tree-view"]').tab('show');
@@ -56,36 +58,34 @@
             const validFromResultsValue = urlParams['valid-from'];
             const validToResultsValue = urlParams['valid-to'];
             const dateInfiniteValue = urlParams['date-infinite'];
-            if (policySelectValues) {
-                const policySelectArray = policySelectValues.split(',');
-                policySelect.val(policySelectArray).trigger('change');
+            const orderBy = urlParams['order_by'];
+            const sortDirection = urlParams['direction'];
+
+            // testing
+            const valuesToUpdate = {
+                policySelect : policySelectValues,
+                searchInTitle : searchInTitleValue,
+                paginationResults : paginationResultsValue,
+                categorySelect : categoryResultsValue,
+                documentLevelSelect : documentLevelResultsValue
+            };
+            function setAndTrigger(element, value) {
+                if (value !== undefined && value !== null) {
+                    const valueArray = Array.isArray(value) ? value.split(',') : value;
+                    $(element).val(valueArray).trigger('change');
+                }
             }
 
-            if (searchInTitleValue) {
-                searchInTitle.val(searchInTitleValue).trigger('change');
-            }
-
-            if (paginationResultsValue) {
-                paginationResults.val(paginationResultsValue).trigger('change');
-            }
-
-            if (categoryResultsValue) {
-                const categorySelectArray = categoryResultsValue.split(',');
-                categorySelect.val(categorySelectArray).trigger('change');
-            }
-
+            $.each(valuesToUpdate, function (element, value) {
+                setAndTrigger(window[element], value);
+            });
             if (validFromResultsValue) {
                 validFrom.val(validFromResultsValue).trigger('change');
             }
 
             if (validToResultsValue) {
+                console.log(validToResultsValue);
                 validTo.val(validToResultsValue).trigger('change');
-            }
-            if (documentLevelResultsValue) {
-                documentLevelSelect.val(documentLevelResultsValue).trigger('change');
-            }
-            if (documentLevelResultsValue) {
-                documentLevelSelect.val(documentLevelResultsValue).trigger('change');
             }
 
             if (dateInfiniteValue) {
@@ -129,7 +129,7 @@
 
             const buildUrl = () => {
                 const policyAreaSelectedIds = policySelect.val();
-                const preparedInstitutionSelectedIds = preparedInstitutionSelect.val();
+                //const preparedInstitutionSelectedIds = preparedInstitutionSelect.val();
                 const titleValue = searchInTitle.val();
                 const validFromValue = validFrom.val();
                 const validToValue = validTo.val();
@@ -164,7 +164,12 @@
                 params.set('valid-to', validTo.val());
                 params.set('document-level', documentLevelSelect.val());
                 params.set('pagination-results', paginationResultsValue);
-
+                if (orderBy) {
+                    params.set('order_by', orderBy);
+                }
+                if (sortDirection) {
+                    params.set('direction', orderBy);
+                }
                 window.location.href = url.toString();
             });
             let policyAreaSort = $('#policyAreaSort');
