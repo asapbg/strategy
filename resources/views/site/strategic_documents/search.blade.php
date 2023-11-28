@@ -151,26 +151,34 @@
 
 <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
     <div class="col-md-3">
-        <p class="mb-0 cursor-pointer " id="policyAreaSort">
-            <i class="fa-solid fa-sort me-2"></i> Област на политика
-        </p>
+        @php
+            $translation = trans_choice('custom.policy_area', 1);
+            $sort_by = 'policy-area'; // Adjust this to the actual column name for policy area
+        @endphp
+        @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>
     <div class="col-md-3 ">
-        <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Заглавие
-        </p>
+        @php
+            $translation = trans_choice('custom.title', 1);
+            $sort_by = 'title'; // Adjust this to the actual column name for title
+        @endphp
+        @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>
 
 
     <div class="col-md-3">
-        <p class="mb-0 cursor-pointer">
-            <i class="fa-solid fa-sort me-2"></i>Валидна от
-        </p>
+        @php
+            $translation = trans_choice('custom.valid_from', 1);
+            $sort_by = 'valid-from';
+        @endphp
+        @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>
     <div class="col-md-3">
-        <p class="mb-0 cursor-pointer ">
-            <i class="fa-solid fa-sort me-2"></i>Валидна до
-        </p>
+        @php
+            $translation = trans_choice('custom.valid_to', 1);
+            $sort_by = 'valid-to';
+        @endphp
+        @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>
 </div>
 

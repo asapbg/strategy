@@ -49,7 +49,7 @@
                                         @if($item->active)
                                             @can('update', $item)
                                                  <a href="{{ route($unPublishRouteName, ['id' => $item->id, 'stay' => false]) }}"
-                                                   class="btn btn-sm btn-danger"
+                                                   class="btn btn-sm btn-danger mr-2"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.edit') }}">
                                                     <i class="fa fa-eye"></i>
@@ -58,7 +58,7 @@
                                         @else
                                             @can('update', $item)
                                                 <a href="{{ route($publishRouteName, ['id' => $item->id, 'stay' => false]) }}"
-                                                   class="btn btn-sm btn-success"
+                                                   class="btn btn-sm btn-warning mr-2"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.edit') }}">
                                                     <i class="fa fa-eye"></i>

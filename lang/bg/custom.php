@@ -552,4 +552,7 @@ return [
     'function' => 'Функция|Функции',
     'section' => 'Секция|Секции',
     'link_to_parent_strategic_document' => 'Линк и заглавие на родителски стратегически документ',
+    'strategic_documents_title' => 'Стратегически документи',
+    'valid_from' => 'Валидна от',
+    'valid_to'  => 'Валидна до',
 ];
