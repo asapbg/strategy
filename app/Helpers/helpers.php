@@ -487,6 +487,8 @@ if (!function_exists('optionsUserTypes')) {
                     $content=  '<embed src="'.asset($path).'" width="100%" height="2100px" />';
                     break;
                 case 'application/msword':
+                    $content = __('custom.old_file_format');
+                    break;
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
                     $html = new \PhpOffice\PhpWord\Writer\HTML($content);
