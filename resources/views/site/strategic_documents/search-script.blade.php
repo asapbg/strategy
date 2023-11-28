@@ -124,27 +124,6 @@
             });
 
             $('#searchBtn').on('click', function () {
-                /*
-                const policyAreaSelectedIds = policySelect.val();
-                const preparedInstitutionSelectedIds = preparedInstitutionSelect.val();
-                const titleValue = searchInTitle.val();
-                const validFromValue = validFrom.val();
-                const validToValue = validTo.val();
-                const paginationSelectedResult = paginationResults.val();
-
-                 */
-                /*
-                const url = '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
-                    '&category=' + encodeURIComponent(categorySelect.val()) +
-                    '&pagination-results=' + paginationSelectedResult +
-                    '&title=' + encodeURIComponent(titleValue) +
-                    '&valid-from=' + encodeURIComponent(validFromValue) +
-                    '&valid-to=' + encodeURIComponent(validToValue) +
-                    '&date-infinite=' + encodeURIComponent(infiniteDate.prop('checked')) +
-                    '&document-level=' + encodeURIComponent(documentLevelSelect.val()) +
-                    '&view=' + encodeURIComponent(view);
-
-                 */
                 window.location.href = buildUrl();
             });
 

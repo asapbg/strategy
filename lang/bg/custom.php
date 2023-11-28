@@ -564,4 +564,7 @@ return [
     'filter_pagination' => 'Брой резултати',
     'consultation_number_' => 'Номер на консултация',
     'total_pagination_result' => 'Общо :number резултат|Общо :number резултата',
+    'strategic_documents_title' => 'Стратегически документи',
+    'valid_from' => 'Валидна от',
+    'valid_to'  => 'Валидна до',
 ];
