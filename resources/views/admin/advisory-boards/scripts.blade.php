@@ -69,6 +69,37 @@
             });
         }
 
+        function loadFunctionFileData(url, locale = 'bg') {
+            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
+
+            const locale_spans = form.querySelectorAll('.locale');
+            locale_spans.forEach(function (element) {
+                element.innerHTML = locale.toUpperCase();
+            });
+
+            // Get all input elements with an ID that starts with "file"
+            const fileInputs = form.querySelectorAll('input[name^="file"][class^="form-control"]');
+
+            // Loop through the file input elements and add the "_bg" suffix to their names
+            fileInputs.forEach(function (input) {
+                input.setAttribute('name', input.getAttribute('id') + '_' + locale);
+            });
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name="file_id"]').value = data.id;
+                    form.querySelector('input[name="file_name_' + locale + '"]').value = data.custom_name;
+                    form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         /**
          * Change button state for ajax forms.
          * State can be either 'loading' or 'finished'.
@@ -89,6 +120,17 @@
             }
 
             loader.classList.add('d-none');
+        }
+
+        /**
+         * Display the name of the file next to the input element.
+         *
+         * @param input
+         */
+        function attachDocFileName(input) {
+            if (typeof input.files[0] === 'object') {
+                $(input).siblings('.document-name').html(input.files[0].name);
+            }
         }
     </script>
 @endpush

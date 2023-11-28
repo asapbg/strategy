@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-md-8">
                     <a href="#" class="text-decoration-none">
                         <span class="obj-icon-info me-2">

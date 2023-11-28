@@ -1,13 +1,14 @@
 @php
     $have_request_param = $have_request_param ?? false;
+    $modal_id ??= 'modal-delete-resource';
 @endphp
 
-<div class="modal fade" id="modal-delete-resource" role="dialog" aria-hidden=" true">
+<div class="modal fade" id="{{ $modal_id }}" role="dialog" aria-hidden=" true">
     <div class="modal-dialog">
 
         <div class="modal-content">
 
-            <div class="modal-header bg-danger">
+            <div class="modal-header bg-danger text-white">
                 <h4 class="modal-title">
                     <i class="fas fa-exclamation"></i>
                     {{__('custom.remove')}}  {{$resource}}
@@ -37,7 +38,7 @@
                         <i class="fas fa-ban"></i>&nbsp; {{__('custom.deletion')." ".__('custom.of')}} {{capitalize($resource)}}
                     </button>
                 </form>
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary pull-left" data-dismiss="modal">
                     {{__('custom.cancel')}}
                 </button>
             </div>

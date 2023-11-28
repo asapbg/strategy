@@ -33,7 +33,7 @@ class SettingsStoreRequest extends FormRequest
             foreach ($dbSettings as $s) {
                 $rules[$s['name']] = [
                     $s['is_required'] ? 'required' : 'nullable',
-                    $s['type'] == 'text' ? 'string' : 'numeric'
+                    $s['type'] == 'numeric' ? 'numeric' : 'string'
                 ];
             }
         }

@@ -484,7 +484,7 @@ if (!function_exists('optionsUserTypes')) {
             switch ($file->content_type){
                 case 'application/pdf':
                     $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
-                    $content=  '<embed src="'.asset($path).'" width="800px" height="2100px" />';
+                    $content=  '<embed src="'.asset($path).'" width="100%" height="2100px" />';
                     break;
                 case 'application/msword':
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':

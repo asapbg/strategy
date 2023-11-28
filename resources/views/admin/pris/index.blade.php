@@ -21,6 +21,8 @@
                     <thead>
                     <tr>
                         <th>ID</th>
+                        <th>{{ __('custom.document_number') }}</th>
+                        <th>{{ trans_choice('custom.institutions', 1) }}</th>
                         <th>{{ __('custom.pris_about') }}</th>
                         <th>{{ trans_choice('custom.legal_act_types', 1) }}</th>
                         <th>{{__('custom.published_at')}}</th>
@@ -32,17 +34,30 @@
                         @foreach($items as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
+                            <td>{{ $item->regNum }}</td>
+                            <td>{{ $item->institution ? $item->institution->name : '---' }}</td>
                             <td>{!! $item->about !!}</td>
                             <td>{{ $item->legal_act_type_id ? $item->actType->name : '---' }}</td>
                             <td>{{ $item->published_at ? displayDate($item->published_at) : '---' }}</td>
                             <td class="text-center">
                                 @can('update', $item)
-                                <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                   class="btn btn-sm btn-info"
-                                   data-toggle="tooltip"
-                                   title="{{ __('custom.edit') }}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                                    <a href="{{ route( $editRouteName , [$item->id]) }}"
+                                       class="btn btn-sm btn-info mr-2"
+                                       data-toggle="tooltip"
+                                       title="{{ __('custom.edit') }}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                @endcan
+                                @can('delete', $item)
+                                    <a href="javascript:;"
+                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                       data-target="#modal-delete-resource"
+                                       data-resource-id="{{ $item->id }}"
+                                       data-resource-name="{{ $item->regNum }} ({{ $item->legal_act_type_id ? $item->actType->name : '---' }})"
+                                       data-resource-delete-url="{{ route('admin.pris.delete', $item) }}"
+                                       data-toggle="tooltip"
+                                       title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
+                                    </a>
                                 @endcan
                             </td>
                         </tr>
@@ -58,6 +73,7 @@
                 @endif
             </div>
         </div>
+        @includeIf('modals.delete-resource', ['resource' => $title_singular])
     </div>
 </section>
 

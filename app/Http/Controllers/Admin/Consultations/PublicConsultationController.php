@@ -35,6 +35,7 @@ use App\Models\Timeline;
 use App\Services\FileOcr;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -595,6 +596,12 @@ class PublicConsultationController extends AdminController
                 'placeholder' => __('validation.attributes.name'),
                 'value' => $request->input('name'),
                 'col' => 'col-md-4'
+            ),
+            'consultationNumber' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.consultation_number_'),
+                'value' => $request->input('consultationNumber'),
+                'col' => 'col-md-4'
             )
         );
     }
@@ -714,7 +721,7 @@ class PublicConsultationController extends AdminController
                 'object_code' => Comments::PC_OBJ_CODE,
                 'object_id' => $pc->id,
                 'content' => $validated['message'],
-                'created_at' => Carbon::parse($validated['report_date'])->format('Y-m-d H:i:s'),
+                'created_at' => Carbon::parse($validated['report_date'].' '.$validated['report_time'])->format('Y-m-d H:i:s'),
                 'user_id' => $request->user()->id
             ]);
             $comment->save();
@@ -732,6 +739,29 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             Log::error('Error save proposal report public consultation'.$e);
             return redirect(url()->previous().'#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Delete existing public consultation record
+     *
+     * @param PublicConsultation $item
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request, PublicConsultation $item)
+    {
+        if($request->user()->cannot('delete', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        try {
+            $item->delete();
+            return redirect(url()->previous())
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.deleted_successfully_f'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
         }
     }
 

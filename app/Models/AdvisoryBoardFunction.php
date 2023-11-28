@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static where(string $string, mixed $advisory_board_id)
+ */
 class AdvisoryBoardFunction extends Model
 {
 
-    use FilterSort, SoftDeletes, Translatable;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_functions');

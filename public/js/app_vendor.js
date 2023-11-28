@@ -1653,7 +1653,7 @@ MyModal.prototype.init = function (_myModal) {
         '    <div class="modal-content">\n' +
         '      <div class="modal-header">\n' +
         '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
-        (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
+        (_myModal.dismissible ? '<button type="button" class="btn btn-close close" data-dismiss="modal" aria-label="Close"></button>\n' : '') +
         '      </div>\n' +
         '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
         '      </div>\n' +
@@ -1878,6 +1878,58 @@ $(document).ready(function () {
         $(document).on('click', '.show-more', function () {
             $(this).parent().addClass('d-none');
             $(this).parent().parent().find('.full-length').removeClass('d-none');
+        });
+    }
+
+    if ($('.js-toggle-delete-resource-modal').length) {
+        $('.js-toggle-delete-resource-modal').on('click', function(e) {
+            e.preventDefault();
+
+            // If delete url specify in del.btn use that url
+            if($(this).data('resource-delete-url')) {
+                $( $(this).data('target')).find('form').attr('action', $(this).data('resource-delete-url'));
+            }
+
+            $($(this).data('target')).find('span.resource-name').html($(this).data('resource-name'));
+            $($(this).data('target')).find('#resource_id').attr('value', $(this).data('resource-id'));
+
+            $($(this).data('target')).modal('toggle');
+        })
+    }
+
+    //======================================
+    // START PDOI SUBJECTS SELECT FROM MODAL
+    // use <select name="subjects[]" id="subjects" class="select2">
+    // and button with class 'pick-subject' and data-url attribute to call modal with the tree
+    //you can add to url get parameters to set tree as selectable or just view : select=1
+    // and if you need more than one subject to be selected use parameter 'multiple=1'
+    //======================================
+    if( $('.pick-institution').length ) {
+        $('.pick-institution').on('click', function (){
+            let subjectModal = new MyModal({
+                title: $(this).data('title'),
+                destroyListener: true,
+                bodyLoadUrl: $(this).data('url'),
+                customClass: 'no-footer'
+            });
+
+            $(document).on('click', '#select-institution', function (){
+                let subjectsFormSelect = $('#' + $(this).data('dom'));
+                let checked = $('#'+ subjectModal.id +' input[name="institutions-item"]:checked');
+                if( checked.length ) {
+                    if( checked.length === 1 ) {
+                        subjectsFormSelect.val(checked.val());
+                    } else if( checked.length > 1 ) {
+                        let subjectValues = [];
+                        checked.each(function(){
+                            subjectValues.push($(this).val());
+                        });
+                        subjectsFormSelect.val(subjectValues);
+                    }
+                    subjectsFormSelect.trigger('change');
+                }
+                subjectModal.modalObj.hide();
+            });
         });
     }
 

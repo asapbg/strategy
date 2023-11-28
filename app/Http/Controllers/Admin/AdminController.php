@@ -110,21 +110,27 @@ class AdminController extends Controller
 
     /**
      * Upload file in public disk
-     * @param $item
-     * @param $file
-     * @param int $codeObject
-     * @param $docType
+     *
+     * @param             $item
+     * @param             $file
+     * @param int         $codeObject
+     * @param int         $docType
+     * @param string      $description
+     * @param string      $locale
+     * @param string|null $customName
+     *
      * @return File
      */
-    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '', $locale = 'bg')
+    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '', $locale = 'bg', string $customName = null)
     {
         $path = match ($codeObject) {
             File::CODE_OBJ_LEGISLATIVE_PROGRAM,
             File::CODE_OBJ_OPERATIONAL_PROGRAM => File::PUBLIC_CONSULTATIONS_UPLOAD_DIR . $item->id . DIRECTORY_SEPARATOR,
             File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR . DIRECTORY_SEPARATOR,
+            File::CODE_AB_FUNCTION => File::ADVISORY_BOARD_FUNCTION_UPLOAD_DIR . DIRECTORY_SEPARATOR,
             default => '',
         };
-        $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+        $fileNameToStore = str_replace('.', '', microtime(true)) . '.' . $file->getClientOriginalExtension();
         $file->storeAs($path, $fileNameToStore, 'public_uploads');
         $file = new File([
             'id_object' => $item->id,
@@ -132,10 +138,11 @@ class AdminController extends Controller
             'doc_type' => $docType,
             'filename' => $fileNameToStore,
             'content_type' => $file->getClientMimeType(),
-            'path' => 'files'.DIRECTORY_SEPARATOR.$path.$fileNameToStore,
+            'path' => DIRECTORY_SEPARATOR . $path . $fileNameToStore,
             'sys_user' => auth()->user()->id,
-            'description_'.$locale => !empty($description) ? $description : null,
-            'locale' => $locale
+            'description_' . $locale => !empty($description) ? $description : null,
+            'locale' => $locale,
+            'custom_name' => $customName
         ]);
         $file->save();
         return $file;

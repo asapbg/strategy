@@ -450,7 +450,7 @@ return [
     'search_pris_doc_js_placeholder'                         => 'Въведете Номер/Година',
     'search_lp_record_js_placeholder'                         => 'Въведете наименование',
     'search_op_record_js_placeholder'                         => 'Въведете наименование',
-    'search_pc_record_js_placeholder'                         => 'Въведете наименование',
+    'search_pc_record_js_placeholder'                         => 'Въведете Номер/Наименование',
     'nomenclature_level.CENTRAL'        => 'Централно',
     'nomenclature_level.CENTRAL_OTHER'        => 'Ценрално друго',
     'nomenclature_level.AREA'        => 'Областно',

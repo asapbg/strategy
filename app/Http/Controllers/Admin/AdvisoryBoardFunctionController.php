@@ -47,18 +47,22 @@ class AdvisoryBoardFunctionController extends AdminController
 
         DB::beginTransaction();
         try {
-            $item = new AdvisoryBoardFunction();
+            $item = AdvisoryBoardFunction::where('advisory_board_id', $advisory_board_id)->first() ?? new AdvisoryBoardFunction();
+            $message = $item->id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f');
             $fillable = $this->getFillableValidated($validated, $item);
             $fillable['advisory_board_id'] = $advisory_board_id;
             $item->fill($fillable);
             $item->save();
 
+            foreach (config('available_languages') as $lang) {
+                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
+            }
+
             $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
 
-            return redirect($route)
-                ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.created_successfully_m'));
+            return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . $message);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);

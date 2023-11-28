@@ -3046,17 +3046,6 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.datepicker-time').length) {
-        $('.datepicker-time').datepicker({
-            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
-            format: 'dd.mm.yyyy H:m',
-            todayHighlight: true,
-            orientation: "bottom left",
-            autoclose: true,
-            weekStart: 1
-        });
-    }
-
     if($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
@@ -3096,6 +3085,17 @@ $(document).ready(function (e) {
             weekStart: 1,
             onClose: function(dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+    }
+
+    if($('.timepicker').length) {
+        $('.timepicker').timepicker({
+            showSeconds: false,
+            showMeridian: false,
+            icons: {
+                up: 'fas fa-caret-up',
+                down: 'fas fa-caret-down'
             }
         });
     }

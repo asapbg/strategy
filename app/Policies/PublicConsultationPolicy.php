@@ -67,7 +67,7 @@ class PublicConsultationPolicy
      */
     public function delete(User $user, PublicConsultation $publicConsultation)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.advisory.delete']);
     }
 
     /**

@@ -6,9 +6,11 @@ use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Models\Setting;
 use App\Policies\LegislativeProgramPolicy;
 use App\Policies\OperationalProgramPolicy;
 use App\Policies\PublicConsultationPolicy;
+use App\Policies\SettingsPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,7 +24,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         PublicConsultation::class => PublicConsultationPolicy::class,
         LegislativeProgram::class => LegislativeProgramPolicy::class,
-        OperationalProgram::class => OperationalProgramPolicy::class
+        OperationalProgram::class => OperationalProgramPolicy::class,
+        Setting::class => SettingsPolicy::class
     ];
 
     /**

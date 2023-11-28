@@ -11,6 +11,7 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryChairmanType;
 use App\Models\ConsultationLevel;
+use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\RedirectResponse;
@@ -91,7 +92,10 @@ class AdvisoryBoardController extends AdminController
      */
     public function show(AdvisoryBoard $item)
     {
-        return $this->view('admin.advisory-boards.view', compact('item'));
+        $members = $item->members;
+        $functions = $item->advisoryFunction?->translations;
+
+        return $this->view('admin.advisory-boards.view', compact('item', 'members', 'functions'));
     }
 
     /**
@@ -109,8 +113,14 @@ class AdvisoryBoardController extends AdminController
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
-//        $function = $item->advisoryFunction;
-//        dd($function);
+        $function = $item->advisoryFunction;
+
+        $files = File::query()
+            ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])
+            ->get();
 
         return $this->view(
             'admin.advisory-boards.edit',
@@ -121,7 +131,9 @@ class AdvisoryBoardController extends AdminController
                 'advisory_act_types',
                 'institutions',
                 'consultation_levels',
-                'members'
+                'members',
+                'function',
+                'files'
             )
         );
     }

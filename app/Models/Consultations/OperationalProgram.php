@@ -194,6 +194,7 @@ class OperationalProgram extends ModelActivityExtend
         if(isset($filters['search'])) {
             $q->where('operational_program_row.value', 'ilike', '%'.$filters['search'].'%');
         }
+        $q->whereNull('legislative_program.deleted_at');
 
         $q->groupBy('operational_program_row.id');
 

@@ -218,7 +218,9 @@ class CommonController extends Controller
                 File::CODE_OBJ_PUBLICATION,
                 File::CODE_OBJ_LEGISLATIVE_PROGRAM,
                 File::CODE_OBJ_OPERATIONAL_PROGRAM,
-                File::CODE_OBJ_PRIS
+                File::CODE_OBJ_PRIS,
+                File::CODE_OBJ_PUBLIC_CONSULTATION,
+                File::CODE_AB_FUNCTION,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
@@ -297,7 +299,8 @@ class CommonController extends Controller
         $multipleSelect = (boolean)$request->input('multiple');
         $selectId = $request->input('dom') ?? 'institutions';
         $institutions = Institution::getTree($request->all());
-        $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
+//        $oldBootstrap = $request->input('admin') && $request->input('admin'); //ugly way to fix design for bootstrap
+        $oldBootstrap = true; //ugly way to fix design for bootstrap
         return view('partials.institutions_tree', compact('institutions', 'canSelect', 'multipleSelect', 'oldBootstrap', 'selectId'));
     }
 
@@ -325,6 +328,9 @@ class CommonController extends Controller
                 $data = OperationalProgram::select2AjaxOptionsFilterByInstitution($requestData);
                 break;
             case 'pc':
+                $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
+                $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
+                $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
                 $data = PublicConsultation::select2AjaxOptions($requestData);
                 break;
         }

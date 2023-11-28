@@ -375,7 +375,8 @@ return [
         'doc_num'              => 'Номер',
         'doc_date'              => 'Дата',
         'protocol'              => 'Протокол',
-        'newspaper_number'     => 'Обн. ДВ.',
+        'newspaper_number'     => 'Обн. ДВ. (номер)',
+        'newspaper_year'     => 'ДВ. (година)',
         'about_bg'              => 'Заглавие/Относно (BG)',
         'about_en'              => 'Заглавие/Относно (EN)',
         'legal_reason_bg'     => 'Правно основание (BG)',
@@ -423,5 +424,6 @@ return [
         'icon_class' => 'Икона (клас)',
         'advisory_chairman_type_id' => 'Длъжност',
         'advisory_type_id' => 'Тип',
+        'report_time' => 'Час',
     ],
 ];

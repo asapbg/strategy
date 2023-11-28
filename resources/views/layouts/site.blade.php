@@ -55,7 +55,7 @@
                 @if(Session::has($msgType))
                     <div class="alert alert-{{$msgType}} mt-1 alert-dismissible py-2" style="z-index: 9999;"
                          role="alert">{!! Session::get($msgType) !!}
-                        <button type="button" class="btn-close py-2" data-bs-dismiss="alert"
+                        <button type="button" class="btn-close py-2" data-dismiss="alert"
                                 aria-label="Close"></button>
                     </div>
                 @endif

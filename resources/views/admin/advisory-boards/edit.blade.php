@@ -16,9 +16,9 @@
                                aria-controls="general" aria-selected="true">{{ __('custom.general_info') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="chairmen-tab" data-toggle="pill" href="#chairmen" role="tab"
-                               aria-controls="chairmen"
-                               aria-selected="false">{{ trans_choice('custom.chairmen', 2) }}</a>
+                            <a class="nav-link" id="members-tab" data-toggle="pill" href="#members" role="tab"
+                               aria-controls="members"
+                               aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
@@ -34,8 +34,8 @@
                             @include('admin.advisory-boards.tabs.general')
                         </div>
 
-                        <div class="tab-pane fade" id="chairmen" role="tabpanel" aria-labelledby="chairmen-tab">
-                            @include('admin.advisory-boards.tabs.chairmen')
+                        <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
+                            @include('admin.advisory-boards.tabs.members')
                         </div>
 
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
@@ -47,9 +47,13 @@
         </div>
     </section>
 
+    @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.restore-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-restore-file'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-function-file')
+    @includeIf('admin.advisory-boards.modals.edit-function-file')
     @includeIf('admin.advisory-boards.scripts')
 @endsection

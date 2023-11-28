@@ -331,6 +331,6 @@
         'cancel_btn_text'           => __('custom.cancel'),
         'continue_btn_text'         => __('custom.continue'),
         'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.legislative_initiatives', 1),
-        'file_change_warning_txt'   => __('custom.legislative_comment_delete_warning'),
+        'file_change_warning_txt'   => __('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.legislative_initiatives_list', 1)) . '?',
     ])
 @endsection

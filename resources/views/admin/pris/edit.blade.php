@@ -134,12 +134,14 @@
                                                         {{ trans_choice('custom.public_consultations', 1) }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <select id="public_consultation_id" name="public_consultation_id"  class="form-control form-control-sm @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
+                                                        <select id="public_consultation_id" name="public_consultation_id"
+                                                                @if($item->id && $item->public_consultation_id) data-current="{{ $item->public_consultation_id }}" @endif
+                                                                data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}"
+                                                                data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}"
+                                                                class="form-control form-control-sm select2-autocomplete-ajax @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
                                                             <option value="">---</option>
-                                                            @if(isset($publicConsultations) && $publicConsultations->count())
-                                                                @foreach($publicConsultations as $row)
-                                                                    <option value="{{ $row->id }}" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == $row->id) selected @endif>{{ $row->name }}</option>
-                                                                @endforeach
+                                                            @if(!old('public_consultation_id') && $item->id && $item->public_consultation_id)
+                                                                <option value="{{ $item->public_consultation_id }}" selected="selected">{{ $item->consultation->reg_num }} / {{ $item->consultation->title }}</option>
                                                             @endif
                                                         </select>
                                                         @error('public_consultation_id')
@@ -148,7 +150,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="col-12"></div>
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="newspaper_number">
@@ -158,6 +160,20 @@
                                                         <input type="text" name="newspaper_number" value="{{ old('newspaper_number', $item->id ? $item->newspaper_number : '') }}" class="form-control form-control-sm @error('newspaper_number'){{ 'is-invalid' }}@enderror">
                                                         @error('newspaper_number')
                                                             <div class="text-danger mt-1">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label" for="newspaper_year">
+                                                        {{ __('validation.attributes.newspaper_year') }}
+                                                    </label>
+                                                    <div class="col-12">
+                                                        <input type="text" name="newspaper_year" value="{{ old('newspaper_year', $item->id ? $item->newspaper_year : '') }}" class="form-control form-control-sm @error('newspaper_year'){{ 'is-invalid' }}@enderror">
+                                                        @error('newspaper_year')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>

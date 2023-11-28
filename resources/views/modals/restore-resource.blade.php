@@ -1,4 +1,8 @@
-<div class="modal fade" id="modal-restore-resource" role="dialog" aria-hidden="true">
+@php
+    $modal_id ??= 'modal-restore-resource';
+@endphp
+
+<div class="modal fade" id="{{ $modal_id }}" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-success">

@@ -13,6 +13,7 @@ use App\Models\DynamicStructureColumn;
 use App\Models\File;
 use App\Models\StrategicDocuments\Institution;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -37,6 +38,7 @@ class OperationalProgramController extends AdminController
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
 
         $items = OperationalProgram::FilterBy($requestFilter)
+            ->orderBy('from_date', 'desc')
             ->paginate($paginate);
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
@@ -300,6 +302,29 @@ class OperationalProgramController extends AdminController
             DB::rollBack();
             logError('Publish operational program (ID '.$item->id.')', $e);
             return back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Delete existing program record
+     *
+     * @param OperationalProgram $item
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request, OperationalProgram $item)
+    {
+        if($request->user()->cannot('delete', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        try {
+            $item->delete();
+            return redirect(url()->previous())
+                ->with('success', trans_choice('custom.operational_program', 1)." ".__('messages.deleted_successfully_f'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
         }
     }
 

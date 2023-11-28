@@ -30,7 +30,7 @@ class LegislativeInitiativeController extends AdminController
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->title_singular = 'Законодателна инициатива';
+        $this->title_singular = __('custom.legislative_initiatives');
     }
 
     /**
