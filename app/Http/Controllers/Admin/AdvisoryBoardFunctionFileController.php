@@ -10,8 +10,7 @@ use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardFunctionFileController extends AdminController
@@ -141,12 +140,25 @@ class AdvisoryBoardFunctionFileController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
+     * @param AdvisoryBoard $item
+     * @param File          $file
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function destroy(AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function destroy(AdvisoryBoard $item, File $file)
     {
-        //
+        $route = route('admin.advisory-boards.edit', $item) . '#functions';
+
+        try {
+            $file_name = $file->custom_name ?? $file->filename;
+
+            $file->delete();
+
+            return redirect()->to($route)
+                ->with('success', __('custom.file') . " $file_name " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect($route)->with('danger', __('messages.system_error'));
+        }
     }
 }

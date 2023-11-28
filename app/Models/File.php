@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\EngineManager;
 use Laravel\Scout\Searchable;
 
+/**
+ * @property string $custom_name
+ */
 class File extends Model
 {
     use SoftDeletes, Searchable;

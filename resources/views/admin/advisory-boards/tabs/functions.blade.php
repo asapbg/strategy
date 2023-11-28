@@ -111,7 +111,7 @@
                                         <div class="col-auto">
                                             @can('update', $item)
                                                 <button type="button"
-                                                        class="btn btn-sm btn-warning"
+                                                        class="btn btn-sm btn-warning mr-2"
                                                         data-toggle="modal"
                                                         data-target="#modal-edit-function-file"
                                                         title="{{ __('custom.edit') }}"
@@ -123,12 +123,12 @@
 
                                         <div class="col-auto">
                                             @can('delete', $item)
-                                                @if(!$item->deleted_at)
+                                                @if(!$file->deleted_at)
                                                     <a href="javascript:;"
                                                        class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                       data-target="#modal-delete-resource"
-                                                       data-resource-id="{{ $item->id }}"
-                                                       data-resource-delete-url="{{ route('admin.advisory-boards.delete', $item) }}"
+                                                       data-target="#modal-delete-file"
+                                                       data-resource-id="{{ $file->id }}"
+                                                       data-resource-delete-url="{{ route('admin.advisory-boards.function.file.delete', ['item' => $item, 'file' => $file]) }}"
                                                        data-toggle="tooltip"
                                                        title="{{__('custom.delete')}}">
                                                         <i class="fa fa-trash"></i>
