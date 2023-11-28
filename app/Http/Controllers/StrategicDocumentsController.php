@@ -9,6 +9,7 @@ use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\FileService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,10 +17,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Admin\StrategicDocumentsController as AdminStrategicDocumentsController;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class StrategicDocumentsController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->title_singular = trans('custom.strategic_documents_title');
+    }
+
     /**
      * @param Request $request
      * @return View
@@ -35,8 +43,9 @@ class StrategicDocumentsController extends Controller
         $categoriesData = $this->prepareCategoriesData($strategicDocuments);
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
+        $pageTitle = $this->title_singular;
         //return view('templates.strategicheski-dokumenti', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName'));
-        return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData'));
+        return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle'));
     }
 
     /**
@@ -45,19 +54,19 @@ class StrategicDocumentsController extends Controller
      */
     private function prepareResults(Request $request): Builder
     {
-        $strategicDocuments = StrategicDocument::with('policyArea')->active();
+        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations'])->active();
         $policyArea = $request->input('policy-area');
         //$preparedInstitutions = $request->input('prepared-institution');
         $categories = $request->input('category');
         $title = $request->input('title');
+        $orderBy = $request->input('order_by');
+        $direction = $request->input('direction') ?? 'asc';
+        $currentLocale = app()->getLocale();
         if ($title) {
-            $currentLocale = app()->getLocale();
             $strategicDocuments->whereHas('translations', function($query) use ($title, $currentLocale) {
                 $query->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
             });
         }
-
-        $policyAreaSortOrder = $request->input('policy-area-sort-order');
 
         if ($policyArea) {
             $policyAreaArray = explode(',', $policyArea);
@@ -99,11 +108,11 @@ class StrategicDocumentsController extends Controller
         $dateFrom = $request->input('valid-from');
         $dateTo = $request->input('valid-to');
         if ($dateFrom && $dateTo) {
-            $dateFrom = \Carbon\Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $dateTo = \Carbon\Carbon::createFromFormat('d.m.Y', $dateTo);
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
             $strategicDocuments->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
         } elseif ($dateFrom) {
-            $dateFrom = \Carbon\Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
             $strategicDocuments->where('document_date_accepted', '>=', $dateFrom)
                 ->orWhereNull('document_date_accepted');
         }
@@ -111,6 +120,26 @@ class StrategicDocumentsController extends Controller
         $documentDateInfinite = $request->input('date-infinite');
         if ($documentDateInfinite == 'true') {
             $strategicDocuments->orWhereNull('document_date_expiring');
+        }
+
+        if ($orderBy == 'policy-area') {
+            $strategicDocuments->join('policy_area_translations', 'strategic_document.policy_area_id', '=', 'policy_area_translations.policy_area_id')
+                ->where('locale', $currentLocale)
+                ->orderBy('policy_area_translations.name', $direction);
+        }
+
+        if ($orderBy == 'title') {
+            $strategicDocuments->join('strategic_document_translations', 'strategic_document.id', '=', 'strategic_document_translations.strategic_document_id')
+                ->where('locale', $currentLocale)
+                ->orderBy('strategic_document_translations.title', $direction);
+        }
+
+        if ($orderBy == 'valid-from') {
+            $strategicDocuments->orderBy('document_date_accepted', $direction);
+        }
+
+        if ($orderBy == 'valid-to') {
+            $strategicDocuments->orderBy('document_date_expiring', $direction);
         }
 
         return $strategicDocuments;
@@ -125,6 +154,7 @@ class StrategicDocumentsController extends Controller
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
         $strategicDocumentFileService = app(FileService::class);
         $locale = app()->getLocale();
+        $pageTitle = $this->title_singular;
 
         $strategicDocumentFiles = StrategicDocumentFile::with('translations')
             ->where('strategic_document_id', $id)
@@ -142,7 +172,7 @@ class StrategicDocumentsController extends Controller
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
 
-        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs'));
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs', 'pageTitle'));
     }
 
     public function previewModalFile(Request $request, $id = 0)
