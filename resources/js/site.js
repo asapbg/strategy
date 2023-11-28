@@ -36,7 +36,7 @@ MyModal.prototype.init = function (_myModal) {
         '    <div class="modal-content">\n' +
         '      <div class="modal-header">\n' +
         '        <h4 class="modal-title">' + _myModal.title + '</h4>\n' +
-        (_myModal.dismissible ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' : '') +
+        (_myModal.dismissible ? '<button type="button" class="btn btn-close close" data-dismiss="modal" aria-label="Close"></button>\n' : '') +
         '      </div>\n' +
         '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
         '      </div>\n' +
