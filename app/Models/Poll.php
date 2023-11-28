@@ -8,8 +8,9 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-use illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Poll extends ModelActivityExtend
 {
@@ -47,10 +48,10 @@ class Poll extends ModelActivityExtend
         });
     }
 
-    public function scopeInPeriod($query)
-    {
-
-    }
+//    public function scopeInPeriod($query)
+//    {
+//
+//    }
 
     protected function inPeriod(): Attribute
     {
@@ -101,17 +102,17 @@ class Poll extends ModelActivityExtend
             ->select(
 //                DB::raw('poll_questions.id as question_id'),
                 DB::raw('poll_question_option.id as option_id'),
-                DB::raw('sum(CASE WHEN account_poll_options.poll_question_option_id IS NOT NULL THEN 1 ELSE 0 END) as option_cnt'))
+                DB::raw('sum(CASE WHEN user_poll_option.poll_question_option_id IS NOT NULL THEN 1 ELSE 0 END) as option_cnt'))
             ->join('poll_question', 'poll_question.poll_id', '=', 'polls.id')
             ->join('poll_question_option', 'poll_question_option.poll_question_id', '=', 'poll_question.id')
-            ->join('account_polls', 'account_polls.poll_id', '=', 'polls.id')
-            ->leftJoin('account_poll_options', 'account_poll_options.poll_question_option_id', '=', 'poll_question_option.id')
+            ->join('user_poll', 'user_poll_option.poll_id', '=', 'polls.id')
+            ->leftJoin('user_poll_option', 'user_poll_option.poll_question_option_id', '=', 'poll_question_option.id')
             ->where('polls.id', (int)$id)
             ->whereNull('polls.deleted_at')
-            ->whereNull('account_polls.deleted_at')
+            ->whereNull('user_poll.deleted_at')
             ->whereNull('poll_question.deleted_at')
             ->whereNull('poll_question_option.deleted_at')
-            ->whereColumn('account_poll_options.account_poll_id', '=', 'account_polls.id')
+            ->whereColumn('user_poll_option.user_poll_id', '=', 'user_poll.id')
             ->groupBy(['poll_question.id', 'poll_question_option.id'])
             ->get();
     }

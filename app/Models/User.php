@@ -150,6 +150,11 @@ class User extends Authenticatable
         return $this->hasOne(Institution::class, 'id', 'institution_id');
     }
 
+    public function polls(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserPoll::class, 'user_id', 'id');
+    }
+
 
     /**
      * Return the user's full name if not empty
