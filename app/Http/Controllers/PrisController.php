@@ -2,25 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActType;
 use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class PrisController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $category = '')
     {
         $requestFilter = $request->all();
+        if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
+            $actType = LegalActType::find((int)$requestFilter['legalАctТype']);
+            if( $actType && Str::slug($actType->name) != $category ){
+                return redirect(route('pris.index', $request->query()));
+            }
+        }
+
+
         $filter = $this->filters($request);
 //        return $this->view('templates.8_2_1_1_2_public_legal_information');
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
         $items = Pris::Published()->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
             ->FilterBy($requestFilter)->paginate($paginate);
         $pageTitle = __('site.menu.pris');
-        return $this->view('site.pris.index', compact('filter','items', 'pageTitle'));
+
+        $menuCategories = [];
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)->get();
+        if( $actTypes->count() ) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+        return $this->view('site.pris.index', compact('filter','items', 'pageTitle', 'menuCategories'));
     }
 
     public function show(Request $request, int $id = 0)

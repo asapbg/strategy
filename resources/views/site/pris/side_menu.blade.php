@@ -27,21 +27,18 @@
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
 {{--                                    active-item-left p-1 text-white--}}
-                                    <li class="my-2"><a href="#" class="link-dark text-decoration-none">Постановления</a>
-                                    </li>
-                                    <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Решения</a></li>
-                                    <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Становища</a></li>
-                                    <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Протоколи</a></li>
-                                    <hr class="custom-hr">
+                                    @if(isset($menuCategories) && sizeof($menuCategories))
+                                        @foreach($menuCategories as $mc)
+                                            <li class="my-2"><a href="{{ $mc['url'] }}" class="@if(str_contains(url()->current(),'pris/'.$mc['slug'])) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ $mc['label'] }}</a></li>
+                                            <hr class="custom-hr">
+                                        @endforeach
+                                    @endif
                                 </ul>
                             </ul>
                         </ul>
                     </div>
                 </li>
-                <li class="mb-2"><a href="#" class="link-dark  text-decoration-none">Архив</a></li>
+                <li class="mb-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.archive') }}</a></li>
             </ul>
         </div>
         <hr class="custom-hr">
