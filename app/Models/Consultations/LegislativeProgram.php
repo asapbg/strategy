@@ -71,6 +71,14 @@ class LegislativeProgram extends ModelActivityExtend
         );
     }
 
+    protected function isActual(): Attribute
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        return Attribute::make(
+            get: fn () => (Carbon::parse($this->from_date)->format('Y-m-d') <= $now && Carbon::parse($this->to_date)->format('Y-m-d') >= $now)
+        );
+    }
+
     protected function recordPeriod(): Attribute
     {
         return Attribute::make(

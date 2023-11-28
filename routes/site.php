@@ -44,8 +44,9 @@ Route::controller(\App\Http\Controllers\PublicConsultationController::class)->gr
 
 Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
     Route::get('/pris', 'index')->name('pris.index');
-    Route::get('/pris/{category}', 'index')->name('pris.category');
     Route::get('/pris/{id}', 'show')->where('id', '[0-9]+')->name('pris.view');
+    Route::get('/pris/archive', 'archive')->name('pris.archive');
+    Route::get('/pris/{category}', 'index')->name('pris.category');
 });
 
 Route::controller(\App\Http\Controllers\OperationalProgramController::class)->group(function () {

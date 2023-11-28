@@ -27,6 +27,11 @@
                                                         </i>
                                                         <i class="fas fa-arrow-right read-more"></i>
                                                     </a>
+                                                    <div class="meta-consul">
+                                                        <span>
+                                                            <span class="{{ $item->isActual ? 'active' : 'inactive' }}-ks">{{ $item->isActual ? __('custom.active_f') : __('custom.archive') }}</span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="consult-item-header-edit">
                                                     @can('delete', $item)

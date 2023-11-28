@@ -15,6 +15,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const TRANSLATABLE_FIELDS = ['name'];
     const MODULE_NAME = ('custom.nomenclatures.legal_act_type');
     const TYPE_ORDER = 7;
+    const TYPE_ARCHIVE = 8;
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
