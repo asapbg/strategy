@@ -43,7 +43,7 @@ class AdvisoryBoardFunctionFileController extends AdminController
      *
      * @return JsonResponse
      */
-    public function store(StoreAdvisoryBoardFunctionFileRequest $request): JsonResponse
+    public function ajaxStore(StoreAdvisoryBoardFunctionFileRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $model = AdvisoryBoard::find($request->route()->parameters['item']);
@@ -87,7 +87,8 @@ class AdvisoryBoardFunctionFileController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param File $file
+     * @param AdvisoryBoard $item
+     * @param File          $file
      *
      * @return JsonResponse
      */
@@ -99,14 +100,42 @@ class AdvisoryBoardFunctionFileController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest $request
-     * @param \App\Models\AdvisoryBoardFunctionFile                     $advisoryBoardFunctionFile
+     * @param UpdateAdvisoryBoardFunctionFileRequest $request
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function update(UpdateAdvisoryBoardFunctionFileRequest $request, AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
+    public function ajaxUpdate(UpdateAdvisoryBoardFunctionFileRequest $request): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $model = AdvisoryBoard::find($request->route()->parameters['item']);
+
+        DB::beginTransaction();
+        try {
+            $file = File::find($validated['file_id']);
+
+            //Add file and attach
+            $updated_file = $this->uploadFile(
+                $model,
+                $validated['file'],
+                File::CODE_AB_FUNCTION,
+                DocTypesEnum::AB_FUNCTION,
+                $validated['file_description_' . $file->locale],
+                $file->locale,
+                $validated['file_name_' . $file->locale]
+            );
+
+            if (\Illuminate\Support\Facades\File::exists(public_path('files' . DIRECTORY_SEPARATOR . $updated_file->path))) {
+                $file->delete();
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
+        }
     }
 
     /**

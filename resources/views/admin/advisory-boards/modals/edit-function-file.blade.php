@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-edit-function-file" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
@@ -14,20 +14,22 @@
                 <form method="POST" name="FUNCTIONS_FILE_UPDATE" enctype="multipart/form-data" class="pull-left mr-4">
                     @csrf
 
+                    <input type="hidden" name="file_id" value=""/>
+
                     <div class="row">
-                        <div class="col-md-6 col-12">
+                        <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="file">{{ __('custom.file') }}
-                                    ()
+                                    (<span class="locale"></span>)
                                     <span class="required">*</span>
                                 </label>
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <input class="form-control form-control-sm" id="file"
-                                               type="file"
-                                               name="file">
+                                        <label for="file" class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
+                                        <input name="file" class="d-none form-control" type="file" id="file" onchange="attachDocFileName(this)">
+                                        <span class="document-name"></span>
                                     </div>
                                 </div>
 
@@ -37,11 +39,11 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 col-12">
+                        <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="file_name">{{ __('custom.name') }}
-                                    ()
+                                    (<span class="locale"></span>)
                                     <span class="required">*</span>
                                 </label>
 
@@ -59,11 +61,11 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 col-12">
+                        <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="file_description">{{ __('custom.description') }}
-                                    ()
+                                    (<span class="locale"></span>)
                                 </label>
 
                                 <div class="row">
@@ -83,7 +85,7 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('custom.cancel') }}</button>
                 <button type="button" class="btn btn-success"
-                        onclick="submitFunctionFileAjax(this)">
+                        onclick="updateFunctionFileAjax(this)">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
                     <span class="text">{{ __('custom.add') }}</span>
                 </button>
@@ -94,15 +96,13 @@
 
 @push('scripts')
     <script type="application/javascript">
-        function submitFunctionFileAjax(element) {
+        function updateFunctionFileAjax(element) {
             // change button state
             changeButtonState(element);
 
             // Get the form element
-            const form = document.querySelector('form[name=FUNCTIONS_FILE]');
-            console.log(form);
+            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
             const formData = new FormData(form);
-            console.log(formData.entries());
 
             // Get all file input elements with an ID that starts with "file"
             const fileInputs = document.querySelectorAll('[id^="file"][type=file]');
@@ -110,7 +110,6 @@
             // Loop through the file input elements and append their files to the form data
             for (let i = 0; i < fileInputs.length; i++) {
                 const fileInput = fileInputs[i];
-                console.log(fileInput);
                 formData.append('file' + i, fileInput.files[0]);
             }
 
@@ -118,7 +117,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.advisory-boards.function.file.store', $item) }}",
+                url: "{{ route('admin.advisory-boards.function.file.update', $item) }}",
                 data: formData,
                 type: 'POST',
                 dataType: 'json',
@@ -141,28 +140,6 @@
                     }
                 }
             });
-        }
-
-        /**
-         * Change button state for ajax forms.
-         * State can be either 'loading' or 'finished'.
-         *
-         * @param element
-         * @param state
-         */
-        function changeButtonState(element, state = 'loading') {
-            const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
-            const loader = element.querySelector('.spinner-grow');
-
-            element.querySelector('.text').innerHTML = button_text_translation;
-            element.disabled = state === 'loading';
-
-            if (state === 'loading') {
-                loader.classList.remove('d-none');
-                return;
-            }
-
-            loader.classList.add('d-none');
         }
     </script>
 @endpush

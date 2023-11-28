@@ -26,9 +26,9 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <input class="form-control form-control-sm" id="file_{{ $lang['code'] }}"
-                                                   type="file"
-                                                   name="file_{{ $lang['code'] }}">
+                                            <label for="file_{{ $lang['code'] }}" class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
+                                            <input name="file_{{ $lang['code'] }}" class="d-none" type="file" id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
+                                            <span class="document-name"></span>
                                         </div>
                                     </div>
 
