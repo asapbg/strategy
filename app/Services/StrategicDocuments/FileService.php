@@ -27,7 +27,10 @@ class FileService
         foreach (['en', 'bg'] as $locale) {
             try {
                 DB::beginTransaction();
-
+                $strategicDocumentFileTypeId = Arr::get($validated, 'strategic_document_type_file_id');
+                if ($strategicDocumentFileTypeId) {
+                    $validated['strategic_document_type_id'] = $strategicDocumentFileTypeId;
+                }
                 if ($isMain) {
                     $mainFile = $strategicDocument->files->where('is_main', true)->where('locale', $locale)->first();
                     if ($mainFile) {
@@ -222,7 +225,15 @@ class FileService
         if (Arr::get($validated, 'valid_at_main')) {
             $validated['valid_at'] = $validated['valid_at_main'];
         }
-
+        if (Arr::get($validated, 'valid_at_main')) {
+            $validated['valid_at'] = $validated['valid_at_main'];
+        }
+        /*
+        if (Arr::get($validated, 'strategic_document_type_file_main_id')) {
+            $validated['strategic_document_type_id_bg'] = $validated['strategic_document_type_file_main_id'];
+            unset($validated['strategic_document_type_file_main_id']);
+        }
+        */
         return $validated;
     }
 }

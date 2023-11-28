@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Admin\AdvisoryBoardMember;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAdvisoryBoardMemberRequest extends FormRequest
+class UpdateAdvisoryBoardMemberRequest extends FormRequest
 {
+
+    use FailedAuthorization;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -15,7 +19,7 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoard::class);
+        return $this->user()->can('update', [AdvisoryBoardMember::class, AdvisoryBoardMember::find($this->request->get('advisory_board_member_id', 0))]);
     }
 
     /**
@@ -27,6 +31,7 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
     {
         $rules = [
             'advisory_board_id' => 'required|integer|exists:advisory_boards,id',
+            'advisory_board_member_id' => 'required|integer|exists:advisory_board_members,id',
             'advisory_type_id' => 'required|integer',
             'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
             'consultation_level_id' => 'required|integer|exists:consultation_level,id',

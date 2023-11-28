@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\AdvisoryBoard;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class AdvisoryBoardPolicy
 {
@@ -16,11 +15,11 @@ class AdvisoryBoardPolicy
      *
      * @param User $user
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
-        //
+        return $user->canAny('manage.*', 'manage.advisory-boards');
     }
 
     /**
@@ -93,10 +92,10 @@ class AdvisoryBoardPolicy
      * @param User          $user
      * @param AdvisoryBoard $advisoryBoard
      *
-     * @return Response|bool
+     * @return bool
      */
-    public function forceDelete(User $user, AdvisoryBoard $advisoryBoard)
+    public function forceDelete(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        //
+        return false;
     }
 }

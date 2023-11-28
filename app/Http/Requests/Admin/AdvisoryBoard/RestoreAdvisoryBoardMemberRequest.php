@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\AdvisoryBoardMember;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -12,6 +13,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class RestoreAdvisoryBoardMemberRequest extends FormRequest
 {
 
+    use FailedAuthorization;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -19,7 +22,7 @@ class RestoreAdvisoryBoardMemberRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('restore', AdvisoryBoard::find($this->member->advisory_board_id));
+        return $this->user()->can('restore', $this->member);
     }
 
     /**

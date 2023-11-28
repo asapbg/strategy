@@ -143,7 +143,8 @@
 
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
                             <div class="row align-items-center justify-content-between mb-4">
-                                <div class="col-md-3">
+                                <div class="col-auto">
+                                    <h3>{{ trans_choice('custom.section', 1) }}</h3>
                                 </div>
 
                                 <div class="col-auto">
@@ -158,13 +159,82 @@
                                         @foreach($functions as $function)
                                             <div class="row mb-3">
                                                 <div class="col-12">
-                                                    <label>{{ __('custom.description') }} ({{ Str::upper($function['locale']) }})</label>
+                                                    <label>{{ __('custom.description') }}
+                                                        ({{ Str::upper($function['locale']) }})</label>
                                                     {!! $function->description !!}
                                                 </div>
                                             </div>
                                         @endforeach
                                     @endif
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <hr/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-auto">
+                                <h3>{{ trans_choice('custom.files', 2) }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>{{ __('custom.name') }}</th>
+                                        <th>{{ __('custom.description') }}</th>
+                                        <th>{{ __('validation.attributes.created_at') }}</th>
+                                        <th>{{ __('custom.actions') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if(isset($files) && $files->count() > 0)
+                                        @foreach($files as $file)
+                                            <tr>
+                                                <td>{{ $file->id }}</td>
+                                                <td>{{ $file->custom_name ?? $file->filename }}</td>
+                                                <td>{{ $file->description }}</td>
+                                                <td>{{ $file->created_at }}</td>
+                                                <td>
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto">
+                                                            @can('view', $item)
+                                                                <div class="row">
+                                                                    <div class="col-auto">
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-outline-info preview-file-modal mr-2"
+                                                                                data-file="{{ $file->id }}"
+                                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}">
+                                                                            {!! fileIcon($file->content_type) !!}
+                                                                            {{ __('custom.preview') }}
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <div class="col-auto">
+                                                                        <a class="btn btn-sm btn-info mr-2"
+                                                                           href="{{ route('admin.download.file', $file) }}"
+                                                                           target="_blank"
+                                                                           title="{{ __('custom.download') }}">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            @endcan
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

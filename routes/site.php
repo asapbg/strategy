@@ -8,6 +8,10 @@ Route::get('/', function () {
     return view('site.home');
 })->name('home');
 
+Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
+    Route::get('', 'index')->name('advisory-boards.index');
+});
+
 Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {
     Route::get('/archive', 'index')->name('archive.index');
 });

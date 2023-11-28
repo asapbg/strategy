@@ -418,7 +418,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/reports/store', 'store')->name('reports.store');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
         Route::get('', 'index')->name('advisory-boards.index');
         Route::get('/create', 'create')->name('advisory-boards.create');
         Route::post('/store', 'store')->name('advisory-boards.store');
@@ -429,7 +429,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{item}/restore', 'restore')->name('advisory-boards.restore')->withTrashed();
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
         Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.members.store');
         Route::get('{member}/edit', 'ajaxEdit')->name('advisory-boards.members.edit');
         Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.members.update');
@@ -437,11 +437,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{member}/restore', 'restore')->name('advisory-boards.members.restore')->withTrashed();
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {
         Route::post('/store', 'store')->name('advisory-boards.function.store');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoardFunctionFileController::class)->prefix('/advisory-boards/{item}/function/file')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionFileController::class)->prefix('/advisory-boards/{item}/function/file')->group(function () {
         Route::post('/ajax-store',      'ajaxStore')    ->name('advisory-boards.function.file.store');
         Route::get('{file}/edit',       'ajaxEdit')     ->name('advisory-boards.function.file.edit');
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.function.file.update');

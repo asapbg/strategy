@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardRequest;
@@ -29,6 +30,8 @@ class AdvisoryBoardController extends AdminController
      */
     public function index(): View
     {
+        $this->authorize('viewAny', AdvisoryBoard::class);
+
         $items = AdvisoryBoard::withTrashed()->with(['policyArea'])->orderBy('id', 'desc')->paginate(10);
 
         return $this->view('admin.advisory-boards.index', compact('items'));
@@ -41,6 +44,8 @@ class AdvisoryBoardController extends AdminController
      */
     public function create(): View
     {
+        $this->authorize('create', AdvisoryBoard::class);
+
         $item = new AdvisoryBoard();
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
@@ -92,10 +97,13 @@ class AdvisoryBoardController extends AdminController
      */
     public function show(AdvisoryBoard $item)
     {
+        $this->authorize('view', $item);
+
         $members = $item->members;
         $functions = $item->advisoryFunction?->translations;
+        $files = File::query()->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
 
-        return $this->view('admin.advisory-boards.view', compact('item', 'members', 'functions'));
+        return $this->view('admin.advisory-boards.view', compact('item', 'members', 'functions', 'files'));
     }
 
     /**
@@ -107,6 +115,8 @@ class AdvisoryBoardController extends AdminController
      */
     public function edit(AdvisoryBoard $item): View
     {
+        $this->authorize('update', $item);
+
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
