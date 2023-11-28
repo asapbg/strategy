@@ -513,4 +513,23 @@ if (!function_exists('optionsUserTypes')) {
             return strip_tags($html_string);
         }
     }
+
+    if (!function_exists('paginationSelect')) {
+
+        /**
+         * return pagination options
+         *
+         * @return array
+         */
+        function paginationSelect()
+        {
+            return $options = [
+                ['value' => 1, 'name' => 10],
+                ['value' => 20, 'name' => 20],
+                ['value' => 30, 'name' => 30],
+                ['value' => 40, 'name' => 40],
+                ['value' => 50, 'name' => 50],
+            ];
+        }
+    }
 }

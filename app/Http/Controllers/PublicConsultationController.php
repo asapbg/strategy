@@ -15,12 +15,37 @@ class PublicConsultationController extends Controller
     public function index(Request $request)
     {
         $requestFilter = $request->all();
+        //Filter
         $filter = $this->filters($request);
-        $paginate = $filter['paginate'] ?? PublicConsultation::PAGINATE;
-//        return $this->view('templates.public_consultation_list');
-        $pk = PublicConsultation::Active()->with(['translation'])->FilterBy($requestFilter)->paginate($paginate);
+
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+//dd($sort, $sortOrd);
+        $paginate = $requestFilter['paginate'] ?? PublicConsultation::PAGINATE;
+        $pk = PublicConsultation::select('public_consultation.*')
+            ->Active()
+            ->with(['translation'])
+            ->join('public_consultation_translations', function ($j){
+                $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                    ->where('public_consultation_translations.locale', '=', app()->getLocale());
+            })
+            ->join('act_type', 'act_type.id', '=', 'public_consultation.act_type_id')
+            ->join('act_type_translations', function ($j){
+                $j->on('act_type_translations.act_type_id', '=', 'act_type.id')
+                    ->where('act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->join('field_of_actions', 'field_of_actions.id', '=', 'public_consultation.field_of_actions_id')
+            ->join('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
+            ->paginate($paginate);
         $pageTitle = __('site.menu.public_consultation');
-        return $this->view('site.public_consultations.index', compact('filter', 'pk', 'pageTitle'));
+        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -64,6 +89,17 @@ class PublicConsultationController extends Controller
         }
     }
 
+    private function sorters()
+    {
+        return array(
+            'regNum' => ['class' => 'col-md-2', 'label' => __('custom.number')],
+            'actType' => ['class' => 'col-md-3', 'label' => __('site.public_consultation.type_consultation')],
+            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'title' => ['class' => 'col-md-2', 'label' => __('custom.title')],
+            'date' => ['class' => 'col-md-2', 'label' => __('custom.date')],
+        );
+    }
+
     private function filters($request)
     {
         return array(
@@ -78,7 +114,16 @@ class PublicConsultationController extends Controller
                 'label' => __('custom.consultation_number_'),
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
-            )
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? PublicConsultation::PAGINATE,
+                'col' => 'col-md-3'
+            ),
         );
     }
 }

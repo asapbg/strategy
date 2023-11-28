@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consultations\OperationalProgram;
+use App\Models\LegalActType;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class OperationalProgramController extends Controller
@@ -16,7 +18,19 @@ class OperationalProgramController extends Controller
         $items = OperationalProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.menu.op');
-        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent'));
+
+        $menuCategories = [];
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)->get();
+        if( $actTypes->count() ) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories'));
     }
 
     public function show(Request $request, int $id = 0)

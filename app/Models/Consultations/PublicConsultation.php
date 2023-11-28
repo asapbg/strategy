@@ -85,11 +85,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     }
 
     public function scopeActive($query){
-        $query->where('active', 1);
+        $query->where('public_consultation.active', 1);
     }
 
     public function scopeEnded($query){
-        $query->where('open_to', '<', Carbon::now()->format('Y-m-d'));
+        $query->where('public_consultation.open_to', '<', Carbon::now()->format('Y-m-d'));
     }
 
     protected function openFrom(): Attribute

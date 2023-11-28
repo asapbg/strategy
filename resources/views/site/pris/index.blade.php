@@ -7,40 +7,7 @@
 
         <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5" >
             @include('site.partial.filter')
-            <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
-                <div class="col-md-2">
-                    <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i> Категория
-                    </p>
-                </div>
-                <div class="col-md-2 cursor-pointer ">
-                    <p class="mb-0">
-                        <i class="fa-solid fa-sort me-2"></i>Вносител
-                    </p>
-                </div>
-
-
-                <div class="col-md-2">
-                    <p class="mb-0 cursor-pointer">
-                        <i class="fa-solid fa-sort me-2"></i>Дата
-                    </p>
-                </div>
-                <div class="col-md-2">
-                    <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i>Номер
-                    </p>
-                </div>
-                <div class="col-md-2">
-                    <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i>Заглавие
-                    </p>
-                </div>
-                <div class="col-md-2">
-                    <p class="mb-0 cursor-pointer ">
-                        <i class="fa-solid fa-sort me-2"></i>Основание
-                    </p>
-                </div>
-            </div>
+            @include('site.partial.sorter')
 
             <div class="row mb-2">
                 <div class="col-12 mt-2">
