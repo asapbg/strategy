@@ -77,6 +77,7 @@ class PollController extends Controller
                 }
             }
             $userPoll->answers()->attach($answers);
+            $poll->has_entry = 1;
             DB::commit();
             return redirect(url()->previous())->with('success', __('messages.poll_save_success'));
         } catch (\Exception $e) {
