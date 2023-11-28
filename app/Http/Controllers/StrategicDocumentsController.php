@@ -25,6 +25,7 @@ class StrategicDocumentsController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
+
         $this->title_singular = trans('custom.strategic_documents_title');
     }
 
