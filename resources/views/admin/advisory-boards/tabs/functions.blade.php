@@ -50,7 +50,21 @@
 
         <div class="row justify-content-between align-items-center">
             <div class="col-auto">
-                <h3>{{ trans_choice('custom.files', 2) }}</h3>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h3>{{ trans_choice('custom.files', 2) }}</h3>
+                    </div>
+
+                    <div class="col-auto">
+                        <div class="custom-control custom-switch">
+                            @php $checked = request()->get('show_deleted_files', '0') == '1' ? 'checked' : '' @endphp
+                            <input type="checkbox" class="custom-control-input"
+                                   id="show-deleted" {{ $checked }}>
+                            <label class="custom-control-label"
+                                   for="show-deleted">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-auto">
@@ -137,12 +151,12 @@
                                             @endcan
 
                                             @can('restore', $item)
-                                                @if($item->deleted_at)
+                                                @if($file->deleted_at)
                                                     <a href="javascript:;"
                                                        class="btn btn-sm btn-success js-toggle-restore-resource-modal"
                                                        data-target="#modal-restore-resource"
                                                        data-resource-id="{{ $item->id }}"
-                                                       data-resource-restore-url="{{ route('admin.advisory-boards.restore', $item) }}"
+                                                       data-resource-restore-url="{{ route('admin.advisory-boards.function.file.restore', ['item' => $item, 'file' => $file]) }}"
                                                        data-toggle="tooltip"
                                                        title="{{__('custom.restore')}}">
                                                         <i class="fa fa-plus"></i>
@@ -161,3 +175,19 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        document.querySelector('#show-deleted').addEventListener('change', function () {
+            const url = @json(url()->current());
+            const after_url = '#functions';
+
+            if (this.checked) {
+                window.location = url + '?show_deleted_files=1' + after_url;
+                return;
+            }
+
+            window.location = url + after_url;
+        })
+    </script>
+@endpush

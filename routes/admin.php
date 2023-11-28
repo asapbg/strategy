@@ -446,5 +446,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('{file}/edit',       'ajaxEdit')     ->name('advisory-boards.function.file.edit');
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.function.file.update');
         Route::post('{file}/delete',    'destroy')      ->name('advisory-boards.function.file.delete');
+        Route::post('{file}/restore',   'restore')      ->name('advisory-boards.function.file.restore')->withTrashed();
     });
 });

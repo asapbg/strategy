@@ -203,7 +203,6 @@
             const url = @json(url()->current());
 
             document.querySelector('#show-deleted').addEventListener('change', function () {
-                console.log(this, this.value, this.checked, url);
                 if (this.checked) {
                     window.location = url + '?show_deleted_comments=1';
                     return;

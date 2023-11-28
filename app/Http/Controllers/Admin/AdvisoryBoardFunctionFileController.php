@@ -6,34 +6,15 @@ use App\Enums\DocTypesEnum;
 use App\Http\Requests\StoreAdvisoryBoardFunctionFileRequest;
 use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardFunctionFileController extends AdminController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -64,23 +45,11 @@ class AdvisoryBoardFunctionFileController extends AdminController
 
             DB::commit();
             return response()->json(['status' => 'success']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\AdvisoryBoardFunctionFile $advisoryBoardFunctionFile
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AdvisoryBoardFunctionFile $advisoryBoardFunctionFile)
-    {
-        //
     }
 
     /**
@@ -130,7 +99,7 @@ class AdvisoryBoardFunctionFileController extends AdminController
 
             DB::commit();
             return response()->json(['status' => 'success']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
@@ -156,7 +125,32 @@ class AdvisoryBoardFunctionFileController extends AdminController
 
             return redirect()->to($route)
                 ->with('success', __('custom.file') . " $file_name " . __('messages.deleted_successfully_m'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect($route)->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param AdvisoryBoard $item
+     * @param File          $file
+     *
+     * @return RedirectResponse
+     */
+    public function restore(AdvisoryBoard $item, File $file)
+    {
+        $route = route('admin.advisory-boards.edit', $item) . '?show_deleted_files=1#functions';
+
+        try {
+            $file_name = $file->custom_name ?? $file->filename;
+
+            $file->restore();
+
+            return redirect()->to($route)
+                ->with('success', __('custom.file') . " $file_name " . __('messages.restored_successfully_m'));
+        } catch (Exception $e) {
             Log::error($e);
             return redirect($route)->with('danger', __('messages.system_error'));
         }

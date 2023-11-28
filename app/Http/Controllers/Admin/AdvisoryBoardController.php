@@ -114,7 +114,13 @@ class AdvisoryBoardController extends AdminController
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
-        $files = File::where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
+
+        $files = File::query()
+            ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])
+            ->get();
 
         return $this->view(
             'admin.advisory-boards.edit',
