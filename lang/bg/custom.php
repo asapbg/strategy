@@ -567,4 +567,6 @@ return [
     'strategic_documents_title' => 'Стратегически документи',
     'valid_from' => 'Валидна от',
     'valid_to'  => 'Валидна до',
+    'main_information'  => 'Основна информация',
+    'main_file'  => 'Основен файл',
 ];

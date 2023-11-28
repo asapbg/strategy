@@ -155,7 +155,6 @@ class StrategicDocumentsController extends AdminController
             try {
                 $fileService = app(FileService::class);
                 $validated = $fileService->prepareMainFileFields($validated);
-
                 $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
                 $enFile =  Arr::get($validated, 'file_strategic_documents_en');
 
@@ -167,6 +166,10 @@ class StrategicDocumentsController extends AdminController
                     if ($mainFile) {
                         $validated = $fileService->prepareMainFileFields($validated);
                         $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $mainFile, $validated);
+                        $mainFile->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file_main_id');
+                        $validAt = Arr::get($validated, 'valid_at_main');
+                        $mainFile->valid_at = $validAt ? Carbon::parse($validAt) : null;
+                        $mainFile->save();
                     }
                 }
             } catch (\Throwable $throwable) {

@@ -33,11 +33,13 @@ class StoreStrategicDocumentRequest extends FormRequest
             'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
             'policy_area_id' => ['required', 'numeric', 'exists:policy_area,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
             'public_consultation_id' => ['required', 'numeric'],
             'active' => ['required', 'numeric', 'in:0,1'],
-            'valid_at_main' => ['required', 'date'],
+            //'valid_at_main' => ['required', 'date'],
+            'valid_at_main' => ['required_if:date_valid_indefinite_main,0', 'date', 'nullable'],
             'pris_act_id' => ['required_if:strategic_act_link,null'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
             'strategic_act_link' => ['required_if:pris_act_id,null'],
@@ -102,6 +104,7 @@ class StoreStrategicDocumentRequest extends FormRequest
     {
         return [
             'document_date_expiring.required_if' => 'Полето ":attribute" е задължително, когато датата на изтичане не е неограничена.',
+            'valid_at_main.required_if' => 'Полето ":attribute" е задължително, когато датата на изтичане не е неограничена.',
         ];
     }
 }
