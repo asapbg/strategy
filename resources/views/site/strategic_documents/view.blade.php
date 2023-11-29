@@ -102,7 +102,8 @@
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
                     <div class="mb-2 fs-18">
                         <span>{{ $strategicDocument->strategicActType->name }}</span>
-                        @if ($strategicDocument->pris?->doc_num)
+                        @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
+                            {{ $strategicDocument->pris?->doc_num }}
                             <a href="{{ route('pris.view', [$strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
                                 {{ $strategicDocument->pris?->doc_num }}
                             </a>

@@ -470,6 +470,36 @@ class StrategicDocumentsController extends AdminController
     }
 
     /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function prisDetails($id)
+    {
+        try {
+            $pris = Pris::findOrFail($id);
+
+            return response()->json(['date' => $pris->doc_date, 'public_consultation_id' => $pris->public_consultation_id]);
+        } catch (\Throwable $throwable) {
+            return response()->json(['error' => 'Resource not found.'], 404);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function publicConsultationDetails($id)
+    {
+        try {
+            $publicConsultation = PublicConsultation::findOrFail($id);
+
+            return response()->json(['pris_act_id' => $publicConsultation->pris_act_id,]);
+        } catch (\Throwable $throwable) {
+            return response()->json(['error' => 'Resource not found.'], 404);
+        }
+    }
+
+    /**
      * @param int $id
      * @return RedirectResponse
      */
