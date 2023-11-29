@@ -137,6 +137,7 @@ class AdvisoryBoardController extends AdminController
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
+        $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
 
         $files = File::query()
             ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
@@ -156,7 +157,8 @@ class AdvisoryBoardController extends AdminController
                 'consultation_levels',
                 'members',
                 'function',
-                'files'
+                'files',
+                'authorities'
             )
         );
     }

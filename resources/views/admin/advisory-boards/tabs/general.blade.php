@@ -4,12 +4,43 @@
               id="form">
             @csrf
 
+            <!-- Областна Политика -->
+            <div class="row mb-4">
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="control-label" for="policy_area_id">
+                            {{ trans_choice('custom.field_of_actions', 1) }}
+                            <span class="required">*</span>
+                        </label>
+
+
+                        <select id="policy_area_id" name="policy_area_id"
+                                class="form-control form-control-sm select2-no-clear">
+                            <option value="">---</option>
+                            @if(isset($policy_areas) && $policy_areas->count() > 0)
+                                @foreach($policy_areas as $area)
+                                    @php $selected = old('policy_area_id', $item->policy_area_id ?? '') == $area->id ? 'selected' : '' @endphp
+
+                                    <option
+                                        value="{{ $area->id }}" {{ $selected }}>{{ $area->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+
+                        @error('policy_area_id')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- Име на съвет -->
             <div class="row mb-4">
                 @if($can_foreach_translations)
                     @foreach($item->translations as $translation)
                         <div class="col-md-6 col-12">
                             <div class="form-group">
-                                <label class="col-sm-12 control-label"
+                                <label class="control-label"
                                        for="name_{{ $translation->locale }}">{{ __('validation.attributes.advisory_name') }}
                                     ({{ Str::upper($translation->locale) }}) <span
                                         class="required">*</span></label>
@@ -28,88 +59,51 @@
                 @endif
             </div>
 
+            <!-- Наличие на представител на НПО в състава на съвета -->
+            <div class="row mb-4">
+                <div class="col-auto">
+                    <div class="form-check pl-4">
+                        @php $checked = old('has_npo_presence', $item->has_npo_presence) ? 'checked' : '' @endphp
+                        <input type="checkbox" name="has_npo_presence" class="form-check-input"
+                               id="npo_presence" {{ $checked }}>
+                        <label class="form-check-label font-weight-semibold" for="npo_presence">
+                            {{ __('custom.presence_npo_representative') }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Съветът е създаден към -->
             <div class="row mb-4">
                 <div class="col-md-6 col-12">
                     <div class="form-group">
-                        <label class="control-label" for="policy_area_id">
-                            {{ trans_choice('custom.field_of_actions', 1) }}
+                        <label class="control-label" for="authority_id">
+                            {{ trans_choice('validation.attributes.authority_id', 1) }}
                             <span class="required">*</span>
                         </label>
 
-                        <select id="policy_area_id" name="policy_area_id"
+
+                        <select id="authority_id" name="authority_id"
                                 class="form-control form-control-sm select2-no-clear">
                             <option value="">---</option>
-
-                            @if(isset($policy_areas) && $policy_areas->count() > 0)
-                                @foreach($policy_areas as $area)
-                                    @php $selected = old('policy_area_id', $item->policy_area_id ?? '') == $area->id ? 'selected' : '' @endphp
+                            @if(isset($authorities) && $authorities->count() > 0)
+                                @foreach($authorities as $authority)
+                                    @php $selected = old('authority_id', $item->authority_id) == $authority->id ? 'selected' : '' @endphp
 
                                     <option
-                                        value="{{ $area->id }}" {{ $selected }}>{{ $area->name }}</option>
+                                        value="{{ $authority->id }}" {{ $selected }}>{{ $authority->name }}</option>
                                 @endforeach
                             @endif
                         </select>
 
-                        @error('policy_area_id')
+                        @error('authority_id')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
             </div>
 
-            <div class="row mb-4">
-                <div class="col-md-6 col-12">
-                    <div class="form-group">
-                        <label class="control-label" for="advisory_chairman_type_id">
-                            {{ trans_choice('validation.attributes.council_attached_to', 1) }}
-                            <span class="required">*</span>
-                        </label>
-
-
-                        <select id="advisory_chairman_type_id" name="advisory_chairman_type_id"
-                                class="form-control form-control-sm select2-no-clear">
-                            <option value="">---</option>
-                            @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
-                                @foreach($advisory_chairman_types as $type)
-                                    @php $selected = old('advisory_chairman_type_id', $item->advisory_chairman_type_id ?? '') == $type->id ? 'selected' : '' @endphp
-
-                                    <option
-                                        value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-
-                        @error('advisory_chairman_type_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="row">
-                        @if($can_foreach_translations)
-                            @foreach($item->translations as $translation)
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                               for="advisory_specific_name_{{ $translation->locale }}">
-                                            {{ trans_choice('validation.attributes.specific_name', 1) }}
-                                            ({{ Str::upper($translation->locale) }})
-                                        </label>
-
-                                        <input type="text"
-                                               id="advisory_specific_name_{{ $translation->locale }}"
-                                               name="advisory_specific_name_{{ $translation->locale }}"
-                                               class="form-control form-control-sm"
-                                               value="{{ old('advisory_specific_name_' . $translation->locale, $translation->advisory_specific_name ?? '') }}"/>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            </div>
-
+            <!-- Акт на създаване -->
             <div class="row mb-4">
                 <div class="col-md-6 col-12">
                     <div class="form-group">
@@ -137,32 +131,39 @@
                         @enderror
                     </div>
                 </div>
+            </div>
 
-                <div class="col-12">
-                    <div class="row">
-                        @if($can_foreach_translations)
-                            @foreach($item->translations as $translation)
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                               for="advisory_act_specific_name_{{ $translation->locale }}">
-                                            {{ trans_choice('validation.attributes.specific_name', 1) }}
-                                            ({{ Str::upper($translation->locale) }})
-                                        </label>
+            <!-- Председател -->
+            <div class="row mb-4">
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="control-label" for="advisory_chairman_type">
+                            {{ trans_choice('validation.attributes.advisory_chairman_type_id', 1) }}
+                            <span class="required">*</span>
+                        </label>
 
-                                        <input type="text"
-                                               id="advisory_act_specific_name_{{ $translation->locale }}"
-                                               name="advisory_act_specific_name_{{ $translation->locale }}"
-                                               class="form-control form-control-sm"
-                                               value="{{ old('advisory_act_specific_name_' . $translation->locale, $translation->advisory_act_specific_name ?? '') }}"/>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+
+                        <select id="advisory_chairman_type" name="advisory_chairman_type_id"
+                                class="form-control form-control-sm select2-no-clear">
+                            <option value="">---</option>
+                            @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
+                                @foreach($advisory_chairman_types as $type)
+                                    @php $selected = old('advisory_chairman_type_id', $item->advisory_chairman_type_id) == $type->id ? 'selected' : '' @endphp
+
+                                    <option
+                                        value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+
+                        @error('advisory_chairman_type_id')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
 
+            <!-- Регламентиран брой заседания на година -->
             <div class="row mb-4">
                 <div class="col-md-6 col-12">
                     <div class="form-group">
@@ -178,59 +179,6 @@
                         @error('meetings_per_year')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-md-6 col-12">
-                    <div class="form-group">
-                        <label class="control-label" for="report_institution_id">
-                            {{ trans_choice('validation.attributes.report_at', 1) }}
-                            <span class="required">*</span>
-                        </label>
-
-
-                        <select id="report_institution_id" name="report_institution_id"
-                                class="form-control form-control-sm select2-no-clear">
-                            <option value="">---</option>
-                            @if(isset($institutions) && $institutions->count() > 0)
-                                @foreach($institutions as $institution)
-                                    @php $selected = old('report_institution_id', $item->report_institution_id ?? '') == $institution->id ? 'selected' : '' @endphp
-
-                                    <option
-                                        value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-
-                        @error('report_institution_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="row">
-                        @if($can_foreach_translations)
-                            @foreach($item->translations as $translation)
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                               for="report_institution_specific_name_{{ $translation->locale }}">
-                                            {{ trans_choice('validation.attributes.specific_name', 1) }}
-                                            ({{ Str::upper($translation->locale) }})
-                                        </label>
-
-                                        <input type="text"
-                                               id="report_institution_specific_name_{{ $translation->locale }}"
-                                               name="report_institution_specific_name_{{ $translation->locale }}"
-                                               class="form-control form-control-sm"
-                                               value="{{ old('report_institution_specific_name_' . $translation->locale, $translation->report_institution_specific_name ?? '') }}"/>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
                     </div>
                 </div>
             </div>
