@@ -51,40 +51,43 @@
                                             <div class="col-12">
                                             <span
                                                 class="fw-bold">{{ trans_choice('custom.field_of_actions', 1) }}:</span>
-                                                {{ $item->policyArea->name }}
+                                                {{ $item->policyArea?->name }}
                                             </div>
 
                                             <div class="col-12">
-                                        <span
-                                            class="fw-bold">{{ __('validation.attributes.council_attached_to') }}:</span>
-                                                {{ $item->advisoryChairmanType->name . ($item->advisory_specific_name ? ', ' : '' ) }}
-                                                @if($item->advisory_specific_name)
-                                                    {{ $item->advisory_specific_name }}
-                                                @endif
+                                                <span
+                                                    class="fw-bold">{{ __('custom.presence_npo_representative') }}:</span>
+                                                {{ $item->has_npo_presence ? __('custom.yes') : __('custom.no') }}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <span
+                                                    class="fw-bold">{{ __('validation.attributes.authority_id') }}:</span>
+                                                {{ $item->authority?->name . ($item->advisory_specific_name ? ', ' : '' ) }}
                                             </div>
 
                                             <div class="col-12">
                                             <span
                                                 class="fw-bold">{{ __('validation.attributes.act_of_creation') }}:</span>
-                                                {{ $item->advisoryActType->name . ($item->advisory_act_specific_name ? ', ' : '') }}
-                                                @if($item->advisory_act_specific_name)
-                                                    {{ $item->advisory_act_specific_name }}
-                                                @endif
+                                                {{ $item->advisoryActType?->name . ($item->advisory_act_specific_name ? ', ' : '') }}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <span
+                                                    class="fw-bold">{{ trans_choice('validation.attributes.advisory_chairman_type_id', 1) }}:</span>
+                                                {{ $item->advisoryChairmanType?->name }}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <span
+                                                    class="fw-bold">{{ __('validation.attributes.vice_chairman') }}:</span>
+                                                {{ $item->hasViceChairman ? __('custom.yes') : __('custom.no') }}
                                             </div>
 
                                             <div class="col-12">
                                             <span
                                                 class="fw-bold">{{ __('validation.attributes.meetings_per_year') }}:</span>
                                                 {{ $item->meetings_per_year }}
-                                            </div>
-
-                                            <div class="col-12">
-                                                <span
-                                                    class="fw-bold">{{ __('validation.attributes.report_at') }}:</span>
-                                                {{ $item->reportInstitution->name . ($item->report_institution_specific_name ? ', ' : '') }}
-                                                @if($item->report_institution_specific_name)
-                                                    {{ $item->report_institution_specific_name }}
-                                                @endif
                                             </div>
                                         </div>
                                     </div>

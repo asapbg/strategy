@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -40,16 +41,31 @@ class AdvisoryBoard extends Model
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id'];
 
     public function advisoryFunction(): HasOne
     {
         return $this->hasOne(AdvisoryBoardFunction::class);
     }
 
-    public function reportInstitution(): BelongsTo
+    protected function hasViceChairman(): Attribute
     {
-        return $this->belongsTo(Institution::class, 'report_institution_id');
+        return Attribute::make(
+            get: function () {
+                if ($this->members->count() > 0) {
+                    $found = $this->members->first(fn($member) => $member->advisory_chairman_type_id === AdvisoryChairmanType::VICE_CHAIRMAN);
+
+                    return !is_null($found);
+                }
+
+                return false;
+            }
+        );
+    }
+
+    public function authority(): BelongsTo
+    {
+        return $this->belongsTo(AuthorityAdvisoryBoard::class);
     }
 
     public function members(): HasMany
@@ -86,18 +102,6 @@ class AdvisoryBoard extends Model
             'name' => [
                 'type' => 'string',
                 'rules' => ['required'],
-            ],
-            'advisory_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
-            ],
-            'advisory_act_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
-            ],
-            'report_institution_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
             ],
         ];
     }

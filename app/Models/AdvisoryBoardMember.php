@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int    $advisory_board_id
+ * @property int    $advisory_type_id
+ * @property int    $advisory_chairman_type_id
  * @property string $name
  *
  * @method static find(bool|float|int|string|null $get)
@@ -21,7 +23,7 @@ class AdvisoryBoardMember extends Model
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_members');
-    const TRANSLATABLE_FIELDS = ['name', 'job'];
+    const TRANSLATABLE_FIELDS = ['member_name', 'member_job', 'member_notes'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
@@ -52,13 +54,17 @@ class AdvisoryBoardMember extends Model
     public static function translationFieldsProperties(): array
     {
         return [
-            'name' => [
+            'member_name' => [
                 'type' => 'string',
                 'rules' => ['required'],
             ],
-            'job' => [
+            'member_job' => [
                 'type' => 'string',
                 'rules' => ['nullable'],
+            ],
+            'member_notes' => [
+                'type' => 'string',
+                'rules' => ['nullable']
             ],
         ];
     }

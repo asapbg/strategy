@@ -575,5 +575,7 @@ return [
     'public_consultation_link_missing'   => 'Няма връзка с обществена консултация',
     'strategic_document_link_missing'   => 'Няма връзка с друг стратегически документ',
     'date_indefinite_name'      => 'Безсрочна',
+    'presence_npo_representative' => 'Наличие на представител на НПО в състава на съвета',
+    'names_jobs_organization' => 'имена, длъжност, организация',
     'parent_strategic_document' =>  'Родителски документ',
 ];
