@@ -5,7 +5,7 @@
             @if($item->pollsInPeriod->count())
                 @foreach($item->pollsInPeriod as $poll)
                     @if($poll->questions->count())
-                        <form class="row" action="{{ route('poll.store') }}" method="post">
+                        <form class="row mb-3" action="{{ route('poll.store') }}" method="post">
                             @csrf
                             <input type="hidden" name="id" value="{{ $poll->id }}">
                             @if(!$loop->first)

@@ -27,13 +27,15 @@ class StorePollRequest extends FormRequest
     {
         $rules = [
             'id' => ['sometimes', 'numeric'],
+            'pc' => ['nullable'],
             'name' => ['required', 'max:255'],
             'start_date' => ['required', 'date_format:'.config('app.date_format')],
             'end_date' => ['nullable', 'date_format:'.config('app.date_format')],
             'is_once' => ['nullable', 'numeric'],
             'only_registered' => ['nullable', 'numeric'],
             'stay' => ['nullable', 'numeric'],
-            'status' => ['required', 'numeric', 'in:0,1']
+            'status' => ['required', 'numeric', 'in:0,1'],
+            'save_to_pc' => ['nullable', 'numeric']
         ];
 
         if( !empty($this->request->get('start_date')) && !empty($this->request->get('end_date')) ) {

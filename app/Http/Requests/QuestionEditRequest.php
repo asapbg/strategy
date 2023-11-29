@@ -30,6 +30,7 @@ class QuestionEditRequest extends FormRequest
             'answer_name.*' => ['required', 'string', 'max:255'],
             'answer_id' => ['required', 'array', 'min:2'],
             'answer_id.*' => ['required', 'numeric'],
+            'pc' => ['nullable', 'exists:public_consultation,id'],
         ];
     }
 }

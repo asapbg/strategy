@@ -1,3 +1,8 @@
+<div class="row mb-3">
+    <div class="col-md-3">
+        <a class="btn btn-sm btn-success" type="submit" href="{{ route('admin.polls.edit', ['id' => 0]).'?pc='.$item->id }}"><i class="fas fa-plus mr-2"></i>{{ __('custom.create').' '.__('custom.new_f').' '.trans_choice('custom.polls', 1) }}</a>
+    </div>
+</div>
 <form class="row" action="{{ route('admin.consultations.public_consultations.poll.attach') }}" method="post">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
@@ -35,10 +40,10 @@
                         </td>
                         <td>
                             @can('update', $poll)
-                                <a href="{{ route('admin.polls.edit', ['id' => $poll->id]) }}"><i class="btn btn-sm btn-primary fas fa-edit"></i></a>
+                                <a href="{{ route('admin.polls.edit', ['id' => $poll->id]).'?pc='.$item->id }}"><i class="btn btn-sm btn-primary fas fa-edit"></i></a>
                             @endcan
                             @can('preview', $poll)
-                                <a href="{{ route('admin.polls.preview', $poll) }}"><i class="btn btn-sm btn-success fas fa-eye"></i></a>
+                                <a href="{{ route('admin.polls.preview', $poll).'?pc='.$item->id }}"><i class="btn btn-sm btn-success fas fa-eye"></i></a>
                             @endcan
                         </td>
                     </tr>

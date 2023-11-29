@@ -105,6 +105,98 @@
                 <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
                 <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/" target="_blank">Софтуерна разработка и поддръжка от ASAP</a>
             </div>
-          
       </div>
 </footer>
+
+<script>
+  /*Shrink navbar*/
+window.onscroll = function() {scrollFunction()};
+function scrollFunction() {
+
+  let navLink = document.querySelectorAll('nav.navbar a.nav-link'); 
+  let navItem = document.querySelectorAll('li.nav-item');
+  let navBar = document.querySelectorAll('nav.navbar');
+
+  if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+
+    if(document.getElementById("back-to-admin")){
+      document.getElementById("back-to-admin").style.fontSize = "14px";
+    } 
+
+    if(document.getElementById("profile-toggle")){
+      document.getElementById("profile-toggle").style.fontSize = "14px";
+    } 
+
+    if(document.getElementById("register-link")){
+      document.getElementById("register-link").style.fontSize = "14px";
+    } 
+
+    if(document.getElementById("login-btn")){
+      document.getElementById("login-btn").style.fontSize = "14px";
+    } 
+
+    if(document.getElementById("search-btn")){
+    document.getElementById("search-btn").style.fontSize = "14px";
+    document.getElementById("search-btn").style.height = "37px";
+    
+    } 
+
+    document.getElementById("siteLogo").style.width = "45px";
+    document.getElementById("ms").style.fontSize = "12px";
+    document.getElementById("ok").style.fontSize = "12px";
+          
+    navLink.forEach(function(link) {
+      link.style.fontSize = '14px';
+    });
+
+    navItem.forEach(function(item) {
+      item.style.padding = '2px 10px';
+    });
+
+    navBar.forEach(function(nav) {
+      nav.style.boxShadow = 'rgb(27 81 126 / 81%) 0px 1px 4px';
+    });
+  } 
+
+  else {
+
+    if(document.getElementById("profile-toggle")){
+      document.getElementById("profile-toggle").style.fontSize = "16px";
+    } 
+
+    if(document.getElementById("back-to-admin")){
+      document.getElementById("back-to-admin").style.fontSize = "16px";
+    } 
+
+   document.getElementById("siteLogo").style.width = "55px";
+    document.getElementById("ms").style.fontSize = "16px";
+    document.getElementById("ok").style.fontSize = "16px";  
+
+    if(document.getElementById("register-link")){
+      document.getElementById("register-link").style.fontSize = "16px";
+    } 
+
+    if(document.getElementById("login-btn")){
+      document.getElementById("login-btn").style.fontSize = "16px";
+    } 
+
+    if(document.getElementById("search-btn")){
+    document.getElementById("search-btn").style.fontSize = "16px";
+    document.getElementById("search-btn").style.height = "40px";
+    }   
+    
+    navLink.forEach(function(link) {
+      link.style.fontSize = '15px';
+    });
+
+    navItem.forEach(function(item) {
+      item.style.padding = '10px';
+    });
+
+    navBar.forEach(function(nav) {
+      nav.style.boxShadow = 'rgb(27 81 126) 0px 1px 4px';
+    });
+  }
+}
+/*End shrink*/
+</script>

@@ -307,7 +307,7 @@ return [
     'institutions'                    => 'Институция|Институции',
     'settlements'                     => 'Населени мсета|Населено място',
     'areas'                     => 'Област|Области',
-//    'news'                            => 'Новина|Новини',
+    'news'                            => 'Новина|Новини',
 //    'news_category'                   => 'Категория новини|Категории новини',
     'polls'                           => 'Анкета|Анкети',
     'publications'                    => 'Публикация|Публикации',
@@ -479,5 +479,7 @@ return [
     'loading' => 'Loading...',
     'function' => 'Function|Functions',
     'section' => 'Section|Sections',
-    'old_file_format' => 'Old file format. Information can not be displayed properly.'
+    'old_file_format' => 'Old file format. Information can not be displayed properly.',
+    'up_to_date_information' => 'Up to date information and events',
+    'type_of_governing' => 'Type of governing',
 ];

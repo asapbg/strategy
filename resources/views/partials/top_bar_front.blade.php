@@ -1,14 +1,14 @@
 <div id="topbar">
     <div class="container-fluid">
-        <div class="row top">
+        <div class="row top align-items-center">
             <div class="col-md-6 align-items-center d-flex">
                 <div class="contact-info d-flex w-100 align-items-center ">
                     <a class="navbar-brand logo-link pe-2" href="{{ route('home') }}">
                         <img src="/img/strategy-logo.svg" alt="Strategy Лого" id="siteLogo">
                     </a>
                     <div class="contact-info-text d-flex flex-column ps-2">
-                        <span class="main-color fw-600">Министерски съвет</span>
-                        <span class="fw-600">Портал за обществени консултации</span>
+                        <span class="main-color fw-600" id="ms">Министерски съвет</span>
+                        <span class="fw-600" id="ok">Портал за обществени консултации</span>
                     </div>
                 </div>
             </div>
@@ -26,10 +26,10 @@
                 <div class="auth d-flex justify-content-end">
                     @if(app('auth')->check())
                         @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
-                            <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2 me-2"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
+                            <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2 me-2" id="back-to-admin"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
                         @endif
                         <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" id="profile-toggle" type="button" id="profile-menu" data-toggle="dropdown" aria-expanded="false">
                                 @php($user = app('auth')->user())
                                 {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
                             </button>
@@ -61,9 +61,9 @@
                             </form> -->
 
 
-                            <a class="main-color me-3" href="{{ route('register') }}">{{ __('custom.register') }}</a>
-                            <a class="btn btn-primary me-3" href="{{ route('login') }}"><i class="login-icon fa-solid fa-right-to-bracket main-color"></i> {{ __('custom.login') }}</a>
-                            <a href="" class="cstm-btn btn btn-primary login-search d-flex align-items-center" style="height: 40px;"><i class="login-icon fas fa-search main-color"><span class="d-none">Search</span></i></a>
+                            <a class="main-color me-3" id="register-link" href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                            <a class="btn btn-primary me-3" id="login-btn" href="{{ route('login') }}"><i class="login-icon fa-solid fa-right-to-bracket main-color"></i> {{ __('custom.login') }}</a>
+                            <a href="" class="cstm-btn btn btn-primary login-search d-flex align-items-center" id="search-btn" style="height: 40px;"><i class="login-icon fas fa-search main-color"><span class="d-none">Search</span></i></a>
                         </div>
                     @endif
                 </div>

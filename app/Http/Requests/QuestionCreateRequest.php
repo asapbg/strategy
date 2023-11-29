@@ -28,6 +28,7 @@ class QuestionCreateRequest extends FormRequest
             'new_question_name' => ['required', 'string', 'max:255'],
             'new_answers' => ['required', 'array', 'min:2'],
             'new_answers.*' => ['required', 'string', 'max:255'],
+            'pc' => ['nullable', 'exists:public_consultation,id'],
         ];
     }
 }

@@ -24,7 +24,7 @@
 </head>
 
 <body>
-<header class="fixed-top">
+<header class="fixed-top" id="header-wrapper">
     @include('partials.top_bar_front')
     @include('partials.nav_bar_front')
 </header>

@@ -33,10 +33,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" type="button">
-                        Консултативни съвети
-                    </a>
-
+                    <a class="nav-link" href="{{ route('advisory-boards.index') }}" type="button">{{ trans_choice('custom.advisory_boards', 2) }}</a>
                 </li>
 
                 <li class="nav-item">

@@ -11,6 +11,14 @@
                             <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
+                                <input type="hidden" name="pc" value="{{ isset($pc) && $pc ? $pc->id : '0' }}">
+                                @if(isset($pc) && $pc)
+                                <div class="form-group row">
+                                    <div class="col-12 col-md-offset-3">
+                                        <a href="{{ route('admin.consultations.public_consultations.edit', $pc).'#ct-polls' }}" class="btn btn-sm btn-primary mb-2"><i class="fas fa-arrow-left mr-2" title="{{ __('custom.back') }}"></i>Обратно към консултацията</a>
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="form-group">
                                     <div class="row">
                                         <label class="col-sm-12 control-label" for="name">
@@ -30,7 +38,7 @@
                                             {{ __('custom.begin_date') }} <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" id="start_date" name="start_date" class="form-control form-control-sm datepicker @error('start_date') is-invalid @enderror" value="{{ old('start_date', isset($item) ? $item->start_date : \Carbon\Carbon::now()->format(config('app.date_format'))) }}">
+                                            <input type="text" id="start_date" name="start_date" class="form-control form-control-sm datepicker @error('start_date') is-invalid @enderror" value="{{ old('start_date',isset($pc) && $pc ? $pc->open_from : (isset($item) ? $item->start_date : \Carbon\Carbon::now()->format(config('app.date_format')))) }}" @if(isset($pc) && $pc) readonly @endif>
                                             @error('start_date')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -43,7 +51,7 @@
                                             {{ __('custom.end_date') }}
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" id="end_date" name="end_date" class="form-control form-control-sm datepicker @error('end_date') is-invalid @enderror" value="{{ old('end_date', isset($item) ? $item->end_date : '') }}">
+                                            <input type="text" id="end_date" name="end_date" class="form-control form-control-sm datepicker @error('end_date') is-invalid @enderror" value="{{ old('end_date', isset($pc) && $pc ? $pc->open_to : (isset($item) ? $item->end_date : '')) }}" @if(isset($pc) && $pc) readonly @endif>
                                             @error('end_date')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -70,9 +78,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group d-none">
                                     <label class="col-sm-12 control-label" for="is_once">
-                                        <input type="checkbox" id="is_once" name="is_once" class="checkbox" value="1" @if ($item->is_once) checked @endif>
+                                        <input type="checkbox" id="is_once" name="is_once" class="checkbox" value="1" checked>
                                         {{ __('validation.attributes.once') }}
                                     </label>
                                 </div>
@@ -84,10 +92,18 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <div class="col-md-6 col-md-offset-3">
-                                        <button id="save" type="submit" class="btn btn-sm btn-success">{{ __('custom.save') }}</button>
-                                        <button id="save" type="submit" name="stay" value="1" class="btn btn-sm btn-success">{{ __('custom.save_and_stay') }}</button>
-                                        <a href="{{ route('admin.links.index') }}" class="btn btn-sm btn-primary">{{ __('custom.cancel') }}</a>
+                                    <div class="col-12">
+                                        @if(isset($pc) && $pc)
+                                            <button id="save_to_pc" type="submit" name="save_to_pc" value="1" class="btn btn-sm btn-success mb-2"><i class="fas fa-arrow-left mr-2" title="{{ __('custom.back') }}"></i>Запази и Обратно към консултацията</button>
+                                        @else
+                                            <button id="save" type="submit" class="btn btn-sm btn-success mb-2">{{ __('custom.save') }}</button>
+                                        @endif
+                                        <button id="stay" type="submit" name="stay" value="1" class="btn btn-sm btn-success mb-2">{{ __('custom.save_and_stay') }}</button>
+                                        @if(isset($pc) && $pc)
+                                            <a href="{{ route('admin.consultations.public_consultations.edit', $pc).'#ct-polls' }}" class="btn btn-sm btn-primary mb-2"><i class="fas fa-arrow-left mr-2" title="{{ __('custom.back') }}"></i>Обратно към консултацията</a>
+                                        @else
+                                            <a href="{{ route('admin.links.index') }}" class="btn btn-sm btn-primary mb-2">{{ __('custom.cancel') }}</a>
+                                        @endif
                                     </div>
                                 </div>
                             </form>
@@ -97,6 +113,7 @@
                                 <form action="{{ route('admin.polls.question.create') }}" method="post" id="new-question">
                                     @csrf
                                     <input type="hidden" value="{{ $item->id }}" name="poll_id">
+                                    <input type="hidden" name="pc" value="{{ isset($pc) && $pc ? $pc->id : '0' }}">
                                     <div class="form-group">
                                         <div class="row">
                                             <label class="col-sm-12 control-label" for="new_question_name">
@@ -139,6 +156,7 @@
                                         <form action="{{ route('admin.polls.question.edit') }}" method="post" class="mb-5" class="question">
                                             @csrf
                                             <input type="hidden" value="{{ $q->id }}" name="question_id">
+                                            <input type="hidden" name="pc" value="{{ isset($pc) && $pc ? $pc->id : '0' }}">
                                             @endif
                                             <div class="form-group">
                                                 <div class="row">
@@ -161,8 +179,8 @@
                                                         <input type="hidden" value="{{ $a->id }}" name="answer_id[]">
                                                         <input type="text" maxlength="255" name="answer_name[]" class="form-control" placeholder="{{ __('custom.answer') }}" value="{{ $a->name }}" required>
                                                         <span class="input-group-append">
-                                                        <button type="button" class="btn btn-outline-danger btn-flat remove-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button>
-                                                    </span>
+                                                            <button type="button" class="btn btn-outline-danger btn-flat remove-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button>
+                                                        </span>
                                                     </div>
                                                 @endforeach
                                             @endif

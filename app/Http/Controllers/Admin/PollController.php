@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\QuestionCreateRequest;
 use App\Http\Requests\QuestionEditRequest;
 use App\Http\Requests\StorePollRequest;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\Poll;
 use App\Models\PollAnswer;
 use App\Models\PollQuestion;
@@ -55,6 +56,8 @@ class PollController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
+        $pc = $request->filled('pc') ? PublicConsultation::find((int)$request->input('pc')) : null;
+
         $item = $this->getRecord($id);
 
         if( ($id && $request->user()->cannot('update', $item))
@@ -64,14 +67,24 @@ class PollController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
 
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName'));
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'pc'));
     }
 
     public function store(StorePollRequest $request)
+//    public function store(Request $request)
     {
+//        $r = new StorePollRequest();
+//        $v = Validator::make($request->all(), $r->rules());
+//        if($v->fails()) {
+//            dd($v->errors());
+//        }
+
         $validated = $request->validated();
         $id = $validated['id'];
         $stay = $validated['stay'] ?? 0;
+        $saveToPc = $validated['save_to_pc'] ?? 0;
+        $pc = isset($validated['pc']) && $validated['pc'] ? PublicConsultation::find((int)$validated['pc']) : null;
+        unset($validated['pc'], $validated['save_to_pc']);
 
         $item = $id ? $this->getRecord($id) : new Poll();
 
@@ -89,7 +102,7 @@ class PollController extends AdminController
             unset($validated['id']);
             unset($validated['stay']);
             $item->fill($validated);
-            $item->status = (int)($request->filled('status'));
+            $item->status = (int)($request->input('status'));
             $item->is_once = (int)($request->filled('is_once'));
             $item->only_registered = (int)($request->filled('only_registered'));
             if( !$id ){
@@ -97,9 +110,16 @@ class PollController extends AdminController
             }
             $item->save();
 
+            if($pc) {
+                $item->consultations()->syncWithoutDetaching([$pc->id]);
+            }
+
             DB::commit();
             if( $stay ) {
-                return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]) )
+                return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]).(isset($pc) && $pc ? '?pc='.$pc->id : '') )
+                    ->with('success', trans_choice('custom.polls', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+            } elseif ($saveToPc) {
+                return redirect(route('admin.consultations.public_consultations.edit', $pc).'#ct-polls' )
                     ->with('success', trans_choice('custom.polls', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
 
@@ -121,6 +141,7 @@ class PollController extends AdminController
         }
         $validated = $validator->validated();
         $poll = $this->getRecord($validated['poll_id']);
+        $pc = isset($validated['pc']) && $validated['pc'] ? PublicConsultation::find((int)$validated['pc']) : null;
 
         if( $request->user()->cannot('update', $poll) ) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -138,7 +159,7 @@ class PollController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, ['id' => $validated['poll_id']]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.created_successfully_m'));
+            return redirect(route(self::EDIT_ROUTE, ['id' => $validated['poll_id']]).( $pc ? '?pc='.$pc->id : ''))->with('success', trans_choice('custom.questions', 1).' '.__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error('Create question :'.$e->getMessage());
             DB::rollBack();
@@ -150,6 +171,7 @@ class PollController extends AdminController
     {
         $validated = $request->validated();
         $question = PollQuestion::with(['answers'])->find($validated['question_id']);
+        $pc = isset($validated['pc']) && $validated['pc'] ? PublicConsultation::find((int)$validated['pc']) : null;
         if (!$question) {
             abort(Response::HTTP_NOT_FOUND);
         }
@@ -177,7 +199,7 @@ class PollController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.updated_successfully_m'));
+            return redirect(route(self::EDIT_ROUTE, ['id' => $question->poll_id]).( $pc ? '?pc='.$pc->id : ''))->with('success', trans_choice('custom.questions', 1).' '.__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error('Edit question :'.$e->getMessage());
             DB::rollBack();
