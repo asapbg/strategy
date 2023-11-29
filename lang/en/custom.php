@@ -458,7 +458,7 @@ return [
     'number_symbol'        => '№',
     'archive' => 'Архив',
     'impact_analyze_methods' => 'Методи за анализ на въздействията',
-    'field_of_actions'           => 'Областна политика|Областни политики',
+    'field_of_actions'           => 'Област на политика|Област на политики',
     'legislative_status_active' => 'Active',
     'legislative_status_send' => 'Send to administration',
     'legislative_status_closed' => 'Closed',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\FieldOfAction;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -117,6 +118,15 @@ class PublicConsultationController extends Controller
                 'label' => __('custom.consultation_number_'),
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
+            ),
+            'fieldOfAction' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::get()),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfAction'),
+                'col' => 'col-md-3'
             ),
             'paginate' => array(
                 'type' => 'select',
