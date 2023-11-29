@@ -236,7 +236,7 @@ class PublicConsultationController extends AdminController
 
 
             if( !$id ) {
-                $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
+                $item->reg_num = $item->id.'-K';
                 $item->save();
             }
 
