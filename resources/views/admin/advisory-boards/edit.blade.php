@@ -21,6 +21,11 @@
                                aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill" href="#secretary-of-council" role="tab"
+                               aria-controls="members"
+                               aria-selected="false">{{ trans_choice('custom.secretary_of_council', 2) }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
                                aria-controls="functions"
                                aria-selected="false">{{ trans_choice('custom.function', 2) }}</a>
@@ -36,6 +41,10 @@
 
                         <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
                             @include('admin.advisory-boards.tabs.members')
+                        </div>
+
+                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel" aria-labelledby="secretary-of-council-tab">
+                            @include('admin.advisory-boards.tabs.secretary-of-council')
                         </div>
 
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
@@ -55,5 +64,6 @@
     @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-function-file')
     @includeIf('admin.advisory-boards.modals.edit-function-file')
+    @includeIf('admin.advisory-boards.modals.create-secretary-of-council-form')
     @includeIf('admin.advisory-boards.scripts')
 @endsection

@@ -603,4 +603,6 @@ return [
     'presence_npo_representative' => 'Наличие на представител на НПО в състава на съвета',
     'names_jobs_organization' => 'имена, длъжност, организация',
     'parent_strategic_document' =>  'Родителски документ',
+    'secretary_of_council' => 'Секретар на съвета',
+    'secretary' => 'Секретар|Секретари',
 ];

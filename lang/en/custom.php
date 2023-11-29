@@ -484,4 +484,6 @@ return [
     'type_of_governing' => 'Type of governing',
     'presence_npo_representative' => 'Presence of a representative of an NGO in the composition of the council',
     'names_jobs_organization' => 'names, jobs, organization',
+    'secretary_of_council' => 'Secretary of council',
+    'secretary' => 'Secretary|Secretaries',
 ];

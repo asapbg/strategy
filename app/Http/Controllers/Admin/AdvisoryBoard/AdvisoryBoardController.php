@@ -138,6 +138,7 @@ class AdvisoryBoardController extends AdminController
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
+        $secretaries_council = $item->secretaryCouncil;
 
         $files = File::query()
             ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
@@ -158,7 +159,8 @@ class AdvisoryBoardController extends AdminController
                 'members',
                 'function',
                 'files',
-                'authorities'
+                'authorities',
+                'secretaries_council'
             )
         );
     }
