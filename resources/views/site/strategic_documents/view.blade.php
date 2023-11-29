@@ -103,7 +103,7 @@
                     <div class="mb-2 fs-18">
                         <span>{{ $strategicDocument->strategicActType->name }}</span>
                         @if ($strategicDocument->pris?->doc_num)
-                            <a href="{{ route('pris.view', [$strategicDocument->documentType?->id]) }}" class="main-color text-decoration-none">
+                            <a href="{{ route('pris.view', [$strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
                                 {{ $strategicDocument->pris?->doc_num }}
                             </a>
                         @else
