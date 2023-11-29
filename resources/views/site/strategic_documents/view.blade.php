@@ -2,13 +2,16 @@
 
 @section('pageTitle', 'Стратегически документи - вътрешна страница')
 @section('content')
-    <div class="row edit-consultation m-0" style="top: 17.5%;">
-        <div class="col-md-12 text-end">
-            <button class="btn btn-sm btn-primary main-color mt-2">
-                <i class="fas fa-pen me-2 main-color"></i>{{ trans_choice('custom.edit_document', 1) }}</button>
+    @can('update',  $strategicDocument)
+        <div class="row edit-consultation m-0" style="top: 17.5%;">
+            <div class="col-md-12 text-end">
+                <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->id]) }}"
+                   class="btn btn-sm btn-primary main-color mt-2">
+                    <i class="fas fa-pen me-2 main-color"></i>{{ trans_choice('custom.edit_document', 1) }}
+                </a>
+            </div>
         </div>
-    </div>
-
+    @endcan
     <div class="row">
         <div class="col-lg-12">
             <div class="row mb-4">
@@ -66,16 +69,21 @@
 
                 <div class="col-md-4">
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.document_to', 1) }} </h3>
-                        @if($strategicDocument->parent_document_id)
-                            <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"
-                               class="main-color text-decoration-none fs-18">
-                             <span class="obj-icon-info me-2">
-                                <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->parentDocument?->title }}</span>
-                            </a>
-                       @else
+                    @if($strategicDocument->parent_document_id)
+                        <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"
+                           class="main-color text-decoration-none fs-18">
+                         <span class="obj-icon-info me-2">
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->parentDocument?->title }}</span>
+                        </a>
+                        @can('update',  $strategicDocument)
+                                <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->parentDocument->id]) }}">
+                                    <i class="fas fa-pen me-2 main-color"></i>
+                                </a>
+                        @endcan
+                    @else
                         <span class="obj-icon-info me-2">
-                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.strategic_document_link_missing', 1) }}</span>
-                       @endif
+                        <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.strategic_document_link_missing', 1) }}</span>
+                    @endif
                 </div>
             </div>
 

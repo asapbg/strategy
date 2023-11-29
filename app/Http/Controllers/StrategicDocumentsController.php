@@ -10,6 +10,7 @@ use App\Models\StrategicDocumentFile;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
