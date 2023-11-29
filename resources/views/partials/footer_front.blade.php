@@ -1,53 +1,4 @@
 <footer>
-    <!--
-    <div class="container-fluid">
-    
-        <div class="row">
-            {{--        <div class="col-6 col-md-2 mb-3">--}}
-            {{--          <h5 class="text-light">Полезни връзки</h5>--}}
-            {{--          <ul class="nav flex-column footer-nav">--}}
-            {{--            <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Начало</a></li>--}}
-            {{--            <li class="nav-item mb-2"><a href="#" class= "p-0 text-light">» Новини</a></li>--}}
-            {{--            <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Публикации</a></li>--}}
-            {{--            <li class="nav-item mb-2"><a href="#" class=" p-0 text-light">» Мнения</a></li>--}}
-            {{--          </ul>--}}
-            {{--        </div>--}}
-
-            <div class="col-md-4 mb-3">
-                <h5 class="text-light">Информация</h5>
-                <ul class="nav flex-column footer-nav">
-                    <li class="nav-item pb-0"><a href="#" class=" p-0 text-light">Условия за ползване</a></li>
-                    <li class="nav-item pb-0"><a href="#" class=" p-0 text-light">Към стария портал</a></li>
-                </ul>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <h5 class="text-light">Контакти</h5>
-                <ul class="nav flex-column footer-nav">
-                    <li class="nav-item pb-0 text-light"><i class="fas fa-envelope text-white me-2"></i>main_mail@test.bg</li>
-                    <li class="nav-item pb-0"><a href="#" class=" p-0 text-light">Контакт с администрация</a></li>
-                </ul>
-            </div>
-
-            {{--        <div class="col-md-5 offset-md-1 mb-3">--}}
-            {{--          <form>--}}
-            {{--            <h5 class="text-light">Абонирайте се за нашия бюлетин</h5>--}}
-            {{--            <p class="text-light">Получавайте актуална информация относно обществени консултации, новини и др.</p>--}}
-            {{--            <div class="d-flex flex-column flex-sm-row w-100 gap-2">--}}
-            {{--              <label for="newsletter1" class="visually-hidden" style="color: #fff !important;background: #000;">Имейл адрес</label>--}}
-            {{--              <input id="newsletter1" type="text" class="form-control" placeholder="Имейл адрес">--}}
-            {{--              <button class="btn rss-sub subscribe" type="button">Абониране</button>--}}
-            {{--            </div>--}}
-            {{--          </form>--}}
-            {{--        </div>--}}
-            {{--      </div>--}}
-
-            <div class="d-flex flex-column flex-sm-row justify-content-between pt-4  border-top">
-                <p class="m-0 text-light">© {{ date('Y') }} {{ __('custom.copyright_text') }}</p>
-                <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/" target="_blank">{{ __('custom.asap_support') }}</a>
-            </div>
-        </div>
-    -->
     <div class="container-fluid">
           <div class="row">
             <div class="col-md-2 col-sm-12 mb-3">
@@ -60,30 +11,30 @@
                 <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Политика за бисквитки</a></li>
               </ul>
             </div>
-      
+
             <div class="col-md-2 col-sm-12 mb-3">
                 <h3 class="text-light fs-4 fw-400">Контакти</h3>
                 <ul class="nav flex-column footer-nav">
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Министерски съвет</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» main_mail@test.bg</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» +359 888 123 123</a></a></li>
+                  <li class="nav-item mb-2"><a href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" class="p-0 text-light">» @if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '---' }}@endif</a></li>
+                  <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» +359 888 123 123</a></li>
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Контакт с администрация</a></li>
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Към стария сайт</a></li>
                 </ul>
               </div>
-      
+
               <div class="col-md-2 col-sm-12 mb-3">
                 <!-- Секция за добавяне на страници от админ панела -->
                 <h3 class="text-light fs-4 fw-400">Страници</h3>
                 <ul class="nav flex-column footer-nav">
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Обществени консултации</a></li>
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Стратегически документи</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Законодателни инициативи</a></a></li>
+                  <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Законодателни инициативи</a></li>
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Оценки на въздействието</a></li>
                   <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Гражданско участие</a></li>
                 </ul>
               </div>
-      
+
             <div class="col-md-5 offset-md-1 mb-3">
               <form>
                 <h3 class="text-light fs-4 fw-400">Търсене в портала</h3>
@@ -99,8 +50,8 @@
               </form>
             </div>
           </div>
-      
-         
+
+
             <div class="d-flex flex-column flex-sm-row justify-content-between pt-4 mt-4 border-top">
                 <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
                 <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/" target="_blank">Софтуерна разработка и поддръжка от ASAP</a>
@@ -113,7 +64,7 @@
 window.onscroll = function() {scrollFunction()};
 function scrollFunction() {
 
-  let navLink = document.querySelectorAll('nav.navbar a.nav-link'); 
+  let navLink = document.querySelectorAll('nav.navbar a.nav-link');
   let navItem = document.querySelectorAll('li.nav-item');
   let navBar = document.querySelectorAll('nav.navbar');
 
@@ -121,30 +72,30 @@ function scrollFunction() {
 
     if(document.getElementById("back-to-admin")){
       document.getElementById("back-to-admin").style.fontSize = "14px";
-    } 
+    }
 
     if(document.getElementById("profile-toggle")){
       document.getElementById("profile-toggle").style.fontSize = "14px";
-    } 
+    }
 
     if(document.getElementById("register-link")){
       document.getElementById("register-link").style.fontSize = "14px";
-    } 
+    }
 
     if(document.getElementById("login-btn")){
       document.getElementById("login-btn").style.fontSize = "14px";
-    } 
+    }
 
     if(document.getElementById("search-btn")){
     document.getElementById("search-btn").style.fontSize = "14px";
     document.getElementById("search-btn").style.height = "37px";
-    
-    } 
+
+    }
 
     document.getElementById("siteLogo").style.width = "45px";
     document.getElementById("ms").style.fontSize = "12px";
     document.getElementById("ok").style.fontSize = "12px";
-          
+
     navLink.forEach(function(link) {
       link.style.fontSize = '14px';
     });
@@ -156,35 +107,35 @@ function scrollFunction() {
     navBar.forEach(function(nav) {
       nav.style.boxShadow = 'rgb(27 81 126 / 81%) 0px 1px 4px';
     });
-  } 
+  }
 
   else {
 
     if(document.getElementById("profile-toggle")){
       document.getElementById("profile-toggle").style.fontSize = "16px";
-    } 
+    }
 
     if(document.getElementById("back-to-admin")){
       document.getElementById("back-to-admin").style.fontSize = "16px";
-    } 
+    }
 
    document.getElementById("siteLogo").style.width = "55px";
     document.getElementById("ms").style.fontSize = "16px";
-    document.getElementById("ok").style.fontSize = "16px";  
+    document.getElementById("ok").style.fontSize = "16px";
 
     if(document.getElementById("register-link")){
       document.getElementById("register-link").style.fontSize = "16px";
-    } 
+    }
 
     if(document.getElementById("login-btn")){
       document.getElementById("login-btn").style.fontSize = "16px";
-    } 
+    }
 
     if(document.getElementById("search-btn")){
     document.getElementById("search-btn").style.fontSize = "16px";
     document.getElementById("search-btn").style.height = "40px";
-    }   
-    
+    }
+
     navLink.forEach(function(link) {
       link.style.fontSize = '15px';
     });

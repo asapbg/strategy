@@ -13,6 +13,11 @@
         </div>
     @endcan
     <div class="row">
+        @if(isset($pageTopContent) && !empty($pageTopContent->value))
+            <div class="col-12 my-5">
+                {!! $pageTopContent->value !!}
+            </div>
+        @endif
         <div class="col-lg-12">
             <div class="row mb-4">
                 <div class="col-md-12">

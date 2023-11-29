@@ -13,8 +13,14 @@ class Setting extends ModelActivityExtend
     public $timestamps = true;
 
 //    const SESSION_LIMIT_KEY = 'session_time_limit';
+    const CONTACT_MAIL_KEY = 'contact_email';
     const PAGE_CONTENT_OP = 'op_text';
     const PAGE_CONTENT_LP = 'lp_text';
+    const PAGE_CONTENT_PC = 'pc_text';
+    const PAGE_CONTENT_PRIS = 'pris_text';
+    const PAGE_CONTENT_LI = 'li_text';
+    const PAGE_CONTENT_STRATEGY_DOC = 'strategy_doc_text';
+    const PAGE_CONTENT_ADVISORY_BOARDS = 'advisory_boards_text';
 
     //activity
     protected string $logName = "settings";

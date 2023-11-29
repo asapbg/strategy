@@ -29,6 +29,11 @@
                 @include('site.pris.side_menu')
 
                 <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
+                    @if(isset($pageTopContent) && !empty($pageTopContent->value))
+                        <div class="col-12 mb-5">
+                            {!! $pageTopContent->value !!}
+                        </div>
+                    @endif
                     <ul class="tab nav nav-tabs mb-3" id="myTab" role="tablist">
                         @if(isset($months) && sizeof($months))
                             @foreach($months as $m)
