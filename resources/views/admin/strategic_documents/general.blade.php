@@ -240,7 +240,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
-                                       for="active">{{ trans_choice('custom.strategic_documents', 1) }}</label>
+                                       for="active">{{ trans_choice('custom.parent_strategic_document', 1) }}</label>
                                 <div class="col-12">
                                     <select id="parent_document_id" name="parent_document_id"
                                             class="form-control form-control-sm select2 @error('parent_document_id'){{ 'is-invalid' }}@enderror">
@@ -668,6 +668,29 @@
                         },
                         error: function (xhr, status, error) {
                             //console.error('AJAX Error:', status, error);
+                        }
+                    });
+                }
+            });
+            $('#policy_area_id').on('change', function () {
+                const selectedValue = $(this).val();
+                const parentDocumentSelect = $('#parent_document_id');
+                if (selectedValue) {
+                    $.ajax({
+                        url: `/admin/strategic-documents/same-policy-area/${selectedValue}`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            parentDocumentSelect.empty();
+                            $.each(data.strategicDocuments, function (index, item) {
+                                parentDocumentSelect.append($('<option>', {
+                                    value: item.id,
+                                    text: item.title,
+                                }));
+                            });
+                            parentDocumentSelect.trigger('change');
+                        },
+                        error: function (xhr, status, error) {
                         }
                     });
                 }

@@ -102,10 +102,8 @@ class StrategicDocumentsController extends AdminController
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
-        $strategicDocuments = StrategicDocument::with('translations')->get();
+        $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
 
-        // testing
-        // end testing
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
             'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments'));
@@ -494,6 +492,16 @@ class StrategicDocumentsController extends AdminController
             $publicConsultation = PublicConsultation::findOrFail($id);
 
             return response()->json(['pris_act_id' => $publicConsultation->pris_act_id,]);
+        } catch (\Throwable $throwable) {
+            return response()->json(['error' => 'Resource not found.'], 404);
+        }
+    }
+
+    public function strategicDocumentsFromSamePolicyArea(int $policyAreaId)
+    {
+        try {
+            $strategicDocuments = StrategicDocument::with(['translations'])->where('policy_area_id', $policyAreaId)->get();
+            return response()->json(['strategicDocuments' => $strategicDocuments]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }

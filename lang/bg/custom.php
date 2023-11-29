@@ -575,4 +575,5 @@ return [
     'public_consultation_link_missing'   => 'Няма връзка с обществена консултация',
     'strategic_document_link_missing'   => 'Няма връзка с друг стратегически документ',
     'date_indefinite_name'      => 'Безсрочна',
+    'parent_strategic_document' =>  'Родителски документ',
 ];
