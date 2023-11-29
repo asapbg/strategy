@@ -59,7 +59,9 @@
                         <div class="row mb-4">
                             <div class="col-auto">
                                 <div class="form-check pl-4">
-                                    <input type="checkbox" class="form-check-input" id="npo_presence">
+                                    @php $checked = old('has_npo_presence', '') === 'on' ? 'checked' : '' @endphp
+                                    <input type="checkbox" name="has_npo_presence" class="form-check-input"
+                                           id="npo_presence" {{ $checked }}>
                                     <label class="form-check-label font-weight-semibold" for="npo_presence">
                                         {{ __('custom.presence_npo_representative') }}
                                     </label>
@@ -279,7 +281,7 @@
     @push('scripts')
         <script type="application/javascript">
             // Toggle vice president information fields
-            document.querySelector('#vice_president').addEventListener('change', function (event) {
+            document.querySelector('#has_vice_chairman').addEventListener('change', function (event) {
                 document.querySelector('#member_information').classList.toggle('d-none');
             });
         </script>

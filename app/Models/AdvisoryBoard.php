@@ -40,16 +40,11 @@ class AdvisoryBoard extends Model
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'report_institution_id'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id'];
 
     public function advisoryFunction(): HasOne
     {
         return $this->hasOne(AdvisoryBoardFunction::class);
-    }
-
-    public function reportInstitution(): BelongsTo
-    {
-        return $this->belongsTo(Institution::class, 'report_institution_id');
     }
 
     public function members(): HasMany

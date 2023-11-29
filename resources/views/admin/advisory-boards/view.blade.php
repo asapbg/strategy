@@ -56,7 +56,7 @@
 
                                             <div class="col-12">
                                         <span
-                                            class="fw-bold">{{ __('validation.attributes.council_attached_to') }}:</span>
+                                            class="fw-bold">{{ __('validation.attributes.authority_id') }}:</span>
                                                 {{ $item->advisoryChairmanType->name . ($item->advisory_specific_name ? ', ' : '' ) }}
                                                 @if($item->advisory_specific_name)
                                                     {{ $item->advisory_specific_name }}
@@ -76,15 +76,6 @@
                                             <span
                                                 class="fw-bold">{{ __('validation.attributes.meetings_per_year') }}:</span>
                                                 {{ $item->meetings_per_year }}
-                                            </div>
-
-                                            <div class="col-12">
-                                                <span
-                                                    class="fw-bold">{{ __('validation.attributes.report_at') }}:</span>
-                                                {{ $item->reportInstitution->name . ($item->report_institution_specific_name ? ', ' : '') }}
-                                                @if($item->report_institution_specific_name)
-                                                    {{ $item->report_institution_specific_name }}
-                                                @endif
                                             </div>
                                         </div>
                                     </div>

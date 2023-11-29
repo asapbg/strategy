@@ -38,9 +38,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table((new AdvisoryBoardTranslation())->getTable(), function (Blueprint $table) {
-            $table->string('advisory_specific_name');
-            $table->string('advisory_act_specific_name');
-            $table->string('report_institution_specific_name');
+            $table->string('advisory_specific_name')->nullable();
+            $table->string('advisory_act_specific_name')->nullable();
+            $table->string('report_institution_specific_name')->nullable();
         });
     }
 };

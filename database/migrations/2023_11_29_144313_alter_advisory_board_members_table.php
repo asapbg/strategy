@@ -32,7 +32,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table((new \App\Models\AdvisoryBoardMember())->getTable(), function (Blueprint $table) {
-            $table->unsignedBigInteger('consultation_level_id');
+            $table->unsignedBigInteger('consultation_level_id')->nullable();
             $table->foreign('consultation_level_id')->references('id')->on((new ConsultationLevel())->getTable())->onDelete('cascade');
         });
     }
