@@ -64,9 +64,9 @@
 window.onscroll = function() {scrollFunction()};
 function scrollFunction() {
 
-  let navLink = document.querySelectorAll('nav.navbar a.nav-link');
-  let navItem = document.querySelectorAll('li.nav-item');
-  let navBar = document.querySelectorAll('nav.navbar');
+  let navLink = document.querySelectorAll('header nav.navbar a.nav-link'); 
+  let navItem = document.querySelectorAll('header li.nav-item');
+  let navBar = document.querySelectorAll('header nav.navbar');
 
   if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
 
