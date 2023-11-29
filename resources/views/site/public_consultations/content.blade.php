@@ -82,6 +82,17 @@
         </div>
 
         <div class="row mb-4 mt-4">
+            <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
+            @if($item->responsibleInstitution)
+                <p> <strong>{{ $item->responsibleInstitution->name }} </strong>
+                    <br> {{ __('custom.address') }}: {{ ($item->responsibleInstitution->settlement ? $item->responsibleInstitution->settlement->ime.', ' : '').$item->responsibleInstitution->address }}
+                    <br> {{ __('custom.email') }}: @if($item->responsibleInstitution->email) <a href="mailto:{{ $item->responsibleInstitution->email }}" class="main-color">{{ $item->responsibleInstitution->email }}</a>@else ---@endif
+                </p>
+            @else
+                <p>---</p>
+            @endif
+        </div>
+        <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ __('site.public_consultation.contact_persons') }}</h3>
             @if($item->contactPersons->count())
                 @foreach($item->contactPersons as $person)

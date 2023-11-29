@@ -606,4 +606,5 @@ return [
     'secretary_of_council' => 'Секретар на съвета',
     'secretary' => 'Секретар|Секретари',
     'municipalities'              => 'Община',
+    'address'              => 'Адрес',
 ];
