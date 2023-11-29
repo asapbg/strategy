@@ -557,6 +557,9 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
+            let manualChangeConsultationId = true;
+            let manualPrisActId = true;
+            const prisAct = $('#pris_act_id');
             const dateValidAtMain = $('#valid_at_main');
             const dateIndefiniteCheckboxMain = $('#date_valid_indefinite_main');
             const dateExpiring = $('#document_date_expiring');
@@ -579,7 +582,9 @@
                 });
             }
 
-            $('#pris_options').select2();
+            const prisOptions = $('#pris_options');
+            prisOptions.select2();
+
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
                 if (selectedValue) {
@@ -619,19 +624,50 @@
                 }
             });
 
-            $('#pris_act_id').on('change', function () {
+            prisAct.on('change', function () {
                 const selectedValue = $(this).val();
-                console.log(selectedValue);
-                if (selectedValue) {
+                console.log(manualChangeConsultationId);
+                if (selectedValue && !!manualPrisActId) {
                     $.ajax({
-                        url: `/admin/strategic-documents/pris-option/${selectedValue}`,
+                        url: `/admin/strategic-documents/pris-details/${selectedValue}`,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            $('#document_date_pris').val(data.doc_date);
+                            $('#document_date_accepted').val(data.date).trigger('change');
+                            const publicConsultationId = data.public_consultation_id;
+                            if (publicConsultationId) {
+                                manualChangeConsultationId = false;
+                                $('#public_consultation_id').val(publicConsultationId).trigger('change');
+                                manualChangeConsultationId = true;
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.error('AJAX Error:', status, error);
+                            //console.error('AJAX Error:', status, error);
+                        }
+                    });
+
+                }
+            });
+            $('#public_consultation_id').on('change', function () {
+                const selectedValue = $(this).val();
+                console.log(selectedValue);
+                console.log('public');
+                if (selectedValue && !!manualChangeConsultationId) {
+                    $.ajax({
+                        url: `/admin/strategic-documents/public-consultation-details/${selectedValue}`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            const prisActId = data.pris_act_id;
+                            if (prisActId) {
+                                manualPrisActId = false;
+                                console.log(prisActId);
+                                prisAct.val(prisActId).trigger('change');
+                                manualPrisActId = true;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            //console.error('AJAX Error:', status, error);
                         }
                     });
                 }
