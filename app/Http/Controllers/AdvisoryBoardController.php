@@ -7,6 +7,7 @@ use App\Models\AdvisoryActType;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\FieldOfAction;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -32,13 +33,14 @@ class AdvisoryBoardController extends Controller
         $authority_advisory_boards = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
-
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS.'_'.app()->getLocale())->first();
         return $this->view('site.advisory-boards.index', compact(
             'pageTitle',
             'field_of_actions',
             'authority_advisory_boards',
             'advisory_act_types',
             'advisory_chairman_types',
+            'pageTopContent'
         ));
     }
 

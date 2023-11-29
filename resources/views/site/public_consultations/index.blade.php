@@ -1,6 +1,11 @@
 @extends('layouts.site', ['fullwidth' => true])
 
 @section('content')
+    @if(isset($pageTopContent) && !empty($pageTopContent->value))
+        <div class="col-12 my-5">
+            {!! $pageTopContent->value !!}
+        </div>
+    @endif
     @include('site.partial.filter', ['btn_add' => true])
     @include('site.partial.sorter')
 

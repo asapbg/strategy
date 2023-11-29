@@ -9,6 +9,11 @@
 
 @section('content')
     <div class="row pb-5">
+        @if(isset($pageTopContent) && !empty($pageTopContent->value))
+            <div class="col-12 my-5">
+                {!! $pageTopContent->value !!}
+            </div>
+        @endif
         <div class="col-md-12">
             <ul class=" tab nav nav-tabs mb-3" id="myTab">
                 <li class="nav-item pb-0">

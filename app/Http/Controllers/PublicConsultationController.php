@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +46,8 @@ class PublicConsultationController extends Controller
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
         $pageTitle = __('site.menu.public_consultation');
-        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -61,7 +63,8 @@ class PublicConsultationController extends Controller
         $this->setBreadcrumbsTitle($pageTitle);
         $documents = $item->lastDocumentsByLocaleAndSection(true);
         $timeline = $item->orderTimeline();
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent'));
     }
 
     public function addComment(StoreCommentRequest $request)

@@ -46,7 +46,11 @@
         </div>
 
         <div class="col-lg-10 py-5">
-
+            @if(isset($pageTopContent) && !empty($pageTopContent->value))
+                <div class="col-12 mb-5">
+                    {!! $pageTopContent->value !!}
+                </div>
+            @endif
             <div class="row filter-results mb-2">
                 <h2 class="mb-4">
                     {{ __('custom.searching') }}

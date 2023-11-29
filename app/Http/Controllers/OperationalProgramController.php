@@ -47,6 +47,7 @@ class OperationalProgramController extends Controller
         $data = $item->getTableData();
         $months = $item->id ? extractMonths($item->from_date,$item->to_date, false) : [];
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
-        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
+        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle', 'pageTopContent'));
     }
 }
