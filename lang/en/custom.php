@@ -482,4 +482,6 @@ return [
     'old_file_format' => 'Old file format. Information can not be displayed properly.',
     'up_to_date_information' => 'Up to date information and events',
     'type_of_governing' => 'Type of governing',
+    'presence_npo_representative' => 'Presence of a representative of an NGO in the composition of the council',
+    'names_jobs_organization' => 'names, jobs, organization',
 ];

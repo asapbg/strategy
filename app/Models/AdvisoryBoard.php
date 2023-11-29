@@ -87,18 +87,6 @@ class AdvisoryBoard extends Model
                 'type' => 'string',
                 'rules' => ['required'],
             ],
-            'advisory_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
-            ],
-            'advisory_act_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
-            ],
-            'report_institution_specific_name' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
-            ],
         ];
     }
 }

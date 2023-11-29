@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
+use App\Enums\AdvisoryTypeEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
@@ -11,6 +12,7 @@ use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryChairmanType;
+use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
 use App\Models\File;
 use App\Models\PolicyArea;
@@ -48,13 +50,14 @@ class AdvisoryBoardController extends AdminController
 
         $item = new AdvisoryBoard();
         $policy_areas = PolicyArea::orderBy('id')->get();
-        $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
+        $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
+        $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
 
         return $this->view(
             'admin.advisory-boards.create',
-            compact('item', 'policy_areas', 'advisory_chairman_types', 'advisory_act_types', 'institutions')
+            compact('item', 'policy_areas', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions')
         );
     }
 
@@ -77,6 +80,16 @@ class AdvisoryBoardController extends AdminController
             $item->save();
 
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
+
+            if (isset($validated['member_name_' . app()->getLocale()])) {
+                $member = new AdvisoryBoardMember();
+                $member->advisory_board_id = $item->id;
+                $member->advisory_type_id = AdvisoryTypeEnum::CHAIRMAN->value;
+                $member->advisory_chairman_type_id = AdvisoryChairmanType::VICE_CHAIRMAN;
+                $member->save();
+
+                $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
+            }
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.index')
@@ -127,7 +140,7 @@ class AdvisoryBoardController extends AdminController
 
         $files = File::query()
             ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
-                $query->withTrashed();
+                $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
             ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])
             ->get();
