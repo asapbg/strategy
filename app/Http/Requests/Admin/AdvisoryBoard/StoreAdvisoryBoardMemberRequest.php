@@ -30,10 +30,10 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'advisory_board_id' => 'required|integer|exists:advisory_boards,id',
-            'advisory_type_id' => 'required|integer',
+            'advisory_board_id'         => 'required|integer|exists:advisory_boards,id',
+            'advisory_type_id'          => 'required|integer',
             'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
-            'consultation_level_id' => 'required|integer|exists:consultation_level,id',
+            'email'                     => 'nullable|email',
         ];
 
         foreach (config('available_languages') as $lang) {

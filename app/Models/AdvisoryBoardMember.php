@@ -31,7 +31,7 @@ class AdvisoryBoardMember extends Model
     //activity
     protected string $logName = "advisory_board_members";
 
-    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'advisory_chairman_type_id', 'consultation_level_id'];
+    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'advisory_chairman_type_id', 'email'];
 
     public function consultationLevel(): BelongsTo
     {

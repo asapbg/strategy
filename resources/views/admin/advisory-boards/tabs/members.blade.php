@@ -22,7 +22,6 @@
                         <th>{{ __('custom.first_name') }}</th>
                         <th>{{ __('custom.type') }}</th>
                         <th>{{ __('forms.job') }}</th>
-                        <th>{{ trans_choice('custom.representatives_from', 1) }}</th>
                         <th>{{ __('custom.actions') }}</th>
                     </tr>
                     </thead>
@@ -31,10 +30,9 @@
                         @foreach($members as $member)
                             <tr>
                                 <td>{{ $member->id }}</td>
-                                <td>{{ $member->name }}</td>
+                                <td>{{ $member->member_name }}</td>
                                 <td>{{ trans_choice('custom.' . Str::lower(\App\Enums\AdvisoryTypeEnum::tryFrom($member->advisory_type_id)->name), 1) }}</td>
                                 <td>{{ $member->advisoryChairmanType?->name }}</td>
-                                <td>{{ $member->consultationLevel?->name }}</td>
                                 <td class="text-center">
                                     @can('update', $item)
                                         <button type="button"

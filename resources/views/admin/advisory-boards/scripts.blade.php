@@ -9,15 +9,17 @@
                 dataType: 'json',
                 success: function (data) {
                     form.querySelector('input[name=advisory_board_member_id]').value = data.id;
-                    form.querySelector('#name_bg').value = data.translations[0].name;
-                    form.querySelector('#name_en').value = data.translations[1].name;
+                    form.querySelector('#member_name_bg').value = data.translations[0].member_name;
+                    form.querySelector('#member_name_en').value = data.translations[1].member_name;
                     form.querySelector('#advisory_type_id_change').value = data.advisory_type_id;
                     $('#advisory_type_id_change').trigger('change');
                     form.querySelector('#advisory_chairman_type_id_change').value = data.advisory_chairman_type_id;
                     $('#advisory_chairman_type_id_change').trigger('change');
-                    form.querySelector('#job_bg').value = data.translations[0].job;
-                    form.querySelector('#job_en').value = data.translations[1].job;
-                    form.querySelector('#consultation_level_id_change').value = data.consultation_level_id;
+                    form.querySelector('#job_bg').value = data.translations[0].member_job;
+                    form.querySelector('#job_en').value = data.translations[1].member_job;
+                    $(form.querySelector('#member_notes_bg')).summernote("code", data.translations[0].member_notes);
+                    $(form.querySelector('#member_notes_en')).summernote("code", data.translations[1].member_notes);
+                    form.querySelector('#email').value = data.email;
                     $('#consultation_level_id_change').trigger('change');
                 },
                 error: function (xhr) {
