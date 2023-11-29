@@ -66,8 +66,10 @@ class FileService
                 $file->parent_id = Arr::get($validated, 'parent_id');
                 $file->locale = $locale;
                 $file->is_main = $isMain;
-                $strategicDocument->files()->save($file);
 
+                $strategicDocument->files()->save($file);
+                $ocr = new FileOcr($file->refresh());
+                $ocr->extractText();
                 if ($locale === 'bg') {
                     $file->save();
                     $bgFileId = $file->id;

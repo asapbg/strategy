@@ -571,5 +571,8 @@ return [
     'main_information'  => 'Основна информация',
     'main_file'  => 'Основен файл',
     'up_to_date_information' => 'Актуална информация и събития',
-    'type_of_governing' => 'Вид орган'
+    'type_of_governing' => 'Вид орган',
+    'public_consultation_link_missing'   => 'Няма връзка с обществена консултация',
+    'strategic_document_link_missing'   => 'Няма връзка с друг стратегически документ',
+    'date_indefinite_name'      => 'Безсрочна',
 ];

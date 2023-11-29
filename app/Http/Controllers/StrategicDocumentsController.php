@@ -124,7 +124,6 @@ class StrategicDocumentsController extends Controller
             });
         }
 
-
         if ($orderBy == 'policy-area') {
             $strategicDocuments->join('policy_area_translations', 'strategic_document.policy_area_id', '=', 'policy_area_translations.policy_area_id')
                 ->where('locale', $currentLocale)

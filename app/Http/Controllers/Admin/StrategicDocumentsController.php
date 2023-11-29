@@ -135,10 +135,9 @@ class StrategicDocumentsController extends AdminController
                     'document_date_expiring',
                     'document_date',
                 ];
-
                 foreach ($datesToBeParsedToCarbon as $date) {
                     if (array_key_exists($date, $validated)) {
-                        $validated[$date] = Carbon::parse($validated[$date]);
+                        $validated[$date] = $validated[$date] ? Carbon::parse($validated[$date]) : null;
                     }
                 }
 
@@ -149,7 +148,6 @@ class StrategicDocumentsController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
 
             $item->fill($fillable);
-
             $item->save();
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
             try {

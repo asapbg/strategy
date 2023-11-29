@@ -3,17 +3,18 @@
 namespace App\Services;
 
 use App\Models\File;
+use App\Models\StrategicDocumentFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToText\Pdf;
 
 class FileOcr
 {
-    private File $file;
+    private File|StrategicDocumentFile $file;
     private string $pdf_to_text_env_path;
     private string $doc_to_text_env_path;
 
-    public function __construct(File $file)
+    public function __construct(File|StrategicDocumentFile $file)
     {
         $this->file = $file;
         $this->pdf_to_text_env_path = config('file_to_text.pdf_env_path') ?? '/usr/bin/pdftotext';
