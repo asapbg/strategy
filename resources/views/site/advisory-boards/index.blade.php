@@ -165,7 +165,8 @@
                 </div>
                 <div class="col-md-8 text-end">
                     <button class="btn btn-primary main-color">
-                        <i class="fas fa-square-rss text-warning me-1">{{ __('custom.rss_subscribe') }}</i>
+                        <i class="fas fa-square-rss text-warning me-1"></i>
+                        {{ __('custom.rss_subscribe') }}
                     </button>
                     <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>{{ __('custom.subscribe') }}</button>
                     <button class="btn btn-success text-success"><i

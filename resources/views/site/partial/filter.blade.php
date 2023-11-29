@@ -110,8 +110,8 @@
                     <button type="submit" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>{{ __('custom.search') }}</button>
                 </div>
                 <div class="col-md-6 text-end">
-                    <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
-                    <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+                    <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}</button>
+                    <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
                     @if(isset($btn_add) && $btn_add)
                         <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</button>
                     @endif

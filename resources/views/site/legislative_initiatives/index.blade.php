@@ -126,9 +126,9 @@
                         </div>
 
                         <div class="col-md-6 text-end">
-                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS
+                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
                             </button>
-                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
 
                             @if(auth()->check())
                                 <a href="{{ route('legislative_initiatives.create') }}"

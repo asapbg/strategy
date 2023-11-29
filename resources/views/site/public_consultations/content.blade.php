@@ -9,9 +9,9 @@
                 <button class="btn btn-primary  main-color">
                     <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
                 <button class="btn rss-sub main-color">
-                    <i class="fas fa-square-rss text-warning me-2"></i>RSS Абониране</button>
+                    <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
                 <button class="btn rss-sub main-color">
-                    <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>
+                    <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
             </div>
         </div>
 
