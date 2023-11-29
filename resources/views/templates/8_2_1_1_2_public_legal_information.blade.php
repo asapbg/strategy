@@ -225,7 +225,7 @@
             <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
         </div>
         <div class="col-md-6 text-end">
-            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
+            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS Абониране</button>
             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
             <button class="btn btn-success text-success"><i
                     class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
@@ -362,7 +362,7 @@
                                 <span class="main-color me-2">Относно:</span>  За прекратяване на ликвидацията и за
                                 продължаване на дейността на еднолично акционерно дружество с държавно участие в
                                 капитала "България Хепи Мед Сървиз" ЕАД
-                            
+
                             </div>
                             <div class="meta-consul">
                                 <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> 10.08.2023
@@ -379,7 +379,7 @@
 
     <div class="row">
         <div class="col-md-12">
-  
+
         </div>
     </div>
 

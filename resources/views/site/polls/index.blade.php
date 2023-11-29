@@ -120,8 +120,8 @@
                     <button class="btn rss-sub main-color"><i class="fas fa-search main-color me-1"></i>Търсене</button>
                 </div>
                 <div class="col-md-6 text-end">
-                    <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
-                    <button class="btn rss-sub main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
+                    <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>{{ __('custom.rss_subscribe') }}</button>
+                    <button class="btn rss-sub main-color"><i class="fas fa-envelope me-1"></i>{{ __('custom.subscribe') }}</button>
                     <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добави анкета</button>
                 </div>
             </div>
