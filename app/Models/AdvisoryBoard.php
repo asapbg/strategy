@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -45,6 +46,26 @@ class AdvisoryBoard extends Model
     public function advisoryFunction(): HasOne
     {
         return $this->hasOne(AdvisoryBoardFunction::class);
+    }
+
+    protected function hasViceChairman(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->members->count() > 0) {
+                    $found = $this->members->first(fn($member) => $member->advisory_chairman_type_id === AdvisoryChairmanType::VICE_CHAIRMAN);
+
+                    return !is_null($found);
+                }
+
+                return false;
+            }
+        );
+    }
+
+    public function authority(): BelongsTo
+    {
+        return $this->belongsTo(AuthorityAdvisoryBoard::class);
     }
 
     public function members(): HasMany
