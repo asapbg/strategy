@@ -62,6 +62,13 @@
 
 
         <div class="col-lg-10 py-5">
+            @if(isset($pageTopContent) && !empty($pageTopContent->value))
+                <div class="row">
+                    <div class="col-12 mb-5">
+                        {!! $pageTopContent->value !!}
+                    </div>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-lg-10">
                     <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ mb_strtolower($item->operationalProgram?->value) }}</h2>

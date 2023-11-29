@@ -60,7 +60,7 @@
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене
-            </h2>  
+            </h2>
             <div class="col-md-3">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -97,7 +97,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-md-3">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -118,7 +118,7 @@
                 <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
             </div>
             <div class="col-md-6 text-end">
-                <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
+                <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS Абониране</button>
                 <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
                 <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добави инициатива</button>
             </div>
@@ -183,14 +183,14 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Здравеопазване
                                 </a>
-                          
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="active-li">Активен</span></span>
                                         <span class="mx-1">|</span>
-                                        <span>Подкрепено: <span class="voted-li">585 пъти</span></span>                     
+                                        <span>Подкрепено: <span class="voted-li">585 пъти</span></span>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 12.09.2023 г
@@ -235,14 +235,14 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Партньорство за открито управление
                                 </a>
-                          
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="active-li">Активен</span></span>
                                         <span class="mx-1">|</span>
-                                        <span>Подкрепено: <span class="voted-li">235 пъти</span></span>                     
+                                        <span>Подкрепено: <span class="voted-li">235 пъти</span></span>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -288,14 +288,14 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Партньорство за открито управление
                                 </a>
-                          
+
                                  <div class="status mt-2">
                                     <div>
-                                        <span>Статус: <span class="active-li">Активен</span></span> 
+                                        <span>Статус: <span class="active-li">Активен</span></span>
                                         <span class="mx-1">|</span>
-                                         <span>Подкрепено: <span class="voted-li">182 пъти</span></span>                
+                                         <span>Подкрепено: <span class="voted-li">182 пъти</span></span>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 01.07.2023 г
@@ -341,14 +341,14 @@
                                 <a href="#" title="Административни такси и услуги" class="text-decoration-none mb-3">
                                     Административни такси и услуги
                                 </a>
-                          
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="send-li">Изпратено до администрация</span></span>
                                         <span class="mx-1">|</span>
-                                         <span>Подкрепено: <span class="voted-li">84 пъти</span></span>                
+                                         <span>Подкрепено: <span class="voted-li">84 пъти</span></span>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 21.05.2023 г
@@ -394,14 +394,14 @@
                                 <a href="#" title="Транспорт" class="text-decoration-none mb-3">
                                     Транспорт
                                 </a>
-                          
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="closed-li">Затворен</span></span>
                                         <span class="mx-1">|</span>
-                                        <span>Подкрепено: <span class="voted-li">10 пъти</span></span>                   
+                                        <span>Подкрепено: <span class="voted-li">10 пъти</span></span>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 21.01.2023 г

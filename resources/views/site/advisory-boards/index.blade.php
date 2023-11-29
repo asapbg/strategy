@@ -46,7 +46,11 @@
         </div>
 
         <div class="col-lg-10 py-5">
-
+            @if(isset($pageTopContent) && !empty($pageTopContent->value))
+                <div class="col-12 mb-5">
+                    {!! $pageTopContent->value !!}
+                </div>
+            @endif
             <div class="row filter-results mb-2">
                 <h2 class="mb-4">
                     {{ __('custom.searching') }}
@@ -161,7 +165,8 @@
                 </div>
                 <div class="col-md-8 text-end">
                     <button class="btn btn-primary main-color">
-                        <i class="fas fa-square-rss text-warning me-1">{{ __('custom.rss_subscribe') }}</i>
+                        <i class="fas fa-square-rss text-warning me-1"></i>
+                        {{ __('custom.rss_subscribe') }}
                     </button>
                     <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>{{ __('custom.subscribe') }}</button>
                     <button class="btn btn-success text-success"><i

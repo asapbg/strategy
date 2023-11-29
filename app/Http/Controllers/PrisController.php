@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActType;
 use App\Models\LegalActType;
 use App\Models\Pris;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -49,7 +50,9 @@ class PrisController extends Controller
         $pageTitle = __('site.menu.pris');
 
         $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)->get();
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
         if( $actTypes->count() ) {
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
@@ -59,7 +62,8 @@ class PrisController extends Controller
                 ];
             }
         }
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
     }
 
     public function archive(Request $request)
@@ -105,7 +109,8 @@ class PrisController extends Controller
                 ];
             }
         }
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -119,7 +124,8 @@ class PrisController extends Controller
         }
         $pageTitle = $item->actType->name.' '.__('custom.number_symbol').' '.$item->actType->doc_num.' '.__('custom.of').' '.$item->institution->name.' от '.$item->docYear.' '.__('site.year_short');
         $this->setBreadcrumbsTitle($pageTitle);
-        return $this->view('site.pris.view', compact('item', 'pageTitle'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent'));
     }
 
     private function sorters()

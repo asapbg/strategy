@@ -20,6 +20,7 @@ return new class extends Migration {
         if (Schema::hasColumn($table, $column)) {
             Schema::table($table, function (Blueprint $table) use ($column) {
                 $table->dropColumn($column);
+                $table->string('email')->nullable();
             });
         }
     }
@@ -32,6 +33,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table((new \App\Models\AdvisoryBoardMember())->getTable(), function (Blueprint $table) {
+            $table->dropColumn('email');
             $table->unsignedBigInteger('consultation_level_id')->nullable();
             $table->foreign('consultation_level_id')->references('id')->on((new ConsultationLevel())->getTable())->onDelete('cascade');
         });

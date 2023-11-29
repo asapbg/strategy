@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\LegislativeInitiative;
 use App\Models\RegulatoryAct;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +85,8 @@ class LegislativeInitiativeController extends AdminController
             ->paginate($countResults);
 
         $pageTitle = "Закондателни инициативи";
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent'));
     }
 
     /**
@@ -142,7 +144,8 @@ class LegislativeInitiativeController extends AdminController
 
     public function show(LegislativeInitiative $item)
     {
-        return view(self::SHOW_VIEW, compact('item'));
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
+        return view(self::SHOW_VIEW, compact('item', 'pageTopContent'));
     }
 
     public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)

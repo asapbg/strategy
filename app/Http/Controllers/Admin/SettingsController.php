@@ -7,6 +7,7 @@ use App\Http\Requests\SettingsStoreRequest;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class SettingsController extends Controller
 {
@@ -30,6 +31,10 @@ class SettingsController extends Controller
             }
             $setting->value = $value;
             $setting->update();
+
+            if($name == Setting::CONTACT_MAIL_KEY) {
+                Cache::forget(Setting::CONTACT_MAIL_KEY);
+            }
         }
         return redirect(route('admin.settings', ['section' => $section]))->with('success', __('custom.settings').' '.__('messages.updated_successfully_pl'));
     }

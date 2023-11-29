@@ -13,6 +13,11 @@
             </div>
         </div>
     </section>
+    @if(isset($pageTopContent) && !empty($pageTopContent->value))
+        <div class="col-12 mt-5">
+            {!! $pageTopContent->value !!}
+        </div>
+    @endif
     <div class="container-fluid mt-2 px-0">
         <div class="row">
             @include('site.public_consultations.content')

@@ -21,15 +21,15 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
-                                       for="name_bg">{{ __('custom.first_name') }} (BG) <span
+                                       for="member_name_bg">{{ __('custom.first_name') }} (BG) <span
                                         class="required">*</span></label>
                                 <div class="row">
                                     <div class="col-12">
-                                        <input type="text" id="name_bg" name="name_bg"
-                                               class="form-control form-control-sm @error('name_bg'){{ 'is-invalid' }}@enderror"
+                                        <input type="text" id="member_name_bg" name="member_name_bg"
+                                               class="form-control form-control-sm"
                                                value="" autocomplete="off"/>
 
-                                        <div class="text-danger mt-1 error_name_bg"></div>
+                                        <div class="text-danger mt-1 error_member_name_bg"></div>
                                     </div>
                                 </div>
                             </div>
@@ -38,15 +38,15 @@
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
-                                       for="name_en">{{ __('custom.first_name') }} (EN) <span
+                                       for="member_name_en">{{ __('custom.first_name') }} (EN) <span
                                         class="required">*</span></label>
                                 <div class="row">
                                     <div class="col-12">
-                                        <input type="text" id="name_en" name="name_en"
-                                               class="form-control form-control-sm @error('name_bg'){{ 'is-invalid' }}@enderror"
+                                        <input type="text" id="member_name_en" name="member_name_en"
+                                               class="form-control form-control-sm"
                                                value="" autocomplete="off"/>
 
-                                        <div class="text-danger mt-1 error_name_en"></div>
+                                        <div class="text-danger mt-1 error_member_name_en"></div>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="control-label" for="advisory_chairman_type_id_change">
-                                    {{ __('forms.job') }}
+                                    {{ __('validation.attributes.advisory_chairman_type_id') }}
                                     <span class="required">*</span>
                                 </label>
 
@@ -110,8 +110,7 @@
 
                                         <input type="text" id="job_bg"
                                                name="job_bg"
-                                               class="form-control form-control-sm"
-                                               value="{{ old('job_bg', '') }}"/>
+                                               class="form-control form-control-sm"/>
                                     </div>
                                 </div>
 
@@ -123,36 +122,38 @@
 
                                         <input type="text" id="job_en"
                                                name="job_en"
-                                               class="form-control form-control-sm"
-                                               value="{{ old('job_en', '') }}"/>
+                                               class="form-control form-control-sm"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="row mb-2">
+                        @foreach(config('available_languages') as $lang)
+                            <div class="col-6">
+                                <label for="member_notes_{{ $lang['code'] }}">
+                                    {{ __('validation.attributes.member_notes') }}
+                                    ({{ Str::upper($lang['code']) }})
+                                </label>
+
+                                <textarea class="form-control form-control-sm summernote"
+                                          name="member_notes_{{ $lang['code'] }}"
+                                          id="member_notes_{{ $lang['code'] }}"></textarea>
+                            </div>
+                        @endforeach
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label class="control-label" for="consultation_level_id_change">
-                                    {{ trans_choice('custom.representatives_from', 1) }}
-                                    <span class="required">*</span>
+                                <label class="control-label" for="email">
+                                    {{ trans_choice('custom.email', 1) }}
                                 </label>
 
-                                <select id="consultation_level_id_change" name="consultation_level_id"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="">---</option>
-                                    @if(isset($consultation_levels) && $consultation_levels->count() > 0)
-                                        @foreach($consultation_levels as $level)
-                                            @php $selected = old('consultation_level_id', '') == $level->id ? 'selected' : '' @endphp
-
-                                            <option
-                                                value="{{ $level->id }}" {{ $selected }}>{{ $level->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-
-                                <div class="text-danger mt-1 error_consultation_level_id"></div>
+                                <input type="email" id="email"
+                                       name="email"
+                                       class="form-control form-control-sm"/>
                             </div>
                         </div>
                     </div>

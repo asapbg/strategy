@@ -16,6 +16,13 @@ class SettingsSeeder extends Seeder
         $data = array(
             [
                 'section' => 'system_notifications',
+                'name' => 'contact_email',
+                'type' => 'text',
+                'editable' => 1,
+                'is_required' => 1
+            ],
+            [
+                'section' => 'system_notifications',
                 'name' => 'system_email',
                 'type' => 'text',
                 'editable' => 1,
@@ -48,7 +55,77 @@ class SettingsSeeder extends Seeder
                 'type' => 'summernote',
                 'editable' => 1,
                 'is_required' => 0
-            ]
+            ],
+            [
+                'section' => 'system_pc',
+                'name' => 'pc_text_bg',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_pc',
+                'name' => 'pc_text_en',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_pris',
+                'name' => 'pris_text_bg',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_pris',
+                'name' => 'pris_text_en',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_li',
+                'name' => 'li_text_bg',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_li',
+                'name' => 'li_text_en',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_strategy_doc',
+                'name' => 'strategy_doc_text_bg',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_strategy_doc',
+                'name' => 'strategy_doc_text_en',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_advisory_boards',
+                'name' => 'advisory_boards_text_bg',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_advisory_boards',
+                'name' => 'advisory_boards_text_en',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
         );
 
         foreach ($data as $s) {

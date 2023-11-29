@@ -17,6 +17,11 @@
 
 <br>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">Партньорство за открито управление</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive']) }}"> - Разработване на нов план за действие</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner']) }}"> -- Разработване на нов план за действие - вътрешна страница АКТИВЕН СТАТУС</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner-disabled']) }}"> -- Разработване на нов план за действие - вътрешна страница НЕАКТИВЕН СТАТУС</a>
+
+
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum']) }}">OGP forum</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">    - OGP forum - Правомощия, органи и структура</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura-inner']) }}">  ---- OGP forum - Правомощия, органи и структура - Вътрешна страница на форум</a>

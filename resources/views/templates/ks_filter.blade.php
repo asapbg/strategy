@@ -243,7 +243,7 @@
                 <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой
                     резултати:</label>
                 <select class="form-select w-auto">
-                    <option value="1">10</option>
+                    <option value="1">4</option>
                     <option value="1">20</option>
                     <option value="1">30</option>
                     <option value="1">40</option>
@@ -392,6 +392,30 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination m-0">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">25</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
 

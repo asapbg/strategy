@@ -59,6 +59,11 @@
 
 
         <div class="col-lg-10 py-5">
+            @if(isset($pageTopContent) && !empty($pageTopContent->value))
+                <div class="col-12 mb-5">
+                    {!! $pageTopContent->value !!}
+                </div>
+            @endif
             <div class="row filter-results mb-2">
                 <h2 class="mb-4">
                     Търсене
@@ -121,9 +126,9 @@
                         </div>
 
                         <div class="col-md-6 text-end">
-                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS
+                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
                             </button>
-                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
+                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
 
                             @if(auth()->check())
                                 <a href="{{ route('legislative_initiatives.create') }}"

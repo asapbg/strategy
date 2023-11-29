@@ -5,25 +5,16 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @property int    $advisory_board_id
- * @property int    $advisory_type_id
- * @property int    $advisory_chairman_type_id
- * @property string $name
- *
- * @method static find(bool|float|int|string|null $get)
- */
-class AdvisoryBoardMember extends Model
+class AdvisoryBoardSecretaryCouncil extends Model
 {
 
     use FilterSort, SoftDeletes, Translatable;
 
     const PAGINATE = 20;
-    const MODULE_NAME = ('custom.advisory_board_members');
-    const TRANSLATABLE_FIELDS = ['member_name', 'member_job', 'member_notes'];
+    const MODULE_NAME = ('custom.advisory_board_secretary_council');
+    const TRANSLATABLE_FIELDS = ['name', 'job', 'notes'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
@@ -31,17 +22,7 @@ class AdvisoryBoardMember extends Model
     //activity
     protected string $logName = "advisory_board_members";
 
-    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'advisory_chairman_type_id', 'email'];
-
-    public function consultationLevel(): BelongsTo
-    {
-        return $this->belongsTo(ConsultationLevel::class);
-    }
-
-    public function advisoryChairmanType(): BelongsTo
-    {
-        return $this->belongsTo(AdvisoryChairmanType::class);
-    }
+    protected $fillable = ['advisory_board_id'];
 
     /**
      * Get the model name
@@ -54,15 +35,15 @@ class AdvisoryBoardMember extends Model
     public static function translationFieldsProperties(): array
     {
         return [
-            'member_name' => [
+            'name' => [
                 'type' => 'string',
                 'rules' => ['required'],
             ],
-            'member_job' => [
+            'job' => [
                 'type' => 'string',
                 'rules' => ['nullable'],
             ],
-            'member_notes' => [
+            'notes' => [
                 'type' => 'string',
                 'rules' => ['nullable']
             ],

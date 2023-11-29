@@ -93,7 +93,11 @@ class PollPolicy
      */
     public function restore(User $user, Poll $poll)
     {
-        return $user->canAny(['manage.*','manage.pools'])
+        $pcList = $poll->consultations;
+        return (
+                !$pcList && $user->canAny(['manage.*','manage.pools'])
+                || ($pcList && $user->canAny(['manage.*','manage.advisory']) && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()))
+            )
             && $poll->status != PollStatusEnum::EXPIRED->value
             && !$poll->has_entry
             && databaseDate($poll->start_date) > databaseDate(Carbon::now());
@@ -120,7 +124,11 @@ class PollPolicy
      */
     public function preview(User $user, Poll $poll)
     {
-        return $user->canAny(['manage.*','manage.pools'])
+        $pcList = $poll->consultations;
+        return (
+                !$pcList && $user->canAny(['manage.*','manage.pools'])
+                || ($pcList && $user->canAny(['manage.*','manage.advisory']) && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()))
+            )
             && $poll->status == PollStatusEnum::EXPIRED->value;
     }
 
