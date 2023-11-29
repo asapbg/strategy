@@ -411,7 +411,7 @@ return [
         'legislative program id'  => 'Законодателна програма',
         'operational_program_id'  => 'Оперативна програма',
         'user'  => 'Потребител',
-        'field_of_action'           => 'Областна политика|Областни политики',
+        'field_of_action'           => 'Област на политика|Област на политики',
         'target_group'              => 'Целева група|Целеви групи',
         'document_accepted_with'    => 'Приет с Решение №',
         'file_strategic_documents_bg'  => 'Файл (BG)',
