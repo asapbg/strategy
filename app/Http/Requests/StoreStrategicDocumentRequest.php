@@ -49,6 +49,8 @@ class StoreStrategicDocumentRequest extends FormRequest
             'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
+            'ekatte_area_id' => 'sometimes|exists:ekatte_area,id',
+            'ekatte_municipality_id' => 'sometimes|exists:ekatte_municipality,id',
         ];
 
         if( request()->input('pris_act_id')) {

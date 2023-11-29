@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreStrategicDocumentRequest;
 use App\Http\Requests\StrategicDocumentFileUploadRequest;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\EkatteArea;
+use App\Models\EkatteMunicipality;
 use App\Models\LegalActType;
 use App\Models\PolicyArea;
 use App\Models\Pris;
@@ -103,10 +105,12 @@ class StrategicDocumentsController extends AdminController
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
+        $ekateAreas = EkatteArea::all();
+        $ekateMunicipalities = EkatteMunicipality::all();
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments'));
+            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)

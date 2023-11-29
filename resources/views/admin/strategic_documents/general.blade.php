@@ -46,6 +46,9 @@
                             </div>
                         </div>
                     </div>
+
+
+
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
@@ -103,6 +106,49 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-md-3" id="ekatte_area_div_id">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label"
+                                   for="ekatte_area_id"><br>{{ trans_choice('custom.areas', 1) }}<span
+                                    class="required"></span></label>
+                            <div class="col-12">
+                                <select id="ekatte_area_id" name="ekatte_area_id"
+                                        class="form-control form-control-sm select2 @error('ekatte_area_id'){{ 'is-invalid' }}@enderror">
+                                    @if(!$item->id)
+                                        <option value="" @if(old('ekatte_area_id', '') == '') selected @endif>---
+                                        </option>
+                                    @endif
+                                    @foreach ($ekateAreas as $ekateArea)
+                                        <option value="{{ $ekateArea->id }}"
+                                                @if(old('ekatte_area_id', ($item->id ? $item->ekatte_area_id : 0)) == $ekateArea->id) selected
+                                                @endif data-id="{{ $ekateArea->id }}">{{ $ekateArea->ime }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" id="ekatte_municipality_div_id">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label"
+                                   for="ekatte_municipality_id"><br>{{ trans_choice('custom.municipalities', 1) }}<span
+                                    class="required"></span></label>
+                            <div class="col-12">
+                                <select id="ekatte_municipality_id" name="ekatte_municipality_id"
+                                        class="form-control form-control-sm select2 @error('ekatte_municipality_id'){{ 'is-invalid' }}@enderror">
+                                    @if(!$item->id)
+                                        <option value="" @if(old('ekatte_municipality_id', '') == '') selected @endif>---
+                                        </option>
+                                    @endif
+                                    @foreach ($ekateMunicipalities as $ekateMunicipality)
+                                        <option value="{{ $ekateMunicipality->id }}"
+                                                @if(old('ekatte_municipality_id', ($item->id ? $item->ekatte_municipality_id : 0)) == $ekateMunicipality->id) selected
+                                                @endif data-id="{{ $ekateArea->id }}">{{ $ekateMunicipality->ime }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
@@ -695,6 +741,35 @@
                     });
                 }
             });
+
+            const ekatteAreaDiv = $('#ekatte_area_div_id');
+            const ekatteMunicipalityDiv = $('#ekatte_municipality_div_id');
+            ekatteAreaDiv.hide();
+            ekatteMunicipalityDiv.hide();
+            const strategicDocumentLevel = $('#strategic_document_level_id');
+            const initialStrategicDocumentLevel = strategicDocumentLevel.val();
+            handleVisibility(initialStrategicDocumentLevel);
+
+            strategicDocumentLevel.on('change', function () {
+                const selectedValue = $(this).val();
+                handleVisibility(selectedValue)
+            });
+
+            function handleVisibility(strategicDocumentLevel) {
+                const ekatteAreaDiv = $('#ekatte_area_div_id');
+                const ekatteMunicipalityDiv = $('#ekatte_municipality_div_id');
+
+                if (strategicDocumentLevel == 2) {
+                    ekatteMunicipalityDiv.hide();
+                    ekatteAreaDiv.show();
+                } else if (strategicDocumentLevel == 3) {
+                    ekatteAreaDiv.hide();
+                    ekatteMunicipalityDiv.show();
+                } else {
+                    ekatteMunicipalityDiv.hide();
+                    ekatteAreaDiv.hide();
+                }
+            }
         });
     </script>
 @endpush
