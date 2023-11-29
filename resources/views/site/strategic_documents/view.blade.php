@@ -116,9 +116,8 @@
                     <div class="mb-2 fs-18">
                         <span>{{ $strategicDocument->strategicActType->name }}</span>
                         @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
-                            {{ $strategicDocument->pris?->doc_num }}
                             <a href="{{ route('pris.view', [$strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
-                                {{ $strategicDocument->pris?->doc_num }}
+                                {{ $strategicDocument->pris?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                             </a>
                         @else
                             <a href="{{ $strategicDocument->strategic_act_link }}" class="main-color text-decoration-none">

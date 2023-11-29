@@ -605,4 +605,5 @@ return [
     'parent_strategic_document' =>  'Родителски документ',
     'secretary_of_council' => 'Секретар на съвета',
     'secretary' => 'Секретар|Секретари',
+    'municipalities'              => 'Община',
 ];
