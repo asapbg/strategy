@@ -570,4 +570,7 @@ return [
     'old_file_format' => 'Стар формат на файлът. Информацията не може да бъде показана.',
     'main_information'  => 'Основна информация',
     'main_file'  => 'Основен файл',
+    'public_consultation_link_missing'   => 'Няма връзка с обществена консултация',
+    'strategic_document_link_missing'   => 'Няма връзка с друг стратегически документ',
+    'date_indefinite_name'      => 'Безсрочна',
 ];

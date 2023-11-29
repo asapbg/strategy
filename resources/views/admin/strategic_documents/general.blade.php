@@ -341,8 +341,8 @@
                                     <span class="required">*</span></label>
                                 <div class="col-12">
                                     <input type="text" id="document_date_accepted" name="document_date_accepted"
-                                           class="form-control form-control-sm datepicker @error('date_accepted'){{ 'is-invalid' }}@enderror"
-                                           value="{{ old('document_date_accepted', ($item->id ? $item->document_date : '')) }}">
+                                           class="form-control form-control-sm datepicker @error('document_date_accepted'){{ 'is-invalid' }}@enderror"
+                                           value="{{ old('document_date_accepted', ($item->id ? ($item->document_date_accepted ? \Carbon\Carbon::parse($item->document_date_accepted)->format('d.m.Y') : '') : '')) }}">
                                     @error('document_date_accepted')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -357,9 +357,9 @@
                                 <div class="col-12">
                                     <input type="text" id="document_date_expiring" name="document_date_expiring"
                                            class="form-control form-control-sm datepicker @error('document_date_expiring'){{ 'is-invalid' }}@enderror"
-                                           value="{{ old('document_date_expiring', ($item->id ? $item->document_date : '')) }}">
+                                           value="{{ old('document_date_expiring', ($item->id ? ($item->document_date_expiring ? \Carbon\Carbon::parse($item->document_date_expiring)->format('d.m.Y') : '') : '')) }}">
                                     @error('document_date_expiring')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                        <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
