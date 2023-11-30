@@ -1,6 +1,12 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            let doExport = null;
+            $('#strategicDocumentsExport').on('click', function () {
+                doExport = 'export';
+                window.location.href = buildUrl();
+            });
+
             let liveCycle = $('#liveCycle');
             let view = '';
             liveCycle.hide();
@@ -154,7 +160,7 @@
                 const validFromValue = validFrom.val();
                 const validToValue = validTo.val();
                 const paginationSelectedResult = paginationResults.val();
-                return  '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
+                const url =  '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
                     '&category=' + encodeURIComponent(categorySelect.val()) +
                     '&category-lifecycle=' + encodeURIComponent(categorySelectLivecycleSelect.val()) +
                     '&pagination-results=' + paginationSelectedResult +
@@ -164,7 +170,9 @@
                     '&date-infinite=' + encodeURIComponent(infiniteDate.prop('checked')) +
                     '&document-level=' + encodeURIComponent(documentLevelSelect.val()) +
                     '&policy-area-sort-order=' + encodeURIComponent(policyAreaSortOrder) +
-                    '&view=' + encodeURIComponent(view);
+                    '&view=' + encodeURIComponent(view) + '&export=' + doExport;
+                doExport = null;
+                return url;
             }
 
             $('.pagination a').on('click', function (e) {

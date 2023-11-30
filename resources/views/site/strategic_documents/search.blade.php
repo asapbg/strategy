@@ -4,6 +4,7 @@
             Търсене
         </h2>
     </div>
+
     <div class="col-md-6 text-end">
         <!--
         И в двата вида визуализация (табличен и дървовиден),
@@ -13,9 +14,13 @@
          като линкове, за които е дадено „видими в справката“.
          Това е подобно на сегашната функционалност:
         -->
-        <button class="btn btn-primary main-color"><i
-                class="fas fa-download main-color me-1"></i>Справка с всички документи</button>
+        <button id="strategicDocumentsExport" class="btn btn-primary main-color">
+            <i
+                class="fas fa-download main-color me-1"></i>
+            Справка с всички документи </button>
+
     </div>
+
 
     <div class="col-md-12">
         <div class="input-group ">
