@@ -20,9 +20,9 @@
     <div class="col-md-12">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">Област на политика</label>
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.policy_area', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="policySelect">
-                    <option value="all">Всички</option>
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($policyAreas as $policyArea)
                         <option value="{{ $policyArea->id }}">{{ $policyArea->name }}</option>
                     @endforeach
@@ -42,25 +42,24 @@
     <div class="col-md-12">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">Категория</label>
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.category', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="categorySelect">
-                    <option value="all">Всички</option>
-                    <option value="active">Действащи</option>
-                    <option value="expired">Изтекли</option>
-                    <option value="public_consultation">Процес на консултация</option>
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
+                    <option value="active">{{ trans_choice('custom.effective', 1) }}</option>
+                    <option value="expired">{{ trans_choice('custom.expired', 1) }}</option>
+                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}</option>
                 </select>
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <div class="input-group" id="processOfConsultation">
+        <div class="input-group" id="liveCycle">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">Категории спрямо цикъла си на
-                    живот</label>
-                <select class="form-select select2" multiple aria-label="Default select example" >
-                    <option value="1">Действащи</option> <!-- default -->
-                    <option value="1">Изтекли</option>
-                    <option value="1">В процес на консултация</option>
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.categories_based_on_livecycle', 1) }}</label>
+                <select class="form-select select2" multiple aria-label="Default select example" id="category_select_livecycle">
+                    <option value="active">{{ trans_choice('custom.effective', 1) }}</option> <!-- default -->
+                    <option value="expired">{{ trans_choice('custom.expired', 1) }}</option>
+                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}</option>
                 </select>
             </div>
         </div>
@@ -153,14 +152,14 @@
     <div class="col-md-3">
         @php
             $translation = trans_choice('custom.policy_area', 1);
-            $sort_by = 'policy-area'; // Adjust this to the actual column name for policy area
+            $sort_by = 'policy-area';
         @endphp
         @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>
     <div class="col-md-3 ">
         @php
             $translation = trans_choice('custom.title', 1);
-            $sort_by = 'title'; // Adjust this to the actual column name for title
+            $sort_by = 'title';
         @endphp
         @include('components.sortable-link', compact('sort_by', 'translation'))
     </div>

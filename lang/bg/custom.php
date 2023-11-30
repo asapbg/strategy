@@ -607,4 +607,8 @@ return [
     'secretary' => 'Секретар|Секретари',
     'municipalities'              => 'Община',
     'address'              => 'Адрес',
+    'effective'              => 'Действащи',
+    'expired'              => 'Изтекли',
+    'in_process_of_consultation'  => 'Процес на консултация',
+    'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
 ];

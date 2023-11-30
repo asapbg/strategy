@@ -299,7 +299,6 @@
                 $('.preview-file-modal2').on('click', function (e) {
                     let fileId = $(this).data('file');
                     let previewUrl = $(this).data('url');
-                    console.log(previewUrl);
                     let titleTxt = '';
                     let continueTxt = 'Изтегляне';
                     let cancelBtnTxt = 'Отказ';
@@ -348,6 +347,4 @@
             })
         });
     </script>
-
-
 @endpush
