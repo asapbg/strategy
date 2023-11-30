@@ -181,14 +181,14 @@ class PrisController extends AdminController
     private function filters($request)
     {
         return array(
-            'legalАctТype' => array(
+            'legalActTypes' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(LegalActType::Pris()->get(), true),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.legal_act_types', 1),
-                'value' => $request->input('legalАctТype'),
-                'col' => 'col-md-3'
+                'value' => $request->input('legalActTypes'),
+                'col' => 'col-md-12'
             ),
             'about' => array(
                 'type' => 'text',

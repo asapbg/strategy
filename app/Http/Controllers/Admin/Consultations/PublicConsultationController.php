@@ -635,7 +635,7 @@ class PublicConsultationController extends AdminController
             'importer' => array(
                 'type' => 'subjects',
                 'placeholder' => __('site.public_consultation.importer'),
-                'multiple' => true,
+                'multiple' => false,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
                 'value' => request()->input('importer'),
                 'default' => '',
