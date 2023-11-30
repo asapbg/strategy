@@ -168,7 +168,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12 mb-2">
                             <button class="btn btn-primary">
                                 Добавяне на предложение
                             </button>
@@ -180,10 +180,21 @@
 
         <div class="row mb-4 mt-5">
             <div class="col-md-12">
+                <h2 class="obj-title">Oбразец за формуляра на предложение</h2>
+                <p>
+                    Изтеглете формуляра за предложение, който впоследствие трябва да изпратите. След изпращане предложението става видимо в тази секция.
+                </p>
+
+                <button class="btn btn-success">
+                    <i class="fa fa-solid fa-download me-1"></i> Изтегляне на образец
+                </button>
+            </div>
+        </div>
+
+
+        <div class="row mb-4 mt-5">
+            <div class="col-md-12">
                 <h2 class="obj-title mb-4">Списък с направени предложения</h2>
-
-
-
                 <div class="accordion" id="accordionExample">
 
 

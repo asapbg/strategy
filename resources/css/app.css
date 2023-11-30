@@ -12,6 +12,19 @@
 
 .table-light {
     --bs-table-bg: #d5e7f6;
+    border-color:  #96c3e9;
+}
+
+.table {
+    border-color:  #96c3e9;
+}
+
+.table-inactive {
+    border-color:  #ccc !important;
+}
+
+.gray-out {
+    background: #e6e6e6;
 }
 
 .list-group-flush>.list-group-item {
@@ -61,6 +74,11 @@ h6 {
 .fs-14 {
     font-size: 14px !important;
 }
+
+.fs-16 {
+    font-size: 16px !important;
+}
+
 
 .fs-18 {
     font-size: 18px !important;
@@ -118,11 +136,17 @@ min-height: 38px !important;
 max-height: 38px !important;
 }
 
-.select2-container .select2-selection--multiple{
+span.select2.select2-container.select2-container--default,span.select2.select2-container.select2-container--single {
+    width: 100% !important;
+}
+
+.select2-container .select2-selection--multiple, .select2-container--default .select2-selection--single{
     min-height: 36px !important;
 }
 
-
+.select2-container--default .select2-selection--single {
+    border:1px solid #ced4da !important;
+}
 
 .select2-container--default .select2-selection--multiple, .select2-dropdown {
     border:1px solid #ced4da !important;
@@ -593,7 +617,7 @@ form label {
 }
 
 .consult-img-holder i {
-    font-size: 45px;
+    font-size: 55px;
 }
 
 
@@ -680,16 +704,30 @@ a.box-link span {
 
 .btn.btn-success {
     border: 2px solid #198754;
-    background: #fff;
-    color: #198754;
+    background: #fff !important;;
+    color: #198754 !important;;
     border-radius: 30px !important;
 }
+
+.btn.btn-success:hover {
+    background:#e9fbf3 !important;
+}
+
+:not(.btn-check) + .btn.btn-success:active:focus-visible {
+    color: #198754 !important;
+}
+
+
 
 .btn.btn-danger {
     border: 2px solid #dc3545;
     background: #fff !important;
     color: #dc3545 !important;
     border-radius: 30px !important;
+}
+
+.btn.btn-danger:hover, .btn.btn-reject:hover {
+    background: #ffe6e6 !important;
 }
 
 .btn.btn-reject {
@@ -935,7 +973,7 @@ a.box-link span {
 /**/
 
 #slider {
-    margin-top: 127px;
+    margin-top: 126px;
 }
 
 /*Forum*/
@@ -1426,6 +1464,7 @@ input[type=checkbox] {
     border-radius: 12px;
     font-size: 13px;
     display: inline-flex;
+    text-transform: uppercase;
 }
 
 .inactive-ks {
@@ -1433,6 +1472,7 @@ input[type=checkbox] {
     padding: 2px 10px;
     border-radius: 12px;
     font-size: 13px;
+    text-transform: uppercase;
     display: inline-flex;
 }
 
@@ -1506,6 +1546,7 @@ input[type=checkbox] {
 }
 
 .active-item-left a:hover {
+    color:#fff !important;
     text-decoration: underline !important;
 }
 
@@ -1535,7 +1576,7 @@ input[type=checkbox] {
     background: rgba(var(--bs-success-rgb));
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1553,7 +1594,7 @@ input[type=checkbox] {
     background: rgba(var(--bs-danger-rgb));
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1693,7 +1734,6 @@ ul.list-group.subscribe-items li {
 
     .select2-container--default .select2-selection--multiple .select2-selection__rendered{
         padding-bottom: 5px;
-        /**/
         min-height: 36px !important;
     }
 
