@@ -700,7 +700,7 @@ a.box-link span {
 }
 
 .danger-bgr {
-   background: #dc3545 ; 
+   background: #dc3545 ;
 }
 
 .reg-btn {
@@ -1274,7 +1274,7 @@ footer .nav-item {
 .invalid-feedback {
     display: block;
 }
- 
+
 .register-form .btn-group > .btn-check:checked + .btn {
     border-color: #21659e;
     background: #21659e;
@@ -1581,14 +1581,14 @@ input[type=checkbox] {
     width: 100%;
     background-color: #fff;
   }
-  
+
   .calendar-head {
     display: flex;
     min-height: 30px;
     background-color: #21659e;
     color: #fff;
   }
-  
+
   .dayname {
     flex-grow: 1;
     flex-shrink: 1;
@@ -1602,12 +1602,12 @@ input[type=checkbox] {
     line-height: 1;
     font-size: 20px;
   }
-  
+
   .calendar .row {
     display: flex;
     min-height: 150px;
   }
-  
+
   .day {
     flex-grow: 1;
     flex-shrink: 1;
@@ -1615,7 +1615,7 @@ input[type=checkbox] {
     color: #333;
     box-shadow: -1px -1px #D5D7DB, inset -1px -1px 0 0 #D5D7DB;
   }
-  
+
   .day.next {
     color: #d5d7db;
   }
@@ -1788,3 +1788,203 @@ ul.list-group.subscribe-items li {
         width: 100% !important;
     }
 }
+
+/*START INSTITUTION LEVEL CLASS*/
+/*=====================*/
+.institution-level {
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 10px
+}
+.level-central{
+    border: 2px solid #21659e;
+    background: #21659e !important;
+    color: #fff !important;
+}
+.level-central:hover{
+    color: #21659e !important;
+    background: #fff !important;
+}
+
+.level-central_other{
+    border: 2px solid #198754;
+    background: #198754 !important;
+    color: #fff !important;
+}
+.level-central_other:hover{
+    color: #198754 !important;
+    background: #fff !important;
+}
+
+.level-area{
+    border: 2px solid #6f42c1;
+    background: #6f42c1 !important;
+    color: #fff !important;
+}
+.level-area:hover{
+    color: #6f42c1 !important;
+    background: #fff !important;
+}
+
+.level-municipal{
+    border: 2px solid #dc3545;
+    background: #dc3545 !important;
+    color: #fff !important;
+}
+.level-municipal:hover{
+    color: #dc3545 !important;
+    background: #fff !important;
+}
+/*=====================*/
+/*START INSTITUTION LEVEL CLASS*/
+
+/*START ACT TYPE CLASS*/
+/*=====================*/
+.act-type {
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 10px
+}
+.act-type-1{
+    border: 2px solid #21659e;
+    background: #21659e !important;
+    color: #fff !important;
+}
+.act-type-1:hover{
+    color: #21659e !important;
+    background: #fff !important;
+}
+
+.act-type-2{
+    border: 2px solid #198754;
+    background: #198754 !important;
+    color: #fff !important;
+}
+.act-type-2:hover{
+    color: #198754 !important;
+    background: #fff !important;
+}
+
+.act-type-3{
+    border: 2px solid #6f42c1;
+    background: #6f42c1 !important;
+    color: #fff !important;
+}
+.act-type-3:hover{
+    color: #6f42c1 !important;
+    background: #fff !important;
+}
+
+.act-type-4{
+    border: 2px solid #F39189;
+    background: #F39189 !important;
+    color: #fff !important;
+}
+.act-type-4:hover{
+    color: #F39189 !important;
+    background: #fff !important;
+}
+
+.act-type-5{
+    border: 2px solid #AC7088;
+    background: #AC7088 !important;
+    color: #fff !important;
+}
+.act-type-5:hover{
+    color: #AC7088 !important;
+    background: #fff !important;
+}
+
+.act-type-6{
+    border: 2px solid #ECA869;
+    background: #ECA869 !important;
+    color: #fff !important;
+}
+.act-type-6:hover{
+    color: #ECA869 !important;
+    background: #fff !important;
+}
+
+.act-type-7{
+    border: 2px solid #7895B2;
+    background: #7895B2 !important;
+    color: #fff !important;
+}
+.act-type-7:hover{
+    color: #7895B2 !important;
+    background: #fff !important;
+}
+
+.act-type-8{
+    border: 2px solid #C98474;
+    background: #C98474 !important;
+    color: #fff !important;
+}
+.act-type-8:hover{
+    color: #C98474 !important;
+    background: #fff !important;
+}
+
+.act-type-9{
+    border: 2px solid #829460;
+    background: #829460 !important;
+    color: #fff !important;
+}
+.act-type-9:hover{
+    color: #829460 !important;
+    background: #fff !important;
+}
+
+.act-type-10{
+    border: 2px solid #CBB279;
+    background: #CBB279 !important;
+    color: #fff !important;
+}
+.act-type-10:hover{
+    color: #CBB279 !important;
+    background: #fff !important;
+}
+
+.act-type-11{
+    border: 2px solid #7286D3;
+    background: #7286D3 !important;
+    color: #fff !important;
+}
+.act-type-11:hover{
+    color: #7286D3 !important;
+    background: #fff !important;
+}
+
+.act-type-12{
+    border: 2px solid #73A9AD;
+    background: #73A9AD !important;
+    color: #fff !important;
+}
+.act-type-12:hover{
+    color: #73A9AD !important;
+    background: #fff !important;
+}
+
+.act-type-13{
+    border: 2px solid #632626;
+    background: #632626 !important;
+    color: #fff !important;
+}
+.act-type-13:hover{
+    color: #632626 !important;
+    background: #fff !important;
+}
+
+.act-type-14{
+    border: 2px solid #C6D57E;
+    background: #C6D57E !important;
+    color: #fff !important;
+}
+.act-type-14:hover{
+    color: #C6D57E !important;
+    background: #fff !important;
+}
+/*=====================*/
+/*START ACT TYPE  CLASS*/
