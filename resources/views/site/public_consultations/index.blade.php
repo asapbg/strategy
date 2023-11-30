@@ -6,7 +6,8 @@
             {!! $pageTopContent->value !!}
         </div>
     @endif
-    @include('site.partial.filter', ['btn_add' => true])
+    @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\Consultations\PublicConsultation::class))
+    @include('site.partial.filter', ['btn_add' => $addBtn, 'add_url' => route('admin.consultations.public_consultations.edit', null)])
     @include('site.partial.sorter')
 
 <div class="row mb-2">

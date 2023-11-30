@@ -24,6 +24,7 @@ class PrisController extends Controller
                 return redirect(route('pris.index', $request->query()));
             }
         }
+
         $filter = $this->filters($request);
         //Sorter
         $sorter = $this->sorters();
@@ -113,7 +114,7 @@ class PrisController extends Controller
         return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
     }
 
-    public function show(Request $request, int $id = 0)
+    public function show(Request $request, $category, int $id = 0)
     {
         $item = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
             'tags', 'tags.translation', 'changedDocs',
@@ -122,10 +123,25 @@ class PrisController extends Controller
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
-        $pageTitle = $item->actType->name.' '.__('custom.number_symbol').' '.$item->actType->doc_num.' '.__('custom.of').' '.$item->institution->name.' от '.$item->docYear.' '.__('site.year_short');
+
+        $pageTitle = $item->displayName.' от '.$item->docYear.' '.__('site.year_short');
         $this->setBreadcrumbsTitle($pageTitle);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
-        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent'));
+
+        $menuCategories = [];
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
+        if( $actTypes->count() ) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories'));
     }
 
     private function sorters()

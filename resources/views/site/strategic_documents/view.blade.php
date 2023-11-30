@@ -116,7 +116,7 @@
                     <div class="mb-2 fs-18">
                         <span>{{ $strategicDocument->strategicActType->name }}</span>
                         @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
-                            <a href="{{ route('pris.view', [$strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
+                            <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name) ,'id' => $strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
                                 {{ $strategicDocument->pris?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                             </a>
                         @else

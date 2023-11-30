@@ -609,4 +609,12 @@ return [
     'address'              => 'Адрес',
     'op_project_timeline_label'              => 'Проектът на акт в Оперативната програма',
     'lp_project_timeline_label'              => 'Проектът на акт в Законодателната програма',
+    'reseniia' => 'Решения',
+    'postanovleniia' => 'Постановления',
+    'protokolni_reseniia' => 'Протоколни решения',
+    'razporezdaniia' => 'Разпореждания',
+    'protokoli' => 'Протоколи',
+    'stenogrami' => 'Стенограми',
+    'zapovedi' => 'Заповеди',
+    'arxiv-1944-1989-g' => 'Архив 1944-1989 г.',
 ];
