@@ -208,7 +208,7 @@
                                     $fileExtension = $mainDocument->content_type;
                                     $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
                                 @endphp
-                                    <i class="{{ $iconClass }}"></i>{{ $mainDocument->display_name }}
+                                    <i class="{{ $iconClass }}"></i>{!!  $mainDocument->document_display_name !!}
                                         <!--
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
                                         -->
@@ -236,7 +236,7 @@
                                 @foreach($strategicDocumentFiles as $strategicDocumentFile)
                                     <li class="list-group-item">
                                         <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                            <i class="{{ $strategicDocumentFile['icon'] }}"></i>{{ $strategicDocumentFile['text'] }}
+                                            <i class="{{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
                                         </a>
                                     </li>
                                 @endforeach
@@ -247,7 +247,9 @@
                                 @foreach($reportsAndDocs as $document)
                                     <li class="list-group-item">
                                         <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $document->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $document->id]) }}">
-                                            <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>{{ $document->display_name }}
+                                            <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>
+                                            <!--
+                                            {!! $document->display_name !!}
                                             <span class="fw-bold">&#123;</span>
                                             <span class="valid-date fw-bold"> Публикувано: {{ $document->created_at->format('d.m.Y') }}</span>
                                             <span> /</span>
@@ -255,6 +257,8 @@
                                             <span> /</span>
                                             <span class="str-doc-type fw-bold">{{ $document->documentType->name }}</span>
                                             <span class="fw-bold">&#125;</span>
+                                            -->
+                                            {!! $document->documentDisplayName !!}
                                         </a>
                                     </li>
                                 @endforeach

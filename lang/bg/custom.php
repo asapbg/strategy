@@ -611,4 +611,5 @@ return [
     'expired'              => 'Изтекли',
     'in_process_of_consultation'  => 'Процес на консултация',
     'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
+    'infinite' =>           'Безсрочна',
 ];

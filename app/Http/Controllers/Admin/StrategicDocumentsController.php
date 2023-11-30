@@ -548,4 +548,5 @@ class StrategicDocumentsController extends AdminController
         return redirect($redirectRoute)
             ->with('success', trans_choice('custom.strategic_documents', 1)." ".($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
     }
+
 }
