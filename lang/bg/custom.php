@@ -580,7 +580,7 @@ return [
     'representatives_from' => 'Представител от|Представители от',
     'member' => 'Член|Членове',
     'loading' => 'Моля изчакайте...',
-    'function' => 'Функция|Функции',
+    'function' => 'Работна програма',
     'section' => 'Секция|Секции',
     'link_to_parent_strategic_document' => 'Линк и заглавие на родителски стратегически документ',
     'newspaper_number' => 'ДВ. (номер)',
@@ -611,4 +611,5 @@ return [
     'expired'              => 'Изтекли',
     'in_process_of_consultation'  => 'Процес на консултация',
     'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
+    'secretariat' => 'Секретариат',
 ];

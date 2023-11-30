@@ -6,7 +6,7 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" onclick="ADVISORY_BOARD_FUNCTION.submit();">
+                <button type="button" class="btn btn-success" onclick="ADVISORY_BOARD_SECRETARIAT.submit();">
                     {{ __('custom.save') . ' ' . trans_choice('custom.section', 1) }}
                 </button>
             </div>
@@ -14,7 +14,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <form name="ADVISORY_BOARD_FUNCTION" action="{{ route('admin.advisory-boards.function.store', $item) }}"
+                <form name="ADVISORY_BOARD_SECRETARIAT" action="{{ route('admin.advisory-boards.secretariat.store', ['item' => $item, 'secretariat' => $secretariat]) }}"
                       method="post">
                     @csrf
 
@@ -25,8 +25,8 @@
                                     ({{ Str::upper($lang['code']) }})</label>
 
                                 @php
-                                    $description = $function?->translations->count() === 2 ?
-                                        $function->translations->first(fn($row) => $row->locale == $lang['code'])->description :
+                                    $description = $secretariat?->translations->count() === 2 ?
+                                        $secretariat->translations->first(fn($row) => $row->locale == $lang['code'])->description :
                                         old('description_' . $lang['code'], '');
                                 @endphp
 
@@ -35,6 +35,10 @@
                                           id="description_{{ $lang['code'] }}">
                                     {{ $description }}
                                 </textarea>
+
+                                @error('description_' . $lang['code'])
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     @endforeach
@@ -57,11 +61,11 @@
 
                     <div class="col-auto">
                         <div class="custom-control custom-switch">
-                            @php $checked = request()->get('show_deleted_functions_files', '0') == '1' ? 'checked' : '' @endphp
+                            @php $checked = request()->get('show_deleted_secretariat_files', '0') == '1' ? 'checked' : '' @endphp
                             <input type="checkbox" class="custom-control-input"
-                                   id="show-deleted-function-files" {{ $checked }} onchange="toggleDeletedFiles(this, 'functions')">
+                                   id="show-deleted-secretariat-files" {{ $checked }} onchange="toggleDeletedFiles(this, 'secretariat')">
                             <label class="custom-control-label"
-                                   for="show-deleted-function-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                   for="show-deleted-secretariat-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
                         </div>
                     </div>
                 </div>
@@ -69,7 +73,7 @@
 
             <div class="col-auto">
                 <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-add-function-file">
+                        data-target="#modal-add-secretariat-file">
                     <i class="fa fa-plus mr-3"></i>
                     {{ __('custom.add') . ' ' . __('custom.file') }}
                 </button>
@@ -89,8 +93,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(isset($function_files) && $function_files->count() > 0)
-                        @foreach($function_files as $file)
+                    @if(isset($secretariat_files) && $secretariat_files->count() > 0)
+                        @foreach($secretariat_files as $file)
                             <tr>
                                 <td>{{ $file->id }}</td>
                                 <td>{{ $file->custom_name ?? $file->filename }}</td>

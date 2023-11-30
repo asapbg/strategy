@@ -27,6 +27,7 @@ enum DocTypesEnum: int
 
     // Advisory board - Консултативен съвет
     case AB_FUNCTION = 12; // Файл към функции на консултативен съвет
+    case AB_SECRETARIAT = 13; // Файл към секретариат на консултативен съвет
 
     //TODO ask Izi about next two documents. Are they same as 1 and 2 ???
     //case PC_preliminary_IMPACT_EVALUATION = 6; //Предварителна оценка на въздействието

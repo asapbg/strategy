@@ -3,10 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardFunctionFile;
-use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property AdvisoryBoard $item
+ */
 class UpdateAdvisoryBoardFunctionFileRequest extends FormRequest
 {
 
@@ -17,7 +18,7 @@ class UpdateAdvisoryBoardFunctionFileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', [AdvisoryBoardFunctionFile::class, File::find($this->request->get('file_id', 0))]);
+        return $this->user()->can('update', [AdvisoryBoard::class, $this->item]);
     }
 
     /**

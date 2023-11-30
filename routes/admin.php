@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Models\AdvisoryBoard;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
@@ -444,12 +445,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store', 'store')->name('advisory-boards.function.store');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionFileController::class)->prefix('/advisory-boards/{item}/function/file')->group(function () {
-        Route::post('/ajax-store',      'ajaxStore')    ->name('advisory-boards.function.file.store');
-        Route::get('{file}/edit',       'ajaxEdit')     ->name('advisory-boards.function.file.edit');
-        Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.function.file.update');
-        Route::post('{file}/delete',    'destroy')      ->name('advisory-boards.function.file.delete');
-        Route::post('{file}/restore',   'restore')      ->name('advisory-boards.function.file.restore')->withTrashed();
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController::class)->prefix('/advisory-boards/{item}/file')->group(function () {
+        Route::post('/ajax-store',      'ajaxStore')    ->name('advisory-boards.file.store');
+        Route::get('{file}/edit',       'ajaxEdit')     ->name('advisory-boards.file.edit');
+        Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.file.update');
+        Route::post('{file}/delete',    'destroy')      ->name('advisory-boards.file.delete');
+        Route::post('{file}/restore',   'restore')      ->name('advisory-boards.file.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretaryCouncilController::class)->prefix('/advisory-boards/{item}/secretary-council/')->group(function () {
@@ -458,5 +459,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-update',         'ajaxUpdate')   ->name('advisory-boards.secretary-council.update');
         Route::post('{secretary}/delete',   'destroy')      ->name('advisory-boards.secretary-council.delete');
         Route::post('{secretary}/restore',  'restore')      ->name('advisory-boards.secretary-council.restore')->withTrashed();
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretariatController::class)->prefix('/advisory-boards/{item}/secretariat')->group(function () {
+        Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
     });
 });

@@ -2,11 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardFunctionFile;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
+/**
+ * @property int $item
+ */
+class StoreAdvisoryBoardFileRequest extends FormRequest
 {
 
     /**
@@ -16,7 +20,7 @@ class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoard::class);
+        return $this->user()->can('update', [AdvisoryBoard::class, $this->item]);
     }
 
     /**
@@ -26,14 +30,14 @@ class StoreAdvisoryBoardFunctionFileRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
+        $rules = [
+            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())]
+        ];
 
         foreach (config('available_languages') as $lang) {
             $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
-
-            foreach (AdvisoryBoardFunctionFile::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
+            $rules['file_name_' . $lang['code']] = 'required|string';
+            $rules['file_description_' . $lang['code']] = 'nullable|string';
         }
 
         return $rules;

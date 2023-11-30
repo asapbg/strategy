@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-function-file" aria-hidden="true">
+<div class="modal fade" id="modal-add-secretariat-file" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,10 +11,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="FUNCTIONS_FILE" enctype="multipart/form-data" class="pull-left mr-4">
+                <form method="POST" name="SECRETARIAT_FILE" enctype="multipart/form-data" class="pull-left mr-4">
                     @csrf
 
-                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_FUNCTION->value }}"/>
+                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_SECRETARIAT->value }}"/>
 
                     <div class="row">
                         @foreach(config('available_languages') as $lang)
@@ -28,10 +28,8 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="" onclick="FUNCTIONS_FILE.querySelector('input[id=file_{{ $lang['code'] }}]').click()"
-                                                   class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
-                                            <input name="file_{{ $lang['code'] }}" class="d-none" type="file"
-                                                   id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
+                                            <label for="file_{{ $lang['code'] }}" class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
+                                            <input name="file_{{ $lang['code'] }}" class="d-none" type="file" id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
                                             <span class="document-name"></span>
                                         </div>
                                     </div>

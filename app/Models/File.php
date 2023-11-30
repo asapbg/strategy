@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Laravel\Scout\Searchable;
 
 /**
  * @property string $custom_name
+ * @property string $advisoryBoardTab
  */
 class File extends Model
 {
@@ -63,5 +65,23 @@ class File extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'sys_user');
+    }
+
+    /**
+     * Get the tab, depending on the doc_type.
+     * Used for redirects.
+     *
+     * @return Attribute
+     * @see AdvisoryBoardFileController
+     */
+    public function advisoryBoardTab(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => match ($this->doc_type) {
+                12 => '#functions',
+                13 => '#secretariat',
+                default => '#unknown'
+            }
+        );
     }
 }

@@ -153,8 +153,79 @@
          */
         function attachDocFileName(input) {
             if (typeof input.files[0] === 'object') {
+                console.log($(input).siblings('.document-name'))
                 $(input).siblings('.document-name').html(input.files[0].name);
             }
+        }
+
+        /**
+         * Submit file through ajax request.
+         *
+         * @param element
+         * @param url
+         */
+        function submitFileAjax(element, url) {
+            // change button state
+            changeButtonState(element);
+
+            // Get the form element
+            const form = element.closest('.modal-content').querySelector('form');
+            const formData = new FormData(form);
+
+            // Get all file input elements with an ID that starts with "file"
+            const fileInputs = document.querySelectorAll('[id^="file"][type=file]');
+
+            // Loop through the file input elements and append their files to the form data
+            for (let i = 0; i < fileInputs.length; i++) {
+                const fileInput = fileInputs[i];
+                formData.append('file' + i, fileInput.files[0]);
+            }
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
+                },
+                url: url,
+                data: formData,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    changeButtonState(element, 'finished');
+
+                    // Handle error response
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+
+                        for (let i in errors) {
+                            const search_class = '.error_' + i;
+                            form.querySelector(search_class).textContent = errors[i][0];
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Listen for toggle deleted button, to show deleted resources.
+         *
+         * @param element
+         * @param current_tab
+         */
+        function toggleDeletedFiles(element, current_tab = '') {
+            const url = window.location.pathname;
+            const after_url = '#' + current_tab;
+
+            if (element.checked) {
+                window.location = url + '?show_deleted_' + current_tab + '_files=1' + after_url;
+                return;
+            }
+
+            window.location = url + after_url;
         }
     </script>
 @endpush
