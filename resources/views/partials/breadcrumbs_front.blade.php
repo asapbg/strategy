@@ -1,4 +1,4 @@
-<section @if(!isset($pageTitle)) style="padding-top: 130px;" @endif>
+<section @if(!isset($pageTitle)) style="padding-top: 126px;" @endif>
     @if (isset($breadcrumbs) && !in_array(request()->route()->getName(), ['home']) )
     <div class="container-fluid">
         <div class="row breadcrumbs py-1">
