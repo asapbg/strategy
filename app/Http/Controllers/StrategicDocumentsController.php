@@ -38,7 +38,7 @@ class StrategicDocumentsController extends Controller
     public function index(Request $request): View
     {
         $paginatedResults = $request->get('pagination-results') ?? 10;
-        $strategicDocuments = $this->prepareResults($request)->where('active', 1);
+        $strategicDocuments = $this->prepareResults($request);
         $policyAreas = PolicyArea::all();
         $preparedInstitutions = AuthorityAcceptingStrategic::all();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
@@ -58,10 +58,11 @@ class StrategicDocumentsController extends Controller
      */
     private function prepareResults(Request $request): Builder
     {
-        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations'])->active();
+        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations'])->where('active', 1);
         $policyArea = $request->input('policy-area');
         //$preparedInstitutions = $request->input('prepared-institution');
         $categories = $request->input('category');
+        $categoriesLifeCycleSelect = $request->input('category-lifecycle');
         $title = $request->input('title');
         $orderBy = $request->input('order_by');
         $direction = $request->input('direction') ?? 'asc';
@@ -69,20 +70,6 @@ class StrategicDocumentsController extends Controller
 
         $dateFrom = $request->input('valid-from');
         $dateTo = $request->input('valid-to');
-
-        $documentDateInfinite = $request->input('date-infinite');
-        if ($dateFrom && $dateTo) {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
-            $strategicDocuments->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
-        } elseif ($dateFrom && $documentDateInfinite == 'false') {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $strategicDocuments->where('document_date_accepted', '>=', $dateFrom);
-        }
-
-        if ($documentDateInfinite == 'true') {
-            $strategicDocuments->whereNull('document_date_expiring');
-        }
 
         if ($title) {
             $strategicDocuments->whereHas('translations', function($query) use ($title, $currentLocale) {
@@ -98,23 +85,39 @@ class StrategicDocumentsController extends Controller
             });
         }
 
-        if ($categories) {
-            $categories = explode(',', $categories);
+        if ($categories || $categoriesLifeCycleSelect) {
+            if ($categories) {
+                $categories = explode(',', $categories);
+            }
+            if ($categoriesLifeCycleSelect) {
+                $categoriesLifeCycleSelect = explode(',', $categoriesLifeCycleSelect);
+                $categories = array_merge($categories ?? [], $categoriesLifeCycleSelect);
+            }
+
             $strategicDocuments->when(in_array('all', $categories), function ($query) {
                 return $query;
             }, function($query) use ($categories) {
-                if (in_array('active', $categories)) {
-                    $query->where('document_date_expiring', '>', now())->where('active', 1);
-                }
-                if (in_array('expired', $categories)) {
-                    $query->where('document_date_expiring', '<=', now());
-                }
-                if (in_array('public_consultation', $categories)) {
-                    $query->whereHas('publicConsultation', function ($subquery) {
-                        $subquery->where('active', '=', '1')
-                            ->where('open_to', '<=', now());
-                    });
-                }
+                $query->where(function ($subquery) use ($categories) {
+                    if (in_array('active', $categories) && in_array('expired', $categories)) {
+                        $subquery->where(function ($innerSubquery) {
+                            $innerSubquery->where('document_date_expiring', '>', now())
+                                ->orWhereNull('document_date_expiring');
+                        })->orWhere('document_date_expiring', '<=', now());
+                    } elseif (in_array('active', $categories)) {
+                        $subquery->where(function ($innerSubquery) {
+                            $innerSubquery->where('document_date_expiring', '>', now())
+                                ->orWhereNull('document_date_expiring');
+                        });
+                    } elseif (in_array('expired', $categories)) {
+                        $subquery->where('document_date_expiring', '<=', now());
+                    }
+                    if (in_array('public_consultation', $categories)) {
+                        $subquery->orWhereHas('publicConsultation', function ($innerSubquery) {
+                            $innerSubquery->where('active', '=', '1')
+                                ->where('open_to', '<=', now());
+                        });
+                    }
+                });
             });
         }
 
@@ -127,6 +130,26 @@ class StrategicDocumentsController extends Controller
             });
         }
 
+        $documentDateInfinite = $request->input('date-infinite');
+
+        $strategicDocuments->when($dateFrom, function ($query) use ($dateFrom, $documentDateInfinite) {
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
+
+            return $query->where(function ($subquery) use ($dateFrom, $documentDateInfinite) {
+                $subquery->where('document_date_accepted', '>=', $dateFrom);
+
+                if ($documentDateInfinite == 'true') {
+                    $subquery->orWhereNull('document_date_expiring');
+                }
+            });
+        });
+
+        $strategicDocuments->when($dateFrom && $dateTo && $documentDateInfinite == 'false', function ($query) use ($dateFrom, $dateTo) {
+            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
+            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
+
+            return $query->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
+        });
         if ($orderBy == 'policy-area') {
             $strategicDocuments->join('policy_area_translations', 'strategic_document.policy_area_id', '=', 'policy_area_translations.policy_area_id')
                 ->where('locale', $currentLocale)

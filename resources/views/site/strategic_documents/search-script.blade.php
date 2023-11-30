@@ -1,19 +1,24 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            let processOfConsultation = $('#processOfConsultation');
+            let liveCycle = $('#liveCycle');
             let view = '';
-            processOfConsultation.hide();
+            liveCycle.hide();
+
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 let target = $(e.target).attr("href");
+
                 if (target === '#tree-view') {
                     view = 'tree-view';
-                    processOfConsultation.show();
+                    console.log(view);
+                    updateUrlParameters({ 'view': 'tree-view' });
+                    liveCycle.show();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     view = 'table-view';
+                    updateUrlParameters({ 'view': 'table-view' });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                    processOfConsultation.hide();
+                    liveCycle.hide();
                 }
             });
             const policySelect = $('#policySelect');
@@ -25,6 +30,8 @@
             const validFrom = $('#valid_from');
             const validTo = $('#valid_to');
             const infiniteDate = $('#date_expiring_indefinite_checkbox');
+            const categorySelectLivecycleSelect = $('#category_select_livecycle');
+
             let policyAreaSortOrder = 'asc';
 
             const updateUrlParameters = (params) => {
@@ -43,17 +50,20 @@
                 return params;
             }
             const urlParams = getUrlParameters();
-            console.log(urlParams);
 
             const viewParam = urlParams.view;
             if (viewParam === 'tree-view') {
                 $('#myTab a[href="#tree-view"]').tab('show');
+            }
+            if (viewParam === 'table-view') {
+                $('#myTab a[href="#table-view"]').tab('show');
             }
             const policySelectValues = urlParams['policy-area'];
             //const prepareInstitutionsSelectValues = urlParams['prepared-institution'];
             const searchInTitleValue = urlParams['title'];
             const paginationResultsValue = urlParams['pagination-results'];
             const categoryResultsValue = urlParams['category'];
+            const categorySelectLivecycleSelectResultValue = urlParams['category-lifecycle'];
             const documentLevelResultsValue = urlParams['document-level'];
             const validFromResultsValue = urlParams['valid-from'];
             const validToResultsValue = urlParams['valid-to'];
@@ -61,24 +71,29 @@
             const orderBy = urlParams['order_by'];
             const sortDirection = urlParams['direction'];
 
-            // testing
             const valuesToUpdate = {
                 policySelect : policySelectValues,
                 searchInTitle : searchInTitleValue,
                 paginationResults : paginationResultsValue,
                 categorySelect : categoryResultsValue,
-                documentLevelSelect : documentLevelResultsValue
+                documentLevelSelect : documentLevelResultsValue,
+                //categorySelectLivecycleSelect : categorySelectLivecycleSelectResultValue,
             };
+
             function setAndTrigger(element, value) {
                 if (value !== undefined && value !== null) {
-                    const valueArray = Array.isArray(value) ? value.split(',') : value;
-                    $(element).val(valueArray).trigger('change');
+                    $(element).val(value.split(',')).trigger('change');
                 }
             }
 
             $.each(valuesToUpdate, function (element, value) {
                 setAndTrigger(window[element], value);
             });
+
+            if (categorySelectLivecycleSelectResultValue) {
+                categorySelectLivecycleSelect.val(categorySelectLivecycleSelectResultValue.split(',')).trigger('change');
+            }
+
             if (validFromResultsValue) {
                 validFrom.val(validFromResultsValue).trigger('change');
             }
@@ -106,6 +121,11 @@
             categorySelect.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category': selectedValues.join(',') });
+            });
+
+            categorySelectLivecycleSelect.on('change', function () {
+                const selectedValues = $(this).val();
+                updateUrlParameters({ 'category-livecycle': selectedValues.join(',') });
             });
 
             validFrom.on('change', function () {
@@ -136,6 +156,7 @@
                 const paginationSelectedResult = paginationResults.val();
                 return  '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
                     '&category=' + encodeURIComponent(categorySelect.val()) +
+                    '&category-lifecycle=' + encodeURIComponent(categorySelectLivecycleSelect.val()) +
                     '&pagination-results=' + paginationSelectedResult +
                     '&title=' + encodeURIComponent(titleValue) +
                     '&valid-from=' + encodeURIComponent(validFromValue) +
@@ -155,15 +176,24 @@
                 const titleValue = searchInTitle.val();
                 const paginationResultsValue = paginationResults.val();
                 const categoryResultsValues = categorySelect.val();
-                params.set('policy-area', policyAreaSelectedIds);
-                params.set('prepared-institution', preparedInstitutionSelectedIds);
-                params.set('title', titleValue);
-                params.set('pagination-results', paginationResultsValue);
-                params.set('category', categoryResultsValues);
-                params.set('valid-from', validFrom.val());
-                params.set('valid-to', validTo.val());
-                params.set('document-level', documentLevelSelect.val());
-                params.set('pagination-results', paginationResultsValue);
+
+                const paramsToUpdate = {
+                    'policy-area' : policyAreaSelectedIds,
+                    'prepared-institution' : preparedInstitutionSelectedIds,
+                    'title' : titleValue,
+                    'pagination-results' : paginationResultsValue,
+                    'category' : categoryResultsValues,
+                    'valid-from' : validFrom.val(),
+                    'valid-to' : validTo.val(),
+                    'document-level' : documentLevelSelect.val(),
+                    'category-livecycle' : categorySelectLivecycleSelect.val(),
+                }
+
+                Object.keys(paramsToUpdate).forEach(function (key) {
+                    const value = paramsToUpdate[key];
+                    params.set(key, value);
+                });
+
                 if (orderBy) {
                     params.set('order_by', orderBy);
                 }
@@ -171,13 +201,6 @@
                     params.set('direction', orderBy);
                 }
                 window.location.href = url.toString();
-            });
-            let policyAreaSort = $('#policyAreaSort');
-
-            policyAreaSort.on('click', function() {
-                policyAreaSortOrder = policyAreaSortOrder === 'asc' ? 'desc' : 'asc';
-                policyAreaSort.val('asc');
-                window.location.href = buildUrl();
             });
         });
     </script>
