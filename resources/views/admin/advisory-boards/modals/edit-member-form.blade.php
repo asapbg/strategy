@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-edit-chairman" aria-hidden="true">
+<div class="modal fade" id="modal-edit-member" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,24 +104,24 @@
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="control-label" for="job_bg">
+                                        <label class="control-label" for="member_job_bg">
                                             {{ __('forms.job') }} (BG)
                                         </label>
 
-                                        <input type="text" id="job_bg"
-                                               name="job_bg"
+                                        <input type="text" id="member_job_bg"
+                                               name="member_job_bg"
                                                class="form-control form-control-sm"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="control-label" for="job_en">
+                                        <label class="control-label" for="member_job_en">
                                             {{ __('forms.job') }} (EN)
                                         </label>
 
-                                        <input type="text" id="job_en"
-                                               name="job_en"
+                                        <input type="text" id="member_job_en"
+                                               name="member_job_en"
                                                class="form-control form-control-sm"/>
                                     </div>
                                 </div>
@@ -163,7 +163,7 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('custom.cancel') }}</button>
                 <button type="button" class="btn btn-success"
-                        onclick="updateMemberAjax(this)">
+                        onclick="updateAjax(this, '{{ route('admin.advisory-boards.members.update', ['item' => $item]) }}')">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
                     <span class="text">{{ __('custom.save') }}</span>
                 </button>

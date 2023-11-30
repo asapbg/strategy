@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
+use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
@@ -138,7 +139,7 @@ class AdvisoryBoardController extends AdminController
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
-        $secretaries_council = $item->secretaryCouncil;
+        $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
 
         $files = File::query()
             ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {

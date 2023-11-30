@@ -38,7 +38,7 @@
                                         <button type="button"
                                                 class="btn btn-sm btn-warning"
                                                 data-toggle="modal"
-                                                data-target="#modal-edit-chairman"
+                                                data-target="#modal-edit-member"
                                                 title="{{ __('custom.edit') }}"
                                                 onclick="loadMemberData('{{ route('admin.advisory-boards.members.edit', $member) }}');"
                                         >

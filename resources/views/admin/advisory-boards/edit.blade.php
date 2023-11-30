@@ -56,14 +56,17 @@
         </div>
     </section>
 
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-delete-secretary-council'])
     @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
     @includeIf('modals.restore-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-restore-file'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
-    @includeIf('admin.advisory-boards.modals.edit-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-function-file')
     @includeIf('admin.advisory-boards.modals.edit-function-file')
-    @includeIf('admin.advisory-boards.modals.create-secretary-of-council-form')
+    @includeIf('admin.advisory-boards.modals.create-secretary-council-form')
+    @includeIf('admin.advisory-boards.modals.edit-secretary-council-form')
     @includeIf('admin.advisory-boards.scripts')
 @endsection
