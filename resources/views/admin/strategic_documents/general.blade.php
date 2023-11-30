@@ -232,14 +232,16 @@
                                        for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
                                 <select id="pris_act_id" name="pris_act_id"
                                         class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
-                                    <!--
-                        <option value="{{ $item->pris?->id }}"
-                                {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
-                                    data-id="{{ $item->pris?->id }}"> {{ $item->pris?->actType?->name . ' N' . $item->pris?->doc_num . ' ' . $item->pris?->doc_date }} </option>
-                                -->
+                                    <option value="{{ $item->pris?->id }}"
+                                            {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
+                                            data-id="{{ $item->pris?->id }}"> {{ $item->pris?->regNum }} </option>
+
                                     @foreach ($prisActs as $prisAct)
                                         <option value="{{ $prisAct->id }}">
+                                            {{ $prisAct->regNum }}
+                                            <!--
                                             {{ $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date }}
+                                            -->
                                         </option>
                                     @endforeach
                                 </select>

@@ -461,7 +461,7 @@ class StrategicDocumentsController extends AdminController
             foreach ($prisActs as $prisAct) {
                 $prisOptions[] = [
                     'id' => $prisAct->id,
-                    'text' => $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
+                    'text' => $prisAct->regNum,//$prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
                 ];
             }
 
