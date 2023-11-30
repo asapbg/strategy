@@ -7,6 +7,13 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int    $advisory_board_id
+ * @property string $name
+ *
+ * @method static find(bool|float|int|string|null $get)
+ * @method static findOrFail(\Illuminate\Routing\Route|object|string|null $route)
+ */
 class AdvisoryBoardSecretaryCouncil extends Model
 {
 

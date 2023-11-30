@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class AdvisoryBoardSecretaryCouncilPolicy
 {
@@ -25,12 +26,12 @@ class AdvisoryBoardSecretaryCouncilPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param \App\Models\User                          $user
-     * @param \App\Models\AdvisoryBoardSecretaryCouncil $advisoryBoardSecretaryCouncil
+     * @param User                          $user
+     * @param AdvisoryBoardSecretaryCouncil $secretary
      *
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return bool
      */
-    public function view(User $user, AdvisoryBoardSecretaryCouncil $advisoryBoardSecretaryCouncil)
+    public function view(User $user, AdvisoryBoardSecretaryCouncil $secretary): bool
     {
         return $user->canAny('manage.*', 'manage.advisory-boards');
     }
@@ -50,12 +51,12 @@ class AdvisoryBoardSecretaryCouncilPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param \App\Models\User                          $user
-     * @param \App\Models\AdvisoryBoardSecretaryCouncil $advisoryBoardSecretaryCouncil
+     * @param User                          $user
+     * @param AdvisoryBoardSecretaryCouncil $secretary
      *
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return bool
      */
-    public function update(User $user, AdvisoryBoardSecretaryCouncil $advisoryBoardSecretaryCouncil)
+    public function update(User $user, AdvisoryBoardSecretaryCouncil $secretary): bool
     {
         return $user->canAny('manage.*', 'manage.advisory-boards');
     }

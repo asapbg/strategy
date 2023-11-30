@@ -43,7 +43,9 @@
                 <h3 class="mb-2 fs-18">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
                 <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info me-2">
-                    <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>{{ $item->fieldOfAction ? $item->fieldOfAction->name : '---'}}</span>
+                    <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
+                      @if($item->fieldOfAction)<a href="{{ route('public_consultation.index').'?fieldOfAction='.$item->fieldOfAction->id }}" target="_blank">{{ $item->fieldOfAction->name }}</a>@else{{ '---' }}@endif
+                  </span>
                 </a>
             </div>
         </div>
@@ -79,6 +81,17 @@
             </div>
         </div>
 
+        <div class="row mb-4 mt-4">
+            <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
+            @if($item->responsibleInstitution)
+                <p> <strong>{{ $item->responsibleInstitution->name }} </strong>
+                    <br> {{ __('custom.address') }}: {{ ($item->responsibleInstitution->settlement ? $item->responsibleInstitution->settlement->ime.', ' : '').$item->responsibleInstitution->address }}
+                    <br> {{ __('custom.email') }}: @if($item->responsibleInstitution->email) <a href="mailto:{{ $item->responsibleInstitution->email }}" class="main-color">{{ $item->responsibleInstitution->email }}</a>@else ---@endif
+                </p>
+            @else
+                <p>---</p>
+            @endif
+        </div>
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ __('site.public_consultation.contact_persons') }}</h3>
             @if($item->contactPersons->count())

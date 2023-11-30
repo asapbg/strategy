@@ -6,7 +6,8 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create-secretary-of-council">
+                <button type="button" class="btn btn-success" data-toggle="modal"
+                        data-target="#modal-create-secretary-of-council">
                     <i class="fa fa-plus mr-3"></i>
                     {{ __('custom.add') . ' ' . trans_choice('custom.secretary', 1) }}
                 </button>
@@ -32,45 +33,45 @@
                                 <td>{{ $secretary->name }}</td>
                                 <td>{{ $secretary->job }}</td>
                                 <td class="text-center">
-{{--                                    @can('update', $item)--}}
-{{--                                        <button type="button"--}}
-{{--                                                class="btn btn-sm btn-warning"--}}
-{{--                                                data-toggle="modal"--}}
-{{--                                                data-target="#modal-edit-chairman"--}}
-{{--                                                title="{{ __('custom.edit') }}"--}}
-{{--                                                onclick="loadMemberData('{{ route('admin.advisory-boards.members.edit', $member) }}');"--}}
-{{--                                        >--}}
-{{--                                            <i class="fa fa-edit"></i>--}}
-{{--                                        </button>--}}
-{{--                                    @endcan--}}
+                                    @can('update', $item)
+                                        <button type="button"
+                                                class="btn btn-sm btn-warning"
+                                                data-toggle="modal"
+                                                data-target="#modal-edit-secretary-council"
+                                                title="{{ __('custom.edit') }}"
+                                                onclick="loadSecretaryCouncilData('{{ route('admin.advisory-boards.secretary-council.edit', ['item' => $item, 'secretary' => $secretary]) }}');"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    @endcan
 
-{{--                                    @can('delete', $item)--}}
-{{--                                        @if(!$member->deleted_at)--}}
-{{--                                            <a href="javascript:;"--}}
-{{--                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"--}}
-{{--                                               data-target="#modal-delete-resource"--}}
-{{--                                               data-resource-id="{{ $member->id }}"--}}
-{{--                                               data-resource-delete-url="{{ route('admin.advisory-boards.members.delete', $member) }}"--}}
-{{--                                               data-toggle="tooltip"--}}
-{{--                                               title="{{__('custom.delete')}}">--}}
-{{--                                                <i class="fa fa-trash"></i>--}}
-{{--                                            </a>--}}
-{{--                                        @endif--}}
-{{--                                    @endcan--}}
+                                    @can('delete', $item)
+                                        @if(!$secretary->deleted_at)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-secretary-council"
+                                               data-resource-id="{{ $secretary->id }}"
+                                               data-resource-delete-url="{{ route('admin.advisory-boards.secretary-council.delete', ['item' => $item, 'secretary' => $secretary]) }}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.delete')}}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        @endif
+                                    @endcan
 
-{{--                                    @can('restore', $item)--}}
-{{--                                        @if($member->deleted_at)--}}
-{{--                                            <a href="javascript:;"--}}
-{{--                                               class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
-{{--                                               data-target="#modal-restore-resource"--}}
-{{--                                               data-resource-id="{{ $member->id }}"--}}
-{{--                                               data-resource-restore-url="{{ route('admin.advisory-boards.members.restore', $member) }}"--}}
-{{--                                               data-toggle="tooltip"--}}
-{{--                                               title="{{__('custom.restore')}}">--}}
-{{--                                                <i class="fa fa-plus"></i>--}}
-{{--                                            </a>--}}
-{{--                                        @endif--}}
-{{--                                    @endcan--}}
+                                    @can('restore', $item)
+                                        @if($secretary->deleted_at)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                               data-target="#modal-restore-secretary-council"
+                                               data-resource-id="{{ $secretary->id }}"
+                                               data-resource-restore-url="{{ route('admin.advisory-boards.secretary-council.restore', ['item' => $item, 'secretary' => $secretary]) }}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.restore')}}">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        @endif
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

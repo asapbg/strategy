@@ -15,8 +15,8 @@
                     $('#advisory_type_id_change').trigger('change');
                     form.querySelector('#advisory_chairman_type_id_change').value = data.advisory_chairman_type_id;
                     $('#advisory_chairman_type_id_change').trigger('change');
-                    form.querySelector('#job_bg').value = data.translations[0].member_job;
-                    form.querySelector('#job_en').value = data.translations[1].member_job;
+                    form.querySelector('#member_job_bg').value = data.translations[0].member_job;
+                    form.querySelector('#member_job_en').value = data.translations[1].member_job;
                     $(form.querySelector('#member_notes_bg')).summernote("code", data.translations[0].member_notes);
                     $(form.querySelector('#member_notes_en')).summernote("code", data.translations[1].member_notes);
                     form.querySelector('#email').value = data.email;
@@ -28,19 +28,41 @@
             });
         }
 
-        function updateMemberAjax(element) {
+        function loadSecretaryCouncilData(url) {
+            const form = document.querySelector('form[name=SECRETARY_COUNCIL_FORM_EDIT]');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=advisory_board_secretary_council_id]').value = data.id;
+                    form.querySelector('#name_bg').value = data.translations[0].name;
+                    form.querySelector('#name_en').value = data.translations[1].name;
+                    form.querySelector('#job_bg').value = data.translations[0].job;
+                    form.querySelector('#job_en').value = data.translations[1].job;
+                    $(form.querySelector('#notes_bg')).summernote("code", data.translations[0].notes);
+                    $(form.querySelector('#notes_en')).summernote("code", data.translations[1].notes);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+        function updateAjax(element, url) {
             // change button state
             changeButtonState(element);
 
             // Get the form element
-            const form = document.querySelector('form[name=CHAIRMAN_FORM_EDIT]');
+            const form = element.closest('.modal-content').querySelector('form');
             const formData = new FormData(form);
 
             $.ajax({
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
                 },
-                url: "{{ route('admin.advisory-boards.members.update') }}",
+                url: url,
                 data: formData,
                 type: 'POST',
                 dataType: 'json',
@@ -48,7 +70,7 @@
                 contentType: false,
                 success: function (result) {
                     // Get a reference to the modal
-                    const modal = new bootstrap.Modal(document.getElementById('modal-edit-chairman'));
+                    const modal = new bootstrap.Modal(element.closest('.modal'));
 
                     // Hide the modal
                     modal.hide();

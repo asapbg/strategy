@@ -23,6 +23,11 @@
                     <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label> {{ $item->importerInstitution ? (($item->importerInstitution->settlement ? $item->importerInstitution->settlement->ime.', ' : '').$item->importerInstitution->address) : '---'}}
                 </div>
             </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-auto control-label">{{ trans_choice('site.public_consultation.responsible_institution', 1) }}: </label> {{ $item->responsibleInstitution ?  $item->responsibleInstitution->name : '---'}}
+                </div>
+            </div>
             @if($item->pris)
                 <div class="col-12">
                     <div class="form-group">

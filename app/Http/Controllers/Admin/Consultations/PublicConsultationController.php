@@ -236,7 +236,7 @@ class PublicConsultationController extends AdminController
 
 
             if( !$id ) {
-                $item->reg_num = '#'.$item->id.'-'.displayDate($item->created_at);
+                $item->reg_num = $item->id.'-K';
                 $item->save();
             }
 
@@ -602,7 +602,17 @@ class PublicConsultationController extends AdminController
                 'placeholder' => __('custom.consultation_number_'),
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
-            )
+            ),
+            'fieldOfAction' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::get(), true),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfAction'),
+                'col' => 'col-md-3'
+            ),
+
         );
     }
 
