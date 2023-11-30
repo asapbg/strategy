@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -104,5 +105,32 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     public function scopeMain($query)
     {
         return $query->where('is_main', 1);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentDisplayNameAttribute(): string
+    {
+        $expiringDate = $this->valid_at == null ? trans('custom.infinite') : Carbon::parse($this->valid_at)->format('d-m-Y');
+
+        if (request()->route()->getName() == 'strategy-document.view') {
+            $displayName = '<span class="">' . $this->display_name . '</span>' .
+                ' <span class="fw-bold">&#123;</span>' .
+                '<span class="valid-date fw-bold"> ' . trans('custom.published_at') . ': ' .
+                Carbon::parse($this->document_date_accepted)->format('d-m-Y') . '</span>' .
+                ' <span>/</span>' .
+                '<span class="valid-date fw-bold"> ' . trans('custom.valid_at') . ': ' .
+                $expiringDate . '</span>' .
+                ' <span>/</span>' .
+                '<span class="str-doc-type fw-bold">' . $this->documentType->name . '</span>' .
+                '<span class="fw-bold">&#125;</span>';
+        } else {
+            $displayName =  $this->display_name . '. {' . trans('custom.published_at') . ' ' .
+                Carbon::parse($this->valid_at)->format('d-m-Y') . ' / ' . trans('custom.valid_at') .
+                ' ' . $expiringDate . ' / ' . $this->documentType->name . '}';
+        }
+
+        return $displayName;
     }
 }

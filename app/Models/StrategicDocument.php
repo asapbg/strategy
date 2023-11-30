@@ -7,9 +7,11 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -126,5 +128,17 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function parentDocument(): BelongsTo
     {
         return $this->belongsTo(StrategicDocument::class, 'parent_document_id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentDisplayNameAttribute(): string
+    {
+        $expiringDate = $this->document_date_expiring == null ? trans('custom.infinite') : Carbon::parse($this->document_date_expiring)->format('d-m-Y');
+        return $this->title .' ' . '{' . trans('custom.published_at') . ' ' .
+            Carbon::parse($this->document_date_accepted)->format('d-m-Y') . ' / ' . trans('custom.valid_at')
+            . ' ' . $expiringDate  . ' / ' . $this->documentType->name . '}';
+
     }
 }

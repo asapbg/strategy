@@ -143,7 +143,7 @@ class FileService
 
         $fileExtension = $mainFile->content_type;
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-        $validAt = $this->prepareValidAtText($mainFile);
+        //$validAt = $this->prepareValidAtText($mainFile);
         $editLink = $adminView ? "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" : '';
         $downloadLink = $adminView ? "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>" : '';
         $deleteLink = $adminView ? "<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>" : '';
@@ -151,7 +151,7 @@ class FileService
         $rootNode = [
             'id' => $mainFile->id,
             'parent' => '#',
-            'text' => $mainFile->display_name . ' ' . $validAt .
+            'text' => $mainFile->document_display_name . //$mainFile->display_name . ' ' . $validAt .
                 //"<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
                 //"<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
                 //"<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
@@ -166,12 +166,12 @@ class FileService
             }
             $fileExtension = $file->content_type;
             $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-            $validAt = $this->prepareValidAtText($file);
+            //$validAt = $this->prepareValidAtText($file);
 
             $fileNode = [
                 'id' => $file->id,
                 'parent' => $file->parent_id ?: $mainFile->id,
-                'text' => $file->display_name . ' ' . $validAt .
+                'text' => $file->document_display_name .//$file->display_name . ' ' . $validAt .
                     $editLink . $downloadLink . $deleteLink,
                     //"<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
                     //"<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
