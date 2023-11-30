@@ -487,4 +487,5 @@ return [
     'secretary_of_council' => 'Secretary of council',
     'secretary' => 'Secretary|Secretaries',
     'secretariat' => 'Secretariat',
+    'regulatory_framework' => 'Regulatory framework',
 ];

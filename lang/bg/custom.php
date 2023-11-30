@@ -613,4 +613,5 @@ return [
     'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
     'secretariat' => 'Секретариат',
     'infinite' =>           'Безсрочна',
+    'regulatory_framework' => 'Нормативна рамка',
 ];

@@ -80,6 +80,7 @@ class File extends Model
             get: fn() => match ($this->doc_type) {
                 12 => '#functions',
                 13 => '#secretariat',
+                14 => '#regulatory',
                 default => '#unknown'
             }
         );
