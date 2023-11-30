@@ -210,16 +210,14 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label">
-                                    Категории:
+                                    {{ trans_choice('custom.category', 1) }}
                                 </label>
                                 <span class="text-danger" id="connect-doc-error"></span>
-                                <select id="the_legal_act_type_filter" name="legal_act_type_filter"
-                                        class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
+                                <select id="the_legal_act_type_filter" name="legal_act_type_filter" class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
                                     <option value="">--</option>
                                     @if(isset($legalActTypes) && $legalActTypes->count())
                                         @foreach($legalActTypes as $row)
-                                            <option value="{{ $row->id }}"
-                                                    @if(old('legal_act_type_filter', '') == $row->id) selected @endif>{{ $row->name }}</option>
+                                            <option value="{{ $row->id }}" @if(old('legal_act_type_filter', '') == $row->id) selected @endif>{{ $row->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -672,7 +670,7 @@
 
             prisAct.on('change', function () {
                 const selectedValue = $(this).val();
-                console.log(manualChangeConsultationId);
+
                 if (selectedValue && !!manualPrisActId) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-details/${selectedValue}`,
@@ -683,7 +681,7 @@
                             const publicConsultationId = data.public_consultation_id;
                             if (publicConsultationId) {
                                 manualChangeConsultationId = false;
-                                $('#public_consultation_id').val(publicConsultationId).trigger('change');
+                                $('#public_consultation_id').val(publicConsultationId).trigger('change.select2');
                                 manualChangeConsultationId = true;
                             }
                         },
@@ -691,13 +689,10 @@
                             //console.error('AJAX Error:', status, error);
                         }
                     });
-
                 }
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
-                console.log(selectedValue);
-                console.log('public');
                 if (selectedValue && !!manualChangeConsultationId) {
                     $.ajax({
                         url: `/admin/strategic-documents/public-consultation-details/${selectedValue}`,
