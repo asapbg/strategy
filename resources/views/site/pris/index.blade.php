@@ -11,7 +11,8 @@
                     {!! $pageTopContent->value !!}
                 </div>
             @endif
-            @include('site.partial.filter')
+            @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\Pris::class))
+            @include('site.partial.filter', ['btn_add' => $addBtn, 'add_url' => route('admin.pris.edit', ['item' => 0])])
             @include('site.partial.sorter')
 
             <div class="row mb-2">
@@ -34,7 +35,7 @@
                                         <div class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
                                                 <div class="consult-item-header-link">
-                                                    <a href="{{ route('pris.view', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }}">
+                                                    <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name),'id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }}">
                                                         <h3>{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }} {{ __('custom.of') }} {{ $item->institution->name }} от {{ $item->docYear }} {{ __('site.year_short') }}</h3>
                                                     </a>
                                                 </div>
@@ -75,7 +76,7 @@
                                             </div>
                                             <div class="meta-consul">
                                                 <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> {{ displayDate($item->doc_date) }} {{ __('site.year_short') }}</span>
-                                                <a href="{{ route('pris.view', ['id' => $item->id]) }}"><i class="fas fa-arrow-right read-more"></i></a>
+                                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) }}"><i class="fas fa-arrow-right read-more"></i></a>
                                             </div>
                                         </div>
 

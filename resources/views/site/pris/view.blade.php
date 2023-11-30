@@ -4,9 +4,13 @@
     <section>
         <div class="container-fluid">
             <div class="row edit-consultation m-0">
-                <div class="col-md-12 text-end">
+                <div class="col-md-12 text-end  mt-2">
+                    <button class="btn rss-sub main-color">
+                        <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
+                    <button class="btn rss-sub main-color">
+                        <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
                     @can('update', $item)
-                        <a class="btn btn-sm btn-primary main-color mt-2" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
+                        <a class="btn rss-sub main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
                             <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
                     @endcan
                 </div>
@@ -31,7 +35,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-thumbtack main-color me-1"></i>Категория
+                        <i class="fa-solid fa-thumbtack main-color me-1"></i>{{ __('validation.attributes.category') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -40,7 +44,7 @@
                 </div>
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-regular fa-hashtag main-color me-1"></i>Номер
+                        <i class="fa-regular fa-hashtag main-color me-1"></i>{{ __('validation.attributes.number') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -83,7 +87,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class=" fa-solid fa-arrow-up-right-from-square main-color me-1"></i>Заглавие/Относно
+                        <i class=" fa-solid fa-arrow-up-right-from-square main-color me-1"></i>{{ __('custom.pris_about') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -93,7 +97,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-university main-color me-1"></i>Институция
+                        <i class="fa-solid fa-university main-color me-1"></i>{{ trans_choice('custom.institutions', 1) }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -103,7 +107,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-right-to-bracket main-color me-1"></i>Вносител
+                        <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -114,7 +118,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-regular fa-file-lines main-color me-1"></i>Протокол
+                        <i class="fa-regular fa-file-lines main-color me-1"></i>{{ __('validation.attributes.protocolr') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -124,7 +128,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-newspaper main-color me-1"></i>ДВ брой
+                        <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper_number') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -134,7 +138,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-gavel main-color me-1"></i>Правно основание
+                        <i class="fa-solid fa-gavel main-color me-1"></i>{{ __('custom.pris_legal_reason') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -163,9 +167,9 @@
                     <div class="col-md-9 pris-left-column">
                         @if($item->changedDocs->count())
                             @foreach($item->changedDocs as $doc)
-                                <a href="{{ route('pris.view', ['id' => $doc->id]) }}" target="_blank"
+                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
-                                    {{ $doc->actType->name.' '.__('custom.number_symbol').' '.$doc->actType->doc_num.' '.__('custom.of').' '.$doc->institution->name.' от '.$doc->docYear.' '.__('site.year_short') }}
+                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}
                                 </a>
                             @endforeach
                         @endif
@@ -212,7 +216,7 @@
                                             <div class="col-md-6">
                                                 <div class="text-end">
                                                     <span class="text-end">
-                                                        <strong>Дата на създаване:</strong> 15.05.2023г.
+                                                        <strong>{{ __('custom.date_created') }}:</strong> 15.05.2023г.
                                                     </span><Br>
                                                                 <span class="text-end">
                                                         <strong>Дата на публикуване:</strong> 20.05.2023г.

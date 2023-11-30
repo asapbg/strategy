@@ -6,7 +6,8 @@
             {!! $pageTopContent->value !!}
         </div>
     @endif
-    @include('site.partial.filter', ['btn_add' => true])
+    @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\Consultations\PublicConsultation::class))
+    @include('site.partial.filter', ['btn_add' => $addBtn, 'add_url' => route('admin.consultations.public_consultations.edit', null)])
     @include('site.partial.sorter')
 
 <div class="row mb-2">
@@ -65,8 +66,24 @@
                                 title="{{ __('custom.period') }}"></i> {{ displayDate($consultation->open_from) }} -
                             {{ displayDate($consultation->open_to) }}</span>
                     </div>
+                    <div class="meta-consul mb-2 justify-content-start">
+                        @if($consultation->actType)
+                            <span class="me-2">
+                                <strong>{{ __('site.public_consultation.type_consultation') }}:</strong>
+                                <a class="act-type act-type-{{ $consultation->act_type_id }}" target="_blank" href="{{ route('public_consultation.index').'?actType='.$consultation->act_type_id }}">{{ $consultation->actType->name }}</a>
+                            </span>
+                        @endif
+                        |
+                        @if($consultation->consultation_level_id)
+                            <span class="ms-2">
+                                <strong>{{ __('site.public_consultation.importer_type') }}:</strong>
+                                <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$consultation->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}</a>
+                            </span>
+                        @endif
+                    </div>
                     <div class="meta-consul">
-                        <span><strong>{{ __('custom.status') }}:</strong>
+                        <span>
+                            <strong>{{ __('custom.status') }}:</strong>
                             <span class="{{ $consultation->inPeriodBoolean ? 'active' : 'inactive' }}-ks">{{ $consultation->inPeriod }}</span>
                         </span>
                         <a href="{{ route('public_consultation.view', ['id' => $consultation->id]) }}" title="{{ $consultation->title }}"><i

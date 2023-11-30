@@ -70,8 +70,7 @@ class GenerateComments extends Command
                 ]);
                 $csv->save();
             }
-
-            //TODO fix me fix pdf style
+            
             $pdf = PDF::loadView('exports.comments', ['data' => $exportData, 'isPdf' => true]);
             Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
 
