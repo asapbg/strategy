@@ -147,7 +147,7 @@
                                                     @foreach ($documents as $document)
                                                         <li class="active-node parent_li">
                                                             <span>
-                                                                <a href="#">
+                                                                <a href="{{ route( 'strategy-document.view' , [$document->id]) }}">
                                                                      {{ $document->title }} {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '' }} - {{ $document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен' }}
                                                                 </a>
                                                             </span>
@@ -188,7 +188,7 @@
                                                     @foreach ($documents as $document)
                                                         <li class="active-node parent_li">
                                                             <span>
-                                                                <a href="#">
+                                                                <a href="{{ route( 'strategy-document.view' , [$document->id]) }}">
                                                                      {{ $document->title }} {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '' }} - {{ $document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен' }}
                                                                 </a>
                                                             </span>
