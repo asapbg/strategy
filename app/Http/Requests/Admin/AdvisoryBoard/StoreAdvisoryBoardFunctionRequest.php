@@ -22,7 +22,7 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoard::find($this->item));
+        return $this->user()->can('create', AdvisoryBoard::class);
     }
 
     /**

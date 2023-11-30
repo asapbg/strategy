@@ -117,7 +117,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.advisory-boards.function.file.update', $item) }}",
+                url: "{{ route('admin.advisory-boards.file.update', $item) }}",
                 data: formData,
                 type: 'POST',
                 dataType: 'json',

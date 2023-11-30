@@ -22,8 +22,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill" href="#secretary-of-council" role="tab"
-                               aria-controls="members"
+                               aria-controls="secretary-of-council"
                                aria-selected="false">{{ trans_choice('custom.secretary_of_council', 2) }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="secretariat-tab" data-toggle="pill" href="#secretariat" role="tab"
+                               aria-controls="secretariat"
+                               aria-selected="false">{{ trans_choice('custom.secretariat', 2) }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
@@ -47,6 +52,10 @@
                             @include('admin.advisory-boards.tabs.secretary-of-council')
                         </div>
 
+                        <div class="tab-pane fade" id="secretariat" role="tabpanel" aria-labelledby="secretariat-tab">
+                            @include('admin.advisory-boards.tabs.secretariat')
+                        </div>
+
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
                             @include('admin.advisory-boards.tabs.functions')
                         </div>
@@ -64,6 +73,7 @@
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-secretariat-file')
     @includeIf('admin.advisory-boards.modals.add-function-file')
     @includeIf('admin.advisory-boards.modals.edit-function-file')
     @includeIf('admin.advisory-boards.modals.create-secretary-council-form')

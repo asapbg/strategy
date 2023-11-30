@@ -477,7 +477,7 @@ return [
     'representatives_from' => 'Representative from|Representatives from',
     'member' => 'Member|Members',
     'loading' => 'Loading...',
-    'function' => 'Function|Functions',
+    'function' => 'Working program',
     'section' => 'Section|Sections',
     'old_file_format' => 'Old file format. Information can not be displayed properly.',
     'up_to_date_information' => 'Up to date information and events',
@@ -486,4 +486,5 @@ return [
     'names_jobs_organization' => 'names, jobs, organization',
     'secretary_of_council' => 'Secretary of council',
     'secretary' => 'Secretary|Secretaries',
+    'secretariat' => 'Secretariat',
 ];

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
-use App\Enums\DocTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StoreAdvisoryBoardFunctionFileRequest;
+use App\Http\Requests\StoreAdvisoryBoardFileRequest;
 use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardFunctionFile;
 use App\Models\File;
 use DB;
 use Exception;
@@ -15,30 +13,29 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Log;
 
-class AdvisoryBoardFunctionFileController extends AdminController
+class AdvisoryBoardFileController extends AdminController
 {
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvisoryBoardFunctionFileRequest $request
+     * @param StoreAdvisoryBoardFileRequest $request
+     * @param AdvisoryBoard                 $item
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardFunctionFileRequest $request): JsonResponse
+    public function ajaxStore(StoreAdvisoryBoardFileRequest $request, AdvisoryBoard $item): JsonResponse
     {
         $validated = $request->validated();
-        $model = AdvisoryBoard::find($request->route()->parameters['item']);
 
         DB::beginTransaction();
         try {
             foreach (config('available_languages') as $lang) {
-                //Add file and attach
                 $this->uploadFile(
-                    $model,
+                    $item,
                     $validated['file_' . $lang['code']],
                     File::CODE_AB_FUNCTION,
-                    DocTypesEnum::AB_FUNCTION,
+                    $validated['doc_type_id'],
                     $validated['file_description_' . $lang['code']],
                     $lang['code'],
                     $validated['file_name_' . $lang['code']]
@@ -64,7 +61,7 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function ajaxEdit(AdvisoryBoard $item, File $file): JsonResponse
     {
-        $this->authorize('update', [AdvisoryBoardFunctionFile::class, $file]);
+        $this->authorize('update', [AdvisoryBoard::class, $item]);
 
         return response()->json($file);
     }
@@ -73,14 +70,13 @@ class AdvisoryBoardFunctionFileController extends AdminController
      * Update the specified resource in storage.
      *
      * @param UpdateAdvisoryBoardFunctionFileRequest $request
+     * @param AdvisoryBoard                          $item
      *
      * @return JsonResponse
      */
-    public function ajaxUpdate(UpdateAdvisoryBoardFunctionFileRequest $request): JsonResponse
+    public function ajaxUpdate(UpdateAdvisoryBoardFunctionFileRequest $request, AdvisoryBoard $item): JsonResponse
     {
         $validated = $request->validated();
-
-        $model = AdvisoryBoard::find($request->route()->parameters['item']);
 
         DB::beginTransaction();
         try {
@@ -88,10 +84,10 @@ class AdvisoryBoardFunctionFileController extends AdminController
 
             //Add file and attach
             $updated_file = $this->uploadFile(
-                $model,
+                $item,
                 $validated['file'],
                 File::CODE_AB_FUNCTION,
-                DocTypesEnum::AB_FUNCTION,
+                $file->doc_type,
                 $validated['file_description_' . $file->locale],
                 $file->locale,
                 $validated['file_name_' . $file->locale]
@@ -120,9 +116,9 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function destroy(AdvisoryBoard $item, File $file)
     {
-        $this->authorize('delete', [AdvisoryBoardFunctionFile::class, $file]);
+        $this->authorize('delete', [AdvisoryBoard::class, $item]);
 
-        $route = route('admin.advisory-boards.edit', $item) . '#functions';
+        $route = redirect()->back()->getTargetUrl() . $file->advisoryBoardTab;
 
         try {
             $file_name = $file->custom_name ?? $file->filename;
@@ -147,9 +143,9 @@ class AdvisoryBoardFunctionFileController extends AdminController
      */
     public function restore(AdvisoryBoard $item, File $file)
     {
-        $this->authorize('restore', [AdvisoryBoardFunctionFile::class, $file]);
+        $this->authorize('restore', [AdvisoryBoard::class, $item]);
 
-        $route = route('admin.advisory-boards.edit', $item) . '?show_deleted_files=1#functions';
+        $route = redirect()->back()->getTargetUrl() . $file->advisoryBoardTab;
 
         try {
             $file_name = $file->custom_name ?? $file->filename;

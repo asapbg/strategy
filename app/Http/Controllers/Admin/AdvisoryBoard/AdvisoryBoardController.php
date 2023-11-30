@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Enums\AdvisoryTypeEnum;
+use App\Enums\DocTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
@@ -138,14 +139,22 @@ class AdvisoryBoardController extends AdminController
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $function = $item->advisoryFunction;
+        $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
 
-        $files = File::query()
-            ->when(request()->get('show_deleted_files', 0) == 1, function ($query) {
+        $function_files = File::query()
+            ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION])
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
+            ->get();
+
+        $secretariat_files = File::query()
+            ->when(request()->get('show_deleted_secretariat_files', 0) == 1, function ($query) {
+                $query->withTrashed()->orderBy('deleted_at', 'desc');
+            })
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_SECRETARIAT])
             ->get();
 
         return $this->view(
@@ -159,9 +168,11 @@ class AdvisoryBoardController extends AdminController
                 'consultation_levels',
                 'members',
                 'function',
-                'files',
+                'function_files',
                 'authorities',
-                'secretaries_council'
+                'secretaries_council',
+                'secretariat',
+                'secretariat_files'
             )
         );
     }
