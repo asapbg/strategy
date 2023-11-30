@@ -612,4 +612,5 @@ return [
     'in_process_of_consultation'  => 'Процес на консултация',
     'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
     'secretariat' => 'Секретариат',
+    'regulatory_framework' => 'Нормативна рамка',
 ];
