@@ -43,7 +43,7 @@ class LegislativeProgramController extends Controller
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
-        $pageTitle = trans_choice('custom.operational_program', 1).' '.$item->name;
+        $pageTitle = trans_choice('custom.legislative_program', 1).' '.$item->name;
         $this->setBreadcrumbsTitle($pageTitle);
         $data = $item->getTableData();
         $months = $item->id ? extractMonths($item->from_date,$item->to_date, false) : [];

@@ -165,7 +165,7 @@
                             @foreach($item->changedDocs as $doc)
                                 <a href="{{ route('pris.view', ['id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
-                                    {{ $doc->actType->name.' '.__('custom.number_symbol').' '.$doc->actType->doc_num.' '.__('custom.of').' '.$doc->institution->name.' от '.$doc->docYear.' '.__('site.year_short') }}
+                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}
                                 </a>
                             @endforeach
                         @endif
