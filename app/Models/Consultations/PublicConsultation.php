@@ -440,7 +440,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                     }
                 }
             }
-            if(!$found) {
+
+            if(!$found && $e != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
                 $label = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e));
                 $description = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e).'.description');
                 $eData = [
@@ -452,10 +453,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
                         $sortedTimeline['1'] = $eData;
                         break;
-                    case PublicConsultationTimelineEnum::FILE_CHANGE->value:
                     case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
-                        $index = $e == PublicConsultationTimelineEnum::FILE_CHANGE->value ? '3' : '5';
-                        $sortedTimeline[$index] = $eData;
+                        $sortedTimeline['5'] = $eData;
                         break;
                 }
             }
