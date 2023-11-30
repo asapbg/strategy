@@ -8,7 +8,9 @@ use App\Models\PolicyArea;
 use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
+use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
+use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
 use Exception;
@@ -35,7 +37,7 @@ class StrategicDocumentsController extends Controller
      * @param Request $request
      * @return View
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $paginatedResults = $request->get('pagination-results') ?? 10;
         $strategicDocuments = $this->prepareResults($request);
@@ -44,6 +46,13 @@ class StrategicDocumentsController extends Controller
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $categoriesData = $this->prepareCategoriesData($strategicDocuments);
+        if ($request->input('export') == 'export') {
+            $exportService = app(ExportService::class);
+            $strategicDocumentsCommonService = app(CommonService::class);
+            $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
+
+            return $exportService->export('App\Exports\StrategicDocumentsExport', $exportData, 'strategic_documents_export');
+        }
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
         $pageTitle = $this->title_singular;
