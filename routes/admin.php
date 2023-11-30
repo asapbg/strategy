@@ -35,7 +35,6 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Models\AdvisoryBoard;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
@@ -463,5 +462,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretariatController::class)->prefix('/advisory-boards/{item}/secretariat')->group(function () {
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {
+        Route::post('store', 'ajaxStore')->name('advisory-boards.meetings.store');
     });
 });

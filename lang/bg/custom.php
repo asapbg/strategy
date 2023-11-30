@@ -614,4 +614,6 @@ return [
     'secretariat' => 'Секретариат',
     'infinite' =>           'Безсрочна',
     'regulatory_framework' => 'Нормативна рамка',
+    'meetings_and_decisions' => 'Заседания и решения',
+    'meetings' => 'Заседание|Заседания',
 ];

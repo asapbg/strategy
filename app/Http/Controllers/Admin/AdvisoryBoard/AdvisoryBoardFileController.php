@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\StoreAdvisoryBoardFileRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFileRequest;
 use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\File;

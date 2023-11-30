@@ -142,6 +142,7 @@ class AdvisoryBoardController extends AdminController
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
+        $meetings = $item->meetings;
 
         $function_files = File::query()
             ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
@@ -181,6 +182,7 @@ class AdvisoryBoardController extends AdminController
                 'secretariat',
                 'secretariat_files',
                 'regulatory_framework_files',
+                'meetings',
             )
         );
     }

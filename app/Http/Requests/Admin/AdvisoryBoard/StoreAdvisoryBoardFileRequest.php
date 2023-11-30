@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;

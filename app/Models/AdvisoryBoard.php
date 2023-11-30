@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
  * @property Collection            $functionFiles
  * @property Collection            $secretaryCouncil
  * @property Collection            $secretariat
+ * @property Collection            $meetings
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -63,6 +64,11 @@ class AdvisoryBoard extends Model
                 return false;
             }
         );
+    }
+
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMeeting::class);
     }
 
     public function secretariat(): HasOne

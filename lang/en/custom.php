@@ -488,4 +488,6 @@ return [
     'secretary' => 'Secretary|Secretaries',
     'secretariat' => 'Secretariat',
     'regulatory_framework' => 'Regulatory framework',
+    'meetings_and_decisions' => 'Meetings and decisions',
+    'meetings' => 'Meeting|Meetings',
 ];
