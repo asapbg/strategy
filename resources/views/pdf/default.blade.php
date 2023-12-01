@@ -2,33 +2,23 @@
 <html>
 <head>
     <style>
-        /* Add your CSS styles here */
         body {
-            font-size: 16px; /* Adjust the font size as needed */
+            font-size: 14px;
         }
 
         table {
-            width: 120%; /* Adjust the width as needed */
+            width: 100%;
+            border-collapse: collapse;
         }
 
         td, th {
-            padding: 6px; /* Adjust the padding as needed */
-        }
-
-        tr {
-            margin-bottom: 6px; /* Adjust the margin as needed */
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
+            border: 1px solid #ddd;
             padding: 8px;
         }
+
         th {
             background-color: #f2f2f2;
+            font-size: 14px; /* Adjust the font size for the header cells */
         }
     </style>
 </head>
@@ -38,31 +28,31 @@
 <table>
     <thead>
     <tr>
-        <th>{{ trans('custom.id') }}</th>
-        <th>{{ trans('custom.title') }}</th>
+        <th>{{ trans('custom.stategic_document_status') }}</th>
+        <th>{{ trans('custom.stategic_document_active_period_of_time') }}</th>
+        <th>{{ trans('custom.stategic_document_by_category') }}</th>
+        <th>{{ trans('custom.strategic_document_accepted_by_national_assemly') }}</th>
+        <th>{{ trans('custom.strategic_document_tile') }}</th>
         <th>{{ trans('custom.policy_area') }}</th>
-        <th>{{ trans('custom.strategic_document_type') }}</th>
-        <th>{{ trans('custom.accept_act_institution_type') }}</th>
-        <th>{{ trans('custom.pris') }}</th>
-        <th>{{ trans('custom.document_date') }}</th>
-        <th>{{ trans('custom.public_consultation_link') }}</th>
-        <th>{{ trans('custom.public_consultation_link') }}</th>
+        <th>{{ trans_choice('custom.authority_accepting_strategic', 1) }}</th>
+        <th>{{ trans('custom.strategic_document_valid_status') }}</th>
+        <th>{{ trans('custom.strategic_documents_total_count_in_report') }}</th>
     </tr>
     </thead>
     <tbody>
-    @foreach ($data as $row)
-        <tr>
-            <td>{{ $row['id'] }}</td>
-            <td>{{ $row['title'] }}</td>
-            <td>{{ $row['policy_area'] }}</td>
-            <td>{{ $row['strategic_document_type_id'] }}</td>
-            <td>{{ $row['accept_act_institution_type_id'] }}</td>
-            <td>{{ $row['pris_name'] }}</td>
-            <td>{{ $row['document_date'] }}</td>
-            <td>{{ $row['public_consultation'] }}</td>
-            <td>{{ $row['active'] }}</td>
-        </tr>
-    @endforeach
+        @foreach ($data as $row)
+            <tr>
+                <td>{{ $row['status'] }}</td>
+                <td>{{ $row['period_of_time'] }}</td>
+                <td>{{ $row['category'] }}</td>
+                <td>{{ $row['strategic_document_type_id'] }}</td>
+                <td>{!! $row['title'] !!}</td>
+                <td>{{ $row['policy_area'] }}</td>
+                <td>{{ $row['accept_institution'] }}</td>
+                <td>{{ $row['valid_status'] }}</td>
+                <td>{{ $row['count'] }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
 </body>

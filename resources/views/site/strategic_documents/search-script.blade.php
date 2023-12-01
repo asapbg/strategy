@@ -2,6 +2,22 @@
     <script>
         $(document).ready(function() {
             let doExport = null;
+            const pdfExport = $('#pdf_export');
+            const excelExport =  $('#excel_export');
+            const csvExport =  $('#csv_export');
+            pdfExport.on('click', function() {
+                doExport = 'pdf';
+                window.location.href = buildUrl();
+            });
+            excelExport.on('click', function () {
+                doExport = 'xlsx';
+                window.location.href = buildUrl();
+            });
+            csvExport.on('click', function () {
+                doExport = 'csv';
+                window.location.href = buildUrl();
+            });
+
             $('#strategicDocumentsExport').on('click', function () {
                 doExport = 'export';
                 window.location.href = buildUrl();

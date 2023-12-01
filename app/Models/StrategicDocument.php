@@ -141,4 +141,32 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
             . ' ' . $expiringDate  . ' / ' . $this->documentType->name . '}';
 
     }
+
+    /**
+     * @return string
+     */
+    public function getDocumentStatusAttribute(): string
+    {
+        $currentDate = Carbon::now();
+        $dateAccepted = Carbon::parse($this->document_date_accepted);
+        $dateExpired = Carbon::parse($this->document_date_expiring);
+
+        if ($currentDate->between($dateAccepted, $dateExpired, true)) {
+            return trans('custom.strategic_document_active');
+        } elseif ($currentDate->greaterThan($dateExpired)) {
+            return trans('custom.strategic_document_expired');
+        } else {
+            return trans('custom.pending');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentLinkAttribute(): string
+    {
+        $url = url('strategy-document', ['id' => $this->id]);
+
+        return '<a href="' . $url . '">' . $this->title . '</a>';
+    }
 }

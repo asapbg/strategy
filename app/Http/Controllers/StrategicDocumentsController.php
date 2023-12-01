@@ -46,12 +46,16 @@ class StrategicDocumentsController extends Controller
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $categoriesData = $this->prepareCategoriesData($strategicDocuments);
-        if ($request->input('export') == 'export') {
+        if ($request->input('export')) {
             $exportService = app(ExportService::class);
-            $strategicDocumentsCommonService = app(CommonService::class);
-            $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
-
-            return $exportService->export('App\Exports\StrategicDocumentsExport', $exportData, 'strategic_documents_export');
+            if ($request->input('export') == 'pdf') {
+                $strategicDocumentsCommonService = app(CommonService::class);
+                $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
+                return $exportService->export(null, $exportData, 'strategic_documents_export', 'pdf', 'default');
+            }
+            if ($request->input('export') == 'xlsx' || $request->input('export') == 'csv') {
+                return $exportService->export('App\Exports\StrategicDocumentsExport', $strategicDocuments->get(), 'strategic_documents_export', $request->input('export'));
+            }
         }
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
