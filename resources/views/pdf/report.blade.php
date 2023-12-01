@@ -94,7 +94,7 @@
                             <li class="parent_li">
                                 <span>{{ $mainFile->document_display_name }} {{ $mainFile->id }}</span>
                                 @foreach ($strategicDocument->files as $file)
-                                    @if(in_array($file->id, $processedFiles) || $file->locale == 'en' || $file->is_main)
+                                    @if(in_array($file->id, $processedFiles) || $file->locale == 'en' || $file->is_main || !$file->visible_in_report)
                                         @continue
                                     @endif
                                     @php $processedFiles[] = $file->id; @endphp
