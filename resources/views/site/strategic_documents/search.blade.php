@@ -14,11 +14,24 @@
          като линкове, за които е дадено „видими в справката“.
          Това е подобно на сегашната функционалност:
         -->
+        <div class="dropdown d-inline">
+            <button class="btn btn-primary main-color dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-download main-color me-2"></i>
+                Експорт
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a id="pdf_export" class="dropdown-item" href="#">Експорт като Pdf</a></li>
+                <li><a id="excel_export" class="dropdown-item" href="#">Експорт като Excel</a></li>
+                <li><a id="csv_export" class="dropdown-item" href="#">Експорт като Csv</a></li>
+            </ul>
+        </div>
+        <!--
         <button id="strategicDocumentsExport" class="btn btn-primary main-color">
             <i
                 class="fas fa-download main-color me-1"></i>
             Справка с всички документи </button>
-
+        -->
     </div>
 
 

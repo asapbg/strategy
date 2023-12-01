@@ -2,6 +2,7 @@
 
 namespace App\Services\StrategicDocuments;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -16,16 +17,15 @@ class CommonService
         $prepareData = [];
         foreach ($strategicDocuments as $strategicDocument) {
             $prepareData[] = [
-                'id' => $strategicDocument->id,
-                'title' => $strategicDocument->title,
-                'policy_area' => $strategicDocument->policyArea->name,
-                'strategic_document_type_id' => $strategicDocument->documentType?->name,
-                'accept_act_institution_type_id' => $strategicDocument->acceptActInstitution?->name,
-                'pris_name' => $strategicDocument->pris?->regNum,
-                'document_date' => $strategicDocument->document_date,
-                'public_consultation' => $strategicDocument->publicConsultation?->title,
-                'active' => trans('custom.active'),//$strategicDocument->active,
-                'consultation_number' => $strategicDocument->publicConsultation?->reg_num,
+                'status' => $strategicDocument->document_status,
+                'period_of_time' => Carbon::parse($strategicDocument->document_date_accepted)->format('m-d-Y') . ' - ' . Carbon::parse($strategicDocument->document_date_expiring)->format('m-d-Y'), // check period of time
+                'category' => $strategicDocument->documentLevel?->name,
+                'strategic_document_type_id' => $strategicDocument->documentType?->name, // check this one which one it is
+                'title' => $strategicDocument->document_link,
+                'policy_area' => $strategicDocument->policyArea?->name,
+                'accept_institution' => $strategicDocument->acceptActInstitution?->name,
+                'valid_status' => Carbon::parse($strategicDocument->document_date_expiring),//$strategicDocument->active,
+                'count' => $strategicDocuments->count(),
             ];
         }
 
