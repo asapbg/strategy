@@ -471,4 +471,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{meeting}/delete',     'destroy')      ->name('advisory-boards.meetings.delete');
         Route::post('{meeting}/restore',    'restore')      ->name('advisory-boards.meetings.restore')->withTrashed();
     });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardCustomController::class)->prefix('/advisory-boards/{item}/sections/')->group(function () {
+        Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.sections.store');
+    });
 });

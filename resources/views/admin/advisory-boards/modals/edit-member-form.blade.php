@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="CHAIRMAN_FORM_EDIT" class="pull-left mr-4">
+                <form method="POST" name="CHAIRMAN_FORM_EDIT" class="pull-left">
                     @csrf
 
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>

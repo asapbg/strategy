@@ -12,7 +12,7 @@
             </div>
             <div class="modal-body">
                 <form method="POST" name="CHAIRMAN_FORM" action="{{ route('admin.advisory-boards.members.store') }}"
-                      class="pull-left mr-4">
+                      class="pull-left">
                     @csrf
 
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>

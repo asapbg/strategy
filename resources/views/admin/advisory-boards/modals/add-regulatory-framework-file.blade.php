@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="REGULATORY_FRAMEWORK_FILE" enctype="multipart/form-data" class="pull-left mr-4">
+                <form method="POST" name="REGULATORY_FRAMEWORK_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
                     <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_REGULATORY_FRAMEWORK->value }}"/>

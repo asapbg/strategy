@@ -15,25 +15,6 @@ use Log;
 
 class AdvisoryBoardMeetingsController extends AdminController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,18 +46,6 @@ class AdvisoryBoardMeetingsController extends AdminController
             Log::error($e);
             return response()->json(['status' => 'error'], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeetings
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AdvisoryBoardMeeting $advisoryBoardMeetings)
-    {
-        //
     }
 
     /**

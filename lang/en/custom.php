@@ -490,4 +490,8 @@ return [
     'regulatory_framework' => 'Regulatory framework',
     'meetings_and_decisions' => 'Meetings and decisions',
     'meetings' => 'Meeting|Meetings',
+    'custom_sections' => 'Custom section|Custom sections',
+    'custom_section_order_end' => 'Last',
+    'custom_section_order_start' => 'First',
+    'custom_section_title_help' => 'Used only for internal pages',
 ];

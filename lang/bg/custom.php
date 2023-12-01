@@ -638,4 +638,8 @@ return [
     'pending' => 'очакван',
     'strategic_document_active' => 'Действащ',
     'strategic_document_expired' => 'С изтекъл срок',
+    'custom_sections' => 'Друга секция|Други секции',
+    'custom_section_order_end' => 'Последна',
+    'custom_section_order_start' => 'Първа',
+    'custom_section_title_help' => 'Използва се само за вътрешни страници'
 ];

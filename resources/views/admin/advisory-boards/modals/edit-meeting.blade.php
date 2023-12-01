@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="MEETING_UPDATE" enctype="multipart/form-data" class="pull-left mr-4">
+                <form method="POST" name="MEETING_UPDATE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
                     <input type="hidden" name="meeting_id" value=""/>

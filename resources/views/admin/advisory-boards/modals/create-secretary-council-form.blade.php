@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <form method="POST" name="SECRETARY_OF_COUNCIL_FORM"
                       action=""
-                      class="pull-left mr-4">
+                      class="pull-left">
                     @csrf
 
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>
