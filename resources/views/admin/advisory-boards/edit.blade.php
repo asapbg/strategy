@@ -86,15 +86,18 @@
     </section>
 
     <!-- Delete, Restore -->
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-delete-meeting'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-delete-secretary-council'])
     @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-restore-meeting'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
     @includeIf('modals.restore-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-restore-file'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
 
     <!-- Modals -->
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
+    @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')

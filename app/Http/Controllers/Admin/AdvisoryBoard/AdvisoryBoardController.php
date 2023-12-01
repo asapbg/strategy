@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\AdvisoryChairmanType;
@@ -142,7 +143,7 @@ class AdvisoryBoardController extends AdminController
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
-        $meetings = $item->meetings;
+        $meetings = AdvisoryBoardMeeting::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
 
         $function_files = File::query()
             ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {

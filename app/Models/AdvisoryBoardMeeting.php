@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
+ *
+ * @method static find(mixed $meeting_id)
  */
 class AdvisoryBoardMeeting extends Model
 {

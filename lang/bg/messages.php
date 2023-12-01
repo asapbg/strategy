@@ -14,6 +14,7 @@
     'deleted_successfully_f'    => 'беше изтрита успешно',
     'restored_successfully_m'   => 'беше възстановен успешно',
     'restored_successfully_f'   => 'беше възстановена успешно',
+    'restored_successfully_n'   => 'беше възстановено успешно',
     'file_uploaded_successfully' => 'Файлът беше успешно импортиран',
     'invalid_excel_file'        => 'Невалиден excel файл',
     'invalid_voice_file'        => 'Невалиден гласов файл',
