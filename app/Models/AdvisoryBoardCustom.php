@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +33,7 @@ class AdvisoryBoardCustom extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION);
+        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION)->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
     }
 
     /**
