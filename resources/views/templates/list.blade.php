@@ -17,11 +17,15 @@
 
 <br>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-list']) }}">Партньорство за открито управление</a>
-<br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive']) }}"> - Разработване на нов план за действие</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive']) }}"> - Секция Национални планове за действие</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner-list']) }}"> -- Национални планове за действие - Вътрешна страница на Действащ план</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner-list']) }}"> -- Национални планове за действие - Вътрешна страница на  Изпълнен план</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner']) }}"> <i>-- Национални планове за действие - Вътрешна страница на действащ план Табличен вид</i></a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner-closed']) }}"> <i>-- Национални планове за действие - Вътрешна страница на изпълнен Табличен вид</i></a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-monitoring']) }}"> - Секция „Оценка за изпълнението на плановете за действие - мониторинг“</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive']) }}"> - Секция Разработване на нов план за действие</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner']) }}"> -- Разработване на нов план за действие - вътрешна страница АКТИВЕН СТАТУС</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner-disabled']) }}"> -- Разработване на нов план за действие - вътрешна страница НЕАКТИВЕН СТАТУС</a>
-
-
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum']) }}">OGP forum</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura']) }}">    - OGP forum - Правомощия, органи и структура</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-forum-prav-org-struktura-inner']) }}">  ---- OGP forum - Правомощия, органи и структура - Вътрешна страница на форум</a>

@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\AdvisoryBoard;
 
-use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMeeting;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
- * @property int $item
+ * @property AdvisoryBoard $item
  */
-class StoreAdvisoryBoardFileRequest extends FormRequest
+class UpdateAdvisoryBoardMeetingsRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,13 +33,14 @@ class StoreAdvisoryBoardFileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())]
+            'meeting_id'    => 'required|integer|exists:advisory_board_meetings,id',
+            'next_meeting'  => 'required|date',
         ];
 
         foreach (config('available_languages') as $lang) {
-            $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
-            $rules['file_name_' . $lang['code']] = 'required|string';
-            $rules['file_description_' . $lang['code']] = 'nullable|string';
+            foreach (AdvisoryBoardMeeting::translationFieldsProperties() as $field => $properties) {
+                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+            }
         }
 
         return $rules;

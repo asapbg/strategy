@@ -113,7 +113,7 @@
                     <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}</button>
                     <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
                     @if(isset($btn_add) && $btn_add)
-                        <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</button>
+                        <a class="btn btn-success text-success" href="@if(isset($add_url) && $add_url){{ $add_url }}@else{{ '#' }}@endif" target="_blank"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</a>
                     @endif
                 </div>
             </div>

@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <h2 class="mb-3">Информация</h2>
             </div>
-            <div class="col-md-12 text-старт">
+            <div class="col-md-12 text-start">
                 <button class="btn btn-primary  main-color">
                     <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
                 <button class="btn rss-sub main-color">
@@ -50,21 +50,35 @@
             </div>
         </div>
 
-{{--        <div class="row mb-4">--}}
-{{--            <div class="col-md-4 ">--}}
-{{--                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.type_consultation') }}</h3>--}}
+        <div class="row mb-4">
+            <div class="col-md-4 ">
+                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.type_consultation') }}</h3>
+                <a href="#" class="main-color text-decoration-none">
+                  <span class="obj-icon-info me-2">
+                    <i class="fas fa-file-lines me-2 main-color" title="{{ __('site.public_consultation.type_consultation') }}"></i>
+                      @if($item->actType)<a class="act-type act-type-{{ $item->act_type_id }}" href="{{ route('public_consultation.index').'?actType='.$item->act_type_id }}" target="_blank">{{ $item->actType->name }}</a>@else{{ '---' }}@endif
+                  </span>
+                </a>
+            </div>
+            <div class="col-md-4 ">
+                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
+                <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
+                  <span class="obj-icon-info me-2">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
+                      {{ $item->importerInstitution->name }}
+                  </span>
+                </a>
+            </div>
+            <div class="col-md-4 ">
+                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
 {{--                <a href="#" class="main-color text-decoration-none">--}}
 {{--                  <span class="obj-icon-info me-2">--}}
-{{--                    <i class="fas fa-file-lines me-2 main-color" title="Тип консултация"></i>{{ $item->actType->name }} </span>--}}
+{{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>--}}
+{{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
+{{--                  </span>--}}
 {{--                </a>--}}
-{{--            </div>--}}
-{{--            <div class="col-md-4 ">--}}
-{{--                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>--}}
-{{--                <a href="#" class="main-color text-decoration-none">--}}
-{{--                  <span class="obj-icon-info me-2">--}}
-{{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }} </span>--}}
-{{--                </a>--}}
-{{--            </div>--}}
+                <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
+            </div>
 {{--            <div class="col-md-4 ">--}}
 {{--                <h3 class="mb-2 fs-18">Предишна версия</h3>--}}
 {{--                <a href="#" class="main-color text-decoration-none">--}}
@@ -72,7 +86,7 @@
 {{--                    <i class="fa-solid fa-code-compare me-2 main-color" title="История"></i>Версия 1.1 </span>--}}
 {{--                </a>--}}
 {{--            </div>--}}
-{{--        </div>--}}
+        </div>
 
 
         <div class="row mt-4 mb-4">
@@ -116,25 +130,22 @@
             </div>
         @endif
 
-
+        @if($item->importerInstitution && $item->importerInstitution->links->count())
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
             <div class="col-md-12">
-                @if($item->importerInstitution && $item->importerInstitution->links->count())
-                    <ul class="list-group list-group-flush">
-                        @foreach($item->importerInstitution->links as $l)
-                            <li class="list-group-item">
-                                <a href="#" class="main-color text-decoration-none">
-                                    <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
-                                </a><a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none">{{ $l->title }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    ---
-                @endif
+                <ul class="list-group list-group-flush">
+                    @foreach($item->importerInstitution->links as $l)
+                        <li class="list-group-item">
+                            <a href="#" class="main-color text-decoration-none">
+                                <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
+                            </a><a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none">{{ $l->title }}</a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
+        @endif
 
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.documents', 2) }}</h3>

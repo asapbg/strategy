@@ -428,6 +428,7 @@ return [
         'council_members' => 'Council members',
         'job' => 'Job',
         'member_notes' => 'Notes and short info',
+        'next_meeting' => 'Next meeting',
     ],
 
 ];

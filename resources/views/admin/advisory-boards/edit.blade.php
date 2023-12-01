@@ -21,7 +21,8 @@
                                aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill" href="#secretary-of-council" role="tab"
+                            <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill"
+                               href="#secretary-of-council" role="tab"
                                aria-controls="secretary-of-council"
                                aria-selected="false">{{ trans_choice('custom.secretary_of_council', 2) }}</a>
                         </li>
@@ -34,6 +35,16 @@
                             <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
                                aria-controls="functions"
                                aria-selected="false">{{ trans_choice('custom.function', 2) }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regulatory-tab" data-toggle="pill" href="#regulatory" role="tab"
+                               aria-controls="regulatory"
+                               aria-selected="false">{{ trans_choice('custom.regulatory_framework', 2) }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="decisions-tab" data-toggle="pill" href="#decisions" role="tab"
+                               aria-controls="decisions"
+                               aria-selected="false">{{ trans_choice('custom.meetings_and_decisions', 2) }}</a>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +59,8 @@
                             @include('admin.advisory-boards.tabs.members')
                         </div>
 
-                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel" aria-labelledby="secretary-of-council-tab">
+                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel"
+                             aria-labelledby="secretary-of-council-tab">
                             @include('admin.advisory-boards.tabs.secretary-of-council')
                         </div>
 
@@ -59,24 +71,43 @@
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
                             @include('admin.advisory-boards.tabs.functions')
                         </div>
+
+                        <div class="tab-pane fade" id="regulatory" role="tabpanel" aria-labelledby="regulatory">
+                            @include('admin.advisory-boards.tabs.regulatory-framework')
+                        </div>
+
+                        <div class="tab-pane fade" id="decisions" role="tabpanel" aria-labelledby="decisions">
+                            @include('admin.advisory-boards.tabs.meetings-decisions')
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Delete, Restore -->
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-delete-meeting'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-delete-secretary-council'])
     @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-restore-meeting'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
     @includeIf('modals.restore-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-restore-file'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
+
+    <!-- Modals -->
+    @includeIf('admin.advisory-boards.modals.create-meeting-form')
+    @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')
     @includeIf('admin.advisory-boards.modals.add-secretariat-file')
     @includeIf('admin.advisory-boards.modals.add-function-file')
-    @includeIf('admin.advisory-boards.modals.edit-function-file')
+    @includeIf('admin.advisory-boards.modals.add-meeting-file')
+    @includeIf('admin.advisory-boards.modals.edit-file')
     @includeIf('admin.advisory-boards.modals.create-secretary-council-form')
     @includeIf('admin.advisory-boards.modals.edit-secretary-council-form')
+
+    <!-- Scripts -->
     @includeIf('admin.advisory-boards.scripts')
 @endsection

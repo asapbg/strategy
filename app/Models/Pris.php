@@ -54,7 +54,14 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected function regNum(): Attribute
     {
         return Attribute::make(
-            get: fn () => ('#'.$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y')),
+            get: fn () => (__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y')),
+        );
+    }
+
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (($this->actType ? $this->actType->name : '').' '.__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y').' '.__('custom.of').' '.($this->institution ? $this->institution->name : '---')),
         );
     }
 

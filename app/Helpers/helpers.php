@@ -534,4 +534,29 @@ if (!function_exists('optionsUserTypes')) {
             ];
         }
     }
+
+    if (!function_exists('enumToSelectOptions')) {
+
+        /**
+         * return pagination options
+         *
+         * @param array $enums
+         * @param string $translationBase
+         * @param bool $any
+         * @return array
+         */
+        function enumToSelectOptions( array $enums, string $translationBase = '', bool $any = false): array
+        {
+            $options = [];
+            if( $any ){
+                $options[] = ['value' => '', 'name' => ''];
+            }
+            if( sizeof($enums) ) {
+                foreach ($enums as $name => $val) {
+                    $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.'.$translationBase.'.'.$name) : $name];
+                }
+            }
+            return $options;
+        }
+    }
 }

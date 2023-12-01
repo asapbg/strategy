@@ -361,89 +361,131 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function orderTimeline()
     {
         $events = $this->timeline;
-        $timeline = [];
+        $sortedTimeline = [];
         $now = Carbon::now()->format('Y-m-d H:i:s');
 
         //Начало на обществената консултация
         $startDate = Carbon::parse($this->open_from)->format('Y-m-d 00:00:00');
-        $timeline[$startDate.'_'.PublicConsultationTimelineEnum::START->value] = [
+        $sortedTimeline['2'] = [
             'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)),
             'date' => displayDate($startDate),
             'isActive' => $this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')),
-            'description' => '<p class="'.($this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')) ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)).'.description').'</p>'
+//            'description' => '<p class="'.($this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')) ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)).'.description').'</p>'
+            'description' => ''
         ];
 
         //Приключване на консултацията
         $endDate = Carbon::parse($this->open_to)->format('Y-m-d 23:59:59');
-        $timeline[$endDate.'_'.PublicConsultationTimelineEnum::END->value] = [
+        $sortedTimeline['4'] = [
             'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)),
             'date' => displayDate($endDate),
             'isActive' => $now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s'),
-            'description' => '<p class="'.($now < Carbon::parse($this->open_to)->format('Y-m-d H:i:s') ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)).'.description').'</p>'
+//            'description' => '<p class="'.($now < Carbon::parse($this->open_to)->format('Y-m-d H:i:s') ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)).'.description').'</p>'
+            'description' => ''
         ];
 
         //Приемане на акта от Министерския съвет
         $pris = $this->pris;
-        if( $pris ) {
-//            $actDate = Carbon::parse($pris->doc_date)->format('Y-m-d 23:59:59');
-            //Always last
-            $actDate = '2222-00-00 00:00:00';
-            $timeline[$actDate.'_'.PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value] = [
-                'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value)),
-                'date' => $pris ? displayDate($pris->doc_date) : null,
-                'isActive' => (bool)$pris,
-                'description' => '<p><a class="text-primary" href="'.route('pris.view', ['id' => $pris->id]).'" target="_blank">'.$pris->regNum.'</a></p>'
-            ];
+        if($pris){
+            $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
+            $prisEventDescription = '<p><a class="text-primary" href="'.route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id]).'" target="_blank">'.$pris->displayName.'</a></p>';
+        } else {
+            $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
+            $prisEventDescription = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value).'.description');
         }
+        $sortedTimeline['6'] = [
+            'label' => $prisEventLabel,
+            'date' => $pris ? displayDate($pris->doc_date) : null,
+            'isActive' => (bool)$pris,
+            'description' => $prisEventDescription
+        ];
 
         //TODO PublicConsultationTimelineEnum::PRESENTING_IN_NA->value
-
-        if($events->count()) {
-            foreach ($events as $event) {
-                switch ($event->event_id) {
-                    case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
-                        //always first
-                        $timeline['0000-00-00 00:00:00_'.PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value] = [
-                            'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value)),
-                            'date' => displayDate($event->updated_at),
-                            'isActive' => true,
-                            'description' => '<p><a class="text-primary" target="_blank" href="'.route(($event->object instanceof OperationalProgramRow ? 'op.view' : 'lp.view') , ['id' => $event->object instanceof OperationalProgramRow ? $event->object->operational_program_id : $event->object->legislative_program_id ]).'">'.$event->object->value.'</a></p>'
-                        ];
-                        break;
-                    case PublicConsultationTimelineEnum::FILE_CHANGE->value:
-                    case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
-                        if($event->object->{'description_' . app()->getLocale()}) {
-                            $timeline[$event->created_at.'_'.$event->event_id] = [
-                                'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
-                                'date' => displayDate($event->created_at),
-                                'isActive' => true,
-                                'description' => '<p><span class="d-inline-block">
+        foreach ([PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
+                     PublicConsultationTimelineEnum::FILE_CHANGE->value,
+                     PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value
+                 ] as $e){
+            $found = 0;
+            if($events->count()) {
+                foreach ($events as $event) {
+                    if($e == $event->event_id) {
+                        switch ($event->event_id) {
+                            case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
+                                $label = $event->object instanceof OperationalProgramRow ? __('custom.op_project_timeline_label') : __('custom.lp_project_timeline_label');
+                                //always first
+                                $sortedTimeline['1'] = [
+                                    'label' => $label,
+                                    'date' => displayDate($event->updated_at),
+                                    'isActive' => true,
+                                    'description' => '<p><a class="text-primary" target="_blank" href="'.route(($event->object instanceof OperationalProgramRow ? 'op.view' : 'lp.view') , ['id' => $event->object instanceof OperationalProgramRow ? $event->object->operational_program_id : $event->object->legislative_program_id ]).'">'.$event->object->value.'</a></p>'
+                                ];
+                                $found = 1;
+                                break;
+                            case PublicConsultationTimelineEnum::FILE_CHANGE->value:
+                            case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
+                                $index = $event->event_id == PublicConsultationTimelineEnum::FILE_CHANGE->value ? '3_'.$event->created_at : '5';
+                                if($event->object->{'description_' . app()->getLocale()}) {
+                                    $sortedTimeline[$index] = [
+                                        'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
+                                        'date' => displayDate($event->created_at),
+                                        'isActive' => true,
+                                        'description' => '<p><span class="d-inline-block">
                                                 <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="'.$event->object->id.'" data-url="'.route('admin.preview.file.modal', ['id' => $event->object->id]).'" title="'.__('custom.preview').'">'.fileIcon($event->object->content_type).' '.($event->object->{'description_' . app()->getLocale()}).' '.__('custom.version_short').' '.$event->object->version.'</button>
                                             </span></p>'
-                            ];
+                                    ];
+                                }
+                                $found = 1;
+                                break;
                         }
-                        break;
-                }
-            }
-        }
-
-        //Sort events
-        $timestamps = $sortedTimeline = [];
-        if(sizeof($timeline)) {
-            foreach ($timeline as $key => $event) {
-                $explode = explode('_', $key);
-                $timestamps[] = $explode[0];
-            }
-            usort($timestamps, "compareByTimeStamp");
-
-            $timelineKeys = array_keys($timeline);
-            foreach ($timestamps as $timestamp) {
-                foreach ($timelineKeys as $timelineKey) {
-                    if (str_contains($timelineKey, $timestamp)) {
-                        $sortedTimeline[] = $timeline[$timelineKey];
                     }
                 }
             }
+
+            if(!$found && $e != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
+                $label = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e));
+                $description = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e).'.description');
+                $eData = [
+                    'label' => $label,
+                    'isActive' => false,
+                    'description' => $description
+                ];
+                switch ($e) {
+                    case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
+                        $sortedTimeline['1'] = $eData;
+                        break;
+                    case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
+                        $sortedTimeline['5'] = $eData;
+                        break;
+                }
+            }
+        }
+
+
+        //Sort events
+        $timestamps = [];
+        if(sizeof($sortedTimeline)) {
+            //sort timestamps for multiple events
+            foreach ($sortedTimeline as $key => $event) {
+                $explode = explode('_', $key);
+                if(sizeof($explode) == 2){
+                    $timestamps[] = $explode[1];
+                }
+                usort($timestamps, "compareByTimeStamp");
+            }
+            //replace timestamp keys with sortable keys
+            foreach ($sortedTimeline as $key => $event) {
+                if(sizeof($timestamps)) {
+                    foreach ($timestamps as $tkey => $t){
+                        if (str_contains($key, $t)) {
+                            $newKey = str_replace('_'.$t, '', $key);
+                            $sortedTimeline[$newKey.'.'.$tkey] = $sortedTimeline[$key];
+                            unset($sortedTimeline[$key]);
+                        }
+                    }
+                }
+            }
+
+            array_multisort(array_keys($sortedTimeline), SORT_NATURAL, $sortedTimeline);
         }
         return $sortedTimeline;
     }

@@ -12,6 +12,19 @@
 
 .table-light {
     --bs-table-bg: #d5e7f6;
+    border-color:  #96c3e9;
+}
+
+.table {
+    border-color:  #96c3e9;
+}
+
+.table-inactive {
+    border-color:  #ccc !important;
+}
+
+.gray-out {
+    background: #e6e6e6;
 }
 
 .list-group-flush>.list-group-item {
@@ -61,6 +74,11 @@ h6 {
 .fs-14 {
     font-size: 14px !important;
 }
+
+.fs-16 {
+    font-size: 16px !important;
+}
+
 
 .fs-18 {
     font-size: 18px !important;
@@ -118,11 +136,17 @@ min-height: 38px !important;
 max-height: 38px !important;
 }
 
-.select2-container .select2-selection--multiple{
+span.select2.select2-container.select2-container--default,span.select2.select2-container.select2-container--single {
+    width: 100% !important;
+}
+
+.select2-container .select2-selection--multiple, .select2-container--default .select2-selection--single{
     min-height: 36px !important;
 }
 
-
+.select2-container--default .select2-selection--single {
+    border:1px solid #ced4da !important;
+}
 
 .select2-container--default .select2-selection--multiple, .select2-dropdown {
     border:1px solid #ced4da !important;
@@ -593,7 +617,7 @@ form label {
 }
 
 .consult-img-holder i {
-    font-size: 45px;
+    font-size: 55px;
 }
 
 
@@ -680,16 +704,30 @@ a.box-link span {
 
 .btn.btn-success {
     border: 2px solid #198754;
-    background: #fff;
-    color: #198754;
+    background: #fff !important;;
+    color: #198754 !important;;
     border-radius: 30px !important;
 }
+
+.btn.btn-success:hover {
+    background:#e9fbf3 !important;
+}
+
+:not(.btn-check) + .btn.btn-success:active:focus-visible {
+    color: #198754 !important;
+}
+
+
 
 .btn.btn-danger {
     border: 2px solid #dc3545;
     background: #fff !important;
     color: #dc3545 !important;
     border-radius: 30px !important;
+}
+
+.btn.btn-danger:hover, .btn.btn-reject:hover {
+    background: #ffe6e6 !important;
 }
 
 .btn.btn-reject {
@@ -700,7 +738,7 @@ a.box-link span {
 }
 
 .danger-bgr {
-   background: #dc3545 ; 
+   background: #dc3545 ;
 }
 
 .reg-btn {
@@ -935,7 +973,7 @@ a.box-link span {
 /**/
 
 #slider {
-    margin-top: 127px;
+    margin-top: 126px;
 }
 
 /*Forum*/
@@ -1274,7 +1312,7 @@ footer .nav-item {
 .invalid-feedback {
     display: block;
 }
- 
+
 .register-form .btn-group > .btn-check:checked + .btn {
     border-color: #21659e;
     background: #21659e;
@@ -1426,6 +1464,7 @@ input[type=checkbox] {
     border-radius: 12px;
     font-size: 13px;
     display: inline-flex;
+    text-transform: uppercase;
 }
 
 .inactive-ks {
@@ -1433,6 +1472,7 @@ input[type=checkbox] {
     padding: 2px 10px;
     border-radius: 12px;
     font-size: 13px;
+    text-transform: uppercase;
     display: inline-flex;
 }
 
@@ -1506,6 +1546,7 @@ input[type=checkbox] {
 }
 
 .active-item-left a:hover {
+    color:#fff !important;
     text-decoration: underline !important;
 }
 
@@ -1535,7 +1576,7 @@ input[type=checkbox] {
     background: rgba(var(--bs-success-rgb));
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1553,7 +1594,7 @@ input[type=checkbox] {
     background: rgba(var(--bs-danger-rgb));
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1581,14 +1622,14 @@ input[type=checkbox] {
     width: 100%;
     background-color: #fff;
   }
-  
+
   .calendar-head {
     display: flex;
     min-height: 30px;
     background-color: #21659e;
     color: #fff;
   }
-  
+
   .dayname {
     flex-grow: 1;
     flex-shrink: 1;
@@ -1602,12 +1643,12 @@ input[type=checkbox] {
     line-height: 1;
     font-size: 20px;
   }
-  
+
   .calendar .row {
     display: flex;
     min-height: 150px;
   }
-  
+
   .day {
     flex-grow: 1;
     flex-shrink: 1;
@@ -1615,7 +1656,7 @@ input[type=checkbox] {
     color: #333;
     box-shadow: -1px -1px #D5D7DB, inset -1px -1px 0 0 #D5D7DB;
   }
-  
+
   .day.next {
     color: #d5d7db;
   }
@@ -1693,7 +1734,6 @@ ul.list-group.subscribe-items li {
 
     .select2-container--default .select2-selection--multiple .select2-selection__rendered{
         padding-bottom: 5px;
-        /**/
         min-height: 36px !important;
     }
 
@@ -1788,3 +1828,203 @@ ul.list-group.subscribe-items li {
         width: 100% !important;
     }
 }
+
+/*START INSTITUTION LEVEL CLASS*/
+/*=====================*/
+.institution-level {
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 10px
+}
+.level-central{
+    border: 2px solid #21659e;
+    background: #21659e !important;
+    color: #fff !important;
+}
+.level-central:hover{
+    color: #21659e !important;
+    background: #fff !important;
+}
+
+.level-central_other{
+    border: 2px solid #198754;
+    background: #198754 !important;
+    color: #fff !important;
+}
+.level-central_other:hover{
+    color: #198754 !important;
+    background: #fff !important;
+}
+
+.level-area{
+    border: 2px solid #6f42c1;
+    background: #6f42c1 !important;
+    color: #fff !important;
+}
+.level-area:hover{
+    color: #6f42c1 !important;
+    background: #fff !important;
+}
+
+.level-municipal{
+    border: 2px solid #dc3545;
+    background: #dc3545 !important;
+    color: #fff !important;
+}
+.level-municipal:hover{
+    color: #dc3545 !important;
+    background: #fff !important;
+}
+/*=====================*/
+/*START INSTITUTION LEVEL CLASS*/
+
+/*START ACT TYPE CLASS*/
+/*=====================*/
+.act-type {
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 10px
+}
+.act-type-1{
+    border: 2px solid #21659e;
+    background: #21659e !important;
+    color: #fff !important;
+}
+.act-type-1:hover{
+    color: #21659e !important;
+    background: #fff !important;
+}
+
+.act-type-2{
+    border: 2px solid #198754;
+    background: #198754 !important;
+    color: #fff !important;
+}
+.act-type-2:hover{
+    color: #198754 !important;
+    background: #fff !important;
+}
+
+.act-type-3{
+    border: 2px solid #6f42c1;
+    background: #6f42c1 !important;
+    color: #fff !important;
+}
+.act-type-3:hover{
+    color: #6f42c1 !important;
+    background: #fff !important;
+}
+
+.act-type-4{
+    border: 2px solid #F39189;
+    background: #F39189 !important;
+    color: #fff !important;
+}
+.act-type-4:hover{
+    color: #F39189 !important;
+    background: #fff !important;
+}
+
+.act-type-5{
+    border: 2px solid #AC7088;
+    background: #AC7088 !important;
+    color: #fff !important;
+}
+.act-type-5:hover{
+    color: #AC7088 !important;
+    background: #fff !important;
+}
+
+.act-type-6{
+    border: 2px solid #ECA869;
+    background: #ECA869 !important;
+    color: #fff !important;
+}
+.act-type-6:hover{
+    color: #ECA869 !important;
+    background: #fff !important;
+}
+
+.act-type-7{
+    border: 2px solid #7895B2;
+    background: #7895B2 !important;
+    color: #fff !important;
+}
+.act-type-7:hover{
+    color: #7895B2 !important;
+    background: #fff !important;
+}
+
+.act-type-8{
+    border: 2px solid #C98474;
+    background: #C98474 !important;
+    color: #fff !important;
+}
+.act-type-8:hover{
+    color: #C98474 !important;
+    background: #fff !important;
+}
+
+.act-type-9{
+    border: 2px solid #829460;
+    background: #829460 !important;
+    color: #fff !important;
+}
+.act-type-9:hover{
+    color: #829460 !important;
+    background: #fff !important;
+}
+
+.act-type-10{
+    border: 2px solid #CBB279;
+    background: #CBB279 !important;
+    color: #fff !important;
+}
+.act-type-10:hover{
+    color: #CBB279 !important;
+    background: #fff !important;
+}
+
+.act-type-11{
+    border: 2px solid #7286D3;
+    background: #7286D3 !important;
+    color: #fff !important;
+}
+.act-type-11:hover{
+    color: #7286D3 !important;
+    background: #fff !important;
+}
+
+.act-type-12{
+    border: 2px solid #73A9AD;
+    background: #73A9AD !important;
+    color: #fff !important;
+}
+.act-type-12:hover{
+    color: #73A9AD !important;
+    background: #fff !important;
+}
+
+.act-type-13{
+    border: 2px solid #632626;
+    background: #632626 !important;
+    color: #fff !important;
+}
+.act-type-13:hover{
+    color: #632626 !important;
+    background: #fff !important;
+}
+
+.act-type-14{
+    border: 2px solid #C6D57E;
+    background: #C6D57E !important;
+    color: #fff !important;
+}
+.act-type-14:hover{
+    color: #C6D57E !important;
+    background: #fff !important;
+}
+/*=====================*/
+/*START ACT TYPE  CLASS*/

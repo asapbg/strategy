@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
@@ -31,6 +32,7 @@ use App\Models\Poll;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
+use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
 use App\Services\FileOcr;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -608,11 +610,36 @@ class PublicConsultationController extends AdminController
                 'options' => optionsFromModel(FieldOfAction::get(), true),
                 'multiple' => false,
                 'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 2),
+                'placeholder' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfAction'),
                 'col' => 'col-md-3'
             ),
-
+            'actType' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(ActType::get(), true),
+                'multiple' => false,
+                'default' => '',
+                'placeholder' => trans_choice('custom.act_type', 2),
+                'value' => $request->input('actType'),
+                'col' => 'col-md-3'
+            ),
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => false,
+                'default' => '',
+                'placeholder' => __('site.public_consultation.importer_type'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-3'
+            ),
+            'importer' => array(
+                'type' => 'subjects',
+                'placeholder' => __('site.public_consultation.importer'),
+                'multiple' => false,
+                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
+                'value' => request()->input('importer'),
+                'default' => '',
+            ),
         );
     }
 

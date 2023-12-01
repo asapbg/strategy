@@ -50,6 +50,63 @@
             });
         }
 
+        function loadMeetingData(url) {
+            const form = document.querySelector('form[name=MEETING_UPDATE]');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=meeting_id]').value = data.id;
+
+                    const date = new Date(data.next_meeting);
+                    form.querySelector('#next_meeting').value = date.toLocaleDateString('en-US', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    $(form.querySelector('#description_bg')).summernote("code", data.translations[0].description);
+                    $(form.querySelector('#description_en')).summernote("code", data.translations[1].description);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+        function loadFunctionFileData(url, locale = 'bg') {
+            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
+
+            const locale_spans = form.querySelectorAll('.locale');
+            locale_spans.forEach(function (element) {
+                element.innerHTML = locale.toUpperCase();
+            });
+
+            // Get all input elements with an ID that starts with "file"
+            const fileInputs = form.querySelectorAll('input[name^="file"][class^="form-control"]');
+
+            // Loop through the file input elements and add the "_bg" suffix to their names
+            fileInputs.forEach(function (input) {
+                input.setAttribute('name', input.getAttribute('id') + '_' + locale);
+            });
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name="file_id"]').value = data.id;
+                    form.querySelector('input[name="file_name_' + locale + '"]').value = data.custom_name;
+                    form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function updateAjax(element, url) {
             // change button state
             changeButtonState(element);
@@ -89,37 +146,6 @@
                             form.querySelector(search_class).textContent = errors[i][0];
                         }
                     }
-                }
-            });
-        }
-
-        function loadFunctionFileData(url, locale = 'bg') {
-            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
-
-            const locale_spans = form.querySelectorAll('.locale');
-            locale_spans.forEach(function (element) {
-                element.innerHTML = locale.toUpperCase();
-            });
-
-            // Get all input elements with an ID that starts with "file"
-            const fileInputs = form.querySelectorAll('input[name^="file"][class^="form-control"]');
-
-            // Loop through the file input elements and add the "_bg" suffix to their names
-            fileInputs.forEach(function (input) {
-                input.setAttribute('name', input.getAttribute('id') + '_' + locale);
-            });
-
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    form.querySelector('input[name="file_id"]').value = data.id;
-                    form.querySelector('input[name="file_name_' + locale + '"]').value = data.custom_name;
-                    form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
                 }
             });
         }

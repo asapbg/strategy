@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Requests\StoreCommentRequest;
+use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\FieldOfAction;
 use App\Models\Setting;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -124,8 +127,35 @@ class PublicConsultationController extends Controller
                 'options' => optionsFromModel(FieldOfAction::get()),
                 'multiple' => false,
                 'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 2),
+                'label' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfAction'),
+                'col' => 'col-md-3'
+            ),
+            'actType' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(ActType::get()),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.act_type', 1),
+                'value' => $request->input('actType'),
+                'col' => 'col-md-3'
+            ),
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('site.public_consultation.importer_type'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-3'
+            ),
+            'importer' => array(
+                'type' => 'subjects',
+                'label' => __('site.public_consultation.importer'),
+                'multiple' => false,
+                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
+                'value' => request()->input('importer'),
+                'default' => '',
                 'col' => 'col-md-3'
             ),
             'paginate' => array(
