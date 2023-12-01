@@ -559,7 +559,7 @@ return [
     'edit_information' => 'Редактиране на документ',
     'information' => 'Информация',
     'export' => 'Експорт',
-    'rss_subscribe'      => 'RSS Абониране',
+    'rss_subscribe'      => 'RSS',
     'subscribe'      => 'Абониране',
     'document_to'   => 'Документът е към',
     'public_consultation_link'   => 'Линк към обществена консултация',
