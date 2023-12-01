@@ -1783,6 +1783,9 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
     });
 }
 
+function paginatePage(url){
+    window.location.href = url;
+}
 
 $(document).ready(function () {
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
@@ -1930,6 +1933,13 @@ $(document).ready(function () {
                 }
                 subjectModal.modalObj.hide();
             });
+        });
+    }
+
+    //Change items result on list pages
+    if($('#list-paginate').length) {
+        $('#list-paginate').on('change', function (){
+            paginatePage($(this).find(':selected').data('url'))
         });
     }
 

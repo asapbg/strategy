@@ -7,6 +7,7 @@
                 </h2>
 
                 @foreach($filter as $key => $field)
+                    @continue($key == 'paginate')
                     <div class="{{ $field['col'] ?? 'col-md-6' }} col-12 mb-2  @if($field['type'] == 'subjects') d-flex @endif">
                         @switch($field['type'])
                             @case('text')

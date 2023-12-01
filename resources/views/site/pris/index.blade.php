@@ -16,13 +16,14 @@
             @include('site.partial.sorter')
 
             <div class="row mb-2">
-                <div class="col-12 mt-2">
+                <div class="col-md-6 mt-2">
                     <div class="info-consul text-start">
                         <p class="fw-600">
                             {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->count()]) }}
                         </p>
                     </div>
                 </div>
+                @include('site.partial.paginate_filter')
             </div>
 
             @if($items->count())
@@ -36,7 +37,7 @@
                                             <div class="consult-item-header d-flex justify-content-between">
                                                 <div class="consult-item-header-link">
                                                     <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name),'id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }}">
-                                                        <h3>{{ $item->actType->name }} {{ __('custom.number_symbol') }}{{ $item->doc_num }} {{ __('custom.of') }} {{ $item->institution->name }} от {{ $item->docYear }} {{ __('site.year_short') }}</h3>
+                                                        <h3>{{ $item->displayName }} от {{ $item->docYear }} {{ __('site.year_short') }}</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
