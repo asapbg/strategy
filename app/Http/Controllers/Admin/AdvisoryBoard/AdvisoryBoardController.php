@@ -166,6 +166,13 @@ class AdvisoryBoardController extends AdminController
             ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK])
             ->get();
 
+        $meetings_decisions_files = File::query()
+            ->when(request()->get('show_deleted_decisions_files', 0) == 1, function ($query) {
+                $query->withTrashed()->orderBy('deleted_at', 'desc');
+            })
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
+            ->get();
+
         return $this->view(
             'admin.advisory-boards.edit',
             compact(
@@ -184,6 +191,7 @@ class AdvisoryBoardController extends AdminController
                 'secretariat_files',
                 'regulatory_framework_files',
                 'meetings',
+                'meetings_decisions_files',
             )
         );
     }

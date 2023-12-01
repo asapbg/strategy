@@ -103,6 +103,7 @@
     @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')
     @includeIf('admin.advisory-boards.modals.add-secretariat-file')
     @includeIf('admin.advisory-boards.modals.add-function-file')
+    @includeIf('admin.advisory-boards.modals.add-meeting-file')
     @includeIf('admin.advisory-boards.modals.edit-file')
     @includeIf('admin.advisory-boards.modals.create-secretary-council-form')
     @includeIf('admin.advisory-boards.modals.edit-secretary-council-form')

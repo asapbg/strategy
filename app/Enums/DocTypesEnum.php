@@ -31,6 +31,8 @@ enum DocTypesEnum: int
 
     case AB_REGULATORY_FRAMEWORK = 14; // Файл към нормативна рамка на консултативен съвет
 
+    case AB_MEETINGS_AND_DECISIONS = 15; // Файл към заседания и решения на консултативен съвет
+
     //TODO ask Izi about next two documents. Are they same as 1 and 2 ???
     //case PC_preliminary_IMPACT_EVALUATION = 6; //Предварителна оценка на въздействието
     //case PC_MC_IMPACT_EVALUATION_OPINION = 6; //Становище на администрацията на Министерския съвет

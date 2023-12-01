@@ -103,12 +103,12 @@
 
                     <div class="col-auto">
                         <div class="custom-control custom-switch">
-                            @php $checked = request()->get('show_deleted_functions_files', '0') == '1' ? 'checked' : '' @endphp
+                            @php $checked = request()->get('show_deleted_decisions_files', '0') == '1' ? 'checked' : '' @endphp
                             <input type="checkbox" class="custom-control-input"
-                                   id="show-deleted-function-files"
-                                   {{ $checked }} onchange="toggleDeletedFiles(this, 'functions')">
+                                   id="show-deleted-decisions-files"
+                                   {{ $checked }} onchange="toggleDeletedFiles(this, 'decisions')">
                             <label class="custom-control-label"
-                                   for="show-deleted-function-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                   for="show-deleted-decisions-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
 
             <div class="col-auto">
                 <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-add-function-file">
+                        data-target="#modal-add-meeting-file">
                     <i class="fa fa-plus mr-3"></i>
                     {{ __('custom.add') . ' ' . __('custom.file') }}
                 </button>

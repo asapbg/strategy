@@ -81,6 +81,7 @@ class File extends Model
                 12 => '#functions',
                 13 => '#secretariat',
                 14 => '#regulatory',
+                15 => '#decisions',
                 default => '#unknown'
             }
         );
