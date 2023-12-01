@@ -52,12 +52,12 @@
 
                                                         <div class="col-auto">
                                                             <div class="custom-control custom-switch">
-                                                                @php $checked = request()->get('show_deleted_sections_files', '0') == '1' ? 'checked' : '' @endphp
+                                                                @php $checked = request()->get('show_deleted_custom_files', '0') == '1' ? 'checked' : '' @endphp
                                                                 <input type="checkbox" class="custom-control-input"
-                                                                       id="show_deleted_sections_files"
-                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'sections')">
+                                                                       id="show_deleted_custom_files"
+                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'custom')">
                                                                 <label class="custom-control-label"
-                                                                       for="show_deleted_sections_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                                                       for="show_deleted_custom_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
                                                             </div>
                                                         </div>
                                                     </div>
