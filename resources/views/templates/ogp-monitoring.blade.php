@@ -1,8 +1,5 @@
 @extends('layouts.site', ['fullwidth' => true])
 <style>
-    .public-page {
-        padding: 0px 0px !important;
-    }
 
 </style>
 @section('pageTitle', 'Оценка за изпълнението на плановете за действие - мониторинг')

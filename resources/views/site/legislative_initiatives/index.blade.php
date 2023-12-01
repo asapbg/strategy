@@ -64,7 +64,7 @@
                     {!! $pageTopContent->value !!}
                 </div>
             @endif
-            <div class="row filter-results mb-2">
+            <div class="filter-results mb-2">
                 <h2 class="mb-4">
                     Търсене
                 </h2>
@@ -118,14 +118,14 @@
                         </div>
                     </div>
 
-                    <div class="row mb-5 mt-5">
-                        <div class="col-md-6">
+                    <div class="row m-0 mb-5 action-btn-wrapper">
+                        <div class="col-md-6 px-0">
                             <button class="btn rss-sub main-color" type="submit"><i
                                     class="fas fa-search main-color"></i>Търсене
                             </button>
                         </div>
 
-                        <div class="col-md-6 text-end">
+                        <div class="col-md-6 text-end col-md-6 px-0">
                             <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
                             </button>
                             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
