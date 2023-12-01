@@ -14,7 +14,7 @@
       <div class="row filter-results mb-2">
           <h2 class="mb-4">
               Търсене
-          </h2>  
+          </h2>
           <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
@@ -61,7 +61,7 @@
               <button class="btn rss-sub main-color"><i class="fas fa-search main-color me-1"></i>Търсене</button>
           </div>
           <div class="col-md-6 text-end">
-              <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
+              <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS</button>
               <button class="btn rss-sub main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
               <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добави ръкодоство</button>
           </div>
@@ -74,7 +74,7 @@
           </div>
           <div class="col-md-4 cursor-pointer ">
               <p class="mb-0">
-                  <i class="fa-solid fa-sort me-2"></i>Ключова дума 
+                  <i class="fa-solid fa-sort me-2"></i>Ключова дума
               </p>
           </div>
 
@@ -117,7 +117,7 @@
                                           </i>
                                       </a>
                                   </div>
-                              </div>                              
+                              </div>
                               <div class="meta-consul mt-2">
                                   <span class="text-secondary">
                                       <i class="far fa-calendar text-secondary me-1"></i> 12.09.2023 г
@@ -159,7 +159,7 @@
                                       </a>
                                   </div>
                               </div>
-                            
+
                               <div class="meta-consul mt-2">
                                   <span class="text-secondary">
                                       <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -177,9 +177,9 @@
           </div>
       </div>
 
-  
 
- 
+
+
 
       <div class="row">
           <nav aria-label="Page navigation example">
@@ -206,7 +206,7 @@
       </div>
 
   </div>
-  
+
 </div>
 </body>
 

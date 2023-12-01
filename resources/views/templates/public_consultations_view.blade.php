@@ -51,7 +51,7 @@
                 <button class="btn btn-primary  main-color">
                   <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
                 <button class="btn rss-sub main-color">
-                  <i class="fas fa-square-rss text-warning me-2"></i>RSS Абониране</button>
+                  <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>
                 <button class="btn rss-sub main-color">
                   <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>
               </div>
@@ -753,7 +753,7 @@
                       <p class="text-muted">Справка или съобщение.</p>
                     </li>
                     <li class="timeline-item mb-5">
-                      <h5 class="fw-bold text-muted fs-18">Приемане на акта от Министерския съвет</h5>
+                      <h5 class="fw-bold text-muted fs-18">Окончателен акт на Министерския съвет</h5>
                       <p class="text-muted mb-2 fw-bold text-muted">18.06.2023</p>
                       <p class="text-muted">Окончателен акт.</p>
                     </li>

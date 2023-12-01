@@ -200,7 +200,7 @@
 
                 <div class="row mb-0 mt-5">
                     <div class="mb-2">
-                        <h2 class="mb-1">Прикачени файлове</h2>
+                        <h2 class="mb-1">{{ __('custom.files') }}</h2>
                     </div>
                 </div>
                 <div class="row p-3">
@@ -210,21 +210,34 @@
                             @if($f->locale == $locale)
                                 <div class="custom-card p-3 mb-5">
                                     <div class="col-md-12">
-                                        <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>
-                                        {!! fileHtmlContent($f) !!}
+{{--                                        <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>--}}
+{{--                                        {!! fileHtmlContent($f) !!}--}}
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+                                            <div class="col-12">
+                                                <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="text-end">
+                                                <div class="text-start">
+                                                    <span class="text-start me-3">
+                                                        <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->cretaed_at) }} {{ __('custom.year_short') }}.
+                                                    </span>
                                                     <span class="text-end">
-                                                        <strong>{{ __('custom.date_created') }}:</strong> 15.05.2023г.
-                                                    </span><Br>
-                                                                <span class="text-end">
-                                                        <strong>Дата на публикуване:</strong> 20.05.2023г.
+                                                        <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г.
                                                     </span>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6 text-end">
+                                                <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+{{--                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">--}}
+{{--                                                    {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$locale}) ? $f->{'description_'.$locale} : $f->filename }} | {{ displayDate($f->created_at) }}--}}
+{{--                                                </a>--}}
+                                                <button type="button"
+                                                        class="btn btn-success text-success preview-file-modal mr-2"
+                                                        data-file="{{ $f->id }}"
+                                                        data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}">
+                                                    {!! fileIcon($f->content_type) !!}
+                                                    {{ __('custom.preview') }}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

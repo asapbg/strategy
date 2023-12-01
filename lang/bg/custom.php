@@ -523,7 +523,7 @@ return [
     'timeline.END.description'           => 'Край на консултацията',
     'timeline.PUBLISH_PROPOSALS_REPORT'           => 'Справка за получените предложения',
     'timeline.PUBLISH_PROPOSALS_REPORT.description'           => 'Справка или съобщение.',
-    'timeline.ACCEPT_ACT_MC'           => 'Приемане на акта от Министерския съвет',
+    'timeline.ACCEPT_ACT_MC'           => 'Окончателен акт на Министерския съвет',
     'timeline.ACCEPT_ACT_MC.description'           => 'Окончателен акт на Министерския съвет',
     'timeline.PRESENTING_IN_NA'           => 'Представяне на законопроекта',
     'timeline.PRESENTING_IN_NA.description'           => 'Развито в обхвата на текущата поръчка.',
