@@ -63,7 +63,7 @@ class StrategicDocumentsController extends Controller
                 $query->where('locale', 'bg');
             }])
                 ->whereHas('files.translations', function ($query) {
-                    $query->where('locale', 'bg');
+                    $query->where('locale', 'bg')->where('visible_in_report', 1);
                 })->get();
             return $strategicDocumentsCommonService->preparePdfReportData($strategicDocs);
         }
