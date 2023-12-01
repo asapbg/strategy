@@ -100,7 +100,7 @@
                                     @php $processedFiles[] = $file->id; @endphp
                                     <ul>
                                         <li class="parent_li">
-                                            <span>{{ $file->document_display_name }} {{ $file->id }}</span>
+                                            <span>{{ $file->document_display_name }}</span>
                                             @if ($file->childDocuments->isNotEmpty())
                                                 @foreach ($file->childDocuments as $childDocument)
                                                     @php $processedFiles[] = $childDocument->id; @endphp
