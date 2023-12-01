@@ -2,6 +2,7 @@
 
 namespace App\Services\StrategicDocuments;
 
+use App\Services\Exports\ExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -32,4 +33,10 @@ class CommonService
         return $prepareData;
     }
 
+    public function preparePdfReportData($strategicDocuments)
+    {
+        $exportService = app(ExportService::class);
+
+        return $exportService->export('', $strategicDocuments, 'report.pdf', 'pdf', 'pdf.report');
+    }
 }

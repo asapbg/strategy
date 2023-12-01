@@ -36,7 +36,7 @@ class ExportService
                 if ($pdfView === null) {
                     throw new \InvalidArgumentException('Pdf view not provided.');
                 }
-                $pdf = \PDF::loadView('pdf.default', compact('data'));
+                $pdf = \PDF::loadView($pdfView, compact('data'));
                 return $pdf->download($fileName . '.pdf');
             default:
                 throw new \InvalidArgumentException('Unsupported export format: ' . $format);

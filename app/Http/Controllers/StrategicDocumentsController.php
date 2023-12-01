@@ -46,17 +46,28 @@ class StrategicDocumentsController extends Controller
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $categoriesData = $this->prepareCategoriesData($strategicDocuments);
+        $strategicDocumentsCommonService = app(CommonService::class);
         if ($request->input('export')) {
             $exportService = app(ExportService::class);
             if ($request->input('export') == 'pdf') {
-                $strategicDocumentsCommonService = app(CommonService::class);
+
                 $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
-                return $exportService->export(null, $exportData, 'strategic_documents_export', 'pdf', 'default');
+                return $exportService->export(null, $exportData, 'strategic_documents_export', 'pdf', 'pdf.default');
             }
             if ($request->input('export') == 'xlsx' || $request->input('export') == 'csv') {
                 return $exportService->export('App\Exports\StrategicDocumentsExport', $strategicDocuments->get(), 'strategic_documents_export', $request->input('export'));
             }
         }
+        if ($request->input('document-report') == 'download') {
+            $strategicDocs = $strategicDocuments->with(['translations', 'files.translations' => function ($query) {
+                $query->where('locale', 'bg');
+            }])
+                ->whereHas('files.translations', function ($query) {
+                    $query->where('locale', 'bg');
+                })->get();
+            return $strategicDocumentsCommonService->preparePdfReportData($strategicDocs);
+        }
+
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
         $pageTitle = $this->title_singular;

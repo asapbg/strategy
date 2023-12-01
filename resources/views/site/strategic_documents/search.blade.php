@@ -26,6 +26,10 @@
                 <li><a id="csv_export" class="dropdown-item" href="#">Експорт като Csv</a></li>
             </ul>
         </div>
+        <button id="documents_report" class="btn btn-primary main-color dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-download main-color me-2"></i>
+            Справка с всички документи
+        </button>
         <!--
         <button id="strategicDocumentsExport" class="btn btn-primary main-color">
             <i

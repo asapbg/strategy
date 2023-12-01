@@ -2,9 +2,16 @@
     <script>
         $(document).ready(function() {
             let doExport = null;
+            let documentReport = null;
             const pdfExport = $('#pdf_export');
             const excelExport =  $('#excel_export');
             const csvExport =  $('#csv_export');
+            const documentsReport = $('#documents_report');
+            documentsReport.on('click', function () {
+                documentReport = 'download'
+                window.location.href = buildUrl();
+            });
+
             pdfExport.on('click', function() {
                 doExport = 'pdf';
                 window.location.href = buildUrl();
@@ -186,8 +193,9 @@
                     '&date-infinite=' + encodeURIComponent(infiniteDate.prop('checked')) +
                     '&document-level=' + encodeURIComponent(documentLevelSelect.val()) +
                     '&policy-area-sort-order=' + encodeURIComponent(policyAreaSortOrder) +
-                    '&view=' + encodeURIComponent(view) + '&export=' + doExport;
+                    '&view=' + encodeURIComponent(view) + '&export=' + doExport + '&document-report=' + documentReport;
                 doExport = null;
+                documentReport = null;
                 return url;
             }
 
