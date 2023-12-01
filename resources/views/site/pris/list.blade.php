@@ -85,7 +85,6 @@
 
     <div class="row">
         @if(isset($items) && $items->count() > 0)
-            {{ $items->links() }}
-            {{--                    {{ $items->appends(request()->query())->links() }}--}}
+            {{ $items->appends(request()->query())->links() }}
         @endif
     </div>

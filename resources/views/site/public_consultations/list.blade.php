@@ -95,3 +95,9 @@
         </div>
     @endforeach
 </div>
+<div class="row">
+    @if(isset($pk) && $pk->count() > 0)
+        {{ $pk->appends(request()->query())->links() }}
+        {{--                    {{ $items->appends(request()->query())->links() }}--}}
+    @endif
+</div>
