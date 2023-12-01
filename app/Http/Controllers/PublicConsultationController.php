@@ -19,6 +19,7 @@ class PublicConsultationController extends Controller
 {
     public function index(Request $request)
     {
+        $rf = $request->all();
         $requestFilter = $request->all();
         //Filter
         $filter = $this->filters($request);
@@ -49,6 +50,11 @@ class PublicConsultationController extends Controller
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
+
+        if( $request->ajax() ) {
+            return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf'));
+        }
+
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
         return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent'));

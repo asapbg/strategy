@@ -49,7 +49,7 @@
     $sort_url = url()->current(). '?' . http_build_query(array_merge(request()->all(), $sort_array));
 @endphp
 
-<a href="{{ $sort_url }}"
-   class="mb-0 text-decoration-none text-dark">
+<a href="{{ $sort_url }}" @if(isset($ajax) && $ajax) data-url="{{ $sort_url }}" @if(isset($ajaxContainer)) data-container="{{ $ajaxContainer }}" @endif @endif
+   class="mb-0 text-decoration-none text-dark @if(isset($ajax) && $ajax) ajaxSort @endif">
     <i class="fa-solid {{ $sort_icon }} me-2 {{ $sort_white }}"></i>{{ $translation }}
 </a>

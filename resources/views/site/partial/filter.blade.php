@@ -34,6 +34,9 @@
                                 </label>
                                 @break('checkbox')
                             @case('select')
+                                @if(isset($field['multiple']) && $field['multiple'] && !empty($field['value']) && is_array($field['value']) && str_contains($field['value'][0], ','))
+                                    @php($field['value'] = explode(',', $field['value'][0]))
+                                @endif
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column  w-100">
                                         <label for="exampleFormControlInput1" class="form-label">{{ $field['label'] }}:</label>
@@ -108,7 +111,11 @@
 
             <div class="row mb-5">
                 <div class="col-md-6">
-                    <button type="submit" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>{{ __('custom.search') }}</button>
+                    @php($fRequest = $rf ?? request()->all())
+                    <button type="@if(isset($ajax) && $ajax){{ 'button' }}@else{{ 'submit' }}@endif"
+                            class="btn rss-sub main-color @if(isset($ajax) && $ajax) ajaxSearch @endif" @if(isset($ajax) && $ajax) data-params="{{ json_encode($fRequest) }}" data-url="{{ url()->current() }}" @if(isset($ajaxContainer)) data-container="{{ $ajaxContainer }}" @endif @endif >
+                        <i class="fas fa-search main-color"></i>{{ __('custom.search') }}
+                    </button>
                 </div>
                 <div class="col-md-6 text-end">
                     <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}</button>
