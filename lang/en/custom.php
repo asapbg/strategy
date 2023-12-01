@@ -494,4 +494,5 @@ return [
     'custom_section_order_end' => 'Last',
     'custom_section_order_start' => 'First',
     'custom_section_title_help' => 'Used only for internal pages',
+    'file_update_help' => "Not uploading a file, will update only it's data",
 ];

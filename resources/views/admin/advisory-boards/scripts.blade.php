@@ -77,7 +77,7 @@
         }
 
         function loadFunctionFileData(url, locale = 'bg') {
-            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
+            const form = document.querySelector('form[name=FILE_UPDATE]');
 
             const locale_spans = form.querySelectorAll('.locale');
             locale_spans.forEach(function (element) {

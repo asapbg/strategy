@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="FUNCTIONS_FILE_UPDATE" enctype="multipart/form-data" class="pull-left">
+                <form method="POST" name="FILE_UPDATE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
                     <input type="hidden" name="file_id" value=""/>
@@ -19,29 +19,30 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label class="col-sm-12 control-label"
+                                <label class="col-sm-12 control-label p-0"
                                        for="file">{{ __('custom.file') }}
                                     (<span class="locale"></span>)
-                                    <span class="required">*</span>
                                 </label>
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <label for="file" class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
-                                        <input name="file" class="d-none form-control" type="file" id="file" onchange="attachDocFileName(this)">
+                                        <label for="file"
+                                               class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
+                                        <input name="file" class="d-none form-control" type="file" id="file"
+                                               onchange="attachDocFileName(this)">
                                         <span class="document-name"></span>
+                                        <div id="fileUpdateHelp" class="form-text">{{ __('custom.file_update_help') }}.
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="text-danger mt-1 error_file"></div>
+                                    <div class="text-danger mt-1 error_file"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label class="col-sm-12 control-label"
+                                <label class="control-label"
                                        for="file_name">{{ __('custom.name') }}
                                     (<span class="locale"></span>)
                                     <span class="required">*</span>
@@ -58,9 +59,7 @@
                                 <div class="text-danger mt-1 error_file_name"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -85,7 +84,7 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('custom.cancel') }}</button>
                 <button type="button" class="btn btn-success"
-                        onclick="updateFunctionFileAjax(this)">
+                        onclick="updateFileAjax(this)">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
                     <span class="text">{{ __('custom.add') }}</span>
                 </button>
@@ -96,12 +95,12 @@
 
 @push('scripts')
     <script type="application/javascript">
-        function updateFunctionFileAjax(element) {
+        function updateFileAjax(element) {
             // change button state
             changeButtonState(element);
 
             // Get the form element
-            const form = document.querySelector('form[name=FUNCTIONS_FILE_UPDATE]');
+            const form = document.querySelector('form[name=FILE_UPDATE]');
             const formData = new FormData(form);
 
             // Get all file input elements with an ID that starts with "file"

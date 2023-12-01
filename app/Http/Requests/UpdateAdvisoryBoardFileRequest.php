@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @property AdvisoryBoard $item
  */
-class UpdateAdvisoryBoardFunctionFileRequest extends FormRequest
+class UpdateAdvisoryBoardFileRequest extends FormRequest
 {
 
     /**
@@ -29,7 +29,7 @@ class UpdateAdvisoryBoardFunctionFileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'file' => 'required|file|mimes:pdf,doc,docx,xlsx',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xlsx',
             'file_id' => 'required|integer|exists:files,id'
         ];
 

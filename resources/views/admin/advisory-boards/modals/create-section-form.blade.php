@@ -103,6 +103,12 @@
 
         let generated_inputs = 0;
 
+        /**
+         * Submit new section.
+         *
+         * @param element
+         * @param url
+         */
         function submitSectionAjax(element, url) {
             // change button state
             changeButtonState(element);
@@ -146,6 +152,9 @@
             });
         }
 
+        /**
+         * Create new row with files.
+         */
         function addFilesRow() {
             const container = document.querySelector('#modal-create-section .row.files');
 
@@ -177,6 +186,14 @@
             container.appendChild(container_col);
         }
 
+        /**
+         * Generate file input.
+         *
+         * @param language
+         * @param identifier
+         * @param should_have_delete_button
+         * @returns {HTMLDivElement}
+         */
         function generateFileInput(language, identifier, should_have_delete_button) {
             // Create the HTML elements
             const file_label = document.createElement('label');
@@ -221,6 +238,11 @@
             return file_col;
         }
 
+        /**
+         * Generate button for removing a row with files.
+         *
+         * @returns {HTMLDivElement}
+         */
         function generateDeleteButton() {
             const delete_col = document.createElement('div');
             delete_col.classList.add('col-auto', 'align-self-center');
@@ -230,15 +252,10 @@
             delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
             delete_button.title = 'Изтрий';
             delete_button.innerHTML = '<i class="fa fa-trash"></i>';
-            delete_button.onclick = () => removeFileRow(delete_button);
+            delete_button.onclick = () => delete_button.closest('.col-12').remove();
 
             delete_col.appendChild(delete_button);
             return delete_col;
-        }
-
-        function removeFileRow(row) {
-            console.log(row);
-            row.closest('.col-12').remove()
         }
     </script>
 @endpush
