@@ -20,9 +20,10 @@
                             @endif
                         </ul>
                     </div>
-                    <div class="card-body">
+                   
+                    <div class="card-body p-0">
                         <div class="tab-content" id="custom-tabsContent">
-                            <div class="tab-pane fade active show" id="general" role="tabpanel"
+                            <div class="tab-pane fade active show pt-0" id="general" role="tabpanel"
                                  aria-labelledby="general-tab">
                                 @include('admin.strategic_documents.general')
                             </div>

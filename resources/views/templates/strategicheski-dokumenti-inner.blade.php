@@ -17,9 +17,23 @@
             <div class="col-md-12">
                 <h2 class="mb-3">Информация</h2>
             </div>
-            <div class="col-md-12 text-старт">
-                <button class="btn btn-primary  main-color">
-                    <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
+            <div class="col-md-12 text-start">
+               
+                <div class="dropdown d-inline">
+                    <button class="btn btn-primary main-color dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download main-color me-2"></i>
+                        Експорт
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Експорт като Pdf</a></li>
+                        <li><a class="dropdown-item" href="#">Експорт като Excel</a></li>
+                        <li><a class="dropdown-item" href="#">Експорт като Csv</a></li>
+                    </ul>
+                </div>
+
+
+
                 <button class="btn rss-sub main-color">
                     <i class="fas fa-square-rss text-warning me-2"></i>RSS Абониране</button>
                 <button class="btn rss-sub main-color">
