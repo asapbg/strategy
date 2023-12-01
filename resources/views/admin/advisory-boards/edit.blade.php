@@ -110,6 +110,7 @@
     @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-custom-file')
     @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')
     @includeIf('admin.advisory-boards.modals.add-secretariat-file')
     @includeIf('admin.advisory-boards.modals.add-function-file')
