@@ -40,17 +40,18 @@ class StoreStrategicDocumentRequest extends FormRequest
             'active' => ['required', 'numeric', 'in:0,1'],
             //'valid_at_main' => ['required', 'date'],
             'valid_at_main' => ['required_if:date_valid_indefinite_main,0', 'date', 'nullable'],
-            'pris_act_id' => ['required_if:strategic_act_link,null'],
+            'pris_act_id' => ['nullable'],
             'strategic_act_number' => ['nullable', 'string', 'max:100'],
-            'strategic_act_link' => ['required_if:pris_act_id,null'],
+            'strategic_act_link' => ['nullable'],
             'document_date' => ['nullable', 'date'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
             'document_date_accepted' => 'required|date',
             'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
-            'ekatte_area_id' => 'sometimes|exists:ekatte_area,id',
-            'ekatte_municipality_id' => 'sometimes|exists:ekatte_municipality,id',
+            'ekatte_area_id' => 'nullable|sometimes|integer',
+            'ekatte_municipality_id' => 'nullable|sometimes|integer',
+            'visible_in_report_main' => ['nullable', 'numeric'],
         ];
 
         if( request()->input('pris_act_id')) {

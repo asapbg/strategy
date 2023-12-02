@@ -169,6 +169,7 @@ class StrategicDocumentsController extends AdminController
                         $mainFile->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file_main_id');
                         $validAt = Arr::get($validated, 'valid_at_main');
                         $mainFile->valid_at = $validAt ? Carbon::parse($validAt) : null;
+                        $mainFile->visible_in_report = Arr::get($validated, 'visible_in_report') ?? 0;
                         $mainFile->save();
                     }
                 }

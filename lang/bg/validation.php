@@ -432,5 +432,12 @@ return [
         'job' => 'Длъжност',
         'member_notes' => 'Бележки и кратка информация',
         'next_meeting' => 'Следващо заседание',
+        'strategic_document_level_id' => 'Ниво на стратегически документ',
+        'policy_area_id' => 'Област на политика',
+        'strategic_document_type_id' => 'Вид стратегически документ',
+        'strategic_act_type_id' => 'Вид акт, с който се одобряват стратегически документи',
+        'accept_act_institution_type_id' => 'Орган, приел стратегически документ',
+        'document_date_accepted'  => 'Дата на приемане',
+        'document_date_expiring'  => 'Дата на валидност',
     ],
 ];

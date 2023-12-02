@@ -512,9 +512,9 @@
                         <div class="col-md-8">
                             <div class="form-group form-group-sm">
                                 <label class="col-sm-12 control-label" for="visible_in_report"><br>
-                                    <input type="checkbox" id="visible_in_report" name="visible_in_report"
+                                    <input type="checkbox" id="visible_in_report" name="visible_in_report_main"
                                            class="checkbox"
-                                           value="1" @if (old('visible_in_report',0)) checked @endif>
+                                           value="1" @if (old('visible_in_report', optional($mainFile)->visible_in_report)) checked @endif>
                                     {{ __('custom.visible_in_report') }}
                                 </label>
                             </div>

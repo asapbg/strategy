@@ -59,11 +59,12 @@ class StrategicDocumentsController extends Controller
             }
         }
         if ($request->input('document-report') == 'download') {
-            $strategicDocs = $strategicDocuments->with(['translations', 'files.translations' => function ($query) {
-                $query->where('locale', 'bg');
+            $currentLocale = app()->getLocale();
+            $strategicDocs = $strategicDocuments->with(['translations', 'files.translations' => function ($query) use ($currentLocale) {
+                $query->where('locale', $currentLocale);
             }])
-                ->whereHas('files.translations', function ($query) {
-                    $query->where('locale', 'bg')->where('visible_in_report', 1);
+                ->whereHas('files.translations', function ($query) use ($currentLocale) {
+                    $query->where('locale', $currentLocale)->where('visible_in_report', 1);
                 })->get();
             return $strategicDocumentsCommonService->preparePdfReportData($strategicDocs);
         }
