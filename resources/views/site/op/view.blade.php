@@ -38,7 +38,7 @@
                         @if(isset($months) && sizeof($months))
                             @foreach($months as $m)
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link tablinks @if($loop->first) active @endif" id="{{ 't'.$m }}-tab" data-toggle="tab" data-target="#{{ 't'.$m }}" type="button" role="tab" aria-controls="{{ 't'.$m }}" aria-selected="true">{{ __('site.'.(int)$m) }}</button>
+                                    <a href="#{{ 't'.$m }}" class="nav-link tablinks @if($loop->first) active @endif" id="{{ 't'.$m }}-tab" data-toggle="tab" data-target="#{{ 't'.$m }}" type="button" role="tab" aria-controls="{{ 't'.$m }}" aria-selected="true">{{ __('site.'.(int)$m) }}</a>
                                 </li>
                             @endforeach
                         @endif
