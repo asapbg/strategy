@@ -208,6 +208,23 @@ class FileService
 
     public function prepareMainFileFields($validated)
     {
+        $fieldsToMap = [
+            'display_name_main_bg' => 'display_name_bg',
+            'display_name_main_en' => 'display_name_en',
+            'file_strategic_documents_bg_main' => 'file_strategic_documents_bg',
+            'file_strategic_documents_en_main' => 'file_strategic_documents_en',
+            'valid_at_main' => 'valid_at',
+            'visible_in_report_main' => 'visible_in_report',
+        ];
+
+        foreach ($fieldsToMap as $sourceField => $destinationField) {
+            if (Arr::get($validated, $sourceField)) {
+                $validated[$destinationField] = $validated[$sourceField];
+                unset($validated[$sourceField]);
+            }
+        }
+
+        /*
         if (Arr::get($validated, 'display_name_main_bg')) {
             $validated['display_name_bg'] = $validated['display_name_main_bg'];
             unset($validated['display_name_main_bg']);
@@ -230,6 +247,11 @@ class FileService
         if (Arr::get($validated, 'valid_at_main')) {
             $validated['valid_at'] = $validated['valid_at_main'];
         }
+        if (Arr::get($validated, 'visible_in_report_main')) {
+            $validated['visible_in_report'] = $validated['visible_in_report_main'];
+            unset($validated['visible_in_report_main']);
+        }
+        */
         /*
         if (Arr::get($validated, 'strategic_document_type_file_main_id')) {
             $validated['strategic_document_type_id_bg'] = $validated['strategic_document_type_file_main_id'];

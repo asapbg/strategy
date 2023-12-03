@@ -14,11 +14,11 @@
                          'required' => true,
                         ])
                     </div>
-    
+
                     <div class="row">
                         @include('admin.partial.edit_field_translate', ['field' => 'description', 'required' => true])
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -48,9 +48,9 @@
                                 </div>
                             </div>
                         </div>
-    
-    
-    
+
+
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-12" id="ekatte_area_div_id">
                             <div class="form-group">
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="col-md-12" id="ekatte_municipality_div_id">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -177,7 +177,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -206,7 +206,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-12 d-none" id="pris-act">
                             <div class="col-12">
@@ -237,7 +237,7 @@
                                         <option value="{{ $item->pris?->id }}"
                                                 {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
                                                 data-id="{{ $item->pris?->id }}"> {{ $item->pris?->regNum }} </option>
-    
+
                                         @foreach ($prisActs as $prisAct)
                                             <option value="{{ $prisAct->id }}">
                                                 {{ $prisAct->regNum }}
@@ -254,9 +254,9 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
-                        
+
                     <div class="col-md-6 act-custom-fields d-none">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
@@ -287,7 +287,7 @@
                     </div>
                     </div>
 
-                  
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -384,7 +384,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -436,7 +436,7 @@
                                 </div>
                             </div>
                         </div>
-                  
+
                 </div>
             </div>
         </div>
@@ -459,7 +459,7 @@
                     </div>
 
                  <div class="row">
-                        <div class="col-md-4">                           
+                        <div class="col-md-4">
                             <div class="form-group form-group-sm">
                                 <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span
                                         class="required">*</span> </label>
@@ -527,7 +527,7 @@
                                     <label class="col-sm-12 control-label" for="visible_in_report"><br>
                                         <input type="checkbox" id="visible_in_report" name="visible_in_report"
                                                class="checkbox"
-                                               value="1" @if (old('visible_in_report',0)) checked @endif>
+                                               value="1" @if (old('visible_in_report', optional($mainFile)->visible_in_report)) checked @endif>
                                         {{ __('custom.visible_in_report') }}
                                     </label>
                                 </div>
@@ -579,7 +579,7 @@
                                 </div>
                             @endforeach
                         </div>
-                    
+
 
 
 
