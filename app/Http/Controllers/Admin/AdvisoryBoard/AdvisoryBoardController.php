@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardSecretaryCouncil;
@@ -173,6 +174,12 @@ class AdvisoryBoardController extends AdminController
             ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
             ->get();
 
+        $sections = AdvisoryBoardCustom::withTrashed()->with(['files' => function ($query) {
+            $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
+                $query->withTrashed();
+            });
+        }])->where('advisory_board_id', $item->id)->orderBy('order')->get();
+
         return $this->view(
             'admin.advisory-boards.edit',
             compact(
@@ -192,6 +199,7 @@ class AdvisoryBoardController extends AdminController
                 'regulatory_framework_files',
                 'meetings',
                 'meetings_decisions_files',
+                'sections',
             )
         );
     }

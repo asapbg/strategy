@@ -225,7 +225,7 @@
             <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
         </div>
         <div class="col-md-6 text-end">
-            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS Абониране</button>
+            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>RSS</button>
             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>Абониране</button>
             <button class="btn btn-success text-success"><i
                     class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>

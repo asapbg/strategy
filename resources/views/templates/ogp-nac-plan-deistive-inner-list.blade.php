@@ -60,7 +60,7 @@
                 <button class="btn btn-primary  main-color">
                     <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
                 <button class="btn rss-sub main-color">
-                    <i class="fas fa-square-rss text-warning me-2"></i>RSS Абониране</button>
+                    <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>
                 <button class="btn rss-sub main-color">
                     <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>
             </div>
@@ -276,9 +276,9 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
                                   <button class=" accordion-button text-dark fs-18 fw-600 collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    
+
                                     Тематична област №2 - Отворени градове
-                                
+
                                   </button>
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">

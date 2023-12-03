@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="#"><span class="pris-tag">{{ $item->actType->name }}</span></a>
+                        <a href="{{ route('pris.index').'?legalActTypes[]='.$item->actType->id }}" target="_blank"><span class="pris-tag">{{ $item->actType->name }}</span></a>
                     </div>
                 </div>
                 <div class="row pris-row pb-2 mb-2">
@@ -49,25 +49,26 @@
 
                     <div class="col-md-9 pris-left-column">
                         <span>
-                            {{ $item->doc_num }}
+                            {{ $item->regNum }}
                         </span>
                     </div>
                 </div>
 
+                @if($item->consultation)
+                    <div class="row pris-row pb-2 mb-2">
+                        <div class="col-md-3 pris-left-column">
+                            <i class="fa-brands fa-keycdn main-color me-1"></i>{{ __('custom.consultation_number_') }}
+                        </div>
+
+                        <div class="col-md-9 pris-left-column">
+                            <a href="{{ route('public_consultation.view', ['id' => $item->consultation->id ]) }}" title="{{ __('custom.consultation_number_').' '.$item->consultation->reg_num }}" class="text-decoration-none">{{ $item->consultation->reg_num }}</a>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-brands fa-keycdn main-color me-1"></i>Уникален номер
-                    </div>
-
-                    <div class="col-md-9 pris-left-column">
-                        <a href="#" class="text-decoration-none">{{ $item->regnum }}</a>
-
-                    </div>
-                </div>
-
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-calendar-check main-color me-1"></i>Дата на издаване
+                        <i class="fa-solid fa-calendar-check main-color me-1"></i>{{ __('custom.date_issued') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -77,7 +78,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-regular fa-calendar-days main-color me-1"></i>Дата на публикуване
+                        <i class="fa-regular fa-calendar-days main-color me-1"></i>{{ __('custom.date_published') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -94,45 +95,47 @@
                         {!! $item->about !!}
                     </div>
                 </div>
+                @if($item->institution)
+                    <div class="row pris-row pb-2 mb-2">
+                        <div class="col-md-3 pris-left-column">
+                            <i class="fa-solid fa-university main-color me-1"></i>{{ trans_choice('custom.institutions', 1) }}
+                        </div>
+
+                        <div class="col-md-9 pris-left-column">
+                            <a href="{{ route('admin.strategic_documents.institutions.edit', $item->institution) }}" class="text-decoration-none" target="_blank" title="{{ $item->institution->name }}">{{ $item->institution->name }} </a>
+                        </div>
+                    </div>
+                @endif
+
+                @if($item->importer)
+                    <div class="row pris-row pb-2 mb-2">
+                        <div class="col-md-3 pris-left-column">
+                            <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
+                        </div>
+
+                        <div class="col-md-9 pris-left-column">
+                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-university main-color me-1"></i>{{ trans_choice('custom.institutions', 1) }}
+                        <i class="fa-regular fa-file-lines main-color me-1"></i>{{ __('validation.attributes.protocol') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="#" class="text-decoration-none">{{ $item->institution->name }} </a>
+                        <a href="{{ route('pris.index').'?protocol='.$item->protocol }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
                     </div>
                 </div>
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
+                        <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="#" class="text-decoration-none">{{ $item->importer }} </a>
-                    </div>
-                </div>
-
-
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class="fa-regular fa-file-lines main-color me-1"></i>{{ __('validation.attributes.protocolr') }}
-                    </div>
-
-                    <div class="col-md-9 pris-left-column">
-                        {{ $item->protocol }}
-                    </div>
-                </div>
-
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper_number') }}
-                    </div>
-
-                    <div class="col-md-9 pris-left-column">
-                        <a href="#" class="text-decoration-none"> {{ $item->newspaper }}</a>
+                        <a href="{{ route('pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
                     </div>
                 </div>
 
@@ -148,12 +151,12 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-tags main-color me-1"></i>Термини
+                        <i class="fa-solid fa-tags main-color me-1"></i>{{ trans_choice('custom.tags', 2) }}
                     </div>
                     <div class="col-md-9 pris-left-column">
                         @if($item->tags->count())
                             @foreach($item->tags as $tag)
-                                <a href="#"><span class="pris-tag">{{ $tag->label }}</span></a>
+                                <a href="{{ route('pris.index').'?tag='.$tag->id }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $tag->label }}" target="_blank"><span class="pris-tag">{{ $tag->label }}</span></a>
                             @endforeach
                         @endif
                     </div>
@@ -161,7 +164,7 @@
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-arrow-right-arrow-left main-color me-1"></i>Свързани документи
+                        <i class="fa-solid fa-arrow-right-arrow-left main-color me-1"></i>{{ __('custom.change_docs') }}
                     </div>
 
                     <div class="col-md-9 pris-left-column">
@@ -169,7 +172,7 @@
                             @foreach($item->changedDocs as $doc)
                                 <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
-                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}
+                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}
                                 </a>
                             @endforeach
                         @endif
@@ -197,7 +200,7 @@
 
                 <div class="row mb-0 mt-5">
                     <div class="mb-2">
-                        <h2 class="mb-1">Прикачени файлове</h2>
+                        <h2 class="mb-1">{{ __('custom.files') }}</h2>
                     </div>
                 </div>
                 <div class="row p-3">
@@ -207,21 +210,34 @@
                             @if($f->locale == $locale)
                                 <div class="custom-card p-3 mb-5">
                                     <div class="col-md-12">
-                                        <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>
-                                        {!! fileHtmlContent($f) !!}
+{{--                                        <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>--}}
+{{--                                        {!! fileHtmlContent($f) !!}--}}
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+                                            <div class="col-12">
+                                                <h4 class="mb-2">{{ $f->{'description_'.$locale} }}</h4>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="text-end">
+                                                <div class="text-start">
+                                                    <span class="text-start me-3">
+                                                        <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->cretaed_at) }} {{ __('custom.year_short') }}.
+                                                    </span>
                                                     <span class="text-end">
-                                                        <strong>{{ __('custom.date_created') }}:</strong> 15.05.2023г.
-                                                    </span><Br>
-                                                                <span class="text-end">
-                                                        <strong>Дата на публикуване:</strong> 20.05.2023г.
+                                                        <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г.
                                                     </span>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6 text-end">
+                                                <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+{{--                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">--}}
+{{--                                                    {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$locale}) ? $f->{'description_'.$locale} : $f->filename }} | {{ displayDate($f->created_at) }}--}}
+{{--                                                </a>--}}
+                                                <button type="button"
+                                                        class="btn btn-success text-success preview-file-modal mr-2"
+                                                        data-file="{{ $f->id }}"
+                                                        data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}">
+                                                    {!! fileIcon($f->content_type) !!}
+                                                    {{ __('custom.preview') }}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

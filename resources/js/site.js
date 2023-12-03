@@ -166,6 +166,103 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
     });
 }
 
+// ===================
+// !!! DO NOT CHANGE
+// START LISTS AJAX
+// ===================
+
+
+function initInputs()
+{
+    $('.select2').select2(select2Options);
+
+    $('.datepicker').datepicker({
+        language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+        format: 'dd.mm.yyyy',
+        todayHighlight: true,
+        orientation: "bottom left",
+        autoclose: true,
+        weekStart: 1,
+        changeMonth: true,
+        changeYear: true,
+    });
+
+    $('.pick-institution').on('click', function (){
+        let subjectModal = new MyModal({
+            title: $(this).data('title'),
+            destroyListener: true,
+            bodyLoadUrl: $(this).data('url'),
+            customClass: 'no-footer'
+        });
+        // console.log($('#select-institution'));
+// console.log(subjectModal.id);
+//         $(document).on('click', '#select-institution', function (){
+//             console.log('ok');
+//         });
+        $(document).on('click', '#select-institution', function (){
+            let subjectsFormSelect = $('#' + $(this).data('dom'));
+            let checked = $('#'+ subjectModal.id +' input[name="institutions-item"]:checked');
+            if( checked.length ) {
+                if( checked.length === 1 ) {
+                    subjectsFormSelect.val(checked.val());
+                } else if( checked.length > 1 ) {
+                    let subjectValues = [];
+                    checked.each(function(){
+                        subjectValues.push($(this).val());
+                    });
+                    subjectsFormSelect.val(subjectValues);
+                }
+                subjectsFormSelect.trigger('change');
+            }
+            subjectModal.modalObj.hide();
+        });
+    });
+}
+
+function ajaxList(domElement) {
+    $(document).on('change', domElement + ' #list-paginate', function (){
+        $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
+            //$('.select2').select2(select2Options);
+            initInputs();
+            ajaxList($(this).data('container'));
+        });
+    });
+    $(document).on('click', domElement + ' .ajaxSort', function (e){
+        e.preventDefault();
+        $($(this).data('container')).load($(this).data('url'), function (){
+            initInputs();
+            ajaxList($(this).data('container'));
+        });
+    });
+    $(document).on('click', domElement + ' .ajaxSearch', function (e){
+        e.preventDefault();
+        let data = $(this).closest('form').serializeArray();
+        let dataObj = {};
+        let oldParams = $.map($(this).data('params'), function(value, index) {
+            return [[index,value]];
+        });
+
+        $(data).each(function(i, field){
+            let multiValue = field.name.split('[');
+            if(typeof multiValue[0] != "undefined") {
+                dataObj[field.name] = typeof dataObj[field.name] == 'undefined' ? field.value : dataObj[field.name] + ',' + field.value;
+            } else {
+                dataObj[field.name] = field.value;
+            }
+        });
+        let url = $(this).data('url');
+        $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
+            initInputs();
+            ajaxList($(this).data('container'));
+        });
+    });
+}
+
+//ajaxList();
+// ===================
+// !!! DO NOT CHANGE
+// END LISTS AJAX
+// ===================
 
 $(document).ready(function () {
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash

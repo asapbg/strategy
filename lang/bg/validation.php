@@ -379,6 +379,7 @@ return [
         'protocol'              => 'Протокол',
         'newspaper_number'     => 'Обн. ДВ. (номер)',
         'newspaper_year'     => 'ДВ. (година)',
+        'newspaper'     => 'Обн. ДВ.',
         'about_bg'              => 'Заглавие/Относно (BG)',
         'about_en'              => 'Заглавие/Относно (EN)',
         'legal_reason_bg'     => 'Правно основание (BG)',

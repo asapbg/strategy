@@ -62,7 +62,7 @@
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене
-            </h2>  
+            </h2>
             <div class="col-md-3">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -99,7 +99,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-md-3">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -120,7 +120,7 @@
                 <button class="btn rss-sub main-color"><i class="fas fa-search main-color me-1"></i>Търсене</button>
             </div>
             <div class="col-md-6 text-end">
-                <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
+                <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS</button>
                 <button class="btn rss-sub main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
                 <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добави анкета</button>
             </div>
@@ -182,14 +182,14 @@
                                         </a>
                                     </div>
                                 </div>
-                              
-            
+
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="active-li">Активна</span></span>
-                            
+
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 12.09.2023 г
@@ -231,14 +231,14 @@
                                         </a>
                                     </div>
                                 </div>
-                            
-                          
+
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="active-li">Активна</span></span>
-                   
+
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -281,14 +281,14 @@
                                         </a>
                                     </div>
                                 </div>
-                          
-                          
+
+
                                  <div class="status mt-2">
                                     <div>
-                                        <span>Статус: <span class="active-li">Активна</span></span> 
-                                
+                                        <span>Статус: <span class="active-li">Активна</span></span>
+
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 01.07.2023 г
@@ -331,14 +331,14 @@
                                         </a>
                                     </div>
                                 </div>
-                             
-                          
+
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="active-li">Активна</span></span>
-                                            
+
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 21.05.2023 г
@@ -381,14 +381,14 @@
                                         </a>
                                     </div>
                                 </div>
-                          
-                        
+
+
                                  <div class="status mt-2">
                                     <div>
                                         <span>Статус: <span class="closed-li">Затворенa</span></span>
-                          
+
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 21.01.2023 г

@@ -1208,7 +1208,7 @@
                                         <p class="text-muted">Справка или съобщение.</p>
                                     </li>
                                     <li class="timeline-item mb-5">
-                                        <h5 class="fw-bold text-muted fs-18">Приемане на акта от Министерския съвет</h5>
+                                        <h5 class="fw-bold text-muted fs-18">Окончателен акт на Министерския съвет</h5>
                                         <p class="text-muted mb-2 fw-bold text-muted">18.06.2023</p>
                                         <p class="text-muted">Окончателен акт.</p>
                                     </li>

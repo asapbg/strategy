@@ -46,6 +46,11 @@
                                aria-controls="decisions"
                                aria-selected="false">{{ trans_choice('custom.meetings_and_decisions', 2) }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tab" data-toggle="pill" href="#custom" role="tab"
+                               aria-controls="custom"
+                               aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -79,6 +84,10 @@
                         <div class="tab-pane fade" id="decisions" role="tabpanel" aria-labelledby="decisions">
                             @include('admin.advisory-boards.tabs.meetings-decisions')
                         </div>
+
+                        <div class="tab-pane fade" id="custom" role="tabpanel" aria-labelledby="custom">
+                            @include('admin.advisory-boards.tabs.custom')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,10 +105,12 @@
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
 
     <!-- Modals -->
+    @includeIf('admin.advisory-boards.modals.create-section-form')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
     @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-custom-file')
     @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')
     @includeIf('admin.advisory-boards.modals.add-secretariat-file')
     @includeIf('admin.advisory-boards.modals.add-function-file')

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFileRequest;
-use App\Http\Requests\UpdateAdvisoryBoardFunctionFileRequest;
+use App\Http\Requests\UpdateAdvisoryBoardFileRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\File;
 use DB;
@@ -69,17 +69,30 @@ class AdvisoryBoardFileController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateAdvisoryBoardFunctionFileRequest $request
-     * @param AdvisoryBoard                          $item
+     * @param UpdateAdvisoryBoardFileRequest $request
+     * @param AdvisoryBoard                  $item
      *
      * @return JsonResponse
      */
-    public function ajaxUpdate(UpdateAdvisoryBoardFunctionFileRequest $request, AdvisoryBoard $item): JsonResponse
+    public function ajaxUpdate(UpdateAdvisoryBoardFileRequest $request, AdvisoryBoard $item): JsonResponse
     {
         $validated = $request->validated();
 
         DB::beginTransaction();
         try {
+            if (!isset($validated['file'])) {
+                foreach (config('available_languages') as $lang) {
+                    if (isset($validated['file_name_' . $lang['code']])) {
+                        File::find($validated['file_id'])->update(['custom_name' => $validated['file_name_' . $lang['code']], 'description_bg' => $validated['file_description_' . $lang['code']]]);
+
+                        break;
+                    }
+                }
+
+                DB::commit();
+                return response()->json(['status' => 'success']);
+            }
+
             $file = File::find($validated['file_id']);
 
             //Add file and attach

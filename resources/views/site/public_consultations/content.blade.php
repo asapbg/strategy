@@ -26,10 +26,10 @@
                     @endif
                 </h3>
                 <a href="#short-term" class="text-decoration-none"></a>
-                <span class="obj-icon-info">
+                <span class="obj-icon-info fw-bold" style="font-size: 18px;">
                   <i class="far fa-calendar me-2 main-color" title="{{ __('site.public_consultation.open_from') }}"></i>{{ displayDate($item->open_from) }} {{ __('site.year_short') }} </span>
                 <span class="mx-2"> — </span>
-                <span class="obj-icon-info">
+                <span class="obj-icon-info fw-bold" style="font-size: 18px;">
                   <i class="far fa-calendar-check me-2 main-color" title="{{ __('site.public_consultation.open_to') }}"></i>{{ displayDate($item->open_to) }} {{ __('site.year_short') }} </span>
             </div>
             <div class="col-md-4 ">

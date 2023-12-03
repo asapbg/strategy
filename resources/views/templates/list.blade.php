@@ -23,6 +23,7 @@
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner']) }}"> <i>-- Национални планове за действие - Вътрешна страница на действащ план Табличен вид</i></a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nac-plan-deistive-inner-closed']) }}"> <i>-- Национални планове за действие - Вътрешна страница на изпълнен Табличен вид</i></a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-monitoring']) }}"> - Секция „Оценка за изпълнението на плановете за действие - мониторинг“</a>
+<br><a href="{{ route('templates.view', ['slug' => 'ogp-monitoring-inner']) }}"> -- Секция „Оценка за изпълнението на плановете за действие - мониторинг“ - Вътрешна страница</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive']) }}"> - Секция Разработване на нов план за действие</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner']) }}"> -- Разработване на нов план за действие - вътрешна страница АКТИВЕН СТАТУС</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp-nov-plan-deistive-inner-disabled']) }}"> -- Разработване на нов план за действие - вътрешна страница НЕАКТИВЕН СТАТУС</a>
@@ -89,6 +90,9 @@
 
 <br>
 <br><a href="{{ route('partnerships.index') }}">Партньорство за открито управление</a>
+
+<br>
+<br><a href="{{ route('templates.view', ['slug' => 'search-results']) }}">Страница за резултати от рърсене</a>
 
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}

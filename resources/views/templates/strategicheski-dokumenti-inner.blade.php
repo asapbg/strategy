@@ -17,11 +17,25 @@
             <div class="col-md-12">
                 <h2 class="mb-3">Информация</h2>
             </div>
-            <div class="col-md-12 text-старт">
-                <button class="btn btn-primary  main-color">
-                    <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
+            <div class="col-md-12 text-start">
+
+                <div class="dropdown d-inline">
+                    <button class="btn btn-primary main-color dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download main-color me-2"></i>
+                        Експорт
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Експорт като Pdf</a></li>
+                        <li><a class="dropdown-item" href="#">Експорт като Excel</a></li>
+                        <li><a class="dropdown-item" href="#">Експорт като Csv</a></li>
+                    </ul>
+                </div>
+
+
+
                 <button class="btn rss-sub main-color">
-                    <i class="fas fa-square-rss text-warning me-2"></i>RSS Абониране</button>
+                    <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>
                 <button class="btn rss-sub main-color">
                     <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>
             </div>
@@ -49,7 +63,7 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <!-- 
+                <!--
                 "Документът е към“, в което да се попълва линк и заглавие на родителски стратегически документ, ако такъв е зададен.
                 -->
                 <h3 class="mb-2 fs-5">Документът е към</h3>
@@ -77,8 +91,8 @@
             </div>
             <div class="col-md-4">
                             <!-- От заглавната част актът, с който е приет документът,
-                 да се визуализира отделно и да се сглоби от компонентите си, 
-                 подобно на в ПРИС – „Решение No XXXX/YY.ZZ.WWWW на Министерския съвет“ 
+                 да се визуализира отделно и да се сглоби от компонентите си,
+                 подобно на в ПРИС – „Решение No XXXX/YY.ZZ.WWWW на Министерския съвет“
                  и да е линк, който се взима от полето „Връзка към акта“. (Номер на решение не е задължителен, ако органът е НС). -->
                 <h3 class="mb-2 fs-5">Акт на приемане</h3>
                 <div class="mb-2 fs-18">
@@ -94,9 +108,9 @@
             </div>
         </div>
 
-    
+
         <div class="row mb-3">
-            <!-- 
+            <!--
                 Трети ред: категория, линк към обществена консултация (ако има), линк към Мониторстат (ако има).
             -->
             <div class="col-md-4">
@@ -159,7 +173,7 @@
         </div>
 
         <div class="row mb-4 mt-4">
-            <!-- При клик върху основния документ, трябва да се визуализира в модал и да има изтегляне. 
+            <!-- При клик върху основния документ, трябва да се визуализира в модал и да има изтегляне.
             Пример: https://strategy.asapbg.com/templates/public_consultations_view от файловете Пакет основни документи -->
             <h3 class="mb-3">Основен документ</h3>
             <div class="col-md-12">
@@ -234,7 +248,7 @@
                                 </a>
                             </li>
 
-                            <li class="list-group-item">  
+                            <li class="list-group-item">
                                     <a href="#" class="main-color text-decoration-none">
                                         <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Стратегическа рамка за
                                         развитие на образованието, обучението и ученето в Република България
@@ -295,7 +309,7 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <a href="#" class="main-color text-decoration-none">
-                                    <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Отчет 1 
+                                    <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Отчет 1
                                     <span class="fw-bold">&#123;</span>
                                     <span class="valid-date fw-bold"> Публикувано 10.07.2023</span>
                                     <span> /</span>
@@ -306,7 +320,7 @@
                                 </a>
                             </li>
 
-                            <li class="list-group-item">  
+                            <li class="list-group-item">
                                     <a href="#" class="main-color text-decoration-none">
                                         <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>Доклад 2
                                         <span class="fw-bold">&#123;</span>

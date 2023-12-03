@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,6 +18,7 @@ class PrisController extends Controller
     public function index(Request $request, $category = '')
     {
         //Filter
+        $rf = $request->all();
         $requestFilter = $request->all();
         if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
             $actType = LegalActType::find((int)$requestFilter['legalАctТype']);
@@ -26,6 +28,7 @@ class PrisController extends Controller
         }
 
         $filter = $this->filters($request);
+
         //Sorter
         $sorter = $this->sorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
@@ -47,7 +50,15 @@ class PrisController extends Controller
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)->paginate($paginate);
+            ->SortedBy($sort,$sortOrd)
+            ->paginate($paginate);
+
+        if( $request->ajax() ) {
+            return view('site.pris.list', compact('filter','sorter', 'items', 'rf'));
+        }
+
+
+
         $pageTitle = __('site.menu.pris');
 
         $menuCategories = [];
@@ -64,7 +75,7 @@ class PrisController extends Controller
             }
         }
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf'));
     }
 
     public function archive(Request $request)
