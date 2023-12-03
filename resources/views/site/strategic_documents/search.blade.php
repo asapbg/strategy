@@ -74,6 +74,22 @@
             </div>
         </div>
     </div>
+    <!-- Pris -->
+    <div class="col-md-12">
+        <div class="input-group ">
+            <div class="mb-3 d-flex flex-column  w-100">
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.pris', 1) }}</label>
+                <select class="form-select select2" multiple aria-label="Default select example" id="pris_act_ids">
+                    <option value="">--</option>
+                    @foreach($prisActs as $prisAct)
+                        <option value="{{ $prisAct->id }}">{{ $prisAct->regNum }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Pris -->
     <div class="col-md-12">
         <div class="input-group" id="liveCycle">
             <div class="mb-3 d-flex flex-column  w-100">
@@ -140,7 +156,7 @@
     </div>
     <div class="col-md-3">
         <div class="input-group ">
-            <div class="mb-3 d-flex flex-column  w-100">
+            <div class="mb-3 d-flex flex-column w-100">
                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
                 <select class="form-select" id="documentLevelSelect">
                     <!--
@@ -150,6 +166,32 @@
                     <option value="1">Централно</option>
                     <option value="2">Областно</option>
                     <option value="3">Общинско</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" id="ekate_areas_div_id">
+        <div class="input-group ">
+            <div class="mb-3 d-flex flex-column  w-100">
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
+                <select class="form-select" id="ekate_areas_id">
+                    <option value="">--</option>
+                    @foreach ($ekateAreas as $ekateArea)
+                        <option value="{{ $ekateArea->id }}">{{ $ekateArea->ime }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" id="ekate_municipalities_div_id">
+        <div class="input-group ">
+            <div class="mb-3 d-flex flex-column  w-100">
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
+                <select class="form-select" id="ekate_municipalities_id">
+                    <option value="">--</option>
+                    @foreach ($ekateMunicipalities as $ekateMunicipality)
+                        <option value="{{ $ekateMunicipality->id }}">{{ $ekateMunicipality->ime }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -165,8 +207,11 @@
             Абониране</button>
         <button class="btn btn-primary main-color"><i
                 class="fas fa-envelope me-1"></i>Абониране</button>
-        <button class="btn btn-success text-success"><i
-                class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
+
+        @can('create', auth()->user())
+            <a href="{{ route( $editRouteName) }}" class="btn btn-success text-success"><i
+                class="fas fa-circle-plus text-success me-1"></i>{{ trans_choice('custom.adding', 1) }}</a>
+        @endcan
     </div>
 </div>
 

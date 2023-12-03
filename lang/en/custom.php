@@ -498,4 +498,5 @@ return [
     'date_indefinite' => 'Date infinite',
     'date_expring_indefinite' => 'Date infinite',
     'infinite' => 'Infinite',
+    'strategic_document_deleted' => 'Стратегическият документ беше изтрит успешно',
 ];

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthorityAcceptingStrategic;
+use App\Models\EkatteArea;
+use App\Models\EkatteMunicipality;
 use App\Models\File;
 use App\Models\PolicyArea;
+use App\Models\Pris;
 use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
@@ -50,7 +53,6 @@ class StrategicDocumentsController extends Controller
         if ($request->input('export')) {
             $exportService = app(ExportService::class);
             if ($request->input('export') == 'pdf') {
-
                 $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
                 return $exportService->export(null, $exportData, 'strategic_documents_export', 'pdf', 'pdf.default');
             }
@@ -73,8 +75,12 @@ class StrategicDocumentsController extends Controller
         $resultCount = $strategicDocuments->total();
         $pageTitle = $this->title_singular;
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
+        $ekateAreas = EkatteArea::all();
+        $ekateMunicipalities = EkatteMunicipality::all();
+        $prisActs = Pris::all();
+
         //return view('templates.strategicheski-dokumenti', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName'));
-        return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent'));
+        return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
 
     /**
@@ -95,6 +101,9 @@ class StrategicDocumentsController extends Controller
 
         $dateFrom = $request->input('valid-from');
         $dateTo = $request->input('valid-to');
+        $ekateArea = $request->input('ekate-area');
+        $ekateMunicipality = $request->input('ekate-municipality');
+        $prisActs = $request->input('pris-acts');
 
         if ($title) {
             $strategicDocuments->whereHas('translations', function($query) use ($title, $currentLocale) {
@@ -155,13 +164,14 @@ class StrategicDocumentsController extends Controller
             });
         }
 
+        $documentDateFrom = $request->input('valid-from');
+        $documentDateTo = $request->input('valid-to');
         $documentDateInfinite = $request->input('date-infinite');
+        $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
+            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
 
-        $strategicDocuments->when($dateFrom, function ($query) use ($dateFrom, $documentDateInfinite) {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-
-            return $query->where(function ($subquery) use ($dateFrom, $documentDateInfinite) {
-                $subquery->where('document_date_accepted', '>=', $dateFrom);
+            return $query->where(function ($subquery) use ($documentDateFrom, $documentDateInfinite) {
+                $subquery->where('document_date_accepted', '>=', $documentDateFrom);
 
                 if ($documentDateInfinite == 'true') {
                     $subquery->orWhereNull('document_date_expiring');
@@ -169,12 +179,13 @@ class StrategicDocumentsController extends Controller
             });
         });
 
-        $strategicDocuments->when($dateFrom && $dateTo && $documentDateInfinite == 'false', function ($query) use ($dateFrom, $dateTo) {
-            $dateFrom = Carbon::createFromFormat('d.m.Y', $dateFrom);
-            $dateTo = Carbon::createFromFormat('d.m.Y', $dateTo);
+        $strategicDocuments->when($documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateFrom, $documentDateTo) {
+            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
+            $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
 
-            return $query->whereBetween('document_date_accepted', [$dateFrom, $dateTo]);
+            return $query->whereBetween('document_date_accepted', [$documentDateFrom, $documentDateTo]);
         });
+
         if ($orderBy == 'policy-area') {
             $strategicDocuments->join('policy_area_translations', 'strategic_document.policy_area_id', '=', 'policy_area_translations.policy_area_id')
                 ->where('locale', $currentLocale)
@@ -193,6 +204,19 @@ class StrategicDocumentsController extends Controller
 
         if ($orderBy == 'valid-to') {
             $strategicDocuments->orderBy('document_date_expiring', $direction);
+        }
+
+        if ($ekateArea) {
+            $strategicDocuments->where('ekatte_area_id', $ekateArea);
+        }
+
+        if ($ekateMunicipality) {
+            $strategicDocuments->where('ekatte_municipality_id', $ekateMunicipality);
+        }
+
+        if ($prisActs) {
+            $prisActsArray = explode(',', $prisActs);
+            $strategicDocuments->whereIn('pris_act_id', $prisActsArray);
         }
 
         return $strategicDocuments;

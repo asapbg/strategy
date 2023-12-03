@@ -214,12 +214,9 @@ class StrategicDocumentsController extends AdminController
             }
             */
             $item->delete();
-            $item->documentLevel()->delete();
-            $item->acceptActInstitution()->delete();
-            $item->documentType()->delete();
-
-            $item->delete();
             DB::commit();
+
+            return redirect()->back()->with('success', __('custom.strategic_document_deleted'));
         } catch (\Throwable $throwable) {
             DB::rollBack();
             Log::error('Delete strategic document ID('.$id.'): '.$throwable);

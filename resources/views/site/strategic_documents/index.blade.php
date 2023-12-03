@@ -49,11 +49,26 @@
                                                     </div>
                                                     <div class="consult-item-header-edit">
                                                         @can('delete', $document)
+                                                            <a href="#" class="open-delete-modal">
+                                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                                   role="button" title="{{ __('custom.deletion') }}"></i>
+                                                            </a>
+                                                            <form class="d-none"
+                                                                  method="GET"
+                                                                  action="{{ route( $deleteRouteName , [$document->id]) }}"
+                                                                  name="DELETE_ITEM_{{ $document->id }}"
+                                                            >
+                                                                @csrf
+                                                            </form>
+                                                        @endcan
+                                                        <!--
+                                                        @can('delete', $document)
                                                             <a href="{{ route( $deleteRouteName , [$document->id]) }}">
                                                                 <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
                                                                    role="button" title="Изтриване"></i>
                                                             </a>
                                                         @endcan
+                                                        -->
                                                         @can('update', $document)
                                                             <a href="{{ route( $editRouteName , [$document->id]) }}">
                                                                 <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
@@ -206,5 +221,12 @@
             </div>
         </div>
     </div>
+
+    @include('components.delete-modal', [
+        'cancel_btn_text'           => __('custom.cancel'),
+        'continue_btn_text'         => __('custom.continue'),
+        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.strategic_documents', 1),
+        'file_change_warning_txt'   => __('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.strategic_documents', 1)) . '?',
+    ])
 @endsection
 
