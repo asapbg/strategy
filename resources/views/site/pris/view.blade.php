@@ -198,14 +198,14 @@
                 </div>
 
                 @if($item->files->count())
+                    <div class="row mb-0 mt-5">
+                        <div class="mb-2">
+                            <h2 class="mb-1">{{ __('custom.files') }}</h2>
+                        </div>
+                    </div>
                     @php($locale = app()->getLocale())
                     @foreach($item->files as $f)
                         @if($f->locale == $locale)
-                            <div class="row mb-0 mt-5">
-                                <div class="mb-2">
-                                    <h2 class="mb-1">{{ __('custom.files') }}</h2>
-                                </div>
-                            </div>
                             <div class="row p-3">
                                 <div class="accordion" id="accordionExample">
 
@@ -249,16 +249,6 @@
                                                     </div>
                                                     <div class="col-md-6 text-end">
                                                         <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
-                                                        {{--                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">--}}
-                                                        {{--                                                    {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$locale}) ? $f->{'description_'.$locale} : $f->filename }} | {{ displayDate($f->created_at) }}--}}
-                                                        {{--                                                </a>--}}
-{{--                                                        <button type="button"--}}
-{{--                                                                class="btn btn-success text-success preview-file-modal mr-2"--}}
-{{--                                                                data-file="{{ $f->id }}"--}}
-{{--                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}">--}}
-{{--                                                            {!! fileIcon($f->content_type) !!}--}}
-{{--                                                            {{ __('custom.preview') }}--}}
-{{--                                                        </button>--}}
                                                     </div>
                                                 </div>
                                             </div>
