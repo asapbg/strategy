@@ -106,6 +106,7 @@
 
     <!-- Modals -->
     @includeIf('admin.advisory-boards.modals.create-section-form')
+    @includeIf('admin.advisory-boards.modals.edit-section')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
     @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])

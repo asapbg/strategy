@@ -22,10 +22,27 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title w-100">
-                                        <a class="d-block w-100" data-toggle="collapse" href="#collapse{{$key}}"
-                                           aria-expanded="true">
-                                            {{ $section->title }}
-                                        </a>
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-10">
+                                                <a data-toggle="collapse" href="#collapse{{$key}}"
+                                                   aria-expanded="true">
+                                                    {{ $section->title }}
+                                                </a>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                @can('update', $item)
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-warning mr-2"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-edit-section"
+                                                            title="{{ __('custom.edit') }}"
+                                                            onclick="loadSectionData('{{ route('admin.advisory-boards.sections.edit', ['item' => $item, 'section' => $section]) }}');">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                @endcan
+                                            </div>
+                                        </div>
                                     </h4>
                                 </div>
 

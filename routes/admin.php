@@ -474,5 +474,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardCustomController::class)->prefix('/advisory-boards/{item}/sections/')->group(function () {
         Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.sections.store');
+        Route::get('{section}/edit', 'ajaxEdit')->name('advisory-boards.sections.edit');
+        Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.sections.update');
     });
 });

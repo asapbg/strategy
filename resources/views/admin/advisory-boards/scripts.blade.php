@@ -76,6 +76,32 @@
             });
         }
 
+        function loadSectionData(url) {
+            const form = document.querySelector('form[name=SECTION_UPDATE]');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=section_id]').value = data.id;
+                    form.querySelector('input#title').value = data.title;
+
+                    form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
+                    if (form.querySelector('#order').options.length - 1 === data.order) {
+                        form.querySelector('#order').value = '';
+                    }
+
+                    $(form.querySelector('#order')).trigger('change');
+                    $(form.querySelector('#body_bg')).summernote("code", data.translations[0].body);
+                    $(form.querySelector('#body_en')).summernote("code", data.translations[1].body);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function loadFunctionFileData(url, locale = 'bg') {
             const form = document.querySelector('form[name=FILE_UPDATE]');
 
