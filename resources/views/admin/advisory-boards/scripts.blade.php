@@ -208,6 +208,50 @@
         }
 
         /**
+         * Submit basic ajax form.
+         * You can pass the submit button and the url for storing data.
+         *
+         * @param element
+         * @param url
+         */
+        function submitAjax(element, url) {
+            // change button state
+            changeButtonState(element);
+
+            // Get the form element
+            const form = element.closest('.modal-content').querySelector('form');
+            const formData = new FormData(form);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
+                },
+                url: url,
+                data: formData,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    changeButtonState(element, 'finished');
+
+                    // Handle error response
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+
+                        for (let i in errors) {
+                            const search_class = '.error_' + i;
+                            form.querySelector(search_class).textContent = errors[i][0];
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
          * Submit file through ajax request.
          *
          * @param element
@@ -301,6 +345,10 @@
             }
 
             window.location = url + after_url;
+        }
+
+        function prepareMeetingId(id, form) {
+            form.querySelector('input[name=advisory_board_meeting_id]').value = id;
         }
     </script>
 @endpush

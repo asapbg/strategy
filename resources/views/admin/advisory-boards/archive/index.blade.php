@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
-                            @include('admin.partial.archive_list', ['items' => $programs])
+                            @include('admin.partial.archive_list', ['items' => $programs, 'current_tab' => 'functions'])
                         </div>
                     </div>
                 </div>
