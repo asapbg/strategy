@@ -206,7 +206,7 @@
                     @php($locale = app()->getLocale())
                     @foreach($item->files as $f)
                         @if($f->locale == $locale)
-                            <div class="row p-3">
+                            <div class="row p-1">
                                 <div class="accordion" id="accordionExample">
 
                                     <div class="card custom-card">

@@ -8,6 +8,7 @@ use App\Enums\PublicConsultationTimelineEnum;
 use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\ConsultationLevel;
+use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Poll;
@@ -86,6 +87,15 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function scopeActive($query){
         $query->where('public_consultation.active', 1);
+    }
+
+    public function scopeByUser($query){
+        $user = auth()->user();
+        if($user && !$user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])) {
+            if( $user->can('manage.advisory') ) {
+                return $query->where('public_consultation.importer_institution_id', '=', $user->institution_id);
+            }
+        }
     }
 
     public function scopeEnded($query){

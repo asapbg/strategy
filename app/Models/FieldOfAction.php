@@ -42,6 +42,10 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    public function scopeActive($query){
+        $query->where('field_of_actions.active', 1);
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
