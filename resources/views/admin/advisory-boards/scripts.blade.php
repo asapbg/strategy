@@ -178,10 +178,7 @@
          * @param input
          */
         function attachDocFileName(input) {
-            if (typeof input.files[0] === 'object') {
-                console.log($(input).siblings('.document-name'))
-                $(input).siblings('.document-name').html(input.files[0].name);
-            }
+            typeof input.files[0] === 'object' ? $(input).siblings('.document-name').html(input.files[0].name) : null;
         }
 
         /**

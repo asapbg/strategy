@@ -99,7 +99,9 @@
     <script type="application/javascript">
         const __chose_file = @json(__('custom.select_file'));
         const __file = @json(__('custom.file'));
-        const available_languages_count = @json(config('available_languages') ?? []);
+        const __file_name = @json(__('custom.name'));
+        const __file_description = @json(__('custom.description'));
+        const available_languages = @json(config('available_languages') ?? []);
 
         let generated_inputs = 0;
 
@@ -158,104 +160,121 @@
         function addFilesRow() {
             const container = document.querySelector('#modal-create-section .row.files');
 
-            const file_card = document.createElement('div');
-            file_card.classList.add('border-bottom');
-
             const row = document.createElement('div');
             row.classList.add('row');
 
-            // Generate input for every available language
-            for (let i in available_languages_count) {
-                const is_even = i % 2 === 0;
-                const file_col = generateFileInput(available_languages_count[i].code, 1 + generated_inputs, is_even);
-                row.appendChild(file_col);
+            const card_header = document.createElement('div');
+            card_header.classList.add('card-header');
 
-                if (is_even) {
-                    row.appendChild(generateDeleteButton());
-                }
+            const card_header_close_btn = document.createElement('button');
+            card_header_close_btn.classList.add('btn-close', 'float-right');
+            card_header_close_btn.type = 'button';
+            card_header_close_btn.onclick = () => card_header_close_btn.closest('.card').remove();
+            card_header.appendChild(card_header_close_btn);
+
+            const card_body = document.createElement('div');
+            card_body.classList.add('card-body');
+
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.appendChild(card_header);
+
+            // Generate input for every available language
+            for (let i in available_languages) {
+                const column = generateFileInput(available_languages[i].code, SECTION_FORM, 1 + generated_inputs);
+
+                row.appendChild(column);
 
                 generated_inputs++;
             }
 
-            file_card.appendChild(row);
+            card_body.appendChild(row);
+            card.appendChild(card_body)
 
             const container_col = document.createElement('div');
             container_col.classList.add('col-12', 'mt-2');
 
-            container_col.appendChild(file_card);
+            container_col.appendChild(card);
             container.appendChild(container_col);
         }
 
         /**
-         * Generate file input.
+         * Generate column with file, name and description.
          *
          * @param language
+         * @param form
          * @param identifier
-         * @param should_have_delete_button
          * @returns {HTMLDivElement}
          */
-        function generateFileInput(language, identifier, should_have_delete_button) {
-            // Create the HTML elements
+        function generateFileInput(language, form, identifier) {
+            const container = document.createElement('div');
+            container.classList.add('col-6');
+
             const file_label = document.createElement('label');
-            file_label.classList.add('d-block', 'control-label');
-            file_label.htmlFor = `file_${language}`;
+            file_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_label.htmlFor = `file_${language}_${identifier}`;
             file_label.textContent = __file + ' (' + language.toUpperCase() + ')';
 
-            const file_label_span = document.createElement('span');
-            file_label_span.classList.add('required');
-            file_label_span.textContent = '*';
-            file_label.appendChild(file_label_span);
+            const required_label = document.createElement('span');
+            required_label.classList.add('required', 'ml-1')
+            required_label.textContent = '*';
 
-            const file_col = document.createElement('div');
-            const col_class = should_have_delete_button ? 'col-5' : 'col-6';
-            file_col.classList.add(col_class);
+            file_label.appendChild(required_label);
+
+            const file_button = document.createElement('label');
+            file_button.classList.add('col-12', 'btn', 'btn-outline-secondary');
+            file_button.textContent = __chose_file;
+            file_button.onclick = () => form.querySelector(`input[id=file_${language}_${identifier}]`).click();
 
             const file_input = document.createElement('input');
-            file_input.name = `file_${language}[]`;
             file_input.classList.add('d-none');
             file_input.type = 'file';
             file_input.id = `file_${language}_${identifier}`;
+            file_input.name = `file_${language}[]`;
             file_input.onchange = () => attachDocFileName(file_input);
 
-            const file_button = document.createElement('label');
-            file_button.classList.add('btn', 'btn-outline-secondary');
-            file_button.textContent = __chose_file;
-            file_button.onclick = () => file_input.click();
-
-            const file_name_span = document.createElement('span');
-            file_name_span.classList.add('document-name');
+            const file_document_name = document.createElement('span');
+            file_document_name.classList.add('document-name', 'd-block');
+            file_document_name.style.height = '21px';
 
             const file_error = document.createElement('div');
-            file_error.classList.add('text-danger', 't-1', `error_file_${language}`);
+            file_error.classList.add('text-danger', 't-1', `error_file_${language}_${identifier}`);
 
-            // Append the HTML elements to the DOM
-            file_col.appendChild(file_label);
-            file_col.appendChild(file_input);
-            file_col.appendChild(file_button);
-            file_col.appendChild(file_name_span);
-            file_col.appendChild(file_error);
+            const file_name_input_label = document.createElement('label');
+            file_name_input_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_name_input_label.htmlFor = `file_name_${language}_${identifier}`;
+            file_name_input_label.textContent = __file_name + ' (' + language.toUpperCase() + ')';
 
-            return file_col;
-        }
+            const file_name_input = document.createElement('input');
+            file_name_input.classList.add('form-control', 'form-control-sm');
+            file_name_input.id = `file_name_${language}_${identifier}`;
+            file_name_input.type = 'text';
+            file_name_input.name = `file_name_${language}[]`;
+            file_name_input.autocomplete = 'off';
 
-        /**
-         * Generate button for removing a row with files.
-         *
-         * @returns {HTMLDivElement}
-         */
-        function generateDeleteButton() {
-            const delete_col = document.createElement('div');
-            delete_col.classList.add('col-auto', 'align-self-center');
+            const file_description_label = document.createElement('label');
+            file_description_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_description_label.htmlFor = `file_description_${language}_${identifier}`;
+            file_description_label.textContent = __file_description + ' (' + language.toUpperCase() + ')';
 
-            const delete_button = document.createElement('a');
-            delete_button.href = 'javascript:;';
-            delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
-            delete_button.title = 'Изтрий';
-            delete_button.innerHTML = '<i class="fa fa-trash"></i>';
-            delete_button.onclick = () => delete_button.closest('.col-12').remove();
+            const file_description_input = document.createElement('input');
+            file_description_input.classList.add('form-control', 'form-control-sm');
+            file_description_input.id = `file_description_${language}_${identifier}`;
+            file_description_input.type = 'text';
+            file_description_input.name = `file_description_${language}[]`;
+            file_description_input.autocomplete = 'off';
 
-            delete_col.appendChild(delete_button);
-            return delete_col;
+            container.appendChild(file_label);
+            container.appendChild(file_button);
+            container.appendChild(file_input);
+            container.appendChild(file_document_name);
+            container.appendChild(file_error);
+            container.appendChild(file_name_input_label);
+            container.appendChild(file_name_input);
+            container.appendChild(file_description_label);
+            container.appendChild(file_description_input);
+
+            return container;
         }
     </script>
 @endpush

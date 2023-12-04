@@ -62,14 +62,18 @@ class AdvisoryBoardCustomController extends AdminController
 
             foreach (config('available_languages') as $language) {
                 if (isset($validated['file_' . $language['code']])) {
-                    foreach ($validated['file_' . $language['code']] as $file) {
+                    foreach ($validated['file_' . $language['code']] as $key => $file) {
+                        $name_key = 'file_name_' . $language['code'];
+                        $description_key = 'file_description_' . $language['code'];
+
                         $this->uploadFile(
                             $section,
                             $file,
                             File::CODE_AB_FUNCTION,
                             DocTypesEnum::AB_CUSTOM_SECTION,
-                            '',
-                            $language['code']
+                            $validated[$description_key][$key] ?? '',
+                            $language['code'],
+                            $validated[$name_key][$key] ?? null
                         );
                     }
                 }
