@@ -504,4 +504,12 @@ return [
     'date_expring_indefinite' => 'Date infinite',
     'infinite' => 'Infinite',
     'strategic_document_deleted' => 'Стратегическият документ беше изтрит успешно',
+    'table_view'    => 'Табличен изглед',
+    'tree_view' => 'Дървовиден изглед',
+    'national' => 'Национални',
+    'regional' => 'Регионални',
+    'central_level' => 'Централно ниво',
+    'area_level' => 'Областно ниво',
+    'distrinct_level' => 'Регионално ниво',
+    //
 ];
