@@ -171,7 +171,7 @@
                                                         {{ __('validation.attributes.newspaper_year') }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <input type="text" name="newspaper_year" value="{{ old('newspaper_year', $item->id ? $item->newspaper_year : '') }}" class="form-control form-control-sm @error('newspaper_year'){{ 'is-invalid' }}@enderror">
+                                                        <input type="text" name="newspaper_year" value="{{ old('newspaper_year', $item->id ? $item->newspaper_year : '') }}" class="form-control form-control-sm datepicker-year @error('newspaper_year'){{ 'is-invalid' }}@enderror">
                                                         @error('newspaper_year')
                                                         <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
