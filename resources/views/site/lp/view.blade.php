@@ -38,7 +38,7 @@
                         @if(isset($months) && sizeof($months))
                             @foreach($months as $m)
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link tablinks @if($loop->first) active @endif" id="{{ 't'.$m }}-tab" data-toggle="tab" data-target="#{{ 't'.$m }}" type="button" role="tab" aria-controls="{{ 't'.$m }}" aria-selected="true">{{ __('site.'.(int)$m) }}</button>
+                                    <a href="#{{ 't'.$m }}" class="nav-link tablinks @if($loop->first) active @endif" id="{{ 't'.$m }}-tab" data-toggle="tab" data-target="#{{ 't'.$m }}" type="button" role="tab" aria-controls="{{ 't'.$m }}" aria-selected="true">{{ __('site.'.(int)$m) }}</a>
                                 </li>
                             @endforeach
                         @endif
@@ -66,11 +66,12 @@
                                                                  data-bs-parent="#accordion{{ $m }}">
                                                                 <div class="accordion-body">
                                                                     <div class="custom-card p-3 mb-5">
-                                                                        @php($cnt = 1)
+{{--                                                                        @php($cnt = 1)--}}
                                                                         @foreach($rowData as $r)
-                                                                            @if($cnt == 1)
-                                                                                <div class="row mb-3 mt-1 ">
-                                                                            @endif
+{{--                                                                            @if($cnt == 1)--}}
+{{--                                                                                <div class="row mb-3 mt-1 ">--}}
+{{--                                                                            @endif--}}
+                                                                            <div class="row mb-3 mt-1 ">
                                                                                 <div class="col-md-6">
                                                                                     <p class="fw-bold fs-18 mb-1">{{ $r->label }}</p>
                                                                                     <p>
@@ -85,17 +86,19 @@
                                                                                         @endif
                                                                                     </p>
                                                                                 </div>
-                                                                            @if($cnt == 2 || $loop->last)
-                                                                                    <hr class="custom-hr">
-                                                                                </div>
-                                                                            @endif
+{{--                                                                            @if($cnt == 2 || $loop->last)--}}
+{{--                                                                                    <hr class="custom-hr">--}}
+{{--                                                                                </div>--}}
+{{--                                                                            @endif--}}
+                                                                                <hr class="custom-hr">
+                                                                            </div>
                                                                             @if($loop->last)
                                                                                 <div class="row mb-3">
                                                                                     @if($item->rowFiles->count())
                                                                                         @foreach([\App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION->value, \App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value] as $doc)
                                                                                             @foreach($item->rowFiles as $f)
                                                                                                 @if($f->pivot->row_num == $row->row_num && $f->pivot->row_month == $row->month && $f->doc_type == $doc)
-                                                                                                    <div class="col-md-6 ">
+                                                                                                    <div class="col-md-6 mb-2">
                                                                                                         <p class="fw-bold fs-18 mb-1">{{ __('custom.public_consultation.doc_type.'.$doc) }}</p>
                                                                                                         <p class="mb-0">
                                                                                                             <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
@@ -110,7 +113,7 @@
                                                                                     @endif
                                                                                 </div>
                                                                             @endif
-                                                                            @php($cnt = $cnt == 2 ? 1 : $cnt + 1)
+{{--                                                                            @php($cnt = $cnt == 2 ? 1 : $cnt + 1)--}}
                                                                         @endforeach
 
     {{--                                                                    <hr class="custom-hr">--}}
