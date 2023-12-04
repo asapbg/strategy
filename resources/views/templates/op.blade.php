@@ -94,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
+                <div class="col-lg-10  right-side-content py-5">
 
 
                     <ul class=" tab nav nav-tabs mb-3">

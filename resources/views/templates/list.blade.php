@@ -1,7 +1,6 @@
 <h4>Публична част</h4>
 <a href="{{ route('templates.view', ['slug' => 'public_consultations_view']) }}">Обществена консултация - Преглед</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_10_public']) }}">Списък на физическите и юридическите лица, на които е възложено от държавата или общините да изработят проекти на нормативни актове, оценки на въздействието - Преглед)</a>
-<br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_library_list']) }}">Библиотека списък</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_2_public_legal_information']) }}">Правна информация на Министерски съвет. Търсене</a>
 <br><a href="{{ route('impact_assessment.index') }}">Оценка на въздействието</a>
 
@@ -10,6 +9,7 @@
 <br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti-inner']) }}">Стратегически документи (вътрешна)</a>
 
 <br>
+<br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_library_list']) }}">Библиотека списък</a>
 <br><a href="{{ route('templates.view', ['slug' => 'public-news']) }}">Новини страница</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_public_news']) }}">Новина преглед</a>
 <br><a href="{{ route('templates.view', ['slug' => 'blog']) }}">Публикации страница</a>
@@ -92,7 +92,8 @@
 <br><a href="{{ route('partnerships.index') }}">Партньорство за открито управление</a>
 
 <br>
-<br><a href="{{ route('templates.view', ['slug' => 'search-results']) }}">Страница за резултати от рърсене</a>
+<br><a href="{{ route('templates.view', ['slug' => 'not-found']) }}">Страница за 404</a>
+<br><a href="{{ route('templates.view', ['slug' => 'search-results']) }}">Страница за резултати от търсене</a>
 
 <h4>Администрация</h4>
 {{--<a href="{{ route('templates.view', ['slug' => '8_2_1_1_9_admin']) }}">Библиотека & Новини</a>--}}

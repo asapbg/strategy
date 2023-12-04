@@ -51,7 +51,7 @@
     </div>
 
 
-    <div class="col-lg-10 pt-5 pb-5">
+    <div class="col-lg-10 right-side-content py-5">
         <div class="row mb-4">
             <div class="col-md-12">
                 <h2 class="mb-3">Информация</h2>

@@ -1,11 +1,11 @@
-<div class="col-lg-3 col-md-4 side-menu py-5 mt-1" style="background:#f5f9fd;">
+<div class="col-lg-2 col-md-4 side-menu py-5 mt-1" style="background:#f5f9fd;">
     <div class="left-nav-panel" style="background: #fff !important;">
         <div class="flex-shrink-0 p-2">
             <ul class="list-unstyled">
-                <ul class="mb-1">
+                <ul class="list-unstyled mb-1">
                     <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        <i class="fa-solid fa-bars me-2 mb-2"></i>Начало
+                        <i class="fa-solid fa-bars me-2 mb-2"></i> {{ __('custom.home') }}
                     </a>
                     <hr class="custom-hr">
                     <div class="collapse show mt-3" id="home-collapse">

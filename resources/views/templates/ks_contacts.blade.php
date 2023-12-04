@@ -33,7 +33,7 @@
 
     </div>
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
         <div class="row mb-2">
             <h2 class="mb-4">
                 Контакти на служители от дирекция „Координация на политики и концесии"

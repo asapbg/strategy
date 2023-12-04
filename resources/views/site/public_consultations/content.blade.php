@@ -1,4 +1,4 @@
-<div class="col-lg-10 py-5">
+<div class="col-lg-10 py-5 right-side-content">
     <div>
 
         <div class="row mb-4">

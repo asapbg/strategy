@@ -45,7 +45,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
        
     <div class="row align-items-center justify-content-center">
         <div class="col-md-8 col-sm-12">
