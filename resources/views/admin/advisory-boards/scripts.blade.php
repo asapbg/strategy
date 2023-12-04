@@ -268,9 +268,35 @@
         function toggleDeletedFiles(element, current_tab = '') {
             const url = window.location.pathname;
             const after_url = '#' + current_tab;
+            const url_query = window.location.search;
+
+            if (element.checked && url_query.length === 0) {
+                window.location = url + '?show_deleted_' + current_tab + '_files=1' + after_url;
+                return;
+            }
+
+            if (element.checked && url_query.length > 0) {
+                window.location = url + url_query + '&show_deleted_' + current_tab + '_files=1' + after_url;
+                return;
+            }
+
+            window.location = url + after_url;
+        }
+
+        /**
+         * Send url query parameter for deleted resource and keep the current tab.
+         * Used for sections.
+         *
+         * @param element
+         * @param section
+         * @param url_param
+         */
+        function toggleDeleted(element, section, url_param) {
+            const url = window.location.pathname;
+            const after_url = '#' + section;
 
             if (element.checked) {
-                window.location = url + '?show_deleted_' + current_tab + '_files=1' + after_url;
+                window.location = url + `?${url_param}=1${after_url}`
                 return;
             }
 

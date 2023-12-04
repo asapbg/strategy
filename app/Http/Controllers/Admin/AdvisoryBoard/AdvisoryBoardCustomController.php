@@ -11,6 +11,7 @@ use App\Models\AdvisoryBoardCustom;
 use App\Models\File;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Log;
 
@@ -157,12 +158,50 @@ class AdvisoryBoardCustomController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\AdvisoryBoardCustom $advisoryBoardCustom
+     * @param AdvisoryBoard       $item
+     * @param AdvisoryBoardCustom $section
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function destroy(AdvisoryBoardCustom $advisoryBoardCustom)
+    public function destroy(AdvisoryBoard $item, AdvisoryBoardCustom $section)
     {
-        //
+        $this->authorize('delete', [AdvisoryBoard::class, $item]);
+
+        $route = route('admin.advisory-boards.edit', $item->id) . '#custom';
+
+        try {
+            $section->delete();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.section', 1) . ' ' . __('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param AdvisoryBoard       $item
+     * @param AdvisoryBoardCustom $section
+     *
+     * @return RedirectResponse
+     */
+    public function restore(AdvisoryBoard $item, AdvisoryBoardCustom $section)
+    {
+        $this->authorize('restore', [AdvisoryBoard::class, $item]);
+
+        $route = route('admin.advisory-boards.edit', $item->id) . '#custom';
+
+        try {
+            $section->restore();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.section', 1) . ' ' . __('messages.restored_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
+        }
     }
 }
