@@ -58,7 +58,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
         <h2 class="obj-title mb-4">
             Финанси и данъчна политика
         </h2>

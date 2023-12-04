@@ -18,8 +18,8 @@
 </div>
 
 <div class="search-results-wrapper pt-3 pb-5">
-    <div class="row mb-4">
-        <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">01</span>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">02</span>
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">03</span>
@@ -59,8 +59,8 @@
             </div>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">04</span>
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">05</span>
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">06</span>
@@ -100,8 +100,8 @@
             </div>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">07</span>
@@ -114,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">08</span>
@@ -127,7 +127,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="result-content">
                 <div class="result-number-wrapper">
                     <span class="result-number fs-1 main-color">09</span>

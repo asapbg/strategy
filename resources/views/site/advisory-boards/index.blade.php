@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="col-lg-10 py-5">
+        <div class="col-lg-10 right-side-content py-5">
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
                 <div class="col-12 mb-5">
                     {!! $pageTopContent->value !!}
@@ -159,7 +159,7 @@
             </div>
 
 
-            <div class="row mb-5">
+            <div class="row mb-5 action-btn-wrapper">
                 <div class="col-md-4">
                     <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>{{ __('custom.searching') }}</button>
                 </div>

@@ -83,7 +83,7 @@
 
 </div>
 
-<div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
+<div class="col-lg-10  right-side-content py-5">
     <div class="row filter-results mb-2">
         <h2 class="mb-4">
             Търсене

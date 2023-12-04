@@ -305,7 +305,7 @@
                                     <li class="list-group-item">
                                         <a href="{{ $document->path }}" class="main-color text-decoration-none">
                                             <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>{{ $document->display_name }}
-                                            <span class="fw-bold">&#123;</span>
+                                            <span class="fw-bold">/</span>
                                             <span class="valid-date fw-bold"> Публикувано {{ $document->created_at->format('d.m.Y') }}</span>
                                             <span> /</span>
                                             <span class="valid-date fw-bold"> Валидност {{ $document->valid_at ?? 'Няма валидност' }} </span>
@@ -314,7 +314,7 @@
                                             $document->strategicDocument->documentType->name
                                             -->
                                             <span class="str-doc-type fw-bold">{{ $document->documentType->name }}</span>
-                                            <span class="fw-bold">&#125;</span>
+                                            <span class="fw-bold">/</span>
                                         </a>
                                     </li>
                                 @endforeach
