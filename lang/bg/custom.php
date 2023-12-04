@@ -645,4 +645,6 @@ return [
     'custom_section_order_start' => 'Първа',
     'custom_section_title_help' => 'Използва се само за вътрешни страници',
     'file_update_help' => 'Ако не качите файл, ще обновите само неговите данни',
+    'legislative_program_title' => 'Законодателна програма на Министерския съвет за периода :monthFrom – :monthTo :year г.',
+    'operational_program_title' => 'Оперативна програма на Министерския съвет за периода :monthFrom – :monthTo :year г.',
 ];

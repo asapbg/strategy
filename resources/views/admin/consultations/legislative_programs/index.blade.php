@@ -71,7 +71,7 @@
                                                class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                                                data-target="#modal-delete-resource"
                                                data-resource-id="{{ $item->id }}"
-                                               data-resource-name="{{ trans_choice('custom.legislative_program', 1) }} {{ $item->name }}"
+                                               data-resource-name="{{ $item->name }}"
                                                data-resource-delete-url="{{ route('admin.consultations.legislative_programs.delete', $item) }}"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
