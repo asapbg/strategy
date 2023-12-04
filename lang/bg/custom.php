@@ -658,4 +658,5 @@ return [
     'operational_program_title' => 'Оперативна програма на Министерския съвет за периода :monthFrom – :monthTo :year г.',
     'pris_program_title' => ':actType :number на Министерския съвет от :year г.',
     'add_information_for_meeting' => 'Добави информация към заседание',
+    'pris_act' => 'акт',
 ];
