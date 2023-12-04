@@ -479,4 +479,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{section}/delete',     'destroy')      ->name('advisory-boards.sections.delete');
         Route::post('{section}/restore',    'restore')      ->name('advisory-boards.sections.restore')->withTrashed();
     });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/archive')->group(function () {
+        Route::get('', 'index')->name('advisory-boards.archive.index');
+    });
 });

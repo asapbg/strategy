@@ -69,7 +69,7 @@
 
             <div class="col-auto">
                 <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-add-file">
+                        data-target="#modal-add-function-file">
                     <i class="fa fa-plus mr-3"></i>
                     {{ __('custom.add') . ' ' . __('custom.file') }}
                 </button>

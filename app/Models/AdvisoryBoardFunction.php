@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @method static where(string $string, mixed $advisory_board_id)
+ * @method static orderBy(string $string, string $string1)
  */
 class AdvisoryBoardFunction extends Model
 {
@@ -25,6 +29,16 @@ class AdvisoryBoardFunction extends Model
     protected string $logName = "advisory_board_functions";
 
     protected $fillable = ['advisory_board_id'];
+
+    public function advisoryBoard(): BelongsTo
+    {
+        return $this->belongsTo(AdvisoryBoard::class);
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION)->where('doc_type', DocTypesEnum::AB_FUNCTION);
+    }
 
     /**
      * Get the model name
