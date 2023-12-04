@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Consultations\PublicConsultation;
+use App\Models\CustomRole;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePublicConsultationRequest extends FormRequest
@@ -53,6 +54,10 @@ class StorePublicConsultationRequest extends FormRequest
             foreach ($availableLanguages as $lang) {
                 $rules[$field .'_'. $lang['code']] = $properties['rules'];
             }
+        }
+
+        if(auth()->user()->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) && !request()->isMethod('put')) {
+            $rules['institution_id'] = ['required', 'numeric', 'exists:institution,id'];
         }
 
         return $rules;

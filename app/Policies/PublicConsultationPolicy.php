@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Consultations\PublicConsultation;
+use App\Models\CustomRole;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -54,7 +55,8 @@ class PublicConsultationPolicy
      */
     public function update(User $user, PublicConsultation $publicConsultation)
     {
-        return $user->canAny(['manage.*', 'manage.advisory']);
+        return $user->canAny(['manage.*', 'manage.advisory']) &&
+            ($user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) || $user->institution_id == $publicConsultation->importer_institution_id);
     }
 
     /**
@@ -66,7 +68,8 @@ class PublicConsultationPolicy
      */
     public function delete(User $user, PublicConsultation $publicConsultation)
     {
-        return $user->canAny(['manage.*', 'manage.advisory.delete']);
+        return $user->canAny(['manage.*', 'manage.advisory.delete']) &&
+            ($user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) || $user->institution_id == $publicConsultation->importer_institution_id);
     }
 
     /**
@@ -114,6 +117,7 @@ class PublicConsultationPolicy
      */
     public function proposalReport(User $user, PublicConsultation $publicConsultation)
     {
-        return true;
+        return $user->canAny(['manage.*', 'manage.advisory']) &&
+            ($user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) || $user->institution_id == $publicConsultation->importer_institution_id);
     }
 }

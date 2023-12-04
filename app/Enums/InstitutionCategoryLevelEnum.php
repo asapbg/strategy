@@ -29,4 +29,14 @@ enum InstitutionCategoryLevelEnum: int
         }
         return $keyName;
     }
+
+    public static function keyToLabel(): array
+    {
+        return [
+            self::CENTRAL->value => __('custom.nomenclature_level.'.self::CENTRAL->name),
+            self::CENTRAL_OTHER->value => __('custom.nomenclature_level.'.self::CENTRAL_OTHER->name),
+            self::AREA->value => __('custom.nomenclature_level.'.self::AREA->name),
+            self::MUNICIPAL->value => __('custom.nomenclature_level.'.self::MUNICIPAL->name)
+        ];
+    }
 }

@@ -23,6 +23,7 @@ use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\ConsultationType;
+use App\Models\CustomRole;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\FieldOfAction;
@@ -68,6 +69,7 @@ class PublicConsultationController extends AdminController
 
         $items = PublicConsultation::with(['translation'])
             ->FilterBy($requestFilter)
+            ->ByUser()
             ->paginate($paginate);
         $toggleBooleanModel = 'PublicConsultation';
         $editRouteName = self::EDIT_ROUTE;
@@ -119,17 +121,31 @@ class PublicConsultationController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = PublicConsultation::translationFieldsProperties();
 
-        $userInstitutionLevel = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
+        $isAdmin = auth()->user()->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]);
+        $institutionLevels = $userInstitutionLevel = $institutions = null;
+        if($isAdmin) {
+            $institutions = Institution::optionsListWithAttr();
+            $institutionLevels = InstitutionCategoryLevelEnum::options();
+            $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : FieldOfAction::with(['translation'])->Active()->get();
+            $actTypes = $item->id ? ActType::with(['translation'])
+                ->where('consultation_level_id', '=', $item->consultation_level_id)
+                ->get() : ActType::with(['translation'])->get();
+        } else {
+            $userInstitutionLevel = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
+            $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->fieldsOfAction : null);
+            $actTypes = ActType::with(['translation'])
+                ->where('consultation_level_id', '=', $item->id ? $item->consultation_level_id : $userInstitutionLevel)
+                ->get();
+        }
 
         $consultationLevels = ConsultationLevel::with(['translation'])->get();
-        $actTypes = ActType::with(['translation'])
-            ->where('consultation_level_id', '=', $item->id ? $item->consultation_level_id : $userInstitutionLevel)
-            ->get();
+
+
         $programProjects = ProgramProject::with(['translation'])->get();
         $linkCategories = LinkCategory::with(['translation'])->get();
         $operationalPrograms = OperationalProgram::get();
         $legislativePrograms = LegislativeProgram::get();
-        $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->fieldsOfAction : null);
+
         $documents = [];
         foreach ($item->documents as $document){
             $documents[$document->doc_type.'_'.$document->locale][] = $document;
@@ -139,14 +155,14 @@ class PublicConsultationController extends AdminController
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
-            'fieldsOfActions'));
+            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions'));
     }
 
     public function store(Request $request, PublicConsultation $item)
     {
         $user = $request->user();
-
-        if( !$user->institution_id ) {
+        $isAdmin = $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]);
+        if( !$isAdmin && !$user->institution_id ) {
             return back()->withInput($request->all())->with('danger', __('messages.you_are_not_associate_with_institution'));
         }
 
@@ -177,14 +193,15 @@ class PublicConsultationController extends AdminController
 
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {
-                $fillable['consultation_level_id'] = $request->user()->institution ? $request->user()->institution->level->nomenclature_level : 0;
+                $institution = $isAdmin ? Institution::find((int)$validated['institution_id']) : ($request->user()->institution ? $request->user()->institution : null);
+                $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
             }
             $item->fill($fillable);
             $item->active = $request->input('active') ? 1 : 0;
 
             if( !$id ) {
-                $item->importer_institution_id = $user->institution ? $user->institution->id : null;
-                $item->responsible_institution_id = $user->institution ? $user->institution->id : null;
+                $item->importer_institution_id = $institution ? $institution->id : null;
+                $item->responsible_institution_id = $institution ? $institution->id : null;
             }
 
             $item->save();
