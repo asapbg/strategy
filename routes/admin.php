@@ -207,6 +207,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/polls/edit/{id}', 'edit')->name('polls.edit');
         Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
         Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
+        Route::post('/polls/{item}/delete', 'destroy')->name('polls.delete');
 
         Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
         Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');

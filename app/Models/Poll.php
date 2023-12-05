@@ -41,6 +41,12 @@ class Poll extends ModelActivityExtend
         $query->where('status', '=', PollStatusEnum::ACTIVE->value);
     }
 
+    public function scopePublic($query)
+    {
+        $query->where('poll.start_date', '<', databaseDate(Carbon::now()))
+            ->where('poll.status', '<>', PollStatusEnum::INACTIVE->value);
+    }
+
     public function scopeNotExpired($query)
     {
         $query->where(function ($query) {
@@ -48,10 +54,27 @@ class Poll extends ModelActivityExtend
         });
     }
 
-//    public function scopeInPeriod($query)
-//    {
-//
-//    }
+    public function scopeByUserPermission($query)
+    {
+        $user = auth()->user();
+        if( $user ) {
+            //if not super admin
+            if( !$user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]) ) {
+                if( $user->can(['manage.pools']) ){
+                    //only polls where user is the author
+                    $query->where('poll.user_id', '=', $user->id);
+                } else if( $user->can(['manage.advisory']) ) {
+                    //only polls where OK is from user institution
+                    $query->whereHas('consultations', function ($query) use($user){
+                        $query->where('public_consultation.importer_institution_id', '=', $user->institution_id);
+                    });
+                } else{
+                    //to return empty list - just in case
+                    $query->where('poll.user_id', '=', 0);
+                }
+            }
+        }
+    }
 
     protected function inPeriod(): Attribute
     {

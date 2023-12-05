@@ -13,6 +13,7 @@ return [
     'active_n'                         => 'Активно',
     'active_m'                         => 'Активен',
     'active_f'                         => 'Активна',
+    'closed_f'                         => 'Затворенa',
     'inactive_n'                       => 'Неактивно',
     'inactive_m'                       => 'Неактивен',
     'inactive_f'                       => 'Неактивна',
