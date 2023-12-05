@@ -1,6 +1,7 @@
 @php
     /** @var $current_tab - used to determine the fragment for the pagination */
     $current_tab ??= '';
+    $archive_category ??= 0;
 @endphp
 
 <div id="accordion">
@@ -13,7 +14,13 @@
                             <div class="col-12">
                                 <a data-toggle="collapse" href="#collapse{{$key}}"
                                    aria-expanded="true" class="font-weight-bold">
-                                    {{ __('custom.function') . ' ' .  __('custom.from') . ' ' . $item->created_at->format('Y') . __('custom.year_short') }}
+                                    @if($archive_category == 1)
+                                        {{ trans_choice('custom.meetings', 1) . ' ' .  __('custom.from') . ' ' . $item->created_at->format('d.m.Y') . __('custom.year_short') }}
+                                    @endif
+
+                                    @if($archive_category == 2)
+                                        {{ __('custom.function') . ' ' .  __('custom.from') . ' ' . $item->created_at->format('Y') . __('custom.year_short') }}
+                                    @endif
                                 </a>
                             </div>
                         </div>

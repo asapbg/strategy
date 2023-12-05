@@ -19,8 +19,20 @@ class AdvisoryBoardArchiveController extends AdminController
     {
         $this->authorize('viewAny', AdvisoryBoard::class);
 
-        $programs = AdvisoryBoardFunction::with('files')->orderBy('created_at', 'desc')->paginate(10);
+        $keywords = request()->offsetGet('keywords');
 
-        return $this->view('admin.advisory-boards.archive.index', compact('programs'));
+        $items = AdvisoryBoard::withTrashed()->with(['policyArea', 'translations'])
+            ->where(function ($query) use ($keywords) {
+                $query->when(!empty($keywords), function ($query) use ($keywords) {
+                    $query->whereHas('translations', function ($query) use ($keywords) {
+                        $query->where('name', 'like', '%' . $keywords . '%');
+                    });
+                });
+            })
+            ->where('active', false)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return $this->view('admin.advisory-boards.archive.index', compact('items'));
     }
 }

@@ -1,7 +1,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
+            loadStrategyDocuments();
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
@@ -9,6 +9,10 @@
             const csvExport =  $('#csv_export');
             const documentsReport = $('#documents_report');
             const documentLevelSelect = $('#documentLevelSelect');
+            documentLevelSelect.select2({
+                multiple: true
+            });
+            documentLevelSelect.val('').trigger('change');
             const ekateAreasDivId = $('#ekate_areas_div_id');
             const ekateMunicipalitiesDivId = $('#ekate_municipalities_div_id');
             const prisAct = $('#pris_act_ids');
@@ -19,16 +23,22 @@
             ekateAreasId.select2();
             ekateMunicipalitiesId.select2();
             documentLevelSelect.on('change', function () {
-                const selectedDocument = $(this).val();
+                const selectedDocuments = $(this).val();
                 ekateAreasId.val('').trigger('change');
                 ekateMunicipalitiesId.val('').trigger('change');
-                if (selectedDocument == 2) {
+
+                if (selectedDocuments.includes('2')) {
                     ekateAreasDivId.show();
-                    ekateMunicipalitiesDivId.hide();
-                } else if (selectedDocument == 3) {
+                } else {
                     ekateAreasDivId.hide();
+                }
+
+                if (selectedDocuments.includes('3')) {
                     ekateMunicipalitiesDivId.show();
                 } else {
+                    ekateMunicipalitiesDivId.hide();
+                }
+                if (!selectedDocuments.includes('2') && !selectedDocuments.includes('3')) {
                     ekateAreasDivId.hide();
                     ekateMunicipalitiesDivId.hide();
                 }
@@ -66,15 +76,16 @@
 
                 if (target === '#tree-view') {
                     view = 'tree-view';
-                    console.log(view);
                     updateUrlParameters({ 'view': 'tree-view' });
                     liveCycle.show();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    loadStrategyDocuments(1, buildUrl())
                 } else {
                     view = 'table-view';
                     updateUrlParameters({ 'view': 'table-view' });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     liveCycle.hide();
+                    loadStrategyDocuments(1, buildUrl())
                 }
             });
             const policySelect = $('#policySelect');
@@ -107,13 +118,6 @@
             }
             const urlParams = getUrlParameters();
 
-            const viewParam = urlParams.view;
-            if (viewParam === 'tree-view') {
-                $('#myTab a[href="#tree-view"]').tab('show');
-            }
-            if (viewParam === 'table-view') {
-                $('#myTab a[href="#table-view"]').tab('show');
-            }
             const policySelectValues = urlParams['policy-area'];
             //const prepareInstitutionsSelectValues = urlParams['prepared-institution'];
             const searchInTitleValue = urlParams['title'];
@@ -174,52 +178,110 @@
                 infiniteDate.prop('checked', isDateInfinite).trigger('change');
             }
 
+            infiniteDate.on('change', function () {
+                updateUrlParameters({ 'date-infinite': infiniteDate.prop('checked') });
+                loadStrategyDocuments(1, buildUrl());
+            });
+
             categorySelect.on('change', function() {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category': selectedValues.join(',') });
+                loadStrategyDocuments(1, buildUrl());
             });
+            searchInTitle.on('keyup', function() {
+                updateUrlParameters({ 'title': searchInTitle.val() });
+                loadStrategyDocuments(1, buildUrl());
+            })
+
             policySelect.on('change', function() {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'policy-area': selectedValues.join(',') });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             categorySelect.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category': selectedValues.join(',') });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             categorySelectLivecycleSelect.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category-livecycle': selectedValues.join(',') });
+                loadStrategyDocuments(1, buildUrl());
+            });
+
+            prisAct.on('change', function () {
+                const selectedValues = $(this).val();
+                updateUrlParameters({ 'pris-act': selectedValues.join(',') });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             validFrom.on('change', function () {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'valid-from': selectedValue });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             validTo.on('change', function () {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'valid-to': selectedValue });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             ekateAreasId.on('change', function() {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'ekate-area': selectedValue });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             ekateMunicipalitiesId.on('change', function() {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'ekate-municipality': selectedValue });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             paginationResults.on('change', function () {
+                console.log('heree');
                 const paginationResultsValue = parseInt($(this).val(), 10);
                 updateUrlParameters({ 'pagination-results':paginationResultsValue });
+                loadStrategyDocuments(1, buildUrl());
             });
 
             $('#searchBtn').on('click', function () {
                 window.location.href = buildUrl();
+            });
+
+            $('.ajaxSort').on('click', function (e) {
+                e.preventDefault();
+                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
+                //console.log($('.ajaxSort i.fa-solid'));
+
+                const url = $(this).data('url');
+                const containerId = $(this).data('container');
+                const container = containerId.startsWith('#') ? containerId.slice(1) : containerId;
+                const iconElement = $(this).find('i.fa-solid');
+                const currentIconClass = iconElement.attr('class');
+                const isSort = currentIconClass.includes('fa-sort');
+                const sort_white = isSort ? '' : 'text-white';
+                $('.ajaxSort i.fa-solid').not(iconElement).removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort').addClass(sort_white);
+
+                if (currentIconClass.includes('fa-sort-asc')) {
+                    updateUrlParameters({ 'direction': 'desc', 'order_by': container });
+                    iconElement.removeClass('fa-sort-asc').addClass('fa-sort-desc').addClass(sort_white);
+
+                } else if (currentIconClass.includes('fa-sort-desc')) {
+                    updateUrlParameters({ 'direction': 'asc', 'order_by': container });
+                    iconElement.removeClass('fa-sort-desc').addClass('fa-sort-asc').addClass(sort_white);
+
+                } else {
+                    updateUrlParameters({ 'direction': 'asc', 'order_by': container });
+                    iconElement.removeClass('fa-sort').addClass('fa-sort-asc').addClass(sort_white);
+                }
+
+                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
+                loadStrategyDocuments(1, buildUrl());
+
             });
 
             const buildUrl = () => {
@@ -229,7 +291,9 @@
                 const validFromValue = validFrom.val();
                 const validToValue = validTo.val();
                 const paginationSelectedResult = paginationResults.val();
-
+                const params = getUrlParameters();
+                const theOrderBy = params['order_by'];
+                const theDirection = params['direction'];
                 const url =  '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
                     '&category=' + encodeURIComponent(categorySelect.val()) +
                     '&category-lifecycle=' + encodeURIComponent(categorySelectLivecycleSelect.val()) +
@@ -240,6 +304,8 @@
                     '&date-infinite=' + encodeURIComponent(infiniteDate.prop('checked')) +
                     '&document-level=' + encodeURIComponent(documentLevelSelect.val()) +
                     '&policy-area-sort-order=' + encodeURIComponent(policyAreaSortOrder) +
+                    '&order_by=' + encodeURIComponent(theOrderBy) +
+                    '&direction=' +  encodeURIComponent(theDirection) +
                     '&view=' + encodeURIComponent(view) + '&export=' + doExport + '&document-report=' + documentReport
                     + '&ekate-area=' + ekateAreasId.val() + '&ekate-municipality=' + ekateMunicipalitiesId.val() + '&pris-acts=' + prisAct.val();//prisAct
                 doExport = null;
@@ -247,41 +313,43 @@
                 return url;
             }
 
-            $('.pagination a').on('click', function (e) {
-                e.preventDefault();
-                const url = new URL($(this).attr('href'), window.location.href);
-                const params = url.searchParams;
-                const policyAreaSelectedIds = policySelect.val();
-                const preparedInstitutionSelectedIds = preparedInstitutionSelect.val();
-                const titleValue = searchInTitle.val();
-                const paginationResultsValue = paginationResults.val();
-                const categoryResultsValues = categorySelect.val();
-
-                const paramsToUpdate = {
-                    'policy-area' : policyAreaSelectedIds,
-                    'prepared-institution' : preparedInstitutionSelectedIds,
-                    'title' : titleValue,
-                    'pagination-results' : paginationResultsValue,
-                    'category' : categoryResultsValues,
-                    'valid-from' : validFrom.val(),
-                    'valid-to' : validTo.val(),
-                    'document-level' : documentLevelSelect.val(),
-                    'category-livecycle' : categorySelectLivecycleSelect.val(),
-                }
-
-                Object.keys(paramsToUpdate).forEach(function (key) {
-                    const value = paramsToUpdate[key];
-                    params.set(key, value);
-                });
-
-                if (orderBy) {
-                    params.set('order_by', orderBy);
-                }
-                if (sortDirection) {
-                    params.set('direction', orderBy);
-                }
-                window.location.href = url.toString();
+            $(document).on('click', '.pagination a',function(event) {
+                event.preventDefault();
+                const page = $(this).attr('href').split('page=')[1];
+                const url = buildUrl();
+                loadStrategyDocuments(page, url);
             });
+
+            function loadStrategyDocuments(page = 1, search = '', view = '') {
+                let targetContainer = view === 'tree-view' ? '#tree-view' : '#table-view';
+                let otherContainer = view === 'tree-view' ? '#table-view' : '#tree-view';
+
+                $('#spinner-container').show();
+                $.ajax({
+                    url: '{{ route("strategy-document.list") }}',
+                    type: 'GET',
+                    data: { page: page, search: search },
+                    timeout: 5000,
+                    success: function (response) {
+                        $(targetContainer).empty();
+                        $(targetContainer).html(response.strategic_documents);
+
+                        setTimeout(function () {
+                            console.log(targetContainer);
+                            if (response.pagination && targetContainer == '#table-view') {
+                                $('#table-view').append('<div class="row" id="pagination-container">' + response.pagination + '</div>');
+                            }
+                        }, 100);
+                    },
+                    error: function (error) {
+                        console.error('Error loading strategy documents:', error);
+                    },
+                    complete: function () {
+                        $('#spinner-container').hide();
+                    }
+                });
+            }
         });
+
     </script>
 @endpush

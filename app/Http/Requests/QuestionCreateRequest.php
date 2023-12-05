@@ -23,12 +23,18 @@ class QuestionCreateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'poll_id' => ['required', 'numeric'],
             'new_question_name' => ['required', 'string', 'max:255'],
             'new_answers' => ['required', 'array', 'min:2'],
             'new_answers.*' => ['required', 'string', 'max:255'],
-            'pc' => ['nullable', 'exists:public_consultation,id'],
+            'pc' => ['nullable'],
         ];
+
+        if(request()->filled('pc') && (int)request()->input('pc')) {
+            $rules['pc'][] = 'exists:public_consultation,id';
+        }
+
+        return $rules;
     }
 }

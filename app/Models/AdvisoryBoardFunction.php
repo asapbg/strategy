@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int $id
+ *
  * @method static where(string $string, mixed $advisory_board_id)
  * @method static orderBy(string $string, string $string1)
  */

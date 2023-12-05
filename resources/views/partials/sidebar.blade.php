@@ -156,7 +156,7 @@
 {{--                        </li>--}}
 {{--                    </ul>--}}
 {{--                </li>--}}
-                @canany(['manage.*','manage.pools'])
+                @canany(['manage.*','manage.pools', 'manage.advisory'])
                     <li class="nav-item">
                         <a href="{{ route('admin.polls.index') }}"
                         class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
@@ -279,7 +279,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.advisory-boards.archive.index') . '#functions' }}"
+                                <a href="{{ route('admin.advisory-boards.archive.index') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ __('custom.archive') }}</p>

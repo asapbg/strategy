@@ -108,6 +108,12 @@ class Controller extends BaseController
             $segments[] = $heading;
         }
 
+        if ($links_count && $segments[$links_count] == "view") {
+            array_pop($segments);
+            $heading = __('custom.view_of').$this->title_singular;
+            $segments[] = $heading;
+        }
+
         $breadcrumbs['heading'] = $this->breadcrumb_title ?? $heading ?? '';
         $url = '';
 

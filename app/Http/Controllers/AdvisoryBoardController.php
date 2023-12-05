@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActType;
 use App\Models\AdvisoryActType;
+use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\FieldOfAction;
@@ -34,13 +34,30 @@ class AdvisoryBoardController extends Controller
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS.'_'.app()->getLocale())->first();
+        $keywords = '';
+        $status = request()->offsetGet('status');
+        $advisory_boards = AdvisoryBoard::withTrashed()->with(['policyArea', 'translations'])
+            ->where(function ($query) use ($keywords) {
+                $query->when(!empty($keywords), function ($query) use ($keywords) {
+                    $query->whereHas('translations', function ($query) use ($keywords) {
+                        $query->where('name', 'like', '%' . $keywords . '%');
+                    });
+                });
+            })
+            ->when($status != '', function ($query) use ($status) {
+                $query->where('active', (bool)$status);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
         return $this->view('site.advisory-boards.index', compact(
             'pageTitle',
             'field_of_actions',
             'authority_advisory_boards',
             'advisory_act_types',
             'advisory_chairman_types',
-            'pageTopContent'
+            'pageTopContent',
+            'advisory_boards'
         ));
     }
 
@@ -69,20 +86,20 @@ class AdvisoryBoardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param AdvisoryBoard $item
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function show(AdvisoryBoard $advisoryBoard)
+    public function show(AdvisoryBoard $item)
     {
-        dd('show');
+        return view('site.advisory-boards.view', compact('item'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      *
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param AdvisoryBoard $advisoryBoard
      *
      * @return \Illuminate\Http\Response
      */
@@ -95,8 +112,8 @@ class AdvisoryBoardController extends Controller
      * Update the specified resource in storage.
      *
      *
-     * @param \Illuminate\Http\Request  $request
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param \Illuminate\Http\Request $request
+     * @param AdvisoryBoard            $advisoryBoard
      *
      * @return \Illuminate\Http\Response
      */
@@ -109,7 +126,7 @@ class AdvisoryBoardController extends Controller
      * Remove the specified resource from storage.
      *
      *
-     * @param \App\Models\AdvisoryBoard $advisoryBoard
+     * @param AdvisoryBoard $advisoryBoard
      *
      * @return \Illuminate\Http\Response
      */

@@ -1,3 +1,7 @@
+@php
+    $view_mode ??= false;
+@endphp
+
 <div class="tab-content">
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
@@ -6,11 +10,16 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-create-meeting">
-                    <i class="fa fa-plus mr-3"></i>
-                    {{ __('custom.add') . ' ' . trans_choice('custom.meetings', 1) }}
-                </button>
+                @if(!$view_mode)
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#modal-create-meeting">
+                        <i class="fa fa-plus mr-3"></i>
+                        {{ __('custom.add') . ' ' . trans_choice('custom.meetings', 1) }}
+                    </button>
+                @else
+                    <a href="{{ route('admin.advisory-boards.edit', $item) . '#decisions' }}"
+                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                @endif
             </div>
         </div>
 
@@ -114,25 +123,29 @@
                         <h3>{{ trans_choice('custom.files', 2) }}</h3>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="custom-control custom-switch">
-                            @php $checked = request()->get('show_deleted_decisions_files', '0') == '1' ? 'checked' : '' @endphp
-                            <input type="checkbox" class="custom-control-input"
-                                   id="show-deleted-decisions-files"
-                                   {{ $checked }} onchange="toggleDeletedFiles(this, 'decisions')">
-                            <label class="custom-control-label"
-                                   for="show-deleted-decisions-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                    @if(!$view_mode)
+                        <div class="col-auto">
+                            <div class="custom-control custom-switch">
+                                @php $checked = request()->get('show_deleted_decisions_files', '0') == '1' ? 'checked' : '' @endphp
+                                <input type="checkbox" class="custom-control-input"
+                                       id="show-deleted-decisions-files"
+                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'decisions')">
+                                <label class="custom-control-label"
+                                       for="show-deleted-decisions-files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-add-meeting-file">
-                    <i class="fa fa-plus mr-3"></i>
-                    {{ __('custom.add') . ' ' . __('custom.file') }}
-                </button>
+                @if(!$view_mode)
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#modal-add-meeting-file">
+                        <i class="fa fa-plus mr-3"></i>
+                        {{ __('custom.add') . ' ' . __('custom.file') }}
+                    </button>
+                @endif
             </div>
         </div>
 

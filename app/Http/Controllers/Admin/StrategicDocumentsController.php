@@ -100,13 +100,13 @@ class StrategicDocumentsController extends AdminController
         $legalActTypes = LegalActType::with('translations')->get();
 
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
-        $consultations = PublicConsultation::all();
+        $consultations = PublicConsultation::with('translations');
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
-        $ekateAreas = EkatteArea::all();
-        $ekateMunicipalities = EkatteMunicipality::all();
+        $ekateAreas = EkatteArea::with('translations');
+        $ekateMunicipalities = EkatteMunicipality::with('translations');
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',

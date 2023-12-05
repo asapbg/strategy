@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');
+    Route::get('{item}/view', 'show')->name('advisory-boards.view');
 });
 
 Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {
@@ -23,7 +24,7 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
-    Route::get('poll/show', 'show')->name('poll.show');
+    Route::get('poll/{id}/show', 'show')->name('poll.show');
     Route::post('poll', 'store')->name('poll.store');
 });
 
@@ -67,6 +68,8 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
 
 Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
     Route::get('/strategy-documents/{search?}', 'index')->name('strategy-documents.index');
+    Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
+
     Route::get('/strategy-document/{id}', 'show')->name('strategy-document.view');
     Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');

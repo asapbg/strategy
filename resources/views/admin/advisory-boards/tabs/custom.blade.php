@@ -1,3 +1,7 @@
+@php
+    $view_mode ??= false;
+@endphp
+
 <div class="tab-content">
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
@@ -7,25 +11,33 @@
                         <h3>{{ trans_choice('custom.section', 2) }}</h3>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="custom-control custom-switch">
-                            @php $checked = request()->get('show_deleted_sections', '0') == '1' ? 'checked' : '' @endphp
-                            <input type="checkbox" class="custom-control-input"
-                                   id="show_deleted_sections"
-                                   {{ $checked }} onchange="toggleDeleted(this, 'custom', 'show_deleted_sections')">
-                            <label class="custom-control-label"
-                                   for="show_deleted_sections">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                    @if(!$view_mode)
+                        <div class="col-auto">
+                            <div class="custom-control custom-switch">
+                                @php $checked = request()->get('show_deleted_sections', '0') == '1' ? 'checked' : '' @endphp
+                                <input type="checkbox" class="custom-control-input"
+                                       id="show_deleted_sections"
+                                       {{ $checked }} onchange="toggleDeleted(this, 'custom', 'show_deleted_sections')">
+                                <label class="custom-control-label"
+                                       for="show_deleted_sections">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-create-section">
-                    <i class="fa fa-plus mr-3"></i>
-                    {{ __('custom.add') . ' ' . trans_choice('custom.section', 1) }}
-                </button>
+                @if(!$view_mode)
+
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#modal-create-section">
+                        <i class="fa fa-plus mr-3"></i>
+                        {{ __('custom.add') . ' ' . trans_choice('custom.section', 1) }}
+                    </button>
+                @else
+                    <a href="{{ route('admin.advisory-boards.edit', $item) . '#custom' }}"
+                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                @endif
             </div>
         </div>
 
@@ -45,52 +57,54 @@
                                                 </a>
                                             </div>
 
-                                            <div class="col-auto">
-                                                <div class="row">
-                                                    <div class="col-auto">
-                                                        @can('update', $item)
-                                                            <button type="button"
-                                                                    class="btn btn-sm btn-warning mr-2"
-                                                                    data-toggle="modal"
-                                                                    data-target="#modal-edit-section"
-                                                                    title="{{ __('custom.edit') }}"
-                                                                    onclick="loadSectionData('{{ route('admin.advisory-boards.sections.edit', ['item' => $item, 'section' => $section]) }}');">
-                                                                <i class="fa fa-edit"></i>
-                                                            </button>
-                                                        @endcan
-                                                    </div>
+                                            @if(!$view_mode)
+                                                <div class="col-auto">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            @can('update', $item)
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-warning mr-2"
+                                                                        data-toggle="modal"
+                                                                        data-target="#modal-edit-section"
+                                                                        title="{{ __('custom.edit') }}"
+                                                                        onclick="loadSectionData('{{ route('admin.advisory-boards.sections.edit', ['item' => $item, 'section' => $section]) }}');">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
+                                                            @endcan
+                                                        </div>
 
-                                                    <div class="col-auto">
-                                                        @can('delete', $item)
-                                                            @if(!$section->deleted_at)
-                                                                <a href="javascript:;"
-                                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                                   data-target="#modal-delete-section"
-                                                                   data-resource-id="{{ $section->id }}"
-                                                                   data-resource-delete-url="{{ route('admin.advisory-boards.sections.delete', ['item' => $item, 'section' => $section]) }}"
-                                                                   data-toggle="tooltip"
-                                                                   title="{{__('custom.delete')}}">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </a>
-                                                            @endif
-                                                        @endcan
+                                                        <div class="col-auto">
+                                                            @can('delete', $item)
+                                                                @if(!$section->deleted_at)
+                                                                    <a href="javascript:;"
+                                                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                                       data-target="#modal-delete-section"
+                                                                       data-resource-id="{{ $section->id }}"
+                                                                       data-resource-delete-url="{{ route('admin.advisory-boards.sections.delete', ['item' => $item, 'section' => $section]) }}"
+                                                                       data-toggle="tooltip"
+                                                                       title="{{__('custom.delete')}}">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
 
-                                                        @can('restore', $item)
-                                                            @if($section->deleted_at)
-                                                                <a href="javascript:;"
-                                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
-                                                                   data-target="#modal-restore-section"
-                                                                   data-resource-id="{{ $section->id }}"
-                                                                   data-resource-restore-url="{{ route('admin.advisory-boards.sections.restore', ['item' => $item, 'section' => $section]) }}"
-                                                                   data-toggle="tooltip"
-                                                                   title="{{__('custom.restore')}}">
-                                                                    <i class="fa fa-plus"></i>
-                                                                </a>
-                                                            @endif
-                                                        @endcan
+                                                            @can('restore', $item)
+                                                                @if($section->deleted_at)
+                                                                    <a href="javascript:;"
+                                                                       class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                                       data-target="#modal-restore-section"
+                                                                       data-resource-id="{{ $section->id }}"
+                                                                       data-resource-restore-url="{{ route('admin.advisory-boards.sections.restore', ['item' => $item, 'section' => $section]) }}"
+                                                                       data-toggle="tooltip"
+                                                                       title="{{__('custom.restore')}}">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     </h4>
                                 </div>
@@ -116,31 +130,36 @@
                                                             <h3>{{ trans_choice('custom.files', 2) }}</h3>
                                                         </div>
 
-                                                        <div class="col-auto">
-                                                            <div class="custom-control custom-switch">
-                                                                @php $checked = request()->get('show_deleted_custom_files', '0') == '1' ? 'checked' : '' @endphp
-                                                                <input type="checkbox" class="custom-control-input"
-                                                                       id="show_deleted_custom_files"
-                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'custom')">
-                                                                <label class="custom-control-label"
-                                                                       for="show_deleted_custom_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                                        @if(!$view_mode)
+                                                            <div class="col-auto">
+                                                                <div class="custom-control custom-switch">
+                                                                    @php $checked = request()->get('show_deleted_custom_files', '0') == '1' ? 'checked' : '' @endphp
+                                                                    <input type="checkbox" class="custom-control-input"
+                                                                           id="show_deleted_custom_files"
+                                                                           {{ $checked }} onchange="toggleDeletedFiles(this, 'custom')">
+                                                                    <label class="custom-control-label"
+                                                                           for="show_deleted_custom_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     </div>
                                                 </div>
 
                                                 <div class="col-auto">
-                                                    <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#modal-add-custom-file">
-                                                        <i class="fa fa-plus mr-3"></i>
-                                                        {{ __('custom.add') . ' ' . __('custom.file') }}
-                                                    </button>
+                                                    @if(!$view_mode)
+                                                        <button type="button" class="btn btn-success"
+                                                                data-toggle="modal"
+                                                                data-target="#modal-add-custom-file">
+                                                            <i class="fa fa-plus mr-3"></i>
+                                                            {{ __('custom.add') . ' ' . __('custom.file') }}
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
 
                                             <div class="row mt-3">
                                                 <div class="col-12">
-                                                    @include('admin.partial.files_table', ['files' => $section->files, 'item' => $item])
+                                                    @include('admin.partial.files_table', ['files' => $section->files, 'item' => $item, 'view_mode' => $view_mode])
                                                 </div>
                                             </div>
                                         </div>

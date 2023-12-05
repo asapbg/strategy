@@ -633,14 +633,21 @@
 
             function handleDateCheckbox(dateInput, checkbox) {
                 dateInput.on('change', function () {
-                    if (!checkbox.is(':checked')) {
+                    if ($(checkbox).is(':checked')) {
                         checkbox.prop('checked', $(this).val() === '').trigger('change');
                     }
                 });
                 checkbox.on('change', function () {
                     if ($(this).is(':checked')) {
+                        if (dateInput == dateExpiring) {
+                            dateInput.prop('disabled', true);
+                        }
                         if (dateInput.val() !== '') {
                             dateInput.val('').trigger('change');
+                        }
+                    } else {
+                        if (dateInput == dateExpiring) {
+                            dateInput.prop('disabled', false);
                         }
                     }
                 });

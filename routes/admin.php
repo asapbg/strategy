@@ -63,7 +63,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(LegislativeProgramController::class)->group(function () {
         Route::get('/consultations/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
         Route::get('/consultations/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::get('/consultations/legislative-programs/view/{item}', 'show')->name('consultations.legislative_programs.view');
+        Route::get('/consultations/legislative-programs/{item}/view', 'show')->name('consultations.legislative_programs.view');
         Route::get('/consultations/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
         Route::match(['post', 'put'], '/consultations/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
         Route::get('/consultations/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
@@ -74,7 +74,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(OperationalProgramController::class)->group(function () {
         Route::get('/consultations/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
         Route::get('/consultations/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
-        Route::get('/consultations/operational-programs/view/{item}', 'show')->name('consultations.operational_programs.view');
+        Route::get('/consultations/operational-programs/{item}/view', 'show')->name('consultations.operational_programs.view');
         Route::get('/consultations/operational-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
         Route::match(['post', 'put'], '/consultations/operational-programs/store', 'store')->name('consultations.operational_programs.store');
         Route::get('/consultations/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
@@ -208,6 +208,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/polls/edit/{id}', 'edit')->name('polls.edit');
         Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
         Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
+        Route::post('/polls/{item}/delete', 'destroy')->name('polls.delete');
 
         Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
         Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');
