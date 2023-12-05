@@ -148,7 +148,7 @@
 {{--                        </li>--}}
 {{--                    </ul>--}}
 {{--                </li>--}}
-                @canany(['manage.*','manage.pools'])
+                @canany(['manage.*','manage.pools', 'manage.advisory'])
                     <li class="nav-item">
                         <a href="{{ route('admin.polls.index') }}"
                         class="nav-link @if(Str::endsWith(url()->current(), 'polls')) active @endif">
