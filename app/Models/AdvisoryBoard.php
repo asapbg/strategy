@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AdvisoryTypeEnum;
+use App\Enums\DocTypesEnum;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
@@ -46,6 +48,26 @@ class AdvisoryBoard extends Model
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id'];
 
+    public function members(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::MEMBER->value);
+    }
+
+    public function viceChairmen(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
+            ->where('advisory_chairman_type_id', AdvisoryChairmanType::VICE_CHAIRMAN);
+    }
+
+    public function chairmen(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
+            ->where('advisory_chairman_type_id', AdvisoryChairmanType::HEAD_CHAIRMAN);
+    }
+
     public function advisoryFunction(): HasOne
     {
         return $this->hasOne(AdvisoryBoardFunction::class);
@@ -86,7 +108,7 @@ class AdvisoryBoard extends Model
         return $this->belongsTo(AuthorityAdvisoryBoard::class);
     }
 
-    public function members(): HasMany
+    public function allMembers(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class);
     }

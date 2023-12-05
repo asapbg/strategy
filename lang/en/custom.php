@@ -472,6 +472,8 @@ return [
     'name_of_normative_act' => 'Name of normative act',
     'description_of_suggested_change' => 'Description of suggested change',
     'keyword' => 'Keyword|Keywords',
+    'vice_chairman_site' => 'Vice chairmen',
+    'chairman_site' => 'Chairmen',
     'chairmen' => 'Chairman|Chairmen',
     'chairman' => 'Chairman',
     'chairmen_list' => 'Chairman list|Chairmen list',
@@ -513,5 +515,11 @@ return [
     'central_level' => 'Централно ниво',
     'area_level' => 'Областно ниво',
     'distrinct_level' => 'Регионално ниво',
-    //
+    'name_of_advisory_board' => 'Name of advisory board',
+    'rules_internal_organization' => 'Rules for the internal organization of the activity',
+    'effective_from' => 'Effective from',
+    'versions' => 'Versions',
+    'advisory_board_moderator_info' => 'Information about the moderator of Advisory Board',
+    'redirect_to_iisda' => 'Redirect to Integration information system of the state administration (IISDA)',
+    'advisory_board_description_link' => 'Record of description - link',
 ];

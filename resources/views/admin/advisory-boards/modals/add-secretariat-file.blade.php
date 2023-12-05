@@ -28,7 +28,7 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="file_{{ $lang['code'] }}" class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
+                                            <label for="" class="btn btn-outline-secondary" onclick="SECRETARIAT_FILE.querySelector('input[id=file_{{ $lang['code'] }}]').click()">{{ __('custom.select_file') }}</label>
                                             <input name="file_{{ $lang['code'] }}" class="d-none" type="file" id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
                                             <span class="document-name"></span>
                                         </div>

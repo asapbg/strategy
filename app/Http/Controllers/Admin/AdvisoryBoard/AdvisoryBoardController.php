@@ -136,7 +136,7 @@ class AdvisoryBoardController extends AdminController
 
         $archive_category = request()->get('archive_category', '');
 
-        $members = $item->members;
+        $members = $item->allMembers;
         $functions = $item->advisoryFunction?->translations;
         $files = File::query()->where(['id_object' => $item->advisoryFunction?->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
         $secretariat = $item->secretariat;

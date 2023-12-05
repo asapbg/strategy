@@ -10,6 +10,7 @@ Route::get('/', function () {
 
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');
+    Route::get('{item}/view', 'show')->name('advisory-boards.view');
 });
 
 Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {
