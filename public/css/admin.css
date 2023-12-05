@@ -54842,6 +54842,16 @@ table .toggle i { color: #269740 }
     --primary-color:#4a6484;
 }
 
+@font-face {
+    font-family: Fira Sans BGR;
+    src: url(../fonts/FiraSansBGR/FiraSansBGR-Regular.woff);
+    font-weight: normal;
+}
+
+body {
+font-family: "Fira Sans BGR";
+}
+
 /*sidebar sub icons*/
 .nav-treeview > .nav-item {
     padding-left: 10px;

@@ -2456,6 +2456,10 @@ url("/fonts/bootstrap-icons/bootstrap-icons.woff") format("woff");
     cursor: pointer !important;
 }
 
+.lh-normal {
+    line-height: normal;
+}
+
 .home-page-section {
     padding: 60px 0px;
 }
@@ -4058,6 +4062,48 @@ input[type=checkbox] {
 /**/
 
 /*Calendar*/
+.event-legend {
+    display: flex;
+    align-items: center;
+}
+
+.past-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #e6e6e6;
+    display: block;
+}
+
+.current-day-legend {
+    width: 30px;
+    height: 30px;
+    background:  #a9efce;
+    display: block;
+}
+
+.future-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #d5e7f6;
+    display: block;
+    cursor: pointer;
+}
+
+.calendar-wrap .past-event{
+    background:  #e6e6e6;
+    cursor: pointer;
+}
+
+.calendar-wrap .current-day-calendar{
+background:  #a9efce;
+text-decoration: underline;
+cursor: pointer;
+}
+
+.calendar-wrap .day-number {
+    font-size: 26px;
+}
+
 .calendar {
     width: 100%;
     background-color: #fff;
@@ -4081,12 +4127,12 @@ input[type=checkbox] {
     font-weight: 400;
     text-align: center;
     line-height: 1;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .calendar .row {
     display: flex;
-    min-height: 150px;
+    min-height: 100px;
   }
 
   .day {
@@ -4098,11 +4144,31 @@ input[type=checkbox] {
   }
 
   .day.next {
-    color: #d5d7db;
+    color: #565d63;
   }
 
   .day.event {
     background: #d5e7f6;
+  }
+
+  .modal-dialog.event-screen-dialog {
+    min-width: 90%;
+  }
+
+  .past-date-event {
+    background: #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .future-date-event {
+    background: #d5e7f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 /**/
 
