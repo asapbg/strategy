@@ -4,7 +4,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card card-primary card-outline">
-                <div class="card-header">
+                <div class="card-header fw-bold">
                     @if(!$item->id)
                         {{ __('custom.new_f').' '.__('custom.dynamic_structures.type.'.\App\Enums\DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->name) }}
                     @else
@@ -125,124 +125,133 @@
                                 </div>
                             @endcan
                         @endif
+
                         @if(isset($months) && sizeof($months) && isset($data) && $data)
-                            @foreach($months as $month)
-                                @php($rIndex = 1)
-                                @php($hasData = 0)
-                                @if(isset($data) && $data)
-                                    @foreach($data as $i => $row)
-                                        @if($row->month == $month)
-                                            @php($hasData = 1)
-                                            @php($rowColumns = json_decode($row->columns, true))
-                                            @if(!is_null($rowColumns))
-                                                <div class="card card-primary">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <h3 class="border-bottom border-4 border-primary pb-2">
-                                                                {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }}
+                            <div class="accordion" id="accordionExample">
+                                @foreach($months as $month)
+                                    @php($rIndex = 1)
+                                    @php($hasData = 0)
+                                    @if(isset($data) && $data)
+                                        @foreach($data as $i => $row)
+                                            @if($row->month == $month)
+                                                @php($hasData = 1)
+                                                @php($rowColumns = json_decode($row->columns, true))
+                                                @if(!is_null($rowColumns))
+                                                    @php($accordionIndex = $rIndex.$i)
+                                                    <div class="card card-primary card-outline">
+                                                        <div class="card-header" id="heading{{ $accordionIndex }}">
+                                                            <h2 class="mb-0 d-flex flex-row justify-content-between">
+                                                                @php(usort($rowColumns, function ($a, $b) { return strcmp($a['ord'], $b['ord']); }))
+                                                                <button class="btn btn-link btn-block text-left fw-bold @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $accordionIndex }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $accordionIndex }}">
+                                                                    {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }} {{ $rowColumns[0]['value'] }}
+                                                                </button>
                                                                 @can('update', $item)
                                                                     <a class="btn btn-danger ml-3" href="{{ route('admin.consultations.legislative_programs.remove_row', ['item' => $item, 'row' => $row->row_num]) }}">{{ __('custom.remove') }}</a>
                                                                 @endcan
-                                                            </h3>
+                                                            </h2>
                                                         </div>
-                                                        <div class="row">
-                                                            @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
-                                                            @php(ksort($rowColumns))
-                                                            @foreach($rowColumns as $k => $col)
-                                                                @php($fieldName = 'val['.$i.']['.$k.']')
-                                                                @php($errorField = 'val.'.$i.'.'.$k)
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-12 control-label" for="{{ $fieldName }}">
-                                                                            {{ $col['label'] }}
-                                                                        </label>
-                                                                        <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
-                                                                            <input type="hidden" name="{{ 'col['.$i.']['.$k.']' }}" value="{{ $col['id'] }}">
-                                                                            @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                                                                                <div class="col-12 d-flex flex-row px-0">
-                                                                                    <div class="input-group">
-                                                                                        <select class="form-control form-control-sm select2 select2-hidden-accessible @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" id="institutions_{{ $i.'.'.$k }}">
-                                                                                            <option value="" @if('' == old($errorField, '')) selected @endif>---</option>
-                                                                                            @if(isset($institutions) && sizeof($institutions))
-                                                                                                @foreach($institutions as $option)
-                                                                                                    <option value="{{ $option['value'] }}" @if($option['value'] == old((int)$errorField, (int)$col['value'])) selected @endif>{{ $option['name'] }}</option>
-                                                                                                @endforeach
-                                                                                            @endif
+                                                        <div id="collapse{{ $accordionIndex }}" class="collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $accordionIndex }}" data-parent="#accordionExample">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
+                                                                    @php(ksort($rowColumns))
+                                                                    @foreach($rowColumns as $k => $col)
+                                                                        @php($fieldName = 'val['.$i.']['.$k.']')
+                                                                        @php($errorField = 'val.'.$i.'.'.$k)
+                                                                        <div class="col-12">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-12 control-label" for="{{ $fieldName }}">
+                                                                                    {{ $col['label'] }}
+                                                                                </label>
+                                                                                <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
+                                                                                    <input type="hidden" name="{{ 'col['.$i.']['.$k.']' }}" value="{{ $col['id'] }}">
+                                                                                    @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                                        <div class="col-12 d-flex flex-row px-0">
+                                                                                            <div class="input-group">
+                                                                                                <select class="form-control form-control-sm select2 select2-hidden-accessible @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" id="institutions_{{ $i.'.'.$k }}">
+                                                                                                    <option value="" @if('' == old($errorField, '')) selected @endif>---</option>
+                                                                                                    @if(isset($institutions) && sizeof($institutions))
+                                                                                                        @foreach($institutions as $option)
+                                                                                                            <option value="{{ $option['value'] }}" @if($option['value'] == old((int)$errorField, (int)$col['value'])) selected @endif>{{ $option['name'] }}</option>
+                                                                                                        @endforeach
+                                                                                                    @endif
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <button type="button" class="btn btn-primary ml-1 pick-institution"
+                                                                                                    data-title="{{ trans_choice('custom.institutions',2) }}"
+                                                                                                    data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i.'.'.$k }}">
+                                                                                                <i class="fas fa-list"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
+                                                                                        <input type="text" class="form-control form-control-sm datepicker-month @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
+                                                                                    @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
+                                                                                        <select name="{{ $fieldName }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" >
+                                                                                            <option value="" @if(old($errorField, (int)$col['value']) == '') selected @endif></option>
+                                                                                            <option value="1" @if(old($errorField, (int)$col['value']) == 1) selected @endif>Да</option>
+                                                                                            <option value="0" @if(old($errorField, (int)$col['value']) == 0) selected @endif>Не</option>
                                                                                         </select>
-                                                                                    </div>
-                                                                                    <button type="button" class="btn btn-primary ml-1 pick-institution"
-                                                                                            data-title="{{ trans_choice('custom.institutions',2) }}"
-                                                                                            data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i.'.'.$k }}">
-                                                                                        <i class="fas fa-list"></i>
-                                                                                    </button>
+                                                                                    @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
+                                                                                        <input type="text" class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, $col['value']) }}">
+                                                                                    @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
+                                                                                        <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
+                                                                                    @else
+                                                                                        <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
+                                                                                    @endif
+                                                                                    @error($errorField)
+                                                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                                                    @enderror
                                                                                 </div>
-                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                                <input type="text" class="form-control form-control-sm datepicker-month @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
-                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                                <select name="{{ $fieldName }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" >
-                                                                                    <option value="" @if(old($errorField, (int)$col['value']) == '') selected @endif></option>
-                                                                                    <option value="1" @if(old($errorField, (int)$col['value']) == 1) selected @endif>Да</option>
-                                                                                    <option value="0" @if(old($errorField, (int)$col['value']) == 0) selected @endif>Не</option>
-                                                                                </select>
-                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                                <input type="text" class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, $col['value']) }}">
-                                                                            @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
-                                                                                <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
-                                                                            @else
-                                                                                <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
-                                                                            @endif
-                                                                            @error($errorField)
-                                                                                <div class="text-danger mt-1">{{ $message }}</div>
-                                                                            @enderror
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
-                                                        </div>
-                                                        <div class="row">
-                                                            @foreach(config('available_languages') as $lang)
-                                                                @php($fieldNameLang = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">{{ trans_choice('custom.impact_assessment', 1) }} ({{ strtoupper($lang['code']) }})</label>
-                                                                        <div class="col-12">
-                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
-                                                                            @error($fieldNameLang)
-                                                                            <div class="text-danger mt-1">{{ $message }}</div>
-                                                                            @enderror
-                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                <div class="row">
+                                                                    @foreach(config('available_languages') as $lang)
+                                                                        @php($fieldNameLang = 'file_assessment_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">{{ trans_choice('custom.impact_assessment', 1) }} ({{ strtoupper($lang['code']) }})</label>
+                                                                                <div class="col-12">
+                                                                                    <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                                    @error($fieldNameLang)
+                                                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                                                    @enderror
+                                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
-                                                        </div>
-                                                        <div class="row">
-                                                            @foreach(config('available_languages') as $lang)
-                                                                @php($fieldNameLang = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">Становище ({{ strtoupper($lang['code']) }})</label>
-                                                                        <div class="col-12">
-                                                                            <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
-                                                                            @error($fieldNameLang)
-                                                                            <div class="text-danger mt-1">{{ $message }}</div>
-                                                                            @enderror
+                                                                <div class="row">
+                                                                    @foreach(config('available_languages') as $lang)
+                                                                        @php($fieldNameLang = 'file_opinion_'.$row->row_num.'_'.str_replace('.', '_', $row->month).'_'.$lang['code'])
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-12 control-label" for="{{ $fieldNameLang }}">Становище ({{ strtoupper($lang['code']) }})</label>
+                                                                                <div class="col-12">
+                                                                                    <input type="file" class="form-control form-control-sm @error($fieldNameLang) is-invalid @enderror" value="" name="{{ $fieldNameLang }}">
+                                                                                    @error($fieldNameLang)
+                                                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                                                    @enderror
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                                @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null, 'delete' => isset($opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]) ? route('admin.consultations.legislative_programs.delete.file', ['program' => $item, 'file' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']]]) : ''])
-                                                                    </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endif
+                                                @php($rIndex += 1)
                                             @endif
-                                            @php($rIndex += 1)
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
                         @endif
                         <div class="col-12">
                             @if($item->id)

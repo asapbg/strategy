@@ -4,7 +4,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card card-primary card-outline">
-                <div class="card-header">
+                <div class="card-header fw-bold">
                     {{ __('custom.dynamic_structures.type.'.\App\Enums\DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->name).' ('.$item->period.')' }}
                 </div>
                 <div class="card-body">
@@ -21,62 +21,70 @@
                         </div>
 
                         @if(isset($months) && sizeof($months) && isset($data) && $data)
-                            @foreach($months as $month)
-                                @php($rIndex = 1)
-                                @php($hasData = 0)
-                                @if(isset($data) && $data)
-                                    @foreach($data as $i => $row)
-                                        @if($row->month == $month)
-                                            @php($hasData = 1)
-                                            @php($rowColumns = json_decode($row->columns, true))
-                                            @if(!is_null($rowColumns))
-                                                <div class="card card-primary">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <h3 class="border-bottom border-4 border-primary pb-2">
-                                                                {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }}
-                                                            </h3>
+                            <div class="accordion mt-4" id="accordionExample">
+                                @foreach($months as $month)
+                                    @php($rIndex = 1)
+                                    @php($hasData = 0)
+                                    @if(isset($data) && $data)
+                                        @foreach($data as $i => $row)
+                                            @if($row->month == $month)
+                                                @php($hasData = 1)
+                                                @php($rowColumns = json_decode($row->columns, true))
+                                                @if(!is_null($rowColumns))
+                                                    @php($accordionIndex = $rIndex.$i)
+                                                    <div class="card card-primary card-outline">
+                                                        <div class="card-header" id="heading{{ $accordionIndex }}">
+                                                            <h2 class="mb-0">
+                                                                @php(usort($rowColumns, function ($a, $b) { return strcmp($a['ord'], $b['ord']); }))
+                                                                <button class="btn btn-link btn-block text-left @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $accordionIndex }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $accordionIndex }}">
+                                                                    {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }}  {{ $rowColumns[0]['value'] }}
+                                                                </button>
+                                                            </h2>
                                                         </div>
-                                                        <div class="row">
-                                                            @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
-                                                            @php(ksort($rowColumns))
-                                                            @foreach($rowColumns as $k => $col)
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <span class="fw-bold">{{ $col['label'] }}:</span>
-                                                                        @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                                                                            {{ $institutions[(int)$col['value']] ?? '---' }}
-                                                                        @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                            {{ $col['value'] ? 'Да' : 'Не' }}
-                                                                        @else
-                                                                            {!! $col['value'] !!}
-                                                                        @endif
-                                                                    </div>
+                                                        <div id="collapse{{ $accordionIndex }}" class="collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $accordionIndex }}" data-parent="#accordionExample">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    @php($rowColumns = array_combine(array_column($rowColumns, 'ord'), $rowColumns))
+                                                                    @php(ksort($rowColumns))
+                                                                    @foreach($rowColumns as $k => $col)
+                                                                        <div class="col-12">
+                                                                            <div class="form-group">
+                                                                                <span class="fw-bold">{{ $col['label'] }}:</span>
+                                                                                @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                                    {{ $institutions[(int)$col['value']] ?? '---' }}
+                                                                                @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
+                                                                                    {{ $col['value'] ? 'Да' : 'Не' }}
+                                                                                @else
+                                                                                    {!! $col['value'] !!}
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
-                                                        </div>
-                                                        <div class="row">
-                                                            @foreach(config('available_languages') as $lang)
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                <div class="row">
+                                                                    @foreach(config('available_languages') as $lang)
+                                                                        <div class="col-12">
+                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
-                                                        </div>
-                                                        <div class="row">
-                                                            @foreach(config('available_languages') as $lang)
-                                                                <div class="col-12">
-                                                                    @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                <div class="row">
+                                                                    @foreach(config('available_languages') as $lang)
+                                                                        <div class="col-12">
+                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endif
+                                                @php($rIndex += 1)
                                             @endif
-                                            @php($rIndex += 1)
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
                         @endif
                         <div class="col-12">
                             <a href="{{ route('admin.consultations.legislative_programs.index') }}"
