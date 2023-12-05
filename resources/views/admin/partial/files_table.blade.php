@@ -2,6 +2,7 @@
     $files ??= [];
     $item ??= new stdClass();
     $is_archived ??= false;
+    $view_mode ??= false;
 @endphp
 
 <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
@@ -48,7 +49,7 @@
                             @endcan
                         </div>
 
-                        @if(!$is_archived)
+                        @if(!$is_archived && !$view_mode)
                             <div class="col-auto">
                                 @can('update', $item)
                                     <button type="button"
@@ -63,7 +64,7 @@
                             </div>
                         @endif
 
-                        @if(!$is_archived)
+                        @if(!$is_archived && !$view_mode)
                             <div class="col-auto">
                                 @can('delete', $item)
                                     @if(!$file->deleted_at)

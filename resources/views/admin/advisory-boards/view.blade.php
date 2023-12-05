@@ -15,9 +15,40 @@
                            aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill"
+                           href="#secretary-of-council" role="tab"
+                           aria-controls="secretary-of-council"
+                           aria-selected="false">{{ trans_choice('custom.secretary_of_council', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="secretariat-tab" data-toggle="pill" href="#secretariat" role="tab"
+                           aria-controls="secretariat"
+                           aria-selected="false">{{ trans_choice('custom.secretariat', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="functions-tab" data-toggle="pill" href="#functions" role="tab"
                            aria-controls="functions"
                            aria-selected="false">{{ trans_choice('custom.function', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="regulatory-tab" data-toggle="pill" href="#regulatory" role="tab"
+                           aria-controls="regulatory"
+                           aria-selected="false">{{ trans_choice('custom.regulatory_framework', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="decisions-tab" data-toggle="pill" href="#decisions" role="tab"
+                           aria-controls="decisions"
+                           aria-selected="false">{{ trans_choice('custom.meetings_and_decisions', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-tab" data-toggle="pill" href="#custom" role="tab"
+                           aria-controls="custom"
+                           aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="archive-tab" data-toggle="pill" href="#archive" role="tab"
+                           aria-controls="archive"
+                           aria-selected="false">{{ __('custom.archive') }}</a>
                     </li>
                 </ul>
 
@@ -142,6 +173,15 @@
                             </div>
                         </div>
 
+                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel"
+                             aria-labelledby="secretary-of-council-tab">
+                            @include('admin.advisory-boards.tabs.secretary-of-council', ['view_mode' => true])
+                        </div>
+
+                        <div class="tab-pane fade" id="secretariat" role="tabpanel" aria-labelledby="secretariat-tab">
+                            @include('admin.advisory-boards.tabs.secretariat', ['view_mode' => true])
+                        </div>
+
                         <div class="tab-pane fade" id="functions" role="tabpanel" aria-labelledby="functions-tab">
                             <div class="row align-items-center justify-content-between mb-4">
                                 <div class="col-auto">
@@ -237,6 +277,22 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="regulatory" role="tabpanel" aria-labelledby="regulatory">
+                            @include('admin.advisory-boards.tabs.regulatory-framework', ['view_mode' => true])
+                        </div>
+
+                        <div class="tab-pane fade" id="decisions" role="tabpanel" aria-labelledby="decisions">
+                            @include('admin.advisory-boards.tabs.meetings-decisions', ['view_mode' => true])
+                        </div>
+
+                        <div class="tab-pane fade" id="custom" role="tabpanel" aria-labelledby="custom">
+                            @include('admin.advisory-boards.tabs.custom', ['view_mode' => true])
+                        </div>
+
+                        <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive">
+                            @include('admin.advisory-boards.tabs.archive')
                         </div>
                     </div>
                 </div>
