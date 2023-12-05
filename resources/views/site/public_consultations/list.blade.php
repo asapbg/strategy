@@ -57,7 +57,8 @@
                                 </div>
                             </div>
                             <div class="meta-consul mb-2">
-                                <span class="text-secondary"> {{ $consultation->reg_num }}</span>
+                                <span class="text-secondary"> <i class="fas fa-hashtag text-secondary" title="{{ __('custom.period') }}"></i>
+                                    {{ $consultation->reg_num }}</span>
                             </div>
                             <div class="meta-consul mb-2">
                             <span class="text-secondary"><i class="far fa-calendar text-secondary"

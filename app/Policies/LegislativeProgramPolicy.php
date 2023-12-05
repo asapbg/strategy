@@ -55,7 +55,7 @@ class LegislativeProgramPolicy
     public function update(User $user, LegislativeProgram $legislativeProgram)
     {
         $now = Carbon::now()->format('Y-m-d');
-        return $user->canAny(['manage.*', 'manage.legislative_operational_programs']);
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs']) && !$legislativeProgram->public;
     }
 
     /**
@@ -79,8 +79,8 @@ class LegislativeProgramPolicy
      */
     public function unPublish(User $user, LegislativeProgram $legislativeProgram)
     {
-        return false;
-        //return $user->canAny(['manage.*', 'manage.legislative_programs']) && $legislativeProgram->public;
+        //return false;
+        return $user->canAny(['manage.*', 'manage.legislative_programs']) && $legislativeProgram->public;
     }
 
     /**
@@ -92,7 +92,7 @@ class LegislativeProgramPolicy
      */
     public function delete(User $user, LegislativeProgram $legislativeProgram)
     {
-        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete']);
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete']) && !$legislativeProgram->public;;
     }
 
     /**

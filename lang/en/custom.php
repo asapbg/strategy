@@ -76,6 +76,7 @@ return [
     'search'                    => 'Търсене',
     'clear'                     => 'Изчисти',
     'view'                      => 'Преглед',
+    'view_of'                   => 'Преглед на ',
     'users_lists'               => 'Списък с потребители',
     'choose_password'           => 'Въведете парола',
     'password_changed_at'       => 'Смяна на парола',
