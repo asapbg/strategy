@@ -271,7 +271,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.advisory-boards.archive.index') . '#functions' }}"
+                                <a href="{{ route('admin.advisory-boards.archive.index') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
                                     <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
                                     <p>{{ __('custom.archive') }}</p>
