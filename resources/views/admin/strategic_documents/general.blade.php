@@ -633,7 +633,7 @@
 
             function handleDateCheckbox(dateInput, checkbox) {
                 dateInput.on('change', function () {
-                    if (!checkbox.is(':checked')) {
+                    if ($(checkbox).is(':checked')) {
                         checkbox.prop('checked', $(this).val() === '').trigger('change');
                     }
                 });
