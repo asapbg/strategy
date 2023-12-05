@@ -2,6 +2,16 @@
     --primary-color:#4a6484;
 }
 
+@font-face {
+    font-family: Fira Sans BGR;
+    src: url(../fonts/FiraSansBGR/FiraSansBGR-Regular.woff);
+    font-weight: normal;
+}
+
+body {
+font-family: "Fira Sans BGR";
+}
+
 /*sidebar sub icons*/
 .menu-open .nav-treeview {
     display: block!important;
