@@ -138,7 +138,7 @@ return [
         'roles' => [
             'required' => 'Трябва да изберете поне една роля',
         ],
-        'sector_roles.*.storage_location_id' => [
+        'contractor_name.bg.storage_location_id' => [
             'required_with' => 'Когато сте избрали сектор трябва да изберете и склад',
         ],
         'password' => [
@@ -244,6 +244,11 @@ return [
         'time'                     => 'Време',
         'available'                => 'Достъпен',
         'size'                     => 'Размер',
+        'contractor_name.bg'       => 'Наименование на възложител',
+        'executor_name.bg'          => 'Наименование на изпълнител',
+        'contract_subject.bg'       => 'Предмет на договора',
+        'services_description.bg'    => 'Описание на извършените услуги',
+        'price'                     => 'Цена на договора',
         'recaptcha_response_field' => 'Рекапча',
         'subject'                  => 'Заглавие',
         'message'                  => 'Съобщение',

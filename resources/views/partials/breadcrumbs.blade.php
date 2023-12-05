@@ -1,4 +1,4 @@
-@if (isset($breadcrumbs) && !request()->routeIs('admin.home'))
+@if (isset($breadcrumbs))
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">

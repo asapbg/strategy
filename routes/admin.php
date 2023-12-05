@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\ExecutorController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
@@ -430,6 +431,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
         Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
         Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed();
+    });
+
+    Route::controller(ExecutorController::class)->prefix('/executors')->as('executors.')->group(function () {
+        Route::get('',                      'index')->name('index');
+        Route::get('/create',               'create')->name('create');
+        Route::post('/store',               'store')->name('store');
+        Route::get('{executor}/view',       'show')->name('view');
+        Route::get('{executor}/edit',       'edit')->name('edit');
+        Route::post('{executor}/update',    'update')->name('update');
+        Route::post('{executor}/delete',    'destroy')->name('destroy');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {

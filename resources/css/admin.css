@@ -3,6 +3,9 @@
 }
 
 /*sidebar sub icons*/
+.menu-open .nav-treeview {
+    display: block!important;
+}
 .nav-treeview > .nav-item {
     padding-left: 10px;
 }

@@ -26,6 +26,12 @@ class Controller extends BaseController
     /** @var array $request */
     protected array $request = [];
 
+    /** @var array $languages */
+    protected array $languages = [];
+
+    /** @var string $route_name */
+    private ?string $route_name;
+
     /**
      * Set pages titles in singular and plural according to controller / model
      * Get the request
@@ -34,8 +40,10 @@ class Controller extends BaseController
      */
     public function __construct(Request $request)
     {
+        $this->route_name = $request->route()?->getName();
         $this->request = $request->all();
         $trans_lang = $this->getControllerHandleName();
+        $this->languages = config('available_languages');
 
         $this->title_singular = trans_choice($trans_lang, 1);
         $this->title_plural   = trans_choice($trans_lang, 2);
@@ -55,6 +63,7 @@ class Controller extends BaseController
                 [
                     'title_singular'    => $this->title_singular,
                     'title_plural'      => $this->title_plural,
+                    'languages'         => $this->languages,
                     'breadcrumbs'       => $this->breadcrumbs(),
                 ],
                 $this->request,
@@ -69,6 +78,16 @@ class Controller extends BaseController
     protected function breadcrumbs()
     {
         $breadcrumbs = [];
+
+        $exclude_routes = [
+            "admin.home",
+            "admin.activity-logs.show"
+        ];
+
+        if (in_array($this->route_name, $exclude_routes)) {
+            return $breadcrumbs;
+        }
+
         $segments = request()->segments();
         $links_count = count(request()->segments())-1;
         $text = __('custom.list_with');
@@ -82,22 +101,10 @@ class Controller extends BaseController
             $heading = __('custom.creation_of').$this->title_singular;
             $segments[] = $heading;
         }
-        if ($links_count && $segments[$links_count] == "edit") {
+        if ($segments[$links_count] == "edit") {
             $links_count--;
             $segments = array_slice(request()->segments(), 0, $links_count);
-            $heading = __('custom.create') .' '. $this->title_singular;
-            if (in_array("profile", $segments)) {
-                $heading = __('custom.edit_of').l_trans('custom.profiles', 1);
-            }
-            $segments[] = $heading;
-        }
-        if ($links_count && $segments[$links_count - 1] == "edit") {
-            $links_count -= 2;
-            $segments = array_slice(request()->segments(), 0, $links_count);
             $heading = __('custom.edit_of').$this->title_singular;
-            if (in_array("profile", $segments)) {
-                $heading = __('custom.edit_of').l_trans('custom.profiles', 1);
-            }
             $segments[] = $heading;
         }
 
@@ -111,13 +118,14 @@ class Controller extends BaseController
                 || ($segment == "profile" && in_array("users", $segments))
                 || $segment == "users" && in_array("profile", $segments)
             ) {
-
                 continue;
             }
 
             $url .= "/$segment";
             $name = str_replace("-", "_", $segment);
-            $display_name = trans_choice("custom.$name", 2);
+            $display_name = array_key_exists($name, trans('custom'))
+                ? trans_choice("custom.$name", 2)
+                : __(capitalize($name));
 
             if ($name == "admin") {
                 $display_name = __("custom.home");
@@ -143,8 +151,7 @@ class Controller extends BaseController
             }
         }
 
-        $links_count = count($breadcrumbs['links']) - 1;
-        $breadcrumbs['links_count'] = $links_count;
+        $breadcrumbs['links_count'] = count($breadcrumbs['links']) - 1;
 
         if (isset($this->breadcrumb_title)) {
 //            $breadcrumbs['links'][$links_count]['name'] = $this->breadcrumb_title;
