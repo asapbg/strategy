@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
@@ -12,6 +13,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
+use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardSecretaryCouncil;
@@ -146,11 +148,16 @@ class AdvisoryBoardController extends AdminController
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
         $meetings = AdvisoryBoardMeeting::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
 
+        $archive = AdvisoryBoardFunction::with('files')
+            ->where('advisory_board_id', $item->id)
+            ->where('status', StatusEnum::INACTIVE->value)
+            ->orderBy('created_at', 'desc')->paginate(10);
+
         $function_files = File::query()
             ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
+            ->where(['id_object' => $function->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
             ->get();
 
         $secretariat_files = File::query()
@@ -205,6 +212,7 @@ class AdvisoryBoardController extends AdminController
                 'meetings',
                 'meetings_decisions_files',
                 'sections',
+                'archive',
             )
         );
     }
