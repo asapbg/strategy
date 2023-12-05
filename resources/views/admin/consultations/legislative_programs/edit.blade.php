@@ -55,14 +55,7 @@
                                                         {{ trans_choice('custom.months', 1) }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <select id="type" name="month"  class="form-control form-control-sm @error('month'){{ 'is-invalid' }}@enderror">
-                                                            <option value="">---</option>
-                                                            @if(isset($months) && sizeof($months))
-                                                                @foreach($months as $m)
-                                                                    <option value="{{ $m }}" @if(old('month', '') == $m) selected @endif>{{ $m }}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
+                                                        <input id="month" type="text" class="form-control form-control-sm datepicker-month @error('month') is-invalid @enderror" value="{{ old('month', '') }}" name="month" data-start="{{ $months[0] }}" data-end="{{ $months[sizeof($months) - 1] }}">
                                                         @error('month')
                                                             <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
@@ -98,7 +91,7 @@
                                                                     </button>
                                                                 </div>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                <input type="text" class="form-control form-control-sm datepicker-month @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}">
+                                                                <input type="text" class="form-control form-control-sm datepicker-month @error($errorNewField) is-invalid @enderror" value="{{ old($errorNewField, '') }}" name="{{ $newFieldName }}" id="nd{{ $i }}" data-start="{{ $months[0] }}" data-end="{{ $months[sizeof($months) - 1] }}">
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                 <select name="{{ $newFieldName }}" class="form-control form-control-sm  @error($errorNewField) is-invalid @enderror" >
                                                                     <option value="" @if(old($errorNewField, '') == '') selected @endif></option>
@@ -184,7 +177,7 @@
                                                                                             </button>
                                                                                         </div>
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::DATE->value)
-                                                                                        <input type="text" class="form-control form-control-sm datepicker-month @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
+                                                                                        <input type="text" class="form-control form-control-sm datepicker-month @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}" id="{{ 'di'.$i.$k }}" data-start="{{ $months[0] }}" data-end="{{ $months[sizeof($months) - 1] }}">
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                                         <select name="{{ $fieldName }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" >
                                                                                             <option value="" @if(old($errorField, (int)$col['value']) == '') selected @endif></option>
