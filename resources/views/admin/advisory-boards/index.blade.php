@@ -7,39 +7,38 @@
                 <div class="card-body">
                     <form method="GET">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="keywords"
-                                               class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
-                                        <input id="keywords" class="form-control" name="keywords" type="text"
-                                               value="{{ request()->get('keywords', '') }}">
-                                    </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-group-sm">
+                                    <label for="keywords" class="control-label">{{ trans_choice('custom.keyword', 2) }}
+                                        <span
+                                            class="required">*</span> </label>
+                                    <input id="keywords" value="{{ request()->get('keywords') }}"
+                                           class="form-control form-control-sm"
+                                           type="text" name="keywords">
                                 </div>
                             </div>
 
                             <div class="col-md-4">
-                                <div class="input-group">
-                                    <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="status"
-                                               class="form-label">{{ trans_choice('validation.attributes.status', 1) }}</label>
-                                        <select id="status" class="institution form-select select2" name="status"
-                                                multiple>
-                                            <option value="" disabled>--</option>
-                                            @foreach(\App\Enums\StatusEnum::options() as $name => $value)
-                                                @php $selected = request()->get('status', '') == $value ? 'selected' : '' @endphp
-                                                <option
-                                                    value="{{ $value }}" {{ $selected }}>{{ __('custom.'.strtolower($name)) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label"
+                                           for="strategic_document_type">{{ trans_choice('custom.status', 1) }}
+                                        <span class="required">*</span></label>
+                                    <select id="status" name="status"
+                                            class="form-control form-control-sm select2">
+                                        <option value="">---</option>
+                                        @foreach(\App\Enums\StatusEnum::options() as $name => $value)
+                                            @php $selected = request()->get('status', '') == $value ? 'selected' : '' @endphp
+                                            <option
+                                                value="{{ $value }}" {{ $selected }}>{{ __('custom.'.strtolower($name)) }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-12 col-md-3 col-sm-4 mb-2">
-                                <button type="submit" name="search" value="1" class="btn btn-sm btn-success">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-sm btn-success">
                                     <i class="fa fa-search"></i> {{ __('custom.search') }}
                                 </button>
 

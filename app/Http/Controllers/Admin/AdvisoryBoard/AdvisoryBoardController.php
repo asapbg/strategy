@@ -41,7 +41,22 @@ class AdvisoryBoardController extends AdminController
     {
         $this->authorize('viewAny', AdvisoryBoard::class);
 
-        $items = AdvisoryBoard::withTrashed()->with(['policyArea'])->orderBy('id', 'desc')->paginate(10);
+        $keywords = request()->offsetGet('keywords');
+        $status = request()->offsetGet('status');
+
+        $items = AdvisoryBoard::withTrashed()->with(['policyArea', 'translations'])
+            ->where(function ($query) use ($keywords) {
+                $query->when(!empty($keywords), function ($query) use ($keywords) {
+                    $query->whereHas('translations', function ($query) use ($keywords) {
+                        $query->where('name', 'like', '%' . $keywords . '%');
+                    });
+                });
+            })
+            ->when($status != '', function ($query) use ($status) {
+                $query->where('active', (bool)$status);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         return $this->view('admin.advisory-boards.index', compact('items'));
     }
