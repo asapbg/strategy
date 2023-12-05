@@ -6,8 +6,6 @@
                     <label for="status"
                            class="form-label">{{ trans_choice('validation.attributes.category', 1) }}</label>
                     <select id="status" class="institution form-select select2" name="archive_category" multiple>
-                        <option value="" disabled>--</option>
-
                         @php $selected = request()->get('archive_category', '') == 1 ? 'selected' : '' @endphp
                         <option value="1" {{ $selected }}>{{ __('custom.meetings_and_decisions') }}</option>
 
