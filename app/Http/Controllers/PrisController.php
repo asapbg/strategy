@@ -235,19 +235,19 @@ class PrisController extends Controller
                 'type' => 'text',
                 'label' => __('custom.newspaper_number'),
                 'value' => $request->input('newspaperNumber'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'newspaperYear' => array(
                 'type' => 'text',
                 'label' => __('custom.newspaper_year'),
                 'value' => $request->input('newspaperYear'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'changes' => array(
                 'type' => 'text',
                 'label' => __('custom.change_docs'),
                 'value' => $request->input('changes'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'paginate' => array(
                 'type' => 'select',

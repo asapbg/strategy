@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFunctionRequest;
 use App\Models\AdvisoryBoardFunction;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\RedirectResponse;
 use Log;
@@ -27,7 +29,14 @@ class AdvisoryBoardFunctionController extends AdminController
 
         DB::beginTransaction();
         try {
-            $item = AdvisoryBoardFunction::where('advisory_board_id', $advisory_board_id)->first() ?? new AdvisoryBoardFunction();
+            $item = AdvisoryBoardFunction::where('advisory_board_id', $advisory_board_id)->where('status', StatusEnum::ACTIVE->value)->first() ?? new AdvisoryBoardFunction();
+
+            if (!Carbon::parse($item->created_at)->isSameYear(Carbon::now())) {
+                $item->status = StatusEnum::INACTIVE->value;
+                $item->save();
+                $item = new AdvisoryBoardFunction();
+            }
+
             $message = $item->id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f');
             $fillable = $this->getFillableValidated($validated, $item);
             $fillable['advisory_board_id'] = $advisory_board_id;

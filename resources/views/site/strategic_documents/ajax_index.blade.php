@@ -14,7 +14,25 @@
                 {!! $pageTopContent->value !!}
             </div>
         @endif
+            <div class="col-md-12">
+                <ul class=" tab nav nav-tabs mb-3" id="myTab">
+                    <li class="nav-item pb-0">
+                        <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
+                    </li>
+                    <li class="nav-item pb-0">
+                        <a href="#tree-view" class="nav-link tablinks" data-toggle="tab">{{ trans_choice('custom.tree_view', 1) }}</a>
+                    </li>
+                </ul>
+                @include('site.strategic_documents.search')
+                @include('site.strategic_documents.search-script')
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="table-view">
+                    </div>
+                </div>
+            </div>
+
         <div class="col-md-12">
+            <!--
             <ul class=" tab nav nav-tabs mb-3" id="myTab">
                 <li class="nav-item pb-0">
                     <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
@@ -23,88 +41,18 @@
                     <a href="#tree-view" class="nav-link tablinks" data-toggle="tab">{{ trans_choice('custom.tree_view', 1) }}</a>
                 </li>
             </ul>
-            @include('site.strategic_documents.search')
-            @include('site.strategic_documents.search-script')
+            -->
+            <div id="overlay">
+                <div id="spinner-container" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
             <div class="tab-content">
+
                 <div class="tab-pane fade show active" id="table-view">
-
-                @foreach ($strategicDocuments as $document)
-                        @if (!$document->active)
-                            @continue
-                        @endif
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <div class="consul-wrapper">
-                                    <div class="single-consultation d-flex">
-                                        <div class="consult-img-holder">
-                                            <i class="fa-solid fa-circle-nodes dark-blue"></i>
-                                        </div>
-                                        <div class="consult-body">
-                                            <div href="#" class="consul-item">
-                                                <div class="consult-item-header d-flex justify-content-between">
-                                                    <div class="consult-item-header-link">
-                                                        <a href="{{ route('strategy-document.view', ['id' => $document->id]) }}" class="text-decoration-none" title="{{ $document->title }}">
-                                                            <h3>{{ $document->title }}</h3>
-                                                        </a>
-                                                    </div>
-                                                    <div class="consult-item-header-edit">
-                                                        @can('delete', $document)
-                                                            <a href="#" class="open-delete-modal">
-                                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                                   role="button" title="{{ __('custom.deletion') }}"></i>
-                                                            </a>
-                                                            <form class="d-none"
-                                                                  method="GET"
-                                                                  action="{{ route( $deleteRouteName , [$document->id]) }}"
-                                                                  name="DELETE_ITEM_{{ $document->id }}"
-                                                            >
-                                                                @csrf
-                                                            </form>
-                                                        @endcan
-                                                        <!--
-                                                        @can('delete', $document)
-                                                            <a href="{{ route( $deleteRouteName , [$document->id]) }}">
-                                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
-                                                                   role="button" title="Изтриване"></i>
-                                                            </a>
-                                                        @endcan
-                                                        -->
-                                                        @can('update', $document)
-                                                            <a href="{{ route( $editRouteName , [$document->id]) }}">
-                                                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                                                   title="Редакция"></i>
-                                                            </a>
-                                                        @endcan
-                                                    </div>
-                                                </div>
-                                                {{ $document->category }}
-
-                                                <a href="{{ route( 'strategy-document.view' , [$document->id]) }}" title="Образование" class="text-decoration-none mb-3">
-                                                    <i class="bi bi-mortarboard-fill me-1" title="Образование"></i>
-                                                    {{ $document->policyArea->name }}
-                                                </a>
-
-                                                <div class="meta-consul mt-2">
-                                            <span class="text-secondary">
-                                                <!--
-                                                {{ $document->document_date ? $document->document_date . ' г.' : 'Не е указан срок' }}
-                                                -->
-                                                {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '' }} - {{ $document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : 'Безсрочен' }}
-
-                                            </span>
-                                                    <a href="{{ route( 'strategy-document.view' , [$document->id]) }}" title="{{ $document->title }}">
-                                                        <i class="fas fa-arrow-right read-more"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                    <div class="row">
-                        {{ $strategicDocuments->links() }}
+                    <div class="row" id="pagination-container">
                     </div>
                     <!--
                     <div class="row">
@@ -132,7 +80,11 @@
                     </div>
                     -->
                 </div>
+                <div class="tab-pane fade" id="tree-view">
+                    <div class="easy-tree">
 
+                    </div>
+                </div>
                 <div class="tab-pane fade" id="tree-view">
                     <div class="easy-tree">
                         <ul>
@@ -213,8 +165,8 @@
                                             </ul>
                                         </li>
                                     @endforeach
-                                    </ul>
-                                </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -229,4 +181,23 @@
         'file_change_warning_txt'   => __('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.strategic_documents', 1)) . '?',
     ])
 @endsection
+@push('styles')
+    <style>
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        #overlay .spinner {
+            pointer-events: none;
+        }
+    </style>
+@endpush
 

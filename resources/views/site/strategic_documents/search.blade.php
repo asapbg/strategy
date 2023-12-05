@@ -162,7 +162,7 @@
                     <!--
                         Важно - При второто и третото трябва да се появява или да става активно поле за избор на съответната област или община.
                     -->
-                    <option value="all">--</option>
+                    <option value="all">Всички</option>
                     <option value="1">Централно</option>
                     <option value="2">Областно</option>
                     <option value="3">Общинско</option>
@@ -201,6 +201,7 @@
     <div class="col-md-3 col-sm-12">
         <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
     </div>
+
     <div class="col-md-9 text-end col-sm-12">
         <button class="btn btn-primary  main-color"><i
                 class="fas fa-square-rss text-warning me-1"></i>RSS
@@ -220,31 +221,42 @@
         @php
             $translation = trans_choice('custom.policy_area', 1);
             $sort_by = 'policy-area';
+            $translation = trans_choice('custom.policy_area', 1);
+            $sort_by = 'policy-area';
+            $ajax = true;
+            $ajaxContainer = '#policy-area';
         @endphp
-        @include('components.sortable-link', compact('sort_by', 'translation'))
+        @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
     <div class="col-md-3 ">
         @php
+            $sort_by = 'title';
+            $ajax = true;
+            $ajaxContainer = '#title';
             $translation = trans_choice('custom.title', 1);
             $sort_by = 'title';
         @endphp
-        @include('components.sortable-link', compact('sort_by', 'translation'))
+        @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
 
 
     <div class="col-md-3">
         @php
-            $translation = trans_choice('custom.valid_from', 1);
-            $sort_by = 'valid-from';
+           $ajax = true;
+           $ajaxContainer = '#valid-from';
+           $translation = trans_choice('custom.valid_from', 1);
+           $sort_by = 'valid-from';
         @endphp
-        @include('components.sortable-link', compact('sort_by', 'translation'))
+        @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
     <div class="col-md-3">
         @php
-            $translation = trans_choice('custom.valid_to', 1);
-            $sort_by = 'valid-to';
+            $ajax = true;
+            $ajaxContainer = '#valid-to';
+           $translation = trans_choice('custom.valid_to', 1);
+           $sort_by = 'valid-to';
         @endphp
-        @include('components.sortable-link', compact('sort_by', 'translation'))
+        @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
 </div>
 

@@ -51,6 +51,11 @@
                                aria-controls="custom"
                                aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="archive-tab" data-toggle="pill" href="#archive" role="tab"
+                               aria-controls="archive"
+                               aria-selected="false">{{ __('custom.archive') }}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -87,6 +92,10 @@
 
                         <div class="tab-pane fade" id="custom" role="tabpanel" aria-labelledby="custom">
                             @include('admin.advisory-boards.tabs.custom')
+                        </div>
+
+                        <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive">
+                            @include('admin.advisory-boards.tabs.archive')
                         </div>
                     </div>
                 </div>

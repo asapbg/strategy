@@ -62,4 +62,12 @@ class StrategicDocumentsExport implements FromCollection, WithHeadings, ShouldAu
             $this->rowCount
         ];
     }
+
+    /**
+     * @return int
+     */
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
 }

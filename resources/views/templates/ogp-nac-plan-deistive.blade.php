@@ -41,6 +41,7 @@
                     </li>
                     <hr class="custom-hr">
                 </ul>
+                <img src="/img/ogp-img.png" class="img-fluid rounded" alt="OGP">
             </div>
         </div>
 
