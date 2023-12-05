@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\AdvisoryBoardFunction;
+use App\Enums\StatusEnum;
+use App\Models\AdvisoryBoard;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +15,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table((new AdvisoryBoardFunction())->getTable(), function (Blueprint $table) {
-            $table->boolean('status')->default('1');
+        Schema::table((new AdvisoryBoard())->getTable(), function (Blueprint $table) {
+            $table->boolean('active')->default('1');
         });
     }
 
@@ -26,8 +27,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table((new AdvisoryBoardFunction())->getTable(), function (Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table((new AdvisoryBoard())->getTable(), function (Blueprint $table) {
+            $table->dropColumn('active');
         });
     }
 };

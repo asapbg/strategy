@@ -26,10 +26,10 @@
                                         <select id="status" class="institution form-select select2" name="status"
                                                 multiple>
                                             <option value="" disabled>--</option>
-                                            @foreach(\App\Enums\LegislativeInitiativeStatusesEnum::options() as $name => $value)
+                                            @foreach(\App\Enums\StatusEnum::options() as $name => $value)
                                                 @php $selected = request()->get('status', '') == $value ? 'selected' : '' @endphp
                                                 <option
-                                                    value="{{ $value }}" {{ $selected }}>{{ __('custom.legislative_'.strtolower($name)) }}</option>
+                                                    value="{{ $value }}" {{ $selected }}>{{ __('custom.'.strtolower($name)) }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -65,6 +65,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ trans_choice('validation.attributes.advisory_name', 1) }}</th>
+                            <th>{{ __('custom.active_m') }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
@@ -75,6 +76,9 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
+                                    <td>
+                                        @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => 'AdvisoryBoard'])
+                                    </td>
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('view', $item)
