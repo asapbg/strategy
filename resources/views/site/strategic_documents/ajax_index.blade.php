@@ -85,7 +85,6 @@
 
                     </div>
                 </div>
-
                 <div class="tab-pane fade" id="tree-view">
                     <div class="easy-tree">
                         <ul>

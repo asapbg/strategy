@@ -162,7 +162,7 @@
                     <!--
                         Важно - При второто и третото трябва да се появява или да става активно поле за избор на съответната област или община.
                     -->
-                    <option value="all">--</option>
+                    <option value="all">Всички</option>
                     <option value="1">Централно</option>
                     <option value="2">Областно</option>
                     <option value="3">Общинско</option>

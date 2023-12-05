@@ -92,7 +92,7 @@ class StrategicDocumentsController extends Controller
         $searchUrl = $request->get('search');
         $parsedUrl = parse_url($searchUrl);
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
-        $paginatedResults = $request->get('pagination-results') ?? 10;
+        $paginatedResults = Arr::get($queryParams, 'pagination-results') ?? $request->get('pagination-results') ?? 10;
         $strategicDocuments = $this->prepareResults($request);
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
@@ -115,8 +115,6 @@ class StrategicDocumentsController extends Controller
     {
         $treeViewHtml = '<div class="easy-tree">';
         $treeViewHtml .= '<ul>';
-
-        // Loop through the 'national' category
         $treeViewHtml .= '<li class="parent_li">';
         $treeViewHtml .= '<span>';
         $treeViewHtml .= '<span class="glyphicon"></span>';
@@ -241,7 +239,7 @@ class StrategicDocumentsController extends Controller
                 $strategicDocumentsHtml .= csrf_field();
                 $strategicDocumentsHtml .= '</form>';
             }
-            if (Auth::user()->can('update', $document)) {
+            if (Auth::user()?->can('update', $document)) {
                 $strategicDocumentsHtml .= '<a href="' . route($editRouteName, [$document->id]) . '">';
                 $strategicDocumentsHtml .= '<i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>';
                 $strategicDocumentsHtml .= '</a>';
@@ -288,7 +286,7 @@ class StrategicDocumentsController extends Controller
         $parsedUrl = parse_url($searchUrl);
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
 
-        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations'])->where('active', 1);
+        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations', 'acceptActInstitution'])->where('active', 1);
         $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');//$request->input('policy-area');
         $categories = Arr::get($queryParams, 'category') ?? $request->input('category');//$request->input('category');
         $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');//$request->input('category-lifecycle');
@@ -355,10 +353,11 @@ class StrategicDocumentsController extends Controller
 
         $documentLevel = Arr::get($queryParams, 'document-level') ?? $request->input('document-level');
         if ($documentLevel) {
-            $strategicDocuments->when($documentLevel == 'all', function ($query) {
+            $documentLevelArray = explode(',', $documentLevel);
+            $strategicDocuments->when(in_array('all', $documentLevelArray), function ($query) {
                 return $query;
-            }, function($query) use ($documentLevel) {
-                $query->where('strategic_document_level_id', $documentLevel);
+            }, function($query) use ($documentLevelArray) {
+                $query->whereIn('strategic_document_level_id', $documentLevelArray);
             });
         }
 

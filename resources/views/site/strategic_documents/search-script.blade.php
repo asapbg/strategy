@@ -9,6 +9,10 @@
             const csvExport =  $('#csv_export');
             const documentsReport = $('#documents_report');
             const documentLevelSelect = $('#documentLevelSelect');
+            documentLevelSelect.select2({
+                multiple: true
+            });
+            documentLevelSelect.val('').trigger('change');
             const ekateAreasDivId = $('#ekate_areas_div_id');
             const ekateMunicipalitiesDivId = $('#ekate_municipalities_div_id');
             const prisAct = $('#pris_act_ids');
@@ -19,16 +23,22 @@
             ekateAreasId.select2();
             ekateMunicipalitiesId.select2();
             documentLevelSelect.on('change', function () {
-                const selectedDocument = $(this).val();
+                const selectedDocuments = $(this).val();
                 ekateAreasId.val('').trigger('change');
                 ekateMunicipalitiesId.val('').trigger('change');
-                if (selectedDocument == 2) {
+
+                if (selectedDocuments.includes('2')) {
                     ekateAreasDivId.show();
-                    ekateMunicipalitiesDivId.hide();
-                } else if (selectedDocument == 3) {
+                } else {
                     ekateAreasDivId.hide();
+                }
+
+                if (selectedDocuments.includes('3')) {
                     ekateMunicipalitiesDivId.show();
                 } else {
+                    ekateMunicipalitiesDivId.hide();
+                }
+                if (!selectedDocuments.includes('2') && !selectedDocuments.includes('3')) {
                     ekateAreasDivId.hide();
                     ekateMunicipalitiesDivId.hide();
                 }
@@ -41,9 +51,7 @@
 
             pdfExport.on('click', function() {
                 doExport = 'pdf';
-                //updateUrlParameters({ 'export': 'pdf' });
                 window.location.href = buildUrl();
-                //window.location.href = buildUrl();
             });
             excelExport.on('click', function () {
                 doExport = 'xlsx';
@@ -234,6 +242,7 @@
             });
 
             paginationResults.on('change', function () {
+                console.log('heree');
                 const paginationResultsValue = parseInt($(this).val(), 10);
                 updateUrlParameters({ 'pagination-results':paginationResultsValue });
                 loadStrategyDocuments(1, buildUrl());
@@ -245,26 +254,34 @@
 
             $('.ajaxSort').on('click', function (e) {
                 e.preventDefault();
+                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
+                //console.log($('.ajaxSort i.fa-solid'));
+
                 const url = $(this).data('url');
                 const containerId = $(this).data('container');
                 const container = containerId.startsWith('#') ? containerId.slice(1) : containerId;
                 const iconElement = $(this).find('i.fa-solid');
                 const currentIconClass = iconElement.attr('class');
-                console.log(container);
+                const isSort = currentIconClass.includes('fa-sort');
+                const sort_white = isSort ? '' : 'text-white';
+                $('.ajaxSort i.fa-solid').not(iconElement).removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort').addClass(sort_white);
+
                 if (currentIconClass.includes('fa-sort-asc')) {
                     updateUrlParameters({ 'direction': 'desc', 'order_by': container });
-                    iconElement.removeClass('fa-sort-asc').addClass('fa-sort-desc');
+                    iconElement.removeClass('fa-sort-asc').addClass('fa-sort-desc').addClass(sort_white);
 
                 } else if (currentIconClass.includes('fa-sort-desc')) {
                     updateUrlParameters({ 'direction': 'asc', 'order_by': container });
-                    iconElement.removeClass('fa-sort-desc').addClass('fa-sort-asc');
+                    iconElement.removeClass('fa-sort-desc').addClass('fa-sort-asc').addClass(sort_white);
 
                 } else {
                     updateUrlParameters({ 'direction': 'asc', 'order_by': container });
-                    iconElement.removeClass('fa-sort').addClass('fa-sort-asc');
+                    iconElement.removeClass('fa-sort').addClass('fa-sort-asc').addClass(sort_white);
                 }
 
+                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
                 loadStrategyDocuments(1, buildUrl());
+
             });
 
             const buildUrl = () => {
