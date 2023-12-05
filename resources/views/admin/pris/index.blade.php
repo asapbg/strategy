@@ -13,7 +13,7 @@
                     @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PrisController@index'])
 
                     <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
+                        <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ __('custom.pris_act') }}
                     </a>
                 </div>
 

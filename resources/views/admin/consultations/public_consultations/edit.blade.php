@@ -219,6 +219,38 @@
             }
         });
 
+
+        @if($isAdmin)
+            let levelsLabel = <?php echo json_encode(\App\Enums\InstitutionCategoryLevelEnum::keyToLabel());?>
+
+            $('#institution_id').on('change', function (){
+                let selectedOpt = $(this).find('option:selected');
+                let foa  = selectedOpt.data('foa');
+                let level  = parseInt(selectedOpt.data('level'));
+                consultationLevel = level;
+                $('#nomenclature_level').val(level);
+                $('#levelLabel').html(levelsLabel[level]);
+
+                $('#act_type_id').val('').trigger('change');
+                $('#act_type_id option').each(function (){
+                    if(parseInt($(this).data('level')) == level) {
+                        $(this).attr('disabled', false);
+                    } else{
+                        $(this).attr('disabled', true);
+                    }
+                });
+
+                $('#field_of_actions_id').val('').trigger('change');
+                $('#field_of_actions_id option').each(function (){
+                    if(foa.indexOf(parseInt($(this).attr('value'))) != -1) {
+                        $(this).attr('disabled', false);
+                    } else{
+                        $(this).attr('disabled', true);
+                    }
+                });
+            });
+        @endif
+
         //Init and preset form
         onDateChange();
         controlForm();

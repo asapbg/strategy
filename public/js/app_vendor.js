@@ -1884,6 +1884,7 @@ function ajaxList(domElement) {
 $(document).ready(function () {
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
+        console.log('#' + hash + '-tab');
         $('#' + hash + '-tab').trigger('click');
     }
 

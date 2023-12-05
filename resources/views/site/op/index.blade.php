@@ -5,7 +5,7 @@
         @include('site.pris.side_menu')
 
 
-        <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5" >
+        <div class="col-lg-10 right-side-content py-5" >
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
                 <div class="col-12 mb-5">
                     {!! $pageTopContent->value !!}
@@ -21,9 +21,9 @@
                                         <div class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
                                                 <div class="consult-item-header-link">
-                                                    <a href="{{ route('op.view', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ trans_choice('custom.operational_program', 1) }} {{ $item->name }}">
+                                                    <a href="{{ route('op.view', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->name }}">
                                                         <i class="me-1 main-color fw-bold fst-normal">
-                                                            {{ trans_choice('custom.operational_program', 1) }} {{ $item->name }}
+                                                            {{ $item->name }}
                                                         </i>
                                                         <i class="fas fa-arrow-right read-more"></i>
                                                     </a>
@@ -39,7 +39,7 @@
                                                            class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
                                                            data-target="#modal-delete-resource"
                                                            data-resource-id="{{ $item->id }}"
-                                                           data-resource-name="{{ trans_choice('custom.operational_program', 1) }} {{ $item->name }}"
+                                                           data-resource-name="{{ $item->name }}"
                                                            data-resource-delete-url="{{ route('admin.consultations.operational_programs.delete', $item) }}"
                                                            data-toggle="tooltip"
                                                            title="{{ __('custom.delete') }}"><span class="d-none"></span>

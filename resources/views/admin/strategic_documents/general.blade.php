@@ -443,7 +443,7 @@
 
         <!-- Files -->
         <div class="row">
-            <div class="card card-secondary p-0 mt-4">
+            <div class="card card-secondary p-0 px-2 mt-4">
                 <div class="card-body">
                     <div class="row">
                         <h3>{{ trans_choice('custom.main_file', 1) }}</h3>

@@ -51,6 +51,11 @@
                                aria-controls="custom"
                                aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="archive-tab" data-toggle="pill" href="#archive" role="tab"
+                               aria-controls="archive"
+                               aria-selected="false">{{ __('custom.archive') }}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -88,6 +93,10 @@
                         <div class="tab-pane fade" id="custom" role="tabpanel" aria-labelledby="custom">
                             @include('admin.advisory-boards.tabs.custom')
                         </div>
+
+                        <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive">
+                            @include('admin.advisory-boards.tabs.archive')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,18 +107,22 @@
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-delete-meeting'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-delete-secretary-council'])
     @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-delete-section'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-restore-meeting'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
+    @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-restore-section'])
     @includeIf('modals.restore-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-restore-file'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
 
     <!-- Modals -->
     @includeIf('admin.advisory-boards.modals.create-section-form')
+    @includeIf('admin.advisory-boards.modals.edit-section')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
     @includeIf('admin.advisory-boards.modals.edit-meeting')
     @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.add-meeting-decisions')
     @includeIf('admin.advisory-boards.modals.add-custom-file')
     @includeIf('admin.advisory-boards.modals.add-regulatory-framework-file')
     @includeIf('admin.advisory-boards.modals.add-secretariat-file')

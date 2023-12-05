@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Pris extends ModelActivityExtend implements TranslatableContract
 {
@@ -60,8 +61,17 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     protected function displayName(): Attribute
     {
+        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
-            get: fn () => (($this->actType ? $this->actType->name : '').' '.__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y').' '.__('custom.of').' '.($this->institution ? $this->institution->name : '---')),
+            get: fn () => ($actName.' '.__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y').' '.__('custom.of').' '.($this->institution ? $this->institution->name : '---')),
+        );
+    }
+
+    protected function mcDisplayName(): Attribute
+    {
+        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
+        return Attribute::make(
+            get: fn () => __('custom.pris_program_title', ['actType' => $actName, 'number' => __('custom.number_symbol').$this->doc_num, 'year' => Carbon::parse($this->doc_date)->format('Y')])
         );
     }
 

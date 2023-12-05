@@ -49,7 +49,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
 
         <div class="row mb-4">
             <div class="col-md-12">

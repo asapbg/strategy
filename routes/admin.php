@@ -472,7 +472,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{meeting}/restore',    'restore')      ->name('advisory-boards.meetings.restore')->withTrashed();
     });
 
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingDecisionController::class)->prefix('/advisory-boards/{item}/meeting/decisions')->group(function() {
+       Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.decisions.store');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardCustomController::class)->prefix('/advisory-boards/{item}/sections/')->group(function () {
-        Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.sections.store');
+        Route::post('/ajax-store',          'ajaxStore')    ->name('advisory-boards.sections.store');
+        Route::get('{section}/edit',        'ajaxEdit')     ->name('advisory-boards.sections.edit');
+        Route::post('/ajax-update',         'ajaxUpdate')   ->name('advisory-boards.sections.update');
+        Route::post('{section}/delete',     'destroy')      ->name('advisory-boards.sections.delete');
+        Route::post('{section}/restore',    'restore')      ->name('advisory-boards.sections.restore')->withTrashed();
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/archive')->group(function () {
+        Route::get('', 'index')->name('advisory-boards.archive.index');
     });
 });

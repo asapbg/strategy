@@ -89,6 +89,22 @@ class Institution extends ModelActivityExtend implements TranslatableContract
             ->get();
     }
 
+    public static function optionsListWithAttr(): \Illuminate\Support\Collection
+    {
+        return DB::table('institution')
+            ->select(['institution.id as value', 'institution_translations.name',
+                DB::raw('json_agg(institution_field_of_action.field_of_action_id) as foa'),
+                DB::raw('max(institution_level.nomenclature_level) as level')])
+            ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
+            ->join('institution_field_of_action', 'institution_field_of_action.institution_id', '=', 'institution.id')
+            ->join('institution_level', 'institution_level.id', '=', 'institution.institution_level_id')
+            ->where('institution.active', '=', 1)
+            ->where('institution_translations.locale', '=', app()->getLocale())
+            ->orderBy('institution_translations.name', 'asc')
+            ->groupBy('institution.id', 'institution_translations.name')
+            ->get();
+    }
+
     /**
      * We use this to draw subjects tree template in modals and pages
      * @return array

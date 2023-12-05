@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5">
+    <div class="col-lg-10 right-side-content py-5">
         <div class="custom-card py-4 px-3 mb-5">
             <div class="col-md-12">
                 <h4 class="mb-2">Информация</h4>

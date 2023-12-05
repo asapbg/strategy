@@ -441,6 +441,10 @@ return [
         'link_to_monitorstat' => 'Link to monitorstat',
         'file_info_main_bg' => 'File info (BG)',
         'file_info_main_en' => 'File info (EN)',
+        'date_of_meeting' => 'Date of meeting',
+        'agenda' => 'Agenda',
+        'decisions' => 'Decisions',
+        'suggestions' => 'Suggestions',
+        'other' => 'Other',
     ],
-
 ];

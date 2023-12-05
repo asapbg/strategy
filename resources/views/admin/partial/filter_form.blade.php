@@ -87,12 +87,12 @@
                                                     @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif
                                             >{{ $option['name'] }}</option>
                                         @endforeach
-                                    </select>
+                                    </select>                     
                                     <button type="button" class="btn btn-sm btn-primary ms-1 pick-institution"
                                             data-title="{{ trans_choice('custom.institutions',2) }}"
                                             data-url="{{ route('modal.institutions').'?select=1&multiple='.(isset($field['multiple']) && $field['multiple'] ? '1' : '0').'&admin=1&dom='.$key }}">
                                         <i class="fa fa-list"></i>
-                                    </button>
+                                    </button>                          
 {{--                                </div>--}}
                                 @break('subjects')
                             @endswitch

@@ -83,3 +83,8 @@ select.form-control-sm ~ .select2-container--default{
     height: auto !important;
 }
 
+.jstree-anchor {
+    display:inline-table !important;
+    white-space: initial !important;
+}
+

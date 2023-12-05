@@ -38,7 +38,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
         <h2 class="obj-title mb-4">Удостоверение за наследници няма да се изисква пред Службите по кадастър, НОИ и Агенцията по
             горите</h2>
         <div class="row">

@@ -32,10 +32,23 @@
                             <tr>
                                 <td>{{ $meeting->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($meeting->next_meeting)->format('d.m.Y') }}</td>
-                                <td>{!! $meeting->description !!}</td>
+                                <td class="col-8">{!! $meeting->description !!}</td>
                                 <td>{{ $meeting->created_at }}</td>
                                 <td>
                                     <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            @can('update', $item)
+                                                <button type="button"
+                                                        class="btn btn-sm btn-success mr-2"
+                                                        data-toggle="modal"
+                                                        data-target="#modal-add-meeting-decisions"
+                                                        title="{{ __('custom.add') . ' ' . __('custom.information') }}"
+                                                        onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM)">
+                                                    <i class="fa fa-handshake"></i>
+                                                </button>
+                                            @endcan
+                                        </div>
+
                                         <div class="col-auto">
                                             @can('update', $item)
                                                 <button type="button"

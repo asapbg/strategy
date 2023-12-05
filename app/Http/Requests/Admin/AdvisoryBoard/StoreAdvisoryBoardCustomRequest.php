@@ -39,6 +39,8 @@ class StoreAdvisoryBoardCustomRequest extends FormRequest
                 $rules[$field . '_' . $lang['code']] = $properties['rules'];
                 $rules['file_' . $lang['code']] = 'nullable|array';
                 $rules['file_' . $lang['code'] . '.*'] = 'required|file|mimes:pdf,doc,docx,xlsx|max:2048';
+                $rules['file_name_' . $lang['code']] = 'nullable|array';
+                $rules['file_description_' . $lang['code']] = 'nullable|array';
             }
         }
 

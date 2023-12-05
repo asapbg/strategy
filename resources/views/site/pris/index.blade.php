@@ -4,7 +4,7 @@
     <div class="row">
 
         @include('site.pris.side_menu')
-        <div class="col-lg-10  home-results home-results-two pris-list mt-5 mb-5" id="listContainer">
+        <div class="col-lg-10 right-side-content py-5" id="listContainer">
             @include('site.pris.list')
         </div>
 

@@ -21,7 +21,7 @@
 
     <div class="container-fluid mt-2 px-0">
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-10 right-side-content">
                 <div class="mt-5">
                     <div class="row mb-4">
                         <div class="col-md-12">

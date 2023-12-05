@@ -269,6 +269,14 @@
                                     <p>{{ trans_choice('custom.advisory_board_list', 2) }}</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.advisory-boards.archive.index') . '#functions' }}"
+                                   class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
+                                    <i class="fas fa-circle nav-icon nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.archive') }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

@@ -89,7 +89,7 @@ class LegislativeProgram extends ModelActivityExtend
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => date('m.Y', strtotime($this->from_date)).' - '.date('m.Y', strtotime($this->to_date))
+            get: fn () => __('custom.legislative_program_title', ['monthFrom' => __('site.'.(int)date('m', strtotime($this->from_date))), 'monthTo' => __('site.'.(int)date('m', strtotime($this->to_date))), 'year' => date('Y', strtotime($this->to_date))])
         );
     }
 

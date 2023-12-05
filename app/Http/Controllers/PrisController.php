@@ -135,7 +135,7 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        $pageTitle = $item->displayName.' от '.$item->docYear.' '.__('site.year_short');
+        $pageTitle = $item->mcDisplayName;
         $this->setBreadcrumbsTitle($pageTitle);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
 

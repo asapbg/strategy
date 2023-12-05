@@ -58,7 +58,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене

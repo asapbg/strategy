@@ -3089,6 +3089,22 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.datepicker-year').length) {
+        $('.datepicker-year').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'yyyy',
+            viewMode: "years",
+            minViewMode: "years",
+            changeMonth: false,
+            changeYear: true,
+            orientation: "bottom left",
+            autoclose: true,
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
+            }
+        });
+    }
+
     if($('.timepicker').length) {
         $('.timepicker').timepicker({
             showSeconds: false,

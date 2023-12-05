@@ -76,6 +76,32 @@
             });
         }
 
+        function loadSectionData(url) {
+            const form = document.querySelector('form[name=SECTION_UPDATE]');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=section_id]').value = data.id;
+                    form.querySelector('input#title').value = data.title;
+
+                    form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
+                    if (form.querySelector('#order').options.length - 1 === data.order) {
+                        form.querySelector('#order').value = '';
+                    }
+
+                    $(form.querySelector('#order')).trigger('change');
+                    $(form.querySelector('#body_bg')).summernote("code", data.translations[0].body);
+                    $(form.querySelector('#body_en')).summernote("code", data.translations[1].body);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function loadFunctionFileData(url, locale = 'bg') {
             const form = document.querySelector('form[name=FILE_UPDATE]');
 
@@ -178,10 +204,51 @@
          * @param input
          */
         function attachDocFileName(input) {
-            if (typeof input.files[0] === 'object') {
-                console.log($(input).siblings('.document-name'))
-                $(input).siblings('.document-name').html(input.files[0].name);
-            }
+            typeof input.files[0] === 'object' ? $(input).siblings('.document-name').html(input.files[0].name) : null;
+        }
+
+        /**
+         * Submit basic ajax form.
+         * You can pass the submit button and the url for storing data.
+         *
+         * @param element
+         * @param url
+         */
+        function submitAjax(element, url) {
+            // change button state
+            changeButtonState(element);
+
+            // Get the form element
+            const form = element.closest('.modal-content').querySelector('form');
+            const formData = new FormData(form);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
+                },
+                url: url,
+                data: formData,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    changeButtonState(element, 'finished');
+
+                    // Handle error response
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+
+                        for (let i in errors) {
+                            const search_class = '.error_' + i;
+                            form.querySelector(search_class).textContent = errors[i][0];
+                        }
+                    }
+                }
+            });
         }
 
         /**
@@ -245,13 +312,43 @@
         function toggleDeletedFiles(element, current_tab = '') {
             const url = window.location.pathname;
             const after_url = '#' + current_tab;
+            const url_query = window.location.search;
 
-            if (element.checked) {
+            if (element.checked && url_query.length === 0) {
                 window.location = url + '?show_deleted_' + current_tab + '_files=1' + after_url;
                 return;
             }
 
+            if (element.checked && url_query.length > 0) {
+                window.location = url + url_query + '&show_deleted_' + current_tab + '_files=1' + after_url;
+                return;
+            }
+
             window.location = url + after_url;
+        }
+
+        /**
+         * Send url query parameter for deleted resource and keep the current tab.
+         * Used for sections.
+         *
+         * @param element
+         * @param section
+         * @param url_param
+         */
+        function toggleDeleted(element, section, url_param) {
+            const url = window.location.pathname;
+            const after_url = '#' + section;
+
+            if (element.checked) {
+                window.location = url + `?${url_param}=1${after_url}`
+                return;
+            }
+
+            window.location = url + after_url;
+        }
+
+        function prepareMeetingId(id, form) {
+            form.querySelector('input[name=advisory_board_meeting_id]').value = id;
         }
     </script>
 @endpush

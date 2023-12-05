@@ -504,6 +504,7 @@ return [
     'date_expring_indefinite' => 'Date infinite',
     'infinite' => 'Infinite',
     'strategic_document_deleted' => 'Стратегическият документ беше изтрит успешно',
+    'add_information_for_meeting' => 'Add information for meeting',
     'table_view'    => 'Табличен изглед',
     'tree_view' => 'Дървовиден изглед',
     'national' => 'Национални',

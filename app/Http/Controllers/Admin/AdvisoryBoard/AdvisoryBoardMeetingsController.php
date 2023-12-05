@@ -136,7 +136,7 @@ class AdvisoryBoardMeetingsController extends AdminController
             $meeting->restore();
 
             return redirect($route)
-                ->with('success', trans_choice('custom.meetings', 1) . ' ' . __('messages.deleted_successfully_n'));
+                ->with('success', trans_choice('custom.meetings', 1) . ' ' . __('messages.restored_successfully_n'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->to($route)->with('danger', __('messages.system_error'));

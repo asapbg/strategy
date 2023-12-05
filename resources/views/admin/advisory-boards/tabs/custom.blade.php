@@ -2,7 +2,22 @@
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
             <div class="col-auto">
-                <h3>{{ trans_choice('custom.section', 2) }}</h3>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h3>{{ trans_choice('custom.section', 2) }}</h3>
+                    </div>
+
+                    <div class="col-auto">
+                        <div class="custom-control custom-switch">
+                            @php $checked = request()->get('show_deleted_sections', '0') == '1' ? 'checked' : '' @endphp
+                            <input type="checkbox" class="custom-control-input"
+                                   id="show_deleted_sections"
+                                   {{ $checked }} onchange="toggleDeleted(this, 'custom', 'show_deleted_sections')">
+                            <label class="custom-control-label"
+                                   for="show_deleted_sections">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-auto">
@@ -22,10 +37,61 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title w-100">
-                                        <a class="d-block w-100" data-toggle="collapse" href="#collapse{{$key}}"
-                                           aria-expanded="true">
-                                            {{ $section->title }}
-                                        </a>
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-10">
+                                                <a data-toggle="collapse" href="#collapse{{$key}}"
+                                                   aria-expanded="true">
+                                                    {{ $section->title }}
+                                                </a>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <div class="row">
+                                                    <div class="col-auto">
+                                                        @can('update', $item)
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-warning mr-2"
+                                                                    data-toggle="modal"
+                                                                    data-target="#modal-edit-section"
+                                                                    title="{{ __('custom.edit') }}"
+                                                                    onclick="loadSectionData('{{ route('admin.advisory-boards.sections.edit', ['item' => $item, 'section' => $section]) }}');">
+                                                                <i class="fa fa-edit"></i>
+                                                            </button>
+                                                        @endcan
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        @can('delete', $item)
+                                                            @if(!$section->deleted_at)
+                                                                <a href="javascript:;"
+                                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                                   data-target="#modal-delete-section"
+                                                                   data-resource-id="{{ $section->id }}"
+                                                                   data-resource-delete-url="{{ route('admin.advisory-boards.sections.delete', ['item' => $item, 'section' => $section]) }}"
+                                                                   data-toggle="tooltip"
+                                                                   title="{{__('custom.delete')}}">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                            @endif
+                                                        @endcan
+
+                                                        @can('restore', $item)
+                                                            @if($section->deleted_at)
+                                                                <a href="javascript:;"
+                                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                                   data-target="#modal-restore-section"
+                                                                   data-resource-id="{{ $section->id }}"
+                                                                   data-resource-restore-url="{{ route('admin.advisory-boards.sections.restore', ['item' => $item, 'section' => $section]) }}"
+                                                                   data-toggle="tooltip"
+                                                                   title="{{__('custom.restore')}}">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </a>
+                                                            @endif
+                                                        @endcan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </h4>
                                 </div>
 
@@ -64,11 +130,11 @@
                                                 </div>
 
                                                 <div class="col-auto">
-{{--                                                    <button type="button" class="btn btn-success" data-toggle="modal"--}}
-{{--                                                            data-target="#modal-add-custom-file">--}}
-{{--                                                        <i class="fa fa-plus mr-3"></i>--}}
-{{--                                                        {{ __('custom.add') . ' ' . __('custom.file') }}--}}
-{{--                                                    </button>--}}
+                                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                                            data-target="#modal-add-custom-file">
+                                                        <i class="fa fa-plus mr-3"></i>
+                                                        {{ __('custom.add') . ' ' . __('custom.file') }}
+                                                    </button>
                                                 </div>
                                             </div>
 

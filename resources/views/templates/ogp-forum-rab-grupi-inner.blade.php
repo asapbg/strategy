@@ -49,7 +49,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5">
+    <div class="col-lg-10 py-5 right-side-content">
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="obj-title mb-4">Дискусионен форум за "Работни групи"</h2>

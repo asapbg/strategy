@@ -5,7 +5,7 @@
         @method('PUT')
     @endif
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
-    <input type="hidden" name="nomenclature_level" id="nomenclature_level" value="{{ $item->id ? $item->nomenclatureLevelLabel : $userInstitutionLevel }}">
+    <input type="hidden" name="nomenclature_level" id="nomenclature_level" value="@if(!$isAdmin || $item->id){{ $item->id ? $item->nomenclatureLevelLabel : $userInstitutionLevel }}@else{{ '0' }}@endif">
     <div class="row">
         @if($item->id)
             <div class="col-md-2">
@@ -36,22 +36,53 @@
                 </div>
             @endif
         @else
-            <div class="col-md-10">
-                <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ auth()->user() && auth()->user()->institution ? auth()->user()->institution->name : '---'}}
+            @if(!$isAdmin)
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ auth()->user() && auth()->user()->institution ? auth()->user()->institution->name : '---'}}
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-10">
-                <div class="form-group">
-                    <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label> {{ auth()->user() && auth()->user()->institution ? ((auth()->user()->institution->settlement ? auth()->user()->institution->settlement->ime.', ' : '').auth()->user()->institution->address) : '---'}}
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label> {{ auth()->user() && auth()->user()->institution ? ((auth()->user()->institution->settlement ? auth()->user()->institution->settlement->ime.', ' : '').auth()->user()->institution->address) : '---'}}
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="col-12 control-label" for="institution_id">
+                            {{ trans_choice('custom.importers', 1) }}
+                        </label>
+                        <div class=" col-12 d-flex flex-row">
+                            <div class="input-group">
+                                <select class="form-control form-control-sm select2 @error('institution_id') is-invalid @enderror" name="institution_id" id="institution_id">
+                                    <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
+                                    @if(isset($institutions) && $institutions->count())
+                                        @foreach($institutions as $option)
+                                            <option value="{{ $option->value }}" @if($option->value == old('institution_id', ($item->id ? $item->institution_id : ''))) selected @endif
+                                            data-level="{{ $option->level }}" data-foa="{{ $option->foa }}">{{ $option->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary ml-1 pick-institution"
+                                    data-title="{{ trans_choice('custom.institutions',2) }}"
+                                    data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institution_id' }}">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        @error('institution_id')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            @endif
         @endif
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label> {{ $item->id ? $item->nomenclatureLevelLabel : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---') }}
-                </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label> <span id="levelLabel">@if(!$isAdmin || $item->id){{ $item->id ? $item->nomenclatureLevelLabel : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---') }}@else{{ '---' }}@endif</span>
             </div>
+        </div>
         <div class="col-12"></div>
         <div class="col-md-4">
             <div class="form-group">
@@ -77,11 +108,12 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="act_type_id">{{ trans_choice('validation.attributes.act_type_id', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
-                    <select id="act_type_id" name="act_type_id" class="cl-child form-control form-control-sm select2 select2-no-clear @error('act_type_id'){{ 'is-invalid' }}@enderror">
+                    <select id="act_type_id" name="act_type_id" class="cl-child form-control form-control-sm select2 @error('act_type_id'){{ 'is-invalid' }}@enderror">
                         <option value="">---</option>
                         @if(isset($actTypes) && $actTypes->count())
+                            <option value=""></option>
                             @foreach($actTypes as $row)
-                                <option value="{{ $row->id }}"
+                                <option value="{{ $row->id }}" data-level="{{ $row->consultation_level_id }}"
                                         @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
 {{--                                        data-id="{{ $row->id }}"--}}
 {{--                                        data-cl="{{ $row->consultationLevel->id }}"--}}
@@ -301,3 +333,43 @@
         </div>
     </div>
 </form>
+@if($isAdmin)
+    @push('scripts')
+        <script type="text/javascript">
+            $(document).ready(function (){
+                let levelsLabel = <?php echo json_encode(\App\Enums\InstitutionCategoryLevelEnum::keyToLabel());?>
+
+                $('#institution_id').on('change', function (){
+                    let selectedOpt = $(this).find('option:selected');
+                    let foa  = selectedOpt.data('foa');
+                    let level  = parseInt(selectedOpt.data('level'));
+
+                    $('#operational_program_row_id').data('institution', $('#institution_id').val());
+                    $('#legislative_program_row_id').data('institution', $('#institution_id').val());
+
+
+                    $('#nomenclature_level').val(level);
+                    $('#levelLabel').html(levelsLabel[level]);
+
+                    $('#act_type_id').val('').trigger('change');
+                    $('#act_type_id option').each(function (){
+                        if(parseInt($(this).data('level')) == level) {
+                            $(this).attr('disabled', false);
+                        } else{
+                            $(this).attr('disabled', true);
+                        }
+                    });
+
+                    $('#field_of_actions_id').val('').trigger('change');
+                    $('#field_of_actions_id option').each(function (){
+                        if(foa.indexOf(parseInt($(this).attr('value'))) != -1) {
+                            $(this).attr('disabled', false);
+                        } else{
+                            $(this).attr('disabled', true);
+                        }
+                    });
+                });
+            });
+        </script>
+    @endpush
+@endif

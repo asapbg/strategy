@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardRequest;
@@ -12,6 +13,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
+use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardSecretaryCouncil;
@@ -21,6 +23,7 @@ use App\Models\ConsultationLevel;
 use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -134,6 +137,8 @@ class AdvisoryBoardController extends AdminController
     {
         $this->authorize('update', $item);
 
+        $archive_category = request()->get('archive_category', '');
+
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
@@ -144,13 +149,32 @@ class AdvisoryBoardController extends AdminController
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
-        $meetings = AdvisoryBoardMeeting::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
+        $meetings = AdvisoryBoardMeeting::withTrashed()
+            ->where('advisory_board_id', $item->id)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->orderBy('id')->get();
+
+        $archive = collect();
+
+        if ($archive_category == '1') {
+            $archive = AdvisoryBoardMeeting::with('files')
+                ->where('advisory_board_id', $item->id)
+                ->whereYear('created_at', '<', Carbon::now()->year)
+                ->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        if ($archive_category == '2') {
+            $archive = AdvisoryBoardFunction::with('files')
+                ->where('advisory_board_id', $item->id)
+                ->where('status', StatusEnum::INACTIVE->value)
+                ->orderBy('created_at', 'desc')->paginate(10);
+        }
 
         $function_files = File::query()
             ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
+            ->where(['id_object' => $function->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
             ->get();
 
         $secretariat_files = File::query()
@@ -174,11 +198,16 @@ class AdvisoryBoardController extends AdminController
             ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
             ->get();
 
-        $sections = AdvisoryBoardCustom::withTrashed()->with(['files' => function ($query) {
+        $sections = AdvisoryBoardCustom::query()->with(['files' => function ($query) {
             $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
                 $query->withTrashed();
             });
-        }])->where('advisory_board_id', $item->id)->orderBy('order')->get();
+        }])
+            ->when(request()->get('show_deleted_sections', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })
+            ->where('advisory_board_id', $item->id)
+            ->orderBy('order')->get();
 
         return $this->view(
             'admin.advisory-boards.edit',
@@ -200,6 +229,7 @@ class AdvisoryBoardController extends AdminController
                 'meetings',
                 'meetings_decisions_files',
                 'sections',
+                'archive',
             )
         );
     }

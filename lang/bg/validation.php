@@ -440,5 +440,10 @@ return [
         'accept_act_institution_type_id' => 'Орган, приел стратегически документ',
         'document_date_accepted'  => 'Дата на приемане',
         'document_date_expiring'  => 'Дата на валидност',
+        'date_of_meeting' => 'Дата на заседанието',
+        'agenda' => 'Дневен ред',
+        'decisions' => 'Решения',
+        'suggestions' => 'Предложения',
+        'other' => 'Други',
     ],
 ];

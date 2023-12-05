@@ -61,7 +61,7 @@
         </div>
 
 
-        <div class="col-lg-10 py-5">
+        <div class="col-lg-10 py-5 right-side-content">
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
                 <div class="row">
                     <div class="col-12 mb-5">

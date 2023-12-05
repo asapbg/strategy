@@ -135,7 +135,7 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfAction'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'actType' => array(
                 'type' => 'select',
@@ -144,7 +144,7 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => trans_choice('custom.act_type', 1),
                 'value' => $request->input('actType'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'level' => array(
                 'type' => 'select',
@@ -153,7 +153,7 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => __('site.public_consultation.importer_type'),
                 'value' => $request->input('level'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'importer' => array(
                 'type' => 'subjects',
@@ -162,7 +162,7 @@ class PublicConsultationController extends Controller
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
                 'value' => request()->input('importer'),
                 'default' => '',
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'paginate' => array(
                 'type' => 'select',
@@ -171,7 +171,7 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => __('custom.filter_pagination'),
                 'value' => $request->input('paginate') ?? PublicConsultation::PAGINATE,
-                'col' => 'col-md-3'
+                'col' => 'col-md-s4'
             ),
         );
     }
