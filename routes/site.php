@@ -25,6 +25,7 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
     Route::get('poll/{id}/show', 'show')->name('poll.show');
+    Route::get('poll/{id}/statistic', 'statistic')->name('poll.statistic');
     Route::post('poll', 'store')->name('poll.store');
 });
 
@@ -83,6 +84,9 @@ Route::controller(ImpactAssessmentController::class)->prefix('/impact_assessment
     Route::post('/{form}', 'store')->name('store');
     Route::get('/{form}/pdf/{inputId}', 'pdf')->name('pdf');
     Route::get('/{form}/show/{inputId}', 'show')->name('show');
+
+Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
+    Route::get('/download/{file}', 'downloadFile')->name('download.file');
 });
 
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {

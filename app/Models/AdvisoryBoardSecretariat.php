@@ -5,9 +5,15 @@ namespace App\Models;
 use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int        $id
+ * @property Collection $files
+ * @property Collection $allFiles
+ */
 class AdvisoryBoardSecretariat extends Model
 {
 
@@ -25,12 +31,19 @@ class AdvisoryBoardSecretariat extends Model
 
     protected $fillable = ['advisory_board_id'];
 
+    public function allFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->withTrashed()
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB_FUNCTION)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
-            ->where('locale', app()->getLocale());
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
     }
 
     /**

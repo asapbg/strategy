@@ -520,6 +520,9 @@ return [
     'effective_from' => 'Effective from',
     'versions' => 'Versions',
     'advisory_board_moderator_info' => 'Information about the moderator of Advisory Board',
-    'redirect_to_iisda' => 'Redirect to Integration information system of the state administration (IISDA)',
     'advisory_board_description_link' => 'Record of description - link',
+    'resolution_council_ministers_short' => 'PMS #',
+    'state_papernew_short' => 'DV',
+    'active_document' => 'Active document',
+    'inactive_document' => 'Inactive document',
 ];

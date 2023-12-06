@@ -14,7 +14,7 @@ class Timeline extends Model
 
     public function object(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 
 }

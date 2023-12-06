@@ -43,6 +43,10 @@
     cursor: pointer !important;
 }
 
+.lh-normal {
+    line-height: normal;
+}
+
 .home-page-section {
     padding: 60px 0px;
 }
@@ -85,6 +89,10 @@ h6 {
 
 .fs-38 {
     font-size: 38px;
+}
+
+.fs-50 {
+    font-size: 50px !important;
 }
 
 .fw-400 {
@@ -202,6 +210,10 @@ span.select2.select2-container.select2-container--default,span.select2.select2-c
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
     border-radius: 8px;
     border-top: 3px solid #20659e;
+}
+
+.accordion .card.custom-card .card-header {
+    border-bottom: unset;
 }
 
 .main-color-light-bgr {
@@ -1487,6 +1499,11 @@ input[type=checkbox] {
     font-weight: 600;
 }
 
+.anotation p {
+    margin-bottom: 0.5rem !important
+}
+/*end priss*/
+
 /*KS*/
 .active-ks {
     color: #fff !important;
@@ -1544,6 +1561,10 @@ input[type=checkbox] {
     height: 11px;
     width: 11px;
     content: "";
+}
+
+li.timeline-item:last-child {
+    margin-bottom: 0px !important;
 }
 
 .preview-file-modal.btn-outline-secondary:hover {
@@ -1645,6 +1666,48 @@ input[type=checkbox] {
 /**/
 
 /*Calendar*/
+.event-legend {
+    display: flex;
+    align-items: center;
+}
+
+.past-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #e6e6e6;
+    display: block;
+}
+
+.current-day-legend {
+    width: 30px;
+    height: 30px;
+    background:  #a9efce;
+    display: block;
+}
+
+.future-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #d5e7f6;
+    display: block;
+    cursor: pointer;
+}
+
+.calendar-wrap .past-event{
+    background:  #e6e6e6;
+    cursor: pointer;
+}
+
+.calendar-wrap .current-day-calendar{
+background:  #a9efce;
+text-decoration: underline;
+cursor: pointer;
+}
+
+.calendar-wrap .day-number {
+    font-size: 26px;
+}
+
 .calendar {
     width: 100%;
     background-color: #fff;
@@ -1668,12 +1731,12 @@ input[type=checkbox] {
     font-weight: 400;
     text-align: center;
     line-height: 1;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .calendar .row {
     display: flex;
-    min-height: 150px;
+    min-height: 100px;
   }
 
   .day {
@@ -1685,11 +1748,31 @@ input[type=checkbox] {
   }
 
   .day.next {
-    color: #d5d7db;
+    color: #565d63;
   }
 
   .day.event {
     background: #d5e7f6;
+  }
+
+  .modal-dialog.event-screen-dialog {
+    min-width: 90%;
+  }
+
+  .past-date-event {
+    background: #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .future-date-event {
+    background: #d5e7f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 /**/
 
@@ -2066,6 +2149,45 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 }
 
 @media(max-width:767px) {
+    /*Event calendar*/
+    .desktop-day {
+        display: none !important;
+    }
+
+    .mobile-day {
+        display: flex !important;
+    }
+
+    .calendar .row {
+        min-height: 50px;
+    }
+
+    .calendar-wrap .day-number {
+       font-size: 4.5vw;
+    }
+    /**/
+
+    /*Public consultation mobile*/
+    .meta-consul {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+
+    .meta-consul span{
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    .meta-consul a{
+       display: inline-block !important;
+       width: auto;
+    }
+
+    .item-separator {
+        display: none !important;
+    }
+    /**/
+
     .library-img-holder {
         max-width: 100%;
     }
@@ -2089,11 +2211,9 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__rendered{
-        padding-bottom: 5px;
-        min-height: 36px !important;
+        min-height: 38px !important;
+        margin-top: 2px;
     }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__rendered
 
     .forum-header-edit {
         display: inline-block;
@@ -2123,6 +2243,27 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
 
 @media (max-width:576px) {
+    .team-member-contact{
+    flex-direction:column !important;
+    }
+
+    .calendar-info {
+        flex-direction: column-reverse;
+    }
+
+    .calendar-month  {
+       margin-top: 15px;
+       margin-bottom: 15px !important;
+    }
+
+    .event-legend {
+        margin-bottom: 15px;
+    }
+
+    .calendar-legend {
+        flex-direction: column;
+    }
+
     .subscribe-action {
         text-align: left !important;
         margin-top: 10px;
@@ -2186,6 +2327,17 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
 
 @media (max-width:480px) {
+    .dayname {
+        font-size: 16px;
+    }
+
+    /*Public consultation*/
+    .meta-consul span {
+        display: flex;
+        flex-direction: column;
+    }
+    /**/
+
     .home-slider {
         margin-top: -5px !important;
     }
@@ -2220,4 +2372,12 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     .centered-heading h1 {
         font-size: 24px !important;
     }
+
+    .calendar .row {
+        min-height: 35px;
+    }
+
+    .calendar-wrap .day-number {
+        font-size: 4vw;
+     }
 }

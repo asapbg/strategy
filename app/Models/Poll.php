@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use function Clue\StreamFilter\fun;
 
 
 class Poll extends ModelActivityExtend
@@ -38,12 +39,12 @@ class Poll extends ModelActivityExtend
 
     public function scopeActive($query)
     {
-        $query->where('status', '=', PollStatusEnum::ACTIVE->value);
+        $query->where('status', '<>', PollStatusEnum::INACTIVE->value);
     }
 
     public function scopePublic($query)
     {
-        $query->where('poll.start_date', '<', databaseDate(Carbon::now()))
+        $query->where('poll.start_date', '<=', databaseDate(Carbon::now()))
             ->where('poll.status', '<>', PollStatusEnum::INACTIVE->value);
     }
 
@@ -78,7 +79,7 @@ class Poll extends ModelActivityExtend
 
     protected function inPeriod(): Attribute
     {
-        $now = databaseDate(Carbon::now());
+        $now = databaseDate(Carbon::now()->format('Y-m-d'));
         return Attribute::make(
             get: fn ($value) => $this->status == PollStatusEnum::ACTIVE->value &&
                 (
@@ -119,25 +120,46 @@ class Poll extends ModelActivityExtend
         return $this->belongsToMany(PublicConsultation::class, 'public_consultation_poll', 'poll_id', 'public_consultation_id');
     }
 
-    public static function getStats($id)
+    public function getStats()
     {
-        return DB::table('polls')
+        $statistic = [];
+        $statisticDB =  DB::table('poll')
             ->select(
-//                DB::raw('poll_questions.id as question_id'),
+                DB::raw('count(distinct(user_poll.id)) as users'),
+                DB::raw('poll_question_option.poll_question_id as question_id'),
                 DB::raw('poll_question_option.id as option_id'),
                 DB::raw('sum(CASE WHEN user_poll_option.poll_question_option_id IS NOT NULL THEN 1 ELSE 0 END) as option_cnt'))
-            ->join('poll_question', 'poll_question.poll_id', '=', 'polls.id')
+            ->join('poll_question', 'poll_question.poll_id', '=', 'poll.id')
             ->join('poll_question_option', 'poll_question_option.poll_question_id', '=', 'poll_question.id')
-            ->join('user_poll', 'user_poll_option.poll_id', '=', 'polls.id')
-            ->leftJoin('user_poll_option', 'user_poll_option.poll_question_option_id', '=', 'poll_question_option.id')
-            ->where('polls.id', (int)$id)
-            ->whereNull('polls.deleted_at')
+            ->join('user_poll', 'user_poll.poll_id', '=', 'poll.id')
+            ->leftJoin('user_poll_option', function ($j){
+                $j->on('user_poll_option.user_poll_id', '=', 'user_poll.id')
+                    ->on('user_poll_option.poll_question_option_id', '=', 'poll_question_option.id');
+            })
+            ->where('poll.id', $this->id)
+            ->whereNull('poll.deleted_at')
             ->whereNull('user_poll.deleted_at')
             ->whereNull('poll_question.deleted_at')
             ->whereNull('poll_question_option.deleted_at')
             ->whereColumn('user_poll_option.user_poll_id', '=', 'user_poll.id')
             ->groupBy(['poll_question.id', 'poll_question_option.id'])
             ->get();
+
+        if($statisticDB->count()) {
+            foreach ($statisticDB as $row) {
+                if(!isset($statistic[$row->question_id])) {
+                    $statistic[$row->question_id] = [
+                        'users' => $row->users,
+                        'all_answers' => 0,
+                        'options' => []
+                    ];
+                }
+                $statistic[$row->question_id]['all_answers'] += $row->option_cnt;
+                $statistic[$row->question_id]['options'][$row->option_id] = $row->option_cnt;
+
+            }
+        }
+        return $statistic;
     }
 
     public static function optionsList()

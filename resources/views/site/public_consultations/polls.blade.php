@@ -1,13 +1,15 @@
 @if($item->pollsInPeriod->count())
     <div class="row mb-0 mt-4">
         <div class="col-md-12">
-            <div class="custom-card py-4 px-3">
+            <div class="custom-card py-4 px-3 mb-4">
                 <h3 class="mb-3">{{ __('site.public_consultation.polls') }}</h3>
                     @foreach($item->pollsInPeriod as $poll)
                         @if($poll->questions->count())
                             <form class="row mb-3" action="{{ route('poll.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $poll->id }}">
+                                <input type="hidden" name="pc_id" value="{{ $item->id }}">
+                                <input type="hidden" name="source" value="pc">
                                 @if(!$loop->first)
                                     <hr>
                                 @endif
@@ -19,17 +21,17 @@
                                 @foreach($poll->questions as $key => $q)
                                     <div class="col-md-6 mb-4">
                                         <input type="hidden" name="q[]" value="{{ $q->id }}">
-                                        <div class="comment-background p-2 rounded">
+                                        <div>
                                             <p class="fw-bold fs-18 mb-2">{{ $q->name }}</p>
                                             @error('a_'.$q->id)
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                             @foreach($q->answers as $key => $a)
                                                 <div class="form-check">
-                                                    <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror"
+                                                    <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror" id="a_{{ $q->id.$key }}"
                                                            type="@if($multiAnswer){{ 'checkbox' }}@else{{ 'radio' }}@endif"
                                                            name="a_{{ $q->id }}[]" value="{{ $a->id }}" @if(in_array($a->id, old('a_'.$q->id, []))) checked @endif>
-                                                    <label class="form-check-label" for="a_{{ $q->id }}[]">
+                                                    <label class="form-check-label" for="a_{{ $q->id.$key }}">
                                                         {{ $a->name }}
                                                     </label>
                                                 </div>

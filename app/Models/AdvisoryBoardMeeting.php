@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  *
  * @method static find(mixed $meeting_id)
+ * @method static where(string $string, int $id)
  */
 class AdvisoryBoardMeeting extends Model
 {
@@ -31,7 +32,9 @@ class AdvisoryBoardMeeting extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION)->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS);
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS);
     }
 
     /**

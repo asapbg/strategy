@@ -1,7 +1,6 @@
 <div class="col-lg-10 py-5 right-side-content">
     <div>
-
-        <div class="row mb-4">
+        <div class="row mb-4 action-btn-wrapper">
             <div class="col-md-12">
                 <h2 class="mb-3">Информация</h2>
             </div>
@@ -16,8 +15,8 @@
         </div>
 
 
-        <div class="row mb-4">
-            <div class="col-md-4 ">
+        <div class="row">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.form_to') }}
                     @if($item->daysCnt <= \App\Models\Consultations\PublicConsultation::SHORT_DURATION_DAYS)
                         <a href="#short-term" class="text-decoration-none">
@@ -32,17 +31,17 @@
                 <span class="obj-icon-info fw-bold" style="font-size: 18px;">
                   <i class="far fa-calendar-check me-2 main-color" title="{{ __('site.public_consultation.open_to') }}"></i>{{ displayDate($item->open_to) }} {{ __('site.year_short') }} </span>
             </div>
-            <div class="col-md-4 ">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.reg_num') }}</h3>
                 <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
+                  <span class="obj-icon-info">
                     <i class="fas fa-hashtag me-2 main-color" title="Номер на консултация "></i>{{ $item->reg_num }}</span>
                 </a>
             </div>
-            <div class="col-md-4 ">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
                 <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
+                  <span class="obj-icon-info">
                     <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
                       @if($item->fieldOfAction)<a href="{{ route('public_consultation.index').'?fieldOfAction='.$item->fieldOfAction->id }}" target="_blank">{{ $item->fieldOfAction->name }}</a>@else{{ '---' }}@endif
                   </span>
@@ -50,26 +49,26 @@
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-md-4 ">
+        <div class="row">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.type_consultation') }}</h3>
                 <a href="#" class="main-color text-decoration-none">
-                  <span class="obj-icon-info me-2">
+                  <span class="obj-icon-info">
                     <i class="fas fa-file-lines me-2 main-color" title="{{ __('site.public_consultation.type_consultation') }}"></i>
                       @if($item->actType)<a class="act-type act-type-{{ $item->act_type_id }}" href="{{ route('public_consultation.index').'?actType='.$item->act_type_id }}" target="_blank">{{ $item->actType->name }}</a>@else{{ '---' }}@endif
                   </span>
                 </a>
             </div>
-            <div class="col-md-4 ">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
                 <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
-                  <span class="obj-icon-info me-2">
+                  <span class="obj-icon-info">
                     <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
                       {{ $item->importerInstitution->name }}
                   </span>
                 </a>
             </div>
-            <div class="col-md-4 ">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
 {{--                <a href="#" class="main-color text-decoration-none">--}}
 {{--                  <span class="obj-icon-info me-2">--}}

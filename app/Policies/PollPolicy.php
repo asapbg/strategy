@@ -57,13 +57,11 @@ class PollPolicy
     public function update(User $user, Poll $poll)
     {
         $pcList = $poll->consultations;
-        return $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && databaseDate($poll->start_date) > databaseDate(Carbon::now()->format('Y-m-d'))
+        return !$poll->has_entry
             && (
                 $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])
                 || ( $user->canAny(['manage.pools']) && $user->id == $poll->user_id )
-                || ( $user->canAny(['manage.advisory']) && $user->id == $poll->user_id && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
+                || ( $user->canAny(['manage.advisory']) && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
             );
     }
 
@@ -77,14 +75,12 @@ class PollPolicy
     public function delete(User $user, Poll $poll)
     {
         $pcList = $poll->consultations;
-        return $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && databaseDate($poll->start_date) > databaseDate(Carbon::now()->format('Y-m-d'))
+        return !$poll->has_entry && !$pcList->count()
             && is_null($poll->deleted_at)
             && (
                 $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])
                 || ( $user->canAny(['manage.pools']) && $user->id == $poll->user_id )
-                || ( $user->canAny(['manage.advisory']) && $user->id == $poll->user_id && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
+                || ( $user->canAny(['manage.advisory']) && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
             );
     }
 
@@ -98,14 +94,12 @@ class PollPolicy
     public function restore(User $user, Poll $poll)
     {
         $pcList = $poll->consultations;
-        return $poll->status != PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && databaseDate($poll->start_date) > databaseDate(Carbon::now()->format('Y-m-d'))
+        return !$poll->has_entry && !$pcList->count()
             && !is_null($poll->deleted_at)
             && (
                 $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])
                 || ( $user->canAny(['manage.pools']) && $user->id == $poll->user_id )
-                || ( $user->canAny(['manage.advisory']) && $user->id == $poll->user_id && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
+                || ( $user->canAny(['manage.advisory']) && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
             );
     }
 
@@ -131,14 +125,12 @@ class PollPolicy
     public function preview(User $user, Poll $poll)
     {
         $pcList = $poll->consultations;
-        return $poll->status == PollStatusEnum::EXPIRED->value
-            && !$poll->has_entry
-            && databaseDate($poll->start_date) > databaseDate(Carbon::now()->format('Y-m-d'))
-            && !is_null($poll->deleted_at)
+        $isAdmin = $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]);
+        return (is_null($poll->deleted_at)  && $poll->has_entry)
             && (
-                $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])
+                $isAdmin
                 || ( $user->canAny(['manage.pools']) && $user->id == $poll->user_id )
-                || ( $user->canAny(['manage.advisory']) && $user->id == $poll->user_id && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
+                || ( $user->canAny(['manage.advisory'])  && in_array($user->institution_id, $pcList->pluck('importer_institution_id')->toArray()) )
             );
     }
 

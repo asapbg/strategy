@@ -24,6 +24,8 @@ class StoreUserPollRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'pc_id' => ['nullable', 'numeric'],
+            'source' => ['nullable', 'string'],
             'id' => ['required', 'numeric', 'exists:poll'],
             'q' => ['required', 'array', 'min:1'],
             'q.*' => ['required', 'numeric', 'exists:poll_question,id']

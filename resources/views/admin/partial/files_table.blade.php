@@ -12,6 +12,7 @@
         <th>{{ __('custom.name') }}</th>
         <th>{{ __('custom.description') }}</th>
         <th>{{ __('validation.attributes.created_at') }}</th>
+        <th>{{ __('custom.active_m') }}</th>
         <th>{{ __('custom.actions') }}</th>
     </tr>
     </thead>
@@ -23,6 +24,9 @@
                 <td>{{ $file->custom_name ?? $file->filename }}</td>
                 <td>{{ $file->description }}</td>
                 <td>{{ $file->created_at }}</td>
+                <td>
+                    @includeIf('partials.toggle-boolean', ['object' => $file, 'model' => 'File'])
+                </td>
                 <td>
                     <div class="row align-items-center">
                         <div class="col-auto">

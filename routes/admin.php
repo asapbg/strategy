@@ -477,6 +477,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
     });
 
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorInformationController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {
+        Route::post('/store/{information}', 'store')->name('advisory-boards.moderator.store');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {
         Route::post('/ajax-store',          'ajaxStore')    ->name('advisory-boards.meetings.store');
         Route::get('{meeting}/edit',        'ajaxEdit')     ->name('advisory-boards.meetings.edit');
