@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PollStatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\QuestionCreateRequest;
 use App\Http\Requests\QuestionEditRequest;
@@ -293,6 +294,21 @@ class PollController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
+                'col' => 'col-md-4'
+            ),
+            'content' => array(
+                'type' => 'text',
+                'default' => '',
+                'placeholder' => __('custom.content'),
+                'value' => $request->input('content'),
+                'col' => 'col-md-4'
+            ),
+            'active' => array(
+                'type' => 'select',
+                'options' => PollStatusEnum::statusOptions(__('custom.status').' ('.__('custom.any').')'),
+                'default' => '',
+                'placeholder' => __('custom.status'),
+                'value' => $request->input('active'),
                 'col' => 'col-md-4'
             ),
         );
