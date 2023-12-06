@@ -31,13 +31,16 @@ class StoreAdvisoryBoardFileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())]
+            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())],
+            'effective_at' => ['nullable', 'date'],
         ];
 
         foreach (config('available_languages') as $lang) {
             $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
             $rules['file_name_' . $lang['code']] = 'required|string';
             $rules['file_description_' . $lang['code']] = 'nullable|string';
+            $rules['resolution_council_ministers_' . $lang['code']] = 'nullable|string';
+            $rules['state_newspaper_' . $lang['code']] = 'nullable|string';
         }
 
         return $rules;

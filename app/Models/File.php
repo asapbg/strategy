@@ -3,20 +3,22 @@
 namespace App\Models;
 
 use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\EngineManager;
 use Laravel\Scout\Searchable;
 
 /**
  * @property string $custom_name
  * @property string $advisoryBoardTab
+ * @property string $resolution_council_ministers // Постановление на Министерски съвет
+ * @property string $state_newspaper              // Държавен вестник
+ * @property Carbon $effective_at                 // В сила от
  */
-class File extends Model
+class File extends ModelActivityExtend
 {
     use SoftDeletes, Searchable;
+
     public $timestamps = true;
 
     const CODE_OBJ_PUBLICATION = 1;
@@ -30,11 +32,11 @@ class File extends Model
     const CODE_AB_FUNCTION = 7;
 
 
-    const PUBLICATION_UPLOAD_DIR = 'publications'.DIRECTORY_SEPARATOR;
-    const PAGE_UPLOAD_DIR = 'pages'.DIRECTORY_SEPARATOR;
-    const PAGE_UPLOAD_PRIS = 'pris'.DIRECTORY_SEPARATOR;
-    const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR;
-    const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc'.DIRECTORY_SEPARATOR.'comments'.DIRECTORY_SEPARATOR;
+    const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
+    const PAGE_UPLOAD_DIR = 'pages' . DIRECTORY_SEPARATOR;
+    const PAGE_UPLOAD_PRIS = 'pris' . DIRECTORY_SEPARATOR;
+    const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR;
+    const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR . 'comments' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_UPLOAD_DIR = 'advisory-boards' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR;
 
@@ -57,14 +59,19 @@ class File extends Model
     protected function preview(): Attribute
     {
         return Attribute::make(
-            get: fn () => str_contains($this->content_type, 'image') ? '<img src="'.asset($this->path).'" class="img-thumbnail sm-thumbnail">'
-                : ( str_contains($this->content_type, 'pdf') ? '<img src="'.asset('img/default_pdf.png').'" class="img-thumbnail sm-thumbnail">' : '' )
+            get: fn() => str_contains($this->content_type, 'image') ? '<img src="' . asset($this->path) . '" class="img-thumbnail sm-thumbnail">'
+                : (str_contains($this->content_type, 'pdf') ? '<img src="' . asset('img/default_pdf.png') . '" class="img-thumbnail sm-thumbnail">' : '')
         );
     }
 
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'sys_user');
+    }
+
+    public function getModelName(): string
+    {
+        return empty($this->custom_name) ? $this->filename : $this->custom_name;
     }
 
     /**

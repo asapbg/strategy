@@ -224,10 +224,7 @@
 
                         @if(!empty($item->secretariat?->files) && $item->secretariat->files->count() > 0)
                             @foreach($item->secretariat->files as $file)
-                                @includeIf('site.partial.file', [
-                                    'file_name' => empty($file->custom_name) ? $file->filename : $file->custom_name,
-
-                                ])
+                                @includeIf('site.partial.file', ['file' => $file])
                             @endforeach
                         @endif
                     </div>

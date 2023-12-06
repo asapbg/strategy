@@ -446,5 +446,8 @@ return [
         'decisions' => 'Decisions',
         'suggestions' => 'Suggestions',
         'other' => 'Other',
+        'resolution_council_matters' => 'Resolution of the Council of Ministers',
+        'state_newspaper' => 'State newspaper',
+        'effective_at' => 'Effective at',
     ],
 ];

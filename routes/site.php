@@ -75,6 +75,10 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
 });
 
+Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
+    Route::get('/download/{file}', 'downloadFile')->name('download.file');
+});
+
 Route::controller(ImpactAssessmentController::class)->group(function () {
     Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
     Route::get('/impact_assessments/forms', 'forms')->name('impact_assessment.forms');

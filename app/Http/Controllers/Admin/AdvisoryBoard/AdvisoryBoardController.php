@@ -252,12 +252,7 @@ class AdvisoryBoardController extends AdminController
             ->where(['id_object' => $function?->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
             ->get();
 
-        $secretariat_files = File::query()
-            ->when(request()->get('show_deleted_secretariat_files', 0) == 1, function ($query) {
-                $query->withTrashed()->orderBy('deleted_at', 'desc');
-            })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_SECRETARIAT])
-            ->get();
+        $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
 
         $regulatory_framework_files = File::query()
             ->when(request()->get('show_deleted_regulatory_files', 0) == 1, function ($query) {

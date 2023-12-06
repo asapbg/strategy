@@ -16,20 +16,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
- * @property int                   $id
- * @property string                $name
+ * @property int                      $id
+ * @property string                   $name
  *
- * @property Collection            $members
- * @property AdvisoryBoardFunction $advisoryFunction
- * @property Collection            $functionFiles
- * @property Collection            $secretaryCouncil
- * @property Collection            $secretariat
- * @property Collection            $meetings
+ * @property Collection               $members
+ * @property AdvisoryBoardFunction    $advisoryFunction
+ * @property Collection               $functionFiles
+ * @property Collection               $secretaryCouncil
+ * @property AdvisoryBoardSecretariat $secretariat
+ * @property Collection               $meetings
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
  */
-class AdvisoryBoard extends Model
+class AdvisoryBoard extends ModelActivityExtend
 {
 
     use FilterSort, SoftDeletes, Translatable;
@@ -131,7 +131,7 @@ class AdvisoryBoard extends Model
     /**
      * Get the model name
      */
-    public function getModelName()
+    public function getModelName(): string
     {
         return $this->name;
     }

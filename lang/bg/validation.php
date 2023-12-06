@@ -450,5 +450,8 @@ return [
         'decisions' => 'Решения',
         'suggestions' => 'Предложения',
         'other' => 'Други',
+        'resolution_council_matters' => 'Постановление на Министерски съвет',
+        'state_newspaper' => 'Държавен вестник',
+        'effective_at' => 'В сила от',
     ],
 ];
