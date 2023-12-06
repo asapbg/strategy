@@ -55,102 +55,6 @@
                 Последни новини и събития
             </h2>
         </div>
-        <!--
-            <div class="col-md-12">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Категория:</label>
-                        <select class="form-select select2" multiple aria-label="Default select example">
-                            <option value="1">Всички</option>
-                            <option value="1">Национални планове за действие</option>
-                            <option value="1">Оценка за изпълнението на плановете за действие - мониторинг</option>
-                            <option value="1">Разработване на нов план за действие</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Търсене в Заглавие/Съдържание</label>
-                        <input type="text" class="form-control" id="searchInTitle">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Дата от:</label>
-                        <div class="input-group">
-                            <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker">
-                            <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Дата до:</label>
-                        <div class="input-group">
-                            <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker">
-                            <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group ">
-                    <div class="mb-3 d-flex flex-column  w-100">
-                        <label for="exampleFormControlInput1" class="form-label">Брой резултати:</label>
-                        <select class="form-select" id="paginationResults">
-                            <option value="10" selected>9</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-5 action-btn-wrapper">
-            <div class="col-md-3 col-sm-12">
-                <button class="btn rss-sub main-color" id="searchBtn"><i class="fas fa-search main-color"></i>Търсене</button>
-            </div>
-            <div class="col-md-9 text-end col-sm-12">
-                <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS
-                    Абониране</button>
-                <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
-                <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
-            </div>
-        </div>
-        <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
-            <div class="col-md-4">
-                <p class="mb-0 cursor-pointer ">
-                    <i class="fa-solid fa-sort me-2"></i> Категория
-            </div>
-            <div class="col-md-4">
-                <p class="mb-0 cursor-pointer ">
-                    <i class="fa-solid fa-sort me-2"></i> Заглавие
-            </div>
-            <div class="col-md-4 cursor-pointer ">
-                <p class="mb-0">
-                    <i class="fa-solid fa-sort me-2"></i>Дата на публикуване
-                </p>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-12 mt-2">
-                <div class="info-consul text-start">
-                    <p class="fw-600">
-                        Общо 98 резултата
-                    </p>
-                </div>
-            </div>
-        </div>
--->
         <div class="row">
             <div class="col-lg-4 mb-4">
                 <div class="post-box">
@@ -397,47 +301,49 @@
                 Календар с предстоящи събития
             </h2>
 
-    
+
 
             <div class="calendar-wrap">
-                <div class="row">
+                <div class="row mb-sm-3 align-items-center calendar-info">
                     <div class="col-md-4">
                         <div class="calendar-month mb-2">
                             <span class="fs-3 d-flex align-items-center">
                                 <span>
                                     <a href="#" class="link-dark">
                                         <i class="fa-solid fa-chevron-left me-2 fs-18"></i>
-                                        <span class="d-none">Previous month</span></a> <!-- Трябва да се слага, защото дава грешки за празни линкове -->
+                                        <span class="d-none">Previous month</span></a>
+                                    <!-- Трябва да се слага, защото дава грешки за празни линкове -->
                                 </span>
                                 Декември
                                 <span>
                                     <a href="#" class="link-dark">
                                         <i class="fa-solid fa-chevron-right ms-2 fs-18"></i>
-                                        <span class="d-none">Next month</span></a> <!-- Трябва да се слага, защото дава грешки за празни линкове -->
-                                    </span>
+                                        <span class="d-none">Next month</span></a>
+                                    <!-- Трябва да се слага, защото дава грешки за празни линкове -->
+                                </span>
                             </span>
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div class="calendar-legend d-flex justify-content-end">
+                        <div class="calendar-legend d-flex justify-content-md-end justify-content-sm-start">
                             <div class="event-legend me-4">
-                                <span class="past-event-legend rounded me-2">                    
+                                <span class="past-event-legend rounded me-2">
                                 </span>
                                 <span>
                                     Минало събитие
                                 </span>
                             </div>
-            
+
                             <div class="event-legend me-4">
-                                <span class="current-day-legend rounded me-2">                    
+                                <span class="current-day-legend rounded me-2">
                                 </span>
                                 <span>
                                     Днес
                                 </span>
                             </div>
-            
-                            <div class="event-legend">
-                                <span class="future-event-legend rounded me-2">                    
+
+                            <div class="event-legend mb-0">
+                                <span class="future-event-legend rounded me-2">
                                 </span>
                                 <span>
                                     Предстоящо събитие
@@ -446,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="calendar-head w-100 p-2 rounded">
+                <div class="calendar-head w-100 p-2 rounded desktop-day">
                     <div class="dayname">Понеделник</div>
                     <div class="dayname">Вторник</div>
                     <div class="dayname">Сряда</div>
@@ -455,7 +361,7 @@
                     <div class="dayname">Събота</div>
                     <div class="dayname">Неделя</div>
                 </div>
-                <div class="calendar-head w-100 p-3 rounded mobile-day d-none">
+                <div class="calendar-head w-100 p-2 rounded mobile-day d-none">
                     <div class="dayname">пн</div>
                     <div class="dayname">вт</div>
                     <div class="dayname">ср</div>
@@ -512,7 +418,7 @@
                         </div>
                     </div>
                     <div class="row">
-    
+
                         <div class="day">
                             <div class="day-number">15</div>
                         </div>
@@ -559,7 +465,7 @@
                         </div>
                     </div>
                     <div class="row">
-    
+
                         <div class="day event cursor-pointer" data-toggle="modal" data-target="#futureEventExample">
                             <div class="day-number">29</div>
                         </div>
@@ -595,151 +501,261 @@
 @endsection
 
 <!-- Past Event -->
-<div class="modal fade" id="pastEventExample" tabindex="-1" role="dialog" aria-labelledby="pastEventExampleLabel" aria-hidden="true">
+<div class="modal fade" id="pastEventExample" tabindex="-1" role="dialog" aria-labelledby="pastEventExampleLabel"
+    aria-hidden="true">
     <div class="modal-dialog event-screen-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Минали събития 02.12.2023г.</h5>
-          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4 mt-4">
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 past-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">02</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на гражданското общество</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието на гражданското общество.
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
-                    </div>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Минали събития 02.12.2023г.</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 past-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">02</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на гражданското общество</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието на гражданското общество.
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+            <div class="modal-body p-4 mt-4">
+
+                <div class="event-list-wrapper mb-4">
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 past-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">02</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество">
+                                        <h3>Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за
+                                развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган
+                                на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
+                                на гражданското общество.
+                            </p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 past-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">02</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на гражданското общество</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието на гражданското общество.
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                <div class="event-list-wrapper mb-4">
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 past-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">02</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество">
+                                        <h3>Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за
+                                развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган
+                                на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
+                                на гражданското общество.
+                            </p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+                <div class="event-list-wrapper mb-4">
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 past-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">02</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество">
+                                        <h3>Вицепремиерът Атанас Пеканов ще ръководи Съвета за развитие на
+                                            гражданското общество</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Заместник министър-председателят Атанас Пеканов е новият председател на Съвета за
+                                развитие на гражданското общество /СРГО/, реши правителството.Като консултативен орган
+                                на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
+                                на гражданското общество.
+                            </p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Затвори</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Затвори</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 <!-- End Past Event -->
 
 <!-- Future Event -->
-<div class="modal fade" id="futureEventExample" tabindex="-1" role="dialog" aria-labelledby="futureEventExampleLabel" aria-hidden="true">
+<div class="modal fade" id="futureEventExample" tabindex="-1" role="dialog" aria-labelledby="futureEventExampleLabel"
+    aria-hidden="true">
     <div class="modal-dialog event-screen-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Предстоящи събития 29.12.2023г.</h5>
-          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4 mt-4">
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 future-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">29</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Мария Габриел е определена за председател на Съвета за административната реформа</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Министерският съвет прие Решение за определяне на заместник министър-председателя и министър на външните работи Мария Габриел за председател на Съвета за административната реформа (САР).
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Предстоящи събития 29.12.2023г.</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 mt-4">
+
+                <div class="event-list-wrapper mb-4">                  
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 future-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">29</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                    административната реформа">
+                                        <h3>Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                            административната реформа</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Министерският съвет прие Решение за определяне на заместник министър-председателя и
+                                министър на външните работи Мария Габриел за председател на Съвета за административната
+                                реформа (САР).
+                            </p>
+                            <p class="mb-0 main-color"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 future-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">29</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Мария Габриел е определена за председател на Съвета за административната реформа</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Министерският съвет прие Решение за определяне на заместник министър-председателя и министър на външните работи Мария Габриел за председател на Съвета за административната реформа (САР).
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                <div class="event-list-wrapper mb-4">                  
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 future-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">29</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                    административната реформа">
+                                        <h3>Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                            административната реформа</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Министерският съвет прие Решение за определяне на заместник министър-председателя и
+                                министър на външните работи Мария Габриел за председател на Съвета за административната
+                                реформа (САР).
+                            </p>
+                            <p class="mb-0 main-color"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="event-list-wrapper custom-shadow rounded mb-4">
-                <div class="row event-body">
-                    <div class="col-md-2 future-date-event p-2 rounded">
-                        <span class="fs-1 lh-normal">29</span>
-                        <span class="fs-18">декември</span>
-                        <span class="fs-18">2023г.</span>
-                    </div>
-                    <div class="col-md-10 p-2">
-                        <a href="#" class="text-decoration-none">
-                            <h3 class="fs-5">Вицепремиерът Мария Габриел е определена за председател на Съвета за административната реформа</h3>
-                        </a>
-                        <p class="event-description mb-2">
-                            Министерският съвет прие Решение за определяне на заместник министър-председателя и министър на външните работи Мария Габриел за председател на Съвета за административната реформа (САР).
-                        </p>
-                        <p><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                <div class="event-list-wrapper mb-4">                  
+                    <div class="row event-body custom-shadow rounded">
+                        <div class="col-md-2 future-date-event p-2 rounded">
+                            <span class="fs-50 lh-normal">29</span>
+                            <span class="fs-18">декември</span>
+                            <span class="fs-18">2023г.</span>
+                        </div>
+                        <div class="col-md-10 p-3">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <a href="#" class="text-decoration-none" title="Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                    административната реформа">
+                                        <h3>Вицепремиерът Мария Габриел е определена за председател на Съвета за
+                                            административната реформа</h3>
+                                    </a>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="event-description mb-2">
+                                Министерският съвет прие Решение за определяне на заместник министър-председателя и
+                                министър на външните работи Мария Габриел за председател на Съвета за административната
+                                реформа (САР).
+                            </p>
+                            <p class="mb-0 main-color"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Затвори</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Затвори</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 <!-- End Future Event -->

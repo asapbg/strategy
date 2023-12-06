@@ -361,7 +361,7 @@ if (!function_exists('optionsUserTypes')) {
             {
                 case 'application/pdf':
                 case 'pdf':
-                    $icon = '<i class="fas fa-file-pdf text-danger me-1"></i>';
+                    $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
                     break;
                 case 'text/csv':
                     $icon = '<i class="fas fa-file-csv text-primary me-1"></i>';
@@ -485,7 +485,7 @@ if (!function_exists('optionsUserTypes')) {
             switch ($file->content_type){
                 case 'application/pdf':
                     $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
-                    $content=  '<embed src="'.asset($path).'" width="100%" height="2100px" />';
+                    $content=  '<embed src="'.asset($path).'" width="100%" height="700px" />';
                     break;
                 case 'application/msword':
                     $content = __('custom.old_file_format');

@@ -5,12 +5,8 @@
         <div class="container-fluid">
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end  mt-2">
-                    <button class="btn rss-sub main-color">
-                        <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
-                    <button class="btn rss-sub main-color">
-                        <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
                     @can('update', $item)
-                        <a class="btn rss-sub main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
+                        <a class="btn btn-primary main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
                             <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
                     @endcan
                 </div>
@@ -30,7 +26,16 @@
                 @endif
 
                 <div class="col-md-12">
-                    <h2 class="mb-2">Описание на документа</h2>
+                    <h2 class="mb-3">Описание на документа</h2>
+                </div>
+
+                <div class="row mb-4 action-btn-wrapper">
+                    <div class="col-md-12 text-start">
+                        <button class="btn btn-primary main-color">
+                            <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
+                        <button class="btn btn-primary main-color">
+                            <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
+                    </div>
                 </div>
 
                 <div class="row pris-row pb-2 mb-2">
@@ -212,8 +217,8 @@
                                     <div class="card custom-card">
                                         <div class="card-header" id="heading{{ $f->id }}">
                                             <h2 class="mb-0">
-                                                <button class="btn btn-link btn-block text-left @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $f->id }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $f->id }}">
-                                                    {{ $f->{'description_'.$locale} }}
+                                                <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $f->id }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $f->id }}">
+                                                  <i class="me-1 bi bi-file-earmark-text fs-18"></i>  {{ $f->{'description_'.$locale} }}
                                                 </button>
                                             </h2>
                                         </div>

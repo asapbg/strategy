@@ -40,7 +40,9 @@
                     <form action="{{ route('public_consultation.comment.add') }}" method="post">
                         @csrf
                         <input type="hidden" value="{{ $item->id }}" name="id">
-                        <textarea class="form-control summernote mb-3 rounded @error('content') is-invalid @enderror" id="content" name="content" rows="2" placeholder="{{ __('custom.enter_comment') }}">{{ old('content', '') }}</textarea>
+                        <div class="summernote-wrapper">
+                            <textarea class="form-control summernote mb-3 rounded @error('content') is-invalid @enderror" id="content" name="content" rows="2" placeholder="{{ __('custom.enter_comment') }}">{{ old('content', '') }}</textarea>
+                        </div>
                         @error('content')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror

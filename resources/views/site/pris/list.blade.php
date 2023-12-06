@@ -22,7 +22,7 @@
     @if($items->count())
         @foreach($items as $item)
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 mb-4">
                     <div class="consul-wrapper">
                         <div class="single-consultation d-flex">
                             <div class="consult-body">
@@ -53,24 +53,26 @@
                                             @endcan
                                         </div>
                                     </div>
-                                    <div class="meta-consul mb-2 d-inline-block">
-                                        <a href="#" title="{{ __('custom.category') }}" class="text-decoration-none mb-3 me-2">
+                                    <div class="meta-consul d-flex justify-content-start">
+                                        <a href="#" title="{{ __('custom.category') }}" class="text-decoration-none mb-2 me-2">
                                             <i class="fas fa-university fa-link main-color" title="{{ $item->actType->name }}"></i>
                                             {{ $item->actType->name }}
                                         </a>
-                                        <a href="#" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-3">
+                                        <a href="#" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2">
                                             <i class="fas fa-university fa-link main-color" title="{{ $item->institution->name }}"></i>
                                             {{ $item->institution->name }}
                                         </a>
                                     </div>
                                     <div class="meta-consul">
-                                        <div class="anotation text-secondary">
-                                            <span class="main-color me-2">{{ __('site.pris.about') }}:</span> {!! $item->about !!}
+                                        <div class="anotation text-secondary mb-2">
+                                            <span class="main-color me-2">
+                                                {{ __('site.pris.about') }}:
+                                            </span> {!! $item->about !!}
                                         </div>
                                     </div>
                                     <div class="meta-consul">
-                                        <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> {{ displayDate($item->doc_date) }} {{ __('site.year_short') }}</span>
-                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) }}"><i class="fas fa-arrow-right read-more"></i></a>
+                                        <span class="text-secondary d-flex flex-row align-items-baseline lh-normal"><i class="far fa-calendar text-secondary me-1"></i> {{ displayDate($item->doc_date) }} {{ __('site.year_short') }}</span>
+                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) }}"><i class="fas fa-arrow-right read-more mt-2"></i></a>
                                     </div>
                                 </div>
 
