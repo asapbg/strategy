@@ -8,6 +8,8 @@
                             <form class="row mb-3" action="{{ route('poll.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $poll->id }}">
+                                <input type="hidden" name="pc_id" value="{{ $item->id }}">
+                                <input type="hidden" name="source" value="pc">
                                 @if(!$loop->first)
                                     <hr>
                                 @endif
@@ -26,10 +28,10 @@
                                             @enderror
                                             @foreach($q->answers as $key => $a)
                                                 <div class="form-check">
-                                                    <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror"
+                                                    <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror" id="a_{{ $q->id.$key }}"
                                                            type="@if($multiAnswer){{ 'checkbox' }}@else{{ 'radio' }}@endif"
                                                            name="a_{{ $q->id }}[]" value="{{ $a->id }}" @if(in_array($a->id, old('a_'.$q->id, []))) checked @endif>
-                                                    <label class="form-check-label" for="a_{{ $q->id }}[]">
+                                                    <label class="form-check-label" for="a_{{ $q->id.$key }}">
                                                         {{ $a->name }}
                                                     </label>
                                                 </div>

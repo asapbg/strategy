@@ -250,6 +250,14 @@ class SyncIisda extends Command
 
                     }
 
+                    $institutions = \App\Models\StrategicDocuments\Institution::get();
+                    $fieldsOfActions = \App\Models\FieldOfAction::get()->take(3)->pluck('id')->toArray();
+                    if($institutions->count() && sizeof($fieldsOfActions)) {
+                        foreach ($institutions as $item) {
+                            $item->fieldsOfAction()->sync($fieldsOfActions);
+                        }
+                    }
+
                     echo 'Inserted: '.sizeof($toInsert);
                     echo 'Deactivated: '.sizeof($idArrayToDeactivate);
                     echo 'Updated: '.$updatedCnt;
