@@ -253,9 +253,19 @@ class SyncIisda extends Command
                     $this->info('Inserted: '.sizeof($toInsert));
                     $this->info('Deactivated: '.sizeof($idArrayToDeactivate));
                     $this->info('Updated: '.$updatedCnt);
-                    //echo 'Inserted: '.sizeof($toInsert);
-                    //echo 'Deactivated: '.sizeof($idArrayToDeactivate);
-                    //echo 'Updated: '.$updatedCnt;
+
+                    $institutions = \App\Models\StrategicDocuments\Institution::get();
+                    $fieldsOfActions = \App\Models\FieldOfAction::get()->take(3)->pluck('id')->toArray();
+                    if($institutions->count() && sizeof($fieldsOfActions)) {
+                        foreach ($institutions as $item) {
+                            $item->fieldsOfAction()->sync($fieldsOfActions);
+                        }
+                    }
+
+                    echo 'Inserted: '.sizeof($toInsert);
+                    echo 'Deactivated: '.sizeof($idArrayToDeactivate);
+                    echo 'Updated: '.$updatedCnt;
+
                     DB::commit();
                     return Command::SUCCESS;
 

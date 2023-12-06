@@ -26,4 +26,13 @@ enum PollStatusEnum: int
         return $keyName;
     }
 
+    public static function statusOptions()
+    {
+        return [
+            ['value' => 0, 'name' => '---'],
+            ['value' => self::ACTIVE->value, 'name' => __('custom.active')],
+            ['value' => self::EXPIRED->value, 'name' => __('custom.closed_f')],
+        ];
+    }
+
 }

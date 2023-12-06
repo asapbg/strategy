@@ -36,51 +36,45 @@
                             <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}
                         </a>
                     @endif
-{{--                    <button class="btn btn-sm btn-danger">--}}
-{{--                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на анкета--}}
-{{--                    </button>--}}
+                    {{--                    <button class="btn btn-sm btn-danger">--}}
+                    {{--                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на анкета--}}
+                    {{--                    </button>--}}
                 </div>
             </div>
             <hr class="custom-hr my-4">
             <div class="row mb-0 mt-4">
-                <div class="col-md-12">
+                <div class="col-12">
                     <div class="custom-card py-4 px-3">
                         <h3 class="mb-3">{{ $item->name }}</h3>
-                        <form class="row mb-3" action="{{ route('poll.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $item->id }}">
-                            <input type="hidden" name="source" value="regular">
-                            @error('a')
-                            <div class="text-danger mb-1">{{ $message }}</div>
-                            @enderror
-                            @php($multiAnswer = \App\Models\Poll::MORE_THEN_ONE_ANSWER)
+                        <div class="row mb-3">
                             @foreach($item->questions as $key => $q)
                                 <div class="col-md-6 mb-4">
-                                    <input type="hidden" name="q[]" value="{{ $q->id }}">
                                     <div class="comment-background p-2 rounded">
-                                        <p class="fw-bold fs-18 mb-2">{{ $q->name }}</p>
-                                        @error('a_'.$q->id)
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                        <p class="fw-bold fs-18 mb-2">{{ __('custom.question_with_number', ['number' => ($key+1)]) }} {{ $q->name }} </p>
+                                        <div class="mb-2">Потребители: <span>{{ $statistic[$q->id]['users'] }}</span></div>
                                         @foreach($q->answers as $key => $a)
-                                            <div class="form-check">
-                                                <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror" id="a_{{ $q->id.$key }}"
-                                                       type="@if($multiAnswer){{ 'checkbox' }}@else{{ 'radio' }}@endif"
-                                                       name="a_{{ $q->id }}[]" value="{{ $a->id }}" @if(in_array($a->id, old('a_'.$q->id, []))) checked @endif>
-                                                <label class="form-check-label" for="a_{{ $q->id.$key }}">
-                                                    {{ $a->name }}
-                                                </label>
+                                            @php($percents = 0)
+                                            <div class="col-12 @if(!$loop->first) mt-2 @endif">
+                                                {{ $a->name }}
+                                            </div>
+                                            @if(sizeof($statistic) && isset($statistic[$q->id]) && isset($statistic[$q->id]['options'][$a->id]))
+                                                @php($percents = ($statistic[$q->id]['options'][$a->id] * 100) / $statistic[$q->id]['users'])
+                                            @endif
+                                            <div class="col-md-6">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $percents }}%" aria-valuenow="{{ $percents }}" aria-valuemin="0" aria-valuemax="100">{{ $percents }}%</div>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
-                            <div class="col-md-12">
-                                <button class="btn btn-primary" type="submit">
-                                    {{ __('custom.send') }}
-                                </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <a href="{{ route('poll.index') }}" class="btn btn-primary w-auto">{{ __('custom.back') }}</a>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

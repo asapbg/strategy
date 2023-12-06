@@ -67,7 +67,7 @@ class PublicConsultationController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? PublicConsultation::PAGINATE;
 
-        $items = PublicConsultation::with(['translation'])
+        $items = PublicConsultation::with(['translation', 'consultations'])
             ->FilterBy($requestFilter)
             ->ByUser()
             ->paginate($paginate);

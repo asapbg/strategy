@@ -10,4 +10,20 @@ class PrisTranslation extends Model
     public $timestamps = false;
 
     protected $fillable = ['locale', 'pris_id', 'about', 'legal_reason', 'importer'];
+
+    protected function about(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
+        );
+    }
+
+    protected function legalReason(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
+        );
+    }
 }

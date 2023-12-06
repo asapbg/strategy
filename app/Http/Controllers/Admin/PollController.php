@@ -272,6 +272,20 @@ class PollController extends AdminController
         }
     }
 
+    /**
+     * Show statistic
+     *
+     * @param Poll $item
+     */
+    public function preview(Request $request, Poll $item)
+    {
+        if($request->user()->cannot('preview', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        $statistic = $item->getStats();
+        return $this->view('admin.polls.statistic', compact('item', 'statistic'));
+    }
+
     private function filters($request)
     {
         return array(

@@ -32,7 +32,7 @@
                                 <div href="#" class="consul-item">
                                     <div class="consult-item-header d-flex justify-content-between">
                                         <div class="consult-item-header-link">
-                                            <a href="{{ route('poll.show', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->name }}">
+                                            <a href="{{ route($item->inPeriod ? 'poll.show' : 'poll.statistic', ['id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->name }}">
                                                 <h3>{{ $item->name }}</h3>
                                             </a>
                                         </div>
@@ -43,7 +43,7 @@
                                                    data-target="#modal-delete-resource"
                                                    data-resource-id="{{ $item->id }}"
                                                    data-resource-name="{{ $item->name }}"
-                                                   data-resource-delete-url="{{ route('admin.poll.delete', $item) }}"
+                                                   data-resource-delete-url="{{ route('admin.polls.delete', $item) }}"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.delete') }}"><span class="d-none"></span>
                                                 </a>
@@ -74,7 +74,7 @@
                                                 <i class="far fa-calendar text-secondary me-1"></i> {{ displayDate($item->start_date) }}
                                             </span>
 
-                                        <a href="{{ route('poll.show', ['id' => $item->id]) }}" title="{{ $item->name }}">
+                                        <a href="{{ route($item->inPeriod ? 'poll.show' : 'poll.statistic', ['id' => $item->id]) }}" title="{{ $item->name }}">
                                             <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
                                         </a>
                                     </div>
@@ -94,3 +94,5 @@
             {{ $items->appends(request()->query())->links() }}
         @endif
     </div>
+
+    @includeIf('modals.delete-resource', ['resource' => $title_singular])

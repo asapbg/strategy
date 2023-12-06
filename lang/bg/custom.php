@@ -676,4 +676,6 @@ return [
     'state_papernew_short' => 'ДВ',
     'active_document' => 'Действащ документ',
     'inactive_document' => 'Недействащ документ',
+    'part_of_pc' => 'Включена в ОК',
+    'result' => 'Резултат',
 ];
