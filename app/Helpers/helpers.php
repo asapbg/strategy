@@ -492,6 +492,7 @@ if (!function_exists('optionsUserTypes')) {
                     break;
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                    $content->setDefaultFontName('Fira Sans BGR');
                     $html = new \PhpOffice\PhpWord\Writer\HTML($content);
                     $content = $html->getContent();
                     break;
