@@ -21,7 +21,7 @@ class FileService
      * @return void
      * @throws \Exception
      */
-    public function uploadFiles($validated, StrategicDocument $strategicDocument, bool $isMain = false)
+    public function uploadFiles($validated, StrategicDocument $strategicDocument, ?StrategicDocumentFile $strategicDocumentFile,bool $isMain = false)
     {
         $bgFileId = null;
         foreach (['en', 'bg'] as $locale) {
@@ -37,11 +37,14 @@ class FileService
                         $mainFile->delete();
                     }
                 }
-                $file = new StrategicDocumentFile();
+                $file = $strategicDocumentFile ? $strategicDocumentFile->replicate() : new StrategicDocumentFile();
+                if ($strategicDocumentFile) {
+                    $file->strategic_document_file_id = $strategicDocumentFile->strategic_document_file_id ?? $strategicDocumentFile->id;
+                }
                 $fillable = $this->getFillableValidated($validated, $file);
                 $file->fill($fillable);
 
-                $uploadedFile = Arr::get($validated, 'file_strategic_documents_' . $locale);//$request->file('file_strategic_documents_' . $locale);
+                $uploadedFile = Arr::get($validated, 'file_strategic_documents_' . $locale);
                 $enFile = $validated['file_strategic_documents_en'] ?? null;
 
                 if ($locale === 'en') {
@@ -51,13 +54,21 @@ class FileService
                             'bg' => Arr::get($validated, 'display_name_bg'),
                             'en' => Arr::get($validated, 'display_name_en'),
                         ];
-                        $validated['display_name_en'] = $displayNames[$locale] ?? null;
+                        // check if to take display name in bg
+                        $validated['display_name_en'] = $displayNames[$locale] ?? $displayNames['bg'];
+                        //dd($validated);
                         $uploadedFile = Arr::get($validated, 'file_strategic_documents_bg');//$request->file('file_strategic_documents_bg');
                     }
                 }
 
+
+
                 $fileNameToStore = round(microtime(true)).'.'.$uploadedFile->getClientOriginalExtension();
                 $uploadedFile->storeAs(StrategicDocumentFile::DIR_PATH, $fileNameToStore, 'public_uploads');
+                // testing
+                $version = $file->version;
+                $newVersion = ($version + 1);
+                // end testing
 
                 $file->content_type = $uploadedFile->getClientMimeType();
                 $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
@@ -66,8 +77,10 @@ class FileService
                 $file->parent_id = Arr::get($validated, 'parent_id');
                 $file->locale = $locale;
                 $file->is_main = $isMain;
-
+                $file->version = $newVersion.'.0';
+                $file->save();
                 $strategicDocument->files()->save($file);
+
                 $ocr = new FileOcr($file->refresh());
                 $ocr->extractText();
                 if ($locale === 'bg') {
@@ -85,6 +98,41 @@ class FileService
                 DB::rollBack();
                 throw new \Exception($throwable);
             }
+        }
+    }
+
+    /**
+     * @param $validated
+     * @param StrategicDocumentFile $strategicDocumentFile
+     * @return void
+     * @throws \Exception
+     */
+    public function updateFile($validated, StrategicDocumentFile $strategicDocumentFile): void
+    {
+        try {
+            $strategicDocument = $strategicDocumentFile->strategicDocument;
+            DB::beginTransaction();
+            $newVersion = $strategicDocumentFile->replicate();
+            $version = $strategicDocumentFile->version + 1;
+            $uploadedFile = Arr::get($validated, 'file_strategic_documents_bg');
+            $fileNameToStore = round(microtime(true)).'.'.$uploadedFile->getClientOriginalExtension();
+            $uploadedFile->storeAs(StrategicDocumentFile::DIR_PATH, $fileNameToStore, 'public_uploads');
+            $newVersion->content_type = $uploadedFile->getClientMimeType();
+            $newVersion->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
+            $newVersion->version = $version.'.0';
+            $newVersion->filename = $fileNameToStore;
+            $newVersion->strategic_document_file_id = $strategicDocumentFile->strategic_document_file_id ?? $strategicDocumentFile->id;
+            $strategicDocument->files()->save($newVersion);
+            $ocr = new FileOcr($newVersion->refresh());
+            $ocr->extractText();
+            $newVersion->save();
+            // check this one
+
+            DB::commit();
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            Log::error('Upload/Update file to strategic file ID('.$strategicDocumentFile->id.'): '.$throwable);
+            throw new \Exception($throwable);
         }
     }
 
@@ -115,7 +163,11 @@ class FileService
         $item->save();
     }
 
-
+    /**
+     * @param $strategicDocumentFiles
+     * @param $adminView
+     * @return array
+     */
     public function prepareFileData($strategicDocumentFiles, $adminView = true): array
     {
         $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
@@ -151,38 +203,39 @@ class FileService
         $rootNode = [
             'id' => $mainFile->id,
             'parent' => '#',
-            'text' => $mainFile->document_display_name . //$mainFile->display_name . ' ' . $validAt .
-                //"<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" .
-                //"<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>",
-                //"<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>",
+            'text' => $mainFile->document_display_name .
                 $editLink . $downloadLink,
             'icon' => $iconClass,
         ];
         $fileData[] = $rootNode;
-
+        $processedFileIds = [];
         foreach ($strategicDocumentFiles as $file) {
             if ($file->is_main) {
                 continue;
             }
-            $fileExtension = $file->content_type;
+            $latestVersion = $file->latestVersion;
+            $currentFile = $latestVersion ?? $file;
+
+            if (in_array($currentFile->strategic_document_file_id, $processedFileIds) && $currentFile->strategic_document_file_id) {
+                continue;
+            }
+
+            $processedFileIds[] = $currentFile->strategic_document_file_id;
+            $fileExtension = $currentFile->content_type;
             $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-            //$validAt = $this->prepareValidAtText($file);
 
             $fileNode = [
-                'id' => $file->id,
-                'parent' => $file->parent_id ?: $mainFile->id,
-                'text' => $file->document_display_name .//$file->display_name . ' ' . $validAt .
+                'id' => $currentFile->id,
+                'parent' => $currentFile->parent_id ?: $mainFile->id,
+                'text' => $currentFile->version . $currentFile->document_display_name .
                     $editLink . $downloadLink . $deleteLink,
-                    //"<a href='#' id='editButton_{$file->id}' class='edit-button' data-file-id='{$file->id}'><i class='fas fa-edit'></i></a>" .
-                    //"<a href='#' id='downloadButton_{$file->id}' class='download-button'><i class='fas fa-download'></i></a>" .
-                    //"<a href='#' id='deleteButton_{$file->id}' class='delete-button' data-file-id='{$file->id}'><i class='fas fa-trash'></i></a>",
                 'icon' => $iconClass,
+                'ord' => $currentFile->ord,
             ];
-
             $fileData[] = $fileNode;
         }
 
-        return $fileData;
+        return collect($fileData)->sortBy('ord')->values()->all();
     }
 
     /**
@@ -224,40 +277,6 @@ class FileService
             }
         }
 
-        /*
-        if (Arr::get($validated, 'display_name_main_bg')) {
-            $validated['display_name_bg'] = $validated['display_name_main_bg'];
-            unset($validated['display_name_main_bg']);
-        }
-        if (Arr::get($validated, 'display_name_main_en')) {
-            $validated['display_name_en'] = $validated['display_name_main_en'];
-            unset($validated['display_name_main_en']);
-        }
-        if (Arr::get($validated, 'file_strategic_documents_bg_main')) {
-            $validated['file_strategic_documents_bg'] = $validated['file_strategic_documents_bg_main'];
-            unset($validated['file_strategic_documents_bg_main']);
-        }
-        if (Arr::get($validated, 'file_strategic_documents_en_main')) {
-            $validated['file_strategic_documents_en'] = $validated['file_strategic_documents_en_main'];
-            unset($validated['file_strategic_documents_en_main']);
-        }
-        if (Arr::get($validated, 'valid_at_main')) {
-            $validated['valid_at'] = $validated['valid_at_main'];
-        }
-        if (Arr::get($validated, 'valid_at_main')) {
-            $validated['valid_at'] = $validated['valid_at_main'];
-        }
-        if (Arr::get($validated, 'visible_in_report_main')) {
-            $validated['visible_in_report'] = $validated['visible_in_report_main'];
-            unset($validated['visible_in_report_main']);
-        }
-        */
-        /*
-        if (Arr::get($validated, 'strategic_document_type_file_main_id')) {
-            $validated['strategic_document_type_id_bg'] = $validated['strategic_document_type_file_main_id'];
-            unset($validated['strategic_document_type_file_main_id']);
-        }
-        */
         return $validated;
     }
 }

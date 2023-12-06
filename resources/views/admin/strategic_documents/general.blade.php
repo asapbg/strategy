@@ -428,7 +428,7 @@
                                                    name="date_expiring_indefinite"
                                                    class="form-check-input"
                                                    value="1" {{ $item->expiration_date === null ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="unlimited_date_expiring">
+                                            <label class="form-check-label" for="date_valid_indefinite_main">
                                                 {{ __('custom.date_expring_indefinite') }}
                                             </label>
                                         </div>
@@ -518,7 +518,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <!--
                         <div class="row px-2">
                             <div class="col-12"></div>
                             @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesMain(),'field' => 'file_info_main', 'required' => false])
@@ -533,7 +533,7 @@
                                 </div>
                             </div>
                         </div>
-
+                    -->
                         <div class="row px-2">
                             @foreach(config('available_languages') as $lang)
                                 @php($fieldName = 'file_strategic_documents_'.$lang['code'])
@@ -579,10 +579,6 @@
                                 </div>
                             @endforeach
                         </div>
-
-
-
-
                 </div>
             </div>
         </div>
@@ -628,8 +624,18 @@
             const dateIndefiniteCheckboxMain = $('#date_valid_indefinite_main');
             const dateExpiring = $('#document_date_expiring');
             const dateExpiringCheckbox = $('#date_expiring_indefinite');
+
+            const dateValidAtFiles = $('#valid_at_files');
+            const dateInfiniteFilesCheckbox = $('#date_valid_indefinite_files');
+
+            //const dateValidAtFileEdit = $('#valid_at_files_edit');
+            //const dateInfiniteEditCheckbox = $('#date_valid_indefinite_files_edit');
+            const dateValidAtFileEdit = $('[id^="valid_at_files_edit"]');
+            const dateInfiniteEditCheckbox = $('[id^="date_valid_indefinite_files_edit"]');
             handleDateCheckbox(dateValidAtMain, dateIndefiniteCheckboxMain);
             handleDateCheckbox(dateExpiring, dateExpiringCheckbox);
+            handleDateCheckbox(dateValidAtFiles, dateInfiniteFilesCheckbox);
+            handleDateCheckbox(dateValidAtFileEdit, dateInfiniteEditCheckbox);
 
             function handleDateCheckbox(dateInput, checkbox) {
                 dateInput.on('change', function () {
@@ -639,16 +645,12 @@
                 });
                 checkbox.on('change', function () {
                     if ($(this).is(':checked')) {
-                        if (dateInput == dateExpiring) {
-                            dateInput.prop('disabled', true);
-                        }
+                        dateInput.prop('disabled', true);
                         if (dateInput.val() !== '') {
                             dateInput.val('').trigger('change');
                         }
                     } else {
-                        if (dateInput == dateExpiring) {
-                            dateInput.prop('disabled', false);
-                        }
+                        dateInput.prop('disabled', false);
                     }
                 });
             }

@@ -61,14 +61,6 @@
                                                                 @csrf
                                                             </form>
                                                         @endcan
-                                                        <!--
-                                                        @can('delete', $document)
-                                                            <a href="{{ route( $deleteRouteName , [$document->id]) }}">
-                                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2"
-                                                                   role="button" title="Изтриване"></i>
-                                                            </a>
-                                                        @endcan
-                                                        -->
                                                         @can('update', $document)
                                                             <a href="{{ route( $editRouteName , [$document->id]) }}">
                                                                 <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"

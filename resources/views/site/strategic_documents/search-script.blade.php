@@ -20,8 +20,14 @@
             ekateMunicipalitiesDivId.hide();
             const ekateAreasId = $('#ekate_areas_id');
             const ekateMunicipalitiesId = $('#ekate_municipalities_id');
-            ekateAreasId.select2();
-            ekateMunicipalitiesId.select2();
+            ekateAreasId.select2({
+                multiple: true
+            });
+            ekateAreasId.val('').trigger('change');
+            ekateMunicipalitiesId.select2({
+                multiple: true
+            });
+            ekateMunicipalitiesId.val('').trigger('change');
             documentLevelSelect.on('change', function () {
                 const selectedDocuments = $(this).val();
                 ekateAreasId.val('').trigger('change');
@@ -119,7 +125,6 @@
             const urlParams = getUrlParameters();
 
             const policySelectValues = urlParams['policy-area'];
-            //const prepareInstitutionsSelectValues = urlParams['prepared-institution'];
             const searchInTitleValue = urlParams['title'];
             const paginationResultsValue = urlParams['pagination-results'];
             const categoryResultsValue = urlParams['category'];
@@ -152,10 +157,10 @@
             });
 
             if (ekatteAreaResultValue) {
-                ekateAreasId.val(ekatteAreaResultValue).trigger('change');
+                ekateAreasId.val(ekatteAreaResultValue.split(',')).trigger('change');
             }
             if (ekatteManipulicityResultValue) {
-                ekateMunicipalitiesId.val(ekatteManipulicityResultValue).trigger('change');
+                ekateMunicipalitiesId.val(ekatteManipulicityResultValue.split(',')).trigger('change');
             }
             if (prisActsResultValue) {
                 prisAct.val(prisActsResultValue.split(',')).trigger('change');

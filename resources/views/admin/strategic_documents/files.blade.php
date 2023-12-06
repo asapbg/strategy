@@ -12,7 +12,7 @@
                         <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span
                                 class="required">*</span> </label>
                         <div class="col-12">
-                            <input id="valid_at" value="{{ old('valid_at', '') }}"
+                            <input id="valid_at_files" value="{{ old('valid_at', '') }}"
                                    class="form-control form-control-sm datepicker @error('valid_at') is-invalid @enderror"
                                    type="text" name="valid_at">
                             @error('valid_at')
@@ -23,11 +23,11 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group form-group-sm">
-                        <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }}
+                        <label for="date_expring_indefinite" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }}
                             <span class="required">*</span> </label>
                         <div class="form-check">
                             <input type="hidden" name="date_valid_indefinite_files" value="0">
-                            <input type="checkbox" id="date_valid_indefinite" name="date_valid_indefinite_files"
+                            <input type="checkbox" id="date_valid_indefinite_files" name="date_valid_indefinite_files"
                                    class="form-check-input"
                                    value="1" {{ $item->expiration_date === null ? 'checked' : '' }}>
                             <label class="form-check-label" for="unlimited_date_expiring">
@@ -117,14 +117,15 @@
                         <button id="saveTree" class="btn btn-success">{{ __('custom.save') }}</button>
                     </div>
                 </div>
-
             </div>
+            <!--
             <h5 class="mt-4 bg-primary py-2 px-4 w-100 rounded-1">{{ trans_choice('custom.files_hierarchy_en', 2) }}</h5>
             <div class="row">
                 <div class="col-12">
                     <br>
                     <div id="fileTreeEn">
                     </div>
+
                     <div class="col-12">
                         <div class="col-6"></div>
                         <br>
@@ -132,66 +133,173 @@
                     </div>
                 </div>
             </div>
+            -->
 
-            @if($item->files)
+        @if($item->files)
                 <table id="fileTable" class="table table-az-admin table-sm table-hover table-bordered mt-4">
                     <thead>
+                    <!--
+                     <label class="col-sm-12 control-label" for="visible_in_report"><br>
+                            <input type="checkbox" id="visible_in_report" name="visible_in_report" class="checkbox"
+                                   value="1" @if (old('visible_in_report',0)) checked @endif>
+                            {{ __('custom.visible_in_report') }}
+                    </label>
+                    -->
                     <tr>
                         <th class="bg-primary">{{ __('custom.name') }}</th>
                         <th class="bg-primary">{{ trans_choice('custom.strategic_document_types', 1) }}</th>
                         <th class="bg-primary">{{ __('custom.valid_at') }}</th>
-                        <th class="bg-primary"></th>
+                        <th class="bg-primary">{{ __('custom.visible_in_report') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($item->files as $f)
                         <tr id="fileRow_head_{{ $f->id }}">
-                            <td class="pt-4 bl-primary-2">{{ $f->display_name }}</td>
-                            <td class="pt-4">{{ $f->documentType->name }}</td>
-                            <td class="pt-4">{{ $f->valid_at }}</td>
-                            <!--
-                <td class="pt-4">
-                    <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.strategic_documents.file.download', $f) }}">
-                        <i class="fas fa-download me-1" role="button"
-                           data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
-                    </a>
-
-                    <a href="javascript:;"
-                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
-                       data-target="#modal-delete-resource"
-                       data-resource-id="{{ $f->id }}"
-                       data-resource-name="{{ "$f->display_name" }}"
-                       data-resource-delete-url="{{route('admin.strategic_documents.file.delete',$f->id)}}"
-                       data-toggle="tooltip"
-                       title="{{__('custom.deletion')}}">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                    -->
-                            {{--                    <a class="btn btn-sm btn-danger" type="button" href="">--}}
-                            {{--                        <i class="fas fa-trash me-1" role="button"--}}
-                            {{--                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>--}}
-                            {{--                    </a>--}}
+                            <td class="pt-4 bl-primary-2"> {{ $f->display_name }} </td>
+                            <td class="pt-4 bl-primary-2">
+                                {{ $f->documentType->name }}
                             </td>
+                            <td class="pt-4">
+                                @if (!$f->valid_at)
+                                    {{ __('custom.date_expring_indefinite') }}
+                                    @else
+                                    {{ $f->valid_at }}
+                                @endif
+                            </td>
+
+                            <td class="pt-4">
+                                @if ($f->visible_in_report == 0)
+                                    {{ __('custom.no') }}
+                                    @else
+                                    {{ __('custom.yes') }}
+                                @endif
+                            </td>
+
                         </tr>
                         <tr id="fileRow_body_{{ $f->id }}">
-                            <td colspan="5" class="edit-file-fields">
-                                <form action="{{ route('admin.strategic_documents.file.update', ['id' => $f->id]) }}"
-                                      method="post">
-                                    @csrf
+                            <form action="{{ route('admin.strategic_documents.file.update', ['id' => $f->id]) }}"
+                                  method="post" enctype="multipart/form-data">
+                                @csrf
+                                <td colspan="5" class="edit-file-fields">
                                     <input type="hidden" name="id" value="{{ $f->id }}">
                                     @method('PUT')
                                     <div class="row @if(!$loop->last) pb-4 @endif">
-                                        @include('admin.partial.edit_field_translate', ['item' => $f, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),'field' => 'file_info', 'required' => false])
+                                        @include('admin.partial.edit_field_translate', ['item' => $f, 'value' => optional($f)->display_name ?? '', 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesFileEdit(),'field' => 'display_name_file_edit', 'required' => true])
                                         @error('error_'.$f->id)
-                                        <div class="col-12 text-danger mb-1">{{ $message }}</div>
+                                            <div class="text-danger mb-1">{{ $message }}</div>
                                         @enderror
+                                        @include('admin.partial.edit_field_translate', ['item' => $f, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesFileEdit(),'field' => 'file_info_file_edit', 'required' => false])
+
+                                        <div class="col-12">
+                                            <label class="col-sm-12 control-label"
+                                                   for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}
+                                                <span class="required">*</span></label>
+                                            <select id="strategic_document_type_file_edit_{{ $f->id }}" name="strategic_document_type_file"
+                                                    class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
+                                                @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
+                                                    @foreach($strategicDocumentTypes as $row)
+                                                        <option value="{{ $row->id }}"
+                                                                @if(old('strategic_document_type_id', optional($f)->strategic_document_type_id) == $row->id) selected
+                                                                @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="col-3">
+                                            <label for="valid_at_files" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span
+                                                    class="required">*</span> </label>
+                                            <input id="valid_at_files_edit_{{ $f->id }}" value="{{ old('valid_at', $f->valid_at) }}"
+                                                   class="form-control form-control-sm datepicker @error('valid_at_files') is-invalid @enderror"
+                                                   type="text" name="valid_at_files">
+                                            @error('valid_at_files')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label for="date_valid_indefinite_files" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }}
+                                                <span class="required">*</span> </label>
+                                            <div class="form-check">
+                                                <input type="hidden" name="date_valid_indefinite_files" value="0">
+                                                <input type="checkbox" data-id="{{ $f->id }}" id="date_valid_indefinite_files_edit_{{$f->id}}" name="date_valid_indefinite_files"
+                                                       class="form-check-input"
+                                                       value="1" {{ $f->expiration_date === null ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="unlimited_date_expiring">
+                                                    {{ __('custom.date_expring_indefinite') }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="col-sm-12 control-label" for="visible_in_report"> {{ __('custom.visible_in_report') }} </label>
+                                                <input type="checkbox" id="visible_in_report" name="visible_in_report_files" class="checkbox"
+                                                       value="1" @if (old('visible_in_report_files', optional($f)->visible_in_report) == 1) checked @endif>
+                                                {{ __('custom.visible_in_report') }}
+                                        </div>
+
+
+                                            @foreach(config('available_languages') as $lang)
+                                                @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))
+                                                @php($fieldName = 'file_strategic_documents_'.$lang['code'])
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="{{ $fieldName }}"
+                                                           class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))
+                                                            <span class="required">*</span>
+                                                        @endif </label>
+                                                    <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror"
+                                                           id="{{ $fieldName }}" type="file" name="{{ $fieldName }}">
+                                                    @error($fieldName)
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            @endforeach
+
+                                            @if(isset($f->parentFile?->versions))
+                                                <div class="col-md-3 mb-3">
+                                                    <a class="mr-3"
+                                                       href="{{ route('admin.strategic_documents.file.download', $f->parentFile) }}"
+                                                       target="_blank" title="{{ __('custom.download') }}">
+                                                        {!! fileIcon($f->parentFile->content_type) !!} {{ $f->parentFile->document_display_name }}
+                                                        - {{ __('custom.'.$f->parentFile->locale) }}
+                                                        | {{ __('custom.version_short').' '.$f->parentFile->version }}
+                                                        | {{ displayDate($f->parentFile->created_at) }}
+                                                        | {{ $f->parentFile->user ? $f->parentFile->user->fullName() : '' }}
+                                                    </a>
+                                                </div>
+                                                @php(
+                                                    $currentLocal = app()->getLocale()
+                                                )
+                                                @foreach ($f->parentFile?->versions as $fileVersion)
+                                                    @if ($currentLocal != $fileVersion->locale)
+                                                        @continue
+                                                    @endif
+
+                                                    @if ($fileVersion->id == $f->id)
+                                                        @continue
+                                                    @endif
+                                                    <div class="col-md-3 mb-3">
+                                                        <a class="mr-3"
+                                                           href="{{ route('admin.strategic_documents.file.download', $fileVersion) }}"
+                                                           target="_blank" title="{{ __('custom.download') }}">
+                                                            {!! fileIcon($fileVersion->content_type) !!} {{ $fileVersion->document_display_name }}
+                                                            - {{ __('custom.'.$fileVersion->locale) }}
+                                                            | {{ __('custom.version_short').' '.$fileVersion->version }}
+                                                            | {{ displayDate($fileVersion->created_at) }}
+                                                            | {{ $f->parentFile->user ? $fileVersion->user->fullName() : '' }}
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                    </div>
+                                    <div class="row">
                                         <div class="col-12">
                                             <button id="save" type="submit"
                                                     class="btn btn-success w-100">{{ __('custom.save') }}</button>
                                         </div>
                                     </div>
-                                </form>
-                            </td>
+                                </td>
+                            </form>
                         </tr>
                     @endforeach
                     </tbody>
@@ -235,11 +343,20 @@
     <script type="text/javascript">
         fileData = {!! json_encode($fileData) !!};
         fileDataEn = {!! json_encode($fileDataEn) !!};
+        mainFileId = {!! json_encode($mainFile->id) !!};
         const hasErrors = @json(session('hasErrorsFromFileTab'));
         $(document).ready(function () {
+            $('#strategic_document_type_file_edit').select2();
+            /*
             const dateValidAt = $('#valid_at');
+            const dateValidAtMain = $('#valid_at_main');
+            const dateValidAtFiles = $('#valid_at_files');
             const dateExpiringCheckbox = $('#date_valid_indefinite');
-            dateValidAt.on('change', function () {
+            const dateInfiniteFilesCheckbox = $('#date_valid_indefinite_files');
+            const dateInfiniteEditCheckbox = $('#date_valid_indefinite_files_edit');
+            const dateValidAtFileEdit = $('#valid_at_files_edit');
+
+            dateValidAtMain.on('change', function () {
                 dateExpiringCheckbox.prop('checked', false);
             });
 
@@ -251,16 +368,20 @@
 
             dateExpiringCheckbox.on('change', function () {
                 if ($(this).is(':checked')) {
-                    if (dateValidAt.val() !== '') {
-                        dateValidAt.val('').trigger('change');
+                    if (dateValidAtFileEdit.val() !== '') {
+                        dateValidAtFileEdit.val('').trigger('change');
                     }
                 }
             })
 
-            if (hasErrors) {
-                //$('#custom-tabs a[href="#files"]').tab('show');
-            }
-
+            dateInfiniteEditCheckbox.on('change', function() {
+                if ($(this).is(':checked')) {
+                    if (dateValidAt.val() !== '') {
+                        dateValidAt.val('').trigger('change');
+                    }
+                }
+            });
+            */
             $('[id^=fileRow_head_]').hide();
             $('[id^=fileRow_body_]').hide();
             const fileTree = $("#fileTree");
@@ -270,7 +391,14 @@
                 $(treeSelector).jstree({
                     "plugins": ["dnd", "themes"],
                     'core': {
-                        'check_callback': true,
+                        //'check_callback': true,
+                        'check_callback': function (operation, node, node_parent, node_position, more) {
+                            // Restrict to parent
+                            if (operation === "move_node") {
+                                return node_parent.id == mainFileId;
+                            }
+                            return true;
+                        },
                         'data': data,
                         'themes': {
                             'dots': true,

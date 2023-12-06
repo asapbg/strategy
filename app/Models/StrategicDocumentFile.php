@@ -7,6 +7,9 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StrategicDocumentFile extends ModelActivityExtend implements TranslatableContract
@@ -26,7 +29,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
 
     protected $fillable = ['strategic_document_id', 'strategic_document_type_id', 'valid_at',
         'visible_in_report', 'sys_user', 'path', 'file_text',
-        'filename', 'content_type', 'ord', 'parent_id'];
+        'filename', 'content_type', 'ord', 'parent_id', 'version', 'strategic_document_file_id'];
 
     const DIR_PATH = 'strategic_doc'.DIRECTORY_SEPARATOR;
 
@@ -48,12 +51,12 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         );
     }
 
-    public function documentType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function documentType(): HasOne
     {
         return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
     }
 
-    public function strategicDocument(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function strategicDocument(): HasOne
     {
         return $this->hasOne(StrategicDocument::class, 'id', 'strategic_document_id');
     }
@@ -80,6 +83,20 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
                 'rules' => ['required', 'string', 'max:500']
             ],
             'file_info_main' => [
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string']
+            ],
+        );
+    }
+
+    public static function translationFieldsPropertiesFileEdit(): array
+    {
+        return array(
+            'display_name_file_edit' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:500']
+            ],
+            'file_info_file_edit' => [
                 'type' => 'summernote',
                 'rules' => ['nullable', 'string']
             ],
@@ -132,5 +149,40 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         }
 
         return $displayName;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function versions(): HasMany
+    {
+        return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_file_id');
+    }
+
+    /**
+     * Get the latest version of the file.
+     *
+     * @return HasOne
+     */
+    public function latestVersion(): HasOne
+    {
+        return $this->hasOne(StrategicDocumentFile::class, 'strategic_document_file_id')
+            ->where('locale', app()->getLocale())
+            ->orderBy('version', 'desc');
+    }
+
+    /**
+     * Get the latest version of the file.
+     *
+     * @return BelongsTo
+     */
+    public function parentFile(): BelongsTo
+    {
+        return $this->belongsTo(StrategicDocumentFile::class, 'strategic_document_file_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'sys_user');
     }
 }
