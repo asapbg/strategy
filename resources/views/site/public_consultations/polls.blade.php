@@ -1,7 +1,7 @@
 @if($item->pollsInPeriod->count())
     <div class="row mb-0 mt-4">
         <div class="col-md-12">
-            <div class="custom-card py-4 px-3">
+            <div class="custom-card py-4 px-3 mb-4">
                 <h3 class="mb-3">{{ __('site.public_consultation.polls') }}</h3>
                     @foreach($item->pollsInPeriod as $poll)
                         @if($poll->questions->count())
@@ -19,7 +19,7 @@
                                 @foreach($poll->questions as $key => $q)
                                     <div class="col-md-6 mb-4">
                                         <input type="hidden" name="q[]" value="{{ $q->id }}">
-                                        <div class="comment-background p-2 rounded">
+                                        <div>
                                             <p class="fw-bold fs-18 mb-2">{{ $q->name }}</p>
                                             @error('a_'.$q->id)
                                                 <div class="text-danger">{{ $message }}</div>

@@ -10,6 +10,7 @@
 
 body {
 font-family: "Fira Sans BGR";
+overflow-x: hidden;
 }
 
 /*sidebar sub icons*/
@@ -98,3 +99,6 @@ select.form-control-sm ~ .select2-container--default{
     white-space: initial !important;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    margin-top: -3px !important;
+}

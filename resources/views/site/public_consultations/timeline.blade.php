@@ -1,5 +1,5 @@
 <div class="col-lg-2 py-5">
-    <div class="row mt-5">
+    <div class="row">
         <div class="col-md-12">
             <div class="hori-timeline px-1" dir="ltr">
                 <h3 class="mb-3">{{ __('site.history') }}</h3>
