@@ -84,6 +84,7 @@ Route::controller(ImpactAssessmentController::class)->prefix('/impact_assessment
     Route::post('/{form}', 'store')->name('store');
     Route::get('/{form}/pdf/{inputId}', 'pdf')->name('pdf');
     Route::get('/{form}/show/{inputId}', 'show')->name('show');
+});
 
 Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
     Route::get('/download/{file}', 'downloadFile')->name('download.file');
