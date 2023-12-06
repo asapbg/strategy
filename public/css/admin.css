@@ -14426,8 +14426,13 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active, [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active:hover, [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active:focus {
+<<<<<<< HEAD
     background-color: #4a6484;
     color: #fff;
+=======
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #1c3050;
+>>>>>>> db76b813 (update assets 3)
 }
 
 [class*="sidebar-dark-"] .nav-flat .nav-item .nav-treeview .nav-treeview {
@@ -54736,7 +54741,11 @@ tr.odd td, .odd {
     padding: 0.3rem 1rem 0.3rem 0.5rem;
 }
 .nav-sidebar .nav-link p {
+<<<<<<< HEAD
     margin-left: 0.2rem !important;
+=======
+    margin-left: 6px !important;
+>>>>>>> db76b813 (update assets 3)
 }
 .nav-sidebar .nav-link i {
     width: 20px;
@@ -54837,9 +54846,12 @@ table .toggle i { color: #269740 }
     font-size: 1.4rem;
     margin: 0;
 }
+<<<<<<< HEAD
 .note-editor p {
     margin-bottom: 0;
 }
+=======
+>>>>>>> db76b813 (update assets 3)
 
 :root {
     --primary-color:#4a6484;
@@ -54857,6 +54869,7 @@ overflow-x: hidden;
 }
 
 /*sidebar sub icons*/
+<<<<<<< HEAD
 .nav-sidebar .nav-link p {
     font-size: 0.96rem;
 }
@@ -54864,6 +54877,8 @@ overflow-x: hidden;
 .menu-open .nav-treeview {
     display: block!important;
 }
+=======
+>>>>>>> db76b813 (update assets 3)
 .nav-treeview > .nav-item {
     padding-left: 10px;
 }
