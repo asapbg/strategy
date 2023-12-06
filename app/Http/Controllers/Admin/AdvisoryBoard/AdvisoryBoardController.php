@@ -245,21 +245,9 @@ class AdvisoryBoardController extends AdminController
                 ->orderBy('created_at', 'desc')->paginate(10);
         }
 
-        $function_files = File::query()
-            ->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
-                $query->withTrashed()->orderBy('deleted_at', 'desc');
-            })
-            ->where(['id_object' => $function?->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_FUNCTION])
-            ->get();
-
+        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $function->allFiles : $function->files;
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
-
-        $regulatory_framework_files = File::query()
-            ->when(request()->get('show_deleted_regulatory_files', 0) == 1, function ($query) {
-                $query->withTrashed()->orderBy('deleted_at', 'desc');
-            })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK])
-            ->get();
+        $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 
         $meetings_decisions_files = File::query()
             ->when(request()->get('show_deleted_decisions_files', 0) == 1, function ($query) {

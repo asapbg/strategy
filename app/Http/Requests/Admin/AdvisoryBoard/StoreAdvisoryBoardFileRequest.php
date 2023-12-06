@@ -33,6 +33,7 @@ class StoreAdvisoryBoardFileRequest extends FormRequest
         $rules = [
             'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())],
             'effective_at' => ['nullable', 'date'],
+            'object_id' => ['required', 'integer'],
         ];
 
         foreach (config('available_languages') as $lang) {

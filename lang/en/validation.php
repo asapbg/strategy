@@ -449,5 +449,6 @@ return [
         'resolution_council_matters' => 'Resolution of the Council of Ministers',
         'state_newspaper' => 'State newspaper',
         'effective_at' => 'Effective at',
+        'redirect_to_iisda' => 'Redirect to Integration information system of the state administration (IISDA)',
     ],
 ];

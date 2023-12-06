@@ -90,6 +90,7 @@ class File extends ModelActivityExtend
                 14 => '#regulatory',
                 15 => '#decisions',
                 16 => '#custom',
+                17 => '#moderator',
                 default => '#unknown'
             }
         );

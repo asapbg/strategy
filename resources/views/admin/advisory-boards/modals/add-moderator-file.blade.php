@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-secretariat-file" aria-hidden="true">
+<div class="modal fade" id="modal-add-moderator-file" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,13 +11,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="SECRETARIAT_FILE" enctype="multipart/form-data" class="pull-left">
+                <form method="POST" name="MODERATOR_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
-                    <input type="hidden" name="object_id" value="{{ $item->secretariat?->id }}">
-                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_SECRETARIAT->value }}"/>
+                    <input type="hidden" name="object_id" value="{{ $item->id }}">
+                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_MODERATOR->value }}"/>
 
-                    @include('admin.partial.file_fields', ['form' => 'SECRETARIAT_FILE'])
+                    @include('admin.partial.file_fields', ['form' => 'MODERATOR_FILE'])
                 </form>
             </div>
 

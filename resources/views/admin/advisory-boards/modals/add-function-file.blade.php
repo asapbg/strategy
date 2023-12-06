@@ -14,79 +14,10 @@
                 <form method="POST" name="FUNCTIONS_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
+                    <input type="hidden" name="object_id" value="{{ $item->advisoryFunction?->id }}"/>
                     <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_FUNCTION->value }}"/>
 
-                    <div class="row">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label class="col-sm-12 control-label"
-                                           for="file_{{ $lang['code'] }}">{{ __('custom.file') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                        <span class="required">*</span>
-                                    </label>
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label for="" onclick="FUNCTIONS_FILE.querySelector('input[id=file_{{ $lang['code'] }}]').click()"
-                                                   class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
-                                            <input name="file_{{ $lang['code'] }}" class="d-none" type="file"
-                                                   id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
-                                            <span class="document-name"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-danger mt-1 error_file_{{ $lang['code'] }}"></div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="row">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label class="col-sm-12 control-label"
-                                           for="file_name_{{ $lang['code'] }}">{{ __('custom.name') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                        <span class="required">*</span>
-                                    </label>
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <input class="form-control form-control-sm"
-                                                   id="file_name_{{ $lang['code'] }}" type="text"
-                                                   name="file_name_{{ $lang['code'] }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="text-danger mt-1 error_file_name_{{ $lang['code'] }}"></div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="row">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label class="col-sm-12 control-label"
-                                           for="file_description_{{ $lang['code'] }}">{{ __('custom.description') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                    </label>
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <input class="form-control form-control-sm"
-                                                   id="file_description_{{ $lang['code'] }}"
-                                                   type="text"
-                                                   name="file_description_{{ $lang['code'] }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    @includeIf('admin.partial.file_fields', ['form' => 'FUNCTIONS_FILE'])
                 </form>
             </div>
 

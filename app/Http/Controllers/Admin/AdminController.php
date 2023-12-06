@@ -148,7 +148,7 @@ class AdminController extends Controller
         $fileNameToStore = str_replace('.', '', microtime(true)) . '.' . $file->getClientOriginalExtension();
         $file->storeAs($path, $fileNameToStore, 'public_uploads');
         $file = new File([
-            'id_object' => $item->id,
+            'id_object' => $item->id ?? $item,
             'code_object' => $codeObject,
             'doc_type' => $docType,
             'filename' => $fileNameToStore,

@@ -32,7 +32,7 @@ class AdvisoryBoardFileController extends AdminController
         try {
             foreach (config('available_languages') as $lang) {
                 $this->uploadFile(
-                    $item->secretariat,
+                    $validated['object_id'],
                     $validated['file_' . $lang['code']],
                     File::CODE_AB_FUNCTION,
                     $validated['doc_type_id'],
@@ -48,6 +48,7 @@ class AdvisoryBoardFileController extends AdminController
             DB::commit();
             return response()->json(['status' => 'success']);
         } catch (Exception $e) {
+            dd($e);
             DB::rollBack();
             Log::error($e);
             return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
