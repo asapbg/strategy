@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static where(string $string, int $id)
  * @method static find(mixed $section_id)
  */
-class AdvisoryBoardCustom extends Model
+class AdvisoryBoardCustom extends ModelActivityExtend
 {
 
     use FilterSort, Translatable, SoftDeletes;
@@ -34,7 +34,9 @@ class AdvisoryBoardCustom extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION)->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
     }
 
     /**

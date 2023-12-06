@@ -149,7 +149,8 @@
                                                     @if(!$view_mode)
                                                         <button type="button" class="btn btn-success"
                                                                 data-toggle="modal"
-                                                                data-target="#modal-add-custom-file">
+                                                                data-target="#modal-add-custom-file"
+                                                                onclick="setSectionFileObjectId('{{ $section->id }}')">
                                                             <i class="fa fa-plus mr-3"></i>
                                                             {{ __('custom.add') . ' ' . __('custom.file') }}
                                                         </button>
@@ -173,3 +174,11 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        function setMeetingFileObjectId(id) {
+            CUSTOM_FILE.querySelector('input[name=object_id]').value = id;
+        }
+    </script>
+@endpush

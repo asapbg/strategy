@@ -224,9 +224,11 @@ class AdvisoryBoardController extends AdminController
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
-        $meetings = AdvisoryBoardMeeting::withTrashed()
-            ->where('advisory_board_id', $item->id)
+        $meetings = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
             ->whereYear('created_at', Carbon::now()->year)
+            ->when(request()->get('show_deleted_meetings', 0) == 1, function($query) {
+                $query->withTrashed();
+            })
             ->orderBy('id')->get();
 
         $archive = collect();

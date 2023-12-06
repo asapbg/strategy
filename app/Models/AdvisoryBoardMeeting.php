@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  *
  * @method static find(mixed $meeting_id)
+ * @method static where(string $string, int $id)
  */
 class AdvisoryBoardMeeting extends Model
 {
