@@ -320,7 +320,8 @@
                         <h3 class="mb-2 fs-4">{{ __('validation.attributes.redirect_to_iisda') }}</h3>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <a href="{{ $item->integration_link }}" target="_blank" class="main-color text-decoration-none">
+                                <a href="{{ $item->integration_link }}" target="_blank"
+                                   class="main-color text-decoration-none">
                                     <i class=" fa-solid fa-link main-color me-2 fs-5"></i>
                                     {{ __('custom.advisory_board_description_link') }}
                                 </a>
@@ -329,6 +330,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Ръчно направени секции -->
+            @if(isset($item->customSections) && $item->customSections->count() > 0)
+                @foreach($item->customSections as $section)
+                    <div class="row mb-4 ks-row">
+                        <div class="col-md-12">
+                            <div class="custom-card p-3">
+                                <h3 class="mb-2 fs-4">{{ $section->title }}</h3>
+
+                                <p>{!! $section->body !!}</p>
+
+                                @if(!empty($section->files) && $section->files->count() > 0)
+                                    @foreach($section->files as $file)
+                                        @includeIf('site.partial.file', ['file' => $file])
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 @endsection

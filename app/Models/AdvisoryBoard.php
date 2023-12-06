@@ -51,6 +51,11 @@ class AdvisoryBoard extends ModelActivityExtend
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link'];
 
+    public function customSections(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardCustom::class)->orderBy('order');
+    }
+
     public function moderatorFiles(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')

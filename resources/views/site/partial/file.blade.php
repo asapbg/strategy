@@ -19,28 +19,40 @@
             </span>
         </div>
 
-        <div class="doc-info-item">
-            <strong>{{ __('custom.resolution_council_ministers_short') }}:</strong>
-            <span><a href="#" class="text-decoration-none">{{ $file->resolution_council_ministers }}</a></span>
-        </div>
-        <div class="doc-info-item">
-            <strong>{{ __('custom.state_papernew_short') }}:</strong>
-            <span><a href="#" class="text-decoration-none">{{ $file->state_newspaper }}</a></span>
-        </div>
-        <div class="doc-info-item">
-            <strong> {{ __('custom.effective_at') }}:</strong>
-            <span>{{ \Carbon\Carbon::parse($file->effective_at)->format('d.m.Y') . __('custom.year_short') }}</span>
-        </div>
+        @if(!empty($file->resolution_council_ministers))
+            <div class="doc-info-item">
+                <strong>{{ __('custom.resolution_council_ministers_short') }}:</strong>
+                <span><a href="#" class="text-decoration-none">{{ $file->resolution_council_ministers }}</a></span>
+            </div>
+        @endif
+
+        @if(!empty($file->state_newspaper))
+            <div class="doc-info-item">
+                <strong>{{ __('custom.state_papernew_short') }}:</strong>
+                <span><a href="#" class="text-decoration-none">{{ $file->state_newspaper }}</a></span>
+            </div>
+        @endif
+
+        @if(!empty($file->effective_at))
+            <div class="doc-info-item">
+                <strong> {{ __('custom.effective_at') }}:</strong>
+                <span>{{ \Carbon\Carbon::parse($file->effective_at)->format('d.m.Y') . __('custom.year_short') }}</span>
+            </div>
+        @endif
+
         <div class="doc-info-item">
             <strong> {{ __('custom.date_published') }}:</strong>
             <span>{{ \Carbon\Carbon::parse($file->created_at)->format('d.m.Y') . __('custom.year_short') }}</span>
         </div>
+
         <div class="doc-info-item">
             <strong> {{ trans_choice('custom.kinds', 1) }}:</strong>
             @php $class = $file->active ? 'text-success' : 'text-danger'; @endphp
-            <span class="{{ $class }}">{{ $file->active ? __('custom.active_document') : __('custom.inactive_document') }}</span>
+            <span
+                class="{{ $class }}">{{ $file->active ? __('custom.active_document') : __('custom.inactive_document') }}</span>
         </div>
     </div>
+
     <div class="file-version pb-2">
         <strong> {{ __('custom.versions') }}:</strong>
 

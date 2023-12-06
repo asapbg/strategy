@@ -14,7 +14,9 @@
                 <form method="POST" name="CUSTOM_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
-                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_CUSTOM_SECTION->value }}"/>
+                    <input type="hidden" name="object_id"/>
+                    <input type="hidden" name="doc_type_id"
+                           value="{{ \App\Enums\DocTypesEnum::AB_CUSTOM_SECTION->value }}"/>
 
                     <div class="row">
                         @foreach(config('available_languages') as $lang)
@@ -28,7 +30,8 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="" onclick="CUSTOM_FILE.querySelector('input[id=file_{{ $lang['code'] }}]').click()"
+                                            <label for=""
+                                                   onclick="CUSTOM_FILE.querySelector('input[id=file_{{ $lang['code'] }}]').click()"
                                                    class="btn btn-outline-secondary">{{ __('custom.select_file') }}</label>
                                             <input name="file_{{ $lang['code'] }}" class="d-none" type="file"
                                                    id="file_{{ $lang['code'] }}" onchange="attachDocFileName(this)">
