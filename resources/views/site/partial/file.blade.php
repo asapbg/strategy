@@ -4,7 +4,7 @@
 
 <div class="document-wrapper-ks mt-3">
     <a href="{{ route('download.file', $file) }}" class="main-color text-decoration-none fs-18">
-        <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>
+        {!! fileIcon($file->content_type) !!}
         {{ empty($file->custom_name) ? $file->filename : $file->custom_name }}
     </a>
 

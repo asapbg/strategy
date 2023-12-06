@@ -314,22 +314,24 @@
             </div>
 
             <!-- Препратка към Интегрираната информационна система на държавната администрация (ИИСДА) -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('validation.attributes.redirect_to_iisda') }}</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <a href="{{ $item->integration_link }}" target="_blank"
-                                   class="main-color text-decoration-none">
-                                    <i class=" fa-solid fa-link main-color me-2 fs-5"></i>
-                                    {{ __('custom.advisory_board_description_link') }}
-                                </a>
-                            </li>
-                        </ul>
+            @if(!empty($item->integration_link))
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('validation.attributes.redirect_to_iisda') }}</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="{{ $item->integration_link }}" target="_blank"
+                                       class="main-color text-decoration-none">
+                                        <i class=" fa-solid fa-link main-color me-2 fs-5"></i>
+                                        {{ __('custom.advisory_board_description_link') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Ръчно направени секции -->
             @if(isset($item->customSections) && $item->customSections->count() > 0)
