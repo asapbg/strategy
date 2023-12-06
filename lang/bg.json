@@ -9,5 +9,9 @@
     "List of the preparers of evaluations under the ZNA": "Списък на изготвящите оценки по ЗНА",
     "Name of contractor": "Наименование на възложител",
     "Name of executor": "Наименование на изпълнител",
-    "Contract date": "Дата на договора"
+    "Contract date": "Дата на договора",
+    "Update a record": "Редактиране на запис",
+    "Create a new record": "Добавяне на нов запис",
+    "The new record was created successfully": "Новият запис беше създаден успешно",
+    "The record was updated successfully": "Записът беше обновен успешно"
 }

@@ -69,14 +69,14 @@
                             @canany(['manage.*', 'manage.legislative_operational_programs'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.legislative_programs.index') }}"
-                                       class="nav-link @if(request()->routeIs('admin.consultations.legislative_programs.index')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'legislative_programs')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.operational_programs.index') }}"
-                                       class="nav-link @if(request()->routeIs('admin.consultations.operational_programs.index')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
                                     </a>
@@ -85,14 +85,14 @@
                             @canany(['manage.*', 'manage.advisory'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.public_consultations.index') }}"
-                                       class="nav-link @if(request()->routeIs('admin.consultations.public_consultations.index')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.consultations', 2) }}</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.comments.index') }}"
-                                       class="nav-link @if(request()->routeIs('admin.consultations.comments.index')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'comments')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.comments', 2) }}</p>
                                     </a>

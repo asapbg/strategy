@@ -14,22 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('executor_translations');
+        Schema::dropIfExists('executors');
+
         Schema::create('executors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('contractor_id')->nullable(); // maybe for a future nomenclature
-            $table->string('contractor_name');
-            $table->string('executor_name');
             $table->bigInteger('eik')->nullable();
-            $table->date('contract_date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->mediumText('contract_subject')->nullable();
-            $table->longText('services_description')->nullable();
-            $table->decimal('price', 10);
-            $table->boolean('active');
+            $table->date('contract_date')->nullable();
+            $table->decimal('price', 10)->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('executors_translations', function (Blueprint $table) {
+        Schema::create('executor_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('locale', 2)->index();
             $table->unique(['executor_id', 'locale']);
@@ -51,7 +49,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('executor_translations');
         Schema::dropIfExists('executors');
-        Schema::dropIfExists('executors_translations');
     }
 };

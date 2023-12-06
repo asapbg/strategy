@@ -42,7 +42,7 @@ class AdminController extends Controller
      * @param $item   //model;
      * @param $validated //request validated
      */
-    protected function storeTranslateOrNew($fields, $item, $validated)
+    public function storeTranslateOrNew($fields, $item, $validated)
     {
         foreach (config('available_languages') as $locale) {
             foreach ($fields as $field) {
@@ -82,7 +82,7 @@ class AdminController extends Controller
      * @param $item
      * @return mixed
      */
-    protected function getFillableValidated($validated, $item)
+    public function getFillableValidated($validated, $item)
     {
         $modelFillable = $item->getFillable();
         $validatedFillable = $validated;
@@ -148,4 +148,13 @@ class AdminController extends Controller
         return $file;
     }
 
+    /**
+     * Get available languages
+     *
+     * @return array
+     */
+    public static function getLanguages()
+    {
+        return config('available_languages');
+    }
 }

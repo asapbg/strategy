@@ -13,7 +13,7 @@ class UpdateExecutorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,8 @@ class UpdateExecutorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $storeR = new StoreExecutorRequest();
+
+        return $storeR->rules();
     }
 }

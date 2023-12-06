@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Models\Executor;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExecutorRequest extends FormRequest
@@ -23,13 +25,20 @@ class StoreExecutorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'contractor_name.bg'            => ['required', 'string', 'max:255'],
-            'executor_name.bg'              => ['required', 'string', 'max:255'],
-            'contract_subject.bg'           => ['required', 'string'],
-            'services_description.bg'       => ['required', 'string'],
+        $rules = [
+            'eik'                           => ['nullable', 'numeric'],
             'contract_date'                 => ['required', 'date'],
             'price'                         => ['required', 'numeric', 'between:0,99999999.99'],
         ];
+
+        foreach (Executor::TRANSLATABLE_FIELDS as $field) {
+            foreach (AdminController::getLanguages() as $lang) {
+                $condition = ($lang['default']) ? 'required' : 'nullable';
+                $rules[$field."_".$lang['code']] = [$condition, 'string'];
+            }
+        }
+
+        return $rules;
+
     }
 }

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\View\View;
@@ -73,6 +74,19 @@ class Controller extends BaseController
     }
 
     /**
+     * Return back with all input data, if any, and display errors
+     *
+     * @param $error_type | 'success', 'warning', 'danger', 'info'
+     * @param $error_msg
+     *
+     * @return RedirectResponse
+     */
+    protected function backWithError($error_type, $error_msg)
+    {
+        return back()->withInput(request()->all())->with($error_type, $error_msg);
+    }
+
+    /**
      * Generate the breadcrumbs
      */
     protected function breadcrumbs()
@@ -98,13 +112,17 @@ class Controller extends BaseController
 
         if ($links_count && $segments[$links_count] == "create") {
             array_pop($segments);
-            $heading = __('custom.creation_of').$this->title_singular;
+            $heading = array_key_exists($this->title_singular, trans('custom'))
+                ? __('custom.creation_of').$this->title_singular
+                : __('Create a new record');
             $segments[] = $heading;
         }
         if ($segments[$links_count] == "edit") {
             $links_count--;
             $segments = array_slice(request()->segments(), 0, $links_count);
-            $heading = __('custom.edit_of').$this->title_singular;
+            $heading = array_key_exists($this->title_singular, trans('custom'))
+                ? __('custom.edit_of').$this->title_singular
+                : __('Update a record');
             $segments[] = $heading;
         }
 

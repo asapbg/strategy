@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="row">
-    
+
 <div class="col-lg-2 col-md-4 side-menu py-5 mt-1" style="background:#f5f9fd;">
     <div class="left-nav-panel" style="background: #fff !important;">
         <div class="flex-shrink-0 p-2">
@@ -72,13 +72,13 @@
                 Списъкът се изготвя в изпълнение на § 1 от Допълнителните разпоредби на Закона за нормативните актове.
             </p>
         </div>
-    
+
         <div class="col-md-4 text-end">
             <button class="btn btn-sm btn-primary main-color">
                 <i class="fas fa-pen me-2 main-color"></i>Редактиране</button>
         </div>
     </div>
-    
+
     <hr>
     <div class="row filter-results mb-2">
         <h2 class="mb-4">
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
@@ -117,7 +117,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="col-md-3">
             <label for="exampleFormControlInput1" class="form-label">Начална дата:</label>
             <div class="input-group">
@@ -125,9 +125,9 @@
                 <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
             </div>
         </div>
-    
-    
-    
+
+
+
         <div class="col-md-3">
             <label for="exampleFormControlInput1" class="form-label">Крайна дата:</label>
             <div class="input-group">
@@ -145,7 +145,6 @@
                         <option value="1">50</option>
                         <option value="1">100</option>
                         <option value="1">150</option>
-                        </option>
                         <option value="1">200</option>
                     </select>
                 </div>
@@ -161,7 +160,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row mb-5 action-btn-wrapper">
         <div class="col-md-3 col-sm-12">
             <button class="btn rss-sub main-color" id="searchBtn"><i class="fas fa-search main-color"></i>Търсене</button>
@@ -173,7 +172,7 @@
                     class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
         </div>
     </div>
-    
+
     <div class="row pt-4 pb-2 px-2">
         <div class="col-md-12">
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2">
@@ -213,17 +212,16 @@
                     </p>
                 </div>
             </div>
-    
-    
+
+
         </div>
     </div>
-    
+
     <div class="row justify-content-end my-3">
         <div class="col-md-4">
         </div>
         <div class="col-md-8 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
-            <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой
-                резултати:</label>
+            <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой резултати:</label>
             <select class="form-select w-auto" id="paginationResults">
                 <option value="5">5</option>
                 <option value="20">20</option>
@@ -234,10 +232,10 @@
             </select>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
-      
+
             <div class="custom-card pt-1 pb-4 px-3 mb-3">
                 <div class="row m-0">
                     <div class="col-md-12 text-end p-0">
@@ -245,13 +243,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -260,7 +258,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -268,7 +266,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -276,7 +274,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -284,15 +282,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -305,7 +303,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -335,13 +333,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -350,7 +348,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -358,7 +356,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -366,7 +364,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -374,15 +372,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -395,7 +393,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -425,13 +423,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -440,7 +438,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -448,7 +446,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -456,7 +454,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -464,15 +462,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -485,7 +483,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -515,13 +513,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -530,7 +528,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -538,7 +536,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -546,7 +544,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -554,15 +552,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -575,7 +573,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -605,13 +603,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -620,7 +618,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -628,7 +626,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -636,7 +634,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -644,15 +642,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -665,7 +663,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -695,13 +693,13 @@
                                 title="Изтриване"></i>
                         </a>
                         <a href="#" title="Редактиране"> <i class="fas fa-pen-to-square float-end main-color fs-4"></i></a>
-    
+
                     </div>
                 </div>
                 <div class="row single-record">
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на възложител                    
+                            Наименование на възложител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">1. Министерство на регионалното развитие и
@@ -710,7 +708,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Наименование на изпълнител                                     
+                            Наименование на изпълнител
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">ДЗЗД "Глобал Аквуекон" </a>
@@ -718,7 +716,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            ЕИК                                   
+                            ЕИК
                         </p>
                         <p>
                             <a href="#" class="main-color text-decoration-none">177282392 </a>
@@ -726,7 +724,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Дата на договора                                 
+                            Дата на договора
                         </p>
                         <p>
                             23.08.2018 г.
@@ -734,15 +732,15 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Цена на договора (в лв. с ДДС)                                 
+                            Цена на договора (в лв. с ДДС)
                         </p>
-                        <p> 
+                        <p>
                             22 008 лв.
                         </p>
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Предмет на договора                                
+                            Предмет на договора
                         </p>
                         <p>
                             Консултантски услуги за изготвяне на становища, анализи, договори, документи, предложения за
@@ -755,7 +753,7 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">
-                            Кратко описание на извършените услуги                                 
+                            Кратко описание на извършените услуги
                         </p>
                         <p>
                             Изготвяне на проект на нормативен акт - Наредба за сервитутите на водоснабдителните и
@@ -777,10 +775,10 @@
                     </div>
                 </div>
             </div>
-    
+
 
         </div>
-    
+
         <div class="row">
             <nav aria-label="Page navigation example">
                 <ul class="pagination m-0">

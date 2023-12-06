@@ -12,7 +12,7 @@
 
                         <div class="row">
 
-                            <div class="col-md-4">
+                            <div class="col-md-3 col-sm-6">
                                 <div class="input-group">
                                     <div class="mb-3 d-flex flex-column w-100">
                                         <label for="contractor_name" class="form-label">{{ __('Name of contractor') }}</label>
@@ -22,12 +22,22 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3 col-sm-6">
                                 <div class="input-group">
                                     <div class="mb-3 d-flex flex-column w-100">
                                         <label for="executor_name" class="form-label">{{ __('Name of executor') }}</label>
                                         <input id="executor_name" class="form-control" name="executor_name" type="text"
                                                value="{{ request()->get('executor_name', '') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    <div class="mb-3 d-flex flex-column w-100">
+                                        <label for="contract_date" class="form-label">{{ __('Contract date') }}</label>
+                                        <input id="contract_date" class="form-control datepicker" name="contract_date" type="text"
+                                               value="{{ request()->get('contract_date', '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +66,7 @@
                     <div class="mb-3">
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\ExecutorController@index'])
                         <a href="{{ route('admin.executors.create') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ mb_strtolower($title_singular) }}
+                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ l_trans('custom.new_record') }}
                         </a>
                     </div>
                     <table class="table table-bordered">
@@ -76,7 +86,6 @@
                                 <td>{{ $executor->id }}</td>
                                 <td>{{ $executor->contractor_name }}</td>
                                 <td>{{ $executor->executor_name }}</td>
-                                <td>{!! $executor->contract_subject !!}</td>
                                 <td>{{ displayDate($executor->contract_date) }}</td>
                                 <td>
                                     @includeIf('partials.toggle-boolean', ['object' => $executor, 'model' => 'Executor'])
@@ -93,7 +102,7 @@
                                        data-target="#modal-delete-resource"
                                        data-resource-id="{{ $executor->id }}"
                                        data-resource-title="{{ $executor->title }}"
-                                       data-resource-delete-url="{{ route('admin.executors.delete', $executor->id )}}"
+                                       data-resource-delete-url="{{ route('admin.executors.destroy', $executor->id )}}"
                                        data-toggle="tooltip"
                                        title="{{ __('custom.deletion') }}">
                                         <i class="fas fa-trash"></i>

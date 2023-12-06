@@ -21,4 +21,5 @@
   'manage.legislative_initiatives'  => 'Права за управление на Законодателни инициативи',
   'manage.legislative_operational_programs'  => 'Права за управление на Законодателни и Оперативни програми',
   'manage.legislative_operational_programs.delete'  => 'Права за изтриване на Законодателни и Оперативни програми',
+  'manage.executors'                => 'Права за управление на Списък на изготвящите оценки по ЗНА',
 );
