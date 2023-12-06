@@ -52,7 +52,7 @@ class PollController extends Controller
             ->paginate($paginate);
 
         if( $request->ajax() ) {
-            return view('site.polls.list', compact('filter','sorter', 'items', 'rf'));
+            return $this->view('site.polls.list', compact('filter','sorter', 'items', 'rf'));
         }
 
         $pageTitle = __('site.public_consultation.polls');
@@ -120,6 +120,11 @@ class PollController extends Controller
 
         $ip = $request->getClientIp();
         $user = $request->user();
+
+        if( $poll->only_registered && !$user ) {
+            return back()->with('warning', __('messages.poll_only_registered'));
+        }
+
         if( $poll->is_once ) {
             if($user) {
                 $pollExist = $user->polls()->where('poll_id', '=', (int)$validated['id'])->first();
@@ -131,9 +136,7 @@ class PollController extends Controller
             }
         }
 
-        if( $poll->only_registered && !$user ) {
-            return back()->with('warning', __('messages.poll_one_time'));
-        }
+
 
         DB::beginTransaction();
         try {

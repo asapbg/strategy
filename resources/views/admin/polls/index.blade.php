@@ -38,7 +38,18 @@
                                     <td>{{ $row->start_date }}</td>
                                     <td>{{ $row->end_date }}</td>
                                     <td>@if((int)$row->is_once)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
-                                    <td>@if($row->consultations->count())<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>
+                                        @if($row->consultations->count())
+                                            @foreach($row->consultations as $c)
+                                                <a href="{{ route('admin.consultations.public_consultations.edit', $c) }}" target="_blank"><i class="text-primary fas fa-link fs-6 mr-1"></i> {{ $c->title }}</a>
+                                                @if(!$loop->first)
+                                                    <br>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <i class="fa fa-minus text-danger"></i>
+                                        @endif
+                                    </td>
                                     <td>@if($row->inPeriod)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
                                     <td>
                                         @can('update', $row)
