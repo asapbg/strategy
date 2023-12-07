@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -45,6 +48,11 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     protected $guarded = [];
 
+    public function getNameAttribute()
+    {
+        return empty($this->custom_name) ? $this->filename : $this->custom_name;
+    }
+
     protected function description(): Attribute
     {
         $field = "description_" . app()->getLocale();
@@ -65,9 +73,16 @@ class File extends ModelActivityExtend
         );
     }
 
-    public function user()
+    public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'sys_user');
+    }
+
+    public function versions(): HasMany
+    {
+        return $this->hasMany(File::class, 'parent_id')
+            ->where('parent_id', $this->id)
+            ->orWhere('id', $this->id);
     }
 
     public function getModelName(): string

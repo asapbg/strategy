@@ -222,8 +222,8 @@
                             {!! $item->secretariat->description !!}
                         @endif
 
-                        @if(!empty($item->secretariat?->files) && $item->secretariat->files->count() > 0)
-                            @foreach($item->secretariat->files as $file)
+                        @if(!empty($item->secretariat?->siteFiles) && $item->secretariat->siteFiles->count() > 0)
+                            @foreach($item->secretariat->siteFiles as $file)
                                 @includeIf('site.partial.file', ['file' => $file])
                             @endforeach
                         @endif
