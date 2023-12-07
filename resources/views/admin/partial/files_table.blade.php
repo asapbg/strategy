@@ -61,7 +61,7 @@
                                             data-toggle="modal"
                                             data-target="#modal-edit-function-file"
                                             title="{{ __('custom.edit') }}"
-                                            onclick="loadFunctionFileData('{{ route('admin.advisory-boards.file.edit', ['item' => $item, 'file' => $file]) }}', '{{ $file->locale }}');">
+                                            onclick="loadFileData('{{ route('admin.advisory-boards.file.edit', ['item' => $item, 'file' => $file]) }}', '{{ $file->locale }}');">
                                         <i class="fa fa-edit"></i>
                                     </button>
                                 @endcan
