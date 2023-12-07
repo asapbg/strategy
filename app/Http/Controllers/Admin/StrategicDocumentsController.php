@@ -526,9 +526,9 @@ class StrategicDocumentsController extends AdminController
     {
         try {
             $publicConsultation = PublicConsultation::findOrFail($id);
-            $pris = $publicConsultation->pris;
+            $prisId = Pris::where('public_consultation_id', $publicConsultation->id)->first()?->id;
 
-            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_act_id' => $publicConsultation->pris_act_id, 'legal_act_type_id' => $pris?->legal_act_type_id]);
+            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_act_id' => $prisId, 'legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
