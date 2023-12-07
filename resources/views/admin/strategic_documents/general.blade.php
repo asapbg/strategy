@@ -635,7 +635,30 @@
             handleDateCheckbox(dateValidAtMain, dateIndefiniteCheckboxMain);
             handleDateCheckbox(dateExpiring, dateExpiringCheckbox);
             handleDateCheckbox(dateValidAtFiles, dateInfiniteFilesCheckbox);
-            handleDateCheckbox(dateValidAtFileEdit, dateInfiniteEditCheckbox);
+            //handleDateCheckbox(dateValidAtFileEdit, dateInfiniteEditCheckbox);
+
+            dateValidAtFileEdit.on('change', function () {
+                const checkboxId = '#date_valid_indefinite_files_edit_' + $(this).data('id');
+                const checkbox = $(checkboxId);
+
+                if (checkbox.is(':checked')) {
+                    checkbox.prop('checked', $(this).val() === '').trigger('change');
+                }
+            });
+
+            dateInfiniteEditCheckbox.on('change', function () {
+                const dateInputId = '#valid_at_files_edit_' + $(this).data('id');
+                const dateInput = $(dateInputId);
+                if ($(this).is(':checked')) {
+                    dateInput.prop('disabled', true);
+                    if (dateInput.val() !== '') {
+                        dateInput.val('').trigger('change');
+                    }
+                } else {
+                    dateInput.prop('disabled', false);
+                }
+            });
+
 
             function handleDateCheckbox(dateInput, checkbox) {
                 dateInput.on('change', function () {
@@ -654,6 +677,7 @@
                     }
                 });
             }
+
 
             const prisOptions = $('#pris_options');
             prisOptions.select2();

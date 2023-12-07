@@ -61,14 +61,10 @@ class FileService
                     }
                 }
 
-
-
                 $fileNameToStore = round(microtime(true)).'.'.$uploadedFile->getClientOriginalExtension();
                 $uploadedFile->storeAs(StrategicDocumentFile::DIR_PATH, $fileNameToStore, 'public_uploads');
-                // testing
                 $version = $file->version;
                 $newVersion = ($version + 1);
-                // end testing
 
                 $file->content_type = $uploadedFile->getClientMimeType();
                 $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
@@ -78,6 +74,7 @@ class FileService
                 $file->locale = $locale;
                 $file->is_main = $isMain;
                 $file->version = $newVersion.'.0';
+                $file->strategic_document_id = $strategicDocument->id;
                 $file->save();
                 $strategicDocument->files()->save($file);
 
@@ -195,7 +192,6 @@ class FileService
 
         $fileExtension = $mainFile->content_type;
         $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-        //$validAt = $this->prepareValidAtText($mainFile);
         $editLink = $adminView ? "<a href='#' id='editButton_{$mainFile->id}' class='edit-button' data-file-id='{$mainFile->id}'><i class='fas fa-edit'></i></a>" : '';
         $downloadLink = $adminView ? "<a href='#' id='downloadButton_{$mainFile->id}' class='download-button'><i class='fas fa-download'></i></a>" : '';
         $deleteLink = $adminView ? "<a href='#' id='deleteButton_{$mainFile->id}' class='delete-button' data-file-id='{$mainFile->id}'><i class='fas fa-trash'></i></a>" : '';
@@ -214,7 +210,12 @@ class FileService
                 continue;
             }
             $latestVersion = $file->latestVersion;
-            $currentFile = $latestVersion ?? $file;
+
+            if ($latestVersion && $file->id !== $latestVersion->id) {
+                $currentFile = $latestVersion;
+            } else {
+                $currentFile = $file;
+            }
 
             if (in_array($currentFile->strategic_document_file_id, $processedFileIds) && $currentFile->strategic_document_file_id) {
                 continue;

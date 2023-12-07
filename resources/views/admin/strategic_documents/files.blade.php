@@ -210,7 +210,7 @@
                                         <div class="col-3">
                                             <label for="valid_at_files" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span
                                                     class="required">*</span> </label>
-                                            <input id="valid_at_files_edit_{{ $f->id }}" value="{{ old('valid_at', $f->valid_at) }}"
+                                            <input data-id="{{ $f->id }}" id="valid_at_files_edit_{{ $f->id }}" value="{{ old('valid_at', $f->valid_at) }}"
                                                    class="form-control form-control-sm datepicker @error('valid_at_files') is-invalid @enderror"
                                                    type="text" name="valid_at_files">
                                             @error('valid_at_files')
@@ -233,7 +233,7 @@
                                         </div>
                                         <div class="col-3">
                                             <label class="col-sm-12 control-label" for="visible_in_report"> {{ __('custom.visible_in_report') }} </label>
-                                                <input type="checkbox" id="visible_in_report" name="visible_in_report_files" class="checkbox"
+                                                <input class="form-check-input" type="checkbox" id="visible_in_report" name="visible_in_report_files" class="checkbox"
                                                        value="1" @if (old('visible_in_report_files', optional($f)->visible_in_report) == 1) checked @endif>
                                                 {{ __('custom.visible_in_report') }}
                                         </div>

@@ -91,8 +91,8 @@ class StrategicDocumentsController extends AdminController
         $policyAreas = PolicyArea::with('translations')->get();
         $prisActs = Pris::with('translations')->get();
         //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
-        $strategicDocumentFilesBg = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
-        $strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->orderBy('ord')->get();
+        $strategicDocumentFilesBg = StrategicDocumentFile::with(['translations', 'versions.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
+        //$strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->orderBy('ord')->get();
         $strategicDocumentsFileService = app(FileService::class);
 
         $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
@@ -108,6 +108,7 @@ class StrategicDocumentsController extends AdminController
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
         $ekateAreas = EkatteArea::with('translations');
         $ekateMunicipalities = EkatteMunicipality::with('translations');
+
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
@@ -241,7 +242,6 @@ class StrategicDocumentsController extends AdminController
             }
 
             $fileService = app(FileService::class);
-
             $fileService->uploadFiles($validated, $strategicDoc, null);
 
             return redirect(route(self::EDIT_ROUTE, ['id' => $strategicDoc->id]))
