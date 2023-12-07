@@ -43,6 +43,10 @@
     cursor: pointer !important;
 }
 
+.lh-normal {
+    line-height: normal;
+}
+
 .home-page-section {
     padding: 60px 0px;
 }
@@ -85,6 +89,10 @@ h6 {
 
 .fs-38 {
     font-size: 38px;
+}
+
+.fs-50 {
+    font-size: 50px !important;
 }
 
 .fw-400 {
@@ -202,6 +210,10 @@ span.select2.select2-container.select2-container--default,span.select2.select2-c
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
     border-radius: 8px;
     border-top: 3px solid #20659e;
+}
+
+.accordion .card.custom-card .card-header {
+    border-bottom: unset;
 }
 
 .main-color-light-bgr {
@@ -1487,6 +1499,11 @@ input[type=checkbox] {
     font-weight: 600;
 }
 
+.anotation p {
+    margin-bottom: 0.5rem !important
+}
+/*end priss*/
+
 /*KS*/
 .active-ks {
     color: #fff !important;
@@ -1544,6 +1561,10 @@ input[type=checkbox] {
     height: 11px;
     width: 11px;
     content: "";
+}
+
+li.timeline-item:last-child {
+    margin-bottom: 0px !important;
 }
 
 .preview-file-modal.btn-outline-secondary:hover {
@@ -1645,6 +1666,48 @@ input[type=checkbox] {
 /**/
 
 /*Calendar*/
+.event-legend {
+    display: flex;
+    align-items: center;
+}
+
+.past-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #e6e6e6;
+    display: block;
+}
+
+.current-day-legend {
+    width: 30px;
+    height: 30px;
+    background:  #a9efce;
+    display: block;
+}
+
+.future-event-legend {
+    width: 30px;
+    height: 30px;
+    background:  #d5e7f6;
+    display: block;
+    cursor: pointer;
+}
+
+.calendar-wrap .past-event{
+    background:  #e6e6e6;
+    cursor: pointer;
+}
+
+.calendar-wrap .current-day-calendar{
+background:  #a9efce;
+text-decoration: underline;
+cursor: pointer;
+}
+
+.calendar-wrap .day-number {
+    font-size: 26px;
+}
+
 .calendar {
     width: 100%;
     background-color: #fff;
@@ -1668,12 +1731,12 @@ input[type=checkbox] {
     font-weight: 400;
     text-align: center;
     line-height: 1;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .calendar .row {
     display: flex;
-    min-height: 150px;
+    min-height: 100px;
   }
 
   .day {
@@ -1685,11 +1748,31 @@ input[type=checkbox] {
   }
 
   .day.next {
-    color: #d5d7db;
+    color: #565d63;
   }
 
   .day.event {
     background: #d5e7f6;
+  }
+
+  .modal-dialog.event-screen-dialog {
+    min-width: 90%;
+  }
+
+  .past-date-event {
+    background: #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .future-date-event {
+    background: #d5e7f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 /**/
 
@@ -1813,194 +1896,6 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     margin-left:10px;
 }
 /**/
-
-/*Responsive*/
-@media (min-width:992px) {
-    .side-menu {
-        min-width: 320px;
-        max-width: 320px;
-    }
-
-    .right-side-content {
-        width: calc(100% - 320px);
-    }
-}
-
-@media (max-width:991px) and (min-width:768px) {
-    #slider {
-        margin-top: 116px;
-    }
-}
-
-@media (max-width:991px) {
-    .side-menu {
-    min-width: 100%;
-    max-width: 100%;
-    }
-
-    .right-side-content {
-        width: 100%;
-    }
-
-    nav.navbar a.nav-link.active,
-    nav.navbar a.nav-link:hover {
-        width: max-content;
-    }
-
-    .home-icon-menu {
-        margin-top: 10px;
-        padding-left: 10px !important;
-    }
-
-    .home-icon-menu .nav-link i {
-        font-size: 24px;
-    }
-}
-
-@media(max-width:767px) {
-    .library-img-holder {
-        max-width: 100%;
-    }
-
-    .single-library {
-        flex-direction: column;
-    }
-
-    .library-img-holder img {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        border-bottom-left-radius: 0px;
-    }
-
-    .doc-info-item {
-        margin-top: 10px;
-    }
-
-    .document-info-field {
-        flex-direction:column;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__rendered{
-        padding-bottom: 5px;
-        min-height: 36px !important;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__rendered
-
-    .forum-header-edit {
-        display: inline-block;
-        margin-bottom: 0px;
-        width: 100%;
-        margin-left: 0px;
-    }
-
-    #slider {
-        margin-top: 155px;
-    }
-
-    .modal-dialog.search-screen {
-        min-width: 90%;
-      }
-        
-      .search-site-input {
-          font-size: 28px;
-          color: #fff;
-      }
-      
-      .search-wrapper-modal i {
-          font-size: 28px;
-      }
-      
-}
-
-
-@media (max-width:576px) {
-    .subscribe-action {
-        text-align: left !important;
-        margin-top: 10px;
-    }
-
-    .inner-row-subscribe .subscribe-action {
-        min-width: 120px;
-        text-align: left !important;
-        margin-top: 10px;
-    }
-
-    ul.list-group.subscribe-items li {
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 15px 0px;
-    }
-
-    .contact-info {
-        align-items: stretch !important;
-    }
-
-    .profile-tabs {
-        flex-direction: column;
-        text-align: center;
-        width: 80%;
-        margin: 0 auto;
-    }
-
-    .top-bar-right-column {
-        text-align: left !important;
-        margin-top: 10px;
-    }
-
-    .consult-item-header-edit {
-        margin-bottom: 10px;
-    }
-
-    .single-consultation {
-        flex-direction: column;
-    }
-
-    .consult-item-header {
-        flex-direction: column-reverse;
-    }
-
-    .consult-img-holder {
-        min-height: 125px;
-    }
-
-    .consult-img-holder i {
-        font-size: 70px;
-    }
-
-    .action-btn-wrapper .col-md-9.text-end.col-sm-12 {
-        text-align: left !important;
-    }
-
-    .action-btn-wrapper button,  .action-btn-wrapper a {
-        display: block;
-        width: 85%;
-        margin: auto;
-        margin-top: 10px;
-    }
-}
-
-
-@media (max-width:480px) {
-    .action-btn-wrapper button, .action-btn-wrapper a{
-        width: 100%;
-    }
-
-    .profile-tabs {
-        width: 100% !important;
-    }
-
-    .search-site-input {
-        font-size: 22px;
-        color: #fff;
-    }
-    
-    .search-wrapper-modal i {
-        font-size: 22px;
-    }
-}
-
 /*START INSTITUTION LEVEL CLASS*/
 /*=====================*/
 .institution-level {
@@ -2200,3 +2095,289 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 }
 /*=====================*/
 /*START ACT TYPE  CLASS*/
+
+/*Responsive*/
+@media (min-width:992px) {
+    .top-bar-left-side-mobile {
+        display: none !important;
+    }
+
+    
+    .side-menu {
+        min-width: 320px;
+        max-width: 320px;
+    }
+
+    .right-side-content {
+        width: calc(100% - 320px);
+    }
+}
+
+@media (max-width:991px) and (min-width:768px) {
+    #slider {
+        margin-top: 115px;
+    }
+}
+
+@media (max-width:991px) {
+    .top-bar-left-side-desktop {
+        display: none !important;
+    }
+
+    .side-menu {
+    min-width: 100%;
+    max-width: 100%;
+    }
+
+    .right-side-content {
+        width: 100%;
+    }
+
+    nav.navbar a.nav-link.active,
+    nav.navbar a.nav-link:hover {
+        width: max-content;
+    }
+
+    .home-icon-menu {
+        margin-top: 10px;
+        padding-left: 10px !important;
+    }
+
+    .home-icon-menu .nav-link i {
+        font-size: 24px;
+    }
+}
+
+@media(max-width:767px) {
+    /*Event calendar*/
+    .desktop-day {
+        display: none !important;
+    }
+
+    .mobile-day {
+        display: flex !important;
+    }
+
+    .calendar .row {
+        min-height: 50px;
+    }
+
+    .calendar-wrap .day-number {
+       font-size: 4.5vw;
+    }
+    /**/
+
+    /*Public consultation mobile*/
+    .meta-consul {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+
+    .meta-consul span{
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    .meta-consul a{
+       display: inline-block !important;
+       width: auto;
+    }
+
+    .item-separator {
+        display: none !important;
+    }
+    /**/
+
+    .library-img-holder {
+        max-width: 100%;
+    }
+
+    .single-library {
+        flex-direction: column;
+    }
+
+    .library-img-holder img {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .doc-info-item {
+        margin-top: 10px;
+    }
+
+    .document-info-field {
+        flex-direction:column;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered{
+        min-height: 38px !important;
+        margin-top: 2px;
+    }
+
+    .forum-header-edit {
+        display: inline-block;
+        margin-bottom: 0px;
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    #slider {
+        margin-top: 115px;
+    }
+
+    .modal-dialog.search-screen {
+        min-width: 90%;
+      }
+        
+      .search-site-input {
+          font-size: 28px;
+          color: #fff;
+      }
+      
+      .search-wrapper-modal i {
+          font-size: 28px;
+      }
+      
+}
+
+
+@media (max-width:576px) {
+    .team-member-contact{
+    flex-direction:column !important;
+    }
+
+    .calendar-info {
+        flex-direction: column-reverse;
+    }
+
+    .calendar-month  {
+       margin-top: 15px;
+       margin-bottom: 15px !important;
+    }
+
+    .event-legend {
+        margin-bottom: 15px;
+    }
+
+    .calendar-legend {
+        flex-direction: column;
+    }
+
+    .subscribe-action {
+        text-align: left !important;
+        margin-top: 10px;
+    }
+
+    .inner-row-subscribe .subscribe-action {
+        min-width: 120px;
+        text-align: left !important;
+        margin-top: 10px;
+    }
+
+    ul.list-group.subscribe-items li {
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 15px 0px;
+    }
+
+    .contact-info {
+        align-items: stretch !important;
+    }
+
+    .profile-tabs {
+        flex-direction: column;
+        text-align: center;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .consult-item-header-edit {
+        margin-bottom: 10px;
+    }
+
+    .single-consultation {
+        flex-direction: column;
+    }
+
+    .consult-item-header {
+        flex-direction: column-reverse;
+    }
+
+    .consult-img-holder {
+        min-height: 125px;
+    }
+
+    .consult-img-holder i {
+        font-size: 70px;
+    }
+
+    .action-btn-wrapper .col-md-9.text-end.col-sm-12 {
+        text-align: left !important;
+    }
+
+    .action-btn-wrapper button,  .action-btn-wrapper a {
+        display: block;
+        width: 85%;
+        margin: auto;
+        margin-top: 10px;
+    }
+}
+
+
+@media (max-width:480px) {
+    .dayname {
+        font-size: 16px;
+    }
+
+    /*Public consultation*/
+    .meta-consul span {
+        display: flex;
+        flex-direction: column;
+    }
+    /**/
+
+    .home-slider {
+        margin-top: -5px !important;
+    }
+
+    #slider {
+        margin-top: 108px;
+    }
+
+    #ok, #ms {
+        font-size: 14px;
+    }
+
+    .action-btn-wrapper button, .action-btn-wrapper a{
+        width: 100%;
+    }
+
+    .profile-tabs {
+        width: 100% !important;
+    }
+
+    .search-site-input {
+        font-size: 22px;
+        color: #fff;
+    }
+    
+    .search-wrapper-modal i {
+        font-size: 22px;
+    }
+}
+
+@media (max-width:380px) {
+    .centered-heading h1 {
+        font-size: 24px !important;
+    }
+
+    .calendar .row {
+        min-height: 35px;
+    }
+
+    .calendar-wrap .day-number {
+        font-size: 4vw;
+     }
+}

@@ -49,21 +49,27 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                        @php Session::forget($msgType); @endphp
                     @endif
                 @endforeach
+
                 @if($errors->any())
-                    <div class="alert alert-danger mt-1" role="alert">Моля проверете за грешки
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @foreach($errors->all() as $message)
-                        <div class="alert alert-danger mt-1 d-none" role="alert"> {{ $message }}
+                    @if(env('APP_DEBUG'))
+                        <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            @foreach($errors->all() as $message)
+                                <div>{{ $message }}</div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="alert alert-danger mt-1" role="alert">Моля проверете за грешки
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                    @endforeach
+                    @endif
                 @endif
             </div>
         </section>

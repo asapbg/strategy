@@ -1,7 +1,8 @@
 @if(isset($filter) && count($filter))
 {{--    <div class="card @if(isset($filterClass)){{ $filterClass }}@endif">--}}
 <form method="GET">
-    <div class="row filter-results mb-2">
+    @if(count($filter) > 1 || !isset($filter['paginate']))
+        <div class="row filter-results mb-2">
         <h2 class="mb-4">
             {{ __('custom.search') }}
         </h2>
@@ -121,17 +122,20 @@
         {{--                    </div>--}}
         {{--                </div>--}}
     </div>
-
+    @endif
     <div class="row mb-5 action-btn-wrapper">
         <div class="col-md-6">
-            @php($fRequest = $rf ?? request()->all())
-            <button type="@if(isset($ajax) && $ajax){{ 'button' }}@else{{ 'submit' }}@endif"
-                class="btn rss-sub main-color @if(isset($ajax) && $ajax) ajaxSearch @endif" @if(isset($ajax) && $ajax)
-                data-params="{{ json_encode($fRequest) }}" data-url="{{ url()->current() }}" @if(isset($ajaxContainer))
-                data-container="{{ $ajaxContainer }}" @endif @endif>
-                <i class="fas fa-search main-color"></i>{{ __('custom.search') }}
-            </button>
+            @if(count($filter) > 1 || !isset($filter['paginate']))
+                @php($fRequest = $rf ?? request()->all())
+                <button type="@if(isset($ajax) && $ajax){{ 'button' }}@else{{ 'submit' }}@endif"
+                    class="btn rss-sub main-color @if(isset($ajax) && $ajax) ajaxSearch @endif" @if(isset($ajax) && $ajax)
+                    data-params="{{ json_encode($fRequest) }}" data-url="{{ url()->current() }}" @if(isset($ajaxContainer))
+                    data-container="{{ $ajaxContainer }}" @endif @endif>
+                    <i class="fas fa-search main-color"></i>{{ __('custom.search') }}
+                </button>
+            @endif
         </div>
+
         <div class="col-md-6 text-end">
             <button class="btn rss-sub main-color"><i
                     class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}</button>

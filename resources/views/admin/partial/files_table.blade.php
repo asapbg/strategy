@@ -2,6 +2,7 @@
     $files ??= [];
     $item ??= new stdClass();
     $is_archived ??= false;
+    $view_mode ??= false;
 @endphp
 
 <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
@@ -11,17 +12,23 @@
         <th>{{ __('custom.name') }}</th>
         <th>{{ __('custom.description') }}</th>
         <th>{{ __('validation.attributes.created_at') }}</th>
+        <th>{{ __('custom.version') }}</th>
+        <th>{{ __('custom.active_m') }}</th>
         <th>{{ __('custom.actions') }}</th>
     </tr>
     </thead>
     <tbody>
-    @if(isset($files) && $files->count() > 0)
+    @if(isset($files) && count($files) > 0)
         @foreach($files as $file)
             <tr>
                 <td>{{ $file->id }}</td>
                 <td>{{ $file->custom_name ?? $file->filename }}</td>
                 <td>{{ $file->description }}</td>
                 <td>{{ $file->created_at }}</td>
+                <td>{{ $file->version }}</td>
+                <td>
+                    @includeIf('partials.toggle-boolean', ['object' => $file, 'model' => 'File'])
+                </td>
                 <td>
                     <div class="row align-items-center">
                         <div class="col-auto">
@@ -48,7 +55,7 @@
                             @endcan
                         </div>
 
-                        @if(!$is_archived)
+                        @if(!$is_archived && !$view_mode)
                             <div class="col-auto">
                                 @can('update', $item)
                                     <button type="button"
@@ -56,14 +63,14 @@
                                             data-toggle="modal"
                                             data-target="#modal-edit-function-file"
                                             title="{{ __('custom.edit') }}"
-                                            onclick="loadFunctionFileData('{{ route('admin.advisory-boards.file.edit', ['item' => $item, 'file' => $file]) }}', '{{ $file->locale }}');">
+                                            onclick="loadFileData('{{ route('admin.advisory-boards.file.edit', ['item' => $item, 'file' => $file]) }}', '{{ $file->locale }}');">
                                         <i class="fa fa-edit"></i>
                                     </button>
                                 @endcan
                             </div>
                         @endif
 
-                        @if(!$is_archived)
+                        @if(!$is_archived && !$view_mode)
                             <div class="col-auto">
                                 @can('delete', $item)
                                     @if(!$file->deleted_at)

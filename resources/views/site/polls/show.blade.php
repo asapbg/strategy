@@ -6,252 +6,83 @@
 
 </style>
 
-@section('pageTitle', 'Законодателна инициатива')
-
 @section('content')
     <div class="row">
-        <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
-            <div class="left-nav-panel" style="background: #fff !important;">
-                <div class="flex-shrink-0 p-2">
-                    <ul class="list-unstyled">
-                        <li class="mb-1">
-                            <a class="btn-toggle pe-auto align-items-center rounded ps-2 text-decoration-none cursor-pointer fs-5 dark-text fw-600"
-                               data-toggle="collapse" data-target="#home-collapse" aria-expanded="true">
-                                <i class="fa-solid fa-bars me-2 mb-2"></i>Гражданско участие
-                            </a>
-                            <hr class="custom-hr">
-                            <div class="collapse show mt-3" id="home-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-
-                                    <li class="mb-2"><a href="#"
-                                                        class="link-dark text-decoration-none">Законодателни инициативи</a>
-                                    </li>
-                                    <hr class="custom-hr">
-                                    <li class="mb-2 mt-1"><a href="#" class="link-dark text-decoration-none">Отворено
-                                            управление</a>
-                                    </li>
-                                    <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
-                                        <ul class="list-unstyled ps-3">
-                                            <hr class="custom-hr">
-                                            <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Планове
-                                                </a></li>
-                                            <hr class="custom-hr">
-                                            <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Отчети</a>
-                                            </li>
-                                            <hr class="custom-hr">
-                                        </ul>
-                                    </ul>
-
-                                    <li class="mb-2 active-item-left p-1">
-                                        <a href="#" class="link-dark text-decoration-none">Анкети</a>
-                                    </li>
-
-
-                                </ul>
-                            </div>
-                        </li>
-                        <hr class="custom-hr">
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-
+        @include('site.legislative_initiatives.side_menu')
 
         <div class="col-lg-10 py-5 right-side-content">
             <h2 class="obj-title mb-4">
-                Финанси и данъчна политика
+                {{ $item->name }}
             </h2>
             <div class="row">
                 <div class="col-md-8">
-                    <a href="#" class="text-decoration-none"><span class="obj-icon-info me-2"><i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>12.7.2023 г.</span>
+                    <a href="#" class="text-decoration-none"><span class="obj-icon-info me-2"><i class="far fa-calendar me-1 dark-blue" title="{{ __('custom.published_at') }}"></i>{{ displayDate($item->created_at) }} {{ __('custom.year_short') }}.</span>
                     </a>
-                    <a href="#" class="text-decoration-none">
-                    <span class="obj-icon-info me-2">
-                        <span>Статус: <span class="active-li">Активна</span></span>
-                    </span>
-
+                    <a href="{{ route('poll.index').'?active='.$item->inPeriod }}" class="text-decoration-none">
+                        <span class="obj-icon-info me-2">
+                            <span>{{__('custom.status')}}:
+                                @if($item->inPeriod)
+                                    <span class="active-li">{{ __('custom.active_f') }}</span>
+                                @else
+                                    <span class="closed-li">{{ __('custom.closed_f') }}</span>
+                                @endif
+                            </span>
+                        </span>
                     </a>
                 </div>
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-sm btn-primary main-color">
-                        <i class="fas fa-pen me-2 main-color"></i>Редактиране на анкета
-                    </button>
-                    <button class="btn btn-sm btn-danger">
-                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на анкета
-                    </button>
+                    @if(auth()->user() && auth()->user()->can('update', $item))
+                        <a href="{{ route('admin.polls.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-primary main-color">
+                            <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}
+                        </a>
+                    @endif
+{{--                    <button class="btn btn-sm btn-danger">--}}
+{{--                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на анкета--}}
+{{--                    </button>--}}
                 </div>
             </div>
             <hr class="custom-hr my-4">
             <div class="row mb-0 mt-4">
                 <div class="col-md-12">
                     <div class="custom-card py-4 px-3">
-                        <h3 class="mb-3">Анкети</h3>
-                        <form class="row" action="">
-
-
-                            <div class="col-md-6 mb-4">
-                                <div class="comment-background p-2 rounded">
-                                    <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Отговор 1
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Отговор 2
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 3
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 4
-                                        </label>
+                        <h3 class="mb-3">{{ $item->name }}</h3>
+                        <form class="row mb-3" action="{{ route('poll.store') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $item->id }}">
+                            <input type="hidden" name="source" value="regular">
+                            @error('a')
+                            <div class="text-danger mb-1">{{ $message }}</div>
+                            @enderror
+                            @php($multiAnswer = \App\Models\Poll::MORE_THEN_ONE_ANSWER)
+                            @foreach($item->questions as $key => $q)
+                                <div class="col-md-6 mb-4">
+                                    <input type="hidden" name="q[]" value="{{ $q->id }}">
+                                    <div class="comment-background p-2 rounded">
+                                        <p class="fw-bold fs-18 mb-2">{{ $q->name }}</p>
+                                        @error('a_'.$q->id)
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                        @foreach($q->answers as $key => $a)
+                                            <div class="form-check">
+                                                <input class="form-check-input @error('a_'.$q->id.'.'.$key) is-invalid @enderror" id="a_{{ $q->id.$key }}"
+                                                       type="@if($multiAnswer){{ 'checkbox' }}@else{{ 'radio' }}@endif"
+                                                       name="a_{{ $q->id }}[]" value="{{ $a->id }}" @if(in_array($a->id, old('a_'.$q->id, []))) checked @endif>
+                                                <label class="form-check-label" for="a_{{ $q->id.$key }}">
+                                                    {{ $a->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="comment-background p-2 rounded">
-                                    <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Отговор 1
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Отговор 2
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 3
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 4
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="comment-background p-2 rounded">
-                                    <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Отговор 1
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Отговор 2
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 3
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 4
-                                        </label>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="comment-background p-2 rounded">
-                                    <p class="fw-bold fs-18 mb-2">Примерен въпрос?</p>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Отговор 1
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Отговор 2
-                                        </label>
-                                    </div>
-
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 3
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            Отговор 4
-                                        </label>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-
+                            @endforeach
                             <div class="col-md-12">
-                                <button class="btn btn-primary">
-                                    Изпращане
+                                <button class="btn btn-primary" type="submit">
+                                    {{ __('custom.send') }}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarTogglerDemo02">
-            <ul class="navbar-nav ">
+            <ul class="navbar-nav">
                 <li class="nav-item home-icon-menu">
                     <a class="nav-link @if(request()->route()->getName() == 'home') active @endif" aria-current="page"
                         href="/"><i class="bi bi-house-door-fill text-light"><span class="d-none">Home</span></i></a>
@@ -40,6 +40,56 @@
                     <a class="nav-link" type="button">Библиотека
                     </a>
                 </li>
+
+                <li class="nav-item top-bar-left-side-mobile">
+                    <div class="auth d-flex justify-content-start flex-column">
+                        @if(app('auth')->check())
+                        <a href="" class="text-light me-3 text-decoration-none nav-link" style="padding-bottom: 10px !important;"
+                        id="search-btn" data-toggle="modal" data-target="#searchModal">
+                        Търсене
+                        </a>
+                            @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
+                            <a href="{{ route('admin.home') }}" class="text-light me-3 text-decoration-none nav-link" style="padding-bottom:10px !important;padding-top:10px !important;"
+                                id="back-to-admin"><i class="text-light fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
+                            @endif
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle nav-link" id="profile-toggle" type="button" style="margin-top:10px !important;padding:5px 10px !important;"
+                                    id="profile-menu" data-toggle="dropdown" aria-expanded="false">
+                                    @php($user = app('auth')->user())
+                                    {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="profile-menu">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('profile') }}">{{ trans_choice('custom.profiles', 1) }}</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="javascript:;"
+                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                            {{ __('auth.logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        @else
+                            <div class="registration justify-content-start align-items-start d-flex flex-column">
+                            <a class="nav-link text-light me-3 text-decoration-none" id="register-link" style="padding-bottom:10px !important;"
+                                    href="{{ route('register') }}">{{ __('custom.register') }}</a>
+                                <a class="nav-link text-light me-3 text-decoration-none" id="login-btn" style="padding:10px 0px !important;"
+                                 href="{{ route('login') }}">                  
+                                    {{ __('custom.login') }}</a>
+                                <a href="#" class="nav-link text-light me-3 text-decoration-none" style="padding-top:10px !important;"
+                                    id="search-btn" data-toggle="modal" data-target="#searchModal">
+                                    Търсене
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </li>
+
             </ul>
             <li class="nav-item d-flex list-unstyled text-end align-items-center"
                 style="padding-right: 0px !important;">

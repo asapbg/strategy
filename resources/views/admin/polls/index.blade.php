@@ -23,7 +23,8 @@
                                 <th>{{ __('custom.begin_date') }}</th>
                                 <th>{{ __('custom.end_date') }}</th>
                                 <th>{{ __('custom.once') }}</th>
-                                <th>{{ __('custom.status') }}</th>
+                                <th>{{ __('custom.part_of_pc') }}</th>
+                                <th>{{ __('custom.active_f') }}</th>
                                 <th>{{ __('custom.actions') }}</th>
                             </tr>
                         </thead>
@@ -37,24 +38,36 @@
                                     <td>{{ $row->start_date }}</td>
                                     <td>{{ $row->end_date }}</td>
                                     <td>@if((int)$row->is_once)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
-                                    <td>@if((int)$row->status)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
                                     <td>
-                                        @if($user->can('update', $row))
+                                        @if($row->consultations->count())
+                                            @foreach($row->consultations as $c)
+                                                <a href="{{ route('admin.consultations.public_consultations.edit', $c) }}" target="_blank"><i class="text-primary fas fa-link fs-6 mr-1"></i> {{ $c->title }}</a>
+                                                @if(!$loop->first)
+                                                    <br>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <i class="fa fa-minus text-danger"></i>
+                                        @endif
+                                    </td>
+                                    <td>@if($row->inPeriod)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>
+                                        @can('update', $row)
                                             <a href="{{route($editRouteName,['id' => $row->id])}}"
                                                class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
                                                title="{{__('custom.edit')}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                        @endif
-                                        @if($row->status == \App\Enums\PollStatusEnum::EXPIRED->value)
+                                        @endcan
+                                        @can('preview', $row)
                                             <a href="{{route($previewRouteName,$row)}}"
                                                class="btn btn-sm btn-success mr-2"
                                                data-toggle="tooltip"
                                                title="{{__('custom.result')}}">
                                                 <i class="fas fa-poll"></i>
                                             </a>
-                                        @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

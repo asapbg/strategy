@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Executor;
 use App\Models\FormInput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 use PDF;
 
 class ImpactAssessmentController extends Controller
@@ -145,5 +147,47 @@ class ImpactAssessmentController extends Controller
     public static function getSteps($formName)
     {
         return count(\File::allFiles(resource_path("views/form_partials/$formName/steps")));
+    }
+
+    /**
+     * Display a list of contractors and executors
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function executors(Request $request)
+    {
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
+        $contractor_name = $request->get('contractor_name');
+        $executor_name = $request->get('executor_name');
+        $contract_subject = $request->get('contract_subject');
+        $services_description = $request->get('services_description');
+        $contract_date = $request->get('contract_date');
+
+        $executors = Executor::joinTranslation(Executor::class)
+            ->whereLocale(app()->getLocale())
+            ->when($contractor_name, function ($query, $contractor_name) {
+                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
+            })
+            ->when($contractor_name, function ($query, $contractor_name) {
+                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
+            })
+            ->when($executor_name, function ($query, $executor_name) {
+                return $query->where('executor_name', 'ILIKE', "%$executor_name%");
+            })
+            ->when($contract_subject, function ($query, $contract_subject) {
+                return $query->where('contract_subject', 'ILIKE', "%$contract_subject%");
+            })
+            ->when($services_description, function ($query, $services_description) {
+                return $query->where('services_description', 'ILIKE', "%$services_description%");
+            })
+            ->when($contract_date, function ($query, $contract_date) {
+                return $query->where('contract_date', databaseDate($contract_date));
+            })
+            ->whereActive(true)
+            ->orderBy('executors.id', 'desc')
+            ->paginate($paginate);
+
+        return $this->view('impact_assessment.executors', compact('executors'));
     }
 }

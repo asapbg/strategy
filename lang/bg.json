@@ -3,5 +3,15 @@
     "The :attribute must contain at least one number.": ":attribute трябва да съдържа поне една цифра.",
     "The :attribute must contain at least one symbol.": ":attribute трябва да съдържа поне един символ.",
     "The :attribute must contain at least one uppercase and one lowercase letter.": ":attribute трябва да съдържа поне една главна и една малка буква.",
-    "The given :attribute has appeared in a data leak. Please choose a different :attribute.": "given :attribute has appeared in a data leak. Please choose a different :attribute."
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.": "given :attribute has appeared in a data leak. Please choose a different :attribute.",
+    "List of individuals and legal entities": "Списък на физическите и юридическите лица",
+    "Executors": "Списък на физическите и юридическите лица",
+    "List of the preparers of evaluations under the ZNA": "Списък на изготвящите оценки по ЗНА",
+    "Name of contractor": "Наименование на възложител",
+    "Name of executor": "Наименование на изпълнител",
+    "Contract date": "Дата на договора",
+    "Update a record": "Редактиране на запис",
+    "Create a new record": "Добавяне на нов запис",
+    "The new record was created successfully": "Новият запис беше създаден успешно",
+    "The record was updated successfully": "Записът беше обновен успешно"
 }

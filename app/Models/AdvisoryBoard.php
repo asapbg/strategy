@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\AdvisoryTypeEnum;
+use App\Enums\DocTypesEnum;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,20 +17,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
- * @property int                   $id
- * @property string                $name
+ * @property int                      $id
+ * @property string                   $name
  *
- * @property Collection            $members
- * @property AdvisoryBoardFunction $advisoryFunction
- * @property Collection            $functionFiles
- * @property Collection            $secretaryCouncil
- * @property Collection            $secretariat
- * @property Collection            $meetings
+ * @property Collection               $members
+ * @property AdvisoryBoardFunction    $advisoryFunction
+ * @property Collection               $functionFiles
+ * @property Collection               $secretaryCouncil
+ * @property AdvisoryBoardSecretariat $secretariat
+ * @property Collection               $meetings
+ * @property Collection               $regulatoryAllFiles
+ * @property Collection               $regulatoryFiles
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
  */
-class AdvisoryBoard extends Model
+class AdvisoryBoard extends ModelActivityExtend
 {
 
     use FilterSort, SoftDeletes, Translatable;
@@ -44,7 +49,56 @@ class AdvisoryBoard extends Model
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link'];
+
+    public function customSections(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardCustom::class)->orderBy('order');
+    }
+
+    public function moderatorFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MODERATOR]);
+    }
+
+    public function moderatorInformation(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoardModeratorInformation::class);
+    }
+
+    public function regulatoryFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
+    }
+
+    public function regulatoryAllFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->withTrashed()
+            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::MEMBER->value);
+    }
+
+    public function viceChairmen(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
+            ->where('advisory_chairman_type_id', AdvisoryChairmanType::VICE_CHAIRMAN);
+    }
+
+    public function chairmen(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
+            ->where('advisory_chairman_type_id', AdvisoryChairmanType::HEAD_CHAIRMAN);
+    }
 
     public function advisoryFunction(): HasOne
     {
@@ -68,7 +122,8 @@ class AdvisoryBoard extends Model
 
     public function meetings(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMeeting::class);
+        return $this->hasMany(AdvisoryBoardMeeting::class)
+            ->whereYear('created_at', Carbon::now()->year);
     }
 
     public function secretariat(): HasOne
@@ -86,7 +141,7 @@ class AdvisoryBoard extends Model
         return $this->belongsTo(AuthorityAdvisoryBoard::class);
     }
 
-    public function members(): HasMany
+    public function allMembers(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class);
     }
@@ -109,7 +164,7 @@ class AdvisoryBoard extends Model
     /**
      * Get the model name
      */
-    public function getModelName()
+    public function getModelName(): string
     {
         return $this->name;
     }

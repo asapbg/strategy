@@ -17,8 +17,6 @@ include 'eauth.php';
 
 require_once('site.php');
 
-Route::get('test', [\App\Http\Controllers\Test::class, 'index']);
-
 Route::get('/admin/login', function (){
     return redirect(route('login'));
 });

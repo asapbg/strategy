@@ -4,14 +4,17 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * @property int $item
  */
-class StoreAdvisoryBoardFileRequest extends FormRequest
+class   StoreAdvisoryBoardFileRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +34,11 @@ class StoreAdvisoryBoardFileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())]
+            'doc_type_id'                   => ['required', 'integer', Rule::in(DocTypesEnum::values())],
+            'object_id'                     => ['required', 'integer'],
+            'resolution_council_ministers'  => ['nullable', 'string'],
+            'state_newspaper'               => ['nullable', 'string'],
+            'effective_at'                  => ['nullable', 'date'],
         ];
 
         foreach (config('available_languages') as $lang) {

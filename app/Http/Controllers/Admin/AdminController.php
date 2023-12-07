@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\File;
 use App\Models\Pris;
+use Carbon\Carbon;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -42,7 +43,7 @@ class AdminController extends Controller
      * @param $item   //model;
      * @param $validated //request validated
      */
-    protected function storeTranslateOrNew($fields, $item, $validated)
+    public function storeTranslateOrNew($fields, $item, $validated)
     {
         foreach (config('available_languages') as $locale) {
             foreach ($fields as $field) {
@@ -82,7 +83,7 @@ class AdminController extends Controller
      * @param $item
      * @return mixed
      */
-    protected function getFillableValidated($validated, $item)
+    public function getFillableValidated($validated, $item)
     {
         $modelFillable = $item->getFillable();
         $validatedFillable = $validated;
@@ -118,10 +119,24 @@ class AdminController extends Controller
      * @param string      $description
      * @param string      $locale
      * @param string|null $customName
+     * @param string|null $resolutionCouncilMinisters // № Постановление на министерски съвет
+     * @param string|null $stateNewspaper             // № Държавен вестник
+     * @param string|null $effectiveAt                // В сила от (дата)
      *
      * @return File
      */
-    protected function uploadFile($item, $file, int $codeObject, $docType = 0, $description = '', $locale = 'bg', string $customName = null)
+    protected function uploadFile(
+        $item,
+        $file,
+        int $codeObject,
+        $docType = 0,
+        $description = '',
+        $locale = 'bg',
+        string $customName = null,
+        string $resolutionCouncilMinisters = null,
+        string $stateNewspaper = null,
+        string $effectiveAt = null
+    )
     {
         $path = match ($codeObject) {
             File::CODE_OBJ_LEGISLATIVE_PROGRAM,
@@ -133,7 +148,7 @@ class AdminController extends Controller
         $fileNameToStore = str_replace('.', '', microtime(true)) . '.' . $file->getClientOriginalExtension();
         $file->storeAs($path, $fileNameToStore, 'public_uploads');
         $file = new File([
-            'id_object' => $item->id,
+            'id_object' => $item->id ?? $item,
             'code_object' => $codeObject,
             'doc_type' => $docType,
             'filename' => $fileNameToStore,
@@ -142,10 +157,22 @@ class AdminController extends Controller
             'sys_user' => auth()->user()->id,
             'description_' . $locale => !empty($description) ? $description : null,
             'locale' => $locale,
-            'custom_name' => $customName
+            'custom_name' => $customName,
+            'resolution_council_ministers' => $resolutionCouncilMinisters,
+            'state_newspaper' => $stateNewspaper,
+            'effective_at' => $effectiveAt,
         ]);
         $file->save();
         return $file;
     }
 
+    /**
+     * Get available languages
+     *
+     * @return array
+     */
+    public static function getLanguages()
+    {
+        return config('available_languages');
+    }
 }

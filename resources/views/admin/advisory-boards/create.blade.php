@@ -263,6 +263,26 @@
                             </div>
                         </div>
 
+                        <!-- Препратка към Интегрираната информационна система на държавната администрация (ИИСДА) -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="control-label"
+                                           for="integration_link">{{ __('validation.attributes.redirect_to_iisda') }}</label>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input type="text" id="integration_link"
+                                                   name="integration_link"
+                                                   class="form-control form-control-sm @error('integration_link'){{ 'is-invalid' }}@enderror"
+                                                   value="{{ old('integration_link', '') }}"
+                                                   autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>

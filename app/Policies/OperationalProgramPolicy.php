@@ -54,7 +54,7 @@ class OperationalProgramPolicy
      */
     public function update(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.legislative_operational_programs']);
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs'])  && !$operationalProgram->public;
     }
 
     /**
@@ -78,8 +78,8 @@ class OperationalProgramPolicy
      */
     public function unPublish(User $user, OperationalProgram $operationalProgram)
     {
-        return false;
-//        return $user->canAny(['manage.*', 'manage.legislative_operational_programs']) && $operationalProgram->public;
+//        return false;
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs']) && $operationalProgram->public;
     }
 
     /**
@@ -91,7 +91,7 @@ class OperationalProgramPolicy
      */
     public function delete(User $user, OperationalProgram $operationalProgram)
     {
-        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete']);
+        return $user->canAny(['manage.*', 'manage.legislative_operational_programs.delete'])  && !$operationalProgram->public;
     }
 
     /**

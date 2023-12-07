@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\ExecutorController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
@@ -62,7 +63,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(LegislativeProgramController::class)->group(function () {
         Route::get('/consultations/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
         Route::get('/consultations/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::get('/consultations/legislative-programs/view/{item}', 'show')->name('consultations.legislative_programs.view');
+        Route::get('/consultations/legislative-programs/{item}/view', 'show')->name('consultations.legislative_programs.view');
         Route::get('/consultations/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
         Route::match(['post', 'put'], '/consultations/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
         Route::get('/consultations/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
@@ -73,7 +74,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(OperationalProgramController::class)->group(function () {
         Route::get('/consultations/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
         Route::get('/consultations/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
-        Route::get('/consultations/operational-programs/view/{item}', 'show')->name('consultations.operational_programs.view');
+        Route::get('/consultations/operational-programs/{item}/view', 'show')->name('consultations.operational_programs.view');
         Route::get('/consultations/operational-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
         Route::match(['post', 'put'], '/consultations/operational-programs/store', 'store')->name('consultations.operational_programs.store');
         Route::get('/consultations/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
@@ -207,6 +208,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/polls/edit/{id}', 'edit')->name('polls.edit');
         Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
         Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
+        Route::post('/polls/{item}/delete', 'destroy')->name('polls.delete');
 
         Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
         Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');
@@ -421,6 +423,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/reports/store', 'store')->name('reports.store');
     });
 
+    Route::resource('executors', ExecutorController::class);
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
         Route::get('',                  'index')    ->name('advisory-boards.index');
         Route::get('/create',           'create')   ->name('advisory-boards.create');
@@ -430,6 +433,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
         Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
         Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed();
+    });
+
+    Route::controller(ExecutorController::class)->prefix('/executors')->as('executors.')->group(function () {
+        Route::get('',                      'index')->name('index');
+        Route::get('/create',               'create')->name('create');
+        Route::post('/store',               'store')->name('store');
+        Route::get('{executor}/view',       'show')->name('view');
+        Route::get('{executor}/edit',       'edit')->name('edit');
+        Route::post('{executor}/update',    'update')->name('update');
+        Route::post('{executor}/delete',    'destroy')->name('destroy');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
@@ -462,6 +475,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretariatController::class)->prefix('/advisory-boards/{item}/secretariat')->group(function () {
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorInformationController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {
+        Route::post('/store/{information?}', 'store')->name('advisory-boards.moderator.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {

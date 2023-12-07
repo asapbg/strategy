@@ -16,7 +16,7 @@
             @endif
         @endforeach
     @else
-        <p>Не са откити записи</p>
+        <p>Не са открити записи</p>
     @endif
 </form>
 @if(isset($institutions) && sizeof($institutions))

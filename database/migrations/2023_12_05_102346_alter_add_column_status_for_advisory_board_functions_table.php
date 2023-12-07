@@ -15,7 +15,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table((new AdvisoryBoardFunction())->getTable(), function (Blueprint $table) {
-            $table->enum('status', \App\Enums\StatusEnum::options())->default(\App\Enums\StatusEnum::ACTIVE->value);
+            $table->boolean('status')->default('1');
         });
     }
 

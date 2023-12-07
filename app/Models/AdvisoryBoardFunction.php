@@ -5,12 +5,15 @@ namespace App\Models;
 use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
+ * @property int        $id
+ * @property Collection $allFiles
+ * @property Collection $files
  *
  * @method static where(string $string, mixed $advisory_board_id)
  * @method static orderBy(string $string, string $string1)
@@ -37,9 +40,19 @@ class AdvisoryBoardFunction extends Model
         return $this->belongsTo(AdvisoryBoard::class);
     }
 
+    public function allFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->withTrashed()
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_FUNCTION);
+    }
+
     public function files(): HasMany
     {
-        return $this->hasMany(File::class, 'id_object', $this->id)->where('code_object', File::CODE_AB_FUNCTION)->where('doc_type', DocTypesEnum::AB_FUNCTION);
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_FUNCTION);
     }
 
     /**

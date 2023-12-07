@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExecutorController;
 use App\Http\Controllers\ImpactAssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ Route::get('/', function () {
 
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');
+    Route::get('{item}/view', 'show')->name('advisory-boards.view');
 });
 
 Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {
@@ -22,7 +24,8 @@ Route::controller(\App\Http\Controllers\AnalyzeMethodsController::class)->group(
 
 Route::controller(\App\Http\Controllers\PollController::class)->group(function () {
     Route::get('polls', 'index')->name('poll.index');
-    Route::get('poll/show', 'show')->name('poll.show');
+    Route::get('poll/{id}/show', 'show')->name('poll.show');
+    Route::get('poll/{id}/statistic', 'statistic')->name('poll.statistic');
     Route::post('poll', 'store')->name('poll.store');
 });
 
@@ -73,13 +76,18 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
 });
 
-Route::controller(ImpactAssessmentController::class)->group(function () {
-    Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
-    Route::get('/impact_assessments/forms', 'forms')->name('impact_assessment.forms');
-    Route::get('/impact_assessments/{form}', 'form')->name('impact_assessment.form');
-    Route::post('/impact_assessments/{form}', 'store')->name('impact_assessment.store');
-    Route::get('/impact_assessments/{form}/pdf/{inputId}', 'pdf')->name('impact_assessment.pdf');
-    Route::get('/impact_assessments/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
+Route::controller(ImpactAssessmentController::class)->prefix('/impact_assessments')->as('impact_assessment.')->group(function () {
+    Route::get('', 'index')->name('index');
+    Route::get('/executors', 'executors')->name('executors');
+    Route::get('/forms', 'forms')->name('forms');
+    Route::get('/{form}', 'form')->name('form');
+    Route::post('/{form}', 'store')->name('store');
+    Route::get('/{form}/pdf/{inputId}', 'pdf')->name('pdf');
+    Route::get('/{form}/show/{inputId}', 'show')->name('show');
+});
+
+Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
+    Route::get('/download/{file}', 'downloadFile')->name('download.file');
 });
 
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {

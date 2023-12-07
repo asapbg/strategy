@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PollStatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\QuestionCreateRequest;
 use App\Http\Requests\QuestionEditRequest;
@@ -11,6 +12,7 @@ use App\Models\Poll;
 use App\Models\PollAnswer;
 use App\Models\PollQuestion;
 use App\Models\PollQuestionOption;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -38,7 +40,7 @@ class PollController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? Poll::PAGINATE;
 
-        $items = Poll::FilterBy($requestFilter)
+        $items = Poll::ByUserPermission()->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'Poll';
         $editRouteName = self::EDIT_ROUTE;
@@ -248,6 +250,43 @@ class PollController extends AdminController
         return redirect(route('admin.poll.edit', ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.deleted_successfully_m'));
     }
 
+    /**
+     * Delete existing pris record
+     *
+     * @param Poll $item
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request, Poll $item)
+    {
+        if($request->user()->cannot('delete', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        try {
+            $item->delete();
+            return redirect(url()->previous())
+                ->with('success', trans_choice('custom.polls', 1)." ".__('messages.deleted_successfully_f'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
+        }
+    }
+
+    /**
+     * Show statistic
+     *
+     * @param Poll $item
+     */
+    public function preview(Request $request, Poll $item)
+    {
+        if($request->user()->cannot('preview', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        $statistic = $item->getStats();
+        return $this->view('admin.polls.statistic', compact('item', 'statistic'));
+    }
+
     private function filters($request)
     {
         return array(
@@ -255,6 +294,21 @@ class PollController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
+                'col' => 'col-md-4'
+            ),
+            'content' => array(
+                'type' => 'text',
+                'default' => '',
+                'placeholder' => __('custom.content'),
+                'value' => $request->input('content'),
+                'col' => 'col-md-4'
+            ),
+            'active' => array(
+                'type' => 'select',
+                'options' => PollStatusEnum::statusOptions(__('custom.status').' ('.__('custom.any').')'),
+                'default' => '',
+                'placeholder' => __('custom.status'),
+                'value' => $request->input('active'),
                 'col' => 'col-md-4'
             ),
         );

@@ -1,3 +1,7 @@
+@php
+    $archive ??= collect();
+@endphp
+
 <form method="GET">
     <div class="row">
         <div class="col-md-4">

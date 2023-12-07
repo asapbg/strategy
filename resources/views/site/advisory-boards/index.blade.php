@@ -158,17 +158,18 @@
                 </div>
             </div>
 
-
             <div class="row mb-5 action-btn-wrapper">
                 <div class="col-md-4">
-                    <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>{{ __('custom.searching') }}</button>
+                    <button class="btn rss-sub main-color"><i
+                            class="fas fa-search main-color"></i>{{ __('custom.searching') }}</button>
                 </div>
                 <div class="col-md-8 text-end">
                     <button class="btn btn-primary main-color">
                         <i class="fas fa-square-rss text-warning me-1"></i>
                         {{ __('custom.rss_subscribe') }}
                     </button>
-                    <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>{{ __('custom.subscribe') }}</button>
+                    <button class="btn btn-primary main-color"><i
+                            class="fas fa-envelope me-1"></i>{{ __('custom.subscribe') }}</button>
                     <button class="btn btn-success text-success"><i
                             class="fas fa-circle-plus text-success me-1"></i>Добавяне
                     </button>
@@ -279,172 +280,51 @@
                 </div>
             </div>
 
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="consul-wrapper">
-                        <div class="single-consultation d-flex">
-                            <div class="consult-body">
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="https://strategy.asapbg.com/pris/1" class="text-decoration-none"
-                                           title="Постановление №52 на Министерския съвет от 2023 г.">
-                                            <h3>Висш експертен екологичен съвет
-                                            </h3>
-                                        </a>
+            @if(isset($advisory_boards) && $advisory_boards->count() > 0)
+                @foreach($advisory_boards as $board)
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="consul-wrapper">
+                                <div class="single-consultation d-flex">
+                                    <div class="consult-body">
+                                        <div class="consult-item-header d-flex justify-content-between">
+                                            <div class="consult-item-header-link">
+                                                <a href="{{ route('advisory-boards.view', ['item' => $board]) }}"
+                                                   class="text-decoration-none"
+                                                   title="{{ $board->name }}">
+                                                    <h3>{{ $board->name }}</h3>
+                                                </a>
+                                            </div>
+                                            @if($board->active)
+                                                <div class="consult-item-header-edit">
+                                                    <a href="#">
+                                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                           role="button" title="{{ __('custom.delete') }}"></i>
+                                                    </a>
+                                                    <a href="#" class="me-2">
+                                                        <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                           role="button"
+                                                           title="{{ __('custom.edit') }}">
+                                                        </i>
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="meta-consul">
+                                            <span>{{ __('custom.status') }}:
+                                                @php $class = $board->active ? 'active-ks' : 'inactive-ks' @endphp
+                                                <span
+                                                    class="{{ $class }}">{{ $board->active ? __('custom.active') : __('custom.inactive_m') }}</span>
+                                            </span>
+                                            <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
+                                        </div>
                                     </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                               role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#" class="me-2">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                               title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="meta-consul">
-                                    <span>Статус: <span class="active-ks">Активен</span></span>
-                                    <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="consul-wrapper">
-                        <div class="single-consultation d-flex">
-                            <div class="consult-body">
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="https://strategy.asapbg.com/pris/1" class="text-decoration-none"
-                                           title="Постановление №52 на Министерския съвет от 2023 г.">
-                                            <h3>Консултативeн съвет за сътрудничество между държавните органи и лицата,
-                                                осъществяващи икономически дейности, свързани с нефт и продукти от
-                                                нефтен
-                                                произход
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                               role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#" class="me-2">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                               title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="meta-consul">
-                                    <span>Статус: <span class="active-ks">Активен</span></span>
-                                    <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="consul-wrapper">
-                        <div class="single-consultation d-flex">
-                            <div class="consult-body">
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="https://strategy.asapbg.com/pris/1" class="text-decoration-none"
-                                           title="Постановление №52 на Министерския съвет от 2023 г.">
-                                            <h3>Висш консултативен съвет по водите
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                               role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#" class="me-2">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                               title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="meta-consul">
-                                    <span>Статус: <span class="active-ks">Активен</span></span>
-                                    <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="consul-wrapper">
-                        <div class="single-consultation d-flex">
-                            <div class="consult-body">
-                                <div class="consult-item-header d-flex justify-content-between">
-                                    <div class="consult-item-header-link">
-                                        <a href="https://strategy.asapbg.com/pris/1" class="text-decoration-none"
-                                           title="Постановление №52 на Министерския съвет от 2023 г.">
-                                            <h3>Консултативен съвет за насърчаване на малките и средните предприятия
-                                            </h3>
-                                        </a>
-                                    </div>
-                                    <div class="consult-item-header-edit">
-                                        <a href="#">
-                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                               role="button" title="Изтриване"></i>
-                                        </a>
-                                        <a href="#" class="me-2">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                               title="Редакция">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="meta-consul">
-                                    <span>Статус: <span class="active-ks">Активен</span></span>
-                                    <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Дизайн за НЕАКТИВЕН КС
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <div class="consul-wrapper">
-                        <div class="single-consultation d-flex">
-                            <div class="consult-body">
-                                <a href="#" class="consul-item">
-                                </a>
-                                <p class="mb-1"><a href="#" class="consul-item">
-                                    </a><a href="#" class="main-color text-decoration-none fs-5">Съвет за развитие</a>
-                                </p>
-                                <div class="meta-consul">
-                                    <span>Статус: <span class="inactive-ks">Неактивен</span></span>
-                                    <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          -->
+                @endforeach
+            @endif
         </div>
-
     </div>
-
 @endsection

@@ -1,3 +1,7 @@
+@php
+    $view_mode ??= false;
+@endphp
+
 <div class="tab-content">
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
@@ -6,11 +10,16 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-create-secretary-of-council">
-                    <i class="fa fa-plus mr-3"></i>
-                    {{ __('custom.add') . ' ' . trans_choice('custom.secretary', 1) }}
-                </button>
+                @if(!$view_mode)
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#modal-create-secretary-of-council">
+                        <i class="fa fa-plus mr-3"></i>
+                        {{ __('custom.add') . ' ' . trans_choice('custom.secretary', 1) }}
+                    </button>
+                @else
+                    <a href="{{ route('admin.advisory-boards.edit', $item) . '#secretary-of-council' }}"
+                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                @endif
             </div>
         </div>
 

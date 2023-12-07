@@ -682,6 +682,7 @@ $(document).ready(function (e) {
             format: 'mm.yyyy',
             viewMode: "months",
             minViewMode: "months",
+            maxViewMode: "years",
             changeMonth: true,
             changeYear: true,
             orientation: "bottom left",
@@ -689,6 +690,18 @@ $(document).ready(function (e) {
             weekStart: 1,
             onClose: function(dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        }).on('show', function(e) {
+            if( typeof this.firstShow == 'undefined') {
+                let startDateStr = $('#' + e.target.id).data('start');
+                if (typeof startDateStr != 'undefined') {
+                    $(this).datepicker('setStartDate', startDateStr.toString());
+                }
+                let endDateStr = $('#' + e.target.id).data('end');
+                if (typeof endDateStr != 'undefined') {
+                    $(this).datepicker('setEndDate', endDateStr.toString());
+                }
+                this.firstShow = true;
             }
         });
     }
