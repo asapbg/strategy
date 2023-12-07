@@ -51,7 +51,7 @@
                                                  <a href="{{ route($unPublishRouteName, ['id' => $item->id, 'stay' => false]) }}"
                                                    class="btn btn-sm btn-danger mr-2"
                                                    data-toggle="tooltip"
-                                                   title="{{ __('custom.edit') }}">
+                                                   title="{{ __('custom.unpublish') }}">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan
@@ -60,7 +60,7 @@
                                                 <a href="{{ route($publishRouteName, ['id' => $item->id, 'stay' => false]) }}"
                                                    class="btn btn-sm btn-warning mr-2"
                                                    data-toggle="tooltip"
-                                                   title="{{ __('custom.edit') }}">
+                                                   title="{{ __('custom.publish') }}">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan

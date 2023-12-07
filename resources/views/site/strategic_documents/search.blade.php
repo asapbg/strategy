@@ -162,7 +162,7 @@
                     <!--
                         Важно - При второто и третото трябва да се появява или да става активно поле за избор на съответната област или община.
                     -->
-                    <option value="all">Всички</option>
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     <option value="1">Централно</option>
                     <option value="2">Областно</option>
                     <option value="3">Общинско</option>
@@ -175,7 +175,7 @@
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
                 <select class="form-select" id="ekate_areas_id">
-                    <option value="">--</option>
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($ekateAreas as $ekateArea)
                         <option value="{{ $ekateArea->id }}">{{ $ekateArea->ime }}</option>
                     @endforeach
@@ -188,7 +188,7 @@
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
                 <select class="form-select" id="ekate_municipalities_id">
-                    <option value="">--</option>
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($ekateMunicipalities as $ekateMunicipality)
                         <option value="{{ $ekateMunicipality->id }}">{{ $ekateMunicipality->ime }}</option>
                     @endforeach

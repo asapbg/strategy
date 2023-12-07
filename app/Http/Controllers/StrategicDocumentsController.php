@@ -287,23 +287,26 @@ class StrategicDocumentsController extends Controller
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
 
         $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations', 'acceptActInstitution'])->where('active', 1);
-        $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');//$request->input('policy-area');
-        $categories = Arr::get($queryParams, 'category') ?? $request->input('category');//$request->input('category');
-        $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');//$request->input('category-lifecycle');
-        $title = Arr::get($queryParams, 'title') ?? $request->input('title');//$request->input('title');
-        $orderBy = Arr::get($queryParams, 'order_by') ?? $request->input('order_by');//$request->input('order_by');
-        $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';//$request->input('direction') ?? 'asc';
+        $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');
+        $categories = Arr::get($queryParams, 'category') ?? $request->input('category');
+        $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');
+        $title = Arr::get($queryParams, 'title') ?? $request->input('title');
+        $orderBy = Arr::get($queryParams, 'order_by') ?? $request->input('order_by');
+        $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';
         $currentLocale = app()->getLocale();
 
-        //$dateFrom = $request->input('valid-from');
-        //$dateTo = $request->input('valid-to');
-        $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');//$request->input('ekate-area');
-        $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');//$request->input('ekate-municipality');
-        $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');//$request->input('pris-acts');
+        $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
+        $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
+        $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
 
         if ($title) {
-            $strategicDocuments->whereHas('translations', function($query) use ($title, $currentLocale) {
-                $query->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
+            $strategicDocuments->where(function ($query) use ($title, $currentLocale) {
+                $query->whereHas('translations', function($subQuery) use ($title, $currentLocale) {
+                    $subQuery->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
+                })
+                    ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
+                        $subQuery->where('locale', $currentLocale)->where('file_text', 'like', '%' . $title . '%');
+                    });
             });
         }
         if ($policyArea) {
@@ -421,11 +424,25 @@ class StrategicDocumentsController extends Controller
         }
 
         if ($ekateArea) {
-            $strategicDocuments->where('ekatte_area_id', $ekateArea);
+            $strategicDocuments->where(function($query) use ($ekateArea) {
+                $ekateAreaArray = explode(',', $ekateArea);
+                $query->when(in_array('all', $ekateAreaArray), function($query) {
+                    return $query;
+                }, function($query)  use ($ekateAreaArray) {
+                    $query->whereIn('ekatte_area_id', $ekateAreaArray);
+                });
+            });
         }
 
         if ($ekateMunicipality) {
-            $strategicDocuments->where('ekatte_municipality_id', $ekateMunicipality);
+            $ekateMunicipalityArray = explode(',', $ekateMunicipality);
+            $strategicDocuments->where(function($query) use ($ekateMunicipalityArray) {
+                $query->when(in_array('all', $ekateMunicipalityArray), function($query) {
+                    return $query;
+                }, function($query)  use ($ekateMunicipalityArray) {
+                    $query->whereIn('ekatte_municipality_id', $ekateMunicipalityArray);
+                });
+            });
         }
 
         if ($prisActs) {

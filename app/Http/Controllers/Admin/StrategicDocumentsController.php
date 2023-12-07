@@ -76,7 +76,7 @@ class StrategicDocumentsController extends AdminController
      */
     public function edit(Request $request, $id = 0)
     {
-        $item = $this->getRecord($id, ['translation']);
+        $item = $this->getRecord($id, ['documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
@@ -90,17 +90,18 @@ class StrategicDocumentsController extends AdminController
         $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
         $policyAreas = PolicyArea::with('translations')->get();
         $prisActs = Pris::with('translations')->get();
-        $strategicDocumentFiles = StrategicDocumentFile::with('translations')->get();
-        $strategicDocumentFilesBg = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'bg')->get();
-        $strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->get();
+        //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
+        $strategicDocumentFilesBg = StrategicDocumentFile::with(['translations', 'versions.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
+        //$strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->orderBy('ord')->get();
         $strategicDocumentsFileService = app(FileService::class);
 
         $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
-        $fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
+        //$fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
+        $fileDataEn = [];
         $legalActTypes = LegalActType::with('translations')->get();
 
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
-        $consultations = PublicConsultation::with('translations');
+        $consultations = PublicConsultation::with('translations')->get();
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
@@ -108,9 +109,10 @@ class StrategicDocumentsController extends AdminController
         $ekateAreas = EkatteArea::with('translations');
         $ekateMunicipalities = EkatteMunicipality::with('translations');
 
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'strategicDocumentFiles', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities'));
+            'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -159,7 +161,7 @@ class StrategicDocumentsController extends AdminController
                 $enFile =  Arr::get($validated, 'file_strategic_documents_en');
 
                 if ($bgFile || $enFile) {
-                    $fileService->uploadFiles($validated, $item, true);
+                    $fileService->uploadFiles($validated, $item, null, true);
                 } else {
                     $locale = app()->getLocale();
                     $mainFile = $item->files->where('is_main', true)->where('locale', $locale)->first();
@@ -178,7 +180,6 @@ class StrategicDocumentsController extends AdminController
             }
 
             DB::commit();
-
             if( $stay ) {
                 return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]))
                     ->with('success', trans_choice('custom.strategic_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
@@ -241,7 +242,7 @@ class StrategicDocumentsController extends AdminController
             }
 
             $fileService = app(FileService::class);
-            $fileService->uploadFiles($validated, $strategicDoc);
+            $fileService->uploadFiles($validated, $strategicDoc, null);
 
             return redirect(route(self::EDIT_ROUTE, ['id' => $strategicDoc->id]))
                 ->with('success', trans_choice('custom.strategic_document_files', 1)." ".__('messages.created_successfully_m'));
@@ -288,33 +289,58 @@ class StrategicDocumentsController extends AdminController
     {
         $rules = [
             'id' => ['required', 'numeric', 'exists:strategic_document_file,id'],
+            'valid_at_files' => ['required_if:date_valid_indefinite_files,0', 'date', 'nullable'],
+            'visible_in_report_files' => ['nullable', 'numeric'],
+            'strategic_document_type_file' => ['integer'],
+            'display_name_file_edit_bg' => ['required', 'string', 'max:500'],
+            'display_name_file_edit_en' => ['sometimes', 'nullable','string', 'max:500'],
+            // to check
+            'file_strategic_documents_bg' => ['sometimes', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', \App\Models\File::ALLOWED_FILE_EXTENSIONS)],
+            'file_strategic_documents_en' => ['sometimes', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', \App\Models\File::ALLOWED_FILE_EXTENSIONS)],
+            //'display_name_en' => ['sometimes', 'string', 'max:500'],
         ];
         $fields = StrategicDocumentFile::translationFieldsProperties();
         unset($fields['display_name']);
         foreach ($fields as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-
         $validator = Validator::make($request->all(), $rules);
 
-        if( $validator->fails() ) {
+        if( $validator->fails()) {
             return back()->withErrors(['error_'.$id => $validator->errors()->first()]);
         }
 
         $validated = $validator->validated();
         $file = StrategicDocumentFile::find($validated['id']);
-
         if( $request->user()->cannot('update', $file->strategicDocument)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        DB::beginTransaction();
         try {
-            $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
+            DB::beginTransaction();
+
+            $fileEn = Arr::get($validated, 'file_strategic_documents_en');
+            $fileBg = Arr::get($validated, 'file_strategic_documents_bg');
+            $validated['display_name_bg'] = Arr::get($validated, 'display_name_file_edit_bg');
+            $validated['display_name_en'] = Arr::get($validated, 'display_name_file_edit_en');
+
+            if ($fileEn || $fileBg) {
+                $strategicDocumentFileService = app(FileService::class);
+                $theFile = $file->latestVersion ?? $file;
+                $strategicDocumentFileService->uploadFiles($validated, $theFile->strategicDocument, $theFile);
+            } else {
+                $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
+                $file->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file');
+                $validAt = Arr::get($validated, 'valid_at_files');
+                $file->valid_at = $validAt ? Carbon::parse($validAt) : null;
+                $file->visible_in_report = Arr::get($validated, 'visible_in_report_files') ?? 0;
+                $file->save();
+            }
+
             DB::commit();
             return redirect(route(self::EDIT_ROUTE, ['id' => $file->strategic_document_id]))
                 ->with('success', trans_choice('custom.strategic_document_files', 1)." ".__('messages.updated_successfully_m'));
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Update strategic document file ID('.$file->id.'): '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -394,9 +420,10 @@ class StrategicDocumentsController extends AdminController
             $strategicDocument = StrategicDocument::findOrFail($request->get('strategicDocumentId'));
             $fileStructures = Arr::get($request->get('filesStructure'), '0') ?? [];
             if (isset($fileStructures['children'])) {
-                foreach ($fileStructures['children'] as $child) {
+                foreach ($fileStructures['children'] as $key => $child) {
                     $currentFile = StrategicDocumentFile::find($child['id']);
                     $currentFile->parent_id = null;
+                    $currentFile->ord = $key + 1;
                     $currentFile->save();
                 }
 
