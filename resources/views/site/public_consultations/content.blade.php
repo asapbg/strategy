@@ -129,6 +129,13 @@
             </div>
         @endif
 
+        <div class="row mb-4 mt-4" id="short-term">
+            <h3 class="mb-3">{{ __('custom.proposal_ways') }}</h3>
+            <div>
+                {!! $item->proposal_ways !!}
+            </div>
+        </div>
+
         @if($item->importerInstitution && $item->importerInstitution->links->count())
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
