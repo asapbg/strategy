@@ -68,7 +68,7 @@ class StrategicDocumentsController extends Controller
 
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
-        $pageTitle = $this->title_singular;
+        //$pageTitle = $this->title_singular;
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
         $ekateAreas = EkatteArea::all();
         $ekateMunicipalities = EkatteMunicipality::all();

@@ -76,11 +76,10 @@ class StrategicDocumentsController extends AdminController
      */
     public function edit(Request $request, $id = 0)
     {
-        $item = $this->getRecord($id, ['documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
+        $item = $this->getRecord($id, ['pris','documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
@@ -106,9 +105,8 @@ class StrategicDocumentsController extends AdminController
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
         $mainFiles = $item->files->where('is_main', true);
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
-        $ekateAreas = EkatteArea::with('translations');
-        $ekateMunicipalities = EkatteMunicipality::with('translations');
-
+        $ekateAreas = EkatteArea::with('translations')->get();
+        $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
@@ -119,7 +117,7 @@ class StrategicDocumentsController extends AdminController
     {
         $validated = $request->validated();
         $id = $validated['id'];
-        $stay = isset($validated['stay']) ?? 0;
+        $stay = Arr::get($validated, 'stay') || null;
         $item = $id ? $this->getRecord($id) : new StrategicDocument();
 
         if( ($id && $request->user()->cannot('update', $item))
@@ -134,20 +132,24 @@ class StrategicDocumentsController extends AdminController
                 $validated['strategic_act_link'] = null;
                 $validated['document_date'] = null;
 
+                $prisActId = Arr::get($validated, 'pris_act_id');
+                $validated['document_date_accepted'] = $prisActId ? Pris::find($prisActId)->doc_date : null;
                 $datesToBeParsedToCarbon = [
                     'document_date_accepted',
                     'document_date_expiring',
                     'document_date',
                 ];
+
                 foreach ($datesToBeParsedToCarbon as $date) {
                     if (array_key_exists($date, $validated)) {
                         $validated[$date] = $validated[$date] ? Carbon::parse($validated[$date]) : null;
                     }
                 }
-
             } else {
                 $validated['pris_act_id'] = null;
             }
+
+
 
             $fillable = $this->getFillableValidated($validated, $item);
 
@@ -482,7 +484,12 @@ class StrategicDocumentsController extends AdminController
     {
         try {
             $prisOptions = [];
-            $prisActs = Pris::where('legal_act_type_id', $id)->get();
+            if ($id == 'all') {
+                $prisActs = Pris::with('translations')->get();
+            } else {
+                $prisActs = Pris::where('legal_act_type_id', $id)->get();
+            }
+
             foreach ($prisActs as $prisAct) {
                 $prisOptions[] = [
                     'id' => $prisAct->id,
@@ -505,7 +512,7 @@ class StrategicDocumentsController extends AdminController
         try {
             $pris = Pris::findOrFail($id);
 
-            return response()->json(['date' => $pris->doc_date, 'public_consultation_id' => $pris->public_consultation_id]);
+            return response()->json(['date' => $pris->doc_date, 'public_consultation_id' => $pris->public_consultation_id, 'legal_act_type_id' => $pris->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
@@ -519,8 +526,9 @@ class StrategicDocumentsController extends AdminController
     {
         try {
             $publicConsultation = PublicConsultation::findOrFail($id);
+            $pris = $publicConsultation->pris;
 
-            return response()->json(['pris_act_id' => $publicConsultation->pris_act_id,]);
+            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_act_id' => $publicConsultation->pris_act_id, 'legal_act_type_id' => $pris?->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
