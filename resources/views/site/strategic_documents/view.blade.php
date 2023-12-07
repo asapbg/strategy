@@ -203,16 +203,38 @@
                             </li>
                         @else
                             <li class="list-group-item">
+                                <!--
                                 <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $mainDocument->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $mainDocument->id]) }}">
+                                -->
                                 @php
                                     $fileExtension = $mainDocument->content_type;
                                     $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
                                 @endphp
-                                    <i class="{{ $iconClass }}"></i>{!!  $mainDocument->document_display_name !!}
-                                        <!--
+                                    <!--
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
-                                        -->
                                     </a>
+                                     -->
+                                <div>
+                                    <a href="#" class="main-color text-decoration-none" type="button" data-toggle="collapse" data-target="#main_document_content_{{ $mainDocument->id }}">
+                                        <!--
+                                        {{ trans_choice('custom.content', 1) }}
+                                        -->
+                                        <i class="{{ $iconClass }}"></i>{!!  $mainDocument->document_display_name !!}
+                                    </a>
+                                    <div id="main_document_content_{{ $mainDocument->id }}" class="custom-card p-3 content collapse mt-3">
+                                        <h3 class="mb-3 fs-5">{{ trans_choice('custom.content', 1) }}</h3>
+                                        <div class="col-md-12">
+                                            {{ $mainDocument->file_text }}
+                                        </div>
+                                    </div>
+                                    <!--
+                                    <div id="main_document_content_{{ $mainDocument->id }}" class="content collapse">
+
+
+
+                                    </div>
+                                    -->
+                                </div>
                             </li>
                         @endif
                     </ul>
@@ -235,9 +257,16 @@
                             <ul class="list-group list-group-flush">
                                 @foreach($strategicDocumentFiles as $strategicDocumentFile)
                                     <li class="list-group-item">
-                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                            <i class="{{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
-                                        </a>
+                                        <span href="#" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
+                                            <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
+
+                                            <div class="preview-download d-inline">
+                                                <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
+                                                <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
+                                                    <i class="fas fa-download ms-2"></i>
+                                                </a>
+                                            </div>
+                                        </span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -326,6 +355,10 @@
         });
 
         $(document).ready(function() {
+            const mainDocumentId = $('#mainDocument');
+            console.log(mainDocumentId.val());
+
+
             fileData = {!! json_encode($fileData) !!};
             const fileTree = $("#fileTree");
             fileTree.jstree({

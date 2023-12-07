@@ -34,7 +34,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'policy_area_id' => ['required', 'numeric', 'exists:policy_area,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
-            'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
+            //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
             'public_consultation_id' => ['required', 'numeric'],
             'active' => ['required', 'numeric', 'in:0,1'],
@@ -45,7 +45,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'strategic_act_link' => ['nullable'],
             'document_date' => ['nullable', 'date'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
-            'document_date_accepted' => 'required|date',
+            //'document_date_accepted' => 'required|date',
             'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
@@ -95,6 +95,11 @@ class StoreStrategicDocumentRequest extends FormRequest
 
         if (request()->get('date_expiring_indefinite') == 1) {
             $rules['document_date_expiring'][] = 'sometimes';
+        }
+
+        $validator = Validator::make(request()->all(), $rules);
+        if ($validator->fails()) {
+            dd($validator->errors());
         }
 
         return $rules;

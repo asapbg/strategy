@@ -343,45 +343,11 @@
     <script type="text/javascript">
         fileData = {!! json_encode($fileData) !!};
         fileDataEn = {!! json_encode($fileDataEn) !!};
-        mainFileId = {!! json_encode($mainFile->id) !!};
+        mainFileId = {!! json_encode($mainFile?->id) !!};
         const hasErrors = @json(session('hasErrorsFromFileTab'));
         $(document).ready(function () {
             $('#strategic_document_type_file_edit').select2();
-            /*
-            const dateValidAt = $('#valid_at');
-            const dateValidAtMain = $('#valid_at_main');
-            const dateValidAtFiles = $('#valid_at_files');
-            const dateExpiringCheckbox = $('#date_valid_indefinite');
-            const dateInfiniteFilesCheckbox = $('#date_valid_indefinite_files');
-            const dateInfiniteEditCheckbox = $('#date_valid_indefinite_files_edit');
-            const dateValidAtFileEdit = $('#valid_at_files_edit');
 
-            dateValidAtMain.on('change', function () {
-                dateExpiringCheckbox.prop('checked', false);
-            });
-
-            dateValidAt.on('change', function () {
-                if (!dateExpiringCheckbox.is(':checked')) {
-                    dateExpiringCheckbox.prop('checked', $(this).val() === '').trigger('change');
-                }
-            })
-
-            dateExpiringCheckbox.on('change', function () {
-                if ($(this).is(':checked')) {
-                    if (dateValidAtFileEdit.val() !== '') {
-                        dateValidAtFileEdit.val('').trigger('change');
-                    }
-                }
-            })
-
-            dateInfiniteEditCheckbox.on('change', function() {
-                if ($(this).is(':checked')) {
-                    if (dateValidAt.val() !== '') {
-                        dateValidAt.val('').trigger('change');
-                    }
-                }
-            });
-            */
             $('[id^=fileRow_head_]').hide();
             $('[id^=fileRow_body_]').hide();
             const fileTree = $("#fileTree");

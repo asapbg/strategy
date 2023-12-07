@@ -48,9 +48,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -151,6 +148,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- strategic act type.
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -177,6 +175,7 @@
                                 </div>
                             </div>
                         </div>
+                        -->
 
                         <div class="col-md-6">
                             <div class="form-group">
@@ -205,6 +204,35 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="active">{{ trans_choice('custom.public_consultations', 1) }}</label>
+                                <div class="col-12">
+                                    <select id="public_consultation_id" name="public_consultation_id"
+                                            class="form-control form-control-sm select2 @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
+                                        @if(!$item->id)
+                                            <option value="" @if(old('public_consultation_id', '') == '') selected @endif>
+                                                ---
+                                            </option>
+                                        @endif
+                                        @if(isset($consultations) && $consultations->count())
+                                            @foreach($consultations as $consultation)
+                                                <option value="{{ $consultation->id }}"
+                                                        @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : 0)) == $consultation->id) selected
+                                                        @endif
+                                                        data-id="{{ $consultation->id }}"
+                                                >{{ $consultation->reg_num }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('public_consultation_id')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -214,12 +242,13 @@
                                     <label class="col-sm-12 control-label">
                                         {{ trans_choice('custom.category', 1) }}
                                     </label>
+
                                     <span class="text-danger" id="connect-doc-error"></span>
                                     <select id="the_legal_act_type_filter" name="legal_act_type_filter" class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
-                                        <option value="">--</option>
+                                        <option value="all">--</option>
                                         @if(isset($legalActTypes) && $legalActTypes->count())
                                             @foreach($legalActTypes as $row)
-                                                <option value="{{ $row->id }}" @if(old('legal_act_type_filter', '') == $row->id) selected @endif>{{ $row->name }}</option>
+                                                <option value="{{ $row->id }}" @if($row->id == $item->pris?->legal_act_type_id) selected @endif>{{ $row->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -236,11 +265,11 @@
                                             class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
                                         <option value="{{ $item->pris?->id }}"
                                                 {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
-                                                data-id="{{ $item->pris?->id }}"> {{ $item->pris?->regNum }} </option>
+                                                data-id="{{ $item->pris?->id }}"> {{ $item->pris?->displayName }} </option>
 
                                         @foreach ($prisActs as $prisAct)
                                             <option value="{{ $prisAct->id }}">
-                                                {{ $prisAct->regNum }}
+                                                {{ $prisAct->displayName }}
                                                 <!--
                                                 {{ $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date }}
                                                 -->
@@ -271,6 +300,7 @@
                             </div>
                         </div>
                     </div>
+                        <!-- Document date -->
                     <div class="col-md-6 act-custom-fields d-none">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
@@ -286,8 +316,6 @@
                         </div>
                     </div>
                     </div>
-
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -324,11 +352,15 @@
                                     @enderror
                                 </div>
                             </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
+                                <!--
                                 <label class="col-sm-12 control-label"
                                        for="active">{{ trans_choice('custom.public_consultations', 1) }}</label>
+                                       -->
                                 <div class="col-12">
+                                    <!--
                                     <select id="public_consultation_id" name="public_consultation_id"
                                             class="form-control form-control-sm select2 @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
                                         @if(!$item->id)
@@ -349,8 +381,10 @@
                                     @error('public_consultation_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
+                                    -->
                                 </div>
                             </div>
+
                         </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -386,6 +420,7 @@
                         </div>
 
                         <div class="row">
+                            <!--
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -400,8 +435,10 @@
                                         @enderror
                                     </div>
                                 </div>
+
                             </div>
-                            <div class="col-md-4">
+                             -->
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
                                            for="document_date_pris">{{ __('custom.date_expiring') }}
@@ -416,7 +453,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
                                            for="document_date_pris">{{ __('custom.date_indefinite') }}
@@ -436,7 +473,6 @@
                                 </div>
                             </div>
                         </div>
-
                 </div>
             </div>
         </div>
@@ -587,8 +623,9 @@
         <div class="row">
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
+                    <input type="hidden" name="stay" id="stay">
                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                    <button id="stay" type="submit" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+                    <button id="stayButton" type="submit" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
 
                     @if ($item->active)
                         <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
@@ -612,11 +649,13 @@
             padding: 0;
         }
     </style>
-
 @endpush
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#stayButton").click(function () {
+                $("#stay").val("true");
+            });
             let manualChangeConsultationId = true;
             let manualPrisActId = true;
             const prisAct = $('#pris_act_id');
@@ -627,15 +666,11 @@
 
             const dateValidAtFiles = $('#valid_at_files');
             const dateInfiniteFilesCheckbox = $('#date_valid_indefinite_files');
-
-            //const dateValidAtFileEdit = $('#valid_at_files_edit');
-            //const dateInfiniteEditCheckbox = $('#date_valid_indefinite_files_edit');
             const dateValidAtFileEdit = $('[id^="valid_at_files_edit"]');
             const dateInfiniteEditCheckbox = $('[id^="date_valid_indefinite_files_edit"]');
             handleDateCheckbox(dateValidAtMain, dateIndefiniteCheckboxMain);
             handleDateCheckbox(dateExpiring, dateExpiringCheckbox);
             handleDateCheckbox(dateValidAtFiles, dateInfiniteFilesCheckbox);
-            //handleDateCheckbox(dateValidAtFileEdit, dateInfiniteEditCheckbox);
 
             dateValidAtFileEdit.on('change', function () {
                 const checkboxId = '#date_valid_indefinite_files_edit_' + $(this).data('id');
@@ -659,7 +694,6 @@
                 }
             });
 
-
             function handleDateCheckbox(dateInput, checkbox) {
                 dateInput.on('change', function () {
                     if ($(checkbox).is(':checked')) {
@@ -678,12 +712,12 @@
                 });
             }
 
-
             const prisOptions = $('#pris_options');
             prisOptions.select2();
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
+                console.log(selectedValue);
                 if (selectedValue) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-option/${selectedValue}`,
@@ -732,6 +766,7 @@
                         success: function (data) {
                             $('#document_date_accepted').val(data.date).trigger('change');
                             const publicConsultationId = data.public_consultation_id;
+
                             if (publicConsultationId) {
                                 manualChangeConsultationId = false;
                                 $('#public_consultation_id').val(publicConsultationId).trigger('change.select2');
@@ -752,12 +787,20 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
+                            console.log(data);
                             const prisActId = data.pris_act_id;
                             if (prisActId) {
                                 manualPrisActId = false;
-                                console.log(prisActId);
-                                prisAct.val(prisActId).trigger('change');
-                                manualPrisActId = true;
+                                if ($('#accept_act_institution_type_id').val() == 1) {
+                                    $('#document_date_accepted').val(data.date).trigger('change');
+                                    prisAct.val(prisActId).trigger('change');
+                                    manualPrisActId = true;
+                                    const legalActTypeId = data.legal_act_type_id;
+
+                                    if (legalActTypeId) {
+                                        $('#the_legal_act_type_filter').val(legalActTypeId).trigger('change.select2');
+                                    }
+                                }
                             }
                         },
                         error: function (xhr, status, error) {

@@ -31,13 +31,6 @@ use Illuminate\Support\Facades\Storage;
 
 class StrategicDocumentsController extends Controller
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-
-        $this->title_singular = trans('custom.strategic_documents_title');
-    }
-
     /**
      * @param Request $request
      * @return View
@@ -75,12 +68,13 @@ class StrategicDocumentsController extends Controller
 
         $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
         $resultCount = $strategicDocuments->total();
-        $pageTitle = $this->title_singular;
+        //$pageTitle = $this->title_singular;
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
         $ekateAreas = EkatteArea::all();
         $ekateMunicipalities = EkatteMunicipality::all();
         $prisActs = Pris::all();
-
+        $pageTitle = trans('custom.strategic_documents_title');
+        $this->setBreadcrumbsTitle($pageTitle);
         return view('site.strategic_documents.ajax_index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
 
         //return view('templates.strategicheski-dokumenti', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName'));
@@ -462,7 +456,6 @@ class StrategicDocumentsController extends Controller
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
         $strategicDocumentFileService = app(FileService::class);
         $locale = app()->getLocale();
-        $pageTitle = $this->title_singular;
 
         $strategicDocumentFiles = StrategicDocumentFile::with('translations')
             ->where('strategic_document_id', $id)
@@ -480,6 +473,9 @@ class StrategicDocumentsController extends Controller
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
+        $pageTitle = $strategicDocument->title;
+        $this->setBreadcrumbsTitle($pageTitle);
+
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs', 'pageTitle', 'pageTopContent'));
     }
 
