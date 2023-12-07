@@ -89,6 +89,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $query->where('public_consultation.active', 1);
     }
 
+    public function scopeActivePublic($query){
+        $query->where('public_consultation.active', 1)
+            ->where('public_consultation.open_from', '<', Carbon::now()->format('Y-m-d'));
+    }
+
     public function scopeByUser($query){
         $user = auth()->user();
         if($user && !$user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])) {

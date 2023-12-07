@@ -335,8 +335,8 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
                 <select id="active" name="active" class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">
-                    <option value="0" @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.inactive') }}</option>
-                    <option value="1" @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.active') }}</option>
+                    <option value="0" @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.draft') }}</option>
+                    <option value="1" @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.public_f') }}</option>
                 </select>
             </div>
         </div>

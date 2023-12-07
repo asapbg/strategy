@@ -28,10 +28,9 @@ class PublicConsultationController extends Controller
         $sorter = $this->sorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
-//dd($sort, $sortOrd);
         $paginate = $requestFilter['paginate'] ?? PublicConsultation::PAGINATE;
         $pk = PublicConsultation::select('public_consultation.*')
-            ->Active()
+            ->ActivePublic()
             ->with(['translation'])
             ->join('public_consultation_translations', function ($j){
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
@@ -50,7 +49,6 @@ class PublicConsultationController extends Controller
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
-
         if( $request->ajax() ) {
             return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf'));
         }
@@ -63,7 +61,7 @@ class PublicConsultationController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.public_consultations_view');
-        $item = PublicConsultation::Active()->with(['translation', 'actType', 'actType.translation', 'contactPersons',
+        $item = PublicConsultation::ActivePublic()->with(['translation', 'actType', 'actType.translation', 'contactPersons',
             'pollsInPeriod', 'pollsInPeriod.questions', 'pollsInPeriod.questions.answers', 'importerInstitution', 'importerInstitution.links',
             'importerInstitution.links.translations', 'fieldOfAction', 'fieldOfAction.translation'])->find($id);
         if( !$item ) {
@@ -128,39 +126,39 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
             ),
-            'fieldOfAction' => array(
+            'fieldOfActions' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(FieldOfAction::get()),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfAction'),
+                'value' => $request->input('fieldOfActions'),
                 'col' => 'col-md-4'
             ),
-            'actType' => array(
+            'actTypes' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(ActType::get()),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.act_type', 1),
-                'value' => $request->input('actType'),
+                'value' => $request->input('actTypes'),
                 'col' => 'col-md-4'
             ),
-            'level' => array(
+            'levels' => array(
                 'type' => 'select',
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'label' => __('site.public_consultation.importer_type'),
-                'value' => $request->input('level'),
+                'value' => $request->input('levels'),
                 'col' => 'col-md-4'
             ),
-            'importer' => array(
+            'importers' => array(
                 'type' => 'subjects',
                 'label' => __('site.public_consultation.importer'),
-                'multiple' => false,
+                'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
-                'value' => request()->input('importer'),
+                'value' => request()->input('importers'),
                 'default' => '',
                 'col' => 'col-md-4'
             ),

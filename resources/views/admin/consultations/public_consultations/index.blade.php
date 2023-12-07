@@ -24,6 +24,7 @@
                             <th>{{ trans_choice('custom.consultation_level', 1) }}</th>
                             <th>{{ trans_choice('custom.start', 1) }}</th>
                             <th>{{ trans_choice('custom.end', 1) }}</th>
+                            <th>{{ __('custom.status') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -36,6 +37,7 @@
                                     <td>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</td>
                                     <td>{{ $item->open_from }}</td>
                                     <td>{{ $item->open_to }}</td>
+                                    <td>@if($item->active){{ __('custom.public_f') }}@else{{ __('custom.draft') }}@endif</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , $item) }}"
@@ -43,6 +45,22 @@
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('publish', $item)
+                                            <a href="{{ route('admin.consultations.public_consultations.publish', $item) }}"
+                                               class="btn btn-sm btn-success mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.publish') }}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @endcan
+                                        @can('unPublish', $item)
+                                            <a href="{{ route('admin.consultations.public_consultations.unpublish', $item) }}"
+                                               class="btn btn-sm btn-danger mr-2"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.unpublish') }}">
+                                                <i class="fas fa-eye-slash"></i>
                                             </a>
                                         @endcan
                                         @can('delete', $item)
