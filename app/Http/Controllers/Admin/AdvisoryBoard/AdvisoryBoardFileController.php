@@ -39,8 +39,8 @@ class AdvisoryBoardFileController extends AdminController
                     $validated['doc_type_id'],
                     $validated['file_description_' . $lang['code']],
                     $validated['file_name_' . $lang['code']],
-                    $validated['resolution_council_ministers_' . $lang['code']],
-                    $validated['state_newspaper_' . $lang['code']],
+                    $validated['resolution_council_ministers'],
+                    $validated['state_newspaper'],
                     $validated['effective_at'],
                 );
             }
@@ -48,7 +48,6 @@ class AdvisoryBoardFileController extends AdminController
             DB::commit();
             return response()->json(['status' => 'success']);
         } catch (Exception $e) {
-            dd($e);
             DB::rollBack();
             Log::error($e);
             return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
@@ -163,6 +162,9 @@ class AdvisoryBoardFileController extends AdminController
                 $file->doc_type,
                 $validated['file_description_' . $file->locale],
                 $validated['file_name_' . $file->locale],
+                $validated['resolution_council_ministers'],
+                $validated['state_newspaper'],
+                $validated['effective_at']
             );
 
             if (\Illuminate\Support\Facades\File::exists(public_path('files' . DIRECTORY_SEPARATOR . $updated_file->path))) {

@@ -75,49 +75,43 @@
 </div>
 
 <div class="row">
-    @foreach(config('available_languages') as $lang)
-        <div class="col-md-6 col-12">
-            <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="resolution_council_ministers_{{ $lang['code'] }}">{{ __('validation.attributes.resolution_council_matters') }}
-                    ({{ Str::upper($lang['code']) }})
-                </label>
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label class="col-sm-12 control-label"
+                   for="resolution_council_ministers">{{ __('validation.attributes.resolution_council_matters') }}
+            </label>
 
-                <div class="row">
-                    <div class="col-12">
-                        <input class="form-control form-control-sm"
-                               id="resolution_council_ministers_{{ $lang['code'] }}" type="text"
-                               name="resolution_council_ministers_{{ $lang['code'] }}"/>
-                    </div>
+            <div class="row">
+                <div class="col-12">
+                    <input class="form-control form-control-sm"
+                           id="resolution_council_ministers" type="text"
+                           name="resolution_council_ministers"/>
                 </div>
-
-                <div class="text-danger mt-1 error_resolution_council_ministers_{{ $lang['code'] }}"></div>
             </div>
+
+            <div class="text-danger mt-1 error_resolution_council_ministers"></div>
         </div>
-    @endforeach
+    </div>
 </div>
 
 <div class="row">
-    @foreach(config('available_languages') as $lang)
-        <div class="col-md-6 col-12">
-            <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="state_newspaper_{{ $lang['code'] }}">{{ __('validation.attributes.state_newspaper') }}
-                    ({{ Str::upper($lang['code']) }})
-                </label>
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label class="col-sm-12 control-label"
+                   for="state_newspaper">{{ __('validation.attributes.state_newspaper') }}
+            </label>
 
-                <div class="row">
-                    <div class="col-12">
-                        <input class="form-control form-control-sm"
-                               id="state_newspaper_{{ $lang['code'] }}" type="text"
-                               name="state_newspaper_{{ $lang['code'] }}"/>
-                    </div>
+            <div class="row">
+                <div class="col-12">
+                    <input class="form-control form-control-sm"
+                           id="state_newspaper" type="text"
+                           name="state_newspaper"/>
                 </div>
-
-                <div class="text-danger mt-1 error_state_newspaper_{{ $lang['code'] }}"></div>
             </div>
+
+            <div class="text-danger mt-1 error_state_newspaper"></div>
         </div>
-    @endforeach
+    </div>
 </div>
 
 <div class="row">

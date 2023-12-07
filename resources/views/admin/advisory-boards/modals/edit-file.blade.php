@@ -45,7 +45,6 @@
                                 <label class="control-label"
                                        for="file_name">{{ __('custom.name') }}
                                     (<span class="locale"></span>)
-                                    <span class="required">*</span>
                                 </label>
 
                                 <div class="row">
@@ -135,7 +134,7 @@
                 <button type="button" class="btn btn-success"
                         onclick="updateFileAjax(this)">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
-                    <span class="text">{{ __('custom.add') }}</span>
+                    <span class="text">{{ __('custom.update') }}</span>
                 </button>
             </div>
         </div>

@@ -59,13 +59,7 @@
                 dataType: 'json',
                 success: function (data) {
                     form.querySelector('input[name=meeting_id]').value = data.id;
-
-                    const date = new Date(data.next_meeting);
-                    form.querySelector('#next_meeting').value = date.toLocaleDateString('bg-BG', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
+                    form.querySelector('#next_meeting').value = new Date(data.next_meeting).toLocaleDateString();
 
                     $(form.querySelector('#description_bg')).summernote("code", data.translations[0].description);
                     $(form.querySelector('#description_en')).summernote("code", data.translations[1].description);
@@ -129,11 +123,7 @@
                     form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
                     form.querySelector('input[name="resolution_council_ministers"]').value = data.resolution_council_ministers;
                     form.querySelector('input[name="state_newspaper"]').value = data.state_newspaper;
-                    form.querySelector('input[name="effective_at"]').value = new Date(data.effective_at).toLocaleDateString('bg-BG', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
+                    form.querySelector('input[name="effective_at"]').value = new Date(data.effective_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

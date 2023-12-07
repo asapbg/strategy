@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,6 +13,8 @@ use Illuminate\Validation\Rule;
  */
 class UpdateAdvisoryBoardFileRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,18 +34,18 @@ class UpdateAdvisoryBoardFileRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'file_id' => ['required', 'integer', 'exists:files,id'],
-            'doc_type_id' => ['required', 'integer', Rule::in(DocTypesEnum::values())],
-            'effective_at' => ['nullable', 'date'],
-            'object_id' => ['required', 'integer'],
+            'file_id'                       => ['required', 'integer', 'exists:files,id'],
+            'file'                          => ['nullable', 'file', 'mimes:pdf,doc,docx,xlsx'],
+            'resolution_council_ministers'  => ['nullable', 'string'],
+            'state_newspaper'               => ['nullable', 'string'],
+            'effective_at'                  => ['nullable', 'date'],
         ];
 
         foreach (config('available_languages') as $lang) {
-            $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
-            $rules['file_name_' . $lang['code']] = 'required|string';
-            $rules['file_description_' . $lang['code']] = 'nullable|string';
-            $rules['resolution_council_ministers_' . $lang['code']] = 'nullable|string';
-            $rules['state_newspaper_' . $lang['code']] = 'nullable|string';
+            if ($this->request->has('file_name_' . $lang['code'])) {
+                $rules['file_name_' . $lang['code']] = 'required|string';
+                $rules['file_description_' . $lang['code']] = 'nullable|string';
+            }
         }
 
         return $rules;
