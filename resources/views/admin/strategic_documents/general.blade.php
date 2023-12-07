@@ -780,6 +780,7 @@
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
+
                 if (selectedValue && !!manualChangeConsultationId) {
                     $.ajax({
                         url: `/admin/strategic-documents/public-consultation-details/${selectedValue}`,
