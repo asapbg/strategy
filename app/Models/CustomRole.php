@@ -19,6 +19,7 @@ class CustomRole extends Role
     const SUPER_USER_ROLE = 'service_user';
     const ADMIN_USER_ROLE = 'super-admin';
     const MODERATOR_ADVISORY_BOARD = 'moderator-advisory-board';
+    const MODERATOR_ADVISORY_BOARDS = 'moderator-advisory-boards';
 
     /**
      * The attributes that are mass assignable.
