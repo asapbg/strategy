@@ -717,7 +717,6 @@
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
-                console.log(selectedValue);
                 if (selectedValue) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-option/${selectedValue}`,
@@ -787,7 +786,6 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
                             const prisActId = data.pris_act_id;
                             if (prisActId) {
                                 manualPrisActId = false;
@@ -801,6 +799,8 @@
                                         $('#the_legal_act_type_filter').val(legalActTypeId).trigger('change.select2');
                                     }
                                 }
+                            } else {
+                                prisAct.val(null).trigger('change.select2');
                             }
                         },
                         error: function (xhr, status, error) {
