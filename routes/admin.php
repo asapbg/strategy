@@ -478,7 +478,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorInformationController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {
-        Route::post('/store/{information}', 'store')->name('advisory-boards.moderator.store');
+        Route::post('/store/{information?}', 'store')->name('advisory-boards.moderator.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {

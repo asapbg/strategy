@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    @if(isset($files) && $files->count() > 0)
+    @if(isset($files) && count($files) > 0)
         @foreach($files as $file)
             <tr>
                 <td>{{ $file->id }}</td>
