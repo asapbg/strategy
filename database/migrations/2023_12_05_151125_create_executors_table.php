@@ -15,6 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::dropIfExists('executor_translations');
+        Schema::dropIfExists('executors_translations');
         Schema::dropIfExists('executors');
 
         Schema::create('executors', function (Blueprint $table) {

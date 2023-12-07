@@ -247,7 +247,7 @@ class AdvisoryBoardController extends AdminController
                 ->orderBy('created_at', 'desc')->paginate(10);
         }
 
-        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $function->allFiles : $function->files;
+        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $function?->allFiles : $function?->files;
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 

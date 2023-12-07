@@ -2,11 +2,11 @@
     <div>
         <div class="row mb-4 action-btn-wrapper">
             <div class="col-md-12">
-                <h2 class="mb-3">Информация</h2>
+                <h2 class="mb-3">{{ __('custom.information') }}</h2>
             </div>
             <div class="col-md-12 text-start">
                 <button class="btn btn-primary  main-color">
-                    <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
+                    <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export') }}</button>
                 <button class="btn rss-sub main-color">
                     <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
                 <button class="btn rss-sub main-color">
@@ -129,6 +129,13 @@
             </div>
         @endif
 
+        <div class="row mb-4 mt-4" id="short-term">
+            <h3 class="mb-3">{{ __('custom.proposal_ways') }}</h3>
+            <div>
+                {!! $item->proposal_ways !!}
+            </div>
+        </div>
+
         @if($item->importerInstitution && $item->importerInstitution->links->count())
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
@@ -136,9 +143,7 @@
                 <ul class="list-group list-group-flush">
                     @foreach($item->importerInstitution->links as $l)
                         <li class="list-group-item">
-                            <a href="#" class="main-color text-decoration-none">
-                                <i class="fas fa-regular fa-link  main-color me-2 fs-5"></i>
-                            </a><a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none">{{ $l->title }}</a>
+                             <a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none"><i class="fas fa-regular fa-link  main-color me-1 fs-6"></i> {{ $l->title }}</a>
                         </li>
                     @endforeach
                 </ul>

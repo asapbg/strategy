@@ -120,4 +120,28 @@ class PublicConsultationPolicy
         return $user->canAny(['manage.*', 'manage.advisory']) &&
             ($user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) || $user->institution_id == $publicConsultation->importer_institution_id);
     }
+
+    /**
+     * Determine whether the user can publish the model.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Consultations\PublicConsultation $publicConsultation
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function publish(User $user, PublicConsultation $publicConsultation)
+    {
+        return $user->canAny(['manage.*', 'manage.advisory']) && !$publicConsultation->active;
+    }
+
+    /**
+     * Determine whether the user can unpublish the model.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Consultations\PublicConsultation $publicConsultation
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function unPublish(User $user, PublicConsultation $publicConsultation)
+    {
+        return $user->canAny(['manage.*', 'manage.advisory']) && $publicConsultation->active;
+    }
 }

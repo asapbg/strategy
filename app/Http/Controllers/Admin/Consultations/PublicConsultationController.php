@@ -622,39 +622,39 @@ class PublicConsultationController extends AdminController
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
             ),
-            'fieldOfAction' => array(
+            'fieldOfActions' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(FieldOfAction::get(), true),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfAction'),
-                'col' => 'col-md-3'
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4'
             ),
-            'actType' => array(
+            'actTypes' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(ActType::get(), true),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.act_type', 2),
-                'value' => $request->input('actType'),
-                'col' => 'col-md-3'
+                'value' => $request->input('actTypes'),
+                'col' => 'col-md-4'
             ),
-            'level' => array(
+            'levels' => array(
                 'type' => 'select',
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
-                'multiple' => false,
+                'multiple' => true,
                 'default' => '',
                 'placeholder' => __('site.public_consultation.importer_type'),
-                'value' => $request->input('level'),
-                'col' => 'col-md-3'
+                'value' => $request->input('levels'),
+                'col' => 'col-md-4'
             ),
-            'importer' => array(
+            'importers' => array(
                 'type' => 'subjects',
                 'placeholder' => __('site.public_consultation.importer'),
-                'multiple' => false,
+                'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
-                'value' => request()->input('importer'),
+                'value' => request()->input('importers'),
                 'default' => '',
             ),
         );
@@ -793,6 +793,46 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             Log::error('Error save proposal report public consultation'.$e);
             return redirect(url()->previous().'#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function publish(Request $request, PublicConsultation $item)
+    {
+        if( $request->user()->cannot('publish', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        DB::beginTransaction();
+        try {
+            $item->active = 1;
+            $item->save();
+            DB::commit();
+            return redirect(route(self::LIST_ROUTE) )
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Publish consultation program (ID '.$item->id.')', $e);
+            return back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function unPublish(Request $request, PublicConsultation $item)
+    {
+        if( $request->user()->cannot('unPublish', $item) ) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        DB::beginTransaction();
+        try {
+            $item->active = 0;
+            $item->save();
+            DB::commit();
+            return redirect(route(self::LIST_ROUTE) )
+                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Publish consultation (ID '.$item->id.')', $e);
+            return back()->with('danger', __('messages.system_error'));
         }
     }
 

@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -38,11 +41,17 @@ class File extends ModelActivityExtend
     const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR . 'comments' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_UPLOAD_DIR = 'advisory-boards' . DIRECTORY_SEPARATOR;
-    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR;
+    const ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR = 'secretariat';
+    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . 'functions' . DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     protected $guarded = [];
+
+    public function getNameAttribute()
+    {
+        return empty($this->custom_name) ? $this->filename : $this->custom_name;
+    }
 
     protected function description(): Attribute
     {
@@ -64,9 +73,16 @@ class File extends ModelActivityExtend
         );
     }
 
-    public function user()
+    public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'sys_user');
+    }
+
+    public function versions(): HasMany
+    {
+        return $this->hasMany(File::class, 'parent_id')
+            ->where('parent_id', $this->id)
+            ->orWhere('id', $this->id);
     }
 
     public function getModelName(): string

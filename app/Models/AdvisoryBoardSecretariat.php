@@ -39,6 +39,14 @@ class AdvisoryBoardSecretariat extends Model
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
     }
 
+    public function siteFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
+            ->where('parent_id', null);
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
