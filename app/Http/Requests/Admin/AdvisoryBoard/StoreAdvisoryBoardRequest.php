@@ -30,12 +30,13 @@ class StoreAdvisoryBoardRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'policy_area_id' => 'required|integer|exists:policy_area,id',
+            'policy_area_id'            => 'required|integer|exists:policy_area,id',
             'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
-            'advisory_act_type_id' => 'required|integer|exists:advisory_act_type,id',
-            'authority_id' => 'required|integer|exists:authority_advisory_board,id',
-            'meetings_per_year' => 'required|integer',
-            'has_npo_presence' => 'nullable',
+            'advisory_act_type_id'      => 'required|integer|exists:advisory_act_type,id',
+            'authority_id'              => 'required|integer|exists:authority_advisory_board,id',
+            'meetings_per_year'         => 'required|integer',
+            'has_npo_presence'          => 'nullable',
+            'integration_link'          => 'nullable|string',
         ];
 
         foreach (config('available_languages') as $lang) {

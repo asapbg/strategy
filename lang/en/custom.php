@@ -525,4 +525,5 @@ return [
     'state_papernew_short' => 'DV',
     'active_document' => 'Active document',
     'inactive_document' => 'Inactive document',
+    'moderators' => 'Moderator|Moderators',
 ];

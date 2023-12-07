@@ -436,6 +436,7 @@ return [
         'icon_class' => 'Икона (клас)',
         'advisory_chairman_type_id' => 'Вид председател',
         'advisory_type_id' => 'Тип',
+        'advisory_act_type_id' => 'Акт на създаване',
         'report_time' => 'Час',
         'vice_chairman' => 'Заместник председател',
         'council_members' => 'Членове на съвета',
@@ -458,5 +459,6 @@ return [
         'state_newspaper' => 'Държавен вестник',
         'effective_at' => 'В сила от',
         'redirect_to_iisda' => 'Препратка към Интегрираната информационна система на държавната администрация (ИИСДА)',
+        'user_id' => 'потребител',
     ],
 ];

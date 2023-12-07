@@ -262,7 +262,7 @@
                         </a>
                     </li>
                 @endcan
-                @canany(['manage.*', 'manage.advisory-boards'])
+                @canany(['manage.*', 'manage.advisory-boards', 'manage.advisory-board'])
                     <li class="nav-item @if(strstr(url()->current(), 'advisory-boards')) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-weight"></i>
