@@ -114,7 +114,7 @@
                 <div class="col-md-4">
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
                     <div class="mb-2 fs-18">
-                        <span>{{ $strategicDocument->strategicActType->name }}</span>
+                        <span>{{ $strategicDocument->strategicActType?->name }}</span>
                         @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
                             <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name) ,'id' => $strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
                                 {{ $strategicDocument->pris?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
@@ -126,7 +126,7 @@
                         @endif
                         <span>{{ trans_choice('custom.for', 1) }}</span>
                             <a href="#" class="main-color text-decoration-none">
-                                {{ $strategicDocument->acceptActInstitution->name }}
+                                {{ $strategicDocument->acceptActInstitution?->name }}
                             </a>
                     </div>
                 </div>
