@@ -32,18 +32,29 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3 col-sm-6">
+                                <label for="contract_date_from" class="form-label">Начална дата</label>
                                 <div class="input-group">
                                     <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="contract_date" class="form-label">{{ __('Contract date') }}</label>
-                                        <input id="contract_date" class="form-control datepicker" name="contract_date" type="text"
-                                               value="{{ request()->get('contract_date', '') }}">
+                                        <input type="text" name="contract_date_from" autocomplete="off"
+                                               id="contract_date_from" class="form-control datepicker"
+                                               value="{{ request()->offsetGet('contract_date_from') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <label for="contract_date_till" class="form-label">Крайна дата</label>
+                                <div class="input-group">
+                                    <div class="mb-3 d-flex flex-column w-100">
+                                        <input type="text" name="contract_date_till" autocomplete="off"
+                                               id="contract_date_till" class="form-control datepicker"
+                                               value="{{ request()->offsetGet('contract_date_till') }}">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-md-3 col-sm-4 mb-2">
-                                <div class="form-label">&nbsp;</div>
                                 <div>
                                     <button type="submit" name="search" value="1" class="btn btn-success mr-1">
                                         <i class="fa fa-search"></i> {{ __('custom.search') }}

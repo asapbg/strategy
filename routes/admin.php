@@ -423,7 +423,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/reports/store', 'store')->name('reports.store');
     });
 
-    Route::resource('executors', ExecutorController::class);
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
         Route::get('',                  'index')    ->name('advisory-boards.index');
         Route::get('/create',           'create')   ->name('advisory-boards.create');
