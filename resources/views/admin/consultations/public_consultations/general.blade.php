@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-10">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> {{ $item->importerInstitution ?  $item->importerInstitution->name : '---'}}
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> @if($item->importerInstitution) <a class="text-primary" href="{{ route('admin.strategic_documents.institutions.edit', $item->importerInstitution) }}" target="_blank"><i class="fas fa-link mr-1 fs-6"></i>{{ $item->importerInstitution->name }}</a> @else{{ '---' }}@endif
                 </div>
             </div>
             <div class="col-md-10">
@@ -25,7 +25,7 @@
             </div>
             <div class="col-md-10">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('site.public_consultation.responsible_institution', 1) }}: </label> {{ $item->responsibleInstitution ?  $item->responsibleInstitution->name : '---'}}
+                    <label class="col-auto control-label">{{ trans_choice('site.public_consultation.responsible_institution', 1) }}: </label> @if($item->responsibleInstitution) <a class="text-primary" href="{{ route('admin.strategic_documents.institutions.edit', $item->responsibleInstitution) }}" target="_blank"><i class="fas fa-link mr-1 fs-6"></i>{{ $item->responsibleInstitution->name }}</a> @else{{ '---' }}@endif
                 </div>
             </div>
             @if($item->pris)
@@ -54,7 +54,7 @@
                             {{ trans_choice('custom.importers', 1) }}
                         </label>
                         <div class=" col-12 d-flex flex-row">
-                            <div class="input-group">                          
+                            <div class="input-group">
                                 <select class="form-control form-control-sm select2 @error('institution_id') is-invalid @enderror" name="institution_id" id="institution_id">
                                     <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
                                     @if(isset($institutions) && $institutions->count())
@@ -83,6 +83,24 @@
                 <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label> <span id="levelLabel">@if(!$isAdmin || $item->id){{ $item->id ? $item->nomenclatureLevelLabel : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---') }}@else{{ '---' }}@endif</span>
             </div>
         </div>
+        @if($item->id)
+            @if($item->importerInstitution && $item->importerInstitution->links->count())
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label class="col-auto control-label">{{ trans_choice('custom.useful_links', 2) }}: </label>
+                        <div class="col-12">
+                            @foreach($item->importerInstitution->links as $l)
+                                @if(!$loop->first)
+                                <br>
+                                @endif
+                                <a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none"><i class="fas fa-regular fa-link  main-color me-1 fs-6"></i> {{ $l->title }}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
+
         <div class="col-12"></div>
         <div class="col-md-4">
             <div class="form-group">

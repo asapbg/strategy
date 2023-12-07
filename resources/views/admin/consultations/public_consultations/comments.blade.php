@@ -91,6 +91,9 @@
     @endif
     <hr>
 </div>
+
+@php($fPdf = $item->commentsDocumentPdf())
+@php($fCsv = $item->commentsDocumentCsv())
 <div class="row">
     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
         <thead>
@@ -99,6 +102,23 @@
                 <h3 class="fw-bold">{{ trans_choice('custom.comments', 2) }}</h3>
             </th>
         </tr>
+        @if($fPdf || $fCsv)
+            <tr>
+                <th colspan="2" style="border: 1px solid #1c3050;">Авт. генерирани коментари след края на консултацията:</th>
+                <th colspan="2" style="border: 1px solid #1c3050;">
+                    @if($fPdf)
+                        <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $fPdf) }}" target="_blank" title="{{ __('custom.download') }}">
+                            {!! fileIcon($fPdf->content_type) !!} {{ $fPdf->{'description_'.$fPdf->locale} }}
+                        </a>
+                    @endif
+                    @if($fCsv)
+                        <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $fCsv) }}" target="_blank" title="{{ __('custom.download') }}">
+                            {!! fileIcon($fCsv->content_type) !!} {{ $fCsv->{'description_'.$fCsv->locale} }}
+                        </a>
+                    @endif
+                </th>
+            </tr>
+        @endif
         <tr>
             <th>ID</th>
             <th>{{ __('validation.attributes.content') }}</th>
