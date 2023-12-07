@@ -14,6 +14,10 @@ overflow-x: hidden;
 }
 
 /*sidebar sub icons*/
+.nav-sidebar .nav-link p {
+    font-size: 0.96rem;
+}
+
 .menu-open .nav-treeview {
     display: block!important;
 }

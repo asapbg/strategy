@@ -174,9 +174,9 @@
                                                 {{ $item->operationalProgram?->institution }}
                                             </a>
 
-                                            <div class="status mt-2">
-                                                <div>
-                                                    <span>{{ __('validation.attributes.status') }}:
+                                            <div class="status">
+                                                <div class="meta-consul justify-content-start">
+                                                    <span class="me-2 mb-2"><strong>{{ __('validation.attributes.status') }}:</strong>
                                                         @php
                                                             $status_class = 'active-li';
 
@@ -194,28 +194,28 @@
                                                             class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
                                                     </span>
 
-                                                    <span class="mx-1">|</span>
+                                                    <span class="item-separator mb-2">|</span>
 
-                                                    <span>
-                                                        {{ __('custom.supported_f') }}:
-                                                        <span
-                                                            class="voted-li">{{ $item->countLikes() }}
+                                                    <span class="ms-2 mb-2">
+                                                        <strong>  {{ __('custom.supported_f') }}:</strong>
+                                                        <span class="voted-li">
+                                                            {{ $item->countLikes() }}
                                                             @if($item->countLikes() == 1)
-                                                                <span>{{ __('custom.once_count') }}</span>
+                                                               {{ __('custom.once_count') }}
                                                             @else
-                                                                <span>{{ __('custom.times_count') }}</span>
+                                                               {{ __('custom.times_count') }}
                                                             @endif
                                                         </span>
                                                     </span>
                                                 </div>
                                             </div>
 
-                                            <div class="row mt-3 justify-content-between">
+                                            <div class="row justify-content-between align-items-center">
                                                 <div class="col-auto">
                                                     <div class="row">
                                                         <div class="col-auto">
                                                             <span class="text-secondary">
-                                                                <i class="far fa-calendar text-secondary me-1"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
+                                                                <i class="far fa-calendar text-secondary"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
                                                             </span>
                                                         </div>
 

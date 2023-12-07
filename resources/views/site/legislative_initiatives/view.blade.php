@@ -121,7 +121,7 @@
 
             <div class="row my-4">
                 <div class="col-md-12">
-                    <div class="custom-card py-4 px-3">
+                    <div class="custom-card p-3">
                         <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
                         @if(isset($item->comments) && $item->comments->count() > 0)
                             @foreach($item->comments as $key => $comment)
@@ -198,15 +198,22 @@
                         @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
                             <div class="col-md-12 mt-4">
                                 <div>
-                                    <form method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                    <form class="mb-0" method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
                                         @csrf
 
                                         <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
 
                                         <div class="form-group">
-                                        <textarea name="description" class="form-control mb-3 rounded"
-                                                  id="description" rows="2"
-                                                  placeholder="{{ __('custom.enter_comment') }}"></textarea>
+                                            <!--  <div class="summernote-wrapper mb-3">
+                                                -- Вътре се се слага textarea с клас "summernote"
+                                                  </div>   -->
+                                        
+                                            <textarea name="description" class="form-control mb-3 rounded"
+                                            id="description" rows="2"
+                                            placeholder="{{ __('custom.enter_comment') }}">
+                                             </textarea>
+                                       
+                                 
                                         </div>
 
                                         <button type="submit"

@@ -1500,7 +1500,7 @@ input[type=checkbox] {
 }
 
 .anotation p {
-    margin-bottom: 0.5rem !important
+    margin-bottom: 0px !important
 }
 /*end priss*/
 
@@ -1633,7 +1633,7 @@ li.timeline-item:last-child {
     background: #028192;
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1651,7 +1651,7 @@ li.timeline-item:last-child {
     background: #20659e;
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
     margin-bottom: -1px;
 }
@@ -2149,6 +2149,10 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 }
 
 @media(max-width:767px) {
+    .voted-li,.support-count-li, .closed-li {
+        width: fit-content;
+    }
+
     /*Event calendar*/
     .desktop-day {
         display: none !important;
@@ -2180,7 +2184,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
     .meta-consul a{
        display: inline-block !important;
-       width: auto;
+       width: fit-content;
     }
 
     .item-separator {
