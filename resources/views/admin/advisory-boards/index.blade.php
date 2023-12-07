@@ -53,11 +53,13 @@
 
             <div class="card">
                 <div class="card-body table-responsive">
-                    <div class="mb-3">
-                        <a href="{{ route('admin.advisory-boards.create') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
-                        </a>
-                    </div>
+                    @can('create', \App\Models\AdvisoryBoard::class)
+                        <div class="mb-3">
+                            <a href="{{ route('admin.advisory-boards.create') }}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
+                            </a>
+                        </div>
+                    @endcan
 
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
