@@ -77,6 +77,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="resolution_council_ministers">{{ __('validation.attributes.resolution_council_matters') }}
+                                </label>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm"
+                                               id="resolution_council_ministers" type="text"
+                                               name="resolution_council_ministers"/>
+                                    </div>
+                                </div>
+
+                                <div class="text-danger mt-1 error_resolution_council_ministers"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="state_newspaper">{{ __('validation.attributes.state_newspaper') }}
+                                </label>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm"
+                                               id="state_newspaper" type="text"
+                                               name="state_newspaper"/>
+                                    </div>
+                                </div>
+
+                                <div class="text-danger mt-1 error_state_newspaper"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="effective_at">{{ __('validation.attributes.effective_at') }}
+                                </label>
+
+                                <input type="text" id="effective_at" name="effective_at"
+                                       class="datepicker form-control form-control-sm"/>
+
+                                <div class="text-danger mt-1 error_effective_at"></div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

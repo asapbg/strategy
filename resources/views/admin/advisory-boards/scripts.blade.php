@@ -61,7 +61,7 @@
                     form.querySelector('input[name=meeting_id]').value = data.id;
 
                     const date = new Date(data.next_meeting);
-                    form.querySelector('#next_meeting').value = date.toLocaleDateString('en-US', {
+                    form.querySelector('#next_meeting').value = date.toLocaleDateString('bg-BG', {
                         day: '2-digit',
                         month: '2-digit',
                         year: 'numeric'
@@ -102,7 +102,7 @@
             });
         }
 
-        function loadFunctionFileData(url, locale = 'bg') {
+        function loadFileData(url, locale = 'bg') {
             const form = document.querySelector('form[name=FILE_UPDATE]');
 
             const locale_spans = form.querySelectorAll('.locale');
@@ -123,9 +123,17 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
+                    console.log(data);
                     form.querySelector('input[name="file_id"]').value = data.id;
                     form.querySelector('input[name="file_name_' + locale + '"]').value = data.custom_name;
                     form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
+                    form.querySelector('input[name="resolution_council_ministers"]').value = data.resolution_council_ministers;
+                    form.querySelector('input[name="state_newspaper"]').value = data.state_newspaper;
+                    form.querySelector('input[name="effective_at"]').value = new Date(data.effective_at).toLocaleDateString('bg-BG', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

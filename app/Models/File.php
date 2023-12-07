@@ -38,7 +38,8 @@ class File extends ModelActivityExtend
     const PUBLIC_CONSULTATIONS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR;
     const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR . 'comments' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_UPLOAD_DIR = 'advisory-boards' . DIRECTORY_SEPARATOR;
-    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR;
+    const ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR = 'secretariat';
+    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . 'functions' . DIRECTORY_SEPARATOR;
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
