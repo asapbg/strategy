@@ -38,6 +38,7 @@ class FileService
                     }
                 }
                 $file = $strategicDocumentFile ? $strategicDocumentFile->replicate() : new StrategicDocumentFile();
+
                 if ($strategicDocumentFile) {
                     $file->strategic_document_file_id = $strategicDocumentFile->strategic_document_file_id ?? $strategicDocumentFile->id;
                 }
@@ -76,6 +77,7 @@ class FileService
                 $file->version = $newVersion.'.0';
                 $file->strategic_document_id = $strategicDocument->id;
                 $file->save();
+
                 $strategicDocument->files()->save($file);
 
                 $ocr = new FileOcr($file->refresh());
@@ -88,7 +90,6 @@ class FileService
                     $file->save();
                 }
 
-                $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
                 DB::commit();
             } catch (\Throwable $throwable) {
                 Log::error('Upload file to strategic document ID('.$strategicDocument->id.'): '.$throwable);
