@@ -274,10 +274,6 @@
                                                     @if ($currentLocal != $fileVersion->locale)
                                                         @continue
                                                     @endif
-
-                                                    @if ($fileVersion->id == $f->id)
-                                                        @continue
-                                                    @endif
                                                     <div class="col-md-3 mb-3">
                                                         <a class="mr-3"
                                                            href="{{ route('admin.strategic_documents.file.download', $fileVersion) }}"

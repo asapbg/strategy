@@ -130,7 +130,6 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     public function getDocumentDisplayNameAttribute(): string
     {
         $expiringDate = $this->valid_at == null ? trans('custom.infinite') : Carbon::parse($this->valid_at)->format('d-m-Y');
-
         if (request()->route()->getName() == 'strategy-document.view') {
             $displayName = '<span class="">' . $this->display_name . '</span>' .
                 ' <span class="fw-bold">&#123;</span>' .

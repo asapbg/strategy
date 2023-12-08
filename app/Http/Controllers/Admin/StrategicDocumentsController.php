@@ -90,7 +90,7 @@ class StrategicDocumentsController extends AdminController
         $policyAreas = PolicyArea::with('translations')->get();
         $prisActs = Pris::with('translations')->get();
         //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
-        $strategicDocumentFilesBg = StrategicDocumentFile::with(['translations', 'versions.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
+        $strategicDocumentFilesBg = StrategicDocumentFile::with(['translations', 'versions.translations', 'parentFile.versions.translations', 'documentType.translations', 'documentType.translations', 'parentFile.versions.documentType.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
         //$strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->orderBy('ord')->get();
         $strategicDocumentsFileService = app(FileService::class);
 
@@ -161,7 +161,6 @@ class StrategicDocumentsController extends AdminController
                 $validated = $fileService->prepareMainFileFields($validated);
                 $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
                 $enFile =  Arr::get($validated, 'file_strategic_documents_en');
-
                 if ($bgFile || $enFile) {
                     $fileService->uploadFiles($validated, $item, null, true);
                 } else {
@@ -526,9 +525,17 @@ class StrategicDocumentsController extends AdminController
     {
         try {
             $publicConsultation = PublicConsultation::findOrFail($id);
-            $prisId = Pris::where('public_consultation_id', $publicConsultation->id)->first()?->id;
+            $prisActs = Pris::whereIn('public_consultation_id', [$publicConsultation->id])->get();
 
-            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_act_id' => $prisId, 'legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
+            $prisOptions = [];
+            foreach ($prisActs as $prisAct) {
+                $prisOptions[] = [
+                    'id' => $prisAct->id,
+                    'text' => $prisAct->displayName,//$prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
+                ];
+            }
+
+            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_options' => $prisOptions, '','legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }

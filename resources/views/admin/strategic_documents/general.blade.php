@@ -787,12 +787,22 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            const prisActId = data.pris_act_id;
-                            if (prisActId) {
+                            const prisOptions = data.pris_options;
+                            prisAct.prop('disabled', false);
+                            if (prisOptions) {
                                 manualPrisActId = false;
                                 if ($('#accept_act_institution_type_id').val() == 1) {
                                     $('#document_date_accepted').val(data.date).trigger('change');
-                                    prisAct.val(prisActId).trigger('change');
+                                    if (prisOptions.length == 1) {
+                                        prisAct.empty();
+                                        populatePris(prisOptions);
+                                        prisAct.prop('disabled', true);
+                                    } else {
+                                        populatePris(prisOptions);
+                                        prisAct.prop('disabled', false);
+                                    }
+
+                                    $('#the_legal_act_type_filter').prop('disabled', true);
                                     manualPrisActId = true;
                                     const legalActTypeId = data.legal_act_type_id;
 
@@ -810,6 +820,13 @@
                     });
                 }
             });
+
+            function populatePris(prisOptions) {
+                $.each(prisOptions, function (index, option) {
+                    prisAct.append('<option value="' + option.id + '" ' +'>' + option.text + '</option>');
+                });
+            }
+
             $('#policy_area_id').on('change', function () {
                 const selectedValue = $(this).val();
                 const parentDocumentSelect = $('#parent_document_id');
