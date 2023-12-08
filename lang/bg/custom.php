@@ -679,4 +679,5 @@ return [
     'inactive_document' => 'Недействащ документ',
     'part_of_pc' => 'Включена в ОК',
     'result' => 'Резултат',
+    'strategy_documents' => 'Стратегически документ',
 ];
