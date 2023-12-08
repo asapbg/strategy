@@ -25,6 +25,7 @@ use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
+use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -114,6 +115,9 @@ class AdvisoryBoardController extends AdminController
 
                 $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
             }
+
+            $service = app(AdvisoryBoardService::class, ['board' => $item]);
+            $service->createDependencyTables();
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.index')
