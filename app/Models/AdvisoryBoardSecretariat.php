@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int        $id
  * @property Collection $files
  * @property Collection $allFiles
+ * @method static create(array $array)
  */
 class AdvisoryBoardSecretariat extends Model
 {

@@ -508,4 +508,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/archive')->group(function () {
         Route::get('', 'index')->name('advisory-boards.archive.index');
     });
+
+    Route::get('common-html', [\App\Http\Controllers\CommonController::class, 'commonHtml'])->name('common-html');
 });

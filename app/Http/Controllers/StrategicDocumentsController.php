@@ -73,9 +73,9 @@ class StrategicDocumentsController extends Controller
         $ekateAreas = EkatteArea::all();
         $ekateMunicipalities = EkatteMunicipality::all();
         $prisActs = Pris::all();
-        $pageTitle = trans('custom.strategic_documents_title');
-        $this->setBreadcrumbsTitle($pageTitle);
-        return view('site.strategic_documents.ajax_index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
+        $pageTitle = trans('custom.strategy_documents_plural');
+
+        return $this->view('site.strategic_documents.ajax_index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
 
         //return view('templates.strategicheski-dokumenti', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName'));
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));

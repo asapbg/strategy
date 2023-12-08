@@ -680,4 +680,6 @@ return [
     'part_of_pc' => 'Включена в ОК',
     'result' => 'Резултат',
     'moderators' => 'Модератор|Модератори',
+    'strategy_documents' => 'Стратегически документи',
+    'strategy_documents_plural' => 'Стратегически документи',
 ];

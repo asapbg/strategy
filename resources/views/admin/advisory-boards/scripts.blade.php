@@ -117,7 +117,6 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     form.querySelector('input[name="file_id"]').value = data.id;
                     form.querySelector('input[name="file_name_' + locale + '"]').value = data.custom_name;
                     form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
