@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ModelActivityExtend;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StrategicDocumentFileTranslation extends Model
+class StrategicDocumentFileTranslation extends ModelActivityExtend
 {
+    use SoftDeletes;
+
     public $timestamps = false;
     protected $fillable = ['locale', 'strategic_document_file_id', 'display_name', 'file_info'];
 
