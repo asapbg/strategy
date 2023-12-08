@@ -174,6 +174,7 @@ class ImpactAssessmentController extends Controller
         $services_description = $request->get('services_description');
         $contract_date_from = $request->get('contract_date_from');
         $contract_date_till = $request->get('contract_date_till');
+        $eik = $request->get('eik');
         $p_min = $request->get('p_min');
         $p_max = $request->get('p_max');
 
@@ -204,6 +205,9 @@ class ImpactAssessmentController extends Controller
             })
             ->when($p_max, function ($query, $p_max) {
                 return $query->where('price', '<=', $p_max);
+            })
+            ->when($eik, function ($query, $eik) {
+                return $query->where('eik', $eik);
             })
             ->whereActive(true)
             ->orderBy("$sort_table.$order_by", $sort)

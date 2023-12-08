@@ -169,6 +169,20 @@ class ExecutorController extends AdminController
      */
     public function destroy(Executor $executor)
     {
-        //
+        try {
+
+            $executor->translations()->delete();
+            $executor->delete();
+
+            return to_route('admin.users')
+                ->with('success', "Записът ".__('messages.deleted_successfully_m'));
+        }
+        catch (Exception $e) {
+
+            Log::error($e);
+
+            $this->backWithError('danger', __('messages.system_error'));
+
+        }
     }
 }

@@ -434,8 +434,6 @@ $(document).ready(function () {
     }
 
     // Ajax search
-    $("#ajax-pagination .pagination li a").attr("href", "javascript:;");
-
     $(document).on('click', '#ajax-pagination .pagination li', function (e) {
         ShowLoadingSpinner();
         e.preventDefault();
@@ -456,6 +454,20 @@ $(document).ready(function () {
         $("#searchBtn").trigger('click');
     });
 
+    $(document).on('click', '.filter_link', function (e) {
+        ShowLoadingSpinner();
+        e.preventDefault();
+
+        let filter = $(this).data('filter');
+        let filter_value = $(this).html()
+        $("#"+filter).val($.trim(filter_value));
+        $("#searchBtn").trigger('click');
+    });
+
+    $(document).on('change', '#search-form #results-per-page', function (e) {
+        $(".current_page").val(1);
+    });
+
     $("#search-form .search-btn").click(function (e) {
         ShowLoadingSpinner();
         e.preventDefault();
@@ -471,6 +483,9 @@ $(document).ready(function () {
             success: function (res) {
                 $("#executors-results").html(res);
                 HideLoadingSpinner();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#search-form").offset().top
+                }, 20);
             },
             error: function () {
                 // $periodUl.find('li').remove();
