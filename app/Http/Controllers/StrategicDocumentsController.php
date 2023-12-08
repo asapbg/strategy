@@ -73,7 +73,7 @@ class StrategicDocumentsController extends Controller
         $ekateAreas = EkatteArea::all();
         $ekateMunicipalities = EkatteMunicipality::all();
         $prisActs = Pris::all();
-        $pageTitle = trans('custom.strategic_documents_title');
+        $pageTitle = trans('custom.strategy_documents_plural');
 
         return $this->view('site.strategic_documents.ajax_index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
 
