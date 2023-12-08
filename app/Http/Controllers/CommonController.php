@@ -220,7 +220,7 @@ class CommonController extends Controller
                 File::CODE_OBJ_OPERATIONAL_PROGRAM,
                 File::CODE_OBJ_PRIS,
                 File::CODE_OBJ_PUBLIC_CONSULTATION,
-                File::CODE_AB_FUNCTION,
+                File::CODE_AB,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }

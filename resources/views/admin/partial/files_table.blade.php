@@ -23,7 +23,14 @@
             <tr>
                 <td>{{ $file->id }}</td>
                 <td>{{ $file->custom_name ?? $file->filename }}</td>
-                <td>{{ $file->description }}</td>
+                <td>
+                    @foreach(config('available_languages') as $language)
+                        @if($file->{'description_' . $language['code']})
+                            {{ $file->{'description_' . $language['code']} }}
+                            @break
+                        @endif
+                    @endforeach
+                </td>
                 <td>{{ $file->created_at }}</td>
                 <td>{{ $file->version }}</td>
                 <td>

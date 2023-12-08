@@ -35,7 +35,7 @@ class AdvisoryBoardCustom extends ModelActivityExtend
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
-            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
     }
 

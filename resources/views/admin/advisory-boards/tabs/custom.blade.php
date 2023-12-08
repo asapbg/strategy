@@ -177,7 +177,7 @@
 
 @push('scripts')
     <script type="application/javascript">
-        function setMeetingFileObjectId(id) {
+        function setSectionFileObjectId(id) {
             CUSTOM_FILE.querySelector('input[name=object_id]').value = id;
         }
     </script>

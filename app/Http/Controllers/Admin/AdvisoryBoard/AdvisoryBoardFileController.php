@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFileRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardFileRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\File;
+use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -23,20 +24,24 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @param StoreAdvisoryBoardFileRequest $request
      * @param AdvisoryBoard                 $item
+     * @param AdvisoryBoardFileService      $file_service
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardFileRequest $request, AdvisoryBoard $item): JsonResponse
+    public function ajaxStore(StoreAdvisoryBoardFileRequest $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
     {
         $validated = $request->validated();
 
         DB::beginTransaction();
         try {
             foreach (config('available_languages') as $lang) {
-                $this->upload(
+                $file_service->upload(
                     $validated['file_' . $lang['code']],
-                    $lang['code'], $validated['object_id'],
+                    $lang['code'],
+                    $validated['object_id'],
+                    $item->id,
                     $validated['doc_type_id'],
+                    false,
                     $validated['file_description_' . $lang['code']],
                     $validated['file_name_' . $lang['code']],
                     $validated['resolution_council_ministers'],
@@ -52,62 +57,6 @@ class AdvisoryBoardFileController extends AdminController
             Log::error($e);
             return response()->json(['status' => 'error', 'message' => __('messages.system_error')], 500);
         }
-    }
-
-    private function upload(
-        $file,
-        string $language,
-        int $id_object,
-        string $doc_type,
-        string $description = null,
-        ?string $custom_name = null,
-        ?string $resolution = null,
-        ?string $state_newspaper = null,
-        ?string $effective_at = null,
-        ?int $parent_id = null
-    ): void
-    {
-        if (!$file) {
-            return;
-        }
-
-        $version = File::where('locale', '=', $language)
-            ->where('id_object', '=', $id_object)
-            ->where('doc_type', '=', $doc_type)
-            ->where('code_object', '=', File::CODE_AB_FUNCTION)
-            ->count();
-
-        $store_name = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
-        $dir = File::ADVISORY_BOARD_UPLOAD_DIR . $id_object . DIRECTORY_SEPARATOR;
-
-        $sub_dir = match ((int)$doc_type) {
-            DocTypesEnum::AB_SECRETARIAT->value => File::ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR . DIRECTORY_SEPARATOR,
-            default => '',
-        };
-
-        $full_dir = $dir . $sub_dir;
-
-        $file->storeAs($full_dir, $store_name, 'public_uploads');
-
-        $newFile = new File([
-            'id_object' => $id_object,
-            'code_object' => File::CODE_AB_FUNCTION,
-            'filename' => $store_name,
-            'doc_type' => $doc_type,
-            'content_type' => $file->getClientMimeType(),
-            'path' => $full_dir . $store_name,
-            'description_' . $language => $description ?? __('custom.public_consultation.doc_type.' . $doc_type, [], $language),
-            'sys_user' => auth()->user()->id,
-            'locale' => $language,
-            'version' => ($version + 1) . '.0',
-            'custom_name' => $custom_name,
-            'resolution_council_ministers' => $resolution,
-            'state_newspaper' => $state_newspaper,
-            'effective_at' => Carbon::parse($effective_at),
-            'parent_id' => $parent_id,
-        ]);
-
-        $newFile->save();
     }
 
     /**
@@ -130,10 +79,11 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @param UpdateAdvisoryBoardFileRequest $request
      * @param AdvisoryBoard                  $item
+     * @param AdvisoryBoardFileService       $file_service
      *
      * @return JsonResponse
      */
-    public function ajaxUpdate(UpdateAdvisoryBoardFileRequest $request, AdvisoryBoard $item): JsonResponse
+    public function ajaxUpdate(UpdateAdvisoryBoardFileRequest $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
     {
         $validated = $request->validated();
 
@@ -155,11 +105,13 @@ class AdvisoryBoardFileController extends AdminController
             $file = File::find($validated['file_id']);
 
             //Add file and attach
-            $this->upload(
+            $file_service->upload(
                 $validated['file'],
                 $file->locale,
                 $file->id_object,
+                $item->id,
                 $file->doc_type,
+                true,
                 $validated['file_description_' . $file->locale],
                 $validated['file_name_' . $file->locale],
                 $validated['resolution_council_ministers'],

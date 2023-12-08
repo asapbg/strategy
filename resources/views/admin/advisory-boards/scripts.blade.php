@@ -347,5 +347,9 @@
         function prepareMeetingId(id, form) {
             form.querySelector('input[name=advisory_board_meeting_id]').value = id;
         }
+
+        function setMeetingFileObjectId(id) {
+            MEETING_FILE.querySelector('input[name=object_id]').value = id;
+        }
     </script>
 @endpush

@@ -32,7 +32,7 @@ class File extends ModelActivityExtend
     const CODE_OBJ_PUBLIC_CONSULTATION = 6;
 
     /** @var int Advisory Board */
-    const CODE_AB_FUNCTION = 7;
+    const CODE_AB = 7;
 
 
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
@@ -42,7 +42,11 @@ class File extends ModelActivityExtend
     const PUBLIC_CONSULTATIONS_COMMENTS_UPLOAD_DIR = 'pc' . DIRECTORY_SEPARATOR . 'comments' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_UPLOAD_DIR = 'advisory-boards' . DIRECTORY_SEPARATOR;
     const ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR = 'secretariat';
-    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = self::ADVISORY_BOARD_UPLOAD_DIR . 'functions' . DIRECTORY_SEPARATOR;
+    const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = 'functions';
+    const ADVISORY_BOARD_REGULATORY_FRAMEWORK_UPLOAD_DIR = 'regulatory-frameworks';
+    const ADVISORY_BOARD_MEETINGS_AND_DECISIONS_UPLOAD_DIR = 'meetings-and-decisions';
+    const ADVISORY_BOARD_MODERATOR_UPLOAD_DIR = 'moderator';
+    const ADVISORY_BOARD_CUSTOM_SECTION_UPLOAD_DIR = 'custom-sections';
 
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
