@@ -162,7 +162,7 @@ class OperationalProgram extends ModelActivityExtend
                 $j->on('public_consultation.operational_program_id', '=', 'operational_program.id')
                     ->whereColumn('public_consultation.operational_program_row_id', '=', 'operational_program_row.id');
             });
-        if(isset($filters['programId']) && (int)$filters['programId']) {
+        if(isset($filters['programId']) && $filters['programId'] != '') {
             $q->where('operational_program.id', '=', (int)$filters['programId']);
         }
         if(isset($filters['search'])) {
@@ -194,7 +194,7 @@ class OperationalProgram extends ModelActivityExtend
                     ->where('institution_col.value', '=', (int)$filters['institution']);
             });
         }
-        if(isset($filters['programId']) && (int)$filters['programId']) {
+        if(isset($filters['programId']) && $filters['programId'] != '') {
             $q->where('operational_program.id', '=', (int)$filters['programId']);
         }
         if(isset($filters['search'])) {

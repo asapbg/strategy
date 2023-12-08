@@ -50,6 +50,9 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     protected $guarded = [];
 
+    //activity
+    protected string $logName = "files";
+
     public function getNameAttribute()
     {
         return empty($this->custom_name) ? $this->filename : $this->custom_name;

@@ -154,7 +154,7 @@
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.documents', 2) }}</h3>
             <div class="row table-light">
-                <div class="col-md-4">
+                <div class="col-12 mb-2">
                     <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
                     <ul class="list-group list-group-flush">
                         @php($foundBaseDoc = false)
@@ -176,7 +176,7 @@
                     </ul>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-12 mb-2">
                     <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
                     <ul class="list-group list-group-flush">
                         @php($foundKdDoc = false)
@@ -198,7 +198,7 @@
                     </ul>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-12">
                     <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
                     <ul class="list-group list-group-flush">
                         @php($foundReportDoc = false)
