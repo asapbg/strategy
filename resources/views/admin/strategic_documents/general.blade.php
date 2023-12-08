@@ -789,11 +789,11 @@
                         success: function (data) {
                             const prisOptions = data.pris_options;
                             prisAct.prop('disabled', false);
-                            if (prisOptions) {
+                            if (prisOptions.length > 0) {
                                 manualPrisActId = false;
                                 if ($('#accept_act_institution_type_id').val() == 1) {
                                     $('#document_date_accepted').val(data.date).trigger('change');
-                                    if (prisOptions.length == 1) {
+                                    if (prisOptions.length === 1) {
                                         prisAct.empty();
                                         populatePris(prisOptions);
                                         prisAct.prop('disabled', true);
@@ -811,6 +811,8 @@
                                     }
                                 }
                             } else {
+                                $('#the_legal_act_type_filter').prop('disabled', false);
+                                prisAct.empty();
                                 prisAct.val(null).trigger('change.select2');
                             }
                         },
@@ -822,6 +824,7 @@
             });
 
             function populatePris(prisOptions) {
+                prisAct.empty();
                 $.each(prisOptions, function (index, option) {
                     prisAct.append('<option value="' + option.id + '" ' +'>' + option.text + '</option>');
                 });
