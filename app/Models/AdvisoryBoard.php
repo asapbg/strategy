@@ -27,6 +27,8 @@ use Illuminate\Support\Collection;
  * @property Collection               $regulatoryAllFiles
  * @property Collection               $regulatoryFiles
  * @property Collection               $moderators
+ * @property Collection               $meetingsAllFiles
+ * @property Collection               $meetingsFiles
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -77,12 +79,6 @@ class AdvisoryBoard extends ModelActivityExtend
         return $this->hasMany(AdvisoryBoardCustom::class)->orderBy('order');
     }
 
-    public function moderatorFiles(): HasMany
-    {
-        return $this->hasMany(File::class, 'id_object')
-            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MODERATOR]);
-    }
-
     public function moderatorInformation(): HasOne
     {
         return $this->hasOne(AdvisoryBoardModeratorInformation::class);
@@ -91,14 +87,14 @@ class AdvisoryBoard extends ModelActivityExtend
     public function regulatoryFiles(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
-            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
+            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
     }
 
     public function regulatoryAllFiles(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->withTrashed()
-            ->where(['code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
+            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
     }
 
     public function members(): HasMany

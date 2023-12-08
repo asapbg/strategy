@@ -188,8 +188,11 @@ class PublicConsultationController extends AdminController
             $oldOpenFrom = $item->open_from;
             $oldOpenTo = $item->open_to;
 
-            $validated['operational_program_row_id'] = $validated['operational_program_row_id'] ?? null;
-            $validated['legislative_program_row_id'] = $validated['legislative_program_row_id'] ?? null;
+            $validated['operational_program_row_id'] = isset($validated['operational_program_row_id']) && (int)$validated['operational_program_row_id'] > 0 ? $validated['operational_program_row_id'] : null;
+            $validated['legislative_program_row_id'] = isset($validated['legislative_program_row_id']) && (int)$validated['legislative_program_row_id'] > 0 ? $validated['legislative_program_row_id'] : null;
+
+            $validated['operational_program_id'] = isset($validated['operational_program_id']) && (int)$validated['operational_program_id'] > 0 ? $validated['operational_program_id'] : null;
+            $validated['legislative_program_id'] = isset($validated['legislative_program_id']) && (int)$validated['legislative_program_id'] > 0 ? $validated['legislative_program_id'] : null;
 
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {

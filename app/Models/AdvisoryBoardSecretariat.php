@@ -36,14 +36,14 @@ class AdvisoryBoardSecretariat extends Model
     {
         return $this->hasMany(File::class, 'id_object')
             ->withTrashed()
-            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
     }
 
     public function siteFiles(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
-            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
             ->where('parent_id', null);
     }
@@ -51,7 +51,7 @@ class AdvisoryBoardSecretariat extends Model
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
-            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
     }
 

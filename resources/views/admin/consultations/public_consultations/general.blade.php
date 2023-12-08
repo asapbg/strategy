@@ -152,7 +152,7 @@
                 <label class="col-sm-12 control-label" for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
                     <select name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
+                        <option value="0">---</option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
                             @foreach($legislativePrograms as $row)
                                 <option value="{{ $row->id }}"
@@ -185,7 +185,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_legislative_program">
                     <input type="checkbox" id="no_legislative_program" name="no_legislative_program"
-                           @if(!old('no_legislative_program') && $item->legislative_program_id && !$item->lpRow) checked @endif
+                           @if(!old('no_legislative_program') && ($item->legislative_program_id && !$item->lpRow || !$item->legislative_program_id )) checked @endif
                            data-list="legislative_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_legislative_program') }}
                 </label>
@@ -197,7 +197,7 @@
                 <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
                 <div class="col-12">
                     <select name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
+                        <option value="0">---</option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
                             @foreach($operationalPrograms as $row)
                                 <option value="{{ $row->id }}"
@@ -230,7 +230,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_operational_program">
                     <input type="checkbox" id="no_operational_program" name="no_operational_program"
-                           @if(!old('no_legislative_program') && $item->operational_program_id && !$item->opRow) checked @endif
+                           @if(!old('no_operational_program') && ($item->operational_program_id && !$item->opRow || !$item->operational_program_id)) checked @endif
                            data-list="operational_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_operational_program') }}
                 </label>

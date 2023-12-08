@@ -25,7 +25,7 @@ use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
-use App\Services\AdvisoryBoard\AdvisoryBoardService;
+use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -116,7 +116,7 @@ class AdvisoryBoardController extends AdminController
                 $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
             }
 
-            $service = app(AdvisoryBoardService::class, ['board' => $item]);
+            $service = app(AdvisoryBoardFileService::class, ['board' => $item]);
             $service->createDependencyTables();
 
             DB::commit();
@@ -144,25 +144,25 @@ class AdvisoryBoardController extends AdminController
 
         $members = $item->allMembers;
         $functions = $item->advisoryFunction?->translations;
-        $files = File::query()->where(['id_object' => $item->advisoryFunction?->id, 'code_object' => File::CODE_AB_FUNCTION])->get();
+        $files = File::query()->where(['id_object' => $item->advisoryFunction?->id, 'code_object' => File::CODE_AB])->get();
         $secretariat = $item->secretariat;
         $secretariat_files = File::query()
             ->when(request()->get('show_deleted_secretariat_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $secretariat?->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_SECRETARIAT])
+            ->where(['id_object' => $secretariat?->id, 'code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_SECRETARIAT])
             ->get();
         $regulatory_framework_files = File::query()
             ->when(request()->get('show_deleted_regulatory_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK])
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK])
             ->get();
         $meetings_decisions_files = File::query()
             ->when(request()->get('show_deleted_decisions_files', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('deleted_at', 'desc');
             })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
+            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
             ->get();
         $sections = AdvisoryBoardCustom::query()->with(['files' => function ($query) {
             $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
@@ -263,13 +263,6 @@ class AdvisoryBoardController extends AdminController
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 
-        $meetings_decisions_files = File::query()
-            ->when(request()->get('show_deleted_decisions_files', 0) == 1, function ($query) {
-                $query->withTrashed()->orderBy('deleted_at', 'desc');
-            })
-            ->where(['id_object' => $item->id, 'code_object' => File::CODE_AB_FUNCTION, 'doc_type' => DocTypesEnum::AB_MEETINGS_AND_DECISIONS])
-            ->get();
-
         $sections = AdvisoryBoardCustom::query()->with(['files' => function ($query) {
             $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
                 $query->withTrashed();
@@ -299,7 +292,6 @@ class AdvisoryBoardController extends AdminController
                 'secretariat_files',
                 'regulatory_framework_files',
                 'meetings',
-                'meetings_decisions_files',
                 'sections',
                 'archive',
                 'all_users',

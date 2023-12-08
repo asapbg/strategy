@@ -23,6 +23,12 @@ class AdvisoryBoardModeratorInformation extends ModelActivityExtend
 
     protected $fillable = ['advisory_board_id'];
 
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_MODERATOR]);
+    }
+
     /**
      * Get the model name
      */

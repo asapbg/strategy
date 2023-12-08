@@ -14,7 +14,7 @@
                 <form method="POST" name="MEETING_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
-                    <input type="hidden" name="object_id" value="{{ $item->id }}"/>
+                    <input type="hidden" name="object_id"/>
                     <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_MEETINGS_AND_DECISIONS->value }}"/>
 
                     @includeIf('admin.partial.file_fields', ['form' => 'MEETING_FILE'])

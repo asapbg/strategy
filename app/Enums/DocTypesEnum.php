@@ -79,8 +79,7 @@ enum DocTypesEnum: int
                         self::PC_KD_PDF->value,
                     ],
                     'report' => [
-                        //self::PC_IMPACT_EVALUATION->value,
-                        //self::PC_IMPACT_EVALUATION_OPINION->value,
+                        self::PC_COMMENTS_REPORT->value
                     ],
                 ];
                 break;
@@ -100,7 +99,9 @@ enum DocTypesEnum: int
                 'kd' => [
                     self::PC_KD_PDF->value,
                 ],
-                'report' => [],
+                'report' => [
+                    self::PC_COMMENTS_REPORT->value
+                ],
             ];
                 break;
             default:
@@ -111,7 +112,9 @@ enum DocTypesEnum: int
                         self::PC_COMMENTS_REPORT->value,
                     ],
                     'kd' => [],
-                    'report' => [],
+                    'report' => [
+                        self::PC_COMMENTS_REPORT->value
+                    ],
                 ];
         }
 

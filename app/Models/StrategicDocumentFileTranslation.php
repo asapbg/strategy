@@ -12,6 +12,7 @@ class StrategicDocumentFileTranslation extends ModelActivityExtend
 {
     use SoftDeletes;
 
+    protected string $logName = "strategic_document_file_translation";
     public $timestamps = false;
     protected $fillable = ['locale', 'strategic_document_file_id', 'display_name', 'file_info'];
 
