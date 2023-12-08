@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\DB;
-
 class FormInput extends ModelActivityExtend
 {
     public $timestamps = true;

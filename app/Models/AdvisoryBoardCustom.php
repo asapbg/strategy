@@ -5,9 +5,7 @@ namespace App\Models;
 use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -18,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AdvisoryBoardCustom extends ModelActivityExtend
 {
 
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_custom');

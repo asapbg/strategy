@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
@@ -35,7 +34,7 @@ use Illuminate\Support\Collection;
 class AdvisoryBoard extends ModelActivityExtend
 {
 
-    use FilterSort, SoftDeletes, Translatable;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board');

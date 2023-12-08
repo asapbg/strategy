@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Traits\FilterSort;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReportFile extends ModelActivityExtend
 {
-    use FilterSort, SoftDeletes;
+    use FilterSort;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title'];

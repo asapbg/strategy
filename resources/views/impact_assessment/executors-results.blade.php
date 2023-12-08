@@ -26,7 +26,7 @@
                     <div class="col-md-12 mb-2">
                         <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
                         <p>
-                            <a href="#" class="main-color text-decoration-none filter_link" data-filter="contractor_name">
+                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="contractor_name">
                                 {{ $translation?->contractor_name }}
                             </a>
                         </p>
@@ -34,7 +34,7 @@
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">{{ __('Name of executor') }}</p>
                         <p>
-                            <a href="#" class="main-color text-decoration-none filter_link" data-filter="executor_name">
+                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="executor_name">
                                 {{ $translation?->executor_name }}
                             </a>
                         </p>
@@ -42,7 +42,7 @@
                     <div class="col-md-3 mb-2">
                         <p class="fs-18 fw-600 mb-1">{{ __('custom.eik') }}</p>
                         <p>
-                            <a href="#" class="main-color text-decoration-none filter_link" data-filter="eik">
+                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="eik">
                                 {{ $executor->eik }}
                             </a>
                         </p>
@@ -67,14 +67,14 @@
                     <div class="col-md-8">
                         <p class="mb-0">
                             <strong>{{ __('Order information') }}:</strong>
-                            <a href="{{ $translation?->hyperlink ?? "#" }}" class="text-decoration-none"
+                            <a href="{{ $translation?->hyperlink ?? "javascript:;" }}" class="text-decoration-none"
                                @if($translation?->hyperlink) target="_blank" @endif title="ЦАИС"
                             >ЦАИС</a>
                         </p>
                     </div>
                     <div class="col-md-4">
                         <p class="mb-0 text-end">
-                            <a href="{{ $translation?->hyperlink ?? "#" }}" title="линк към ЦАИС или друг източник"
+                            <a href="{{ $translation?->hyperlink ?? "javascript:;" }}" title="линк към ЦАИС или друг източник"
                                @if($translation?->hyperlink) target="_blank" @endif
                             >
                                 <i class="fas fa-arrow-right read-more text-end"></i><span class="d-none">Линк</span>

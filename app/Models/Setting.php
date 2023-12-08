@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Setting extends ModelActivityExtend
 {
-    use SoftDeletes;
     const MODULE_NAME = ('custom.setting');
     protected $guarded = [];
     public $timestamps = true;

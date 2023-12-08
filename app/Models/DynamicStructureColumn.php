@@ -3,13 +3,10 @@
 namespace App\Models;
 
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DynamicStructureColumn extends ModelActivityExtend
 {
-    use SoftDeletes, Translatable;
+    use Translatable;
     public $timestamps = true;
     protected $fillable = ['type', 'ord', 'dynamic_structure_id', 'dynamic_structure_groups_id'];
 

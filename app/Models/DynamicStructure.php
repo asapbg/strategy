@@ -2,15 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\ModelActivityExtend;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
-
 class DynamicStructure extends ModelActivityExtend
 {
-    use SoftDeletes;
     public $timestamps = true;
     protected $guarded = [];
 

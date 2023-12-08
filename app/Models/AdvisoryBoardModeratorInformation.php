@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AdvisoryBoardModeratorInformation extends ModelActivityExtend
 {
