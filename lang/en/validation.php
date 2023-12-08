@@ -336,8 +336,8 @@ return [
         'system_email'              => 'Ел. поща (системни известия)',
         'assessment'                => 'Оценка на въздействието',
         'opinion'                   => 'Становище',
-        'proposal_ways_bg'          => 'Начини за представяне на предложения и становища (BG)',
-        'proposal_ways_en'          => 'Начини за представяне на предложения и становища (EN)',
+        'proposal_ways_bg'          => 'Начини на предоставяне на предложения и становища (BG)',
+        'proposal_ways_en'          => 'Начини на предоставяне на предложения и становища (EN)',
         //Обществени консултации
         'consultation_type_id'      => 'Тип обществена консултация',
         'consultation_level_id'      => 'Категория (ниво) обществени консултации',
@@ -424,6 +424,7 @@ return [
         'report_at' => 'Report of activity before',
         'advisory_chairman_type_id' => 'Type of chairman',
         'advisory_type_id' => 'Job',
+        'advisory_act_type_id' => 'Act of creation',
         'vice_chairman' => 'Vice chairman',
         'council_members' => 'Council members',
         'job' => 'Job',
@@ -450,5 +451,6 @@ return [
         'state_newspaper' => 'State newspaper',
         'effective_at' => 'Effective at',
         'redirect_to_iisda' => 'Redirect to Integration information system of the state administration (IISDA)',
+        'user_id' => 'user',
     ],
 ];

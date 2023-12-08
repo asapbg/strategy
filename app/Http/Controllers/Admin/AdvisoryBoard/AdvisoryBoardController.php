@@ -16,6 +16,7 @@ use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
+use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
@@ -23,6 +24,8 @@ use App\Models\ConsultationLevel;
 use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\User;
+use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -112,6 +115,9 @@ class AdvisoryBoardController extends AdminController
 
                 $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
             }
+
+            $service = app(AdvisoryBoardService::class, ['board' => $item]);
+            $service->createDependencyTables();
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.index')
@@ -226,10 +232,16 @@ class AdvisoryBoardController extends AdminController
         $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
         $meetings = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
             ->whereYear('created_at', Carbon::now()->year)
-            ->when(request()->get('show_deleted_meetings', 0) == 1, function($query) {
+            ->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
                 $query->withTrashed();
             })
             ->orderBy('id')->get();
+        $all_users = User::select(['id', 'username'])
+            ->orderBy('username')
+            ->whereNotIn('id', function ($query) {
+                $query->select('user_id')->from((new AdvisoryBoardModerator())->getTable());
+            })->get();
+        $moderators = $item->moderators;
 
         $archive = collect();
 
@@ -290,6 +302,8 @@ class AdvisoryBoardController extends AdminController
                 'meetings_decisions_files',
                 'sections',
                 'archive',
+                'all_users',
+                'moderators',
             )
         );
     }

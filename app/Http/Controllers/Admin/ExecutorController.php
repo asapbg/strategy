@@ -26,8 +26,12 @@ class ExecutorController extends AdminController
         $contractor_name = $request->get('contractor_name');
         $executor_name = $request->get('executor_name');
         $contract_date = $request->get('contract_date');
+        $contract_date_from = $request->get('contract_date_from');
+        $contract_date_till = $request->get('contract_date_till');
 
-        $executors = Executor::joinTranslation(Executor::class)
+        $executors = Executor::select('executors.*')
+            ->with('translation')
+            ->joinTranslation(Executor::class)
             ->whereLocale(app()->getLocale())
             ->when($contractor_name, function ($query, $contractor_name) {
                 return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
@@ -41,9 +45,16 @@ class ExecutorController extends AdminController
             ->when($contract_date, function ($query, $contract_date) {
                 return $query->where('contract_date', databaseDate($contract_date));
             })
+            ->when($contract_date_from, function ($query, $contract_date_from) {
+                return $query->where('contract_date', '>=', databaseDate($contract_date_from));
+            })
+            ->when($contract_date_till, function ($query, $contract_date_till) {
+                return $query->where('contract_date', '<=', databaseDate($contract_date_till));
+            })
             ->whereActive($active)
             ->orderBy('executors.id', 'desc')
             ->paginate($paginate);
+
 
         return $this->view('admin.executors.index', compact('executors'));
     }
@@ -77,7 +88,7 @@ class ExecutorController extends AdminController
             $item->fill($fillable);
             $item->save();
 
-            $this->storeTranslateOrNew(Executor::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew($item->translatedAttributes, $item, $validated);
 
             DB::commit();
 

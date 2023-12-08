@@ -204,8 +204,7 @@
 
     <div class="col-md-9 text-end col-sm-12">
         <button class="btn btn-primary  main-color"><i
-                class="fas fa-square-rss text-warning me-1"></i>RSS
-            Абониране</button>
+                class="fas fa-square-rss text-warning me-1"></i>RSS</button>
         <button class="btn btn-primary main-color"><i
                 class="fas fa-envelope me-1"></i>Абониране</button>
 

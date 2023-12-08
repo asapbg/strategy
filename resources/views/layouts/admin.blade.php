@@ -9,7 +9,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
-    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css?v='.date('d')) }}" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -86,7 +86,7 @@
 
 </div>
 
-<script src="{{ asset('js/admin.js') }}"></script>
+<script src="{{ asset('js/admin.js?v='.date('d')) }}"></script>
 @stack('scripts')
 
 </body>

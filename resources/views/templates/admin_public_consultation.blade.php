@@ -731,7 +731,7 @@
                                     <div class="row">
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="proposal_ways_bg">Начини за представяне на предложения и становища (BG)<span class="required">*</span></label>
+                                                <label class="col-sm-12 control-label" for="proposal_ways_bg">Начини на предоставяне на предложения и становища (BG)<span class="required">*</span></label>
                                                 <div class="col-12">
                                                 <textarea id="proposal_ways_bg" name="proposal_ways_bg"
                                                           class="form-control form-control-sm summernote ">&lt;ul&gt;&lt;li&gt;Портала за обществени консултации (изисква се регистрация чрез имейл);&lt;/li&gt;&lt;li&gt;Електронна поща на посочените адреси;&lt;/li&gt;&lt;li&gt;Системата за сигурно електронно връчване https://edelivery.egov.bg/ (изисква се квалифициран електронен подпис или ПИК на НОИ);&lt;/li&gt;&lt;li&gt;Официалния адрес за кореспонденция.&lt;/li&gt;</textarea>
@@ -740,7 +740,7 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="proposal_ways_en">Начини за представяне на предложения и становища (EN)<span class="required">*</span></label>
+                                                <label class="col-sm-12 control-label" for="proposal_ways_en">Начини на предоставяне на предложения и становища (EN)<span class="required">*</span></label>
                                                 <div class="col-12">
                                                 <textarea id="proposal_ways_en" name="proposal_ways_en"
                                                           class="form-control form-control-sm summernote ">&lt;ul&gt;&lt;li&gt;Портала за обществени консултации (изисква се регистрация чрез имейл);&lt;/li&gt;&lt;li&gt;Електронна поща на посочените адреси;&lt;/li&gt;&lt;li&gt;Системата за сигурно електронно връчване https://edelivery.egov.bg/ (изисква се квалифициран електронен подпис или ПИК на НОИ);&lt;/li&gt;&lt;li&gt;Официалния адрес за кореспонденция.&lt;/li&gt;</textarea>

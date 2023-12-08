@@ -63,8 +63,9 @@ class AdvisoryBoardFileController extends AdminController
         ?string $custom_name = null,
         ?string $resolution = null,
         ?string $state_newspaper = null,
-        ?string $effective_at = null
-    )
+        ?string $effective_at = null,
+        ?int $parent_id = null
+    ): void
     {
         if (!$file) {
             return;
@@ -103,11 +104,10 @@ class AdvisoryBoardFileController extends AdminController
             'resolution_council_ministers' => $resolution,
             'state_newspaper' => $state_newspaper,
             'effective_at' => Carbon::parse($effective_at),
+            'parent_id' => $parent_id,
         ]);
 
         $newFile->save();
-
-        return $newFile;
     }
 
     /**
@@ -155,7 +155,7 @@ class AdvisoryBoardFileController extends AdminController
             $file = File::find($validated['file_id']);
 
             //Add file and attach
-            $updated_file = $this->upload(
+            $this->upload(
                 $validated['file'],
                 $file->locale,
                 $file->id_object,
@@ -164,12 +164,13 @@ class AdvisoryBoardFileController extends AdminController
                 $validated['file_name_' . $file->locale],
                 $validated['resolution_council_ministers'],
                 $validated['state_newspaper'],
-                $validated['effective_at']
+                $validated['effective_at'],
+                $file->parent_id ?? $file->id
             );
 
-            if (\Illuminate\Support\Facades\File::exists(public_path('files' . DIRECTORY_SEPARATOR . $updated_file->path))) {
-                $file->delete();
-            }
+//            if (\Illuminate\Support\Facades\File::exists(public_path('files' . DIRECTORY_SEPARATOR . $updated_file->path))) {
+//                $file->delete();
+//            }
 
             DB::commit();
             return response()->json(['status' => 'success']);

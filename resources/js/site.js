@@ -68,6 +68,19 @@ MyModal.prototype.loadModalBody = function (_myModal) {
     });
 }
 
+function ShowLoadingSpinner() {
+    $("#ajax_loader_backgr").show();
+    $("#ajax_loader").show();
+    setTimeout(() => {
+        HideLoadingSpinner();
+    }, 2500);
+}
+
+function HideLoadingSpinner() {
+    $("#ajax_loader_backgr").hide();
+    $("#ajax_loader").hide();
+}
+
 //=================================
 //Select2
 //===============================
@@ -258,6 +271,12 @@ function ajaxList(domElement) {
     });
 }
 
+function clearSearchForm() {
+    $("#results-per-page").prop("selectedIndex", 0);
+    $("#search-form").find("input, textarea").not("#amount").val("");
+    $("#search-form").find('select option[value=""]').prop('selected', true);
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -413,5 +432,50 @@ $(document).ready(function () {
             });
         });
     }
+
+    // Ajax search
+    $("#ajax-pagination .pagination li a").attr("href", "javascript:;");
+
+    $(document).on('click', '#ajax-pagination .pagination li', function (e) {
+        ShowLoadingSpinner();
+        e.preventDefault();
+
+        let page = $(this).find('a').html();
+        $("#search-form .current_page").val(page);
+        $("#searchBtn").trigger('click');
+    });
+
+    $(document).on('click', '#search-form .sort_search', function (e) {
+        ShowLoadingSpinner();
+        e.preventDefault();
+
+        let sort = ($(".sort").val() == "ASC") ? "DESC" : "ASC";
+        $(".sort").val(sort);
+        $(".order_by").attr('disabled', true);
+        $(this).find('.order_by').attr('disabled', false);
+        $("#searchBtn").trigger('click');
+    });
+
+    $("#search-form .search-btn").click(function (e) {
+        ShowLoadingSpinner();
+        e.preventDefault();
+
+        if ($(this).hasClass('clear')) {
+            clearSearchForm();
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: $("#search-form").attr('action'),
+            data: $("#search-form").serialize(),
+            success: function (res) {
+                $("#executors-results").html(res);
+                HideLoadingSpinner();
+            },
+            error: function () {
+                // $periodUl.find('li').remove();
+            }
+        });
+    })
 
 });

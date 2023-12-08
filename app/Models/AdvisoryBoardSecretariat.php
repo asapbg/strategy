@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int        $id
  * @property Collection $files
  * @property Collection $allFiles
+ * @method static create(array $array)
  */
 class AdvisoryBoardSecretariat extends Model
 {
@@ -37,6 +38,14 @@ class AdvisoryBoardSecretariat extends Model
             ->withTrashed()
             ->where('code_object', File::CODE_AB_FUNCTION)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
+    }
+
+    public function siteFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB_FUNCTION)
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
+            ->where('parent_id', null);
     }
 
     public function files(): HasMany

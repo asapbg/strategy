@@ -1,34 +1,8 @@
-@extends('layouts.site')
+@extends('layouts.site', ['fullwidth' => true])
 
-@section('pageTitle', 'Стратегически документи')
+@section('pageTitle', 'Отчети')
 
-<section class="slider">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="slider-content">
-                    <div class="page-heading">
-                        <h1> Списък на физическите и юридическите лица</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section>
-    <div class="container-fluid">
-        <div class="row breadcrumbs py-1">
-            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#">Начало</a></li>
-                    <li class="breadcrumb-item"><a href="#">Списък на физическите и юридическите лица</a></li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-</section>
-
+@section('content')
 <div class="container-fluid">
     <div class="row edit-consultation m-0">
         <div class="col-md-12 text-end">
@@ -38,17 +12,6 @@
         </div>
     </div>
 </div>
-
-<section class="container-fluid">
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <p class="fs-18 fw-600 m-0">
-                Списъкът се изготвя в изпълнение на § 1 от Допълнителните разпоредби на Закона за нормативните актове.
-            </p>
-        </div>
-    </div>
-
-    <hr>
 
     <div class="row filter-results mb-2">
         <h2 class="mb-4">
@@ -169,15 +132,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="custom-card pt-1 pb-4 px-3 mb-3">
+            <div class="custom-card p-3 mb-3">
                 <div class="row single-record">
                     <div class="col-md-4">
                         <p>
                             <a href="/report/view" class="main-color text-decoration-none">Проект на Закон за изменение и
-                                допълнение на Закона за малките и средните предприятия <span class="main-color-light">(Активна)</span></a>
+                                допълнение на Закона за малките и средните предприятия <span class="active-li ms-2">Активна</span></a> <!-- ЗА Неактивен статус ! <span class="inactive-ks text-dark ms-2">Неактивна</span> -->
                         </p>
 
-                        <p>
+                        <p class="mb-0">
                             Коментари (0)
                         </p>
                     </div>
@@ -205,14 +168,14 @@
             </div>
         </div>
         <div class="col-md-12">
-            <div class="custom-card pt-1 pb-4 px-3 mb-3">
+            <div class="custom-card p-3 mb-3">
                 <div class="row single-record">
                     <div class="col-md-4">
                         <p>
-                            <a href="/report/view" class="main-color text-decoration-none">Проект на Решение на Министерския съвет за утвърждаване на Национална аптечна карта <span class="main-color-light">(Активна)</span></a>
+                            <a href="/report/view" class="main-color text-decoration-none">Проект на Решение на Министерския съвет за утвърждаване на Национална аптечна карта <span class="active-li ms-2">Активна</span></a>
                         </p>
 
-                        <p>
+                        <p class="mb-0">
                             Коментари (0)
                         </p>
                     </div>
@@ -240,14 +203,14 @@
             </div>
         </div>
         <div class="col-md-12">
-            <div class="custom-card pt-1 pb-4 px-3 mb-3">
+            <div class="custom-card p-3 mb-3">
                 <div class="row single-record">
                     <div class="col-md-4">
                         <p>
-                            <a href="/report/view" class="main-color text-decoration-none">Проект на Постановление на Министерския съвет за изменение и допълнение на Устройствения правилник на Агенцията по заетостта <span class="main-color-light">(Активна)</span></a>
+                            <a href="/report/view" class="main-color text-decoration-none">Проект на Постановление на Министерския съвет за изменение и допълнение на Устройствения правилник на Агенцията по заетостта <span class="active-li ms-2">Активна</span></a>
                         </p>
 
-                        <p>
+                        <p class="mb-0">
                             Коментари (1)
                         </p>
                     </div>
@@ -275,14 +238,14 @@
             </div>
         </div>
         <div class="col-md-12">
-            <div class="custom-card pt-1 pb-4 px-3 mb-3">
+            <div class="custom-card p-3 mb-3">
                 <div class="row single-record">
                     <div class="col-md-4">
                         <p>
-                            <a href="/report/view" class="main-color text-decoration-none">Проект на Закон за изменение и допълнение на Наказателния кодекс<span class="main-color-light">(Активна)</span></a>
+                            <a href="/report/view" class="main-color text-decoration-none">Проект на Закон за изменение и допълнение на Наказателния кодекс<span class="active-li ms-2">Активна</span></a>
                         </p>
 
-                        <p>
+                        <p class="mb-0">
                             Коментари (2)
                         </p>
                     </div>
@@ -311,7 +274,7 @@
         </div>
 
 
-        <div class="row mb-5">
+        <div class="row mt-4">
             <nav aria-label="Page navigation example">
                 <ul class="pagination m-0">
                     <li class="page-item">
@@ -335,4 +298,4 @@
             </nav>
         </div>
     </div>
-</section>
+@endsection

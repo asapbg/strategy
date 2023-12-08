@@ -399,7 +399,7 @@ return [
     'period_in_days'                            => 'Избраният от Вас период е ',
     'acts_pris'                                  => 'Акт (ПРИС)|Актове (ПРИС)',
     'consultation_links'                        => 'Връзки към предишни консултации',
-    'proposal_ways'                              => 'Начини за представяне на предложения и становища',
+    'proposal_ways'                              => 'Начини на предоставяне на предложения и становища',
     'proposal_ways_default_html'                => '<ul><li>Портала за обществени консултации (изисква се регистрация чрез имейл);</li><li>Електронна поща на посочените адреси;</li><li>Системата за сигурно електронно връчване https://edelivery.egov.bg/ (изисква се квалифициран електронен подпис или ПИК на НОИ);</li><li>Официалния адрес за кореспонденция.</li>',
     'consultation_connections'                                 => 'Връзки към предишни консултации',
     'person_contacts'                           => 'Лице за контакт|Лица за контакт',
@@ -525,4 +525,5 @@ return [
     'state_papernew_short' => 'DV',
     'active_document' => 'Active document',
     'inactive_document' => 'Inactive document',
+    'moderators' => 'Moderator|Moderators',
 ];

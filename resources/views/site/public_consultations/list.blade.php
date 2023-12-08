@@ -38,7 +38,7 @@
                                 <div class="consult-item-header-edit">
                                     @can('delete', $consultation)
                                         <a href="javascript:;"
-                                           class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
+                                           class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
                                            data-target="#modal-delete-resource"
                                            data-resource-id="{{ $consultation->id }}"
                                            data-resource-name="{{ $consultation->title }}"
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="meta-consul mb-2">
-                                <span class="text-secondary"> <i class="fas fa-hashtag text-secondary" title="{{ __('custom.period') }}"></i>
+                                <span class="text-secondary d-flex flex-row align-items-center lh-normal"> <i class="fas fa-hashtag text-secondary me-1" title="{{ __('custom.period') }}"></i>
                                     {{ $consultation->reg_num }}</span>
                             </div>
                             <div class="meta-consul mb-2">

@@ -94,6 +94,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/add-poll', 'attachPoll')->name('consultations.public_consultations.poll.attach');
         Route::post('/consultations/public-consultations/add-proposal-report', 'addProposalReport')->name('consultations.public_consultations.proposal_report.store');
         Route::post('/consultations/public-consultations/{item}/delete', 'destroy')->name('consultations.public_consultations.delete');
+        Route::get('/consultations/public-consultations/publish/{item}', 'publish')->name('consultations.public_consultations.publish');
+        Route::get('/consultations/public-consultations/unpublish/{item}', 'unPublish')->name('consultations.public_consultations.unpublish');
     });
 
     // Strategic Documents
@@ -423,7 +425,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/reports/store', 'store')->name('reports.store');
     });
 
-    Route::resource('executors', ExecutorController::class);
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardController::class)->prefix('/advisory-boards')->group(function () {
         Route::get('',                  'index')    ->name('advisory-boards.index');
         Route::get('/create',           'create')   ->name('advisory-boards.create');
@@ -477,8 +478,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorInformationController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {
-        Route::post('/store/{information?}', 'store')->name('advisory-boards.moderator.store');
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {
+        Route::post('/information/store/{information?}', 'storeInformation')->name('advisory-boards.moderator.information.store');
+
+        Route::post('/store', 'store')->name('advisory-boards.moderator.store');
+        Route::post('{moderator}/delete', 'destroy')->name('advisory-boards.moderator.delete');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {

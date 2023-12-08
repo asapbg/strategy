@@ -56,6 +56,15 @@
                                aria-controls="custom"
                                aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
                         </li>
+
+                        @if(!auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARD))
+                            <li class="nav-item">
+                                <a class="nav-link" id="moderators-tab" data-toggle="pill" href="#moderators" role="tab"
+                                   aria-controls="moderators"
+                                   aria-selected="false">{{ trans_choice('custom.moderators', 2) }}</a>
+                            </li>
+                        @endif
+
                         <li class="nav-item">
                             <a class="nav-link" id="archive-tab" data-toggle="pill" href="#archive" role="tab"
                                aria-controls="archive"
@@ -103,6 +112,12 @@
                             @include('admin.advisory-boards.tabs.custom')
                         </div>
 
+                        @if(!auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARD))
+                            <div class="tab-pane fade" id="moderators" role="tabpanel" aria-labelledby="moderators">
+                                @include('admin.advisory-boards.tabs.moderators')
+                            </div>
+                        @endif
+
                         <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive">
                             @include('admin.advisory-boards.tabs.archive')
                         </div>
@@ -118,6 +133,7 @@
     @includeIf('modals.delete-resource', ['resource' => __('custom.file'), 'modal_id' => 'modal-delete-file'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-delete-section'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.moderators', 1), 'modal_id' => 'modal-remove-moderator'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-restore-meeting'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-restore-section'])

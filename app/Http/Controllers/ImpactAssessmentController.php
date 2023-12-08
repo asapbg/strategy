@@ -157,18 +157,30 @@ class ImpactAssessmentController extends Controller
      */
     public function executors(Request $request)
     {
+        $is_search = $request->has('search');
+        $sort = ($request->offsetGet('sort'))
+            ? $request->offsetGet('sort')
+            : "DESC";
+        $order_by = ($request->offsetGet('order_by'))
+            ? $request->offsetGet('order_by')
+            : "id";
+        $sort_table = (in_array($order_by, Executor::TRANSLATABLE_FIELDS))
+            ? "executor_translations"
+            : "executors";
         $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
         $contractor_name = $request->get('contractor_name');
         $executor_name = $request->get('executor_name');
         $contract_subject = $request->get('contract_subject');
         $services_description = $request->get('services_description');
-        $contract_date = $request->get('contract_date');
+        $contract_date_from = $request->get('contract_date_from');
+        $contract_date_till = $request->get('contract_date_till');
+        $p_min = $request->get('p_min');
+        $p_max = $request->get('p_max');
 
-        $executors = Executor::joinTranslation(Executor::class)
+        $executors = Executor::select('executors.*')
+            ->with('translation')
+            ->joinTranslation(Executor::class)
             ->whereLocale(app()->getLocale())
-            ->when($contractor_name, function ($query, $contractor_name) {
-                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
-            })
             ->when($contractor_name, function ($query, $contractor_name) {
                 return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
             })
@@ -181,13 +193,31 @@ class ImpactAssessmentController extends Controller
             ->when($services_description, function ($query, $services_description) {
                 return $query->where('services_description', 'ILIKE', "%$services_description%");
             })
-            ->when($contract_date, function ($query, $contract_date) {
-                return $query->where('contract_date', databaseDate($contract_date));
+            ->when($contract_date_from, function ($query, $contract_date_from) {
+                return $query->where('contract_date', '>=', databaseDate($contract_date_from));
+            })
+            ->when($contract_date_till, function ($query, $contract_date_till) {
+                return $query->where('contract_date', '<=', databaseDate($contract_date_till));
+            })
+            ->when($p_min, function ($query, $p_min) {
+                return $query->where('price', '>=', $p_min);
+            })
+            ->when($p_max, function ($query, $p_max) {
+                return $query->where('price', '<=', $p_max);
             })
             ->whereActive(true)
-            ->orderBy('executors.id', 'desc')
+            ->orderBy("$sort_table.$order_by", $sort)
             ->paginate($paginate);
 
-        return $this->view('impact_assessment.executors', compact('executors'));
+        $prices = Executor::selectRaw('MAX(price) as max_price, MIN(price) as min_price')->first();
+
+        $min_price = $prices->min_price;
+        $max_price = $prices->max_price;
+
+        if ($is_search) {
+            return $this->view('impact_assessment.executors-results', compact('executors'));
+        }
+        return $this->view('impact_assessment.executors',
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search'));
     }
 }

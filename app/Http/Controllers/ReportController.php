@@ -6,11 +6,14 @@ class ReportController extends Controller
 {
     public function index()
     {
-        return $this->view('site.reports.index');
+        $pageTitle = trans_choice('custom.reports', 2);
+
+        return $this->view('site.reports.index', compact("pageTitle"));
     }
 
     public function show()
     {
-        return $this->view('site.reports.view');
+        $pageTitle = trans_choice('custom.reports', 2);
+        return $this->view('site.reports.view', compact("pageTitle"));
     }
 }

@@ -10,14 +10,14 @@
     <link href="{{ asset('/vendor/bootstrap/bootstrap.css') }}" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Font-awesome -->
-    <link href="/vendor/fontawesome-free-6.4.0-web/css/all.css" rel="stylesheet">
+    <link href="{{ asset('/vendor/fontawesome-free-6.4.0-web/css/all.css') }}" rel="stylesheet">
 
     <!-- Custom css -->
-    <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app_vendor.css?v='.date('d')) }}" rel="stylesheet">
     @stack('styles')
 
     <!-- Add favicon -->
-    <link rel="icon" href="/img/strategy-logo.svg" sizes="16x16 32x32" type="image/png">
+    <link rel="icon" href="{{ asset('/img/strategy-logo.svg') }}" sizes="16x16 32x32" type="image/png">
     <script type="text/javascript">
         var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
     </script>
@@ -71,8 +71,24 @@
 
 @include('partials.footer_front')
 
+<div id="ajax_loader_backgr"></div>
+<div id="ajax_loader">
+    <h2>Моля изчакайте</h2>
+    <div class="sk-cube-grid">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+    </div>
+</div>
+
 <!-- SCRIPTS -->
-<script src="{{ asset('js/app_vendor.js') }}"></script>
+<script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>
 @stack('scripts')
 </body>
 </html>

@@ -1500,7 +1500,7 @@ input[type=checkbox] {
 }
 
 .anotation p {
-    margin-bottom: 0.5rem !important
+    margin-bottom: 0px !important;
 }
 /*end priss*/
 
@@ -1633,7 +1633,7 @@ li.timeline-item:last-child {
     background: #028192;
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -1651,7 +1651,7 @@ li.timeline-item:last-child {
     background: #20659e;
     padding: 3px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
     margin-bottom: -1px;
 }
@@ -2102,7 +2102,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
         display: none !important;
     }
 
-    
+
     .side-menu {
         min-width: 320px;
         max-width: 320px;
@@ -2149,6 +2149,10 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 }
 
 @media(max-width:767px) {
+    .voted-li,.support-count-li, .closed-li {
+        width: fit-content;
+    }
+
     /*Event calendar*/
     .desktop-day {
         display: none !important;
@@ -2180,7 +2184,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
     .meta-consul a{
        display: inline-block !important;
-       width: auto;
+       width: fit-content;
     }
 
     .item-separator {
@@ -2229,16 +2233,16 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     .modal-dialog.search-screen {
         min-width: 90%;
       }
-        
+
       .search-site-input {
           font-size: 28px;
           color: #fff;
       }
-      
+
       .search-wrapper-modal i {
           font-size: 28px;
       }
-      
+
 }
 
 
@@ -2362,7 +2366,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
         font-size: 22px;
         color: #fff;
     }
-    
+
     .search-wrapper-modal i {
         font-size: 22px;
     }
@@ -2380,4 +2384,109 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     .calendar-wrap .day-number {
         font-size: 4vw;
      }
+}
+
+#slider-range .ui-state-default, #slider-range .ui-widget-content .ui-state-default, #slider-range .ui-widget-header .ui-state-default,
+#slider-range .ui-button, html #slider-range .ui-button.ui-state-disabled:hover,
+html #slider-range .ui-button.ui-state-disabled:active {
+    border: 1px solid #21659e;
+    background: #21659e;
+    font-weight: normal;
+    color: #21659e;
+    border-radius: 20px;
+}
+/**
+ Loader
+ */
+#ajax_loader_backgr {
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+    z-index: 9000;
+    top: 0;
+    left: 0;
+    background: #fff;
+    opacity: .7
+}
+#ajax_loader h2 {
+    position: relative;
+    left: -42%;
+    margin-bottom: 30px;
+}
+#ajax_loader a {
+    display: block;
+    font-size: 20px;
+    position: relative;
+    left: -40%;
+    margin-top: 30px;
+    text-decoration: none;
+    text-align: center;
+    color: #335cff;
+}
+#ajax_loader {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 45%;
+    left: 49%;
+}
+.sk-cube-grid {
+    width: 40px;
+    height: 40px;
+}
+.sk-cube-grid .sk-cube {
+    width: 33%;
+    height: 33%;
+    background-color: #21659E;
+    float: left;
+    -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+.sk-cube-grid .sk-cube1 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube2 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube3 {
+    -webkit-animation-delay: 0.4s;
+    animation-delay: 0.4s; }
+.sk-cube-grid .sk-cube4 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube5 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube6 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube7 {
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s; }
+.sk-cube-grid .sk-cube8 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube9 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s; }
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    } 35% {
+          -webkit-transform: scale3D(0, 0, 1);
+          transform: scale3D(0, 0, 1);
+      }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    } 35% {
+          -webkit-transform: scale3D(0, 0, 1);
+          transform: scale3D(0, 0, 1);
+      }
 }

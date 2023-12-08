@@ -25,7 +25,7 @@
             <div class="col-12">
                 @if(!$view_mode)
                     <form name="ADVISORY_BOARD_MODERATOR"
-                          action="{{ route('admin.advisory-boards.moderator.store', ['item' => $item, 'information' => $item->moderatorInformation]) }}"
+                          action="{{ route('admin.advisory-boards.moderator.information.store', ['item' => $item, 'information' => $item->moderatorInformation]) }}"
                           method="post">
                         @csrf
 
