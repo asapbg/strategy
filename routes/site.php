@@ -68,10 +68,10 @@ Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->gr
 });
 
 Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
+    Route::get('/strategy-documents/{id}', 'show')->name('strategy-document.view')->where('id', '([1-9]+[0-9]*)');
     Route::get('/strategy-documents/{search?}', 'index')->name('strategy-documents.index');
     Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
 
-    Route::get('/strategy-document/{id}', 'show')->name('strategy-document.view');
     Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
 });
