@@ -13,12 +13,12 @@
 
         td, th {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 4px;
         }
 
         th {
             background-color: #f2f2f2;
-            font-size: 14px; /* Adjust the font size for the header cells */
+            font-size: 13px; /* Adjust the font size for the header cells */
         }
     </style>
 </head>
