@@ -337,4 +337,13 @@ class CommonController extends Controller
 
         return response()->json($data);
     }
+
+    public function commonHtml()
+    {
+        if (!auth()->user()->hasRole('super-admin')) {
+            abort(403, 'Unauthorized: You do not have the super-admin role.');
+        }
+
+        return view('templates.common-html');
+    }
 }
