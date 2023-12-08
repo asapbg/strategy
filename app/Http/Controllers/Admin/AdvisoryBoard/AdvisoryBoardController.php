@@ -47,7 +47,7 @@ class AdvisoryBoardController extends AdminController
         $keywords = request()->offsetGet('keywords');
         $status = request()->offsetGet('status');
 
-        $items = AdvisoryBoard::withTrashed()->with(['policyArea', 'translations'])
+        $items = AdvisoryBoard::with(['policyArea', 'translations'])
             ->where(function ($query) use ($keywords) {
                 $query->when(!empty($keywords), function ($query) use ($keywords) {
                     $query->whereHas('translations', function ($query) use ($keywords) {
