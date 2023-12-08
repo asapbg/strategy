@@ -21,6 +21,7 @@ use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
+use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
@@ -47,7 +48,13 @@ class AdvisoryBoardController extends AdminController
         $keywords = request()->offsetGet('keywords');
         $status = request()->offsetGet('status');
 
-        $items = AdvisoryBoard::with(['policyArea', 'translations'])
+        $items = AdvisoryBoard::withTrashed();
+
+        if (!auth()->user()->hasRole(CustomRole::ADMIN_USER_ROLE) && !auth()->user()->hasRole(CustomRole::MODERATOR_ADVISORY_BOARDS)) {
+            $items = $items->moderatorListing();
+        }
+
+        $items = $items->with(['policyArea', 'translations'])
             ->where(function ($query) use ($keywords) {
                 $query->when(!empty($keywords), function ($query) use ($keywords) {
                     $query->whereHas('translations', function ($query) use ($keywords) {
