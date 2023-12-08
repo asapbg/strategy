@@ -185,11 +185,3 @@
         </div>
     </div>
 </div>
-
-@push('scripts')
-    <script type="application/javascript">
-        function setMeetingFileObjectId(id) {
-            MEETING_FILE.querySelector('input[name=object_id]').value = id;
-        }
-    </script>
-@endpush

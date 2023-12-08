@@ -8,7 +8,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardCustomRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardCustomRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
-use App\Models\File;
+use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -55,13 +55,15 @@ class AdvisoryBoardCustomController extends AdminController
                         $name_key = 'file_name_' . $language['code'];
                         $description_key = 'file_description_' . $language['code'];
 
-                        $this->uploadFile(
-                            $section,
+                        $file_service = app(AdvisoryBoardFileService::class);
+                        $file_service->upload(
                             $file,
-                            File::CODE_AB_FUNCTION,
-                            DocTypesEnum::AB_CUSTOM_SECTION,
-                            $validated[$description_key][$key] ?? '',
                             $language['code'],
+                            $section->id,
+                            $item->id,
+                            DocTypesEnum::AB_CUSTOM_SECTION->value,
+                            false,
+                            $validated[$description_key][$key] ?? '',
                             $validated[$name_key][$key] ?? null
                         );
                     }

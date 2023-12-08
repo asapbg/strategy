@@ -117,7 +117,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                @include('admin.partial.files_table', ['files' => $item->moderatorFiles, 'item' => $item])
+                @include('admin.partial.files_table', ['files' => $item->moderatorInformation?->files, 'item' => $item])
             </div>
         </div>
     </div>
