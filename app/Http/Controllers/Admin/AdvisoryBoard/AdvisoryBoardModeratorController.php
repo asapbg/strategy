@@ -125,6 +125,8 @@ class AdvisoryBoardModeratorController extends AdminController
         try {
             unset($validated['password_confirmation']);
 
+            $validated['user_type'] = User::USER_TYPE_INTERNAL;
+
             $user = User::make($validated);
             $user->password = bcrypt($validated['password']);
             $user->email_verified_at = Carbon::now();
