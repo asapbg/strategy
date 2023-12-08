@@ -79,7 +79,7 @@ class FileService
                 $file->save();
 
                 $strategicDocument->files()->save($file);
-
+                $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
                 $ocr = new FileOcr($file->refresh());
                 $ocr->extractText();
                 if ($locale === 'bg') {
@@ -210,6 +210,7 @@ class FileService
             if ($file->is_main) {
                 continue;
             }
+
             $latestVersion = $file->latestVersion;
 
             if ($latestVersion && $file->id !== $latestVersion->id) {
