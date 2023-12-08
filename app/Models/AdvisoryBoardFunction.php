@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @method static where(string $string, mixed $advisory_board_id)
  * @method static orderBy(string $string, string $string1)
+ * @method static create(array $array)
  */
 class AdvisoryBoardFunction extends Model
 {
