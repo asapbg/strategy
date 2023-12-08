@@ -185,7 +185,7 @@ class LegislativeProgram extends ModelActivityExtend
                     ->where('institution_col.value', '=', (int)$filters['institution']);
             });
         }
-        if(isset($filters['programId']) && (int)$filters['programId']) {
+        if(isset($filters['programId']) && $filters['programId'] != '') {
             $q->where('legislative_program.id', '=', (int)$filters['programId']);
         }
         if(isset($filters['search'])) {

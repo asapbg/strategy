@@ -32,6 +32,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways'];
+    const SHORT_REASON_FIELD = 'short_term_reason';
     const MODULE_NAME = ('custom.consultations.public_consultation');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

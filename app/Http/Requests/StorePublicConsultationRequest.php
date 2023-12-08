@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePublicConsultationRequest extends FormRequest
@@ -53,6 +54,13 @@ class StorePublicConsultationRequest extends FormRequest
         foreach (PublicConsultation::translationFieldsProperties() as $field => $properties) {
             foreach ($availableLanguages as $lang) {
                 $rules[$field .'_'. $lang['code']] = $properties['rules'];
+                if($field == PublicConsultation::SHORT_REASON_FIELD) {
+                    $from = request()->filled('open_from') ? Carbon::parse(request()->input('open_from')) : null;
+                    $to = request()->filled('open_to') ? Carbon::parse(request()->input('open_to')) : null;
+                    if( $to && $from && $to->diffInDays($from) <= PublicConsultation::SHORT_DURATION_DAYS ) {
+                        $rules[$field .'_'. $lang['code']][0] = 'required';
+                    }
+                }
             }
         }
 
