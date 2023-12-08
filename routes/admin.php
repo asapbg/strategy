@@ -483,6 +483,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
         Route::post('/store', 'store')->name('advisory-boards.moderator.store');
         Route::post('{moderator}/delete', 'destroy')->name('advisory-boards.moderator.delete');
+        Route::post('/register', 'ajaxRegister')->name('advisory-boards.moderator.register');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {

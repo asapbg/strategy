@@ -221,27 +221,5 @@
                 }
             });
         }
-
-        /**
-         * Change button state for ajax forms.
-         * State can be either 'loading' or 'finished'.
-         *
-         * @param element
-         * @param state
-         */
-        function changeButtonState(element, state = 'loading') {
-            const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
-            const loader = element.querySelector('.spinner-grow');
-
-            element.querySelector('.text').innerHTML = button_text_translation;
-            element.disabled = state === 'loading';
-
-            if (state === 'loading') {
-                loader.classList.remove('d-none');
-                return;
-            }
-
-            loader.classList.add('d-none');
-        }
     </script>
 @endpush

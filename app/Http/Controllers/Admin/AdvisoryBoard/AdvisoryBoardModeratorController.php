@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
 use App\Http\Requests\StoreAdvisoryBoardModeratorRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryBoardModeratorInformation;
 use App\Models\CustomRole;
+use App\Models\User;
+use Carbon\Carbon;
 use DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Log;
@@ -83,7 +87,7 @@ class AdvisoryBoardModeratorController extends AdminController
     {
         $validated = $request->validated();
 
-        $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderators';
+        $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderator';
 
         DB::beginTransaction();
         try {
@@ -105,6 +109,45 @@ class AdvisoryBoardModeratorController extends AdminController
     }
 
     /**
+     * Register new user and assign him as an advisory board moderator.
+     *
+     * @param StoreUserModeratorRequest $request
+     * @param AdvisoryBoard             $item
+     * @param AdvisoryBoardModerator    $moderator
+     *
+     * @return JsonResponse
+     */
+    public function ajaxRegister(StoreUserModeratorRequest $request, AdvisoryBoard $item, AdvisoryBoardModerator $moderator)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+        try {
+            unset($validated['password_confirmation']);
+
+            $user = User::make($validated);
+            $user->password = bcrypt($validated['password']);
+            $user->email_verified_at = Carbon::now();
+            $user->password_changed_at = Carbon::now();
+            $user->save();
+
+            $moderator->user_id = $user->id;
+            $moderator->advisory_board_id = $item->id;
+            $moderator->save();
+
+            $user->assignRole(CustomRole::MODERATOR_ADVISORY_BOARD);
+
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    /**
      * Remove the user from being moderator of the advisory board.
      *
      * @param AdvisoryBoard          $item
@@ -116,7 +159,7 @@ class AdvisoryBoardModeratorController extends AdminController
     {
         $this->authorize('update', $item);
 
-        $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderators';
+        $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderator';
 
         DB::beginTransaction();
         try {
