@@ -107,5 +107,13 @@
 <br><a href="{{ route('templates.view', ['slug' => 'ogp_аssessment_edit']) }}">OGP Оценка (редакция)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ogp_forum_edit']) }}">OGP FORUM (редакция)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'advisory_board_edit']) }}">Консултативен съвет (редакция)</a>
+<br>
+<br><a href="{{ route('templates.view', ['slug' => 'common-html']) }}" style="text-align: right;">Админ стилове (Само логнат админ има достъп до страницата)</a>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
