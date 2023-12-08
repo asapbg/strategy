@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int  $user_id
+ * @property int  $advisory_board_id
  * @property User $user
  */
 class AdvisoryBoardModerator extends ModelActivityExtend

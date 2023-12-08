@@ -57,14 +57,6 @@
                                aria-selected="false">{{ trans_choice('custom.custom_sections', 2) }}</a>
                         </li>
 
-                        @if(!auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARD))
-                            <li class="nav-item">
-                                <a class="nav-link" id="moderators-tab" data-toggle="pill" href="#moderators" role="tab"
-                                   aria-controls="moderators"
-                                   aria-selected="false">{{ trans_choice('custom.moderators', 2) }}</a>
-                            </li>
-                        @endif
-
                         <li class="nav-item">
                             <a class="nav-link" id="archive-tab" data-toggle="pill" href="#archive" role="tab"
                                aria-controls="archive"
@@ -112,12 +104,6 @@
                             @include('admin.advisory-boards.tabs.custom')
                         </div>
 
-                        @if(!auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARD))
-                            <div class="tab-pane fade" id="moderators" role="tabpanel" aria-labelledby="moderators">
-                                @include('admin.advisory-boards.tabs.moderators')
-                            </div>
-                        @endif
-
                         <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive">
                             @include('admin.advisory-boards.tabs.archive')
                         </div>
@@ -141,6 +127,7 @@
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.member', 1)])
 
     <!-- Modals -->
+    @includeIf('admin.advisory-boards.modals.register-advisory-moderator-form')
     @includeIf('admin.advisory-boards.modals.create-section-form')
     @includeIf('admin.advisory-boards.modals.edit-section')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
