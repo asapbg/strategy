@@ -214,27 +214,72 @@
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
                                     </a>
                                      -->
-                                <div>
-                                    <a href="#" class="main-color text-decoration-none" type="button" data-toggle="collapse" data-target="#main_document_content_{{ $mainDocument->id }}">
-                                        <!--
-                                        {{ trans_choice('custom.content', 1) }}
-                                        -->
-                                        <i class="{{ $iconClass }}"></i>{!!  $mainDocument->document_display_name !!}
-                                    </a>
-                                    <div id="main_document_content_{{ $mainDocument->id }}" class="custom-card p-3 content collapse mt-3">
-                                        <h3 class="mb-3 fs-5">{{ trans_choice('custom.content', 1) }}</h3>
-                                        <div class="col-md-12">
-                                            {{ $mainDocument->file_text }}
+
+
+                                <div class="row p-1">
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="card custom-card">
+                                            <div class="card-header" id="heading60">
+                                                <h2 class="mb-0 d-flex align-items-center justify-content-between">
+                                                    <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
+                                                            data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
+                                                            aria-controls="collapse60">
+                                                        <!--
+                                                        <i class="me-1 bi bi-file-earmark-text fs-18"></i>
+                                                        -->
+                                                           <i class="{{ $iconClass }}"></i>
+                                                            {!!  $mainDocument->document_display_name !!}
+                                                    </button>
+                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60">
+                                                        <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color"></i>
+                                                    </a>
+                                                </h2>
+                                            </div>
+
+                                            <div id="collapse60" class="collapse" aria-labelledby="heading60" data-parent="#accordionExample"
+                                                 style="">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="text-start">
+                                                                <span class="text-start me-3">
+                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $mainDocument->created_at->format('d.m.Y г.') }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 text-end">
+                                                            <a href="{{ route('strategy-document.download-file', ['id' => $mainDocument->id]) }}" title="Download" download class="btn btn-primary">
+                                                                {{ trans_choice('custom.download', 1) }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row file-content">
+                                                        <div class="col-md-12">
+                                                            {{ $mainDocument->file_text }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-6">
+                                                            <div class="text-start">
+                                                                <span class="text-start me-3">
+                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $mainDocument->created_at->format('d.m.Y г.') }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 text-end">
+                                                            <a href="{{ route('strategy-document.download-file', ['id' => $mainDocument->id]) }}" title="Download" download class="btn btn-primary">
+                                                                {{ trans_choice('custom.download', 1) }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!--
-                                    <div id="main_document_content_{{ $mainDocument->id }}" class="content collapse">
-
-
-
-                                    </div>
-                                    -->
                                 </div>
+
                             </li>
                         @endif
                     </ul>
