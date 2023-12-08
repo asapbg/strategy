@@ -97,11 +97,6 @@ class StoreStrategicDocumentRequest extends FormRequest
             $rules['document_date_expiring'][] = 'sometimes';
         }
 
-        $validator = Validator::make(request()->all(), $rules);
-        if ($validator->fails()) {
-            dd($validator->errors());
-        }
-
         return $rules;
     }
 
