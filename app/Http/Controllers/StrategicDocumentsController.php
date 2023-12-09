@@ -224,12 +224,23 @@ class StrategicDocumentsController extends Controller
 
             $strategicDocumentsHtml .= '<div class="consult-item-header-edit">';
 
-
+            /*
             if (Gate::allows('delete', $document)) {
                 $strategicDocumentsHtml .= '<a href="#" class="open-delete-modal">';
                 $strategicDocumentsHtml .= '<i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2" role="button"></i>';
                 $strategicDocumentsHtml .= '</a>';
                 $strategicDocumentsHtml .= '<form class="d-none" method="GET" action="' . route($deleteRouteName, [$document->id]) . '" name="DELETE_ITEM_' . $document->id . '">';
+                $strategicDocumentsHtml .= method_field('GET');
+                $strategicDocumentsHtml .= csrf_field();
+                $strategicDocumentsHtml .= '</form>';
+            }
+            */
+            if (Gate::allows('delete', $document)) {
+                $strategicDocumentsHtml .= '<a href="#" class="open-delete-modal">';
+                $strategicDocumentsHtml .= '<i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2" role="button"></i>';
+                $strategicDocumentsHtml .= '</a>';
+                $strategicDocumentsHtml .= '<form class="d-none" method="GET" action="' . route($deleteRouteName, [$document->id]) . '" name="DELETE_ITEM_' . $document->id . '">';
+                $strategicDocumentsHtml .= method_field('GET');
                 $strategicDocumentsHtml .= csrf_field();
                 $strategicDocumentsHtml .= '</form>';
             }

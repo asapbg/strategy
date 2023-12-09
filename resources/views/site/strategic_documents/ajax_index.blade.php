@@ -16,6 +16,7 @@
         @endif
             <div class="col-md-12">
                 <ul class=" tab nav nav-tabs mb-3" id="myTab">
+
                     <li class="nav-item pb-0">
                         <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
                     </li>
@@ -26,7 +27,15 @@
                 @include('site.strategic_documents.search')
                 @include('site.strategic_documents.search-script')
                 <div class="tab-content">
+
+                    @include('components.delete-modal', [
+                        'cancel_btn_text'           => __('custom.cancel'),
+                        'continue_btn_text'         => __('custom.continue'),
+                        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.strategic_documents', 1),
+                        'file_change_warning_txt'   => __('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.strategic_documents', 1)) . '?',
+                    ])
                     <div class="tab-pane fade show active" id="table-view">
+
                     </div>
                 </div>
             </div>
@@ -42,6 +51,7 @@
                 </li>
             </ul>
             -->
+            <!--
             <div id="overlay">
                 <div id="spinner-container" class="text-center">
                     <div class="spinner-border" role="status">
@@ -49,6 +59,7 @@
                     </div>
                 </div>
             </div>
+            -->
             <div class="tab-content">
 
                 <div class="tab-pane fade show active" id="table-view">
@@ -89,12 +100,6 @@
         </div>
     </div>
 
-    @include('components.delete-modal', [
-        'cancel_btn_text'           => __('custom.cancel'),
-        'continue_btn_text'         => __('custom.continue'),
-        'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.strategic_documents', 1),
-        'file_change_warning_txt'   => __('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.strategic_documents', 1)) . '?',
-    ])
 @endsection
 @push('styles')
     <style>
