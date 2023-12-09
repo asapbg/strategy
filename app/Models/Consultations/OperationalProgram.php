@@ -132,10 +132,14 @@ class OperationalProgram extends ModelActivityExtend
             'select
                         operational_program_row.month,
                         operational_program_row.row_num,
-                        json_agg(json_build_object(\'id\', operational_program_row.id, \'value\', operational_program_row.value, \'type\', dynamic_structure_column.type, \'dsc_id\', dynamic_structure_column.id, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label)) as columns
+                        json_agg(json_build_object(\'id\', operational_program_row.id, \'value\', operational_program_row.value, \'type\', dynamic_structure_column.type, \'dsc_id\', dynamic_structure_column.id, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label, \'institution_ids\', (select json_agg(operational_program_row_institution.institution_id) as institution_ids from operational_program_row_institution where operational_program_row_institution.operational_program_row_id = operational_program_row.id))) as columns,
+                        json_agg(institution_translations.name) FILTER (where institution_translations.name is not null) as name_institutions
                     from operational_program_row
                     join dynamic_structure_column on dynamic_structure_column.id = operational_program_row.dynamic_structures_column_id
                     join dynamic_structure_column_translations on dynamic_structure_column_translations.dynamic_structure_column_id = dynamic_structure_column.id and dynamic_structure_column_translations.locale = \''.app()->getLocale().'\'
+                    left join operational_program_row_institution on operational_program_row_institution.operational_program_row_id = operational_program_row.id
+                    left join institution on institution.id = operational_program_row_institution.institution_id
+                    left join institution_translations on institution_translations.institution_id = institution.id and institution_translations.locale = \''.app()->getLocale().'\'
                     where
                         operational_program_row.operational_program_id = '.(int)$this->id.'
                         and operational_program_row.deleted_at is null
@@ -156,7 +160,7 @@ class OperationalProgram extends ModelActivityExtend
             ->select($select)
             ->join('operational_program_row', function ($j){
                 $j->on('operational_program_row.operational_program_id', '=', 'operational_program.id')
-                    ->where('operational_program_row.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+                    ->where('operational_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_title_id'));
             })
             ->leftJoin('public_consultation', function ($j){
                 $j->on('public_consultation.operational_program_id', '=', 'operational_program.id')
@@ -179,7 +183,7 @@ class OperationalProgram extends ModelActivityExtend
                 DB::raw('max(operational_program_row.value) || \' [Програма \' || max(to_char(operational_program.from_date, \'MM.YYYY\')) || \' - \' || max(to_char(operational_program.to_date, \'MM.YYYY\')) || \']\' as name')])
             ->join('operational_program_row', function ($j){
                 $j->on('operational_program_row.operational_program_id', '=', 'operational_program.id')
-                    ->where('operational_program_row.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+                    ->where('operational_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_title_id'));
             })
             ->leftJoin('public_consultation', function ($j){
                 $j->on('public_consultation.operational_program_id', '=', 'operational_program.id')
@@ -190,8 +194,10 @@ class OperationalProgram extends ModelActivityExtend
             $q->join('operational_program_row as institution_col', function ($j) use($filters){
                 $j->on('institution_col.operational_program_id', '=', 'operational_program_row.operational_program_id')
                     ->on('institution_col.row_num', '=', 'operational_program_row.row_num')
-                    ->where('institution_col.dynamic_structures_column_id', '=', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                    ->where('institution_col.value', '=', (int)$filters['institution']);
+                    ->where('institution_col.dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'));
+            })->join('operational_program_row_institution', function ($j) use($filters){
+                $j->on('operational_program_row_institution.operational_program_row_id', '=', 'institution_col.id')
+                    ->where('operational_program_row_institution.institution_id', '=', (int)$filters['institution']);
             });
         }
         if(isset($filters['programId']) && $filters['programId'] != '') {
@@ -200,7 +206,8 @@ class OperationalProgram extends ModelActivityExtend
         if(isset($filters['search'])) {
             $q->where('operational_program_row.value', 'ilike', '%'.$filters['search'].'%');
         }
-        $q->whereNull('legislative_program.deleted_at');
+        $q->whereNull('operational_program.deleted_at');
+        $q->where('operational_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_title_id'));
 
         $q->groupBy('operational_program_row.id');
 

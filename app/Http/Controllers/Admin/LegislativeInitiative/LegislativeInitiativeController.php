@@ -37,22 +37,27 @@ class LegislativeInitiativeController extends AdminController
             // Keywords search
             $query->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->whereHas('operationalProgram', function ($query) use ($keywords) {
-                    $query->whereIn('operational_program_id', OperationalProgramRow::where('value', 'ilike', "%$keywords%")->where('dynamic_structures_column_id', OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID)->pluck('operational_program_id'));
+                    $query->whereIn('operational_program_id', OperationalProgramRow::where('value', 'ilike', "%$keywords%")->where('dynamic_structures_column_id', config('lp_op_programs.op_ds_col_title_id'))->pluck('operational_program_id'));
                 })
-                    ->orWhere('description', 'ilike', "%$keywords")
-                    ->orWhereHas('user', function ($query) use ($keywords) {
-                        $query->where(function ($query) use ($keywords) {
-                            $query->where('first_name', 'ilike', "%$keywords")
-                                ->orWhere('middle_name', 'ilike', "%$keywords")
-                                ->orWhere('last_name', 'ilike', "%$keywords");
-                        });
+                ->orWhere('description', 'ilike', "%$keywords")
+                ->orWhereHas('user', function ($query) use ($keywords) {
+                    $query->where(function ($query) use ($keywords) {
+                        $query->where('first_name', 'ilike', "%$keywords")
+                            ->orWhere('middle_name', 'ilike', "%$keywords")
+                            ->orWhere('last_name', 'ilike', "%$keywords");
                     });
+                });
             });
         })
             // Institution search
             ->when(!empty($institution), function ($query) use ($institution) {
                 $query->whereHas('operationalProgram', function ($query) use ($institution) {
-                    $query->whereIn('operational_program_id', OperationalProgramRow::where(['value' => $institution, 'dynamic_structures_column_id' => OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID])->pluck('operational_program_id'));
+                    $query->whereIn('operational_program_id',
+                        OperationalProgramRow::where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
+                            ->whereHas('institutions', function ($query) use ($institution) {
+                                $query->where('institution.id', '=', $institution);
+                            })
+                            ->pluck('operational_program_id'));
                 });
             })
             // Status search

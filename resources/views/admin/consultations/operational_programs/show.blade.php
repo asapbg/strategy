@@ -50,12 +50,27 @@
                                                                         <div class="col-12">
                                                                             <div class="form-group">
                                                                                 <span class="fw-bold">{{ $col['label'] }}:</span>
-                                                                                @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                                                                                    {{ $institutions[(int)$col['value']] ?? '---' }}
+                                                                                @if($col['dsc_id'] == config('lp_op_programs.op_ds_col_institution_id'))
+                                                                                    @if(!empty($row->name_institutions))
+                                                                                        @php($nameInstitutions = json_decode($row->name_institutions))
+                                                                                        @if(sizeof($nameInstitutions))
+                                                                                            <p>
+                                                                                                @foreach($nameInstitutions as $name)
+                                                                                                    @if(!$loop->first){{ ',' }}<br>@endif{{ $name }}
+                                                                                                @endforeach
+                                                                                            </p>
+                                                                                        @else
+                                                                                            {{ '---' }}
+                                                                                        @endif
+                                                                                    @else
+                                                                                        {{ '---' }}
+                                                                                    @endif
                                                                                 @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                                     {{ $col['value'] ? 'Да' : 'Не' }}
+                                                                                @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
+                                                                                    {!! html_entity_decode($col['value']) !!}
                                                                                 @else
-                                                                                    {!! $col['value'] !!}
+                                                                                    {{ $col['value'] }}
                                                                                 @endif
                                                                             </div>
                                                                         </div>

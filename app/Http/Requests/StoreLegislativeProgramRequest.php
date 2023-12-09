@@ -45,7 +45,7 @@ class StoreLegislativeProgramRequest extends FormRequest
                 if(request()->filled('col')) {
                     foreach (request()->input('col') as $key => $columns) {
                         foreach ($columns as $key2 => $ids) {
-                            $rules['val.' . $key . '.' . $key2] = ['required', 'string'];
+                            $rules['val.' . $key . '.' . $key2] = ['required'];
                         }
                     }
                 }
@@ -65,9 +65,12 @@ class StoreLegislativeProgramRequest extends FormRequest
             $rules['new_val_col.*'] = ['required', 'numeric', 'exists:dynamic_structure_column,id'];
             $rules['new_val'] = ['array'];
             $rules['month'] = ['required_with:new_val', 'string', 'max:7'];
-
             foreach (request()->input('new_val_col') as $key => $input) {
-                $rules['new_val.'.$key] = ['required', 'string'];
+                if($input == config('lp_op_programs.lp_ds_col_institution_id')) {
+                    $rules['new_val.'.$key] = ['required', 'array'];
+                } else{
+                    $rules['new_val.'.$key] = ['required', 'string'];
+                }
             }
         }
         return $rules;

@@ -25,13 +25,14 @@ class DynamicStructureSeeder extends Seeder
                 'columns' => [
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на законопроекта'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Цели, основни положения и очаквани резултати'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Необходими промени в други закони'],
-                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване'],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 4, 'label' => '№ в Плана за действие'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Цели, основни положения и очаквани резултати'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 6, 'label' => 'Необходими промени в други закони'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 7, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на публикуване за обществени консултации'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на изпращане за предварително съгласуване'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 10, 'label' => 'Месец на внасяне в Министерския съвет'],
                 ]
             ],
             [
@@ -39,13 +40,14 @@ class DynamicStructureSeeder extends Seeder
                 'columns' => [
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 1, 'label' => 'Наименование на нормативния акт'],
                     ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 2, 'label' => 'Вносител'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 4, 'label' => 'Основни положения и очаквани резултати'],
-                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Законово основание за приемане'],
-                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 6, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 7, 'label' => 'Месец на публикуване за обществени консултации'],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на изпращане за предварително съгласуване '],
-                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на внасяне в Министерския съвет'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 3, 'label' => 'Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXT, 'ord' => 4, 'label' => '№ в Плана за действие'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 5, 'label' => 'Основни положения и очаквани резултати'],
+                    ['type' => DynamicStructureColumnTypesEnum::TEXTAREA, 'ord' => 6, 'label' => 'Законово основание за приемане'],
+                    ['type' => DynamicStructureColumnTypesEnum::BOOLEAN, 'ord' => 7, 'label' => 'Изготвяне на цялостна оценка на въздействието (да/не)'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 8, 'label' => 'Месец на публикуване за обществени консултации'],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 9, 'label' => 'Месец на изпращане за предварително съгласуване '],
+                    ['type' => DynamicStructureColumnTypesEnum::DATE, 'ord' => 10, 'label' => 'Месец на внасяне в Министерския съвет'],
                 ]
             ],
             [
