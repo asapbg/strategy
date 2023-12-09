@@ -682,4 +682,7 @@ return [
     'moderators' => 'Модератор|Модератори',
     'strategy_documents' => 'Стратегически документи',
     'strategy_documents_plural' => 'Стратегически документи',
+    'nomenclature.laws'     => 'Закон|Закони',
+    'laws'     => 'Закон|Закони',
+    'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)'
 ];

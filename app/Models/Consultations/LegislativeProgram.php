@@ -10,6 +10,7 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class LegislativeProgram extends ModelActivityExtend
@@ -129,10 +130,14 @@ class LegislativeProgram extends ModelActivityExtend
             'select
                         legislative_program_row.month,
                         legislative_program_row.row_num,
-                        json_agg(json_build_object(\'id\', legislative_program_row.id, \'value\', legislative_program_row.value, \'type\', dynamic_structure_column.type, \'dsc_id\', dynamic_structure_column.id, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label)) as columns
+                        json_agg(json_build_object(\'id\', legislative_program_row.id, \'value\', legislative_program_row.value, \'type\', dynamic_structure_column.type, \'dsc_id\', dynamic_structure_column.id, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label, \'institution_ids\', (select json_agg(legislative_program_row_institution.institution_id) as institution_ids from legislative_program_row_institution where legislative_program_row_institution.legislative_program_row_id = legislative_program_row.id))) as columns,
+                        json_agg(institution_translations.name) FILTER (where institution_translations.name is not null) as name_institutions
                     from legislative_program_row
                     join dynamic_structure_column on dynamic_structure_column.id = legislative_program_row.dynamic_structures_column_id
                     join dynamic_structure_column_translations on dynamic_structure_column_translations.dynamic_structure_column_id = dynamic_structure_column.id and dynamic_structure_column_translations.locale = \''.app()->getLocale().'\'
+                    left join legislative_program_row_institution on legislative_program_row_institution.legislative_program_row_id = legislative_program_row.id
+                    left join institution on institution.id = legislative_program_row_institution.institution_id
+                    left join institution_translations on institution_translations.institution_id = institution.id and institution_translations.locale = \''.app()->getLocale().'\'
                     where
                         legislative_program_row.legislative_program_id = '.(int)$this->id.'
                         and legislative_program_row.deleted_at is null
@@ -147,7 +152,7 @@ class LegislativeProgram extends ModelActivityExtend
             ->select(['legislative_program_row.id', 'legislative_program_row.value as name'])
             ->join('legislative_program_row', function ($j){
                 $j->on('legislative_program_row.legislative_program_id', '=', 'legislative_program.id')
-                    ->where('legislative_program_row.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+                    ->where('legislative_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.lp_ds_col_title_id'));
             })
             ->leftJoin('public_consultation', function ($j){
                 $j->on('public_consultation.legislative_program_id', '=', 'legislative_program.id')
@@ -163,6 +168,12 @@ class LegislativeProgram extends ModelActivityExtend
 
         return $q->get();
     }
+
+    /**
+     *  DO NOT CHANGE WITHOUT DISCUSSION !!!
+     * @param $filters
+     * @return Collection
+     */
     public static function select2AjaxOptionsFilterByInstitution($filters)
     {
         $q = DB::table('legislative_program')
@@ -170,7 +181,7 @@ class LegislativeProgram extends ModelActivityExtend
                 DB::raw('max(legislative_program_row.value) || \' [Програма \' || max(to_char(legislative_program.from_date, \'MM.YYYY\')) || \' - \' || max(to_char(legislative_program.to_date, \'MM.YYYY\')) || \']\' as name')])
             ->join('legislative_program_row', function ($j){
                 $j->on('legislative_program_row.legislative_program_id', '=', 'legislative_program.id')
-                    ->where('legislative_program_row.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_TITLE_ID);
+                    ->where('legislative_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.lp_ds_col_title_id'));
             })
             ->leftJoin('public_consultation', function ($j){
                 $j->on('public_consultation.legislative_program_id', '=', 'legislative_program.id')
@@ -180,8 +191,10 @@ class LegislativeProgram extends ModelActivityExtend
             $q->join('legislative_program_row as institution_col', function ($j) use($filters){
                 $j->on('institution_col.legislative_program_id', '=', 'legislative_program_row.legislative_program_id')
                     ->on('institution_col.row_num', '=', 'legislative_program_row.row_num')
-                    ->where('institution_col.dynamic_structures_column_id', '=', LegislativeProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                    ->where('institution_col.value', '=', (int)$filters['institution']);
+                    ->where('institution_col.dynamic_structures_column_id', '=', config('lp_op_programs.lp_ds_col_institution_id'));
+            })->join('legislative_program_row_institution', function ($j) use($filters){
+                $j->on('legislative_program_row_institution.legislative_program_row_id', '=', 'institution_col.id')
+                    ->where('legislative_program_row_institution.institution_id', '=', (int)$filters['institution']);
             });
         }
         if(isset($filters['programId']) && $filters['programId'] != '') {
@@ -191,6 +204,7 @@ class LegislativeProgram extends ModelActivityExtend
             $q->where('legislative_program_row.value', 'ilike', '%'.$filters['search'].'%');
         }
         $q->whereNull('legislative_program.deleted_at');
+        $q->where('legislative_program_row.dynamic_structures_column_id', '=', config('lp_op_programs.lp_ds_col_title_id'));
 
         $q->groupBy('legislative_program_row.id');
 

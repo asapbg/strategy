@@ -64,7 +64,7 @@
                 <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
                   <span class="obj-icon-info">
                     <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
-                      {{ $item->importerInstitution->name }}
+                      {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
                   </span>
                 </a>
             </div>

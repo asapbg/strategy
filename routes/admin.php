@@ -419,6 +419,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/nomenclatures/field-of-actions/{action}/delete', 'destroy')->name('nomenclatures.field_of_actions.delete');
     });
 
+    Route::controller(\App\Http\Controllers\Admin\Nomenclature\LawController::class)->group(function () {
+        Route::get('/nomenclature/laws', 'index')->name('nomenclature.law')->middleware('can:viewAny,App\Models\Law');
+        Route::get('/nomenclature/laws/edit/{item?}', 'edit')->name('nomenclature.law.edit');
+        Route::match(['post', 'put'], '/nomenclature/laws/store/{item?}', 'store')->name('nomenclature.law.store');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function () {
         Route::get('/reports', 'index')->name('reports.index');
         Route::get('/reports/create', 'create')->name('reports.create');

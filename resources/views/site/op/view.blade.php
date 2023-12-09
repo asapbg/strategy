@@ -73,17 +73,28 @@
                                                                             <div class="row mb-3 mt-1 ">
                                                                                 <div class="col-md-6">
                                                                                     <p class="fw-bold fs-18 mb-1">{{ $r->label }}</p>
-                                                                                    <p>
-                                                                                        @if($r->dsc_id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
-                                                                                            {{ $institutions[(int)$r->value] ?? '---' }}
+                                                                                        @if($r->dsc_id == config('lp_op_programs.op_ds_col_institution_id'))
+                                                                                            @if(!empty($row->name_institutions))
+                                                                                                @php($nameInstitutions = json_decode($row->name_institutions))
+                                                                                                @if(sizeof($nameInstitutions))
+                                                                                                    <p>
+                                                                                                        @foreach($nameInstitutions as $name)
+                                                                                                            @if(!$loop->first){{ ',' }}<br>@endif{{ $name }}
+                                                                                                        @endforeach
+                                                                                                    </p>
+                                                                                                @else
+                                                                                                    {{ '---' }}
+                                                                                                @endif
+                                                                                            @else
+                                                                                                {{ '---' }}
+                                                                                            @endif
                                                                                         @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
-                                                                                            {!! $r->value !!}
+                                                                                            {!! html_entity_decode($r->value) !!}
                                                                                         @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                                            {{ $r->value ? __('custom.yes') : __('custom.no') }}
+                                                                                            <p>{{ $r->value ? __('custom.yes') : __('custom.no') }}</p>
                                                                                         @else
-                                                                                            {{ $r->value }}
+                                                                                            <p>{{ $r->value }}</p>
                                                                                         @endif
-                                                                                    </p>
                                                                                 </div>
 {{--                                                                            @if($cnt == 2 || $loop->last)--}}
 {{--                                                                                    <hr class="custom-hr">--}}

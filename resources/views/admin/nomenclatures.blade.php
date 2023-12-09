@@ -191,6 +191,14 @@
                                 {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}
                             </a>
                         </div>
+
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block nomenclature-btn"
+                               href="{{ route('admin.nomenclature.law') }}">
+                                <i class="fas fa-gavel"></i>
+                                {{ trans_choice('custom.nomenclature.laws', 2) }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
