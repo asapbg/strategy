@@ -28,8 +28,10 @@ use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\Law;
 use App\Models\LinkCategory;
 use App\Models\Poll;
+use App\Models\Pris;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
@@ -152,10 +154,13 @@ class PublicConsultationController extends AdminController
         }
         $polls = $item->id ? Poll::whereDoesntHave('consultations')->Active()->NotExpired()->get() : null;
 
+        $pris = Pris::Decrees()->get();
+        $laws = Law::with(['translations'])->get();
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
-            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions'));
+            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -193,6 +198,9 @@ class PublicConsultationController extends AdminController
 
             $validated['operational_program_id'] = isset($validated['operational_program_id']) && (int)$validated['operational_program_id'] > 0 ? $validated['operational_program_id'] : null;
             $validated['legislative_program_id'] = isset($validated['legislative_program_id']) && (int)$validated['legislative_program_id'] > 0 ? $validated['legislative_program_id'] : null;
+
+            $validated['pris_id'] = isset($validated['pris_id']) && $validated['pris_id'] > 0 ? $validated['pris_id'] : null;
+            $validated['law_id'] = isset($validated['law_id']) && $validated['law_id'] > 0 ? $validated['law_id'] : null;
 
             $fillable = $this->getFillableValidated($validated, $item);
             if( !$id ) {

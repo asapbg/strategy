@@ -51,6 +51,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         $query->whereNotNull('pris.published_at');
     }
 
+    public function scopeDecrees($query){
+        $query->where('pris.legal_act_type_id', '=', LegalActType::TYPE_DECREES);
+    }
+
     protected function regNum(): Attribute
     {
         return Attribute::make(
@@ -114,6 +118,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     public function consultation(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id')->withTrashed();
+    }
+
+    public function decreesConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultation::class, 'pris_id', 'id');
     }
 
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne

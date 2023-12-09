@@ -10,6 +10,7 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OperationalProgram extends ModelActivityExtend
@@ -177,6 +178,11 @@ class OperationalProgram extends ModelActivityExtend
         return $q->get();
     }
 
+    /**
+     * DO NOT CHANGE WITHOUT DISCUSSION !!!
+     * @param $filters
+     * @return Collection
+     */
     public static function select2AjaxOptionsFilterByInstitution($filters){
         $q = DB::table('operational_program')
             ->select(['operational_program_row.id',

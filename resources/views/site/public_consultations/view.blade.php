@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <div class="container-fluid">
+        <div class="container-fluid">8
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end">
                     @can('update', $item)

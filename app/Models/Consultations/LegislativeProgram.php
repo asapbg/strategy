@@ -10,6 +10,7 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class LegislativeProgram extends ModelActivityExtend
@@ -167,6 +168,12 @@ class LegislativeProgram extends ModelActivityExtend
 
         return $q->get();
     }
+
+    /**
+     *  DO NOT CHANGE WITHOUT DISCUSSION !!!
+     * @param $filters
+     * @return Collection
+     */
     public static function select2AjaxOptionsFilterByInstitution($filters)
     {
         $q = DB::table('legislative_program')
