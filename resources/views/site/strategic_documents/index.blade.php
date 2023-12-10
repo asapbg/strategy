@@ -56,7 +56,7 @@
                                                     <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
                                                         role="button" title="{{ __('custom.deletion') }}"></i>
                                                 </a>
-                                                <form class="d-none" method="GET"
+                                                <form class="d-none" method="GET" id="search-form"
                                                     action="{{ route( $deleteRouteName , [$document->id]) }}"
                                                     name="DELETE_ITEM_{{ $document->id }}">
                                                     @csrf

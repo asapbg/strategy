@@ -157,7 +157,7 @@
                         <tr id="fileRow_head_{{ $f->id }}">
                             <td class="pt-4 bl-primary-2"> {{ $f->display_name }} </td>
                             <td class="pt-4 bl-primary-2">
-                                {{ $f->documentType->name }}
+                                {{ $f->documentType?->name }}
                             </td>
                             <td class="pt-4">
                                 @if (!$f->valid_at)
@@ -254,8 +254,8 @@
                                                     @enderror
                                                 </div>
                                             @endforeach
-
                                             @if(isset($f->parentFile?->versions))
+
                                                 <div class="col-md-3 mb-3">
                                                     <a class="mr-3"
                                                        href="{{ route('admin.strategic_documents.file.download', $f->parentFile) }}"

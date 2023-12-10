@@ -200,6 +200,9 @@
 <div class="row mb-5 action-btn-wrapper">
     <div class="col-md-3 col-sm-12">
         <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
+        <span class="btn rss-sub main-color clear" id="clearForm">
+            <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
+        </span>
     </div>
 
     <div class="col-md-9 text-end col-sm-12">

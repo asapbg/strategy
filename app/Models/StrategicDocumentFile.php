@@ -143,7 +143,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         } else {
             $displayName =  $this->display_name . '. {' . trans('custom.published_at') . ' ' .
                 Carbon::parse($this->valid_at)->format('d-m-Y') . ' / ' . trans('custom.valid_at') .
-                ' ' . $expiringDate . ' / ' . $this->documentType->name . '}';
+                ' ' . $expiringDate . ' / ' . $this->documentType?->name . '}';
         }
 
         return $displayName;
@@ -166,7 +166,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     {
         return $this->hasOne(StrategicDocumentFile::class, 'strategic_document_file_id')
             ->where('locale', app()->getLocale())
-            ->orderBy('version', 'desc');
+            ->orderByDesc('version');
     }
 
     /**
@@ -174,9 +174,10 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
      *
      * @return BelongsTo
      */
+
     public function parentFile(): BelongsTo
     {
-        return $this->belongsTo(StrategicDocumentFile::class, 'strategic_document_file_id');
+        return $this->belongsTo(StrategicDocumentFile::class, 'strategic_document_file_id')->where('locale', app()->getLocale());
     }
 
     public function user()
