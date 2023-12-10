@@ -2,6 +2,7 @@
     <script>
         $(document).ready(function() {
             loadStrategyDocuments();
+
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
@@ -311,7 +312,8 @@
                 const baseUrl = '/strategy-documents';
 
                 window.history.replaceState({}, '', baseUrl);
-                loadStrategyDocuments(1, baseUrl);
+                window.location.href = baseUrl;
+                //loadStrategyDocuments(1, baseUrl);
             });
 
             $(document).on('click', '.pagination a',function(event) {

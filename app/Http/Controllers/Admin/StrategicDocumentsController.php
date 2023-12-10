@@ -106,9 +106,9 @@ class StrategicDocumentsController extends AdminController
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         $consultations = PublicConsultation::with('translations')->get();
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
-        $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
+        $mainFile = $strategicDocumentFilesBg->where('is_main', true)->sortByDesc('version')->first();
         $mainFiles = $item->files->where('is_main', true);
-        $mainFile = $mainFile->parentFile->latestVersion ?? $mainFile;
+        $mainFile = $mainFile->parentFile?->latestVersion ?? $mainFile;
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //

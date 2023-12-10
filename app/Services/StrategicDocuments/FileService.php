@@ -60,7 +60,7 @@ class FileService
                         $uploadedFile = Arr::get($validated, 'file_strategic_documents_bg');//$request->file('file_strategic_documents_bg');
                     }
                 }
-                $isMain = $file->parentFile->is_main ?? $isMain;
+                $isMain = $file->parentFile?->is_main ?? $isMain;
 
                 $fileNameToStore = round(microtime(true)).'.'.$uploadedFile->getClientOriginalExtension();
                 $uploadedFile->storeAs(StrategicDocumentFile::DIR_PATH, $fileNameToStore, 'public_uploads');
@@ -167,9 +167,8 @@ class FileService
      */
     public function prepareFileData($strategicDocumentFiles, $adminView = true): array
     {
-        $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
-
-        $mainFile = $mainFile->parentFile->latestVersion ?? $mainFile;
+        $mainFile = $strategicDocumentFiles->where('is_main', 1)->sortByDesc('version')->first();
+        $mainFile = $mainFile->parentFile?->latestVersion ?? $mainFile;
         $fileData = [];
 
         if ($strategicDocumentFiles->isEmpty() || !$mainFile) {
