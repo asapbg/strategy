@@ -6,6 +6,32 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardTranslation;
 use Illuminate\Database\Seeder;
 
+/**
+ * SQL used for generating the json export:
+ *
+ * select
+ * councils."councilID",
+ * councilattribs."category",
+ * g."name",
+ * councilattribs."institutionType",
+ * councilattribs."actType",
+ * (
+ * select
+ * councilmembers."positionOther"
+ * from
+ * councilmembers
+ * where
+ * councils."councilID" = councilmembers."councilID"
+ * limit 1),
+ * councilattribs."requiredSessionsCount",
+ * councils.active
+ * from
+ * councils
+ * inner join councilattribs on
+ * councils."councilID" = councilattribs."councilID"
+ * inner join group_ g on
+ * councils."groupID" = g."groupId"
+ */
 class AdvisoryBoardSeeder extends Seeder
 {
 

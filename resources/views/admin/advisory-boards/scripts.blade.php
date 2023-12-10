@@ -1,7 +1,7 @@
 @push('scripts')
     <script type="application/javascript">
         function loadMemberData(url) {
-            const form = document.querySelector('form[name=CHAIRMAN_FORM_EDIT]');
+            const form = document.querySelector('form[name=MEMBER_FORM_EDIT]');
 
             $.ajax({
                 url: url,
@@ -11,38 +11,13 @@
                     form.querySelector('input[name=advisory_board_member_id]').value = data.id;
                     form.querySelector('#member_name_bg').value = data.translations[0].member_name;
                     form.querySelector('#member_name_en').value = data.translations[1].member_name;
-                    form.querySelector('#advisory_type_id_change').value = data.advisory_type_id;
-                    $('#advisory_type_id_change').trigger('change');
-                    form.querySelector('#advisory_chairman_type_id_change').value = data.advisory_chairman_type_id;
-                    $('#advisory_chairman_type_id_change').trigger('change');
+                    form.querySelectorAll('input[name=advisory_type_id]').forEach(input => input.value === data.advisory_type_id ? input.checked = true : null);
                     form.querySelector('#member_job_bg').value = data.translations[0].member_job;
                     form.querySelector('#member_job_en').value = data.translations[1].member_job;
                     $(form.querySelector('#member_notes_bg')).summernote("code", data.translations[0].member_notes);
                     $(form.querySelector('#member_notes_en')).summernote("code", data.translations[1].member_notes);
                     form.querySelector('#email').value = data.email;
                     $('#consultation_level_id_change').trigger('change');
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
-        }
-
-        function loadSecretaryCouncilData(url) {
-            const form = document.querySelector('form[name=SECRETARY_COUNCIL_FORM_EDIT]');
-
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    form.querySelector('input[name=advisory_board_secretary_council_id]').value = data.id;
-                    form.querySelector('#name_bg').value = data.translations[0].name;
-                    form.querySelector('#name_en').value = data.translations[1].name;
-                    form.querySelector('#job_bg').value = data.translations[0].job;
-                    form.querySelector('#job_en').value = data.translations[1].job;
-                    $(form.querySelector('#notes_bg')).summernote("code", data.translations[0].notes);
-                    $(form.querySelector('#notes_en')).summernote("code", data.translations[1].notes);
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);
@@ -122,7 +97,11 @@
                     form.querySelector('input[name="file_description_' + locale + '"]').value = data['description_' + locale];
                     form.querySelector('input[name="resolution_council_ministers"]').value = data.resolution_council_ministers;
                     form.querySelector('input[name="state_newspaper"]').value = data.state_newspaper;
-                    form.querySelector('input[name="effective_at"]').value = new Date(data.effective_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    form.querySelector('input[name="effective_at"]').value = new Date(data.effective_at).toLocaleDateString('de-DE', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

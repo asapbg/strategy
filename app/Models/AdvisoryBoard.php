@@ -27,7 +27,6 @@ use Illuminate\Support\Collection;
  * @property Collection               $members
  * @property AdvisoryBoardFunction    $advisoryFunction
  * @property Collection               $functionFiles
- * @property Collection               $secretaryCouncil
  * @property AdvisoryBoardSecretariat $secretariat
  * @property Collection               $meetings
  * @property Collection               $regulatoryAllFiles
@@ -104,15 +103,13 @@ class AdvisoryBoard extends ModelActivityExtend
     public function viceChairmen(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class)
-            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
-            ->where('advisory_chairman_type_id', AdvisoryChairmanType::VICE_CHAIRMAN);
+            ->where('advisory_type_id', AdvisoryTypeEnum::VICE_CHAIRMAN->value);
     }
 
     public function chairmen(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class)
-            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
-            ->where('advisory_chairman_type_id', AdvisoryChairmanType::HEAD_CHAIRMAN);
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value);
     }
 
     public function advisoryFunction(): HasOne
@@ -148,7 +145,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function secretaryCouncil(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardSecretaryCouncil::class);
+        return $this->hasMany(AdvisoryBoardMember::class)->where('advisory_type_id', AdvisoryTypeEnum::SECRETARY->value);
     }
 
     public function authority(): BelongsTo

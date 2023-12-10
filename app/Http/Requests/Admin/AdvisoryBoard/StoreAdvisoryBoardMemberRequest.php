@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\AdvisoryBoard;
 
+use App\Enums\AdvisoryTypeEnum;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
 use App\Traits\FailedAuthorization;
@@ -30,10 +31,9 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'advisory_board_id'         => 'required|integer|exists:advisory_boards,id',
-            'advisory_type_id'          => 'required|integer',
-            'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
-            'email'                     => 'nullable|email',
+            'advisory_board_id' => 'required|integer|exists:advisory_boards,id',
+            'advisory_type_id'  => 'required|integer|in:' . rtrim(implode(',', AdvisoryTypeEnum::values()), ','),
+            'email'             => 'nullable|email',
         ];
 
         foreach (config('available_languages') as $lang) {

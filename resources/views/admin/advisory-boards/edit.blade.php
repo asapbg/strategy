@@ -21,12 +21,6 @@
                                aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="secretary-of-council-tab" data-toggle="pill"
-                               href="#secretary-of-council" role="tab"
-                               aria-controls="secretary-of-council"
-                               aria-selected="false">{{ trans_choice('custom.secretary_of_council', 2) }}</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" id="secretariat-tab" data-toggle="pill" href="#secretariat" role="tab"
                                aria-controls="secretariat"
                                aria-selected="false">{{ trans_choice('custom.secretariat', 2) }}</a>
@@ -73,11 +67,6 @@
 
                         <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
                             @include('admin.advisory-boards.tabs.members')
-                        </div>
-
-                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel"
-                             aria-labelledby="secretary-of-council-tab">
-                            @include('admin.advisory-boards.tabs.secretary-of-council')
                         </div>
 
                         <div class="tab-pane fade" id="secretariat" role="tabpanel" aria-labelledby="secretariat-tab">
@@ -132,7 +121,7 @@
     @includeIf('admin.advisory-boards.modals.edit-section')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')
     @includeIf('admin.advisory-boards.modals.edit-meeting')
-    @includeIf('admin.advisory-boards.modals.create-chairman-form', ['resource' => $title_singular])
+    @includeIf('admin.advisory-boards.modals.create-member-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-moderator-file')
     @includeIf('admin.advisory-boards.modals.add-meeting-decisions')
@@ -142,8 +131,6 @@
     @includeIf('admin.advisory-boards.modals.add-function-file')
     @includeIf('admin.advisory-boards.modals.add-meeting-file')
     @includeIf('admin.advisory-boards.modals.edit-file')
-    @includeIf('admin.advisory-boards.modals.create-secretary-council-form')
-    @includeIf('admin.advisory-boards.modals.edit-secretary-council-form')
 
     <!-- Scripts -->
     @includeIf('admin.advisory-boards.scripts')

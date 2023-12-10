@@ -17,7 +17,6 @@ use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardModerator;
-use App\Models\AdvisoryBoardSecretaryCouncil;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
@@ -236,7 +235,6 @@ class AdvisoryBoardController extends AdminController
         $function = $item->advisoryFunction;
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
-        $secretaries_council = AdvisoryBoardSecretaryCouncil::withTrashed()->where('advisory_board_id', $item->id)->get();
         $meetings = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
             ->whereYear('created_at', Carbon::now()->year)
             ->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
@@ -294,7 +292,6 @@ class AdvisoryBoardController extends AdminController
                 'function',
                 'function_files',
                 'authorities',
-                'secretaries_council',
                 'secretariat',
                 'secretariat_files',
                 'regulatory_framework_files',

@@ -445,7 +445,7 @@ return [
         'advisory_type_id' => 'Тип',
         'advisory_act_type_id' => 'Акт на създаване',
         'report_time' => 'Час',
-        'vice_chairman' => 'Заместник председател',
+        'vice_chairman' => 'Заместник-председател',
         'council_members' => 'Членове на съвета',
         'job' => 'Длъжност',
         'member_notes' => 'Бележки и кратка информация',
