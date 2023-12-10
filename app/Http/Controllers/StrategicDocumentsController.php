@@ -37,13 +37,11 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
-        $paginatedResults = $request->get('pagination-results') ?? 10;
         $strategicDocuments = $this->prepareResults($request);
         $policyAreas = PolicyArea::all();
         $preparedInstitutions = AuthorityAcceptingStrategic::all();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
-        $categoriesData = $this->prepareCategoriesData($strategicDocuments);
         $strategicDocumentsCommonService = app(CommonService::class);
         if ($request->input('export')) {
             $exportService = app(ExportService::class);
@@ -66,9 +64,6 @@ class StrategicDocumentsController extends Controller
             return $strategicDocumentsCommonService->preparePdfReportData($strategicDocs);
         }
 
-        $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
-        $resultCount = $strategicDocuments->total();
-        //$pageTitle = $this->title_singular;
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
         $ekateAreas = EkatteArea::all();
         $ekateMunicipalities = EkatteMunicipality::all();
@@ -79,7 +74,7 @@ class StrategicDocumentsController extends Controller
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'title_text'));
+        return $this->view('site.strategic_documents.ajax_index', compact('pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
 
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
@@ -94,9 +89,8 @@ class StrategicDocumentsController extends Controller
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
 
-        $categoriesData = $this->prepareCategoriesData($strategicDocuments);
-
         if (Arr::get($queryParams, 'view') == 'tree-view') {
+            $categoriesData = $this->prepareCategoriesData($strategicDocuments);
             $strategicDocumentsHtml = $this->prepareStrategicDocumentsTreeView($strategicDocuments->get(), $categoriesData);
             $pagination = '';
         } else {
