@@ -16,6 +16,12 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int                      $id
+ * @property int                      $policy_area_id
+ * @property int                      $authority_id
+ * @property int                      $advisory_act_type_id
+ * @property int                      $advisory_chairman_type_id
+ * @property int                      $meetings_per_year
+ * @property bool                     $active
  * @property string                   $name
  *
  * @property Collection               $members

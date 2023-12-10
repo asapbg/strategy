@@ -134,12 +134,14 @@
                         </tbody>
                     </table>
 
-                    <div class="row">
-                        <nav aria-label="Page navigation example">
-                            @if(isset($items) && $items->count() > 0)
-                                {{ $items->appends(request()->query())->links() }}
-                            @endif
-                        </nav>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <nav aria-label="Page navigation example">
+                                @if(isset($items) && $items->count() > 0)
+                                    {{ $items->appends(request()->query())->links() }}
+                                @endif
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>
