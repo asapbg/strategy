@@ -225,6 +225,10 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('update', $item);
 
         $archive_category = request()->get('archive_category', '');
+        $query = $item->newQuery();
+        $item = $query->with(['advisoryFunctions' => function($query) {
+            $query->with('files');
+        }])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
@@ -232,7 +236,6 @@ class AdvisoryBoardController extends AdminController
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
-        $function = $item->advisoryFunction;
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $meetings = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
@@ -264,7 +267,7 @@ class AdvisoryBoardController extends AdminController
                 ->orderBy('created_at', 'desc')->paginate(10);
         }
 
-        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $function?->allFiles : $function?->files;
+//        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $functions?->allFiles : $functions?->files;
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 
@@ -289,8 +292,6 @@ class AdvisoryBoardController extends AdminController
                 'institutions',
                 'consultation_levels',
                 'members',
-                'function',
-                'function_files',
                 'authorities',
                 'secretariat',
                 'secretariat_files',

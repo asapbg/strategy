@@ -1,5 +1,153 @@
 @push('scripts')
     <script type="application/javascript">
+        /**
+         * Create new row with files.
+         */
+        function addFilesRow(form) {
+            const container = form.querySelector('.row.files');
+
+            const row = document.createElement('div');
+            row.classList.add('row');
+
+            const card_header = document.createElement('div');
+            card_header.classList.add('card-header');
+
+            const card_header_close_btn = document.createElement('button');
+            card_header_close_btn.classList.add('btn-close', 'float-right');
+            card_header_close_btn.type = 'button';
+            card_header_close_btn.onclick = () => card_header_close_btn.closest('.card').remove();
+            card_header.appendChild(card_header_close_btn);
+
+            const card_body = document.createElement('div');
+            card_body.classList.add('card-body');
+
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.appendChild(card_header);
+
+            // Generate input for every available language
+            for (let i in available_languages) {
+                const column = generateFileInput(available_languages[i].code, SECTION_FORM, 1 + generated_inputs);
+
+                row.appendChild(column);
+
+                generated_inputs++;
+            }
+
+            card_body.appendChild(row);
+            card.appendChild(card_body)
+
+            const container_col = document.createElement('div');
+            container_col.classList.add('col-12', 'mt-2');
+
+            container_col.appendChild(card);
+            container.appendChild(container_col);
+        }
+
+        /**
+         * Generate column with file, name and description.
+         *
+         * @param language
+         * @param form
+         * @param identifier
+         * @returns {HTMLDivElement}
+         */
+        function generateFileInput(language, form, identifier) {
+            const container = document.createElement('div');
+            container.classList.add('col-6');
+
+            const file_label = document.createElement('label');
+            file_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_label.htmlFor = `file_${language}_${identifier}`;
+            file_label.textContent = __file + ' (' + language.toUpperCase() + ')';
+
+            const required_label = document.createElement('span');
+            required_label.classList.add('required', 'ml-1')
+            required_label.textContent = '*';
+
+            file_label.appendChild(required_label);
+
+            const file_button = document.createElement('label');
+            file_button.classList.add('col-12', 'btn', 'btn-outline-secondary');
+            file_button.textContent = __chose_file;
+            file_button.onclick = () => form.querySelector(`input[id=file_${language}_${identifier}]`).click();
+
+            const file_input = document.createElement('input');
+            file_input.classList.add('d-none');
+            file_input.type = 'file';
+            file_input.id = `file_${language}_${identifier}`;
+            file_input.name = `file_${language}[]`;
+            file_input.onchange = () => attachDocFileName(file_input);
+
+            const file_document_name = document.createElement('span');
+            file_document_name.classList.add('document-name', 'd-block');
+            file_document_name.style.height = '21px';
+
+            const file_error = document.createElement('div');
+            file_error.classList.add('text-danger', 't-1', `error_file_${language}_${identifier}`);
+
+            const file_name_input_label = document.createElement('label');
+            file_name_input_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_name_input_label.htmlFor = `file_name_${language}_${identifier}`;
+            file_name_input_label.textContent = __file_name + ' (' + language.toUpperCase() + ')';
+
+            const file_name_input = document.createElement('input');
+            file_name_input.classList.add('form-control', 'form-control-sm');
+            file_name_input.id = `file_name_${language}_${identifier}`;
+            file_name_input.type = 'text';
+            file_name_input.name = `file_name_${language}[]`;
+            file_name_input.autocomplete = 'off';
+
+            const file_description_label = document.createElement('label');
+            file_description_label.classList.add('col-md-6', 'col-12', 'control-label');
+            file_description_label.htmlFor = `file_description_${language}_${identifier}`;
+            file_description_label.textContent = __file_description + ' (' + language.toUpperCase() + ')';
+
+            const file_description_input = document.createElement('input');
+            file_description_input.classList.add('form-control', 'form-control-sm');
+            file_description_input.id = `file_description_${language}_${identifier}`;
+            file_description_input.type = 'text';
+            file_description_input.name = `file_description_${language}[]`;
+            file_description_input.autocomplete = 'off';
+
+            container.appendChild(file_label);
+            container.appendChild(file_button);
+            container.appendChild(file_input);
+            container.appendChild(file_document_name);
+            container.appendChild(file_error);
+            container.appendChild(file_name_input_label);
+            container.appendChild(file_name_input);
+            container.appendChild(file_description_label);
+            container.appendChild(file_description_input);
+
+            return container;
+        }
+
+        function loadFunctionData(url) {
+            const form = document.querySelector('form[name=FUNCTION_UPDATE]');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=function_id]').value = data.id;
+
+                    if (data.working_year !== null) {
+                        form.querySelector('input[name=working_year]').value = new Date(data.working_year).toLocaleDateString('en-GB', {
+                            year: 'numeric'
+                        });
+                    }
+
+                    $(form.querySelector('#description_bg')).summernote("code", data.translations[0].description);
+                    $(form.querySelector('#description_en')).summernote("code", data.translations[1].description);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function loadMemberData(url) {
             const form = document.querySelector('form[name=MEMBER_FORM_EDIT]');
 

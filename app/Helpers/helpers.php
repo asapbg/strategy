@@ -597,6 +597,16 @@ if (!function_exists('optionsUserTypes')) {
     }
 
     if (!function_exists('copyFile')) {
+
+        /**
+         * Used to copy files from the previous project.
+         *
+         * @param $directory_copy
+         * @param $directory_paste
+         * @param $folder_id
+         *
+         * @return array
+         */
         function copyFiles($directory_copy, $directory_paste, $folder_id): array
         {
             $copied_files = [];
