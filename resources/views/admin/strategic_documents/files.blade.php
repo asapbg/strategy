@@ -256,7 +256,7 @@
                                             @endforeach
                                             @if(isset($f->parentFile?->versions))
 
-                                                <div class="col-md-3 mb-3">
+                                                <div class="col-md-12 mb-3 text-wrap">
                                                     <a class="mr-3"
                                                        href="{{ route('admin.strategic_documents.file.download', $f->parentFile) }}"
                                                        target="_blank" title="{{ __('custom.download') }}">
@@ -274,7 +274,7 @@
                                                     @if ($currentLocal != $fileVersion->locale)
                                                         @continue
                                                     @endif
-                                                    <div class="col-md-3 mb-3">
+                                                    <div class="col-md-12 mb-3 text-wrap">
                                                         <a class="mr-3"
                                                            href="{{ route('admin.strategic_documents.file.download', $fileVersion) }}"
                                                            target="_blank" title="{{ __('custom.download') }}">

@@ -79,8 +79,7 @@ class StrategicDocumentsController extends AdminController
     {
         $currentLocale = app()->getLocale();
         $item = $this->getRecord($id, ['pris.actType','documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
-        //$item = StrategicDocument::with(['pris.actType', 'documentType.translations', 'translation', 'files.parentFile.versions.translations', 'files.translations', 'files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations'])->find($id);
-        //dd($item);
+
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
