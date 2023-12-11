@@ -19,6 +19,7 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
 use App\Services\FileOcr;
+use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -86,10 +87,9 @@ class StrategicDocumentsController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
-        $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
+
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->get();
         $strategicActTypes = StrategicActType::with('translations')->get();
-        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
         $policyAreas = PolicyArea::with('translations')->get();
         $prisActs = Pris::with('translations')->get();
         //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
@@ -111,13 +111,32 @@ class StrategicDocumentsController extends AdminController
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //
+
         $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
-        })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale)->get();
-        //$ekateMunicipalities = EkatteMunicipality::with('translations')->where('locale', $currentLocale)->get();
+        })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
         $ekateMunicipalities = EkatteMunicipality::select('ekatte_municipality.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
-        })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale)->get();
+        })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
+
+        $user = auth()->user();
+        if ($user->hasRole('service_user') || $user->hasRole('super-admin')) {
+            $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
+            $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
+            $ekateAreas = $ekateAreas->get();
+            $ekateMunicipalities = $ekateMunicipalities->get();
+        } else {
+            $commonService = app(CommonService::class);
+            $userInstitutions = $commonService->mapUserToInstitutions($user);
+            $manipulicity = Arr::get($userInstitutions,'manipulicity');
+            $area = Arr::get($userInstitutions,'area');
+            $ekateMunicipalities = $manipulicity ? $ekateMunicipalities->where('ekatte_municipality.id', $manipulicity)->get() : $ekateMunicipalities->get();
+            $ekateAreas = $area ? $ekateAreas->where('ekatte_area.id', $area)->get() : $ekateAreas->get();
+
+            $authoritiesAcceptingStrategic = Arr::get($userInstitutions,'authority_accepting_strategic');
+            $strategicDocumentLevels = Arr::get($userInstitutions,'strategic_document_level');
+        }
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
             'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities'));

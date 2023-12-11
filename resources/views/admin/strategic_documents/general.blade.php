@@ -111,18 +111,21 @@
                                        for="ekatte_area_id">{{ trans_choice('custom.areas', 1) }}<span
                                         class="required"></span></label>
                                 <div class="col-12">
+                                    @if (isset($ekateAreas))
                                     <select id="ekatte_area_id" name="ekatte_area_id"
                                             class="form-control form-control-sm select2 @error('ekatte_area_id'){{ 'is-invalid' }}@enderror">
                                         @if(!$item->id)
                                             <option value="" @if(old('ekatte_area_id', '') == '') selected @endif>---
                                             </option>
                                         @endif
+
                                         @foreach ($ekateAreas as $ekateArea)
                                             <option value="{{ $ekateArea->id }}"
                                                     @if(old('ekatte_area_id', ($item->id ? $item->ekatte_area_id : 0)) == $ekateArea->id) selected
                                                     @endif data-id="{{ $ekateArea->id }}">{{ $ekateArea->ime }}</option>
                                         @endforeach
                                     </select>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -133,18 +136,20 @@
                                        for="ekatte_municipality_id">{{ trans_choice('custom.municipalities', 1) }}<span
                                         class="required"></span></label>
                                 <div class="col-12">
-                                    <select id="ekatte_municipality_id" name="ekatte_municipality_id"
-                                            class="form-control form-control-sm select2 @error('ekatte_municipality_id'){{ 'is-invalid' }}@enderror">
-                                        @if(!$item->id)
-                                            <option value="" @if(old('ekatte_municipality_id', '') == '') selected @endif>---
-                                            </option>
-                                        @endif
-                                        @foreach ($ekateMunicipalities as $ekateMunicipality)
-                                            <option value="{{ $ekateMunicipality->id }}"
-                                                    @if(old('ekatte_municipality_id', ($item->id ? $item->ekatte_municipality_id : 0)) == $ekateMunicipality->id) selected
-                                                    @endif data-id="{{ $ekateArea->id }}">{{ $ekateMunicipality->ime }}</option>
-                                        @endforeach
-                                    </select>
+                                    @if (isset($ekateMunicipalities))
+                                        <select id="ekatte_municipality_id" name="ekatte_municipality_id"
+                                                class="form-control form-control-sm select2 @error('ekatte_municipality_id'){{ 'is-invalid' }}@enderror">
+                                            @if(!$item->id)
+                                                <option value="" @if(old('ekatte_municipality_id', '') == '') selected @endif>---
+                                                </option>
+                                            @endif
+                                            @foreach ($ekateMunicipalities as $ekateMunicipality)
+                                                <option value="{{ $ekateMunicipality->id }}"
+                                                        @if(old('ekatte_municipality_id', ($item->id ? $item->ekatte_municipality_id : 0)) == $ekateMunicipality->id) selected
+                                                        @endif data-id="{{ $ekateMunicipality->id }}">{{ $ekateMunicipality->ime }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -742,6 +747,8 @@
                     });
                 }
             });
+            //$('#accept_act_institution_type_id')
+            console.log($('#accept_act_institution_type_id').val());
 
             $('#accept_act_institution_type_id').on('change', function () {
                 let selectedValue = $(this).val();
@@ -865,6 +872,14 @@
             strategicDocumentLevel.on('change', function () {
                 const selectedValue = $(this).val();
                 handleVisibility(selectedValue)
+                const acceptActInstitution = $('#accept_act_institution_type_id');
+                if (selectedValue == 2) {
+                    acceptActInstitution.val(3).trigger('change');
+                } else if (selectedValue == 3) {
+                    acceptActInstitution.val(4).trigger('change');
+                } else {
+                    acceptActInstitution.val(1).trigger('change');
+                }
             });
 
             function handleVisibility(strategicDocumentLevel) {
