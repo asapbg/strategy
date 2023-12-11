@@ -34,8 +34,8 @@ class seedOldUsers extends Command
      */
     public function handle()
     {
-        DB::table('model_has_roles')->truncate();
-        DB::table('users')->truncate();
+//        DB::table('model_has_roles')->truncate();
+//        DB::table('users')->truncate();
 
         $formatTimestamp = 'Y-m-d H:i:s';
         //TODO missing roles ??????

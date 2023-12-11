@@ -36,10 +36,10 @@ class seedOldPublicConsultations extends Command
      */
     public function handle()
     {
-        DB::table('public_consultation_connection')->truncate();
-        DB::table('public_consultation_contact')->truncate();
-        DB::table('public_consultation_translations')->truncate();
-        DB::table('public_consultation')->truncate();
+//        DB::table('public_consultation_connection')->truncate();
+//        DB::table('public_consultation_contact')->truncate();
+//        DB::table('public_consultation_translations')->truncate();
+//        DB::table('public_consultation')->truncate();
 
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';
