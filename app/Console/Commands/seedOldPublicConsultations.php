@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Models\InstitutionLevel;
+use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -36,10 +38,6 @@ class seedOldPublicConsultations extends Command
      */
     public function handle()
     {
-//        DB::table('public_consultation_connection')->truncate();
-//        DB::table('public_consultation_contact')->truncate();
-//        DB::table('public_consultation_translations')->truncate();
-//        DB::table('public_consultation')->truncate();
 
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';
@@ -48,9 +46,44 @@ class seedOldPublicConsultations extends Command
         //records per query
         $step = 50;
         //max id in old db
-        $maxOldId = DB::connection('old_strategy')->select('select max(publicconsultations.id) from publicconsultations');
+        $maxOldId = DB::connection('old_strategy')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
         $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+
+        //Create default institution
+        $diEmail = 'magdalena.mitkova+egov@asap.bg';
+        $dInstitution = Institution::where('email', '=', $diEmail)->withTrashed()->first();
+        if(!$dInstitution) {
+            $insLevel = InstitutionLevel::create([
+                'system_name' => 'default'
+            ]);
+            if(!$insLevel) {
+                $this->error('Cant create default institution');
+            }
+            if($insLevel) {
+                foreach ($locales as $locale) {
+                    $insLevel->translateOrNew($locale['code'])->name = 'Default Level';
+                }
+                $insLevel->save();
+            }
+
+            $dInstitution = Institution::create([
+                'email' => $diEmail,
+                'institution_level_id' => $insLevel->id
+            ]);
+
+            if(!$dInstitution) {
+                $this->error('Cant create default institution');
+            }
+            foreach ($locales as $locale) {
+                $dInstitution->translateOrNew($locale['code'])->name = 'Default';
+            }
+            $dInstitution->save();
+        }
+
+        $ourUsersInstitutions = User::get()->pluck('institution_id', 'id')->toArray();
+        $ourUsers = User::get()->pluck('old_id', 'id')->toArray();
+        $ourInstitutions = Institution::with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -80,12 +113,13 @@ class seedOldPublicConsultations extends Command
                         -- law_id
                         -- pris_id
                         -- translation
-                        pc.title
+                        pc.title,
                         -- description
                         -- short_term_reason
                         -- short_term_reason
                         -- responsible_unit
                         -- importer
+                        pc.createdbyuserid as author_id
                     from dbo.publicconsultations pc
                         where pc.languageid = 1
                     order by pc.id ');
@@ -95,16 +129,19 @@ class seedOldPublicConsultations extends Command
                     try {
                         foreach ($oldDbResult as $item) {
                             $comments = [];
+                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                            $institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
+
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
-                                'consultation_level_id' => null, //TODO get level ?????????????
-                                'act_type_id' => null, //TODO get act type ?????????????
+                                'consultation_level_id' => $institutionLevel,
+                                'act_type_id' => null,
                                 'legislative_program_id' => null,
                                 'operational_program_id' => null,
-                                'open_from' => !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatTimestamp) : null,
-                                'open_to' => !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatTimestamp) : null,
-                                'importer_institution_id' => null, //TODO get institution ????????????? we can get this by author if we receive a mapping for user institution to IISDA
-                                'responsible_institution_id' => null, //TODO get institution ????????????? we can get this by author if we receive a mapping for user institution to IISDA
+                                'open_from' => !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null,
+                                'open_to' => !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null,
+                                'importer_institution_id' => $institutionId,
+                                'responsible_institution_id' => $institutionId,
                                 'active' => $item->active,
                                 'deleted_at' => !empty($item->deleted_at) ? Carbon::parse($item->deleted_at)->format($formatTimestamp) : null,
                                 'created_at' => !empty($item->created_at) ? Carbon::parse($item->created_at)->format($formatTimestamp) : null,
@@ -129,7 +166,6 @@ class seedOldPublicConsultations extends Command
                                 }
                                 $newPc->save();
 
-                            //TODO add comments Try to get comments with publication
                                 $oldDbComments = DB::connection('old_strategy')
                                     ->select('select
                                         pcomments.createdbyuserid as user_id,
@@ -145,12 +181,11 @@ class seedOldPublicConsultations extends Command
 
                                 if(sizeof($oldDbComments)) {
                                     foreach ($oldDbComments as $c) {
-                                        $user = User::where('old_id', '=', $c->user_id)->first();
                                         $newComment = Comments::create([
-                                            'user_id' => $user ? $user->id : null,
+                                            'user_id' => $ourUsers[$c->user_id] ?? null,
                                             'content' => $c->content,
                                             'object_code' => Comments::PC_OBJ_CODE,
-                                            'object_id' => $c->object_id,
+                                            'object_id' => $newPc->id,
                                             'created_at' => $c->created_at,
                                             'deleted_at' => $c->deleted_at,
                                             'active' => $c->active,
@@ -159,11 +194,13 @@ class seedOldPublicConsultations extends Command
                                         $comments[] = $newComment;
                                     }
                                 }
+                                //TODO migrate files
+                                $this->comment('Finish import of public consultation with old ID '.$item->old_id);
                             }
                         }
                         DB::commit();
                     } catch (\Exception $e) {
-                        Log::error('Migration old startegy users: ' . $e);
+                        Log::error('Migration old startegy public consultations, comment and files: ' . $e);
                         DB::rollBack();
                         dd($prepareNewPc, $comments);
                     }
@@ -171,8 +208,5 @@ class seedOldPublicConsultations extends Command
                 $currentStep += $step;
             }
         }
-
-        Artisan::call('db:seed UsersSeeder');
-        Artisan::call('db:seed UsersAZSeeder');
     }
 }

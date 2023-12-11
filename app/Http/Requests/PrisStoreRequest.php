@@ -27,7 +27,7 @@ class PrisStoreRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'doc_num' => ['required', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('doc_date'))],
+            'doc_num' => ['string', 'numeric', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('doc_date'))],
             'doc_date' => ['required', 'date'],
             'legal_act_type_id' => ['required', 'numeric', 'exists:legal_act_type,id'],
             'institution_id' => ['required', 'numeric', 'exists:institution,id'],

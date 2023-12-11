@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\PrisConnectionStatusEnum;
 use App\Models\File;
 use App\Models\InstitutionLevel;
 use App\Models\Pris;
@@ -14,21 +15,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedOldPris extends Command
+class seedOldPrisCsv extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'old:pris';
+    protected $signature = 'old:pris_csv';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Migrate old PRIS data to application';
+    protected $description = 'Migrate old PRIS from csv data to application';
 
     /**
      * Execute the console command.
@@ -78,6 +79,13 @@ class seedOldPris extends Command
             4 => 5, //'Протокол',
             5 => 4, //'Разпореждане',
             6 => 6, //'Стенограма',
+        ];
+
+        $prisStatuses = [
+            'изменен' => PrisConnectionStatusEnum::CHANGED->value,
+            'допълнен' => PrisConnectionStatusEnum::SUPPLEMENTED->value,
+            'отменен' => PrisConnectionStatusEnum::CANCELED->value,
+            'поверителен' => PrisConnectionStatusEnum::CONFIDENRIAL
         ];
 
         $importers = [
@@ -317,6 +325,17 @@ class seedOldPris extends Command
         //start from this id in old database
         $currentStep = (int)DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
 
+        $csvData = [];
+        $csvFile = fopen(base_path("database/data/final-docs3-txt.csv"), "r");
+        //1 documentid, 2 number_pris, 3 content, 4 act_no, 5 date, 6 title, 7 author, 8 protocol, 9 state_gazette_all, 10 state_gazette_issue, 11 state_gazette_year, 12 relationships, 13 normative_text, 14 tags, 15 status
+        $firstRow = true;
+        while (($data = fgetcsv($csvFile, 2000, ";")) !== FALSE) {
+            if($firstRow) {$firstRow = false; continue;}
+            if(is_array($data) && sizeof($data) == 15) {
+                $csvData[(int)$data[0]] = $data;
+            }
+        }
+
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
 
@@ -354,150 +373,115 @@ class seedOldPris extends Command
                     DB::beginTransaction();
                     try {
                         foreach ($oldDbResult as $item) {
+                            if(!isset($csvData[$item->old_id])) {
+                                $this->comment('OLD ID '.$item->old_id.' not found in csv - Skipped');
+                                continue;
+                            }
+                            $itemCsvData = $csvData[$item->old_id];
                             $tags = [];
                             $newItemTags = [];//tags ids to connect to new item
 
-                            $xml = simplexml_load_string($item->to_parse_xml_details);
-                            $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
-                            $data = json_decode($json, true);
-
-                            if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
-                                $attributes = $data['DocumentContent']['Attribute'];
-                                //main record
-                                $prepareNewPris = [
-                                    'old_id' => $item->old_id,
-                                    'doc_num' => null,
-                                    'doc_date' => null,
-                                    'old_doc_num' => null,
-                                    'active' => $item->active,
-                                    'legal_act_type_id' => $legalTypeDocs[$item->old_doc_type_id],
-                                    'published_at' => Carbon::parse($item->published_at)->format($formatTimestamp),
-                                    'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
-                                    'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
-                                    'institution_id' => null, // When old record do not have institution use our default : $dInstitution
-                                    'version' => null, // TODO ??????
-                                    'protocol' => null,
-                                    'newspaper_number' => null,
-                                    'newspaper_year' => null,
-                                    'old_newspaper_full' => null,
-                                    'old_connections' => null,
-                                    'public_consultation_id' => null,
-                                    'about' => '',
-                                    'legal_reason' => '',
-                                    'importer' => '',
-                                ];
-                                //Do something
-                                //1. Parse tags and insert if need to
-                                foreach ($attributes as $att) {
-                                    //get tags
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            echo "Tags: ".$att['Value']['Value'].PHP_EOL;
-                                            $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
-                                        }
-                                    }
-                                    //get date
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Дата') {
-                                        if(isset($att['Value']) && isset($att['Value']['Date']) && !empty($att['Value']['Date'])) {
-                                            $prepareNewPris['doc_date'] = Carbon::parse($att['Value']['Date'])->format($formatDate);
-                                        }
-                                    }
-                                    //get number
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'No.') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
-                                            $prepareNewPris['old_doc_num'] = $att['Value']['Value'];
-                                            $docNum = explode('-', $att['Value']['Value']);
-                                            $prepareNewPris['doc_num'] = sizeof($docNum) == 2 ? (int)$docNum[1] : (int)$docNum[0];
-                                        }
-                                    }
-                                    //get protocol
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Протокол') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['protocol'] = $att['Value']['Value'];
-                                        }
-                                    }
-                                    //newspaper num
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ брой') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['newspaper_number'] = (int)$att['Value']['Value'];
-                                        }
-                                    }
-                                    //newspaper year
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ година') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['newspaper_year'] = (int)$att['Value']['Value'];
-                                        }
-                                    }
-                                    //newspaper full
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Обнародвано в ДВ') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['old_newspaper_full'] = $att['Value']['Value'];
-                                        }
-                                    }
-                                    //importer
-                                    //institution_id
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            echo "Importer: ".$att['Value']['Value'].PHP_EOL;
-                                            $explode = explode(',', $att['Value']['Value']);
-                                            $importerStr = [];
-                                            $importerInstitutions = [];
-                                            if(sizeof($explode) > 1) {
-                                                foreach ($explode as $e) {
-                                                    if(isset($importers[trim($e)])) {
-                                                        $importerStr[]= $importers[trim($e)]['importer'];
-                                                        $importerInstitutions[] = $importers[trim($e)]['institution_id'];
-                                                    }
-                                                }
-                                            } else{
-                                                $importerStr[] = isset($importers[$att['Value']['Value']]) ? $importers[$att['Value']['Value']]['importer'] : '';
-                                                if(isset($importers[$att['Value']['Value']])) {
-                                                    $importerInstitutions[] = $importers[$att['Value']['Value']]['institution_id'];
-                                                }
-                                            }
-                                            $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
-                                            //TODO We are not ready for multi institutions
-                                            $prepareNewPris['institution_id'] = sizeof($importerInstitutions) ? $importerInstitutions[0] : $dInstitution->id;
-                                        } else{
-                                            $prepareNewPris['institution_id'] = $dInstitution->id;
-                                        }
-                                    }
-                                    //get about
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['about'] = $att['Value']['Value'];
-                                        }
-                                    }
-                                    //get about
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['legal_reason'] = $att['Value']['Value'];
-                                        }
-                                    }
-                                    //4. Parse id doc connections and create them in pris_change_pris
-                                    //get old pris change pris
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Промени') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            echo "Changes: ".$att['Value']['Value'].PHP_EOL;
-                                            $oldChanges = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
-                                            $prepareNewPris['old_connections'] = sizeof($oldChanges) ? implode('; ', $oldChanges) : $oldChanges;
-                                        }
+                            //main record
+                            $prepareNewPris = [
+                                'old_id' => $item->old_id,
+                                'doc_num' => null,
+                                'doc_date' => null,
+                                'old_doc_num' => null,
+                                'active' => $item->active,
+                                'legal_act_type_id' => $legalTypeDocs[$item->old_doc_type_id],
+                                'published_at' => Carbon::parse($item->published_at)->format($formatTimestamp),
+                                'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
+                                'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
+                                'institution_id' => null, // When old record do not have institution use our default : $dInstitution
+                                'version' => null, // TODO ??????
+                                'protocol' => null,
+                                'newspaper_number' => null,
+                                'newspaper_year' => null,
+                                'old_newspaper_full' => null,
+                                'old_connections' => null,
+                                'public_consultation_id' => null,
+                                'about' => '',
+                                'legal_reason' => '',
+                                'importer' => '',
+                            ];
+                            //Do something
+                            //1. Parse tags and insert if need to
+                            //get tags
+                            if(isset($itemCsvData[13])) {
+                                $tags = explode('|', $itemCsvData[13]);
+                            }
+                            //get date
+                            if(isset($itemCsvData[4])) {
+                                $prepareNewPris['doc_date'] = Carbon::parse(trim($itemCsvData[4]))->format($formatDate);
+                            }
+                            //get number
+                            if(isset($itemCsvData[3])) {
+                                $prepareNewPris['doc_num'] = trim($itemCsvData[3]);
+                            }
+                            //get protocol
+                            if(isset($itemCsvData[7])) {
+                                $prepareNewPris['protocol'] = trim($itemCsvData[7]);
+                            }
+                            //newspaper num
+                            if(isset($itemCsvData[9])) {
+                                $prepareNewPris['newspaper_number'] = (int)$itemCsvData[9];
+                            }
+                            //newspaper year
+                            if(isset($itemCsvData[10])) {
+                                $prepareNewPris['newspaper_year'] = (int)$itemCsvData[10];
+                            }
+                            //newspaper full
+                            if(isset($itemCsvData[8])) {
+                                $prepareNewPris['old_newspaper_full'] = trim($itemCsvData[8]);
+                            }
+                            //importer
+                            //institution_id
+                            if(isset($itemCsvData[7])) {
+                                $explodeInstitutions = explode(',', $itemCsvData[7]);
+                                $importerStr = [];
+                                $importerInstitutions = [];
+                                foreach ($explodeInstitutions as $e) {
+                                    if(isset($importers[trim($e)])) {
+                                        $importerStr[]= $importers[trim($e)]['importer'];
+                                        $importerInstitutions[] = $importers[trim($e)]['institution_id'];
                                     }
                                 }
+                                $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                //TODO We are not ready for multi institutions
+                                $prepareNewPris['institution_id'] = sizeof($importerInstitutions) ? $importerInstitutions[0] : $dInstitution->id;
+                            } else{
+                                $prepareNewPris['institution_id'] = $dInstitution->id;
+                            }
+                            //get about
+                            if(isset($itemCsvData[5])) {
+                                $prepareNewPris['about'] = trim($itemCsvData[5]);
+                            }
+                            //get legal_reason
+                            if(isset($itemCsvData[12])) {
+                                $prepareNewPris['legal_reason'] = trim($itemCsvData[12]);
+                            }
+                            //4. Parse id doc connections and create them in pris_change_pris
+                            //get old pris change pris
+                            if(isset($itemCsvData[11])) {
+                                $prepareNewPris['old_connections'] = trim($itemCsvData[11]);
+                            }
 
-                                //2. Create pris record and translations
-                                $newItem = new Pris();
-                                $newItem->fill($prepareNewPris);
+                            //get connection status
+                            if(isset($itemCsvData[8])) {
+                                $prepareNewPris['connection_status'] = $prisStatuses[trim($itemCsvData[8])] ?? 0;
+                            }
+                            //2. Create pris record and translations
+                            $newItem = new Pris();
+                            $newItem->fill($prepareNewPris);
+                            $newItem->save();
+                            if($newItem->id) {
+                                foreach ($locales as $locale) {
+                                    $newItem->translateOrNew($locale['code'])->about = $prepareNewPris['about'];
+                                    $newItem->translateOrNew($locale['code'])->legal_reason = $prepareNewPris['legal_reason'];
+                                    $newItem->translateOrNew($locale['code'])->importer = $prepareNewPris['importer'];
+                                }
                                 $newItem->save();
-                                if($newItem->id) {
-                                    foreach ($locales as $locale) {
-                                        $newItem->translateOrNew($locale['code'])->about = $prepareNewPris['about'];
-                                        $newItem->translateOrNew($locale['code'])->legal_reason = $prepareNewPris['legal_reason'];
-                                        $newItem->translateOrNew($locale['code'])->importer = $prepareNewPris['importer'];
-                                    }
-                                    $newItem->save();
-                                }
+                            }
 
                                 //3. Create connection pris - tags
                                 if($newItem && sizeof($tags)) {
@@ -573,7 +557,6 @@ class seedOldPris extends Command
                                         }
                                     }
                                 }
-                            }
                         }
                         DB::commit();
                     } catch (\Exception $e) {

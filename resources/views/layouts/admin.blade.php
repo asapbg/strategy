@@ -32,7 +32,7 @@
 <body class="hold-transition sidebar-mini {{isset($sidebarCollapse) ? 'sidebar-collapse' : null}}">
 <!-- Site wrapper -->
 <div class="wrapper">
-
+@dd(auth()->user()->roles())
 @include('partials.header')
 
 @include('partials.sidebar')
