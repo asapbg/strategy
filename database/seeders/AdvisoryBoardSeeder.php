@@ -76,7 +76,10 @@ class AdvisoryBoardSeeder extends Seeder
             $imported++;
         }
 
-        $this->command->info("$imported field of actions were imported successfully at " . date("H:i"));
+        $this->command->info("$imported advisory boards were imported successfully at " . date("H:i"));
+
+        // we call all other seeders that depends on advisory boards
+        $this->callDependableSeeders();
     }
 
     private function determineChairmanType(string|null $position): int
@@ -94,5 +97,12 @@ class AdvisoryBoardSeeder extends Seeder
         }
 
         return 4;
+    }
+
+    private function callDependableSeeders(): void
+    {
+        $this->call([
+            AdvisoryBoardMemberSeeder::class,
+        ]);
     }
 }
