@@ -32,7 +32,6 @@ class ExecutorController extends AdminController
         $executors = Executor::select('executors.*')
             ->with('translation')
             ->joinTranslation(Executor::class)
-            ->whereLocale(app()->getLocale())
             ->when($contractor_name, function ($query, $contractor_name) {
                 return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
             })
@@ -54,7 +53,6 @@ class ExecutorController extends AdminController
             ->whereActive($active)
             ->orderBy('executors.id', 'desc')
             ->paginate($paginate);
-
 
         return $this->view('admin.executors.index', compact('executors'));
     }
@@ -174,7 +172,7 @@ class ExecutorController extends AdminController
             $executor->translations()->delete();
             $executor->delete();
 
-            return to_route('admin.users')
+            return to_route('admin.executors.index')
                 ->with('success', "Записът ".__('messages.deleted_successfully_m'));
         }
         catch (Exception $e) {

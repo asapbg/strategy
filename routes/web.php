@@ -48,6 +48,10 @@ Route::group(['middleware' => ['auth']], function() {
         return back();
     })->name('change-locale');
 
+    Route::controller(UsersController::class)->group(function () {
+        Route::get('/subscribe', 'subscribe')->name('subscribe');
+    });
+
     Route::controller(CommonController::class)->group(function () {
         Route::get('/toggle-boolean', 'toggleBoolean')->name('toggle-boolean');
         Route::get('/toggle-permissions', 'togglePermissions')->name('toggle-permissions');

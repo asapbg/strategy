@@ -8,6 +8,8 @@ use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\CustomRole;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\UserSubscribe;
+use Exception;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -197,7 +199,7 @@ class  UsersController extends Controller
         if(auth()->user()->cannot('update', $user)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
-        
+
         $data = $request->except(['_token','roles']);
         $roles = $request->offsetGet('roles');
         $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
@@ -312,6 +314,33 @@ class  UsersController extends Controller
             Log::error($e);
             return to_route('admin.users')->with('danger', __('messages.system_error'));
 
+        }
+    }
+
+    public function subscribe(Request $request)
+    {
+        $user = $request->user();
+        $channel = $request->offsetGet('channel');
+        $model = $request->offsetGet('model');
+        $model_id = $request->offsetGet('model_id');
+
+        try {
+
+            UserSubscribe::create([
+                'user_id' => $user->id,
+                'subscribable_type' => $model,
+                'subscribable_id' => $model_id,
+                'condition' => UserSubscribe::CONDITION_PUBLISHED,
+                'channel' => ($channel == "")
+            ]);
+
+            return response()->json(['success' => true, 'message' => __('You have subscribed successfully')]);
+
+        } catch (Exception $e) {
+
+            Log::error($e);
+
+            return response()->json(['success' => false, 'message' => __('messages.system_error')]);
         }
     }
 }
