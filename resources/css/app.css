@@ -2334,6 +2334,12 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
 
 @media (max-width:480px) {
+    .preview-download {
+        display: flex !important;
+        margin-top: 10px;
+        align-items: center;
+    }
+
     .dayname {
         font-size: 16px;
     }

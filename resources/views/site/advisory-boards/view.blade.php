@@ -197,12 +197,12 @@
                             @if(isset($item->secretaryCouncil) && $item->secretaryCouncil->count() > 0)
                                 @foreach($item->secretaryCouncil as $secretary)
                                     <li class="list-group-item">
-                                        @if(!empty($secretary->name) && !empty($secretary->job) && !empty($secretary->notes))
-                                            {{ $secretary->name . ', ' . $secretary->job . ', '}} {!! $secretary->notes !!}
-                                        @elseif(!empty($secretary->name) && !empty($secretary->job))
-                                            {{ $secretary->name . ', ' . $secretary->job }}
+                                        @if(!empty($secretary->member_name) && !empty($secretary->job) && !empty($secretary->notes))
+                                            {{ $secretary->member_name . ', ' . $secretary->job . ', '}} {!! $secretary->notes !!}
+                                        @elseif(!empty($secretary->member_name) && !empty($secretary->job))
+                                            {{ $secretary->member_name . ', ' . $secretary->job }}
                                         @else
-                                            {{ $secretary->name }}
+                                            {{ $secretary->member_name }}
                                         @endif
                                     </li>
                                 @endforeach

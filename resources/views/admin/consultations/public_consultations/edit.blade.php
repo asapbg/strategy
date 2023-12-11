@@ -89,6 +89,10 @@
         let operationalPrograms = $('#operational_programs');
         let operationalProgramsRows = $('#operational_program_row_id');
         let operationalProgramsSelect = $('#operational_program_id');
+        //Pris
+        let prisSection = $('#pris_section');
+        //Law
+        let lawSection = $('#law_section');
 
         $('#legislative_program_id').on('change', function (){
 
@@ -116,6 +120,14 @@
             legislativePrograms.find('option').each(function(){
                 $(this).prop('selected', false);
             });
+        }
+
+        function hideLawAndPris()
+        {
+            lawSection.find('select').val('0');
+            prisSection.find('select').val('0');
+            lawSection.addClass('d-none');
+            prisSection.addClass('d-none');
         }
 
         function onDateChange() {
@@ -180,6 +192,10 @@
                         $(this).remove();
                     });
 
+                    lawSection.removeClass('d-none');
+                    prisSection.find('select').val('0');
+                    prisSection.addClass('d-none');
+
                 } else if( parseInt(actType.val()) == actMinistry ){
                     //show $op autocomplete select and checkbox 'Проектът на акт на МС не е включен в ОП'. Submit one of them.
                     if($('#no_operational_program').is(':checked')) {
@@ -202,11 +218,17 @@
                     legislativeProgramRows.find('option').each(function(){
                         $(this).remove();
                     });
+
+                    prisSection.removeClass('d-none');
+                    lawSection.find('select').val('0');
+                    lawSection.addClass('d-none');
                 } else {
                     hideProgramSelects();
+                    hideLawAndPris();
                 }
             } else {
                 hideProgramSelects();
+                hideLawAndPris();
             }
         }
 

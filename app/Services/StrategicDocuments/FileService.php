@@ -34,11 +34,10 @@ class FileService
                 if ($isMain) {
                     $mainFile = $strategicDocument->files->where('is_main', true)->where('locale', $locale)->first();
                     if ($mainFile) {
-                        $mainFile->delete();
+                        //$mainFile->delete();
                     }
                 }
                 $file = $strategicDocumentFile ? $strategicDocumentFile->replicate() : new StrategicDocumentFile();
-
                 if ($strategicDocumentFile) {
                     $file->strategic_document_file_id = $strategicDocumentFile->strategic_document_file_id ?? $strategicDocumentFile->id;
                 }
@@ -61,12 +60,12 @@ class FileService
                         $uploadedFile = Arr::get($validated, 'file_strategic_documents_bg');//$request->file('file_strategic_documents_bg');
                     }
                 }
+                $isMain = $file->parentFile?->is_main ?? $isMain;
 
                 $fileNameToStore = round(microtime(true)).'.'.$uploadedFile->getClientOriginalExtension();
                 $uploadedFile->storeAs(StrategicDocumentFile::DIR_PATH, $fileNameToStore, 'public_uploads');
                 $version = $file->version;
                 $newVersion = ($version + 1);
-
                 $file->content_type = $uploadedFile->getClientMimeType();
                 $file->path = StrategicDocumentFile::DIR_PATH.$fileNameToStore;
                 $file->sys_user = request()->user()->id;
@@ -79,7 +78,7 @@ class FileService
                 $file->save();
 
                 $strategicDocument->files()->save($file);
-
+                $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $file, $validated);
                 $ocr = new FileOcr($file->refresh());
                 $ocr->extractText();
                 if ($locale === 'bg') {
@@ -168,8 +167,10 @@ class FileService
      */
     public function prepareFileData($strategicDocumentFiles, $adminView = true): array
     {
-        $mainFile = $strategicDocumentFiles->where('is_main', 1)->first();
+        $mainFile = $strategicDocumentFiles->where('is_main', 1)->sortByDesc('version')->first();
+        $mainFile = $mainFile->parentFile?->latestVersion ?? $mainFile;
         $fileData = [];
+
         if ($strategicDocumentFiles->isEmpty() || !$mainFile) {
             return [];
         }
@@ -206,18 +207,19 @@ class FileService
         ];
         $fileData[] = $rootNode;
         $processedFileIds = [];
-        foreach ($strategicDocumentFiles as $file) {
+
+        foreach ($strategicDocumentFiles->load(['latestVersion']) as $file) {
             if ($file->is_main) {
                 continue;
             }
-            $latestVersion = $file->latestVersion;
+
+            $latestVersion = $file->parentFile?->latestVersion ?? $file->latestVersion;
 
             if ($latestVersion && $file->id !== $latestVersion->id) {
                 $currentFile = $latestVersion;
             } else {
                 $currentFile = $file;
             }
-
             if (in_array($currentFile->strategic_document_file_id, $processedFileIds) && $currentFile->strategic_document_file_id) {
                 continue;
             }

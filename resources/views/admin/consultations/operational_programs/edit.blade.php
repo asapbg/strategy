@@ -70,23 +70,23 @@
                                                         <label class="col-sm-12 control-label" for="{{ $newFieldName }}">
                                                             {{ $col->label }}
                                                         </label>
-                                                        <div class="@if($col->id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
+                                                        <div class="@if($col->id == config('lp_op_programs.op_ds_col_institution_id'))  @else col-md-6 @endif">
                                                             <input type="hidden" value="{{ $col->id }}" name="new_val_col[]">
-                                                            @if($col->id == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                            @if($col->id == config('lp_op_programs.op_ds_col_institution_id'))
                                                                 <div class="col-12 d-flex flex-row px-0">
                                                                     <div class="input-group">
-                                                                        <select class="form-control form-control-sm select2 @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}" id="institutions_{{ $i }}">
-                                                                            <option value="" @if('' == old($errorNewField, '')) selected @endif>---</option>
+                                                                        <select class="form-control form-control-sm select2 @error($errorNewField) is-invalid @enderror" multiple="multiple" name="{{ $newFieldName.'[]' }}" id="institutions_{{ $i }}">
+                                                                            <option value="">---</option>
                                                                             @if(isset($institutions) && sizeof($institutions))
                                                                                 @foreach($institutions as $option)
-                                                                                    <option value="{{ $option['value'] }}" @if($option['value'] == old($errorNewField, '')) selected @endif>{{ $option['name'] }}</option>
+                                                                                    <option value="{{ $option['value'] }}" @if(in_array($option['value'], old($errorNewField, []))) selected @endif>{{ $option['name'] }}</option>
                                                                                 @endforeach
                                                                             @endif
                                                                         </select>
                                                                     </div>
                                                                     <button type="button" class="btn btn-primary ml-1 pick-institution"
                                                                             data-title="{{ trans_choice('custom.institutions',2) }}"
-                                                                            data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i }}">
+                                                                            data-url="{{ route('modal.institutions').'?select=1&multiple=1&admin=1&dom=institutions_'.$i }}">
                                                                         <i class="fas fa-list"></i>
                                                                     </button>
                                                                 </div>
@@ -99,7 +99,7 @@
                                                                     <option value="0" @if(old($errorNewField, '') == 0) selected @endif>Не</option>
                                                                 </select>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
-                                                                <textarea class="form-control form-control-sm summernote @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}">{{ old($errorNewField, '') }}</textarea>
+                                                                <textarea class="form-control form-control-sm summernote @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}">{!! old($errorNewField, '') !!}</textarea>
                                                             @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
                                                                 <input type="text" class="form-control form-control-sm @error($errorNewField) is-invalid @enderror" name="{{ $newFieldName }}" value="{{ old($errorNewField, '') }}">
                                                             @else
@@ -155,23 +155,23 @@
                                                                                 <label class="col-sm-12 control-label" for="{{ $fieldName }}">
                                                                                     {{ $col['label'] }}
                                                                                 </label>
-                                                                                <div class="@if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)  @else col-md-6 @endif">
+                                                                                <div class="@if($col['dsc_id'] == config('lp_op_programs.op_ds_col_institution_id'))  @else col-md-6 @endif">
                                                                                     <input type="hidden" name="{{ 'col['.$i.']['.$k.']' }}" value="{{ $col['id'] }}">
-                                                                                    @if($col['dsc_id'] == \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID)
+                                                                                    @if($col['dsc_id'] == config('lp_op_programs.op_ds_col_institution_id'))
                                                                                         <div class="col-12 d-flex flex-row px-0">
                                                                                             <div class="input-group">
-                                                                                                <select class="form-control form-control-sm select2 select2-hidden-accessible @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" id="institutions_{{ $i.'.'.$k }}">
-                                                                                                    <option value="" @if('' == old($errorField, '')) selected @endif>---</option>
+                                                                                                <select class="form-control form-control-sm select2 select2-hidden-accessible @error($errorField) is-invalid @enderror" multiple="multiple" name="{{ $fieldName.'[]' }}" id="institutions_{{ $i.'.'.$k }}">
+                                                                                                    <option value="">---</option>
                                                                                                     @if(isset($institutions) && sizeof($institutions))
                                                                                                         @foreach($institutions as $option)
-                                                                                                            <option value="{{ $option['value'] }}" @if($option['value'] == old((int)$errorField, (int)$col['value'])) selected @endif>{{ $option['name'] }}</option>
+                                                                                                            <option value="{{ $option['value'] }}" @if(in_array($option['value'], old($errorField, $col['institution_ids'] ?? []))) selected @endif>{{ $option['name'] }}</option>
                                                                                                         @endforeach
                                                                                                     @endif
                                                                                                 </select>
                                                                                             </div>
                                                                                             <button type="button" class="btn btn-primary ml-1 pick-institution"
                                                                                                     data-title="{{ trans_choice('custom.institutions',2) }}"
-                                                                                                    data-url="{{ route('modal.institutions').'?select=1&multiple=0&admin=1&dom=institutions_'.$i.'.'.$k }}">
+                                                                                                    data-url="{{ route('modal.institutions').'?select=1&multiple=1&admin=1&dom=institutions_'.$i.'.'.$k }}">
                                                                                                 <i class="fas fa-list"></i>
                                                                                             </button>
                                                                                         </div>
@@ -184,7 +184,7 @@
                                                                                             <option value="0" @if(old($errorField, (int)$col['value']) == 0) selected @endif>Не</option>
                                                                                         </select>
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
-                                                                                        <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{{ old($errorField, $col['value']) }}</textarea>
+                                                                                        <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{!! old($errorField, $col['value']) !!}</textarea>
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
                                                                                         <input class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, $col['value']) }}">
                                                                                     @else

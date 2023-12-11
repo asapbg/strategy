@@ -64,10 +64,10 @@ class LegislativeInitiativeController extends AdminController
             })
             ->when(!empty($institution), function ($query) use ($institution) {
                 $query->whereHas('operationalProgram', function ($query) use ($institution) {
-                    $query->where([
-                        'value' => $institution,
-                        'dynamic_structures_column_id' => \App\Http\Controllers\Admin\Consultations\OperationalProgramController::DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID
-                    ]);
+                    $query->where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
+                    ->whereHas('institutions', function ($query) use ($institution) {
+                        $query->where('institution.id', '=', $institution);
+                    });
                 });
             })
             ->when(!empty($order_by), function ($query) use ($order_by, $order_by_direction) {

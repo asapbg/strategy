@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-chairman" aria-hidden="true">
+<div class="modal fade" id="modal-create-member" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="CHAIRMAN_FORM" action="{{ route('admin.advisory-boards.members.store') }}"
+                <form method="POST" name="MEMBER_FORM" action="{{ route('admin.advisory-boards.members.store') }}"
                       class="pull-left">
                     @csrf
 
@@ -22,7 +22,7 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="member_name_bg">{{ __('custom.first_name') }} (BG) <span
-                                        class="required">*</span></label>
+                                            class="required">*</span></label>
                                 <div class="row">
                                     <div class="col-12">
                                         <input type="text" id="member_name_bg" name="member_name_bg"
@@ -39,7 +39,7 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="member_name_en">{{ __('custom.first_name') }} (EN) <span
-                                        class="required">*</span></label>
+                                            class="required">*</span></label>
                                 <div class="row">
                                     <div class="col-12">
                                         <input type="text" id="member_name_en" name="member_name_en"
@@ -53,53 +53,59 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-3">
+                        <label class="col-sm-12 control-label"
+                               for="member_name_en">{{ __('custom.type') }}</label>
+
                         <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label" for="advisory_type_id">
-                                    {{ trans_choice('custom.type', 1) }}
-                                    <span class="required">*</span>
-                                </label>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER }}"
+                                               name="advisory_type_id"
+                                               id="advisory_type_member" checked/>
+                                        <label class="form-check-label" id="" for="advisory_type_member">
+                                            {{ trans_choice('custom.member', 1) }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                <select id="advisory_type_id" name="advisory_type_id"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="">---</option>
-                                    @foreach(\App\Enums\AdvisoryTypeEnum::cases() as $case)
-                                        @php $selected = old('advisory_type_id', '') == $case->value ? 'selected' : '' @endphp
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN }}"
+                                               name="advisory_type_id"
+                                               id="advisory_type_chairman"/>
+                                        <label class="form-check-label" id="" for="advisory_type_chairman">
+                                            {{ __('custom.chairman') }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                        <option value="{{ $case->value }}" {{ $selected }}>
-                                            {{ trans_choice('custom.' . Str::lower($case->name), 1) }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN }}"
+                                               name="advisory_type_id"
+                                               id="advisory_type_vice_chairman"/>
+                                        <label class="form-check-label" id="" for="advisory_type_vice_chairman">
+                                            {{ __('validation.attributes.vice_chairman') }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                <div class="text-danger mt-1 error_advisory_type_id"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label" for="advisory_chairman_type_id">
-                                    {{ __('validation.attributes.advisory_chairman_type_id') }}
-                                    <span class="required">*</span>
-                                </label>
-
-                                <select id="advisory_chairman_type_id" name="advisory_chairman_type_id"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="">---</option>
-                                    @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
-                                        @foreach($advisory_chairman_types as $type)
-                                            @php $selected = old('advisory_chairman_type_id', '') == $type->id ? 'selected' : '' @endphp
-
-                                            <option
-                                                value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-
-                                <div class="text-danger mt-1 error_advisory_chairman_type_id"></div>
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY }}"
+                                               name="advisory_type_id"
+                                               id="advisory_type_secretary"/>
+                                        <label class="form-check-label" id="" for="advisory_type_secretary">
+                                            {{ trans_choice('custom.secretary', 1) }}
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,7 +190,7 @@
             changeButtonState(element);
 
             // Get the form element
-            const form = document.querySelector('form[name=CHAIRMAN_FORM]');
+            const form = document.querySelector('form[name=MEMBER_FORM]');
             const formData = new FormData(form);
 
             $.ajax({
@@ -199,7 +205,7 @@
                 contentType: false,
                 success: function (result) {
                     // Get a reference to the modal
-                    const modal = new bootstrap.Modal(document.getElementById('modal-create-chairman'));
+                    const modal = new bootstrap.Modal(document.getElementById('modal-create-member'));
 
                     // Hide the modal
                     modal.hide();
@@ -220,28 +226,6 @@
                     }
                 }
             });
-        }
-
-        /**
-         * Change button state for ajax forms.
-         * State can be either 'loading' or 'finished'.
-         *
-         * @param element
-         * @param state
-         */
-        function changeButtonState(element, state = 'loading') {
-            const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
-            const loader = element.querySelector('.spinner-grow');
-
-            element.querySelector('.text').innerHTML = button_text_translation;
-            element.disabled = state === 'loading';
-
-            if (state === 'loading') {
-                loader.classList.remove('d-none');
-                return;
-            }
-
-            loader.classList.add('d-none');
         }
     </script>
 @endpush

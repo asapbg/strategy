@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\FieldOfAction;
 use App\Models\FieldOfActionTranslation;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 
@@ -19,7 +20,9 @@ class FieldOfActionSeeder extends Seeder
     {
         $this->command->info("Import of field of actions begins at " . date("H:i"));
 
-        $json = File::get(database_path('data/field_of_actions.json'));
+//        $json = File::get(database_path('data/field_of_actions.json'));
+        $json = File::get(database_path('data/old_field_of_actions.json'));
+
         if (!is_json($json)) {
             return;
         }
@@ -29,17 +32,27 @@ class FieldOfActionSeeder extends Seeder
 
         foreach ($actions as $action) {
             $field_of_action = new FieldOfAction([
-                'icon_class' => $action['icon_class']
+                'id' => $action['id'],
+                'icon_class' => $action['icon_class'],
+                'deleted_at' => isset($action['isdeleted']) ? Carbon::now() : null
             ]);
             $field_of_action->save();
 
             foreach (config('available_languages') as $locale) {
+                if (!isset($action[$locale['code']])) {
+                    continue;
+                }
+
                 $translation = new FieldOfActionTranslation();
 
                 $code = $locale['code'] ?? '';
                 $translation->locale = $code;
                 $translation->field_of_action_id = $field_of_action->id;
-                $translation->name = $action['name_' . $code];
+                $translation->name = $action[$code];
+
+                if (isset($action['isdeleted'])) {
+                    $translation->deleted_at = Carbon::now();
+                }
 
                 $translation->save();
             }

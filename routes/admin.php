@@ -419,6 +419,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/nomenclatures/field-of-actions/{action}/delete', 'destroy')->name('nomenclatures.field_of_actions.delete');
     });
 
+    Route::controller(\App\Http\Controllers\Admin\Nomenclature\LawController::class)->group(function () {
+        Route::get('/nomenclature/laws', 'index')->name('nomenclature.law')->middleware('can:viewAny,App\Models\Law');
+        Route::get('/nomenclature/laws/edit/{item?}', 'edit')->name('nomenclature.law.edit');
+        Route::match(['post', 'put'], '/nomenclature/laws/store/{item?}', 'store')->name('nomenclature.law.store');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function () {
         Route::get('/reports', 'index')->name('reports.index');
         Route::get('/reports/create', 'create')->name('reports.create');
@@ -455,7 +461,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {
-        Route::post('/store', 'store')->name('advisory-boards.function.store');
+        Route::post('/store', 'ajaxStore')->name('advisory-boards.function.store');
+        Route::get('{working_program}/edit', 'ajaxEdit')->name('advisory-boards.function.edit');
+        Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.function.update');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController::class)->prefix('/advisory-boards/{item}/file')->group(function () {
@@ -464,14 +472,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.file.update');
         Route::post('{file}/delete',    'destroy')      ->name('advisory-boards.file.delete');
         Route::post('{file}/restore',   'restore')      ->name('advisory-boards.file.restore')->withTrashed();
-    });
-
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretaryCouncilController::class)->prefix('/advisory-boards/{item}/secretary-council/')->group(function () {
-        Route::post('/ajax-store',          'ajaxStore')    ->name('advisory-boards.secretary-council.store');
-        Route::get('{secretary}/edit',      'ajaxEdit')     ->name('advisory-boards.secretary-council.edit');
-        Route::post('/ajax-update',         'ajaxUpdate')   ->name('advisory-boards.secretary-council.update');
-        Route::post('{secretary}/delete',   'destroy')      ->name('advisory-boards.secretary-council.delete');
-        Route::post('{secretary}/restore',  'restore')      ->name('advisory-boards.secretary-council.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretariatController::class)->prefix('/advisory-boards/{item}/secretariat')->group(function () {
@@ -483,6 +483,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
         Route::post('/store', 'store')->name('advisory-boards.moderator.store');
         Route::post('{moderator}/delete', 'destroy')->name('advisory-boards.moderator.delete');
+        Route::post('/register', 'ajaxRegister')->name('advisory-boards.moderator.register');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {

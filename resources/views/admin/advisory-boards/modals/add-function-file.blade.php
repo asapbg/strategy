@@ -14,7 +14,7 @@
                 <form method="POST" name="FUNCTIONS_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
-                    <input type="hidden" name="object_id" value="{{ $item->advisoryFunction?->id }}"/>
+                    <input type="hidden" name="object_id"/>
                     <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_FUNCTION->value }}"/>
 
                     @includeIf('admin.partial.file_fields', ['form' => 'FUNCTIONS_FILE'])

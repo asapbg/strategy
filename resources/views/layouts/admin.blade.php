@@ -32,7 +32,6 @@
 <body class="hold-transition sidebar-mini {{isset($sidebarCollapse) ? 'sidebar-collapse' : null}}">
 <!-- Site wrapper -->
 <div class="wrapper">
-
 @include('partials.header')
 
 @include('partials.sidebar')

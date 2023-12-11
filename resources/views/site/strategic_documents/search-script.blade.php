@@ -2,6 +2,7 @@
     <script>
         $(document).ready(function() {
             loadStrategyDocuments();
+
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
@@ -9,9 +10,14 @@
             const csvExport =  $('#csv_export');
             const documentsReport = $('#documents_report');
             const documentLevelSelect = $('#documentLevelSelect');
+            const administrationSelect = $('#administrationSelect');
             documentLevelSelect.select2({
                 multiple: true
             });
+            administrationSelect.select2({
+                multiple: true
+            });
+            administrationSelect.val('').trigger('change');
             documentLevelSelect.val('').trigger('change');
             const ekateAreasDivId = $('#ekate_areas_div_id');
             const ekateMunicipalitiesDivId = $('#ekate_municipalities_div_id');
@@ -48,6 +54,27 @@
                     ekateAreasDivId.hide();
                     ekateMunicipalitiesDivId.hide();
                 }
+                // AJAX request
+                $.ajax({
+                    url: '/strategy-document-institution/' + selectedDocuments.join(','),
+                    type: 'GET',
+                    dataType: 'json',
+
+                    success: function (data) {
+                        administrationSelect.empty();
+                        console.log(data);
+                        $.each(data.institutions, function (index, item) {
+                            administrationSelect.append($('<option>', {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        });
+                        administrationSelect.trigger('change');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
             });
 
             documentsReport.on('click', function () {
@@ -114,6 +141,7 @@
                 });
                 window.history.replaceState({}, '', `${window.location.pathname}?${searchParams}`);
             }
+
             const getUrlParameters = () => {
                 const url = new URL(window.location.href);
                 const params = {};
@@ -162,6 +190,7 @@
             if (ekatteManipulicityResultValue) {
                 ekateMunicipalitiesId.val(ekatteManipulicityResultValue.split(',')).trigger('change');
             }
+
             if (prisActsResultValue) {
                 prisAct.val(prisActsResultValue.split(',')).trigger('change');
             }
@@ -185,83 +214,78 @@
 
             infiniteDate.on('change', function () {
                 updateUrlParameters({ 'date-infinite': infiniteDate.prop('checked') });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             categorySelect.on('change', function() {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category': selectedValues.join(',') });
-                loadStrategyDocuments(1, buildUrl());
             });
+
             searchInTitle.on('keyup', function() {
                 updateUrlParameters({ 'title': searchInTitle.val() });
-                loadStrategyDocuments(1, buildUrl());
             })
 
             policySelect.on('change', function() {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'policy-area': selectedValues.join(',') });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             categorySelect.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category': selectedValues.join(',') });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             categorySelectLivecycleSelect.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'category-livecycle': selectedValues.join(',') });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             prisAct.on('change', function () {
                 const selectedValues = $(this).val();
                 updateUrlParameters({ 'pris-act': selectedValues.join(',') });
-                loadStrategyDocuments(1, buildUrl());
+            });
+
+            administrationSelect.on('change', function() {
+                const selectedValues = $(this).val();
+                console.log(selectedValues);
+                updateUrlParameters({ 'prepared-institution': selectedValues.join(',') });
             });
 
             validFrom.on('change', function () {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'valid-from': selectedValue });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             validTo.on('change', function () {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'valid-to': selectedValue });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             ekateAreasId.on('change', function() {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'ekate-area': selectedValue });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             ekateMunicipalitiesId.on('change', function() {
                 const selectedValue = $(this).val();
                 updateUrlParameters({ 'ekate-municipality': selectedValue });
-                loadStrategyDocuments(1, buildUrl());
             });
 
             paginationResults.on('change', function () {
-                console.log('heree');
                 const paginationResultsValue = parseInt($(this).val(), 10);
                 updateUrlParameters({ 'pagination-results':paginationResultsValue });
                 loadStrategyDocuments(1, buildUrl());
             });
 
-            $('#searchBtn').on('click', function () {
-                window.location.href = buildUrl();
+
+            $('#searchBtn').on('click', function (e) {
+                e.preventDefault();
+                const url = buildUrl();
+                loadStrategyDocuments(1, url);
             });
 
             $('.ajaxSort').on('click', function (e) {
                 e.preventDefault();
-                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
-                //console.log($('.ajaxSort i.fa-solid'));
-
                 const url = $(this).data('url');
                 const containerId = $(this).data('container');
                 const container = containerId.startsWith('#') ? containerId.slice(1) : containerId;
@@ -284,9 +308,7 @@
                     iconElement.removeClass('fa-sort').addClass('fa-sort-asc').addClass(sort_white);
                 }
 
-                //$('.ajaxSort i.fa-solid').removeClass('fa-sort-desc fa-sort-asc').addClass('fa-sort');
                 loadStrategyDocuments(1, buildUrl());
-
             });
 
             const buildUrl = () => {
@@ -311,6 +333,7 @@
                     '&policy-area-sort-order=' + encodeURIComponent(policyAreaSortOrder) +
                     '&order_by=' + encodeURIComponent(theOrderBy) +
                     '&direction=' +  encodeURIComponent(theDirection) +
+                    '&prepared-institution=' + encodeURIComponent(administrationSelect.val()) +
                     '&view=' + encodeURIComponent(view) + '&export=' + doExport + '&document-report=' + documentReport
                     + '&ekate-area=' + ekateAreasId.val() + '&ekate-municipality=' + ekateMunicipalitiesId.val() + '&pris-acts=' + prisAct.val();//prisAct
                 doExport = null;
@@ -318,10 +341,20 @@
                 return url;
             }
 
+            const clearForm = $('#clearForm');
+            clearForm.on('click', function () {
+                const baseUrl = '/strategy-documents';
+
+                window.history.replaceState({}, '', baseUrl);
+                window.location.href = baseUrl;
+                //loadStrategyDocuments(1, baseUrl);
+            });
+
             $(document).on('click', '.pagination a',function(event) {
                 event.preventDefault();
                 const page = $(this).attr('href').split('page=')[1];
                 const url = buildUrl();
+
                 loadStrategyDocuments(page, url);
             });
 
@@ -329,18 +362,17 @@
                 let targetContainer = view === 'tree-view' ? '#tree-view' : '#table-view';
                 let otherContainer = view === 'tree-view' ? '#table-view' : '#tree-view';
 
-                $('#spinner-container').show();
+                ShowLoadingSpinner();
                 $.ajax({
                     url: '{{ route("strategy-document.list") }}',
                     type: 'GET',
                     data: { page: page, search: search },
-                    timeout: 5000,
+                    //timeout: 5000,
                     success: function (response) {
                         $(targetContainer).empty();
                         $(targetContainer).html(response.strategic_documents);
 
                         setTimeout(function () {
-                            console.log(targetContainer);
                             if (response.pagination && targetContainer == '#table-view') {
                                 $('#table-view').append('<div class="row" id="pagination-container">' + response.pagination + '</div>');
                             }
@@ -350,7 +382,10 @@
                         console.error('Error loading strategy documents:', error);
                     },
                     complete: function () {
-                        $('#spinner-container').hide();
+                        HideLoadingSpinner();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $('#searchBtn').offset().top
+                        }, 20);
                     }
                 });
             }

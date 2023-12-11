@@ -46,7 +46,11 @@ class ModelActivityExtend extends ModelAlias
     public function scopeJoinTranslation($query, $model)
     {
         $table = app($model)->getTable();
-        $table_singular = substr($table, 0, -1);
+        $table_singular = $table;
+        if (str_ends_with($table, 's')) {
+            $table_singular = substr($table, 0, -1);
+        }
+
         $table_id = $table_singular."_id";
 
         $join_table = (Schema::hasTable($table."_translations"))

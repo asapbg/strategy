@@ -40,7 +40,7 @@
                                                         {{ __('validation.attributes.doc_num') }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <input type="number" name="doc_num" value="{{ old('doc_num', $item->id ? $item->doc_num : '') }}" class="form-control form-control-sm @error('doc_num'){{ 'is-invalid' }}@enderror">
+                                                        <input type="text" name="doc_num" value="{{ old('doc_num', $item->id ? $item->doc_num : '') }}" class="form-control form-control-sm @error('doc_num'){{ 'is-invalid' }}@enderror">
                                                         @error('doc_num')
                                                             <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror

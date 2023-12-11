@@ -6,7 +6,7 @@
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
             <div class="col-auto">
-                <h3>{{ trans_choice('custom.section', 1) }}</h3>
+                <h3>{{ trans_choice('custom.secretariat', 1) }}</h3>
             </div>
 
             <div class="col-auto">

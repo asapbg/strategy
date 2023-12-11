@@ -18,7 +18,7 @@
                 {!! $pageTopContent->value !!}
             </div>
         @endif
-        <div class="col-lg-12">
+        <div class="col-lg-12 py-5">
             <div class="row mb-4">
                 <div class="col-md-12">
                     <h2 class="mb-3">{{ trans_choice('custom.information', 1) }}</h2>
@@ -32,8 +32,8 @@
                         <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-md-12 d-flex align-items-center">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mb-4">
                     <h3 class="mb-2 fs-4">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
                     <div class="mb-2 ms-2 fs-4">
                         @can('view',  $strategicDocument->policyArea?->name)
@@ -53,9 +53,9 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
                     @can('view',  $strategicDocument->documentType)
                         <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}"
                            class="main-color text-decoration-none fs-18">
@@ -72,8 +72,8 @@
                     @endcan
                 </div>
 
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.document_to', 1) }} </h3>
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.document_to', 1) }} </h3>
                     @if($strategicDocument->parent_document_id)
                         <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"
                            class="main-color text-decoration-none fs-18">
@@ -92,16 +92,16 @@
                 </div>
             </div>
 
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.accepted_date', 1) }}</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.accepted_date', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('Y-m-d') }}</span>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.date_expiring', 1) }}</h3>
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.date_expiring', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>@if($strategicDocument->document_date_expiring)
@@ -111,8 +111,8 @@
                             @endif</span>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
                     <div class="mb-2 fs-18">
                         <span>{{ $strategicDocument->strategicActType?->name }}</span>
                         @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
@@ -132,9 +132,9 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.category', 1) }}</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
                     @can('view',  $strategicDocument->documentLevel)
                         <a href="{{ route('admin.nomenclature.strategic_document_level.edit', [$strategicDocument->documentLevel?->id]) }}" class="main-color text-decoration-none">
                             <span class="obj-icon-info me-2">
@@ -149,8 +149,8 @@
                         </a>
                     @endcan
                 </div>
-                <div class="col-md-4">
-                    <h3 class="mb-2 fs-5">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
                         @if ($strategicDocument->public_consultation_id)
                             <a href="{{ route('public_consultation.view', [$strategicDocument->public_consultation_id]) }}" class="main-color text-decoration-none fs-18">
                                <span class="obj-icon-info me-2">
@@ -164,8 +164,8 @@
                         @endif
                 </div>
                 @if (! $strategicDocument->link_to_monitorstat)
-                    <div class="col-md-4">
-                        <h3 class="mb-2 fs-5">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
+                    <div class="col-md-4 mb-4">
+                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
                         <a href="{{ $strategicDocument->link_to_monitorstat  }}" class="main-color text-decoration-none fs-18">
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
@@ -214,13 +214,11 @@
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
                                     </a>
                                      -->
-
-
                                 <div class="row p-1">
-                                    <div class="accordion" id="accordionExample">
+                                    <div class="accordion p-0" id="accordionExample">
                                         <div class="card custom-card">
                                             <div class="card-header" id="heading60">
-                                                <h2 class="mb-0 d-flex align-items-center justify-content-between">
+                                                <h2 class="mb-0 d-flex align-items-center justify-content-between main-file-str-doc">
                                                     <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
                                                             data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
                                                             aria-controls="collapse60">
@@ -230,8 +228,8 @@
                                                            <i class="{{ $iconClass }}"></i>
                                                             {!!  $mainDocument->document_display_name !!}
                                                     </button>
-                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60">
-                                                        <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color"></i>
+                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60" class="p-2">
+                                                        <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color p-1"></i>
                                                     </a>
                                                 </h2>
                                             </div>
@@ -279,7 +277,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </li>
                         @endif
                     </ul>

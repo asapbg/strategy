@@ -163,8 +163,16 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
      */
     public function getDocumentLinkAttribute(): string
     {
-        $url = url('strategy-document', ['id' => $this->id]);
+        $url = url('strategy-documents', ['id' => $this->id]);
 
         return '<a href="' . $url . '">' . $this->title . '</a>';
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="CHAIRMAN_FORM_EDIT" class="pull-left">
+                <form method="POST" name="MEMBER_FORM_EDIT" class="pull-left">
                     @csrf
 
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>
@@ -53,48 +53,59 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-3">
+                        <label class="col-sm-12 control-label"
+                               for="member_name_en">{{ __('custom.type') }}</label>
+
                         <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label" for="advisory_type_id_change">
-                                    {{ trans_choice('custom.type', 1) }}
-                                    <span class="required">*</span>
-                                </label>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER }}"
+                                               name="advisory_type_id"
+                                               id="edit_advisory_type_member"/>
+                                        <label class="form-check-label" id="" for="edit_advisory_type_member">
+                                            {{ trans_choice('custom.member', 1) }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                <select id="advisory_type_id_change" name="advisory_type_id"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="">---</option>
-                                    @foreach(\App\Enums\AdvisoryTypeEnum::cases() as $case)
-                                        <option value="{{ $case->value }}">
-                                            {{ trans_choice('custom.' . Str::lower($case->name), 1) }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN }}"
+                                               name="advisory_type_id"
+                                               id="edit_advisory_type_chairman"/>
+                                        <label class="form-check-label" id="" for="edit_advisory_type_chairman">
+                                            {{ __('custom.chairman') }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                <div class="text-danger mt-1 error_advisory_type_id"></div>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN }}"
+                                               name="advisory_type_id"
+                                               id="edit_advisory_type_vice_chairman"/>
+                                        <label class="form-check-label" id="" for="edit_advisory_type_vice_chairman">
+                                            {{ __('validation.attributes.vice_chairman') }}
+                                        </label>
+                                    </div>
+                                </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label" for="advisory_chairman_type_id_change">
-                                    {{ __('validation.attributes.advisory_chairman_type_id') }}
-                                    <span class="required">*</span>
-                                </label>
-
-                                <select id="advisory_chairman_type_id_change" name="advisory_chairman_type_id"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="">---</option>
-                                    @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
-                                        @foreach($advisory_chairman_types as $type)
-                                            <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-
-                                <div class="text-danger mt-1 error_advisory_chairman_type_id"></div>
+                                <div class="col-auto">
+                                    <div class="form-check pl-4">
+                                        <input class="form-check-input" type="radio"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY }}"
+                                               name="advisory_type_id"
+                                               id="edit_advisory_type_secretary"/>
+                                        <label class="form-check-label" id="" for="edit_advisory_type_secretary">
+                                            {{ trans_choice('custom.secretary', 1) }}
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,7 +176,7 @@
                 <button type="button" class="btn btn-success"
                         onclick="updateAjax(this, '{{ route('admin.advisory-boards.members.update', ['item' => $item]) }}')">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
-                    <span class="text">{{ __('custom.save') }}</span>
+                    <span class="text">{{ __('custom.update') }}</span>
                 </button>
             </div>
         </div>

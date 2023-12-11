@@ -7,6 +7,7 @@ use App\Http\Requests\StoreStrategicDocumentRequest;
 use App\Http\Requests\StrategicDocumentFileUploadRequest;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\EkatteArea;
+use App\Models\EkatteAreaTranslation;
 use App\Models\EkatteMunicipality;
 use App\Models\LegalActType;
 use App\Models\PolicyArea;
@@ -18,6 +19,7 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
 use App\Services\FileOcr;
+use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -76,21 +78,22 @@ class StrategicDocumentsController extends AdminController
      */
     public function edit(Request $request, $id = 0)
     {
-        $item = $this->getRecord($id, ['pris','documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
+        $currentLocale = app()->getLocale();
+        $item = $this->getRecord($id, ['pris.actType','documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
+
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
-        $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
+
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->get();
         $strategicActTypes = StrategicActType::with('translations')->get();
-        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
         $policyAreas = PolicyArea::with('translations')->get();
         $prisActs = Pris::with('translations')->get();
         //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
-        $strategicDocumentFilesBg = StrategicDocumentFile::with(['translations', 'versions.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
+        $strategicDocumentFilesBg = StrategicDocumentFile::with(['parentFile', 'translations', 'versions.translations', 'parentFile.versions.translations', 'documentType.translations', 'documentType.translations', 'parentFile.versions.documentType.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
         //$strategicDocumentFilesEn = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->where('locale', 'en')->orderBy('ord')->get();
         $strategicDocumentsFileService = app(FileService::class);
 
@@ -102,11 +105,37 @@ class StrategicDocumentsController extends AdminController
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         $consultations = PublicConsultation::with('translations')->get();
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
-        $mainFile = $strategicDocumentFilesBg->where('is_main', true)->first();
+        $mainFile = $strategicDocumentFilesBg->where('is_main', true)->sortByDesc('version')->first();
         $mainFiles = $item->files->where('is_main', true);
+        $mainFile = $mainFile->parentFile?->latestVersion ?? $mainFile;
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
-        $ekateAreas = EkatteArea::with('translations')->get();
-        $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
+        //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
+        //
+
+        $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
+            $query->where('locale', $currentLocale);
+        })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
+        $ekateMunicipalities = EkatteMunicipality::select('ekatte_municipality.*')->with('translations', function($query) use ($currentLocale) {
+            $query->where('locale', $currentLocale);
+        })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
+
+        $user = auth()->user();
+        if ($user->hasRole('service_user') || $user->hasRole('super-admin')) {
+            $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
+            $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
+            $ekateAreas = $ekateAreas->get();
+            $ekateMunicipalities = $ekateMunicipalities->get();
+        } else {
+            $commonService = app(CommonService::class);
+            $userInstitutions = $commonService->mapUserToInstitutions($user);
+            $manipulicity = Arr::get($userInstitutions,'manipulicity');
+            $area = Arr::get($userInstitutions,'area');
+            $ekateMunicipalities = $manipulicity ? $ekateMunicipalities->where('ekatte_municipality.id', $manipulicity)->get() : $ekateMunicipalities->get();
+            $ekateAreas = $area ? $ekateAreas->where('ekatte_area.id', $area)->get() : $ekateAreas->get();
+
+            $authoritiesAcceptingStrategic = Arr::get($userInstitutions,'authority_accepting_strategic');
+            $strategicDocumentLevels = Arr::get($userInstitutions,'strategic_document_level');
+        }
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
@@ -161,7 +190,6 @@ class StrategicDocumentsController extends AdminController
                 $validated = $fileService->prepareMainFileFields($validated);
                 $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
                 $enFile =  Arr::get($validated, 'file_strategic_documents_en');
-
                 if ($bgFile || $enFile) {
                     $fileService->uploadFiles($validated, $item, null, true);
                 } else {
@@ -526,9 +554,17 @@ class StrategicDocumentsController extends AdminController
     {
         try {
             $publicConsultation = PublicConsultation::findOrFail($id);
-            $prisId = Pris::where('public_consultation_id', $publicConsultation->id)->first()?->id;
+            $prisActs = Pris::whereIn('public_consultation_id', [$publicConsultation->id])->get();
 
-            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_act_id' => $prisId, 'legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
+            $prisOptions = [];
+            foreach ($prisActs as $prisAct) {
+                $prisOptions[] = [
+                    'id' => $prisAct->id,
+                    'text' => $prisAct->displayName,//$prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
+                ];
+            }
+
+            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_options' => $prisOptions, '','legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }

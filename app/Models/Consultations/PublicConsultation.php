@@ -30,7 +30,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways'];
+    const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
     const SHORT_REASON_FIELD = 'short_term_reason';
     const MODULE_NAME = ('custom.consultations.public_consultation');
     const EMAIL_SUBJECT = ('New public consultation was published');
@@ -47,7 +47,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to',
         'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
         'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id',
-        'proposal_report_comment_id', 'field_of_actions_id'
+        'proposal_report_comment_id', 'field_of_actions_id', 'law_id', 'pris_id'
     ];
 
     const MIN_DURATION_DAYS = 14;
@@ -82,6 +82,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             'responsible_unit' => [
                 'type' => 'summernote',
                 'rules' => ['nullable', 'string']
+            ],
+            'importer' => [
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255']
             ]
         );
     }
@@ -92,7 +96,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function scopeActivePublic($query){
         $query->where('public_consultation.active', 1)
-            ->where('public_consultation.open_from', '<', Carbon::now()->format('Y-m-d'));
+            ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'));
     }
 
     public function scopeByUser($query){
@@ -188,6 +192,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $this->belongsTo(Pris::class, 'id', 'public_consultation_id');
     }
 
+    public function decree(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Pris::class, 'id', 'pris_id');
+    }
+
     public function actType(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(ActType::class, 'id', 'act_type_id');
@@ -210,7 +219,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function opRow(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(LegislativeProgramRow::class, 'id', 'operational_program_row_id');
+        return $this->hasOne(OperationalProgramRow::class, 'id', 'operational_program_row_id');
     }
 
     public function polls(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

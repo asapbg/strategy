@@ -109,3 +109,10 @@ select.form-control-sm ~ .select2-container--default{
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     margin-top: -3px !important;
 }
+
+/*==========================*/
+/*Tables last td nowrap icons*/
+.table tr td:last-child {
+    text-wrap: nowrap;
+}
+/*=============================*/

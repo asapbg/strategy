@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\AdvisoryBoardMemberTranslation;
+use App\Models\AdvisoryBoardFunction;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +14,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table((new AdvisoryBoardMemberTranslation())->getTable(), function (Blueprint $table) {
-            $table->string('job')->nullable()->change();
+        Schema::table((new AdvisoryBoardFunction())->getTable(), function (Blueprint $table) {
+            $table->timestamp('working_year')->nullable();
         });
     }
 
@@ -26,8 +26,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('advisory_board_members', function (Blueprint $table) {
-            $table->string('job')->change();
+        Schema::table((new AdvisoryBoardFunction())->getTable(), function (Blueprint $table) {
+            $table->dropColumn('working_year');
         });
     }
 };

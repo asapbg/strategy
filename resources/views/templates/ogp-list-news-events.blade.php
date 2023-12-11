@@ -49,6 +49,93 @@
     </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row p-1">
+        <div class="accordion" id="accordionExample">
+
+            <div class="card custom-card">
+                <div class="card-header" id="heading60">
+                    <h2 class="mb-0">
+                        <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
+                            data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
+                            aria-controls="collapse60">
+                            <i class="me-1 bi bi-file-earmark-text fs-18"></i> ИМЕ НА ФАЙЛ
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapse60" class="collapse show" aria-labelledby="heading60" data-parent="#accordionExample"
+                    style="">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <div class="text-start">
+                                    <span class="text-start me-3">
+                                        <strong>Дата на създаване:</strong> 07.12.2023 г..
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a href="https://strategy.asapbg.com/download/60" class="btn btn-primary">Изтегли</a>
+                            </div>
+                        </div>
+
+                        <div class="row file-content">
+
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <div class="text-start">
+                                    <span class="text-start me-3">
+                                        <strong>Дата на създаване:</strong> 07.12.2023 г..
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a href="https://strategy.asapbg.com/download/60" class="btn btn-primary">Изтегли</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="col-lg-10 py-5 right-side-content">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
@@ -530,10 +617,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
@@ -544,7 +633,8 @@
                                 на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
                                 на гражданското общество.
                             </p>
-                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -567,10 +657,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
@@ -581,7 +673,8 @@
                                 на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
                                 на гражданското общество.
                             </p>
-                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -604,10 +697,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
@@ -618,7 +713,8 @@
                                 на Министерския съвет за разработване и провеждане на политики за подкрепа на развитието
                                 на гражданското общество.
                             </p>
-                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span></p>
+                            <p class="mb-0 text-secondary"><i class="bi bi-clock me-2"></i><span>13:00 - 17:00</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -643,7 +739,7 @@
             </div>
             <div class="modal-body p-4 mt-4">
 
-                <div class="event-list-wrapper mb-4">                  
+                <div class="event-list-wrapper mb-4">
                     <div class="row event-body custom-shadow rounded">
                         <div class="col-md-2 future-date-event p-2 rounded">
                             <span class="fs-50 lh-normal">29</span>
@@ -661,10 +757,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
@@ -679,7 +777,7 @@
                     </div>
                 </div>
 
-                <div class="event-list-wrapper mb-4">                  
+                <div class="event-list-wrapper mb-4">
                     <div class="row event-body custom-shadow rounded">
                         <div class="col-md-2 future-date-event p-2 rounded">
                             <span class="fs-50 lh-normal">29</span>
@@ -697,10 +795,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
@@ -715,7 +815,7 @@
                     </div>
                 </div>
 
-                <div class="event-list-wrapper mb-4">                  
+                <div class="event-list-wrapper mb-4">
                     <div class="row event-body custom-shadow rounded">
                         <div class="col-md-2 future-date-event p-2 rounded">
                             <span class="fs-50 lh-normal">29</span>
@@ -733,10 +833,12 @@
                                 </div>
                                 <div class="consult-item-header-edit">
                                     <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                            role="button" title="Изтриване"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                            title="Редакция">
                                         </i>
                                     </a>
                                 </div>
