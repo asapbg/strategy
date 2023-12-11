@@ -35,13 +35,13 @@ class seedOldPris extends Command
      */
     public function handle()
     {
-        DB::table('pris_tag')->truncate();
-        DB::table('pris_change_pris')->truncate();
-        DB::table('pris_translations')->truncate();
-        DB::table('pris')->truncate();
-        DB::table('tag')->truncate();
-        DB::table('tag_translations')->truncate();
-        DB::table('files')->truncate();
+//        DB::table('pris_tag')->truncate();
+//        DB::table('pris_change_pris')->truncate();
+//        DB::table('pris_translations')->truncate();
+//        DB::table('pris')->truncate();
+//        DB::table('tag')->truncate();
+//        DB::table('tag_translations')->truncate();
+//        DB::table('files')->truncate();
 
         $locales = config('available_languages');
         $ourTags = Tag::with(['translation'])->get()->pluck('translation.label', 'id')->toArray();
