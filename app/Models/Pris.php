@@ -30,7 +30,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected string $logName = "pris";
 
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', 'institution_id', 'version',
-        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at'];
+        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full'];
 
     /**
      * Get the model name
@@ -132,7 +133,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'pris_tag', 'tag_id', 'pris_id');
+        return $this->belongsToMany(Tag::class, 'pris_tag', 'pris_id', 'tag_id');
     }
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

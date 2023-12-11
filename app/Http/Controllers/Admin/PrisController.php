@@ -43,7 +43,9 @@ class PrisController extends AdminController
 
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
 
-        $items = Pris::with(['actType', 'actType.translations'])->FilterBy($requestFilter)
+        $items = Pris::with(['actType', 'actType.translations'])
+            ->FilterBy($requestFilter)
+            ->orderBy('created_at', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Pris';
         $editRouteName = self::EDIT_ROUTE;
@@ -202,15 +204,15 @@ class PrisController extends AdminController
                 'value' => $request->input('legalReason'),
                 'col' => 'col-md-3'
             ),
-            'tags' => array(
-                'type' => 'select',
-                'options' => optionsFromModel(Tag::get()),
-                'multiple' => true,
-                'default' => '',
-                'placeholder' => trans_choice('custom.tags', 2),
-                'value' => $request->input('tags'),
-                'col' => 'col-md-6'
-            ),
+//            'tags' => array(
+//                'type' => 'select',
+//                'options' => optionsFromModel(Tag::get()),
+//                'multiple' => true,
+//                'default' => '',
+//                'placeholder' => trans_choice('custom.tags', 2),
+//                'value' => $request->input('tags'),
+//                'col' => 'col-md-6'
+//            ),
             'institutions' => array(
                 'type' => 'subjects',
                 'placeholder' => trans_choice('custom.institutions', 1),
