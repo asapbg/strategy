@@ -174,7 +174,6 @@
                                     {{ __('custom.yes') }}
                                 @endif
                             </td>
-
                         </tr>
                         <tr id="fileRow_body_{{ $f->id }}">
                             <form action="{{ route('admin.strategic_documents.file.update', ['id' => $f->id]) }}"
@@ -194,6 +193,7 @@
                                             <label class="col-sm-12 control-label"
                                                    for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}
                                                 <span class="required">*</span></label>
+                                            <br>
                                             <select id="strategic_document_type_file_edit_{{ $f->id }}" name="strategic_document_type_file"
                                                     class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">
                                                 @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
