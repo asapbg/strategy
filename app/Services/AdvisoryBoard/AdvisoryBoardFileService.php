@@ -13,6 +13,43 @@ class AdvisoryBoardFileService
     {
     }
 
+    /**
+     * Store DB record for file, if it's already existing.
+     * Used for imports.
+     *
+     * @param int         $id_object
+     * @param string      $code_object
+     * @param string      $file_name
+     * @param int         $doc_type
+     * @param string      $content_type
+     * @param string      $path
+     * @param string|null $version
+     *
+     * @return void
+     */
+    public function storeDbRecord(
+        int    $id_object,
+        string $code_object,
+        string $file_name,
+        int    $doc_type,
+        string $content_type,
+        string $path,
+        string $version = null
+    ): void
+    {
+        $new = new File([
+            'id_object' => $id_object,
+            'code_object' => $code_object,
+            'filename' => $file_name,
+            'doc_type' => $doc_type,
+            'content_type' => $content_type,
+            'path' => $path,
+            'version' => $version ?? '1.0',
+        ]);
+
+        $new->save();
+    }
+
     public function upload(
         $file,
         string $language,
@@ -56,7 +93,7 @@ class AdvisoryBoardFileService
         };
 
         $full_dir = $dir . $sub_dir . $id_object . DIRECTORY_SEPARATOR;
-//        dd($full_dir);
+
         $file->storeAs($full_dir, $store_name, 'public_uploads');
 
         $newFile = new File([
