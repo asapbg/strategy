@@ -167,4 +167,12 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 
         return '<a href="' . $url . '">' . $this->title . '</a>';
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
