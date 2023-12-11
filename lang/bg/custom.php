@@ -682,4 +682,5 @@ return [
     'moderators' => 'Модератор|Модератори',
     'strategy_documents' => 'Стратегически документи',
     'strategy_documents_plural' => 'Стратегически документи',
+    'prepared_administration'  => 'Изработила администрация',
 ];

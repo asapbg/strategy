@@ -11,6 +11,7 @@ use App\Models\Pris;
 use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
+use App\Models\StrategicDocuments\Institution;
 use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
@@ -18,10 +19,12 @@ use App\Services\StrategicDocuments\FileService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Admin\StrategicDocumentsController as AdminStrategicDocumentsController;
 use Illuminate\Support\Arr;
@@ -37,6 +40,7 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
+        $institutions = Institution::withoutTrashed()->get();
         $strategicDocuments = $this->prepareResults($request);
         $policyAreas = PolicyArea::all();
         $preparedInstitutions = AuthorityAcceptingStrategic::all();
@@ -74,7 +78,7 @@ class StrategicDocumentsController extends Controller
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
+        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
 
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
@@ -100,6 +104,35 @@ class StrategicDocumentsController extends Controller
         }
 
         return response()->json(['strategic_documents' => $strategicDocumentsHtml, 'pagination' => $pagination]);
+    }
+
+    /**
+     * @param string $documentLevelIds
+     * @return Application|ResponseFactory|Response
+     */
+    public function getInstitutions(string $documentLevelIds)
+    {
+        $documentLevelArray = explode(',', $documentLevelIds);
+        if (in_array('all', $documentLevelArray)) {
+            return response(['institutions' => Institution::with(['level', 'translations'])->get()]);
+        }
+        if (in_array(2, $documentLevelArray)) {
+            $index = array_search(2, $documentLevelArray);
+            $documentLevelArray[$index] = 3;
+        }
+        if (in_array(3, $documentLevelArray)) {
+            $index = array_search(3, $documentLevelArray);
+            $documentLevelArray[$index] = 4;
+        }
+        if (!empty($documentLevelArray)) {
+            $institutions = Institution::with(['level', 'translations'])->whereHas('level', function ($query) use ($documentLevelArray) {
+                $query->whereIn('nomenclature_level', $documentLevelArray);
+            })->get();
+        } else {
+            $institutions = collect();
+        }
+
+        return response(['institutions' => $institutions]);
     }
 
     private function prepareStrategicDocumentsTreeView($strategicDocuments, $categoriesData)
@@ -146,7 +179,6 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '</ul>';
         $treeViewHtml .= '</li>';
 
-        // Repeat the same structure for the 'regional' category
         $treeViewHtml .= '<li class="parent_li">';
         $treeViewHtml .= '<span>';
         $treeViewHtml .= '<span class="glyphicon"></span>';
@@ -290,6 +322,7 @@ class StrategicDocumentsController extends Controller
         $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
         $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
         $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
+        $preparedInstitutions = Arr::get($queryParams, 'prepared-institution') ?? $request->input('prepared-institution');
 
         if ($title) {
             $strategicDocuments->where(function ($query) use ($title, $currentLocale) {
@@ -440,6 +473,19 @@ class StrategicDocumentsController extends Controller
         if ($prisActs) {
             $prisActsArray = explode(',', $prisActs);
             $strategicDocuments->whereIn('pris_act_id', $prisActsArray);
+        }
+
+        if ($preparedInstitutions) {
+            $preparedInstitutionsArray = explode(',', $preparedInstitutions);
+            $strategicDocuments->where(function($query) use ($preparedInstitutionsArray) {
+                $query->when(in_array('all', $preparedInstitutionsArray), function($query) {
+                    return $query;
+                }, function($query) use ($preparedInstitutionsArray) {
+                    $query->whereHas('user', function ($userQuery) use ($preparedInstitutionsArray) {
+                        $userQuery->whereIn('institution_id', $preparedInstitutionsArray);
+                    });
+                });
+            });
         }
 
         return $strategicDocuments;

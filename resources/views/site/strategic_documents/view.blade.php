@@ -214,8 +214,6 @@
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
                                     </a>
                                      -->
-
-
                                 <div class="row p-1">
                                     <div class="accordion" id="accordionExample">
                                         <div class="card custom-card">
@@ -279,7 +277,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </li>
                         @endif
                     </ul>
