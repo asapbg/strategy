@@ -154,6 +154,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-md-3">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
@@ -166,6 +167,19 @@
                     <option value="1">Централно</option>
                     <option value="2">Областно</option>
                     <option value="3">Общинско</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group ">
+            <div class="mb-3 d-flex flex-column w-100">
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.prepared_administration', 1) }}</label>
+                <select class="form-select" id="administrationSelect">
+                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>
+                    @foreach ($institutions as $institution)
+                        <option value="{{ $institution->id }}">{{ $institution->name }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

@@ -2,38 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AdvisoryTypeEnum;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
-use App\Models\AdvisoryBoardTranslation;
+use App\Models\AdvisoryBoardMemberTranslation;
 use DB;
 use Illuminate\Database\Seeder;
 
-/**
- * SQL used for generating the json export:
- *
- * select
- * councils."councilID",
- * councilattribs."category",
- * g."name",
- * councilattribs."institutionType",
- * councilattribs."actType",
- * (
- * select
- * councilmembers."positionOther"
- * from
- * councilmembers
- * where
- * councils."councilID" = councilmembers."councilID"
- * limit 1),
- * councilattribs."requiredSessionsCount",
- * councils.active
- * from
- * councils
- * inner join councilattribs on
- * councils."councilID" = councilattribs."councilID"
- * inner join group_ g on
- * councils."groupID" = g."groupId"
- */
 class AdvisoryBoardMemberSeeder extends Seeder
 {
 
@@ -49,9 +24,11 @@ class AdvisoryBoardMemberSeeder extends Seeder
         $imported = 0;
         $skipped = 0;
 
-        $old_members_db = DB::connection('old_db')->select('SELECT * FROM councilmembers LIMIT 100');
+        $old_members_db = DB::connection('old_strategy')->select('SELECT * FROM councilmembers');
 
-        $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id');
+        $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
+
+        AdvisoryBoardMember::truncate();
 
         foreach ($old_members_db as $member) {
             if (!in_array($member->councilID, (array)$advisory_board_ids)) {
@@ -60,8 +37,19 @@ class AdvisoryBoardMemberSeeder extends Seeder
             }
 
             $new_member = new AdvisoryBoardMember();
+            $new_member->id = $member->memberID;
             $new_member->advisory_board_id = $member->councilID;
+            $new_member->advisory_type_id = $this->determineAdvisoryType($member->positionOther);
+            $new_member->save();
 
+            foreach (config('available_languages') as $language) {
+                $translation = new AdvisoryBoardMemberTranslation();
+                $translation->locale = $language['code'];
+                $translation->advisory_board_member_id = $new_member->id;
+                $translation->member_name = $member->name ?? '';
+                $translation->member_job = $member->positionOther;
+                $translation->save();
+            }
 
             $imported++;
         }
@@ -71,18 +59,18 @@ class AdvisoryBoardMemberSeeder extends Seeder
 
     private function determineAdvisoryType(string|null $position): int
     {
-        if (str_contains($position, "министър-председател")) {
-            return 1;
+        if (str_contains($position, "секретар")) {
+            return AdvisoryTypeEnum::SECRETARY->value;
         }
 
-        if (str_contains($position, "заместник-министър") || str_contains($position, "зам.")) {
-            return 2;
+        if (str_contains($position, "заместник") || str_contains($position, "зам.")) {
+            return AdvisoryTypeEnum::VICE_CHAIRMAN->value;
         }
 
-        if (str_contains($position, "министър")) {
-            return 3;
+        if (str_contains($position, "министър") || str_contains($position, "председател")) {
+            return AdvisoryTypeEnum::CHAIRMAN->value;
         }
 
-        return 4;
+        return AdvisoryTypeEnum::MEMBER->value; // член
     }
 }

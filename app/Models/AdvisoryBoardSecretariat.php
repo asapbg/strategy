@@ -11,9 +11,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int        $id
+ * @property int        $advisory_board_id
+ *
  * @property Collection $files
  * @property Collection $allFiles
+ *
  * @method static create(array $array)
+ * @method static truncate()
  */
 class AdvisoryBoardSecretariat extends Model
 {

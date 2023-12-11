@@ -33,6 +33,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
     const SHORT_REASON_FIELD = 'short_term_reason';
     const MODULE_NAME = ('custom.consultations.public_consultation');
+    const EMAIL_SUBJECT = ('New public consultation was published');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -56,7 +57,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
      * Get the model name
      */
     public function getModelName() {
-        return $this->title;
+        return $this->translation?->title;
     }
 
     public static function translationFieldsProperties(): array

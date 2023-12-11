@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\CustomRole;
+use App\Models\InstitutionLevel;
+use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -34,9 +36,6 @@ class seedOldUsers extends Command
      */
     public function handle()
     {
-        DB::table('model_has_roles')->truncate();
-        DB::table('users')->truncate();
-
         $formatTimestamp = 'Y-m-d H:i:s';
         //TODO missing roles ??????
         $mappingRoles = [
@@ -48,12 +47,78 @@ class seedOldUsers extends Command
             6 => 3,	//Модератор общ. консултации => Модератор „Обществени консултации“
         ];
         $externalRoleId = CustomRole::where('name', '=', CustomRole::EXTERNAL_USER_ROLE)->first()->id;
+
+        //Institutions
+        $institutions = [
+            ':FIL' => null,
+            ':RE' => null,
+            'ДА' => null,
+            'ДАЕЕР' => null,
+            'ДАИТС' => null,
+            'ЕВ' => null,
+            'зам. министър-председателят' =>null,
+            'зам. министър-председателят и председател на ЦКБППМН' => null,
+            'и.д. главен секретар на МС' => null,
+            'М3' => 131,
+            'МВнР' => 127,
+            'МВР' => 127,
+            'МДА' => null,
+            'МДААР' => null,
+            'МДПБА' => null,
+            'МЕВ' => null,
+            'МЕЕР' => null,
+            'МЗ' => null,
+            'МЗГ' => null,
+            'МЗГАР' => null,
+            'МЗГБ' => null,
+            'МЗГП' => null,
+            'МЗП' => null,
+            'МЗХ' => 132,
+            'МИ' => null,
+            'МИЕ' => null,
+            'МИЕТ' => null,
+            'министър без портфейл' => null,
+            'министър без портфейл (Ал. Праматарски)' => null,
+            'министър без портфейл (Б. Димитров)' => null,
+            'министър без портфейл (М. Кунева)' => null,
+            'министър без портфейл (Н. Моллов)' => null,
+            'министър без портфейл (Ф. Хюсменова)' => null,
+            'министър-председателят' => 126,
+            'МИС' => null,
+            'МК' => 135,
+            'МКТ' => null,
+            'ММС' => 136,
+            'МНО' => null,
+            'МО' => 139,
+            'МОМН' => null,
+            'МОН' => 137,
+            'МОСВ' => 138,
+            'МП' => 140,
+            'МППЕИ' => null,
+            'МПр' => null,
+            'МРРБ' => 141,
+            'МС' => null,
+            'МТ' => 144,
+            'МТИТС' => null,
+            'МТС' => 142,
+            'МТСГ' => null,
+            'МТСП' => 143,
+            'МТТ' => null,
+            'МФ' => 145,
+            'МФВС' => null
+        ];
+
         //records per query
         $step = 50;
         //max id in old db
-        $maxOldId = DB::connection('old_strategy')->select('select max(users.userid) from users');
+        $maxOldId = DB::connection('old_strategy')->select('select max(dbo.users.userid) from dbo.users');
         //start from this id in old database
         $currentStep = (int)DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+
+        //TODO check if exists before drop and add unique emailW
+        //DB::statement('ALTER TABLE users DROP CONSTRAINT users_org_name_unique');
+        //DB::statement('ALTER TABLE users DROP CONSTRAINT users_username_unique');
+        //DB::statement('ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email)');
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -65,9 +130,9 @@ class seedOldUsers extends Command
                         -- institution_id ??????????????
                         u.userid as old_id,
                         u.username as username,
-                        case when profile.organization is not null then 1 else 0 end as is_org
+                        case when profile.organization is not null then 1 else 0 end as is_org,
                         profile.organization as org_name,
-                        case when profile.firstname is null then u.username else profile.firstname as first_name,
+                        case when profile.firstname is null then u.username else profile.firstname end as first_name,
                         profile.lastname as last_name,
                         -- user_type 1 - internal 2 - external
                         m.email,
@@ -114,7 +179,7 @@ class seedOldUsers extends Command
                                 'password_changed_at' => !empty($item->password_changed_at) ? Carbon::parse($item->password_changed_at)->format($formatTimestamp) : null,
                                 'last_login_at' => !empty($item->last_login_at) ? Carbon::parse($item->last_login_at)->format($formatTimestamp) : null,
                                 'active' => (bool)$item->active,
-                                'institution_id' => null, //TODO get institution ????? we can get this by author if we receive a mapping for user institution to IISDA
+                                'institution_id' => $institutions[$item->org_name] ?? null,
                             ];
 
                             $roles = json_decode($item->roles, true);
@@ -141,6 +206,8 @@ class seedOldUsers extends Command
                                 $newUser->assignRole($newUserRoles);
                                 $newUser->save();
                             }
+
+                            $this->comment('User with old id ('.$newUser->old_id.') is created');
                         }
                         DB::commit();
                     } catch (\Exception $e) {
@@ -152,8 +219,5 @@ class seedOldUsers extends Command
                 $currentStep += $step;
             }
         }
-
-        Artisan::call('db:seed UsersSeeder');
-        Artisan::call('db:seed UsersAZSeeder');
     }
 }

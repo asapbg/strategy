@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
-use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFunctionRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardFunctionRequest;
+use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
 use Carbon\Carbon;
 use DB;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Log;
 
 class AdvisoryBoardFunctionController extends AdminController
@@ -18,44 +19,63 @@ class AdvisoryBoardFunctionController extends AdminController
      * Store or update sections.
      *
      * @param StoreAdvisoryBoardFunctionRequest $request
+     * @param AdvisoryBoard                     $item
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function store(StoreAdvisoryBoardFunctionRequest $request): RedirectResponse
+    public function ajaxStore(StoreAdvisoryBoardFunctionRequest $request, AdvisoryBoard $item): JsonResponse
     {
         $validated = $request->validated();
-        $advisory_board_id = $request->route()->parameters['item'];
-        $route = route('admin.advisory-boards.edit', $advisory_board_id) . '#functions';
 
         DB::beginTransaction();
         try {
-            $item = AdvisoryBoardFunction::where('advisory_board_id', $advisory_board_id)->where('status', StatusEnum::ACTIVE->value)->first() ?? new AdvisoryBoardFunction();
+            $new = new AdvisoryBoardFunction();
+            $fillable = $this->getFillableValidated($validated, $new);
+            $fillable['advisory_board_id'] = $item->id;
+            $fillable['working_year'] = Carbon::create($fillable['working_year']);
+            $new->fill($fillable);
+            $new->save();
 
-            if (!Carbon::parse($item->created_at)->isSameYear(Carbon::now())) {
-                $item->status = StatusEnum::INACTIVE->value;
-                $item->save();
-                $item = new AdvisoryBoardFunction();
-            }
-
-            $message = $item->id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f');
-            $fillable = $this->getFillableValidated($validated, $item);
-            $fillable['advisory_board_id'] = $advisory_board_id;
-            $item->fill($fillable);
-            $item->save();
-
-            foreach (config('available_languages') as $lang) {
-                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
-            }
-
-            $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $item, $validated);
+            $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $new, $validated);
 
             DB::commit();
 
-            return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . $message);
+            return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return redirect($route)->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    public function ajaxEdit(AdvisoryBoard $item, AdvisoryBoardFunction $working_program)
+    {
+        $this->authorize('update', $item);
+
+        return response()->json($working_program);
+    }
+
+    public function ajaxUpdate(UpdateAdvisoryBoardFunctionRequest $request, AdvisoryBoard $item)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+        try {
+            $working_program = AdvisoryBoardFunction::find($validated['function_id']);
+            $fillable = $this->getFillableValidated($validated, $working_program);
+            $fillable['working_year'] = Carbon::create($fillable['working_year']);
+            $working_program->fill($fillable);
+            $working_program->save();
+
+            $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $working_program, $validated);
+
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
         }
     }
 }

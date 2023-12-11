@@ -181,7 +181,6 @@ class ImpactAssessmentController extends Controller
         $executors = Executor::select('executors.*')
             ->with('translation')
             ->joinTranslation(Executor::class)
-            ->whereLocale(app()->getLocale())
             ->when($contractor_name, function ($query, $contractor_name) {
                 return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
             })

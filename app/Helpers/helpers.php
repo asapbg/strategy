@@ -18,11 +18,10 @@ if (!function_exists('currentUser')) {
             if (Auth::check() && Auth::user() && Auth::user() instanceof User) {
                 return Auth::user();
             }
-        }
-        else {
-            $model = "\App\Models\\".capitalize($guard);
+        } else {
+            $model = "\App\Models\\" . capitalize($guard);
             if (!class_exists($model)) {
-                $model = "\App\\".capitalize($guard);
+                $model = "\App\\" . capitalize($guard);
                 if (!class_exists($model)) {
                     return null;
                 }
@@ -59,10 +58,14 @@ if (!function_exists('databaseDate')) {
      * Return date in Y-m-d format for storing in database
      *
      * @param $date
+     *
      * @return false|string
      */
     function databaseDate($date)
     {
+        if (!$date) {
+            return null;
+        }
         return date("Y-m-d", strtotime($date));
     }
 }
@@ -73,6 +76,7 @@ if (!function_exists('databaseDateTime')) {
      * Return datetime in Y-m-d H:i:s format for storing in database
      *
      * @param $date
+     *
      * @return false|string
      */
     function databaseDateTime($datetime)
@@ -90,6 +94,7 @@ if (!function_exists('displayDate')) {
      * Return date from datetime string in d-m-Y format
      *
      * @param $datetime
+     *
      * @return false|string
      */
     function displayDate($datetime)
@@ -107,6 +112,7 @@ if (!function_exists('displayDateTime')) {
      * Return date from datetime string in d-m-Y H:i format
      *
      * @param $datetime
+     *
      * @return false|string
      */
     function displayDateTime($datetime)
@@ -114,7 +120,7 @@ if (!function_exists('displayDateTime')) {
         if (!$datetime) {
             return "";
         }
-        return date(config('app.date_format').' H:i', strtotime($datetime));
+        return date(config('app.date_format') . ' H:i', strtotime($datetime));
     }
 }
 
@@ -124,13 +130,14 @@ if (!function_exists('printDate')) {
      * Return date from datetime string in d-MMM-Y format in bg
      *
      * @param $datetime
+     *
      * @return false|string
      */
     function printDate()
     {
         $format = new IntlDateFormatter('bg_BG', IntlDateFormatter::NONE,
             IntlDateFormatter::NONE, NULL, NULL, 'd-MMM-Y');
-        return datefmt_format($format, mktime('0','0','0'));
+        return datefmt_format($format, mktime('0', '0', '0'));
     }
 }
 
@@ -140,6 +147,7 @@ if (!function_exists('capitalize')) {
      * Capitalize a given string
      *
      * @param $string
+     *
      * @return string
      */
     function capitalize($string)
@@ -191,14 +199,14 @@ if (!function_exists('rolesNames')) {
      * Get roles names by id
      *
      * @method rolesNames
-     * @param array  $ids
+     * @param array $ids
      *
      * @return array
      */
     function rolesNames(array $ids)
     {
         $roles = [];
-        if( sizeof($ids) ) {
+        if (sizeof($ids)) {
             $roles = \Spatie\Permission\Models\Role::whereIn('id', $ids)->get()->pluck('name')->toArray();
         }
         return $roles;
@@ -212,13 +220,14 @@ if (!function_exists('getLocaleId')) {
      *
      * @method getLocaleId
      * @param string $code
+     *
      * @return int
      */
     function getLocaleId(string $code): int
     {
         $id = 1; //by default get first language
         foreach (config('available_languages') as $key => $lang) {
-            if( $code == $lang['code'] ) {
+            if ($code == $lang['code']) {
                 $id = $key;
             }
         }
@@ -233,15 +242,16 @@ if (!function_exists('optionsUserTypes')) {
      *
      * @method optionsUserTypes
      *
-     * @param bool $any
+     * @param bool       $any
      * @param string|int $anyValue
      * @param string|int $anyName
+     *
      * @return array
      */
-    function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+    function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
     {
         $options = User::getUserTypes();
-        if( $any ) {
+        if ($any) {
             $options[$anyValue] = $anyName;
             ksort($options);
         }
@@ -253,19 +263,20 @@ if (!function_exists('optionsUserTypes')) {
      *
      * @method optionsApplicationStatus
      *
-     * @param bool $any
+     * @param bool       $any
      * @param string|int $anyValue
      * @param string|int $anyName
+     *
      * @return array
      */
-    function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+    function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
     {
         $options = [];
-        if( $any ) {
+        if ($any) {
             $options[] = ['value' => $anyValue, 'name' => $anyName];
         }
         foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
-            $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.'.$key)];
+            $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.' . $key)];
         }
         return $options;
     }
@@ -277,18 +288,19 @@ if (!function_exists('optionsUserTypes')) {
          *
          * @method optionsStatuses
          *
-         * @param bool $any
+         * @param bool       $any
          * @param string|int $anyValue
          * @param string|int $anyName
+         *
          * @return array
          */
-        function optionsStatuses(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+        function optionsStatuses(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
         {
             $options = array(
                 1 => trans_choice('custom.active', 1),
                 0 => trans_choice('custom.inactive', 1),
             );
-            if( $any ) {
+            if ($any) {
                 $options[$anyValue] = $anyName;
                 ksort($options);
             }
@@ -307,7 +319,7 @@ if (!function_exists('optionsUserTypes')) {
          */
         function logError(string $method, string $error): void
         {
-            \Illuminate\Support\Facades\Log::error($method.': '.$error );
+            \Illuminate\Support\Facades\Log::error($method . ': ' . $error);
         }
     }
 
@@ -317,7 +329,8 @@ if (!function_exists('optionsUserTypes')) {
          * return striped html string
          *
          * @param string $html_string
-         * @param array $tags
+         * @param array  $tags
+         *
          * @return string
          */
         function stripHtmlTags(string $html_string, array $tags = [])
@@ -335,7 +348,8 @@ if (!function_exists('optionsUserTypes')) {
          *
          * @param string $form
          * @param string $to
-         * @param bool $year
+         * @param bool   $year
+         *
          * @return array
          */
         function extractMonths(string $form, string $to, bool $year = true): array
@@ -352,13 +366,13 @@ if (!function_exists('optionsUserTypes')) {
     if (!function_exists('fileIcon')) {
         /**
          * @param string $fileType
+         *
          * @return string
          */
         function fileIcon($fileType): string
         {
             $icon = '<i class="fas fa-file-download text-secondary me-1"></i>';
-            switch ($fileType)
-            {
+            switch ($fileType) {
                 case 'application/pdf':
                 case 'pdf':
                     $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
@@ -389,10 +403,11 @@ if (!function_exists('optionsUserTypes')) {
          *
          * @method optionsFromModel
          *
-         * @param $dbOptions
-         * @param bool $any
+         * @param            $dbOptions
+         * @param bool       $any
          * @param string|int $anyValue
          * @param string|int $anyName
+         *
          * @return array
          */
         function optionsFromModel($dbOptions, bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
@@ -414,18 +429,19 @@ if (!function_exists('optionsUserTypes')) {
              *
              * @method optionsStatusesFilter
              *
-             * @param bool $any
+             * @param bool       $any
              * @param string|int $anyValue
              * @param string|int $anyName
+             *
              * @return array
              */
-            function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName=''): array
+            function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
             {
                 $options = array(
                     ['value' => 1, 'name' => trans_choice('custom.active', 1)],
                     ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
                 );
-                if( $any ) {
+                if ($any) {
                     $options[] = ['value' => $anyValue, 'name' => $anyName];
                     ksort($options);
                 }
@@ -482,10 +498,10 @@ if (!function_exists('optionsUserTypes')) {
         function fileHtmlContent($file)
         {
             $content = '';
-            switch ($file->content_type){
+            switch ($file->content_type) {
                 case 'application/pdf':
-                    $path = (!str_contains($file->path, 'files') ? 'files/' : '').$file->path;
-                    $content=  '<embed src="'.asset($path).'" width="100%" height="700px" />';
+                    $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
+                    $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
                     break;
                 case 'application/msword':
                     $content = __('custom.old_file_format');
@@ -508,7 +524,8 @@ if (!function_exists('optionsUserTypes')) {
          * return striped html string
          *
          * @param string $html_string
-         * @param array $tags
+         * @param array  $tags
+         *
          * @return string
          */
         function htmlToText(string $html_string)
@@ -542,23 +559,112 @@ if (!function_exists('optionsUserTypes')) {
         /**
          * return pagination options
          *
-         * @param array $enums
+         * @param array  $enums
          * @param string $translationBase
-         * @param bool $any
+         * @param bool   $any
+         *
          * @return array
          */
-        function enumToSelectOptions( array $enums, string $translationBase = '', bool $any = false): array
+        function enumToSelectOptions(array $enums, string $translationBase = '', bool $any = false): array
         {
             $options = [];
-            if( $any ){
+            if ($any) {
                 $options[] = ['value' => '', 'name' => ''];
             }
-            if( sizeof($enums) ) {
+            if (sizeof($enums)) {
                 foreach ($enums as $name => $val) {
-                    $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.'.$translationBase.'.'.$name) : $name];
+                    $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
                 }
             }
             return $options;
+        }
+    }
+
+    if (!function_exists('mkdirIfNotExists')) {
+
+        /**
+         * Creates dir if do not exists.
+         *
+         * @param $directory - It should be an absolute path. Try using base_path()
+         *
+         * @return void
+         */
+        function mkdirIfNotExists($directory): void
+        {
+            if (file_exists($directory)) {
+                return;
+            }
+
+            mkdir($directory, 0777, true);
+        }
+    }
+
+    if (!function_exists('copyFile')) {
+
+        /**
+         * Used to copy files from the previous project.
+         *
+         * @param $directory_copy
+         * @param $directory_paste
+         * @param $folder_id
+         *
+         * @return array
+         */
+        function copyFiles($directory_copy, $directory_paste, $folder_id): array
+        {
+            $copied_files = [];
+
+            if (!file_exists($directory_copy)) {
+                return [];
+            }
+
+            $folders = array_filter(array_map('basename', scandir($directory_copy)), function ($file) use ($directory_copy) {
+                return is_dir($directory_copy . DIRECTORY_SEPARATOR . $file);
+            });
+
+            /**
+             * Ex: array:3 [
+             *  0 => "."
+             *  1 => ".."
+             *  2 => "DLFE-7702.pdf"
+             * ]
+             */
+            if (count($folders) < 3) {
+                return [];
+            }
+
+            for ($i = 2; $i < count($folders); $i++) {
+                $sub_dir = $directory_copy . DIRECTORY_SEPARATOR . $folders[$i];
+                $file_info = explode('.', $folders[$i]);
+
+                if (count($file_info) !== 2) {
+                    continue;
+                }
+
+                $file_name = $file_info[0];
+                $file_extension = $file_info[1];
+
+                $files = array_filter(scandir($sub_dir), function ($file) use ($sub_dir) {
+                    return !is_dir($sub_dir . '/' . $file);
+                });
+                $files = array_values($files);
+
+                foreach ($files as $file) {
+                    $source = $sub_dir . DIRECTORY_SEPARATOR . $file;
+                    $to = $directory_paste . DIRECTORY_SEPARATOR . $file_name . '.' . $file_extension;
+
+                    if (copy($source, $to)) {
+                        $temp = [];
+                        $temp['filename'] = basename($to);
+                        $temp['content_type'] = mime_content_type($to);
+                        $temp['path'] = explode(DIRECTORY_SEPARATOR . 'files', $to)[1];
+                        $temp['version'] = $file;
+                        $copied_files[] = $temp;
+                    }
+                }
+            }
+
+            return $copied_files;
         }
     }
 }

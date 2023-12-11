@@ -12,6 +12,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -167,6 +168,31 @@ class User extends Authenticatable
         }
 
         return $this->username;
+    }
+
+    /**
+     * Make scope to return users by given role / roles
+     *
+     * @param $query
+     * @param $roles
+     */
+    public function scopeHasRole($query, $roles)
+    {
+        if (is_array($roles)) {
+            return $query->join('model_has_roles', "model_has_roles.model_id", "=", "users.id")
+                ->whereIn('role_id', Role::whereIn('name', $roles)->get()->pluck('id')->toArray());
+        } else {
+            return $query->join('model_has_roles', "model_has_roles.model_id", "=", "users.id")
+                ->where('role_id', Role::where('name', $roles)->value('id'));
+        }
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(UserSubscribe::class);
     }
 
 }

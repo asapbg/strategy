@@ -724,7 +724,8 @@ form label {
     font-size: 16px;
 }
 
-.rss-sub i {
+.rss-sub i,
+.email-sub i {
     margin-right: 5px;
 }
 
@@ -807,6 +808,7 @@ a.box-link span {
 
 
 .btn.rss-sub,
+.btn.email-sub,
 .btn.btn-primary {
     border: 2px solid #21659e;
     background: #fff !important;
@@ -883,6 +885,7 @@ a.box-link span {
 }
 
 .btn.rss-sub:hover,
+.btn.email-sub:hover,
 .btn.btn-primary:hover {
     background: #eaf3fb !important;
 }

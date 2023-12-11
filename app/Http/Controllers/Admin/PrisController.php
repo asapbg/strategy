@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PrisConnectionStatusEnum;
 use App\Enums\PrisDocChangeTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PrisStoreRequest;
@@ -132,6 +133,7 @@ class PrisController extends AdminController
         }
 
         $item->changedDocs()->attach($validated['connectIds'], ['connect_type' => $validated['connect_type']]);
+        Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
 
         return response()->json(['success' => 1], 200);
     }

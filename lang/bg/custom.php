@@ -685,5 +685,6 @@ return [
     'strategy_documents_plural' => 'Стратегически документи',
     'nomenclature.laws'     => 'Закон|Закони',
     'laws'     => 'Закон|Закони',
-    'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)'
+    'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)',
+    'prepared_administration'  => 'Изработила администрация',
 ];

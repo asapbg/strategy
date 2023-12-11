@@ -20,6 +20,7 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-5/js/bootstrap.bundle.min.js',
         'resources/adminlte-3.2/plugins/select2/js/select2.full.min.js',
         'resources/adminlte-3.2/plugins/select2/js/i18n/bg.js',
+        'resources/adminlte-3.2/plugins/toastr/toastr.min.js',
         'resources/adminlte-3.2/plugins/summernote/summernote.min.js',
         'resources/adminlte-3.2/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js',
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js',
@@ -30,6 +31,7 @@ mix.js('resources/js/app.js', 'public/js')
     .styles([
         'resources/adminlte-3.2/plugins/select2/css/select2.min.css',
         'resources/adminlte-3.2/plugins/summernote/summernote.min.css',
+        'resources/adminlte-3.2/plugins/toastr/toastr.min.css',
         'resources/adminlte-3.2/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css',
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css',
         'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.css',

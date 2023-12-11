@@ -26,4 +26,13 @@ enum PrisDocChangeTypeEnum: int
         return $keyName;
     }
 
+    public static function toStatus($val) {
+        $statuses = [
+            self::CHANGE->value => PrisConnectionStatusEnum::CHANGED->value,
+            self::COMPLEMENTS->value => PrisConnectionStatusEnum::SUPPLEMENTED->value,
+            self::CANCEL->value => PrisConnectionStatusEnum::CANCELED->value
+        ];
+        return $statuses[$val];
+    }
+
 }

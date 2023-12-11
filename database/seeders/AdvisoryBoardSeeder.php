@@ -49,6 +49,8 @@ class AdvisoryBoardSeeder extends Seeder
         $advisory_boards_json = file_get_contents(database_path('/data/old_advisory_boards.json'));
         $advisory_boards = json_decode($advisory_boards_json, true);
 
+        AdvisoryBoard::truncate();
+
         foreach ($advisory_boards as $board) {
             if (!is_array($board)) {
                 continue;
@@ -65,6 +67,10 @@ class AdvisoryBoardSeeder extends Seeder
 
             $new_advisory_board->save();
 
+            // It's needed for further files.
+            $directory = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'advisory-boards' . DIRECTORY_SEPARATOR . $new_advisory_board->id);
+            mkdirIfNotExists($directory);
+
             foreach (config('available_languages') as $locale) {
                 $translation = new AdvisoryBoardTranslation();
                 $translation->locale = $locale['code'];
@@ -76,7 +82,10 @@ class AdvisoryBoardSeeder extends Seeder
             $imported++;
         }
 
-        $this->command->info("$imported field of actions were imported successfully at " . date("H:i"));
+        $this->command->info("$imported advisory boards were imported successfully at " . date("H:i"));
+
+        // we call all other seeders that depends on advisory boards
+        $this->callDependableSeeders();
     }
 
     private function determineChairmanType(string|null $position): int
@@ -94,5 +103,13 @@ class AdvisoryBoardSeeder extends Seeder
         }
 
         return 4;
+    }
+
+    private function callDependableSeeders(): void
+    {
+        $this->call([
+//            AdvisoryBoardMemberSeeder::class,
+//        AdvisoryBoardSecretariatSeeder::class,
+        ]);
     }
 }

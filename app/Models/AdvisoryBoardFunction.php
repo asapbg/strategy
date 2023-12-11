@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static where(string $string, mixed $advisory_board_id)
  * @method static orderBy(string $string, string $string1)
  * @method static create(array $array)
+ * @method static find(mixed $function_id)
  */
 class AdvisoryBoardFunction extends Model
 {
@@ -34,7 +35,7 @@ class AdvisoryBoardFunction extends Model
     //activity
     protected string $logName = "advisory_board_functions";
 
-    protected $fillable = ['advisory_board_id'];
+    protected $fillable = ['advisory_board_id', 'working_year'];
 
     public function advisoryBoard(): BelongsTo
     {

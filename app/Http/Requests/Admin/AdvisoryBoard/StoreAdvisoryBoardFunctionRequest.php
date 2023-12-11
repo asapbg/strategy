@@ -32,7 +32,9 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
+        $rules = [
+            'working_year' => 'nullable|date_format:Y'
+        ];
 
         foreach (config('available_languages') as $lang) {
             foreach (AdvisoryBoardFunction::translationFieldsProperties() as $field => $properties) {

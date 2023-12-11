@@ -1616,6 +1616,23 @@ headTemplate:'<thead><tr><th colspan="7" class="datepicker-title"></th></tr><tr>
 }));
 
 var canAjax = true;
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "1000",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
 
 //===============================
 // START MyModal
@@ -2049,6 +2066,34 @@ $(document).ready(function () {
             });
         });
     }
+
+    // Subscribe
+    $(document).on('click', 'button.subscribe', function (e) {
+        e.preventDefault();
+        let channel = $(this).data('channel');
+        let model = $("#subscribe_model").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "/subscribe",
+            data: {
+                channel: channel,
+                model: model
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#executors-results").html(res);
+                    HideLoadingSpinner();
+                    toastr.success(res.message);
+                } else {
+                    showModalAlert(res.message);
+                }
+            },
+            error: function () {
+                toastr.error('Възникна грешка, моля опитайте отново по-късно');
+            }
+        });
+    });
 
     // Ajax search
     $(document).on('click', '#ajax-pagination .pagination li', function (e) {

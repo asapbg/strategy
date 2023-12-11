@@ -17,12 +17,13 @@ class StrategicDocumentsExport implements FromCollection, WithHeadings, ShouldAu
 {
     public function __construct(private $data, private $rowCount)
     {
+        ini_set('memory_limit', '2048M');
+
     }
     public function collection()
     {
         return collect($this->data);
     }
-
 
 
     /**
@@ -68,6 +69,6 @@ class StrategicDocumentsExport implements FromCollection, WithHeadings, ShouldAu
      */
     public function chunkSize(): int
     {
-        return 1000;
+        return 5000;
     }
 }

@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property int    $id
  * @property int    $advisory_board_id
  * @property int    $advisory_type_id
  * @property int    $advisory_chairman_type_id
  * @property string $name
  *
  * @method static find(bool|float|int|string|null $get)
+ * @method static truncate()
  */
 class AdvisoryBoardMember extends Model
 {

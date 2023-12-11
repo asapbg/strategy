@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\File;
+use App\Models\InstitutionLevel;
 use App\Models\Pris;
+use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use App\Services\FileOcr;
 use Carbon\Carbon;
@@ -35,15 +37,39 @@ class seedOldPris extends Command
      */
     public function handle()
     {
-        DB::table('pris_tag')->truncate();
-        DB::table('pris_change_pris')->truncate();
-        DB::table('pris_translations')->truncate();
-        DB::table('pris')->truncate();
-        DB::table('tag')->truncate();
-        DB::table('tag_translations')->truncate();
-        DB::table('files')->truncate();
-
         $locales = config('available_languages');
+
+        //Create default institution
+        $diEmail = 'magdalena.mitkova+egov@asap.bg';
+        $dInstitution = Institution::where('email', '=', $diEmail)->withTrashed()->first();
+        if(!$dInstitution) {
+            $insLevel = InstitutionLevel::create([
+                'system_name' => 'default'
+            ]);
+            if(!$insLevel) {
+                $this->error('Cant create default institution');
+            }
+            if($insLevel) {
+                foreach ($locales as $locale) {
+                    $insLevel->translateOrNew($locale['code'])->name = 'Default Level';
+                }
+                $insLevel->save();
+            }
+
+            $dInstitution = Institution::create([
+                'email' => $diEmail,
+                'institution_level_id' => $insLevel->id
+            ]);
+
+            if(!$dInstitution) {
+                $this->error('Cant create default institution');
+            }
+            foreach ($locales as $locale) {
+                $dInstitution->translateOrNew($locale['code'])->name = 'Default';
+            }
+            $dInstitution->save();
+        }
+
         $ourTags = Tag::with(['translation'])->get()->pluck('translation.label', 'id')->toArray();
         $legalTypeDocs = [
             1 => 7, //'Заповед',
@@ -348,7 +374,7 @@ class seedOldPris extends Command
                                     'published_at' => Carbon::parse($item->published_at)->format($formatTimestamp),
                                     'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
                                     'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
-                                    'institution_id' => null, // TODO ?????? Not all have institution id
+                                    'institution_id' => null, // When old record do not have institution use our default : $dInstitution
                                     'version' => null, // TODO ??????
                                     'protocol' => null,
                                     'newspaper_number' => null,
@@ -432,7 +458,9 @@ class seedOldPris extends Command
                                             }
                                             $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
                                             //TODO We are not ready for multi institutions
-                                            $prepareNewPris['institution_id'] = sizeof($importerInstitutions) ? $importerInstitutions[0] : null;
+                                            $prepareNewPris['institution_id'] = sizeof($importerInstitutions) ? $importerInstitutions[0] : $dInstitution->id;
+                                        } else{
+                                            $prepareNewPris['institution_id'] = $dInstitution->id;
                                         }
                                     }
                                     //get about
