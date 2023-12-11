@@ -4,10 +4,8 @@ namespace App\Models;
 
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\Consultations\OperationalProgramRow;
-use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
@@ -21,7 +19,7 @@ use Illuminate\Support\Collection;
 class LegislativeInitiative extends ModelActivityExtend
 {
 
-    use FilterSort, SoftDeletes;
+    use FilterSort;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');

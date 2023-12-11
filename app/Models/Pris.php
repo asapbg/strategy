@@ -9,13 +9,12 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Pris extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['about', 'legal_reason', 'importer'];
@@ -31,7 +30,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected string $logName = "pris";
 
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', 'institution_id', 'version',
-        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at'];
+        'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status'];
 
     /**
      * Get the model name
@@ -50,6 +50,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function scopePublished($query){
         $query->whereNotNull('pris.published_at');
+    }
+
+    public function scopeDecrees($query){
+        $query->where('pris.legal_act_type_id', '=', LegalActType::TYPE_DECREES);
     }
 
     protected function regNum(): Attribute
@@ -117,6 +121,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id')->withTrashed();
     }
 
+    public function decreesConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultation::class, 'pris_id', 'id');
+    }
+
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Institution::class, 'id', 'institution_id');
@@ -124,7 +133,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'pris_tag', 'tag_id', 'pris_id');
+        return $this->belongsToMany(Tag::class, 'pris_tag', 'pris_id', 'tag_id');
     }
 
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

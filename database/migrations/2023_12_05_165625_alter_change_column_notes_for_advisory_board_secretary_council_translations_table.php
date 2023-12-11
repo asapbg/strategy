@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AdvisoryBoardSecretaryCouncilTranslation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +14,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table((new AdvisoryBoardSecretaryCouncilTranslation())->getTable(), function (Blueprint $table) {
-            $table->longText('notes')->nullable()->change();
-        });
+//        Schema::table((new AdvisoryBoardSecretaryCouncilTranslation())->getTable(), function (Blueprint $table) {
+//            $table->longText('notes')->nullable()->change();
+//        });
     }
 
     /**
@@ -27,8 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table((new AdvisoryBoardSecretaryCouncilTranslation())->getTable(), function (Blueprint $table) {
-            $table->string('notes')->nullable()->change();
-        });
+//        Schema::table((new AdvisoryBoardSecretaryCouncilTranslation())->getTable(), function (Blueprint $table) {
+//            $table->string('notes')->nullable()->change();
+//        });
     }
 };

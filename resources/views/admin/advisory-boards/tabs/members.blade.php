@@ -6,7 +6,7 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create-chairman">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create-member">
                     <i class="fa fa-plus mr-3"></i>
                     {{ __('custom.add') . ' ' . trans_choice('custom.member', 1) }}
                 </button>

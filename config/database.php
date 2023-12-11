@@ -91,6 +91,36 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'pris' => [
+            'driver' => env('DB_DRIVER_PRIS', 'pgsql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_PRIS', '127.0.0.1'),
+            'port' => env('DB_PORT_PRIS', '5432'),
+            'database' => env('DB_DATABASE_PRIS', 'forge'),
+            'username' => env('DB_USERNAME_PRIS', 'forge'),
+            'password' => env('DB_PASSWORD_PRIS', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'dbo',
+            'sslmode' => 'prefer',
+        ],
+
+        'old_strategy' => [
+            'driver' => env('DB_DRIVER_OLD_STRATEGY', 'pgsql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_OLD_STRATEGY', '127.0.0.1'),
+            'port' => env('DB_PORT_OLD_STRATEGY', '5432'),
+            'database' => env('DB_DATABASE_OLD_STRATEGY', 'forge'),
+            'username' => env('DB_USERNAME_OLD_STRATEGY', 'forge'),
+            'password' => env('DB_PASSWORD_OLD_STRATEGY', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
     ],
 
     /*

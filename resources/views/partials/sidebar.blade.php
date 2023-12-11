@@ -112,7 +112,7 @@
                     <a href="{{ route('admin.executors.index') }}"
                        class="nav-link @if(strstr(url()->current(), '/executors')) active @endif">
                         <i class="far fa-list-alt"></i>
-                        <p>{{ __('List of individuals and legal entities') }}</p>
+                        <p>{{ __('List of the preparers of evaluations under the ZNA') }}</p>
                     </a>
                 </li>
                 <!-- Admin -->

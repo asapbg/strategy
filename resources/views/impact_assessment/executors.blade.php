@@ -23,6 +23,8 @@
                     <form action="{{ url()->current() }}" id="search-form" METHOD="GET">
                         <input type="hidden" name="search" value="true">
                         <input type="hidden" name="page" class="current_page" value="{{ $executors->currentPage() }}">
+                        <input type="hidden" name="sort" class="sort" value="DESC">
+                        <input type="hidden" name="eik" id="eik" value="">
                         <div class="row filter-results mb-2">
                             <h2 class="mb-4">
                                 Търсене
@@ -126,7 +128,6 @@
 
                         <div class="row pt-4 pb-2 px-2">
                             <div class="col-md-12">
-                                <input type="hidden" name="sort" class="sort" value="DESC">
                                 <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2">
                                     <div class="col-md-2">
                                         <p class="mb-0 cursor-pointer sort_search">
@@ -148,7 +149,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <p class="mb-0 cursor-pointer sort_search ">
-                                            <input type="hidden" disabled class="order_by" name="order_by" value="contractor_date">
+                                            <input type="hidden" disabled class="order_by" name="order_by" value="contract_date">
                                             <i class="fa-solid fa-sort"></i> Дата на договора
                                         </p>
                                     </div>
@@ -205,7 +206,7 @@
                     $("#price_range_max").val(ui.values[1]);
                 },
                 change: function( event, ui ) {
-                    //sortList();
+                    $(".current_page").val(1);
                 }
             });
             $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1 ) + "лв." );

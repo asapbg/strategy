@@ -10,11 +10,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StrategicDocumentFile extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const TRANSLATABLE_FIELDS = ['display_name', 'file_info'];
     const MODULE_NAME = ('custom.strategic_document_files');

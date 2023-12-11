@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use App\Models\Consultations\PublicConsultation;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PublicConsultationContact extends ModelActivityExtend
 {
-    use SoftDeletes;
 
     protected $table ='public_consultation_contact';
     protected $guarded = [];

@@ -5,14 +5,10 @@ namespace App\Models;
 use App\Models\StrategicDocuments\Institution;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-use Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InstitutionLink extends ModelActivityExtend implements TranslatableContract
 {
-    use SoftDeletes, Translatable;
+    use Translatable;
 
     const TRANSLATABLE_FIELDS = ['title'];
     const MODULE_NAME = 'custom.institution_links';

@@ -153,7 +153,14 @@ class LegislativeProgramController extends AdminController
                         if (isset($validated['val']) && sizeof($validated['val'])
                             && isset($validated['val'][$rowKey]) && (sizeof($validated['col'][$rowKey]) === sizeof($validated['val'][$rowKey])) ) {
                             foreach ($colIds as $key => $id) {
-                                $item->records()->where('id', '=', (int)$id)->update(['value' => $validated['val'][$rowKey][$key]]);
+                                $oldCol = $item->records()->where('id', '=', (int)$id)->first();
+                                if($oldCol) {
+                                    if($oldCol->dynamic_structures_column_id != config('lp_op_programs.lp_ds_col_institution_id')) {
+                                        $oldCol->update(['value' => $validated['val'][$rowKey][$key]]);
+                                    } else{
+                                        $oldCol->institutions()->sync($validated['val'][$rowKey][$key]);
+                                    }
+                                }
                             }
                         }
                     }
@@ -168,15 +175,19 @@ class LegislativeProgramController extends AdminController
                             $rowNums = $item->records->pluck('row_num')->toArray();
                             $rowNums = empty($rowNums) ? 0 : max($rowNums);
                             foreach ($validated['new_val_col'] as $k => $dsColumnId) {
-                                $newRows[] = array(
+                                $newColValue = $dsColumnId == config('lp_op_programs.lp_ds_col_institution_id') ? date('my') . substr(uniqid(), 9, 12) :  $validated['new_val'][$k];
+                                $dbRecord = new LegislativeProgramRow([
                                     'month' => $validated['month'],
                                     'legislative_program_id' => $item->id,
                                     'dynamic_structures_column_id' => $dsColumnId,
-                                    'value' => $validated['new_val'][$k],
+                                    'value' => $newColValue,
                                     'row_num' => $rowNums + 1
-                                );
+                                ]);
+                                $dbRecord->save();
+                                if( $dsColumnId == config('lp_op_programs.lp_ds_col_institution_id') ) {
+                                    $dbRecord->institutions()->sync($validated['new_val'][$k]);
+                                }
                             }
-                            LegislativeProgramRow::insert($newRows);
                         }
                     }
                 }

@@ -5,11 +5,10 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description'];

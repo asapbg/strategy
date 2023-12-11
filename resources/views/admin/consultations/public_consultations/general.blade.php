@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-10">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> @if($item->importerInstitution) <a class="text-primary" href="{{ route('admin.strategic_documents.institutions.edit', $item->importerInstitution) }}" target="_blank"><i class="fas fa-link mr-1 fs-6"></i>{{ $item->importerInstitution->name }}</a> @else{{ '---' }}@endif
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> @if($item->importerInstitution) <a class="text-primary" href="{{ route('admin.strategic_documents.institutions.edit', $item->importerInstitution) }}" target="_blank"><i class="fas fa-link mr-1 fs-6"></i>{{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif</a> @else{{ '---' }}@endif
                 </div>
             </div>
             <div class="col-md-10">
@@ -76,6 +76,8 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-12"></div>
+                @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => false])
             @endif
         @endif
         <div class="col-md-6">
@@ -145,6 +147,49 @@
                 </div>
             </div>
         </div>
+            <div class="col-md-4" id="pris_section">
+                <div class="form-group">
+                    <label class="col-sm-12 control-label" for="pris_id">Постановление</label>
+                    <div class="col-12">
+                        <select name="pris_id" class="form-control form-control-sm select2 @error('pris_id'){{ 'is-invalid' }}@enderror">
+                            <option value="0">---</option>
+                            @if(isset($pris) && $pris->count())
+                                @foreach($pris as $row)
+                                    <option value="{{ $row->id }}"
+                                            @if(old('pris_id', ($item->id ? $item->pris_id : 0)) == $row->id) selected @endif
+                                            data-id="{{ $row->id }}"
+                                    >{{ $row->displayName }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('pris_id')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="law_section">
+                <div class="form-group">
+                    <label class="col-sm-12 control-label" for="law_id">Закон</label>
+                    <div class="col-12">
+                        <select name="law_id" class="form-control form-control-sm select2 @error('law_id'){{ 'is-invalid' }}@enderror">
+                            <option value="0">---</option>
+                            @if(isset($laws) && $laws->count())
+                                @foreach($laws as $row)
+                                    <option value="{{ $row->id }}"
+                                            @if(old('law_id', ($item->id ? $item->law_id : 0)) == $row->id) selected @endif
+                                            data-id="{{ $row->id }}"
+                                    >{{ $row->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('law_id')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
     </div>
     <div class="row">
         <div class="col-md-4 my-3" id="legislative_programs">
@@ -152,7 +197,7 @@
                 <label class="col-sm-12 control-label" for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span class="required">*</span></label>
                 <div class="col-12">
                     <select name="legislative_program_id" class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
+                        <option value="0" @if(old('legislative_program_id', ($item->id ? $item->legislative_program_id : 0)) == 0) selected @endif>---</option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
                             @foreach($legislativePrograms as $row)
                                 <option value="{{ $row->id }}"
@@ -185,7 +230,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_legislative_program">
                     <input type="checkbox" id="no_legislative_program" name="no_legislative_program"
-                           @if(!old('no_legislative_program') && $item->legislative_program_id && !$item->lpRow) checked @endif
+                           @if(!old('no_legislative_program') && (($item->legislative_program_id && !$item->lpRow) && !$item->legislative_program_id )) checked @endif
                            data-list="legislative_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_legislative_program') }}
                 </label>
@@ -197,7 +242,7 @@
                 <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
                 <div class="col-12">
                     <select name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="">---</option>
+                        <option value="0" @if(old('operational_program_id', ($item->id ? $item->operational_program_id : 0)) == 0) selected @endif>---</option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
                             @foreach($operationalPrograms as $row)
                                 <option value="{{ $row->id }}"
@@ -230,7 +275,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="no_operational_program">
                     <input type="checkbox" id="no_operational_program" name="no_operational_program"
-                           @if(!old('no_legislative_program') && $item->operational_program_id && !$item->opRow) checked @endif
+                           @if(!old('no_operational_program', null) && (($item->operational_program_id && !$item->opRow) && !$item->operational_program_id)) checked @endif
                            data-list="operational_program_row_id" value="1" class="checkbox ">
                     {{ __('custom.no_operational_program') }}
                 </label>
@@ -239,7 +284,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.open_from') }} <span class="required">*</span></label>
                 <input type="text" id="open_from" name="open_from"
@@ -250,7 +295,7 @@
                 @enderror
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="open_to">{{ __('validation.attributes.open_to') }} <span class="required">*</span></label>
                 <input type="text" id="open_to" name="open_to"
@@ -287,8 +332,13 @@
         @include('admin.partial.edit_field_translate', ['field' => 'proposal_ways', 'required' => true, 'default_val' => __('custom.proposal_ways_default_html')])
     </div>
     <div class="row">
+        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
+    </div>
+
+    <hr class="mb-5">
+    <div class="row mb-2">
         <div class="form-group">
-            <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
+            <label class="col-md-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
             <div class="col-12">
 {{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
                 <select id="connected_pc" name="connected_pc[]" multiple="multiple" data-current="{{ $item->id ?? 0 }}"  data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror">
@@ -303,20 +353,34 @@
                 @enderror
             </div>
         </div>
-        @php($pcByOpLp = $item->connectedConsultationByProgram())
-        @if($pcByOpLp->count())
+{{--        @php($pcByOpLp = $item->connectedConsultationByProgram())--}}
+        @php($pcByDecree = $item->decree ? $item->decree->decreesConsultation : null)
+        @if($pcByDecree)
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.consultation_connections_by_op_lp') }}</label>
+                <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.connections_by_op_lp') }}</label>
                 <div class="col-12">
-                    @foreach($pcByOpLp as $row)
-                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>
-                    @endforeach
+    {{--                @if($pcByOpLp->count())--}}
+    {{--                    @foreach($pcByOpLp as $row)--}}
+    {{--                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>--}}
+    {{--                    @endforeach--}}
+    {{--                @endif--}}
+                    @php($found = false)
+                    @if($pcByDecree && $pcByDecree->count())
+                        @foreach($pcByDecree as $row)
+                            @if($row->id != $item->id)
+                                @php($found = true)
+                                <a class="d-block" href="{{ route('admin.consultations.public_consultations.edit', $row) }}" target="_blank">
+                                    <i class="fas fa-link mr-1 fs-6"></i>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}
+                                </a>
+                            @endif
+                        @endforeach
+                    @endif
+                    @if(!$found)
+                        ---
+                    @endif
                 </div>
             </div>
         @endif
-    </div>
-    <div class="row">
-        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
     </div>
 
     <div class="row">
@@ -331,7 +395,7 @@
 {{--                @enderror--}}
 {{--            </div>--}}
 {{--        </div>--}}
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
                 <select id="active" name="active" class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">

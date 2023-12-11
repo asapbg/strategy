@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <div class="container-fluid">
+        <div class="container-fluid">8
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end">
                     @can('update', $item)
@@ -18,7 +18,7 @@
             {!! $pageTopContent->value !!}
         </div>
     @endif
-    <div class="container-fluid mt-2 px-0">
+    <div class="container-fluid px-0">
         <div class="row">
             @include('site.public_consultations.content')
             @include('site.public_consultations.timeline')

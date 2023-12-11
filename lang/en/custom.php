@@ -473,6 +473,7 @@ return [
     'description_of_suggested_change' => 'Description of suggested change',
     'keyword' => 'Keyword|Keywords',
     'vice_chairman_site' => 'Vice chairmen',
+    'vice_chairman' => 'Vice chairman',
     'chairman_site' => 'Chairmen',
     'chairmen' => 'Chairman|Chairmen',
     'chairman' => 'Chairman',

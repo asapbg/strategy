@@ -10,12 +10,11 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Institution extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name', 'address', 'add_info'];

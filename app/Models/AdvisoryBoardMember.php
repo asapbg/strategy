@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property int    $id
  * @property int    $advisory_board_id
  * @property int    $advisory_type_id
  * @property int    $advisory_chairman_type_id
  * @property string $name
  *
  * @method static find(bool|float|int|string|null $get)
+ * @method static truncate()
  */
 class AdvisoryBoardMember extends Model
 {
@@ -31,7 +33,7 @@ class AdvisoryBoardMember extends Model
     //activity
     protected string $logName = "advisory_board_members";
 
-    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'advisory_chairman_type_id', 'email'];
+    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'email'];
 
     public function consultationLevel(): BelongsTo
     {

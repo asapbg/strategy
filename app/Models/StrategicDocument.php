@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Consultations\PublicConsultation;
-use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -13,11 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StrategicDocument extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable, SoftDeletes;
+    use FilterSort, Translatable;
 
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'description'];

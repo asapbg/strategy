@@ -13,4 +13,6 @@ enum AdvisoryTypeEnum: int
 
     case CHAIRMAN = 1; // Председател
     case MEMBER = 2; // Член
+    case VICE_CHAIRMAN = 3; // Заместник-председател
+    case SECRETARY = 4; // Секретар
 }

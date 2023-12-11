@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             DynamicStructureSeeder::class,
             UsersAZSeeder::class,
             FieldOfActionSeeder::class,
+            LawSeeder::class,
         ]);
     }
 }

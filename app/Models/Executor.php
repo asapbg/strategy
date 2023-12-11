@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Executor extends ModelActivityExtend implements TranslatableContract
 {
-    use Translatable, SoftDeletes;
+    use Translatable;
 
     const MODULE_NAME = ('custom.executors');
     const TRANSLATABLE_FIELDS = [
         'contractor_name',
         'executor_name',
         'contract_subject',
-        'services_description'
+        'services_description',
+        'hyperlink'
     ];
 
     /**

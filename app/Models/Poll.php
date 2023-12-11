@@ -4,18 +4,16 @@ namespace App\Models;
 
 use App\Enums\PollStatusEnum;
 use App\Models\Consultations\PublicConsultation;
-use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use function Clue\StreamFilter\fun;
 
 
 class Poll extends ModelActivityExtend
 {
-    use FilterSort, SoftDeletes;
+    use FilterSort;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.polls');

@@ -581,6 +581,22 @@ $(document).ready(function (e) {
         })
     }
 
+    if ($('.js-toggle-restore-resource-modal').length) {
+        $('.js-toggle-restore-resource-modal').on('click', function (e) {
+            e.preventDefault();
+
+            // If delete url specify in del.btn use that url
+            if ($(this).data('resource-restore-url')) {
+                $($(this).data('target')).find('form').attr('action', $(this).data('resource-restore-url'));
+            }
+
+            $($(this).data('target')).find('span.resource-name').html($(this).data('resource-name'));
+            $($(this).data('target')).find('#resource_id').attr('value', $(this).data('resource-id'));
+
+            $($(this).data('target')).modal('toggle');
+        })
+    }
+
     //=================================
     //Select2
     //===============================

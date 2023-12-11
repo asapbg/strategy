@@ -173,11 +173,6 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="secretary-of-council" role="tabpanel"
-                             aria-labelledby="secretary-of-council-tab">
-                            @include('admin.advisory-boards.tabs.secretary-of-council', ['view_mode' => true])
-                        </div>
-
                         <div class="tab-pane fade" id="secretariat" role="tabpanel" aria-labelledby="secretariat-tab">
                             @include('admin.advisory-boards.tabs.secretariat', ['view_mode' => true])
                         </div>

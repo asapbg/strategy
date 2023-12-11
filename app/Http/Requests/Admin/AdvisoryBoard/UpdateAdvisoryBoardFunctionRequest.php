@@ -2,11 +2,18 @@
 
 namespace App\Http\Requests\Admin\AdvisoryBoard;
 
-use App\Models\AdvisoryBoardSecretaryCouncil;
+use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardFunction;
+use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAdvisoryBoardSecretaryCouncilRequest extends FormRequest
+/**
+ * @property int $item
+ */
+class UpdateAdvisoryBoardFunctionRequest extends FormRequest
 {
+
+    use FailedAuthorization;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -15,22 +22,23 @@ class StoreAdvisoryBoardSecretaryCouncilRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoardSecretaryCouncil::class);
+        return $this->user()->can('create', AdvisoryBoard::class);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function rules(): array
     {
         $rules = [
-            'advisory_board_id' => 'required|integer|exists:advisory_boards,id'
+            'function_id' => 'required|integer|exists:advisory_board_functions,id',
+            'working_year' => 'nullable|date_format:Y'
         ];
 
         foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardSecretaryCouncil::translationFieldsProperties() as $field => $properties) {
+            foreach (AdvisoryBoardFunction::translationFieldsProperties() as $field => $properties) {
                 $rules[$field . '_' . $lang['code']] = $properties['rules'];
             }
         }

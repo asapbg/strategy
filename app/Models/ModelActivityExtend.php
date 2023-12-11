@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as ModelAlias;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -10,6 +11,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class ModelActivityExtend extends ModelAlias
 {
     use LogsActivity;
+    use SoftDeletes;
 
     const PAGINATE = 20;
 

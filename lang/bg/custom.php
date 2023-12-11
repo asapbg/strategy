@@ -584,6 +584,7 @@ return [
     'programs' => 'Програма|Програми',
     'chairman_site' => 'Председател/и',
     'vice_chairman_site' => 'Заместник-председател/и',
+    'vice_chairman' => 'Заместник-председател',
     'chairmen' => 'Председател|Председатели',
     'chairman' => 'Председател',
     'chairmen_list' => 'Списък с председатели|Списък с председатели',
@@ -682,5 +683,8 @@ return [
     'moderators' => 'Модератор|Модератори',
     'strategy_documents' => 'Стратегически документи',
     'strategy_documents_plural' => 'Стратегически документи',
+    'nomenclature.laws'     => 'Закон|Закони',
+    'laws'     => 'Закон|Закони',
+    'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)',
     'prepared_administration'  => 'Изработила администрация',
 ];
