@@ -35,7 +35,7 @@
                 new MyModal({
                     title: titleTxt,
                     footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + continueTxt + '</button>' +
-                        '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+                        '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                     body: '<div class="alert alert-danger">' + fileChangeWarningTxt + '</div>',
                 });
             });

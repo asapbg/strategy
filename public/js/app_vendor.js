@@ -1919,7 +1919,7 @@ $(document).ready(function () {
                 canAjax = false;
                 new MyModal({
                     title: titleTxt,
-                    footer: '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+                    footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                     bodyLoadUrl: $(this).data('url'),
                     customClass: 'file-preview'
                 });

@@ -29,8 +29,18 @@
     @include('partials.nav_bar_front')
 </header>
 @if(isset($pageTitle) && request()->route()->getName() != 'home' && !request()->input('sk'))
-    <section class="slider" id="slider">
-        <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif">
+
+    @php
+    $current_url = url()->current();
+    $chunks = explode('/', $current_url);
+    $class = '';
+    if(isset($chunks[3]) && $chunks[3] === 'advisory-boards') {
+        $class = 'advisory-boards-page';
+    }
+    @endphp
+    
+    <section class="slider {{ $class }}" id="slider">
+        <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif">      
             <div class="row">
                 <div class="col-md-12">
                     <div class="slider-content">

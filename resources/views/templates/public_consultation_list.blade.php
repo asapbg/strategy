@@ -24,7 +24,7 @@
 
 
 
-    <div class="container-fluid mt-2 px-0">
+    <div class="container-fluid px-0">
         <div class="row">
 
             <section class="public-page">

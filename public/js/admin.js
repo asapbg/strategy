@@ -3274,7 +3274,7 @@ $(document).ready(function (e) {
                 canAjax = false;
                 new MyModal({
                     title: titleTxt,
-                    footer: '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
                     bodyLoadUrl: $(this).data('url'),
                     customClass: 'file-preview'
                 });
@@ -3368,7 +3368,7 @@ $(document).ready(function (e) {
                 destroyListener: true,
                 body: '<p class="m-0">' + btn.data('question') +'</p>',
                 footer: '<button class="btn btn-sm btn-danger confirmApproveModal">Да</button>' +
-                    '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="Не">Не</button>'
+                    '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="Не">Не</button>'
             });
             $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
                 $('#approveModalSubmit_' + btn.data('file'))[0].click();

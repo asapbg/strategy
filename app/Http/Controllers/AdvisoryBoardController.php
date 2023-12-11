@@ -28,6 +28,7 @@ class AdvisoryBoardController extends Controller
     public function index(Request $request)
     {
         $pageTitle = trans_choice('custom.advisory_boards', 2);
+        $slider = ['title' => $pageTitle, 'img' => '/img/ms-w-2023.jpg'];
 
         $field_of_actions = FieldOfAction::orderBy('id')->get();
         $authority_advisory_boards = AuthorityAdvisoryBoard::orderBy('id')->get();
@@ -81,17 +82,18 @@ class AdvisoryBoardController extends Controller
             ->paginate(10);
 
         if ($is_search) {
-            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards'));
+            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards', ''));
         }
 
         return $this->view('site.advisory-boards.index', compact(
-            'pageTitle',
+           'pageTitle',
             'field_of_actions',
             'authority_advisory_boards',
             'advisory_act_types',
             'advisory_chairman_types',
             'pageTopContent',
-            'advisory_boards'
+            'advisory_boards',
+            'slider'
         ));
     }
 
