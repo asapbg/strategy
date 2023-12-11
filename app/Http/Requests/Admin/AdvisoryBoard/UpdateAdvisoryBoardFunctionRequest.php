@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @property int $item
  */
-class StoreAdvisoryBoardFunctionRequest extends FormRequest
+class UpdateAdvisoryBoardFunctionRequest extends FormRequest
 {
 
     use FailedAuthorization;
@@ -33,6 +33,7 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'function_id' => 'required|integer|exists:advisory_board_functions,id',
             'working_year' => 'nullable|date_format:Y'
         ];
 

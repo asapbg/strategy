@@ -112,9 +112,9 @@ class AdvisoryBoard extends ModelActivityExtend
             ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value);
     }
 
-    public function advisoryFunction(): HasOne
+    public function advisoryFunctions(): HasMany
     {
-        return $this->hasOne(AdvisoryBoardFunction::class);
+        return $this->hasMany(AdvisoryBoardFunction::class);
     }
 
     protected function hasViceChairman(): Attribute

@@ -37,7 +37,6 @@ class DatabaseSeeder extends Seeder
             UsersAZSeeder::class,
             FieldOfActionSeeder::class,
             LawSeeder::class,
-            AdvisoryBoardSeeder::class,
         ]);
     }
 }

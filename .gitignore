@@ -21,3 +21,4 @@ yarn-error.log
 /public/files/publications
 /public/files/advisory-boards
 app/Http/Controllers/Test.php
+/document_library
