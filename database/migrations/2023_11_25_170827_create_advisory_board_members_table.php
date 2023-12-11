@@ -22,13 +22,11 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('advisory_board_id');
             $table->enum('advisory_type_id', AdvisoryTypeEnum::values())->default(AdvisoryTypeEnum::MEMBER->value);
-            $table->unsignedBigInteger('advisory_chairman_type_id');
             $table->string('email')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('advisory_board_id')->references('id')->on((new AdvisoryBoard())->getTable())->onDelete('cascade');
-            $table->foreign('advisory_chairman_type_id')->references('id')->on((new AdvisoryChairmanType())->getTable())->onDelete('cascade');
         });
 
         Schema::create((new AdvisoryBoardMemberTranslation())->getTable(), function (Blueprint $table) {
