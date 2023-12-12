@@ -226,8 +226,10 @@ class AdvisoryBoardController extends AdminController
 
         $archive_category = request()->get('archive_category', '');
         $query = $item->newQuery();
-        $item = $query->with(['advisoryFunctions' => function($query) {
-            $query->with('files');
+        $item = $query->with(['advisoryFunctions' => function ($query) {
+            $query->when(request()->get('show_deleted_functions', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })->with('files');
         }])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();

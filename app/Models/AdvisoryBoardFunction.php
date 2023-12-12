@@ -6,7 +6,6 @@ use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static create(array $array)
  * @method static find(mixed $function_id)
  */
-class AdvisoryBoardFunction extends Model
+class AdvisoryBoardFunction extends ModelActivityExtend
 {
 
     use FilterSort, Translatable;
