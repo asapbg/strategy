@@ -78,8 +78,8 @@ class StrategicDocumentsController extends Controller
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
-
+        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));  
+        
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
 
