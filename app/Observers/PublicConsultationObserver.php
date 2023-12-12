@@ -7,6 +7,7 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\User;
 use App\Models\UserSubscribe;
+use Illuminate\Support\Facades\Log;
 
 class PublicConsultationObserver
 {
