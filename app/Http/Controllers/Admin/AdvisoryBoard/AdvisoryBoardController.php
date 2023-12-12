@@ -234,7 +234,11 @@ class AdvisoryBoardController extends AdminController
                     $query->withTrashed();
                 });
             });
-        }, 'regulatoryFramework'])->find($item->id);
+        }, 'regulatoryFramework', 'meetings' => function ($query) {
+            $query->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
+                $query->withTrashed()->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
+            })->whereYear('next_meeting', '>=', now()->year);
+        }])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
@@ -244,12 +248,6 @@ class AdvisoryBoardController extends AdminController
         $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
-        $meetings = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
-                $query->withTrashed();
-            })
-            ->orderBy('id')->get();
         $all_users = User::select(['id', 'username'])
             ->orderBy('username')
             ->whereNotIn('id', function ($query) {
@@ -262,8 +260,8 @@ class AdvisoryBoardController extends AdminController
         if ($archive_category == '1') {
             $archive = AdvisoryBoardMeeting::with('files')
                 ->where('advisory_board_id', $item->id)
-                ->whereYear('created_at', '<', Carbon::now()->year)
-                ->orderBy('created_at', 'desc')->paginate(10);
+                ->whereYear('next_meeting', '<', Carbon::now()->year)
+                ->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
         }
 
         if ($archive_category == '2') {
@@ -273,7 +271,6 @@ class AdvisoryBoardController extends AdminController
                 ->orderBy('created_at', 'desc')->paginate(10);
         }
 
-//        $function_files = request()->get('show_deleted_functions_files', 0) == 1 ? $functions?->allFiles : $functions?->files;
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 
@@ -302,7 +299,6 @@ class AdvisoryBoardController extends AdminController
                 'secretariat',
                 'secretariat_files',
                 'regulatory_framework_files',
-                'meetings',
                 'sections',
                 'archive',
                 'all_users',

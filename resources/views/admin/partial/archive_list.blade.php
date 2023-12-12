@@ -15,7 +15,7 @@
                                 <a data-toggle="collapse" href="#collapse{{$key}}"
                                    aria-expanded="true" class="font-weight-bold">
                                     @if($archive_category == 1)
-                                        {{ trans_choice('custom.meetings', 1) . ' ' .  __('custom.from') . ' ' . $item->created_at->format('d.m.Y') . __('custom.year_short') }}
+                                        {{ trans_choice('custom.meetings', 1) . ' ' .  __('custom.from') . ' ' . \Carbon\Carbon::parse($item->next_meeting)->format('d.m.Y') . __('custom.year_short') }}
                                     @endif
 
                                     @if($archive_category == 2)
@@ -32,17 +32,19 @@
                      data-parent="#accordion">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6 border-right">
-                                <p>(BG)</p>
-                                {!! $item->translations[0]->description !!}
-                            </div>
+                            @if(!empty($item->translations[0]?->description))
+                                <div class="col-6 border-right">
+                                    <p>(BG)</p>
+                                    {!! $item->translations[0]->description !!}
+                                </div>
+                            @endif
 
-                            <div class="col-6">
-                                <p>(EN)</p>
-                                @if($item->translations->count() > 1)
+                            @if($item->translations->count() > 1 && !empty($item->translations[1]?->description))
+                                <div class="col-6">
+                                    <p>(EN)</p>
                                     {!! $item->translations[1]->description !!}
-                                @endif
-                            </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 

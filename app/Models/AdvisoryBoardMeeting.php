@@ -4,22 +4,25 @@ namespace App\Models;
 
 use App\Enums\DocTypesEnum;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
+ * @property int    $id
+ * @property int    $advisory_board_id
+ * @property Carbon $next_meeting
  *
  * @method static find(mixed $meeting_id)
  * @method static where(string $string, int $id)
+ * @method static truncate()
  */
-class AdvisoryBoardMeeting extends Model
+class AdvisoryBoardMeeting extends ModelActivityExtend
 {
 
     use SoftDeletes, Translatable;
 
-    const PAGINATE = 20;
+    const PAGINATE = 5;
     const MODULE_NAME = ('custom.advisory_board_meetings');
     const TRANSLATABLE_FIELDS = ['description'];
 

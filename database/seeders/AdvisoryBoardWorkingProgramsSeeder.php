@@ -47,13 +47,13 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR .
-                'advisory-boards' . DIRECTORY_SEPARATOR . $program->councilID . DIRECTORY_SEPARATOR . 'functions'
+                File::ADVISORY_BOARD_UPLOAD_DIR . $program->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_FUNCTION_UPLOAD_DIR
             );
             mkdirIfNotExists($directory);
 
             $directory = base_path(
-                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'advisory-boards' . DIRECTORY_SEPARATOR .
-                $program->councilID . DIRECTORY_SEPARATOR . 'secretariat' . DIRECTORY_SEPARATOR . $new_program->id
+                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
+                $program->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_FUNCTION_UPLOAD_DIR . DIRECTORY_SEPARATOR . $new_program->id
             );
             mkdirIfNotExists($directory);
 

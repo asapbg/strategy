@@ -139,8 +139,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function meetings(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMeeting::class)
-            ->whereYear('created_at', Carbon::now()->year);
+        return $this->hasMany(AdvisoryBoardMeeting::class);
     }
 
     public function secretariat(): HasOne

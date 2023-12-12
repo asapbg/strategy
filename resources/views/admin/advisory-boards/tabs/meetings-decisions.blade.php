@@ -28,7 +28,6 @@
 
             <div class="col-auto">
                 @if(!$view_mode)
-
                     <button type="button" class="btn btn-success" data-toggle="modal"
                             data-target="#modal-create-meeting">
                         <i class="fa fa-plus mr-3"></i>
@@ -38,14 +37,18 @@
                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#custom' }}"
                        class="btn btn-warning">{{ __('custom.editing') }}</a>
                 @endif
+
+                <button onclick="goToArchive(1)" role="tab"
+                   aria-controls="archive" class="btn btn-warning"
+                   aria-selected="false">{{ __('custom.belongs_to') . ' ' . __('custom.archive') }}</button>
             </div>
         </div>
 
         <div class="row mt-3">
             <div class="col-md-12">
                 <div id="accordion">
-                    @if(isset($meetings) && $meetings->count() > 0)
-                        @foreach($meetings as $key => $meeting)
+                    @if(isset($item->meetings) && $item->meetings->count() > 0)
+                        @foreach($item->meetings as $key => $meeting)
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title w-100">
@@ -181,6 +184,16 @@
                         @endforeach
                     @endif
                 </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <nav aria-label="Page navigation example">
+                    @if(isset($meetings) && $meetings->count() > 0)
+                        {{ $meetings->appends(request()->query())->fragment('decisions')->links() }}
+                    @endif
+                </nav>
             </div>
         </div>
     </div>

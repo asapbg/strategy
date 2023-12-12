@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardTranslation;
+use App\Models\File;
 use Illuminate\Database\Seeder;
 
 /**
@@ -68,7 +69,7 @@ class AdvisoryBoardSeeder extends Seeder
             $new_advisory_board->save();
 
             // It's needed for further files.
-            $directory = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'advisory-boards' . DIRECTORY_SEPARATOR . $new_advisory_board->id);
+            $directory = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR . $new_advisory_board->id);
             mkdirIfNotExists($directory);
 
             foreach (config('available_languages') as $locale) {
