@@ -16,7 +16,7 @@ return new class extends Migration
     {
         DB::statement('ALTER TABLE users DROP CONSTRAINT users_org_name_unique');
         DB::statement('ALTER TABLE users DROP CONSTRAINT users_username_unique');
-        DB::statement('ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email)');
+//        DB::statement('ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email)');
     }
 
     /**
