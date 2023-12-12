@@ -24,7 +24,7 @@ class AdvisoryBoardMemberSeeder extends Seeder
         $imported = 0;
         $skipped = 0;
 
-        $old_members_db = DB::connection('old_strategy')->select('SELECT * FROM councilmembers');
+        $old_members_db = DB::connection('old_strategy')->select('SELECT * FROM councilmembers where "toVersion" is null');
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
