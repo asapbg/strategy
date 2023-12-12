@@ -209,7 +209,8 @@ class User extends Authenticatable
         $route_name = request()->route()->getName();
 
         return (
-            array_key_exists($route_name, session('subscriptions'))
+            session('subscriptions')
+            && array_key_exists($route_name, session('subscriptions'))
             && session('subscriptions')[$route_name]['channel'] == $channel
             && session('subscriptions')[$route_name]['is_subscribed'] == UserSubscribe::SUBSCRIBED
         );

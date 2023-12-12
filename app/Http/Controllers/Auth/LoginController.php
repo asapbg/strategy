@@ -137,15 +137,14 @@ class LoginController extends Controller
             $user->last_login_at = Carbon::now();
             $user->save();
 
-            $subscriptions = $user->subscriptions()
+            $subscriptionsColl = $user->subscriptions()
                 ->where('is_subscribed', UserSubscribe::SUBSCRIBED)
                 ->get();
-            if ($subscriptions->count() > 0) {
-                foreach ($subscriptions as $subscription) {
+            $subscriptions = [];
+            if ($subscriptionsColl->count() > 0) {
+                foreach ($subscriptionsColl as $subscription) {
                     $subscriptions[$subscription->route_name] = $subscription->toArray();
                 }
-            } else {
-                $subscriptions = [];
             }
             session(['subscriptions' => $subscriptions]);
 
