@@ -42,6 +42,9 @@ class File extends ModelActivityExtend
     const ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR = 'secretariat';
     const ADVISORY_BOARD_FUNCTION_UPLOAD_DIR = 'functions';
     const ADVISORY_BOARD_REGULATORY_FRAMEWORK_UPLOAD_DIR = 'regulatory-frameworks';
+    const ADVISORY_BOARD_REGULATORY_FRAMEWORK_ESTABLISHMENT_UPLOAD_DIR = 'establishments';
+    const ADVISORY_BOARD_REGULATORY_FRAMEWORK_ORGANIZATION_RULES_UPLOAD_DIR = 'organization-rules';
+
     const ADVISORY_BOARD_MEETINGS_AND_DECISIONS_UPLOAD_DIR = 'meetings-and-decisions';
     const ADVISORY_BOARD_MODERATOR_UPLOAD_DIR = 'moderator';
     const ADVISORY_BOARD_CUSTOM_SECTION_UPLOAD_DIR = 'custom-sections';

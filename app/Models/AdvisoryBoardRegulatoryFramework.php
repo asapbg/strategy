@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 
+/**
+ * @property int $id
+ * @property int $advisory_board_id
+ */
 class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
 {
 
