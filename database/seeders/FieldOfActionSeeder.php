@@ -7,6 +7,7 @@ use App\Models\FieldOfActionTranslation;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class FieldOfActionSeeder extends Seeder
 {
@@ -31,15 +32,25 @@ class FieldOfActionSeeder extends Seeder
         $actions = json_decode($json, true);
 
         foreach ($actions as $action) {
-            $field_of_action = new FieldOfAction([
+            $exist = FieldOfAction::find((int)$action['id']);
+            if($exist) { continue; }
+
+            $newItem = [
                 'id' => $action['id'],
-                'icon_class' => $action['icon_class'],
-                'deleted_at' => isset($action['isdeleted']) ? Carbon::now() : null
-            ]);
+                'deleted_at' => isset($action['isdeleted']) && $action['isdeleted'] ? Carbon::now() : null,
+                'active' => (int)$action['isactive'],
+                'parentid' => isset($action['parentid']) ? (int)$action['parentid'] : 0
+            ];
+
+            if(isset($action['icon_class'])) {
+                $newItem['icon_class'] = $action['icon_class'];
+            }
+            $field_of_action = new FieldOfAction($newItem);
             $field_of_action->save();
 
             foreach (config('available_languages') as $locale) {
-                if (!isset($action[$locale['code']])) {
+                $name = $locale['code'] == 'en' && !isset($action[$locale['code']]) ? $action['bg'] : $action[$locale['code']];
+                if (empty($name)) {
                     continue;
                 }
 
@@ -48,9 +59,9 @@ class FieldOfActionSeeder extends Seeder
                 $code = $locale['code'] ?? '';
                 $translation->locale = $code;
                 $translation->field_of_action_id = $field_of_action->id;
-                $translation->name = $action[$code];
+                $translation->name = $name;
 
-                if (isset($action['isdeleted'])) {
+                if (isset($action['isdeleted']) && $action['isdeleted']) {
                     $translation->deleted_at = Carbon::now();
                 }
 

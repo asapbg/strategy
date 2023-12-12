@@ -22,7 +22,7 @@ class PublicConsultationObserver
     {
         if ($publicConsultation->active) {
 
-            $this->sendEmails($publicConsultation, 'created');
+            //$this->sendEmails($publicConsultation, 'created');
 
             Log::info('Send subscribe email on creation');
         }
@@ -40,7 +40,7 @@ class PublicConsultationObserver
 
         if (!$old_active && $publicConsultation->active) {
 
-            $this->sendEmails($publicConsultation, 'updated');
+            //$this->sendEmails($publicConsultation, 'updated');
 
             Log::info('Send subscribe email on update');
         }
