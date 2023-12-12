@@ -60,8 +60,8 @@ class clearDb extends Command
                     Pris::where('id', '>=', $fromId->id)->forceDelete();
                     CommonController::fixSequence('pris');
                 }
-                //DB::table('tag')->truncate();
-                //DB::table('tag_translations')->truncate();
+                DB::table('tag')->truncate();
+                DB::table('tag_translations')->truncate();
 
                 break;
             case 'users':

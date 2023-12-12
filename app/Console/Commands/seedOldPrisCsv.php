@@ -71,7 +71,7 @@ class seedOldPrisCsv extends Command
             $dInstitution->save();
         }
 
-        $ourTags = Tag::with(['translation'])->get()->pluck('translation.label', 'id')->toArray();
+        $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
         $legalTypeDocs = [
             1 => 7, //'Заповед',
             2 => 2, //'Решение',
