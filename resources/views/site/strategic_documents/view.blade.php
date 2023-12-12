@@ -36,19 +36,13 @@
                 <div class="col-md-12 d-flex align-items-center mb-4 policy-area-single">
                     <h3 class="mb-2 fs-4 me-2">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
                     <div class="fs-4">
-                        @can('view',  $strategicDocument->policyArea?->name)
-                            <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->policyArea?->id]) }}"
-                               class="main-color text-decoration-none">
+                        <a href="#"
+                           class="main-color text-decoration-none"
+                           id="policyArea"
+                           data-policy-area-id="{{ $strategicDocument->policyArea?->id }}">
                                 <span class="obj-icon-info me-2">
                                 <i class="bi bi-mortarboard-fill me-1 main-color" title="Тип консултация"></i>{{ $strategicDocument->policyArea?->name }} </span>
-                            </a>
-                        @else
-                            <a href="#"
-                               class="main-color text-decoration-none">
-                                <span class="obj-icon-info me-2">
-                                <i class="bi bi-mortarboard-fill me-1 main-color" title="Тип консултация"></i>{{ $strategicDocument->policyArea?->name }} </span>
-                            </a>
-                        @endcan
+                        </a>
                     </div>
                 </div>
             </div>
@@ -56,20 +50,14 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
-                    @can('view',  $strategicDocument->documentType)
-                        <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}"
-                           class="main-color text-decoration-none fs-18">
+
+                    <a href="#"
+                       class="main-color text-decoration-none fs-18" id="strategicDocumentType"
+                       data-document-type-id="{{ $strategicDocument->documentType?->id }}">
                          <span class="obj-icon-info me-2">
-                        <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }} </span>
-                        </a>
-                    @else
-                        <a href="#"
-                           class="main-color text-decoration-none fs-18">
-                         <span class="obj-icon-info me-2">
-                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }}
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType?->name }}
                          </span>
-                        </a>
-                    @endcan
+                    </a>
                 </div>
 
                 <div class="col-md-8 mb-4">
@@ -95,17 +83,24 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.accepted_date', 1) }}</h3>
-                    <a href="#" class="main-color text-decoration-none fs-18">
+                    <a href="#" class="main-color text-decoration-none fs-18" id="dateAccepted" data-document-date-accepted="{{\Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('Y-m-d') }}</span>
+                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}</span>
                     </a>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.date_expiring', 1) }}</h3>
-                    <a href="#" class="main-color text-decoration-none fs-18">
+
+                    <a href="#" class="main-color text-decoration-none fs-18" id="dateExpiring"
+                           @if ($strategicDocument->document_date_expiring)
+                               data-document-date-expiring="{{\Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}"
+                           @else
+                               data-document-date-expiring="true"
+                           @endif
+                        >
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>@if($strategicDocument->document_date_expiring)
-                                {{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('Y-m-d') }}
+                                {{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}
                             @else
                                 {{ trans_choice('custom.date_indefinite_name', 1) }}
                             @endif</span>
@@ -135,19 +130,16 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
-                    @can('view',  $strategicDocument->documentLevel)
-                        <a href="{{ route('admin.nomenclature.strategic_document_level.edit', [$strategicDocument->documentLevel?->id]) }}" class="main-color text-decoration-none">
-                            <span class="obj-icon-info me-2">
-                            <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentLevel?->name }}</span>
-                        </a>
-                    @else
-                        <a href="#" class="main-color text-decoration-none">
-                            <span class="obj-icon-info me-2">
+
+                    <a href="#" class="main-color text-decoration-none"
+                       id="strategicDocumentLevel"
+                       data-document-level-id="{{ $strategicDocument->documentLevel?->id }}"
+                    >
+                            <span class="obj-icon-info">
                                 <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>
                             </span>
-                            {{ $strategicDocument->documentLevel?->name }}
-                        </a>
-                    @endcan
+                        {{ $strategicDocument->documentLevel?->name }}
+                    </a>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
@@ -367,6 +359,39 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
     <script type="text/javascript">
             $(document).ready(function() {
+                const policyArea = $('#policyArea');
+                policyArea.on('click', function() {
+                    const clickedValue = $(this).data('policy-area-id');
+                    window.location.href = '/strategy-documents?policy-area=' + clickedValue;
+                });
+
+                const strategicDocumentType = $('#strategicDocumentType');
+                strategicDocumentType.on('click', function() {
+                    const clickedValue = $(this).data('document-type-id');
+                    window.location.href = '/strategy-documents?document-type=' + clickedValue;
+                });
+                const strategicDocumentLevel = $('#strategicDocumentLevel');
+                strategicDocumentLevel.on('click', function() {
+                    const clickedValue = $(this).data('document-level-id');
+                    window.location.href = '/strategy-documents?document-level=' + clickedValue;
+                });
+
+                const dateAccepted = $('#dateAccepted');
+                dateAccepted.on('click', function() {
+                    const clickedValue = $(this).data('documentDateAccepted');
+
+                    window.location.href = '/strategy-documents?valid-from=' + clickedValue;
+                });
+                const dateExpiring = $('#dateExpiring');
+                dateExpiring.on('click', function() {
+                    const clickedValue = $(this).data('documentDateExpiring');
+                    if (clickedValue == true) {
+                        window.location.href = '/strategy-documents?date-infinite=' + clickedValue;
+                    } else {
+                        window.location.href = '/strategy-documents?valid-to=' + clickedValue;
+                    }
+                });
+
                 $('#myTab a').on('click', function (e) {
                     e.preventDefault();
                     $(this).tab('show');

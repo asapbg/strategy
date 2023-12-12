@@ -234,7 +234,7 @@ class AdvisoryBoardController extends AdminController
                     $query->withTrashed();
                 });
             });
-        }])->find($item->id);
+        }, 'regulatoryFramework'])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();

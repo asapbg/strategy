@@ -2,36 +2,23 @@
 
 namespace App\Models;
 
-use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @property int        $id
- * @property int        $advisory_board_id
- *
- * @property Collection $files
- * @property Collection $allFiles
- *
- * @method static create(array $array)
- * @method static truncate()
- */
-class AdvisoryBoardSecretariat extends ModelActivityExtend
+class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
 {
 
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const MODULE_NAME = ('custom.advisory_board_secretariat');
+    const MODULE_NAME = ('custom.advisory_board_regulatory_framework');
     const TRANSLATABLE_FIELDS = ['description'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
 
     //activity
-    protected string $logName = "advisory_board_secretariat";
+    protected string $logName = "advisory_board_regulatory_framework";
 
     protected $fillable = ['advisory_board_id'];
 
@@ -69,7 +56,7 @@ class AdvisoryBoardSecretariat extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'description' => [
+            'framework_description' => [
                 'type' => 'string',
                 'rules' => ['required'],
             ],
