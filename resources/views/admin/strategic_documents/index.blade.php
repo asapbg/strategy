@@ -40,7 +40,7 @@
                                     <td class="text-center" style="width: 50px; white-space: nowrap;">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                               class="btn btn-sm btn-info"
+                                               class="btn btn-sm btn-info btn-action"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
@@ -49,19 +49,19 @@
                                         @if($item->active)
                                             @can('update', $item)
                                                  <a href="{{ route($unPublishRouteName, ['id' => $item->id, 'stay' => false]) }}"
-                                                   class="btn btn-sm btn-danger mr-2"
+                                                   class="btn btn-sm btn-secondary mr-2 btn-action"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.unpublish') }}">
-                                                    <i class="fa fa-eye"></i>
+                                                    <i class="fa fa-eye-slash"></i>
                                                 </a>
                                             @endcan
                                         @else
                                             @can('update', $item)
                                                 <a href="{{ route($publishRouteName, ['id' => $item->id, 'stay' => false]) }}"
-                                                   class="btn btn-sm btn-warning mr-2"
+                                                   class="btn btn-sm btn-success mr-2 btn-action"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.publish') }}">
-                                                    <i class="fa fa-eye"></i>
+                                                    <i class="fa fa-plus"></i>
                                                 </a>
                                             @endcan
                                         @endif
@@ -81,6 +81,12 @@
             </div>
         </div>
     </section>
+    <style>
+        .btn-action {
+            width: 50px;
+            margin-right: 2px;
+        }
+    </style>
 
 @endsection
 
