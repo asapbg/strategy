@@ -81,9 +81,7 @@
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.pris', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="pris_act_ids">
                     <option value="">--</option>
-                    @foreach($prisActs as $prisAct)
-                        <option value="{{ $prisAct->id }}">{{ $prisAct->regNum }}</option>
-                    @endforeach
+
                 </select>
             </div>
         </div>
