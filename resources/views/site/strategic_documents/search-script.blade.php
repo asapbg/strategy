@@ -1,10 +1,12 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
             setTimeout(function() {
                 const url = buildUrl();
                 loadStrategyDocuments(1, url);
             }, 100);
+
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
