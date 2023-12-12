@@ -36,13 +36,16 @@ class seedOldUsers extends Command
      */
     public function handle()
     {
+        Artisan::call('db:seed UsersSeeder');
+        Artisan::call('db:seed UsersAZSeeder');
+
         $formatTimestamp = 'Y-m-d H:i:s';
         //TODO missing roles ??????
         $mappingRoles = [
             1 => 2, //Системен администратор => Супер Администратор
             2 => 9, //Регистриран потребител => Външен потребител
-            3 => 2,	//Администратор дискусии => Супер Администратор
-            4 => 2,	//Администратор файлове => Супер Администратор
+            3 => 0,	//Администратор дискусии
+            4 => 0,	//Администратор файлове
             5 => 4, //Модератор страт. документи => Модератор „Стратегически документи"
             6 => 3,	//Модератор общ. консултации => Модератор „Обществени консултации“
         ];
@@ -99,14 +102,69 @@ class seedOldUsers extends Command
             'МРРБ' => 141,
             'МС' => null,
             'МТ' => 144,
-            'МТИТС' => null,
+            'МТИТС' => 142,
             'МТС' => 142,
             'МТСГ' => null,
             'МТСП' => 143,
             'МТТ' => null,
             'МФ' => 145,
-            'МФВС' => null
+            'МФВС' => null,
+            'Администрация на МС' => 126,
+            'Агенция за публичните предприятия и контрол' => 3,
+            'Българския институт по метрология' => 22,
+            'Главна дирекция &quot;Гражданска въздухоплавателна администрация&quot;' => 26,
+            'Държавна агенция &quot;Архиви&quot;' => 49,
+            'Държавна агенция &quot;Безопасност на движението по пътищата&quot;' => 50,
+            'Държавна агенция „Безопасност на движението по пътищата“' => 50,
+            'Държавна агенция &quot;Държавен резерв и военновременни запаси&quot;' => 51,
+            'Държавна агенция &quot;Национална сигурност&quot;' => 55,
+            'Държавна агенция &quot;Разузнаване&quot;' => 56,
+            'Държавна агенция &quot;Технически операции&quot;' => 57,
+            'Държавна агенция за бежанците' => 52,
+            'Държавна агенция за закрила на детето' => 53,
+            'Държавна агенция за метрологичен и технически надзор' => 54,
+            'Държавна комисия по сигурността на информацията' => 58,
+            'Комисия за защита на конкуренцията' => 93,
+            'Комисия за защита на личните данни' => 94,
+            'Комисия за отнемане на незаконно придобито имущество' => 98,
+            'Комисия за противодействие на корупцията и за отнемане на незаконно придобитото имущество' => 98,
+            'Комисия за публичен надзор на регистрираните одитори' => 99,
+            'Комисия за регулиране на съобщенията' => 102,
+            'Министерски съвет' => 126,
+            'Министерство на вътрешните работи' => 128,
+            'Министерство на електронното управление' => 129,
+            'Министерство на енергетиката' => 130,
+            'Министерство на здравеопазването' => 131,
+            'Министерство на земеделието' => 132,
+            'Министерство на икономиката' => 133,
+            'Министерство на икономиката и индустрията' => 133,
+            'КЕВР' => 92,
+            'АМС, дирекция &quot;Стратегическо планиране&quot;' => 126,
+            'Държавна агенция &quot;Електронно управление&quot;' => 129,
+            'Министерство на иновациите и растежа' => 134,
+            'Министерство на културата' => 135,
+            'Министерство на младежта и спорта' => 136,
+            'Министерство на отбраната' => 139,
+            'Министерство на правосъдието' => 140,
+            'Министерство на труда и социалната политика' => 143,
+            'Министерство на туризма' => 144,
+            'Министерство на финансите' => 145,
+            'Министерството на иновациите и растежа' => 134,
+            'Министерстрво на културата' => 135,
+            'Национален статистически институт' => 160,
+            'Национален Статистически институт' => 160,
+            'Национален съвет по цени и реимбурсиране на лекарствените продукти' => 185,
+            'Национална служба за охрана' => 196,
+            'Патентно ведомство' => 525,
+            'ME' => 130,
+            'MT' => 144,
+            'АМС' => 126,
+            'АЯР' => 7,
+            'ДАБ' => 52,
+            'ДАБЧ' => 72,
+            'ДМА, АМС' => 126,
         ];
+
 
         //records per query
         $step = 50;
@@ -114,11 +172,6 @@ class seedOldUsers extends Command
         $maxOldId = DB::connection('old_strategy')->select('select max(dbo.users.userid) from dbo.users');
         //start from this id in old database
         $currentStep = (int)DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
-
-        //TODO check if exists before drop and add unique emailW
-        //DB::statement('ALTER TABLE users DROP CONSTRAINT users_org_name_unique');
-        //DB::statement('ALTER TABLE users DROP CONSTRAINT users_username_unique');
-        //DB::statement('ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email)');
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -155,14 +208,16 @@ class seedOldUsers extends Command
                     join dbo.usersinroles uroles on uroles.userid = u.userid
                     join dbo.roles roles on roles.roleid = uroles.roleid
                     left join dbo.profile profile on profile.userid = u.userid
+                    where u.userid >= '.(int)$currentStep.'
                     -- order by u.userid
                     group by u.userid, m.userid, profile.userid');
 
                 if (sizeof($oldDbResult)) {
-                    DB::beginTransaction();
-                    try {
-                        foreach ($oldDbResult as $item) {
+                    foreach ($oldDbResult as $item) {
+                        DB::beginTransaction();
+                        try {
                             $newUserRoles = [];
+                            $duplicated = User::where('email', '=', $item->email)->first();
                             $prepareNewUser = [
                                 'old_id' => $item->old_id,
                                 'username' => $item->username,
@@ -171,7 +226,7 @@ class seedOldUsers extends Command
                                 'first_name' => $item->first_name,
                                 'last_name' => $item->last_name,
                                 'user_type' => null,
-                                'email' => $item->email,
+                                'email' => $duplicated ? 'duplicated-'.$item->email : $item->email,
                                 'phone' => $item->phone,
                                 'activity_status' => $item->activity_status,
                                 'email_verified_at' => null,
@@ -184,36 +239,43 @@ class seedOldUsers extends Command
 
                             $roles = json_decode($item->roles, true);
 
-                            if(sizeof($roles)) {
+                            if (sizeof($roles)) {
                                 foreach ($roles as $r) {
-                                    if(isset($mappingRoles[$r['id']])) {
+                                    if (isset($mappingRoles[$r['id']])) {
                                         $newUserRoles[] = $mappingRoles[$r['id']];
-                                    } else{
-                                        echo 'Missing role: '.$r['name'].' with ID '.$r['id'].PHP_EOL;
+                                    } else {
+                                        echo 'Missing role: ' . $r['name'] . ' with ID ' . $r['id'] . PHP_EOL;
                                     }
                                 }
-                                if(sizeof($newUserRoles)) {
-                                    if(sizeof($newUserRoles) == 1 && $newUserRoles[0] == $externalRoleId) {
+                                //users in old system do not have external or internal flag.
+                                // We check roles and set this property depending on roles that we found for each user
+
+                                if (sizeof($newUserRoles)) {
+                                    if (sizeof($newUserRoles) == 1 && $newUserRoles[0] == $externalRoleId) {
                                         $prepareNewUser['user_type'] = User::USER_TYPE_EXTERNAL;
-                                    } else{
+                                    } else {
+                                        $newUserRoles = array_filter($newUserRoles, fn($m) => $m != 0);
                                         $prepareNewUser['user_type'] = User::USER_TYPE_INTERNAL;
                                     }
+                                } else {
+                                    //if no roles found save as external user
+                                    $prepareNewUser['user_type'] = User::USER_TYPE_EXTERNAL;
                                 }
                             }
 
                             $newUser = User::create($prepareNewUser);
-                            if($newUser && sizeof($newUserRoles)) {
+                            if ($newUser && sizeof($newUserRoles)) {
                                 $newUser->assignRole($newUserRoles);
                                 $newUser->save();
                             }
 
-                            $this->comment('User with old id ('.$newUser->old_id.') is created');
+                            $this->comment('User with old id (' . $newUser->old_id . ') is created');
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            Log::error('Migration old startegy users: ' . $e);
+                            DB::rollBack();
+                            dd($prepareNewUser, $roles);
                         }
-                        DB::commit();
-                    } catch (\Exception $e) {
-                        Log::error('Migration old startegy users: ' . $e);
-                        DB::rollBack();
-                        dd($prepareNewUser, $roles);
                     }
                 }
                 $currentStep += $step;
