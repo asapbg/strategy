@@ -452,5 +452,7 @@ return [
         'effective_at' => 'Effective at',
         'redirect_to_iisda' => 'Redirect to Integration information system of the state administration (IISDA)',
         'user_id' => 'user',
+        'framework_description_bg' => 'Description',
+        'framework_description_en' => 'Description',
     ],
 ];
