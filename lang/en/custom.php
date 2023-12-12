@@ -527,4 +527,5 @@ return [
     'active_document' => 'Active document',
     'inactive_document' => 'Inactive document',
     'moderators' => 'Moderator|Moderators',
+    'meeting_date' => 'Meeting took place at',
 ];

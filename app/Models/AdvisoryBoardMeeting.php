@@ -33,6 +33,11 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
 
     protected $fillable = ['advisory_board_id', 'next_meeting'];
 
+    public function decisions(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardMeetingDecision::class);
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
