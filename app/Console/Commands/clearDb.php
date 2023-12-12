@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Http\Controllers\CommonController;
 use App\Models\CustomRole;
 use App\Models\File;
+use App\Models\Pris;
+use App\Models\PrisTranslation;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -45,14 +47,17 @@ class clearDb extends Command
             case 'pris':
                 $fromId = DB::table('pris')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
-                    DB::table('pris_tag')->where('pris_id', '>=', $fromId->id)->forceDelete();
-                    DB::table('pris_change_pris')->where('pris_id', '>=', $fromId->id)->forceDelete();
-                    DB::table('pris_translations')->where('pris_id', '>=', $fromId->id)->forceDelete();
+                    DB::table('pris_tag')->where('pris_id', '>=', $fromId->id)->delete();
+                    DB::table('pris_change_pris')->where('pris_id', '>=', $fromId->id)->delete();
+
+                    PrisTranslation::where('pris_id', '>=', $fromId->id)->forceDelete();
                     CommonController::fixSequence('pris_translations');
-                    DB::table('files')->where('id_object', '>=', $fromId->id)
+
+                    File::where('id_object', '>=', $fromId->id)
                         ->where('code_object', '=', File::CODE_OBJ_PRIS)->forceDelete();
                     CommonController::fixSequence('files');
-                    DB::table('pris')->where('id', '>=', $fromId->id)->forceDelete();
+
+                    Pris::where('id', '>=', $fromId->id)->forceDelete();
                     CommonController::fixSequence('pris');
                 }
                 //DB::table('tag')->truncate();
