@@ -25,17 +25,18 @@
                     </div>
                 @endif
 
-                <div class="col-md-12">
-                    <h2 class="mb-3">Описание на документа</h2>
-                </div>
-
-                <div class="row mb-4 action-btn-wrapper">
-                    <div class="col-md-12 text-start">
-                        <button class="btn btn-primary main-color">
-                            <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
-                        <button class="btn btn-primary main-color">
-                            <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
+                    <div class="row mb-4 action-btn-wrapper">
+                        <div class="col-md-12 text-start">
+                            <button class="btn btn-primary main-color">
+                                <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
+                            <button class="btn btn-primary main-color">
+                                <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
+                        </div>
                     </div>
+
+                <div class="col-md-12 mb-5">
+                    <h2 class="mb-3">{{ __('custom.pris_about') }}</h2>
+                    {!! $item->about !!}
                 </div>
 
                 <div class="row pris-row pb-2 mb-2">
@@ -91,23 +92,15 @@
                     </div>
                 </div>
 
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class=" fa-solid fa-arrow-up-right-from-square main-color me-1"></i>{{ __('custom.pris_about') }}
-                    </div>
-
-                    <div class="col-md-9 pris-left-column">
-                        {!! $item->about !!}
-                    </div>
-                </div>
-                @if($item->institution)
+                @if($item->institutions->count())
                     <div class="row pris-row pb-2 mb-2">
                         <div class="col-md-3 pris-left-column">
                             <i class="fa-solid fa-university main-color me-1"></i>{{ trans_choice('custom.institutions', 1) }}
                         </div>
-
                         <div class="col-md-9 pris-left-column">
-                            <a href="{{ route('admin.strategic_documents.institutions.edit', $item->institution) }}" class="text-decoration-none" target="_blank" title="{{ $item->institution->name }}">{{ $item->institution->name }} </a>
+                        @foreach($item->institutions as $i)
+                            <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
+                        @endforeach
                         </div>
                     </div>
                 @endif
@@ -177,7 +170,9 @@
                             @foreach($item->changedDocs as $doc)
                                 <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
-                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}
+{{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
+{{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
+                                    {{ $doc->mcDisplayName }}
                                 </a>
                             @endforeach
                         @endif

@@ -69,14 +69,14 @@
                             @canany(['manage.*', 'manage.legislative_operational_programs'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.legislative_programs.index') }}"
-                                       class="nav-link @if(strstr(url()->current(), 'legislative_programs')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'legislative-programs')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.operational_programs.index') }}"
-                                       class="nav-link @if(strstr(url()->current(), 'operational_programs')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'operational-programs')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
                                     </a>
@@ -85,7 +85,7 @@
                             @canany(['manage.*', 'manage.advisory'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.public_consultations.index') }}"
-                                       class="nav-link @if(strstr(url()->current(), 'public_consultations')) active @endif">
+                                       class="nav-link @if(strstr(url()->current(), 'public-consultations')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice('custom.consultations', 2) }}</p>
                                     </a>
@@ -158,7 +158,7 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.strategic_documents.index') }}"
-                                class="nav-link @if(Str::endsWith(url()->current(), 'strategic-documents')) active @endif">
+                                class="nav-link @if(strstr(url()->current(), 'strategic-documents')) active @endif">
                                 <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
                                 </a>
@@ -167,7 +167,7 @@
                     </li>
                 @endcan
                 @canany(['manage.*','manage.partnership'])
-                    <li class="nav-item @if(Str::endsWith(url()->current(), 'plan_elements')) menu-open @endif">
+                    <li class="nav-item @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-hand-point-up"></i>
                             <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>
@@ -175,7 +175,7 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.ogp.plan_elements.index') }}"
-                                class="nav-link @if(Str::endsWith(url()->current(), 'plan_elements')) active @endif">
+                                class="nav-link @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
                                 </a>

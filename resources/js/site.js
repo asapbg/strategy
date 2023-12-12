@@ -1,4 +1,21 @@
 var canAjax = true;
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "1000",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
 
 //===============================
 // START MyModal
@@ -302,7 +319,7 @@ $(document).ready(function () {
                 canAjax = false;
                 new MyModal({
                     title: titleTxt,
-                    footer: '<button class="btn btn-sm btn-secondary closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+                    footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                     bodyLoadUrl: $(this).data('url'),
                     customClass: 'file-preview'
                 });
@@ -432,6 +449,34 @@ $(document).ready(function () {
             });
         });
     }
+
+    // Subscribe
+    $(document).on('click', 'button.subscribe', function (e) {
+        e.preventDefault();
+        let channel = $(this).data('channel');
+        let model = $("#subscribe_model").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "/subscribe",
+            data: {
+                channel: channel,
+                model: model
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#executors-results").html(res);
+                    HideLoadingSpinner();
+                    toastr.success(res.message);
+                } else {
+                    showModalAlert(res.message);
+                }
+            },
+            error: function () {
+                toastr.error('Възникна грешка, моля опитайте отново по-късно');
+            }
+        });
+    });
 
     // Ajax search
     $(document).on('click', '#ajax-pagination .pagination li', function (e) {

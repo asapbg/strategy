@@ -6,7 +6,24 @@
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="row justify-content-between align-items-center">
             <div class="col-auto">
-                <h3>{{ trans_choice('custom.function', 1) }}</h3>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h3 class="m-0">{{ trans_choice('custom.function', 1) }}</h3>
+                    </div>
+
+                    @if(!$view_mode)
+                        <div class="col-auto">
+                            <div class="custom-control custom-switch">
+                                @php $checked = request()->get('show_deleted_functions', '0') == '1' ? 'checked' : '' @endphp
+                                <input type="checkbox" class="custom-control-input"
+                                       id="show_deleted_functions"
+                                       {{ $checked }} onchange="toggleDeleted(this, 'functions', 'show_deleted_functions')">
+                                <label class="custom-control-label"
+                                       for="show_deleted_functions">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                            </div>
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <div class="col-auto">
@@ -53,33 +70,33 @@
                                                         </div>
 
                                                         <div class="col-auto">
-                                                            {{--                                                            @can('delete', $item)--}}
-                                                            {{--                                                                @if(!$section->deleted_at)--}}
-                                                            {{--                                                                    <a href="javascript:;"--}}
-                                                            {{--                                                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"--}}
-                                                            {{--                                                                       data-target="#modal-delete-section"--}}
-                                                            {{--                                                                       data-resource-id="{{ $section->id }}"--}}
-                                                            {{--                                                                       data-resource-delete-url="{{ route('admin.advisory-boards.sections.delete', ['item' => $item, 'section' => $section]) }}"--}}
-                                                            {{--                                                                       data-toggle="tooltip"--}}
-                                                            {{--                                                                       title="{{__('custom.delete')}}">--}}
-                                                            {{--                                                                        <i class="fa fa-trash"></i>--}}
-                                                            {{--                                                                    </a>--}}
-                                                            {{--                                                                @endif--}}
-                                                            {{--                                                            @endcan--}}
+                                                            @can('delete', $item)
+                                                                @if(!$working_program->deleted_at)
+                                                                    <a href="javascript:;"
+                                                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                                       data-target="#modal-remove-working-program"
+                                                                       data-resource-id="{{ $working_program->id }}"
+                                                                       data-resource-delete-url="{{ route('admin.advisory-boards.function.delete', ['item' => $item, 'working_program' => $working_program]) }}"
+                                                                       data-toggle="tooltip"
+                                                                       title="{{__('custom.delete')}}">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
 
-                                                            {{--                                                            @can('restore', $item)--}}
-                                                            {{--                                                                @if($section->deleted_at)--}}
-                                                            {{--                                                                    <a href="javascript:;"--}}
-                                                            {{--                                                                       class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
-                                                            {{--                                                                       data-target="#modal-restore-section"--}}
-                                                            {{--                                                                       data-resource-id="{{ $section->id }}"--}}
-                                                            {{--                                                                       data-resource-restore-url="{{ route('admin.advisory-boards.sections.restore', ['item' => $item, 'section' => $section]) }}"--}}
-                                                            {{--                                                                       data-toggle="tooltip"--}}
-                                                            {{--                                                                       title="{{__('custom.restore')}}">--}}
-                                                            {{--                                                                        <i class="fa fa-plus"></i>--}}
-                                                            {{--                                                                    </a>--}}
-                                                            {{--                                                                @endif--}}
-                                                            {{--                                                            @endcan--}}
+                                                            @can('restore', $item)
+                                                                @if($working_program->deleted_at)
+                                                                    <a href="javascript:;"
+                                                                       class="btn btn-sm btn-success js-toggle-restore-resource-modal"
+                                                                       data-target="#modal-restore-section"
+                                                                       data-resource-id="{{ $working_program->id }}"
+                                                                       data-resource-restore-url="{{ route('admin.advisory-boards.function.restore', ['item' => $item, 'working_program' => $working_program]) }}"
+                                                                       data-toggle="tooltip"
+                                                                       title="{{__('custom.restore')}}">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,12 +128,12 @@
                                                     @if(!$view_mode)
                                                         <div class="col-auto">
                                                             <div class="custom-control custom-switch">
-                                                                @php $checked = request()->get('show_deleted_custom_files', '0') == '1' ? 'checked' : '' @endphp
+                                                                @php $checked = request()->get('show_deleted_functions_files', '0') == '1' ? 'checked' : '' @endphp
                                                                 <input type="checkbox" class="custom-control-input"
-                                                                       id="show_deleted_custom_files"
-                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'custom')">
+                                                                       id="show_deleted_functions_files"
+                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'functions')">
                                                                 <label class="custom-control-label"
-                                                                       for="show_deleted_custom_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                                                       for="show_deleted_functions_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -125,13 +142,13 @@
 
                                             <div class="col-auto">
                                                 @if(!$view_mode)
-                                                    {{--                                                    <button type="button" class="btn btn-success"--}}
-                                                    {{--                                                            data-toggle="modal"--}}
-                                                    {{--                                                            data-target="#modal-add-custom-file"--}}
-                                                    {{--                                                            onclick="setSectionFileObjectId('{{ $section->id }}')">--}}
-                                                    {{--                                                        <i class="fa fa-plus mr-3"></i>--}}
-                                                    {{--                                                        {{ __('custom.add') . ' ' . __('custom.file') }}--}}
-                                                    {{--                                                    </button>--}}
+                                                    <button type="button" class="btn btn-success"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-add-function-file"
+                                                            onclick="setFunctionFileObjectId('{{ $working_program->id }}')">
+                                                        <i class="fa fa-plus mr-3"></i>
+                                                        {{ __('custom.add') . ' ' . __('custom.file') }}
+                                                    </button>
                                                 @endif
                                             </div>
                                         </div>
@@ -151,3 +168,11 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        function setFunctionFileObjectId(id) {
+            FUNCTIONS_FILE.querySelector('input[name=object_id]').value = id;
+        }
+    </script>
+@endpush

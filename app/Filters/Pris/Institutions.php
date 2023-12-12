@@ -10,8 +10,9 @@ class Institutions extends QueryFilter implements FilterContract{
 
     public function handle($value): void
     {
+        //Need join to work
         if( sizeof($value) ){
-            $this->query->whereIn('pris.institution_id', $value);
+            $this->query->whereIn('institution.id', $value);
         }
     }
 }

@@ -226,9 +226,15 @@ class AdvisoryBoardController extends AdminController
 
         $archive_category = request()->get('archive_category', '');
         $query = $item->newQuery();
-        $item = $query->with(['advisoryFunctions' => function($query) {
-            $query->with('files');
-        }])->find($item->id);
+        $item = $query->with(['advisoryFunctions' => function ($query) {
+            $query->when(request()->get('show_deleted_functions', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })->with('files', function ($query) {
+                $query->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
+                    $query->withTrashed();
+                });
+            });
+        }, 'regulatoryFramework'])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();

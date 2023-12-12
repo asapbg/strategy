@@ -5,22 +5,24 @@ namespace App\Models;
 use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int        $id
+ * @property int        $advisory_board_id
  * @property Collection $allFiles
  * @property Collection $files
+ * @property Carbon     $working_year
  *
  * @method static where(string $string, mixed $advisory_board_id)
  * @method static orderBy(string $string, string $string1)
  * @method static create(array $array)
  * @method static find(mixed $function_id)
  */
-class AdvisoryBoardFunction extends Model
+class AdvisoryBoardFunction extends ModelActivityExtend
 {
 
     use FilterSort, Translatable;

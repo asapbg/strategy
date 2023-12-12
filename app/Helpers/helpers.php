@@ -63,6 +63,9 @@ if (!function_exists('databaseDate')) {
      */
     function databaseDate($date)
     {
+        if (!$date) {
+            return null;
+        }
         return date("Y-m-d", strtotime($date));
     }
 }

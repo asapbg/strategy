@@ -109,6 +109,7 @@
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-delete-section'])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.member', 1)])
     @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.moderators', 1), 'modal_id' => 'modal-remove-moderator'])
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.function', 1), 'modal_id' => 'modal-remove-working-program'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.meetings', 1), 'modal_id' => 'modal-restore-meeting'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.secretary', 1), 'modal_id' => 'modal-restore-secretary-council'])
     @includeIf('modals.restore-resource', ['resource' => trans_choice('custom.section', 1), 'modal_id' => 'modal-restore-section'])

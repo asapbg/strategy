@@ -49,9 +49,7 @@ class UsersAZSeeder extends Seeder
 
                 $role = Role::where('name', $item['role'])->first();
                 $user->assignRole($role);
-
-            } else {
-                $this->command->comment("User: ".$item['email']." already exist in DB");
+                $this->command->comment("User: ".$item['email']." created.");
             }
         }
     }

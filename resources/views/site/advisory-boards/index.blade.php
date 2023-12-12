@@ -3,6 +3,7 @@
 @section('pageTitle', trans_choice('custom.advisory_boards', 2))
 
 @section('content')
+
     <div class="row">
         <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
             <div class="left-nav-panel" style="background: #fff !important;">
@@ -160,13 +161,13 @@
                 </div>
 
                 <div class="row mb-5 action-btn-wrapper">
-                    <div class="col-md-3 col-sm-12">
-                                <span id="searchBtn" class="btn rss-sub main-color search-btn">
+                    <div class="col-md-4 col-sm-12">
+                                <button id="searchBtn" class="btn btn-primary main-color search-btn">
                                     <i class="fas fa-search main-color"></i> {{ __('custom.searching') }}
-                                </span>
-                        <span class="btn rss-sub main-color search-btn clear">
+                                </button>
+                        <button class="btn btn-primary main-color search-btn clear">
                                     <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
-                                </span>
+                                </button>
                     </div>
                     <div class="col-md-8 text-end">
                         <button class="btn btn-primary main-color">

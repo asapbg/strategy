@@ -3,7 +3,7 @@
 @section('pageTitle', 'Стратегически документи - вътрешна страница')
 @section('content')
     @can('update',  $strategicDocument)
-        <div class="row edit-consultation m-0" style="top: 17.5%;">
+        <div class="row edit-consultation m-0">
             <div class="col-md-12 text-end">
                 <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->id]) }}"
                    class="btn btn-sm btn-primary main-color mt-2">
@@ -19,11 +19,11 @@
             </div>
         @endif
         <div class="col-lg-12 py-5">
-            <div class="row mb-4">
+            <div class="row mb-4 action-btn-wrapper">
                 <div class="col-md-12">
                     <h2 class="mb-3">{{ trans_choice('custom.information', 1) }}</h2>
                 </div>
-                <div class="col-md-12 text-старт">
+                <div class="col-md-12 text-start">
                     <button class="btn btn-primary  main-color">
                         <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>
                     <button class="btn rss-sub main-color">
@@ -33,24 +33,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 d-flex align-items-center mb-4">
-                    <h3 class="mb-2 fs-4">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
-                    <div class="mb-2 ms-2 fs-4">
-                        <!--
-                        @can('view',  $strategicDocument->policyArea?->name)
-                            <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->policyArea?->id]) }}"
-                               class="main-color text-decoration-none">
-                                <span class="obj-icon-info me-2">
-                                <i class="bi bi-mortarboard-fill me-1 main-color" title="Тип консултация"></i>{{ $strategicDocument->policyArea?->name }} </span>
-                            </a>
-                        @else
-                            <a href="#"
-                               class="main-color text-decoration-none">
-                                <span class="obj-icon-info me-2">
-                                <i class="bi bi-mortarboard-fill me-1 main-color" title="Тип консултация"></i>{{ $strategicDocument->policyArea?->name }} </span>
-                            </a>
-                        @endcan
-                        -->
+                <div class="col-md-12 d-flex align-items-center mb-4 policy-area-single">
+                    <h3 class="mb-2 fs-4 me-2">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
+                    <div class="fs-4">
                         <a href="#"
                            class="main-color text-decoration-none"
                            id="policyArea"
@@ -65,23 +50,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
-                    <!--
-                    @can('view',  $strategicDocument->documentType)
-                        <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$strategicDocument->documentType?->id]) }}"
-                           class="main-color text-decoration-none fs-18">
-                         <span class="obj-icon-info me-2">
-                        <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType->name }} </span>
-                        </a>
-                    @else
 
-                        <a href="#"
-                           class="main-color text-decoration-none fs-18" id="strategicDocumentType">
-                         <span class="obj-icon-info me-2">
-                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType?->name }}
-                         </span>
-                        </a>
-                    @endcan
-                    -->
                     <a href="#"
                        class="main-color text-decoration-none fs-18" id="strategicDocumentType"
                        data-document-type-id="{{ $strategicDocument->documentType?->id }}">
@@ -91,7 +60,7 @@
                     </a>
                 </div>
 
-                <div class="col-md-4 mb-4">
+                <div class="col-md-8 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.document_to', 1) }} </h3>
                     @if($strategicDocument->parent_document_id)
                         <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"
@@ -139,7 +108,7 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
-                    <div class="mb-2 fs-18">
+                    <div class="fs-18">
                         <span>{{ $strategicDocument->strategicActType?->name }}</span>
                         @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
                             <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name) ,'id' => $strategicDocument->pris?->id]) }}" class="main-color text-decoration-none">
@@ -161,26 +130,12 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
-                    <!--
-                    @can('view',  $strategicDocument->documentLevel)
-                        <a href="{{ route('admin.nomenclature.strategic_document_level.edit', [$strategicDocument->documentLevel?->id]) }}" class="main-color text-decoration-none">
-                            <span class="obj-icon-info me-2">
-                            <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentLevel?->name }}</span>
-                        </a>
-                    @else
-                        <a href="#" class="main-color text-decoration-none">
-                            <span class="obj-icon-info me-2">
-                                <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>
-                            </span>
-                            {{ $strategicDocument->documentLevel?->name }}
-                        </a>
-                    @endcan
-                    -->
+
                     <a href="#" class="main-color text-decoration-none"
                        id="strategicDocumentLevel"
                        data-document-level-id="{{ $strategicDocument->documentLevel?->id }}"
                     >
-                            <span class="obj-icon-info me-2">
+                            <span class="obj-icon-info">
                                 <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>
                             </span>
                         {{ $strategicDocument->documentLevel?->name }}

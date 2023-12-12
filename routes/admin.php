@@ -462,9 +462,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {
-        Route::post('/store', 'ajaxStore')->name('advisory-boards.function.store');
-        Route::get('{working_program}/edit', 'ajaxEdit')->name('advisory-boards.function.edit');
-        Route::post('/ajax-update', 'ajaxUpdate')->name('advisory-boards.function.update');
+        Route::post('/store',                       'ajaxStore')    ->name('advisory-boards.function.store');
+        Route::get('{working_program}/edit',        'ajaxEdit')     ->name('advisory-boards.function.edit');
+        Route::post('/ajax-update',                 'ajaxUpdate')   ->name('advisory-boards.function.update');
+        Route::post('{working_program}/delete',     'destroy')      ->name('advisory-boards.function.delete');
+        Route::post('{working_program}/restore',    'restore')      ->name('advisory-boards.function.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFileController::class)->prefix('/advisory-boards/{item}/file')->group(function () {
@@ -477,6 +479,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSecretariatController::class)->prefix('/advisory-boards/{item}/secretariat')->group(function () {
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
+    });
+
+    Route::controller(\App\Http\Controllers\AdvisoryBoardRegulatoryFrameworkController::class)->prefix('/advisory-boards/{item}/regulatory-framework')->group(function () {
+        Route::post('/store/{framework?}', 'store')->name('advisory-boards.regulatory-framework.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {

@@ -468,5 +468,8 @@ return [
         'redirect_to_iisda' => 'Препратка към Интегрираната информационна система на държавната администрация (ИИСДА)',
         'user_id' => 'потребител',
         'legislative_program_row_id' => 'Законопроект',
+        'institutions' => 'Институции',
+        'framework_description_bg' => 'Описание',
+        'framework_description_en' => 'Описание',
     ],
 ];

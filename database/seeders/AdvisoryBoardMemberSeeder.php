@@ -24,14 +24,14 @@ class AdvisoryBoardMemberSeeder extends Seeder
         $imported = 0;
         $skipped = 0;
 
-        $old_members_db = DB::connection('old_strategy')->select('SELECT * FROM councilmembers');
+        $old_members_db = DB::connection('old_strategy')->select('SELECT * FROM councilmembers where "toVersion" is null');
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
         AdvisoryBoardMember::truncate();
 
         foreach ($old_members_db as $member) {
-            if (!in_array($member->councilID, (array)$advisory_board_ids)) {
+            if (!in_array($member->councilID, $advisory_board_ids)) {
                 $skipped++;
                 continue;
             }
@@ -39,7 +39,7 @@ class AdvisoryBoardMemberSeeder extends Seeder
             $new_member = new AdvisoryBoardMember();
             $new_member->id = $member->memberID;
             $new_member->advisory_board_id = $member->councilID;
-            $new_member->advisory_type_id = $this->determineAdvisoryType($member->positionOther);
+            $new_member->advisory_type_id = $this->determineAdvisoryType($member->type, $member->positionOther);
             $new_member->save();
 
             foreach (config('available_languages') as $language) {
@@ -57,18 +57,14 @@ class AdvisoryBoardMemberSeeder extends Seeder
         $this->command->info("$imported advisory board members were imported successfully at " . date("H:i") . " and $skipped were skipped.");
     }
 
-    private function determineAdvisoryType(string|null $position): int
+    private function determineAdvisoryType(int $type, string|null $position): int
     {
+        if ($type === 1) {
+            return AdvisoryTypeEnum::CHAIRMAN->value;
+        }
+
         if (str_contains($position, "секретар")) {
             return AdvisoryTypeEnum::SECRETARY->value;
-        }
-
-        if (str_contains($position, "заместник") || str_contains($position, "зам.")) {
-            return AdvisoryTypeEnum::VICE_CHAIRMAN->value;
-        }
-
-        if (str_contains($position, "министър") || str_contains($position, "председател")) {
-            return AdvisoryTypeEnum::CHAIRMAN->value;
         }
 
         return AdvisoryTypeEnum::MEMBER->value; // член
