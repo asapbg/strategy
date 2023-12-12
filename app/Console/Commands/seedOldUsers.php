@@ -177,7 +177,7 @@ class seedOldUsers extends Command
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
                 echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('old_strategy')
+                $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
                         -- usercategoryaccess table ?????
                         -- institution_id ??????????????
