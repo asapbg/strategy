@@ -21,11 +21,13 @@
             administrationSelect.select2({
                 multiple: true
             });
+            const prisAct = $('#pris_act_ids');
+
             administrationSelect.val('').trigger('change');
             documentLevelSelect.val('').trigger('change');
             const ekateAreasDivId = $('#ekate_areas_div_id');
             const ekateMunicipalitiesDivId = $('#ekate_municipalities_div_id');
-            const prisAct = $('#pris_act_ids');
+
             ekateAreasDivId.hide();
             ekateMunicipalitiesDivId.hide();
             const ekateAreasId = $('#ekate_areas_id');

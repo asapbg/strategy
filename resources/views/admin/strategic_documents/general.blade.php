@@ -272,14 +272,6 @@
                                                 {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
                                                 data-id="{{ $item->pris?->id }}"> {{ $item->pris?->displayName }} </option>
 
-                                        @foreach ($prisActs as $prisAct)
-                                            <option value="{{ $prisAct->id }}">
-                                                {{ $prisAct->displayName }}
-                                                <!--
-                                                {{ $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date }}
-                                                -->
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('pris_act_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -335,18 +327,7 @@
                                                     ---
                                                 </option>
                                             @endif
-                                            @if(isset($strategicDocuments) && $strategicDocuments->count())
-                                                @foreach($strategicDocuments as $strategicDocument)
-                                                    @if ($strategicDocument->id === $item->id)
-                                                        @continue
-                                                    @endif
-                                                    <option value="{{ $strategicDocument->id }}"
-                                                            @if(old('parent_document_id', ($item->parent_document_id ? $item->parent_document_id : 0)) == $strategicDocument->id) selected
-                                                            @endif
-                                                            data-id="{{ $strategicDocument->id }}"
-                                                    >{{ $strategicDocument->title }}</option>
-                                                @endforeach
-                                            @endif
+
                                         </select>
                                         @error('parent_document_id')
                                         <div class="text-danger mt-1">{{ $message }}</div>

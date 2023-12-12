@@ -78,6 +78,7 @@ class StrategicDocumentsController extends AdminController
      */
     public function edit(Request $request, $id = 0)
     {
+        ini_set('memory_limit', '1024M');
         $currentLocale = app()->getLocale();
         $item = $this->getRecord($id, ['pris.actType','documentType.translations','translation', 'files.parentFile.versions.translations', 'files.translations','files.documentType.translations', 'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations']);
 
@@ -111,13 +112,16 @@ class StrategicDocumentsController extends AdminController
         $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //
-
+        // testing
+        $strategicDocuments = collect();
+        // end testing
         $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
         })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
         $ekateMunicipalities = EkatteMunicipality::select('ekatte_municipality.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
         })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
+
 
         $user = auth()->user();
         $adminUser = $user->hasRole('service_user') || $user->hasRole('super-admin');
@@ -138,6 +142,7 @@ class StrategicDocumentsController extends AdminController
             $authoritiesAcceptingStrategic = Arr::get($userInstitutions,'authority_accepting_strategic');
             $strategicDocumentLevels = Arr::get($userInstitutions,'strategic_document_level');
         }
+
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
