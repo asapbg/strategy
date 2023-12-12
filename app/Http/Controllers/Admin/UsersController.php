@@ -342,8 +342,12 @@ class  UsersController extends Controller
             );
 
             $subscribe[$route_name] = $userSubscribe->toArray();
-            $session_s = session('subscriptions');
-            $new_session = array_merge($session_s, $subscribe);
+            if (session('subscriptions')) {
+                $session_s = session('subscriptions');
+                $new_session = array_merge($session_s, $subscribe);
+            } else {
+                $new_session = $subscribe;
+            }
             session(['subscriptions' => $new_session]);
 
             $message = ($is_subscribed == UserSubscribe::SUBSCRIBED)
