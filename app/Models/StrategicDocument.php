@@ -175,4 +175,14 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     {
         return $this->belongsTo(User::class);
     }
+
+    public function ekatteArea()
+    {
+        return $this->belongsTo(EkatteArea::class, 'ekatte_area_id');
+    }
+
+    public function ekatteManiputlicity()
+    {
+        return $this->belongsTo(EkatteArea::class, 'ekatte_municipality_id');
+    }
 }

@@ -39,8 +39,9 @@ class PrisController extends Controller
         $items = Pris::select('pris.*')
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
-            ->join('institution', 'institution.id', '=', 'pris.institution_id')
-            ->join('institution_translations', function ($j){
+            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
+            ->leftJoin('institution_translations', function ($j){
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
@@ -51,6 +52,7 @@ class PrisController extends Controller
             })
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
+            ->GroupBy('pris.id')
             ->paginate($paginate);
 
         if( $request->ajax() ) {
@@ -177,6 +179,12 @@ class PrisController extends Controller
                 'value' => $request->input('legalActTypes'),
                 'col' => 'col-md-12'
             ),
+            'docNum' => array(
+                'type' => 'text',
+                'label' => __('custom.document_number'),
+                'value' => $request->input('docNum'),
+                'col' => 'col-md-3'
+            ),
             'filesContent' => array(
                 'type' => 'text',
                 'label' => __('custom.content'),
@@ -195,21 +203,21 @@ class PrisController extends Controller
                 'value' => $request->input('legalReason'),
                 'col' => 'col-md-3'
             ),
-            'tag' => array(
-                'type' => 'select',
-                'options' => optionsFromModel(Tag::get()),
-                'multiple' => false,
-                'default' => '',
-                'label' => trans_choice('custom.tags', 2),
-                'value' => $request->input('tag'),
-                'col' => 'col-md-3'
-            ),
-            'institution' => array(
+//            'tag' => array(
+//                'type' => 'select',
+//                'options' => optionsFromModel(Tag::get()),
+//                'multiple' => false,
+//                'default' => '',
+//                'label' => trans_choice('custom.tags', 2),
+//                'value' => $request->input('tag'),
+//                'col' => 'col-md-3'
+//            ),
+            'institutions' => array(
                 'type' => 'subjects',
                 'label' => trans_choice('custom.institutions', 1),
-                'multiple' => false,
+                'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
-                'value' => request()->input('institution'),
+                'value' => request()->input('institutions'),
                 'default' => '',
                 'col' => 'col-md-3'
             ),
@@ -223,12 +231,6 @@ class PrisController extends Controller
                 'type' => 'datepicker',
                 'value' => $request->input('toDate'),
                 'label' => __('custom.end_date'),
-                'col' => 'col-md-3'
-            ),
-            'docNum' => array(
-                'type' => 'text',
-                'label' => __('custom.document_number'),
-                'value' => $request->input('docNum'),
                 'col' => 'col-md-3'
             ),
             'newspaperNumber' => array(

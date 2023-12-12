@@ -10,6 +10,7 @@ use App\Models\AdvisoryBoardFunction;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Log;
 
 class AdvisoryBoardFunctionController extends AdminController
@@ -76,6 +77,56 @@ class AdvisoryBoardFunctionController extends AdminController
             DB::rollBack();
             Log::error($e);
             return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param AdvisoryBoard         $item
+     * @param AdvisoryBoardFunction $working_program
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(AdvisoryBoard $item, AdvisoryBoardFunction $working_program)
+    {
+        $this->authorize('delete', $item);
+
+        $route = route('admin.advisory-boards.edit', $item->id) . '#functions';
+
+        try {
+            $working_program->delete();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.function', 1) . ' ' . __('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param AdvisoryBoard         $item
+     * @param AdvisoryBoardFunction $working_program
+     *
+     * @return RedirectResponse
+     */
+    public function restore(AdvisoryBoard $item, AdvisoryBoardFunction $working_program)
+    {
+        $this->authorize('restore', $item);
+
+        $route = route('admin.advisory-boards.edit', $item->id) . '#functions';
+
+        try {
+            $working_program->restore();
+
+            return redirect($route)
+                ->with('success', trans_choice('custom.function', 1) . ' ' . __('messages.restored_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->to($route)->with('danger', __('messages.system_error'));
         }
     }
 }

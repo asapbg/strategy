@@ -45,14 +45,14 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
             $new_secretariat->save();
 
             $directory = base_path(
-                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR .
-                'advisory-boards' . DIRECTORY_SEPARATOR . $secretariat->councilID . DIRECTORY_SEPARATOR . 'secretariat'
+                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
+                $secretariat->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR
             );
             mkdirIfNotExists($directory);
 
             $directory = base_path(
-                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'advisory-boards' . DIRECTORY_SEPARATOR .
-                $secretariat->councilID . DIRECTORY_SEPARATOR . 'secretariat' . DIRECTORY_SEPARATOR . $new_secretariat->id
+                'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
+                $secretariat->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_SECRETARIAT_UPLOAD_DIR . DIRECTORY_SEPARATOR . $new_secretariat->id
             );
             mkdirIfNotExists($directory);
 

@@ -1,6 +1,21 @@
 @push('scripts')
     <script type="application/javascript">
         /**
+         * Redirect to the archive, based on the category id.
+         *
+         * @param id
+         */
+        function goToArchive(id) {
+            const archive_url = @json(route('admin.advisory-boards.edit', $item) . '?archive_category=:id#archive');
+
+            window.location.href = archive_url.replace(':id', id);
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 500)
+        }
+
+        /**
          * Create new row with files.
          */
         function addFilesRow(form) {

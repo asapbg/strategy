@@ -46,7 +46,7 @@ class seedOldPublicConsultations extends Command
         //records per query
         $step = 50;
         //max id in old db
-        $maxOldId = DB::connection('old_strategy')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
+        $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
         $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
 
@@ -81,15 +81,15 @@ class seedOldPublicConsultations extends Command
             $dInstitution->save();
         }
 
-        $ourUsersInstitutions = User::get()->pluck('institution_id', 'id')->toArray();
-        $ourUsers = User::get()->pluck('old_id', 'id')->toArray();
+        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
+        $ourUsers = User::get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
         $ourInstitutions = Institution::with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
                 echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('old_strategy')
+                $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
                         pc.id as old_id,
                         -- consultation_level_id
@@ -122,6 +122,8 @@ class seedOldPublicConsultations extends Command
                         pc.createdbyuserid as author_id
                     from dbo.publicconsultations pc
                         where pc.languageid = 1
+                        and pc.id >= ' . $currentStep . '
+                        and pc.id < ' . ($currentStep + $step) . '
                     order by pc.id ');
 
                 if (sizeof($oldDbResult)) {
@@ -166,7 +168,7 @@ class seedOldPublicConsultations extends Command
                                 }
                                 $newPc->save();
 
-                                $oldDbComments = DB::connection('old_strategy')
+                                $oldDbComments = DB::connection('old_strategy_app')
                                     ->select('select
                                         pcomments.createdbyuserid as user_id,
                                         pcomments.title || \'\n\' || pcomments."text" as content,

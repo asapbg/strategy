@@ -39,27 +39,25 @@
                 <td>
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            @can('view', $item)
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-info preview-file-modal mr-2"
-                                                data-file="{{ $file->id }}"
-                                                data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}">
-                                            {!! fileIcon($file->content_type) !!}
-                                            {{ __('custom.preview') }}
-                                        </button>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <a class="btn btn-sm btn-info mr-2"
-                                           href="{{ route('admin.download.file', $file) }}"
-                                           target="_blank" title="{{ __('custom.download') }}">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                    </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-info preview-file-modal mr-2"
+                                            data-file="{{ $file->id }}"
+                                            data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}">
+                                        {!! fileIcon($file->content_type) !!}
+                                        {{ __('custom.preview') }}
+                                    </button>
                                 </div>
-                            @endcan
+
+                                <div class="col-auto">
+                                    <a class="btn btn-sm btn-info mr-2"
+                                       href="{{ route('admin.download.file', $file) }}"
+                                       target="_blank" title="{{ __('custom.download') }}">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         @if(!$is_archived && !$view_mode)

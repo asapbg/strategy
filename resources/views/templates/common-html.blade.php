@@ -287,69 +287,6 @@
                     </table>
                 </div>
             </div>
-            <h5 class="text-danger">Когато бутоните от колона Действия падат на два реда, добавяме в заглавието
-                "Действия"<i class="text-dark">('th' min-width:/определно число спрямо случая/vh)<span class="text-dark"
-                        style="font-size:16px;"> style="min-width:25vh;"</span></i></h5>
-            <div class="card">
-                <div class="card-body table-responsive">
-                    <div class="mb-3">
-                        <a href="https://strategy.asapbg.com/admin/advisory-boards/create" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Добави Консултативен съвет
-                        </a>
-                    </div>
-
-                    <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Заглавие</th>
-                                <th>Име на съвет</th>
-                                <th>Активен</th>
-                                <th>Дата на създаване</th>
-                                <th style="min-width:25vh;">Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="odd">
-                                <td>3</td>
-                                <td>Проект на Отчет за 2022 г. за изпълнение на Актуализираната национална стратегия за
-                                    демографско развитие на населението в Република България (2012 – 2030г.);</td>
-                                <td>TEST</td>
-                                <td>
-                                    <div id="active_form_3">
-                                        <input type="hidden" name="id" class="id" value="3">
-                                        <input type="hidden" name="model" class="model" value="AdvisoryBoard">
-                                        <div class="status-box">
-                                            <span class="badge badge-success status" style="cursor: pointer"
-                                                data-status="0"
-                                                onclick="ConfirmToggleBoolean('active','3','Сигурни ли сте, че искате да деактивирате TEST')">
-                                                Да
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2023-11-29 17:51:13</td>
-                                <td class="text-left ">
-                                    <a href="#" class="btn btn-sm btn-info mr-1" title="Редакция">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-danger mr-1" title="Изтриване">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-primary mr-1" title="Преглед">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-secondary mr-1"
-                                        title="Премахване от публична част">
-                                        <i class="fas fa-eye-slash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
 </div>

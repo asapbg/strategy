@@ -40,10 +40,11 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
-        $institutions = Institution::withoutTrashed()->get();
+        ini_set('memory_limit', '1024M');
+        $institutions = Institution::with('translations')->withoutTrashed()->get();
         $strategicDocuments = $this->prepareResults($request);
-        $policyAreas = PolicyArea::all();
-        $preparedInstitutions = AuthorityAcceptingStrategic::all();
+        $policyAreas = PolicyArea::with('translations')->get();
+        $preparedInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $strategicDocumentsCommonService = app(CommonService::class);
@@ -69,17 +70,17 @@ class StrategicDocumentsController extends Controller
         }
 
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
-        $ekateAreas = EkatteArea::all();
-        $ekateMunicipalities = EkatteMunicipality::all();
-        $prisActs = Pris::all();
+        $ekateAreas = EkatteArea::with('translations')->get();
+        $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
+        $prisActs = Pris::with('translations')->get();
         $pageTitle = trans('custom.strategy_documents_plural');
         $title_text = trans('custom.are_you_sure_to_delete');
         $continue_btn_text = trans('custom.delete');
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
-
+        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));  
+        
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
 
@@ -102,7 +103,6 @@ class StrategicDocumentsController extends Controller
             $strategicDocumentsHtml = $this->prepareStrategicDocumentsHtml($strategicDocuments, $editRouteName, $deleteRouteName);
             $pagination = $strategicDocuments->links()->toHtml();
         }
-
         return response()->json(['strategic_documents' => $strategicDocumentsHtml, 'pagination' => $pagination]);
     }
 
@@ -271,10 +271,9 @@ class StrategicDocumentsController extends Controller
             $strategicDocumentsHtml .= '</div>';
 
             $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= $document->category;
             $strategicDocumentsHtml .= '<a class="text-decoration-none mb-3" href="' . route('strategy-document.view', [$document->id]) . '">';
             $strategicDocumentsHtml .= '<i class="bi bi-mortarboard-fill me-1" role="button" title="Образование">';
-            $strategicDocumentsHtml .= $document->policyArea->name;
+            $strategicDocumentsHtml .= $document->policyArea?->name;
             $strategicDocumentsHtml .= '</i>';
             $strategicDocumentsHtml .= '</a>';
 
@@ -309,8 +308,8 @@ class StrategicDocumentsController extends Controller
 
         $parsedUrl = parse_url($searchUrl);
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
+        $strategicDocuments = StrategicDocument::with(['user.institution.translations', 'policyArea.translations', 'documentLevel.translations', 'translations', 'acceptActInstitution.translations', 'ekatteArea.translations', 'ekatteManiputlicity.translations'])->where('active', 1);
 
-        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations', 'acceptActInstitution'])->where('active', 1);
         $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');
         $categories = Arr::get($queryParams, 'category') ?? $request->input('category');
         $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');
@@ -318,7 +317,7 @@ class StrategicDocumentsController extends Controller
         $orderBy = Arr::get($queryParams, 'order_by') ?? $request->input('order_by');
         $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';
         $currentLocale = app()->getLocale();
-
+        $documentType = Arr::get($queryParams, 'document-type') ?? $request->input('document-type');
         $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
         $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
         $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
@@ -327,11 +326,11 @@ class StrategicDocumentsController extends Controller
         if ($title) {
             $strategicDocuments->where(function ($query) use ($title, $currentLocale) {
                 $query->whereHas('translations', function($subQuery) use ($title, $currentLocale) {
-                    $subQuery->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
+                    $subQuery->where('locale', $currentLocale)->where('title', 'ilike', '%' . $title . '%');
                 })
-                    ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
-                        $subQuery->where('locale', $currentLocale)->where('file_text', 'like', '%' . $title . '%');
-                    });
+                ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
+                    $subQuery->where('locale', $currentLocale)->where('file_text', 'ilike', '%' . $title . '%');
+                });
             });
         }
         if ($policyArea) {
@@ -393,8 +392,8 @@ class StrategicDocumentsController extends Controller
         $documentDateTo = Arr::get($queryParams, 'valid-to') ?? $request->input('valid-to');
         $documentDateInfinite = Arr::get($queryParams, 'date-infinite') ?? $request->input('date-infinite');
         $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
-            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
 
+            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
             return $query->where(function ($subquery) use ($documentDateFrom, $documentDateInfinite) {
                 $subquery->where('document_date_accepted', '>=', $documentDateFrom);
 
@@ -403,12 +402,17 @@ class StrategicDocumentsController extends Controller
                 }
             });
         });
-
         $strategicDocuments->when($documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateFrom, $documentDateTo) {
             $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
             $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
 
             return $query->whereBetween('document_date_accepted', [$documentDateFrom, $documentDateTo]);
+        });
+
+        $strategicDocuments->when(!$documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateTo) {
+            $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
+
+            return $query->where('document_date_accepted', '<', $documentDateTo);
         });
 
         if ($orderBy == 'policy-area') {
@@ -476,6 +480,7 @@ class StrategicDocumentsController extends Controller
         }
 
         if ($preparedInstitutions) {
+
             $preparedInstitutionsArray = explode(',', $preparedInstitutions);
             $strategicDocuments->where(function($query) use ($preparedInstitutionsArray) {
                 $query->when(in_array('all', $preparedInstitutionsArray), function($query) {
@@ -485,6 +490,12 @@ class StrategicDocumentsController extends Controller
                         $userQuery->whereIn('institution_id', $preparedInstitutionsArray);
                     });
                 });
+            });
+        }
+
+        if ($documentType != 'null') {
+            $strategicDocuments->where(function($query) use ($documentType) {
+                $query->where('strategic_document_type_id', $documentType);
             });
         }
 

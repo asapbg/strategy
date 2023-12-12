@@ -121,6 +121,21 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'old_strategy_app' => [
+            'driver' => env('DB_DRIVER_OLD_STRATEGY_APP', 'pgsql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_OLD_STRATEGY_APP', '127.0.0.1'),
+            'port' => env('DB_PORT_OLD_STRATEGY_APP', '5432'),
+            'database' => env('DB_DATABASE_OLD_STRATEGY_APP', 'forge'),
+            'username' => env('DB_USERNAME_OLD_STRATEGY_APP', 'forge'),
+            'password' => env('DB_PASSWORD_OLD_STRATEGY_APP', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
     ],
 
     /*

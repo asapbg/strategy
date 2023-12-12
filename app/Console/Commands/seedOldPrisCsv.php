@@ -71,7 +71,7 @@ class seedOldPrisCsv extends Command
             $dInstitution->save();
         }
 
-        $ourTags = Tag::with(['translation'])->get()->pluck('translation.label', 'id')->toArray();
+        $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
         $legalTypeDocs = [
             1 => 7, //'Заповед',
             2 => 2, //'Решение',
@@ -329,13 +329,13 @@ class seedOldPrisCsv extends Command
         $csvFile = fopen(base_path("database/data/final-docs3-txt.csv"), "r");
         //1 documentid, 2 number_pris, 3 content, 4 act_no, 5 date, 6 title, 7 author, 8 protocol, 9 state_gazette_all, 10 state_gazette_issue, 11 state_gazette_year, 12 relationships, 13 normative_text, 14 tags, 15 status
         $firstRow = true;
-        while (($data = fgetcsv($csvFile, 2000, ";")) !== FALSE) {
+        while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             if($firstRow) {$firstRow = false; continue;}
             if(is_array($data) && sizeof($data) == 15) {
                 $csvData[(int)$data[0]] = $data;
             }
-        }
 
+        }
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
 
@@ -373,14 +373,19 @@ class seedOldPrisCsv extends Command
                     DB::beginTransaction();
                     try {
                         foreach ($oldDbResult as $item) {
+                            $loopItem = $item;
                             if(!isset($csvData[$item->old_id])) {
                                 $this->comment('OLD ID '.$item->old_id.' not found in csv - Skipped');
                                 continue;
                             }
-                            $itemCsvData = $csvData[$item->old_id];
+                            $loopCsvItem = $itemCsvData = $csvData[$item->old_id];
                             $tags = [];
+                            $importerStr = [];
+                            $importerInstitutions = [];
                             $newItemTags = [];//tags ids to connect to new item
-
+                            if(!isset($legalTypeDocs[$item->old_doc_type_id])){
+                                $this->comment('OLD ID '.$item->old_id.' missign legal act type (old id '.$item->old_doc_type_id.')');
+                            }
                             //main record
                             $prepareNewPris = [
                                 'old_id' => $item->old_id,
@@ -436,21 +441,17 @@ class seedOldPrisCsv extends Command
                             }
                             //importer
                             //institution_id
-                            if(isset($itemCsvData[7])) {
+                            if(isset($itemCsvData[6])) {
                                 $explodeInstitutions = explode(',', $itemCsvData[7]);
-                                $importerStr = [];
-                                $importerInstitutions = [];
                                 foreach ($explodeInstitutions as $e) {
                                     if(isset($importers[trim($e)])) {
                                         $importerStr[]= $importers[trim($e)]['importer'];
-                                        $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                        if(!is_null($importers[trim($e)]['institution_id'])) {
+                                            $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                        }
                                     }
                                 }
                                 $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
-                                //TODO We are not ready for multi institutions
-                                $prepareNewPris['institution_id'] = sizeof($importerInstitutions) ? $importerInstitutions[0] : $dInstitution->id;
-                            } else{
-                                $prepareNewPris['institution_id'] = $dInstitution->id;
                             }
                             //get about
                             if(isset($itemCsvData[5])) {
@@ -481,6 +482,12 @@ class seedOldPrisCsv extends Command
                                     $newItem->translateOrNew($locale['code'])->importer = $prepareNewPris['importer'];
                                 }
                                 $newItem->save();
+
+                                if(isset($importerInstitutions) && sizeof($importerInstitutions)) {
+                                    $newItem->institutions()->sync($importerInstitutions);
+                                } else{
+                                    $newItem->institutions()->sync([$dInstitution->id]);
+                                }
                             }
 
                                 //3. Create connection pris - tags
@@ -562,7 +569,7 @@ class seedOldPrisCsv extends Command
                     } catch (\Exception $e) {
                         Log::error('Migration old pris: ' . $e);
                         DB::rollBack();
-                        dd($prepareNewPris, $newItemTags);
+                        dd($prepareNewPris, $newItemTags, $loopItem, $loopCsvItem, $importerInstitutions, $dInstitution);
                     }
                 }
                 $currentStep += $step;

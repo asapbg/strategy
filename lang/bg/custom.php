@@ -488,7 +488,7 @@ return [
     'tags'                                      => 'Термин|Термини',
     'tag'                                      => 'Таг',
     'any'                                      => 'Всички',
-    'pris_about'                               => 'Заглавие/Относно',
+    'pris_about'                               => 'Заглавие',
     'pris_legal_reason'                        => 'Правно основание',
     'pris.change_enum.CHANGE'                  => 'Изменя',
     'pris.change_enum.COMPLEMENTS'             => 'Допълва',
@@ -688,4 +688,5 @@ return [
     'laws'     => 'Закон|Закони',
     'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)',
     'prepared_administration'  => 'Изработила администрация',
+    'meeting_date' => 'Заседанието се проведе на',
 ];

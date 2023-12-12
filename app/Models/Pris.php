@@ -9,6 +9,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -29,7 +30,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "pris";
 
-    protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', 'institution_id', 'version',
+    protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', //'institution_id',
+        'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
         'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status'];
 
@@ -126,9 +128,18 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return $this->hasMany(PublicConsultation::class, 'pris_id', 'id');
     }
 
+    /**
+     * @deprecated
+     * @return HasOne
+     */
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Institution::class, 'id', 'institution_id');
+    }
+
+    public function institutions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Institution::class, 'pris_institution', 'pris_id', 'institution_id');
     }
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

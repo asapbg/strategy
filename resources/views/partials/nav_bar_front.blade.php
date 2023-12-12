@@ -91,8 +91,7 @@
                 </li>
 
             </ul>
-            <li class="nav-item d-flex list-unstyled text-end align-items-center"
-                style="padding-right: 0px !important;">
+            <li class="nav-item d-flex list-unstyled text-end align-items-center social-lang">
                 <a class="nav-link me-3" href="#"><i class="fa-brands fa-facebook text-light"><span
                             class="d-none">Facebook</span></i></a>
                 <a class="nav-link" href="#">EN</a>

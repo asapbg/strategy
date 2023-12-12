@@ -272,14 +272,6 @@
                                                 {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
                                                 data-id="{{ $item->pris?->id }}"> {{ $item->pris?->displayName }} </option>
 
-                                        @foreach ($prisActs as $prisAct)
-                                            <option value="{{ $prisAct->id }}">
-                                                {{ $prisAct->displayName }}
-                                                <!--
-                                                {{ $prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date }}
-                                                -->
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('pris_act_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -335,18 +327,7 @@
                                                     ---
                                                 </option>
                                             @endif
-                                            @if(isset($strategicDocuments) && $strategicDocuments->count())
-                                                @foreach($strategicDocuments as $strategicDocument)
-                                                    @if ($strategicDocument->id === $item->id)
-                                                        @continue
-                                                    @endif
-                                                    <option value="{{ $strategicDocument->id }}"
-                                                            @if(old('parent_document_id', ($item->parent_document_id ? $item->parent_document_id : 0)) == $strategicDocument->id) selected
-                                                            @endif
-                                                            data-id="{{ $strategicDocument->id }}"
-                                                    >{{ $strategicDocument->title }}</option>
-                                                @endforeach
-                                            @endif
+
                                         </select>
                                         @error('parent_document_id')
                                         <div class="text-danger mt-1">{{ $message }}</div>
@@ -870,9 +851,12 @@
             handleVisibility(initialStrategicDocumentLevel);
 
             strategicDocumentLevel.on('change', function () {
+                adminUser = {!! json_encode($adminUser) !!};
                 const selectedValue = $(this).val();
                 handleVisibility(selectedValue)
                 const acceptActInstitution = $('#accept_act_institution_type_id');
+                //handleVisibility(selectedValue);
+                /*
                 if (selectedValue == 2) {
                     acceptActInstitution.val(3).trigger('change');
                 } else if (selectedValue == 3) {
@@ -880,6 +864,33 @@
                 } else {
                     acceptActInstitution.val(1).trigger('change');
                 }
+                */
+                if (adminUser) {
+                    $.ajax({
+                        url: '/admin/strategic-documents/accept-act-institution-options/' + selectedValue,
+                        type: 'GET',
+                        contentType: 'application/json',
+                        success: function(data) {
+                            const acceptingInstitutionsTypeId = $('#accept_act_institution_type_id');
+                            acceptingInstitutionsTypeId.empty();
+                            console.log(data.documentsAcceptingInstitutionsOptions);
+
+                            $.each(data.documentsAcceptingInstitutionsOptions, function(index, option) {
+                                acceptingInstitutionsTypeId.append($('<option>', {
+                                    value: option.id,
+                                    text: option.text
+                                }));
+                            });
+                            acceptingInstitutionsTypeId.val(data.documentsAcceptingInstitutionsOptions[0].id);
+                            acceptingInstitutionsTypeId.trigger('change');
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            // Handle errors here
+                            console.error('AJAX request failed:', textStatus, errorThrown);
+                        }
+                    });
+                }
+
             });
 
             function handleVisibility(strategicDocumentLevel) {
@@ -893,6 +904,8 @@
                     ekatteAreaDiv.hide();
                     ekatteMunicipalityDiv.show();
                 } else {
+                    console.log('asdfg');
+                    console.log(strategicDocumentLevel);
                     ekatteMunicipalityDiv.hide();
                     ekatteAreaDiv.hide();
                 }
