@@ -870,9 +870,12 @@
             handleVisibility(initialStrategicDocumentLevel);
 
             strategicDocumentLevel.on('change', function () {
+                adminUser = {!! json_encode($adminUser) !!};
                 const selectedValue = $(this).val();
                 handleVisibility(selectedValue)
                 const acceptActInstitution = $('#accept_act_institution_type_id');
+                //handleVisibility(selectedValue);
+                /*
                 if (selectedValue == 2) {
                     acceptActInstitution.val(3).trigger('change');
                 } else if (selectedValue == 3) {
@@ -880,6 +883,33 @@
                 } else {
                     acceptActInstitution.val(1).trigger('change');
                 }
+                */
+                if (adminUser) {
+                    $.ajax({
+                        url: '/admin/strategic-documents/accept-act-institution-options/' + selectedValue,
+                        type: 'GET',
+                        contentType: 'application/json',
+                        success: function(data) {
+                            const acceptingInstitutionsTypeId = $('#accept_act_institution_type_id');
+                            acceptingInstitutionsTypeId.empty();
+                            console.log(data.documentsAcceptingInstitutionsOptions);
+
+                            $.each(data.documentsAcceptingInstitutionsOptions, function(index, option) {
+                                acceptingInstitutionsTypeId.append($('<option>', {
+                                    value: option.id,
+                                    text: option.text
+                                }));
+                            });
+                            acceptingInstitutionsTypeId.val(data.documentsAcceptingInstitutionsOptions[0].id);
+                            acceptingInstitutionsTypeId.trigger('change');
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            // Handle errors here
+                            console.error('AJAX request failed:', textStatus, errorThrown);
+                        }
+                    });
+                }
+
             });
 
             function handleVisibility(strategicDocumentLevel) {
@@ -893,6 +923,8 @@
                     ekatteAreaDiv.hide();
                     ekatteMunicipalityDiv.show();
                 } else {
+                    console.log('asdfg');
+                    console.log(strategicDocumentLevel);
                     ekatteMunicipalityDiv.hide();
                     ekatteAreaDiv.hide();
                 }

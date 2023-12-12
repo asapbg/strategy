@@ -115,6 +115,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('strategic-documents/same-policy-area/{id?}', 'strategicDocumentsFromSamePolicyArea')->name('strategic_documents.same-policy-area');
         Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
         Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
+        Route::get('strategic-documents/accept-act-institution-options/{id?}', 'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
     });
 
     // Static pages

@@ -120,8 +120,10 @@ class StrategicDocumentsController extends AdminController
         })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
 
         $user = auth()->user();
+        $adminUser = $user->hasRole('service_user') || $user->hasRole('super-admin');
+
         if ($user->hasRole('service_user') || $user->hasRole('super-admin')) {
-            $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
+            $authoritiesAcceptingStrategic = $item->accept_act_institution_type_id ? AuthorityAcceptingStrategic::with('translations')->where('id', $item->accept_act_institution_type_id)->get() : AuthorityAcceptingStrategic::with('translations')->get();
             $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
             $ekateAreas = $ekateAreas->get();
             $ekateMunicipalities = $ekateMunicipalities->get();
@@ -139,7 +141,7 @@ class StrategicDocumentsController extends AdminController
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities'));
+            'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -529,6 +531,46 @@ class StrategicDocumentsController extends AdminController
         } catch (\Exception $e) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function acceptActInstitutionOptions(int $id)
+    {
+        $user = auth()->user();
+        if ($user->hasRole('service_user') || $user->hasRole('super-admin'))
+        {
+            try {
+                $documentsAcceptingInstitutionsOptions = [];
+                $strategicDocumentLevel = StrategicDocumentLevel::find($id);
+
+                if ($strategicDocumentLevel->id == 1) {
+                    $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::whereIn('id', [1,2])->orderBy('id', 'desc')->get();
+                }
+                if ($strategicDocumentLevel->id == 2) {
+                    $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::where('id', 3)->get();
+                }
+                if ($strategicDocumentLevel->id == 3) {
+                    $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::where('id', 4)->get();
+                }
+                if (isset($documentsAcceptingInstitutions)) {
+                    foreach ($documentsAcceptingInstitutions as $documentsAcceptingInstitution) {
+                        $documentsAcceptingInstitutionsOptions[] = [
+                            'id' => $documentsAcceptingInstitution->id,
+                            'text' => $documentsAcceptingInstitution->name,
+                        ];
+                    }
+                } else {
+                    throw new \Exception('Resource not found.');
+                }
+                return response()->json(['documentsAcceptingInstitutionsOptions' => $documentsAcceptingInstitutionsOptions]);
+            } catch (\Throwable $throwable) {
+                return response()->json(['error' => 'Resource not found.'], 404);
+            }
+        }
+
     }
 
     /**
