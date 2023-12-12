@@ -309,7 +309,6 @@ class StrategicDocumentsController extends Controller
 
         $parsedUrl = parse_url($searchUrl);
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
-
         $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations', 'acceptActInstitution'])->where('active', 1);
         $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');
         $categories = Arr::get($queryParams, 'category') ?? $request->input('category');
@@ -318,7 +317,7 @@ class StrategicDocumentsController extends Controller
         $orderBy = Arr::get($queryParams, 'order_by') ?? $request->input('order_by');
         $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';
         $currentLocale = app()->getLocale();
-
+        $documentType = Arr::get($queryParams, 'document-type') ?? $request->input('document-type');
         $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
         $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
         $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
@@ -327,11 +326,11 @@ class StrategicDocumentsController extends Controller
         if ($title) {
             $strategicDocuments->where(function ($query) use ($title, $currentLocale) {
                 $query->whereHas('translations', function($subQuery) use ($title, $currentLocale) {
-                    $subQuery->where('locale', $currentLocale)->where('title', 'like', '%' . $title . '%');
+                    $subQuery->where('locale', $currentLocale)->where('title', 'ilike', '%' . $title . '%');
                 })
-                    ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
-                        $subQuery->where('locale', $currentLocale)->where('file_text', 'like', '%' . $title . '%');
-                    });
+                ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
+                    $subQuery->where('locale', $currentLocale)->where('file_text', 'ilike', '%' . $title . '%');
+                });
             });
         }
         if ($policyArea) {
@@ -393,8 +392,8 @@ class StrategicDocumentsController extends Controller
         $documentDateTo = Arr::get($queryParams, 'valid-to') ?? $request->input('valid-to');
         $documentDateInfinite = Arr::get($queryParams, 'date-infinite') ?? $request->input('date-infinite');
         $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
-            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
 
+            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
             return $query->where(function ($subquery) use ($documentDateFrom, $documentDateInfinite) {
                 $subquery->where('document_date_accepted', '>=', $documentDateFrom);
 
@@ -403,12 +402,17 @@ class StrategicDocumentsController extends Controller
                 }
             });
         });
-
         $strategicDocuments->when($documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateFrom, $documentDateTo) {
             $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
             $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
 
             return $query->whereBetween('document_date_accepted', [$documentDateFrom, $documentDateTo]);
+        });
+
+        $strategicDocuments->when(!$documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateTo) {
+            $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
+
+            return $query->where('document_date_accepted', '<', $documentDateTo);
         });
 
         if ($orderBy == 'policy-area') {
@@ -485,6 +489,11 @@ class StrategicDocumentsController extends Controller
                         $userQuery->whereIn('institution_id', $preparedInstitutionsArray);
                     });
                 });
+            });
+        }
+        if ($documentType != 'null') {
+            $strategicDocuments->where(function($query) use ($documentType) {
+                $query->where('strategic_document_type_id', $documentType);
             });
         }
 
