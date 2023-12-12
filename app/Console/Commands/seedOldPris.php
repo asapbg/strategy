@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Storage;
 
 class seedOldPris extends Command
 {
+    /** !!!!!!!!!!!!!!!!!!!! */
+    /** WI DO NOT USE THIS */
+    /** !!!!!!!!!!!!!!!!!!!! */
     /**
      * The name and signature of the console command.
-     *
+     * @deprecated
      * @var string
      */
     protected $signature = 'old:pris';
