@@ -204,6 +204,8 @@ class FileService
             'text' => $mainFile->document_display_name .
                 $editLink . $downloadLink,
             'icon' => $iconClass,
+            'file_text' => $mainFile->file_text,
+            'created_at' => $mainFile->created_at->format('d.m.Y г.'),
         ];
         $fileData[] = $rootNode;
         $processedFileIds = [];
@@ -235,6 +237,8 @@ class FileService
                     $editLink . $downloadLink . $deleteLink,
                 'icon' => $iconClass,
                 'ord' => $currentFile->ord,
+                'file_text' => $currentFile->file_text,
+                'created_at' => $currentFile->created_at->format('d.m.Y г.'),
             ];
             $fileData[] = $fileNode;
         }

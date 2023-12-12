@@ -214,13 +214,10 @@
                                                     <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
                                                             data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
                                                             aria-controls="collapse60">
-                                                        <!--
-                                                        <i class="me-1 bi bi-file-earmark-text fs-18"></i>
-                                                        -->
                                                            <i class="{{ $iconClass }}"></i>
                                                             {!!  $mainDocument->document_display_name !!}
                                                     </button>
-                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60" class="p-2">
+                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60" class="p-2 ms-auto">
                                                         <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color p-1"></i>
                                                     </a>
                                                 </h2>
@@ -290,22 +287,67 @@
                         <div class="tab-pane fade show active" id="table-view">
                             <ul class="list-group list-group-flush">
                                 @foreach($strategicDocumentFiles as $strategicDocumentFile)
+                                    @if ($strategicDocumentFile['parent'] == '#')
+                                        @continue
+                                    @endif
                                     <li class="list-group-item">
-                                        <span href="#" type="button" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                            <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
-
-                                            <div class="preview-download d-inline">
-                                                <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
-                                                <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
-                                                    <i class="fas fa-download ms-2"></i>
+                                        <div class="accordion p-0" id="accordionFile_{{ $strategicDocumentFile['id'] }}">
+                                            <span type="button" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
+                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
+                                                <div class="preview-download d-inline">
+                                                    <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
+                                                    <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
+                                                        <i class="fas fa-download ms-2"></i>
+                                                    </a>
+                                                </div>
+                                                <a id="toggle_collapse_{{$strategicDocumentFile['id']}}" href="#" data-toggle="collapse" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" aria-expanded="true" aria-controls="collapse_{{ $strategicDocumentFile['id'] }}" class="p-2">
+                                                    <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color p-1"></i>
                                                 </a>
+                                            </span>
+                                            <div id="collapse_{{ $strategicDocumentFile['id'] }}" class="collapse" aria-labelledby="heading{{ $strategicDocumentFile['id'] }}" data-parent="#accordionFile_{{ $strategicDocumentFile['id'] }}">
+                                                <div class="card-body">
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="text-start">
+                                                                <span class="text-start me-3">
+                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $strategicDocumentFile['created_at'] }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 text-end">
+                                                            <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="btn btn-primary">
+                                                                {{ trans_choice('custom.download', 1) }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row file-content">
+                                                        <div class="col-md-12">
+                                                            {{ $strategicDocumentFile['file_text'] }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-6">
+                                                            <div class="text-start">
+                                                                <span class="text-start me-3">
+                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $strategicDocumentFile['created_at'] }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 text-end">
+                                                            <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="btn btn-primary">
+                                                                {{ trans_choice('custom.download', 1) }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </span>
+                                        </div>
                                     </li>
                                 @endforeach
                             </ul>
-                        </div>
-                        <div class="tab-pane fade" id="tree-view">
+                        </div> <div class="tab-pane fade" id="tree-view">
                             <ul class="list-group list-group-flush">
                                 @foreach($reportsAndDocs as $document)
                                     <li class="list-group-item">
@@ -412,20 +454,41 @@
                     });
             });
         });
+
         $('body').on('click', '[id^="strategicFileId_"]', function(event) {
             event.preventDefault();
             const fileId = this.id.replace('strategicFileId_', '');
             window.location.href = `/strategy-document/download-file/${fileId}`;
         });
+
         $('body').on('click', '#stategicFieldCancelButton', function(event) {
             event.stopPropagation();
         });
 
+        $('body').on('click', 'span[data-target], a[data-toggle="collapse"]', function (event) {
+                const clickedElement = $(event.target);
+            if (clickedElement.hasClass('fa-download') || clickedElement.hasClass('fa-eye')) {
+                return;
+            }
+            event.preventDefault();
+
+            const targetId = $(this).data('target');
+            console.log(targetId);
+            if (!targetId.startsWith('#')) {
+                return;
+            }
+            const isOpen = $(targetId).hasClass('show');
+
+            if (isOpen) {
+                $(targetId).collapse('hide');
+            } else {
+                $('.accordion').find('.collapse.show').collapse('hide');
+                $(targetId).collapse('show');
+            }
+        });
+
         $(document).ready(function() {
             const mainDocumentId = $('#mainDocument');
-            console.log(mainDocumentId.val());
-
-
             fileData = {!! json_encode($fileData) !!};
             const fileTree = $("#fileTree");
             fileTree.jstree({
