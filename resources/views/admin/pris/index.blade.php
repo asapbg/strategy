@@ -35,7 +35,15 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->regNum }}</td>
-                            <td>{{ $item->institution ? $item->institution->name : '---' }}</td>
+                            <td>
+                                @if($item->institutions->count())
+                                    @foreach($item->institutions as $i)
+                                        {{ $i->name }}<br>
+                                    @endforeach
+                                @else
+                                    ---
+                                @endif
+                            </td>
                             <td>{!! $item->about !!}</td>
                             <td>{{ $item->legal_act_type_id ? $item->actType->name : '---' }}</td>
                             <td>{{ $item->published_at ? displayDate($item->published_at) : '---' }}</td>
