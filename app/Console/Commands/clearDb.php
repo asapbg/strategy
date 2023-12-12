@@ -62,7 +62,6 @@ class clearDb extends Command
                 }
                 DB::table('tag')->truncate();
                 DB::table('tag_translations')->truncate();
-
                 break;
             case 'users':
                 DB::table('model_has_roles')->truncate();
