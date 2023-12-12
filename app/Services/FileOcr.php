@@ -57,7 +57,7 @@ class FileOcr
     {
         try {
             $file = escapeshellarg(Storage::disk('public_uploads')->path($this->file->path));
-            $text = shell_exec($this->doc_to_text_env_path.' -m utf-8 -w 0 '.$file);
+            $text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file);
             $clearText = html_entity_decode(trim($text));
             $this->file->file_text = $clearText;
             $this->file->save();
