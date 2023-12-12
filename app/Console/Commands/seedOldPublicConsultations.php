@@ -168,7 +168,7 @@ class seedOldPublicConsultations extends Command
                                 }
                                 $newPc->save();
 
-                                $oldDbComments = DB::connection('old_strategy')
+                                $oldDbComments = DB::connection('old_strategy_app')
                                     ->select('select
                                         pcomments.createdbyuserid as user_id,
                                         pcomments.title || \'\n\' || pcomments."text" as content,
