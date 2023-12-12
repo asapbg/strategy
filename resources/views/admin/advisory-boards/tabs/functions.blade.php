@@ -84,7 +84,7 @@
                                                                 @endif
                                                             @endcan
 
-                                                              @can('restore', $item)
+                                                            @can('restore', $item)
                                                                 @if($working_program->deleted_at)
                                                                     <a href="javascript:;"
                                                                        class="btn btn-sm btn-success js-toggle-restore-resource-modal"
@@ -128,12 +128,12 @@
                                                     @if(!$view_mode)
                                                         <div class="col-auto">
                                                             <div class="custom-control custom-switch">
-                                                                @php $checked = request()->get('show_deleted_custom_files', '0') == '1' ? 'checked' : '' @endphp
+                                                                @php $checked = request()->get('show_deleted_functions_files', '0') == '1' ? 'checked' : '' @endphp
                                                                 <input type="checkbox" class="custom-control-input"
-                                                                       id="show_deleted_custom_files"
-                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'custom')">
+                                                                       id="show_deleted_functions_files"
+                                                                       {{ $checked }} onchange="toggleDeletedFiles(this, 'functions')">
                                                                 <label class="custom-control-label"
-                                                                       for="show_deleted_custom_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                                                       for="show_deleted_functions_files">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -142,13 +142,13 @@
 
                                             <div class="col-auto">
                                                 @if(!$view_mode)
-                                                    {{--                                                    <button type="button" class="btn btn-success"--}}
-                                                    {{--                                                            data-toggle="modal"--}}
-                                                    {{--                                                            data-target="#modal-add-custom-file"--}}
-                                                    {{--                                                            onclick="setSectionFileObjectId('{{ $section->id }}')">--}}
-                                                    {{--                                                        <i class="fa fa-plus mr-3"></i>--}}
-                                                    {{--                                                        {{ __('custom.add') . ' ' . __('custom.file') }}--}}
-                                                    {{--                                                    </button>--}}
+                                                    <button type="button" class="btn btn-success"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-add-function-file"
+                                                            onclick="setFunctionFileObjectId('{{ $working_program->id }}')">
+                                                        <i class="fa fa-plus mr-3"></i>
+                                                        {{ __('custom.add') . ' ' . __('custom.file') }}
+                                                    </button>
                                                 @endif
                                             </div>
                                         </div>
@@ -168,3 +168,11 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        function setFunctionFileObjectId(id) {
+            FUNCTIONS_FILE.querySelector('input[name=object_id]').value = id;
+        }
+    </script>
+@endpush

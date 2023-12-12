@@ -229,7 +229,11 @@ class AdvisoryBoardController extends AdminController
         $item = $query->with(['advisoryFunctions' => function ($query) {
             $query->when(request()->get('show_deleted_functions', 0) == 1, function ($query) {
                 $query->withTrashed();
-            })->with('files');
+            })->with('files', function ($query) {
+                $query->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
+                    $query->withTrashed();
+                });
+            });
         }])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
