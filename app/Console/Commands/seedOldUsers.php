@@ -169,7 +169,7 @@ class seedOldUsers extends Command
         //records per query
         $step = 50;
         //max id in old db
-        $maxOldId = DB::connection('old_strategy')->select('select max(dbo.users.userid) from dbo.users');
+        $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.users.userid) from dbo.users');
         //start from this id in old database
         $currentStep = (int)DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
 
@@ -177,7 +177,7 @@ class seedOldUsers extends Command
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
                 echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('old_strategy')
+                $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
                         -- usercategoryaccess table ?????
                         -- institution_id ??????????????

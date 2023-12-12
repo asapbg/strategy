@@ -17,7 +17,7 @@ class CommentsController extends AdminController
         $requestFilter = $request->all();
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? Comments::PAGINATE;
-        $items = Comments::with(['author'])->FilterBy($requestFilter)->paginate($paginate);
+        $items = Comments::with(['author'])->FilterBy($requestFilter)->orderBy('created_at', 'desc')->paginate($paginate);
         return $this->view('admin.consultations.comments.index', compact('items', 'filter'));
     }
 
