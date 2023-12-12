@@ -40,10 +40,10 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
-        $institutions = Institution::withoutTrashed()->get();
+        $institutions = Institution::with('translations')->withoutTrashed()->get();
         $strategicDocuments = $this->prepareResults($request);
-        $policyAreas = PolicyArea::all();
-        $preparedInstitutions = AuthorityAcceptingStrategic::all();
+        $policyAreas = PolicyArea::with('translations')->get();
+        $preparedInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $strategicDocumentsCommonService = app(CommonService::class);
@@ -69,9 +69,9 @@ class StrategicDocumentsController extends Controller
         }
 
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
-        $ekateAreas = EkatteArea::all();
-        $ekateMunicipalities = EkatteMunicipality::all();
-        $prisActs = Pris::all();
+        $ekateAreas = EkatteArea::with('translations')->get();
+        $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
+        $prisActs = Pris::with('translations')->get();
         $pageTitle = trans('custom.strategy_documents_plural');
         $title_text = trans('custom.are_you_sure_to_delete');
         $continue_btn_text = trans('custom.delete');
@@ -102,7 +102,6 @@ class StrategicDocumentsController extends Controller
             $strategicDocumentsHtml = $this->prepareStrategicDocumentsHtml($strategicDocuments, $editRouteName, $deleteRouteName);
             $pagination = $strategicDocuments->links()->toHtml();
         }
-
         return response()->json(['strategic_documents' => $strategicDocumentsHtml, 'pagination' => $pagination]);
     }
 
@@ -271,10 +270,9 @@ class StrategicDocumentsController extends Controller
             $strategicDocumentsHtml .= '</div>';
 
             $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= $document->category;
             $strategicDocumentsHtml .= '<a class="text-decoration-none mb-3" href="' . route('strategy-document.view', [$document->id]) . '">';
             $strategicDocumentsHtml .= '<i class="bi bi-mortarboard-fill me-1" role="button" title="Образование">';
-            $strategicDocumentsHtml .= $document->policyArea->name;
+            $strategicDocumentsHtml .= $document->policyArea?->name;
             $strategicDocumentsHtml .= '</i>';
             $strategicDocumentsHtml .= '</a>';
 
@@ -309,7 +307,8 @@ class StrategicDocumentsController extends Controller
 
         $parsedUrl = parse_url($searchUrl);
         parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
-        $strategicDocuments = StrategicDocument::with(['policyArea.translations', 'documentLevel', 'translations', 'acceptActInstitution'])->where('active', 1);
+        $strategicDocuments = StrategicDocument::with(['user.institution.translations', 'policyArea.translations', 'documentLevel.translations', 'translations', 'acceptActInstitution.translations', 'ekatteArea.translations', 'ekatteManiputlicity.translations'])->where('active', 1);
+
         $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');
         $categories = Arr::get($queryParams, 'category') ?? $request->input('category');
         $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');
@@ -480,6 +479,7 @@ class StrategicDocumentsController extends Controller
         }
 
         if ($preparedInstitutions) {
+
             $preparedInstitutionsArray = explode(',', $preparedInstitutions);
             $strategicDocuments->where(function($query) use ($preparedInstitutionsArray) {
                 $query->when(in_array('all', $preparedInstitutionsArray), function($query) {
@@ -491,6 +491,7 @@ class StrategicDocumentsController extends Controller
                 });
             });
         }
+
         if ($documentType != 'null') {
             $strategicDocuments->where(function($query) use ($documentType) {
                 $query->where('strategic_document_type_id', $documentType);
