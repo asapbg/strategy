@@ -323,18 +323,33 @@ class  UsersController extends Controller
         $channel = $request->offsetGet('channel');
         $model = $request->offsetGet('model');
         $model_id = $request->offsetGet('model_id');
+        $route_name = $request->offsetGet('route_name');
+        $is_subscribed = $request->offsetGet('is_subscribed');
 
         try {
 
-            UserSubscribe::create([
-                'user_id' => $user->id,
-                'subscribable_type' => $model,
-                'subscribable_id' => $model_id,
-                'condition' => UserSubscribe::CONDITION_PUBLISHED,
-                'channel' => ($channel == "")
-            ]);
+            $userSubscribe = UserSubscribe::updateOrCreate([
+                    'user_id' => $user->id,
+                    'subscribable_type' => $model,
+                    'subscribable_id' => $model_id,
+                    'route_name' => $route_name,
+                    'condition' => UserSubscribe::CONDITION_PUBLISHED,
+                    'channel' => $channel
+                ],
+                [
+                    'is_subscribed' => $is_subscribed
+                ]
+            );
 
-            return response()->json(['success' => true, 'message' => __('You have subscribed successfully')]);
+            $subscribe[$route_name] = $userSubscribe->toArray();
+            $session_s = session('subscriptions');
+            $new_session = array_merge($session_s, $subscribe);
+            session(['subscriptions' => $new_session]);
+
+            $message = ($is_subscribed == UserSubscribe::SUBSCRIBED)
+                ? __('You have subscribed successfully')
+                : __('You have unsubscribed successfully');
+            return response()->json(['success' => true, 'message' => $message]);
 
         } catch (Exception $e) {
 

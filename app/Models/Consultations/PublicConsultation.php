@@ -17,11 +17,13 @@ use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
+use App\Models\UserSubscribe;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModelActivityExtend;
 
@@ -538,5 +540,13 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             })
             ->orderBy('public_consultation_translations.title', 'asc')
             ->get();
+    }
+
+    /**
+     * @return morphMany
+     */
+    public function subscriptions()
+    {
+        return $this->morphMany(UserSubscribe::class, 'subscribable');
     }
 }

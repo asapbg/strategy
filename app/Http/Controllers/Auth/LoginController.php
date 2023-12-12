@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserSubscribe;
 use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -86,7 +87,8 @@ class LoginController extends Controller
 
         // First check if the user is active or
         // has entered a password after the account was created
-        $user = $model::where('username', $username)
+        $user = $model::with('subscriptions')
+            ->where('username', $username)
             ->orWhere('email', $username)
             ->first();
         if (!$user) {
@@ -134,6 +136,18 @@ class LoginController extends Controller
 
             $user->last_login_at = Carbon::now();
             $user->save();
+
+            $subscriptions = $user->subscriptions()
+                ->where('is_subscribed', UserSubscribe::SUBSCRIBED)
+                ->get();
+            if ($subscriptions->count() > 0) {
+                foreach ($subscriptions as $subscription) {
+                    $subscriptions[$subscription->route_name] = $subscription->toArray();
+                }
+            } else {
+                $subscriptions = [];
+            }
+            session(['subscriptions' => $subscriptions]);
 
             \Auth::logoutOtherDevices(request('password'));
             $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin' : $this->redirectPath();

@@ -44,7 +44,7 @@ class ViewServiceProvider extends ServiceProvider
             $contactMail = Cache::get($currentMenuKey);
             if( is_null($contactMail) ) {
                 $contactMail = Setting::where('name', '=', $currentMenuKey)->first();
-                Log::error('Search mail in db');
+                //Log::error('Search mail in db');
                 if(!$contactMail) {
                     $contactMail = '---';
                 } else{

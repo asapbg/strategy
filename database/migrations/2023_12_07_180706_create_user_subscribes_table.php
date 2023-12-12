@@ -13,11 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('user_subscribes');
+
         Schema::create('user_subscribes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('subscribable_type');
             $table->integer('subscribable_id')->nullable();
+            $table->string('route_name')->nullable();
             $table->smallInteger('condition');
             $table->smallInteger('channel');
             $table->json('search_filters')->nullable();

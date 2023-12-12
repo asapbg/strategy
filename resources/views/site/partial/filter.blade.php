@@ -137,12 +137,7 @@
         </div>
 
         <div class="col-md-6 text-end">
-            <button class="btn rss-sub main-color subscribe" data-channel="{{ App\Models\UserSubscribe::CHANNEL_RSS }}">
-                <i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
-            </button>
-            <button class="btn email-sub main-color subscribe" data-channel="{{ App\Models\UserSubscribe::CHANNEL_EMAIL }}">
-                <i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}
-            </button>
+            @includeIf('site.partial.subscribe-buttons')
             @if(isset($btn_add) && $btn_add)
             <a class="btn btn-success text-success"
                 href="@if(isset($add_url) && $add_url){{ $add_url }}@else{{ '#' }}@endif" target="_blank"><i

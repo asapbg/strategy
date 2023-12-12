@@ -1,9 +1,16 @@
 <tr>
 <td class="header">
-@if (trim($slot) === 'Laravel')
-<img src="https://laravel.com/img/notification-logo.png" class="logo" alt="Laravel Logo">
-@else
-{{ $slot }}
-@endif
+<div class="contact-info">
+<div class="float-left">
+<a class="navbar-brand logo-link" href="{{ $url }}">
+<img src="{{ asset('/img/strategy-logo.svg') }}" alt="Strategy Лого" id="siteLogo">
+</a>
+</div>
+<div class="float-left text-left">
+<b class="main-color fw-600" id="ms">Министерски съвет</b><br>
+<b class="fw-600" id="ok">Портал за обществени консултации</b>
+</div>
+</div>
 </td>
 </tr>
+

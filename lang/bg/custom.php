@@ -567,6 +567,7 @@ return [
     'export' => 'Експорт',
     'rss_subscribe'      => 'RSS',
     'subscribe'      => 'Абониране',
+    'unsubscribe'      => 'Отписване',
     'document_to'   => 'Документът е към',
     'public_consultation_link'   => 'Линк към обществена консултация',
     'link_to_oc'   => 'Линк към ОК',

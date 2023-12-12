@@ -142,7 +142,7 @@ img {
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
     margin: 0 auto;
     padding: 0;
-    width: 570px;
+    width: 100%;
 }
 
 /* Subcopy */
@@ -287,4 +287,21 @@ img {
 
 .break-all {
     word-break: break-all;
+}
+.main-color {
+    color: #21659e!important;
+}
+.text-left {
+    text-align: left;
+}
+.float-left {
+    float:left;
+}
+.logo-link {
+    border-right: 2px solid #20659e;
+    margin: 0 1rem;
+    padding: 0 1rem;
+}
+.contact-info-text {
+    text-align: left;
 }

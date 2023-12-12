@@ -188,6 +188,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's subscriptions
+     *
      * @return HasMany
      */
     public function subscriptions()
@@ -195,4 +197,21 @@ class User extends Authenticatable
         return $this->hasMany(UserSubscribe::class);
     }
 
+    /**
+     * Check if the current user is subscribed to the current route's model
+     * for the given channel
+     *
+     * @param $channel
+     * @return bool
+     */
+    public static function isSubscribed($channel)
+    {
+        $route_name = request()->route()->getName();
+
+        return (
+            array_key_exists($route_name, session('subscriptions'))
+            && session('subscriptions')[$route_name]['channel'] == $channel
+            && session('subscriptions')[$route_name]['is_subscribed'] == UserSubscribe::SUBSCRIBED
+        );
+    }
 }

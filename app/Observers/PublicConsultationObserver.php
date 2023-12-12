@@ -7,8 +7,6 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\User;
 use App\Models\UserSubscribe;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PublicConsultationObserver
 {
@@ -21,10 +19,7 @@ class PublicConsultationObserver
     public function created(PublicConsultation $publicConsultation)
     {
         if ($publicConsultation->active) {
-
             $this->sendEmails($publicConsultation, 'created');
-
-            Log::info('Send subscribe email on creation');
         }
     }
 
@@ -39,41 +34,53 @@ class PublicConsultationObserver
         $old_active = $publicConsultation->getOriginal('active');
 
         if (!$old_active && $publicConsultation->active) {
-
             $this->sendEmails($publicConsultation, 'updated');
-
-            Log::info('Send subscribe email on update');
         }
     }
 
     /**
+     * Send emails to all administrators, moderators and subscribed users
+     *
      * @param PublicConsultation $publicConsultation
+     * @param $event
      * @return void
      */
     private function sendEmails(PublicConsultation $publicConsultation, $event): void
     {
-        $adminUsers = null;
+        $administrators = null;
+        $moderators = null;
         if ($event == "created") {
-            $adminUsers = User::whereActive(true)
-                ->whereHas('hasRole', function ($q) {
-                    $q->where('name', CustomRole::ADMIN_USER_ROLE);
-                })->get();
+            $administrators = User::whereActive(true)
+                ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                ->get();
+            $moderator_roles = CustomRole::select('name')
+                ->where('name', 'ILIKE', 'moderator-%')
+                ->get()
+                ->pluck('name')
+                ->toArray();
+            $moderators = User::whereActive(true)
+                ->hasRole($moderator_roles)
+                ->where('institution_id', $publicConsultation->importer_institution_id)
+                ->get()
+                ->unique('id');
         }
         $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', true)
+            ->where('is_subscribed', UserSubscribe::SUBSCRIBED)
             ->get();
 
-        if (!$adminUsers && $subscribedUsers->count() == 0) {
+        if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;
         }
 
         $data['event'] = $event;
-        $data['adminUsers'] = $adminUsers;
+        $data['administrators'] = $administrators;
+        $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $publicConsultation;
         $data['markdown'] = 'public-consultation';
+
         SendSubscribedUserEmailJob::dispatch($data);
     }
 

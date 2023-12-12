@@ -1,4 +1,8 @@
 var canAjax = true;
+
+const SUBSCRIBED = 1;
+const UNSUBSCRIBED = 0;
+
 toastr.options = {
     "closeButton": true,
     "debug": false,
@@ -453,20 +457,62 @@ $(document).ready(function () {
     // Subscribe
     $(document).on('click', 'button.subscribe', function (e) {
         e.preventDefault();
-        let channel = $(this).data('channel');
+        let btn = $(this);
+        let channel = $(btn).data('channel');
         let model = $("#subscribe_model").val();
+        let route_name = $("#subscribe_route_name").val();
+        let text = $("#unsubscribe_text").val();
 
         $.ajax({
             type: 'GET',
             url: "/subscribe",
             data: {
                 channel: channel,
-                model: model
+                model: model,
+                route_name: route_name,
+                is_subscribed: SUBSCRIBED
             },
             success: function (res) {
                 if (res.success) {
                     $("#executors-results").html(res);
                     HideLoadingSpinner();
+                    $(btn).find('span').html(text);
+                    $(btn).removeClass('subscribe').addClass('unsubscribe');
+                    toastr.success(res.message);
+                } else {
+                    showModalAlert(res.message);
+                }
+            },
+            error: function () {
+                toastr.error('Възникна грешка, моля опитайте отново по-късно');
+            }
+        });
+    });
+
+    // Unsubscribe
+    $(document).on('click', 'button.unsubscribe', function (e) {
+        e.preventDefault();
+        let btn = $(this);
+        let channel = $(btn).data('channel');
+        let model = $("#subscribe_model").val();
+        let route_name = $("#subscribe_route_name").val();
+        let text = $("#subscribe_text").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "/subscribe",
+            data: {
+                channel: channel,
+                model: model,
+                route_name: route_name,
+                is_subscribed: UNSUBSCRIBED
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#executors-results").html(res);
+                    HideLoadingSpinner();
+                    $(btn).find('span').html(text);
+                    $(btn).removeClass('unsubscribe').addClass('subscribe');
                     toastr.success(res.message);
                 } else {
                     showModalAlert(res.message);

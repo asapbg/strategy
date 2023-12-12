@@ -89,7 +89,7 @@
     <div id="ajax-pagination" class="row">
         <div class="card-footer mt-2">
             @if($executors->count() > 0 && $executors instanceof Illuminate\Pagination\LengthAwarePaginator)
-                {{ $executors->appends(request()->query())->links() }}
+                {{ $executors->onEachSide(0)->appends(request()->query())->links() }}
             @endif
         </div>
     </div>
