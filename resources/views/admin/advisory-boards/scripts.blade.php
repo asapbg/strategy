@@ -7,8 +7,12 @@
          */
         function goToArchive(id) {
             const archive_url = @json(route('admin.advisory-boards.edit', $item) . '?archive_category=:id#archive');
-            window.location = archive_url.replace(':id', id);
-            window.location.reload();
+
+            window.location.href = archive_url.replace(':id', id);
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 500)
         }
 
         /**
