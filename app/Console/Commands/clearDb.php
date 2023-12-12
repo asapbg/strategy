@@ -43,7 +43,7 @@ class clearDb extends Command
 
         switch ($section){
             case 'pris':
-                $fromId = (int)DB::table('pris')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
+                $fromId = DB::table('pris')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
                     DB::table('pris_tag')->where('pris_id', '>=', $fromId->id)->forceDelete();
                     DB::table('pris_change_pris')->where('pris_id', '>=', $fromId->id)->forceDelete();
