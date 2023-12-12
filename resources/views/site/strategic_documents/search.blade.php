@@ -15,7 +15,7 @@
          Това е подобно на сегашната функционалност:
         -->
         <div class="dropdown d-inline">
-            <button class="btn btn-primary main-color dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-download main-color me-2"></i>
                 Експорт
             </button>
@@ -26,7 +26,7 @@
                 <li><a id="csv_export" class="dropdown-item" href="#">Експорт като Csv</a></li>
             </ul>
         </div>
-        <button id="documents_report" class="btn btn-primary main-color dropdown-toggle mt-2 mb-2" type="button" data-toggle="dropdown" aria-expanded="false">
+        <button id="documents_report" class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button" data-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-download main-color me-2"></i>
             Справка с всички документи
         </button>
@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Търсене в
@@ -111,7 +111,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Валидна от:</label>
@@ -124,7 +124,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Валидна до:</label>
@@ -137,25 +137,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-1">
-        <div class="input-group">
-            <div class="mb-3 d-flex flex-column w-100">
-                <label for="date_expiring_indefinite_checkbox" class="form-label">Безсрочна:</label>
-                <div class="input-group">
-                    <div class="mb-3 d-flex flex-column w-100">
-                        <div class="form-check form-switch">
-                            <input type="hidden" name="date_expiring_indefinite" value="0">
-                            <input type="checkbox" id="date_expiring_indefinite_checkbox" name="date_expiring_indefinite"
-                                   class="form-check-input" value="1">
-                            <label class="form-check-label" for="date_expiring_indefinite_checkbox">Безсрочна</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
@@ -171,7 +154,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.prepared_administration', 1) }}</label>
@@ -181,6 +164,23 @@
                         <option value="{{ $institution->id }}">{{ $institution->name }}</option>
                     @endforeach
                 </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <div class="mb-3 d-flex flex-column w-100">
+                <label for="date_expiring_indefinite_checkbox" class="form-label">Безсрочна:</label>
+                <div class="input-group">
+                    <div class="mb-3 d-flex flex-column w-100">
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="date_expiring_indefinite" value="0">
+                            <input type="checkbox" id="date_expiring_indefinite_checkbox" name="date_expiring_indefinite"
+                                   class="form-check-input" value="1">
+                            <label class="form-check-label" for="date_expiring_indefinite_checkbox">Безсрочна</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

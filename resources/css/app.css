@@ -47,6 +47,10 @@
     line-height: normal;
 }
 
+.no-wrap {
+    text-wrap: nowrap;
+}
+
 .home-page-section {
     padding: 60px 0px;
 }
@@ -1270,6 +1274,37 @@ input#startdate {
         margin-right: 0.5rem;
   } */
 
+.str-doc-tabs {
+    display: inline-block;
+    border: unset !important;
+}
+
+.str-doc-tabs .nav-link.tablinks.active {
+    font-size: 14px !important;
+    background: #21659e;
+    border: unset !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+    padding: 4px !important;
+    line-height: normal;
+}
+
+.str-doc-tabs .nav-link.tablinks{
+    font-size: 14px !important;
+    border: unset !important;
+    color:#212529 !important;
+    padding: 4px !important;
+    line-height: normal;
+}
+
+.str-doc-tabs .nav-link.tablinks.active:hover {
+    text-decoration: underline;
+}
+
+.str-doc-tabs li.nav-item {
+display: flex;
+}
+
 .easy-tree li {
     list-style-type: none;
     margin: 0;
@@ -1705,6 +1740,7 @@ li.timeline-item:last-child {
 
 .active-item-left a {
   color:#fff !important;
+  line-height: normal;
 }
 
 .active-item-left a:hover {
