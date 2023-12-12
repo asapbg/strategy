@@ -40,6 +40,7 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
+        ini_set('memory_limit', '1024M');
         $institutions = Institution::with('translations')->withoutTrashed()->get();
         $strategicDocuments = $this->prepareResults($request);
         $policyAreas = PolicyArea::with('translations')->get();
