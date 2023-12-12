@@ -1,8 +1,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            loadStrategyDocuments();
-
+            setTimeout(function() {
+                const url = buildUrl();
+                loadStrategyDocuments(1, url);
+            }, 100);
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
@@ -321,6 +323,8 @@
                 const params = getUrlParameters();
                 const theOrderBy = params['order_by'];
                 const theDirection = params['direction'];
+                const documentType = params['document-type'] ?? null;
+
                 const url =  '/strategy-documents/search?policy-area=' + encodeURIComponent(policyAreaSelectedIds) +
                     '&category=' + encodeURIComponent(categorySelect.val()) +
                     '&category-lifecycle=' + encodeURIComponent(categorySelectLivecycleSelect.val()) +
@@ -334,6 +338,7 @@
                     '&order_by=' + encodeURIComponent(theOrderBy) +
                     '&direction=' +  encodeURIComponent(theDirection) +
                     '&prepared-institution=' + encodeURIComponent(administrationSelect.val()) +
+                    '&document-type=' + encodeURIComponent(documentType) +
                     '&view=' + encodeURIComponent(view) + '&export=' + doExport + '&document-report=' + documentReport
                     + '&ekate-area=' + ekateAreasId.val() + '&ekate-municipality=' + ekateMunicipalitiesId.val() + '&pris-acts=' + prisAct.val();//prisAct
                 doExport = null;
@@ -361,13 +366,11 @@
             function loadStrategyDocuments(page = 1, search = '', view = '') {
                 let targetContainer = view === 'tree-view' ? '#tree-view' : '#table-view';
                 let otherContainer = view === 'tree-view' ? '#table-view' : '#tree-view';
-
                 ShowLoadingSpinner();
                 $.ajax({
                     url: '{{ route("strategy-document.list") }}',
                     type: 'GET',
                     data: { page: page, search: search },
-                    //timeout: 5000,
                     success: function (response) {
                         $(targetContainer).empty();
                         $(targetContainer).html(response.strategic_documents);
