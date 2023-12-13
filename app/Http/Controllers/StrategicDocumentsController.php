@@ -23,6 +23,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\Paginator;
@@ -589,5 +590,25 @@ class StrategicDocumentsController extends Controller
         }
 
         return $categoriesData;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loadPrisOptions(Request $request): JsonResponse
+    {
+        $strategicDocumentsCommonServce = app(CommonService::class);
+        $prictActs = $strategicDocumentsCommonServce->prisActSelect2Search($request);
+        $prictActs = $prictActs->paginate(20);
+        return response()->json([
+            'items' => $prictActs->map(function ($prictAct) {
+                return [
+                    'id' => $prictAct->id,
+                    'text' => $prictAct->displayName
+                ];
+            }),
+            'more' => $prictActs->hasMorePages()
+        ]);
     }
 }

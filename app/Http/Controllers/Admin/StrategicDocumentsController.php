@@ -104,7 +104,7 @@ class StrategicDocumentsController extends AdminController
         $legalActTypes = LegalActType::with('translations')->get();
 
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
-        $consultations = PublicConsultation::with('translations')->get();
+        $consultations = PublicConsultation::Active()->with('translations')->get();
         $documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->sortByDesc('version')->first();
         $mainFiles = $item->files->where('is_main', true);
