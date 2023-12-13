@@ -22,6 +22,43 @@
                 multiple: true
             });
             const prisAct = $('#pris_act_ids');
+            const loadPrisOptions = () => {
+                $.ajax({
+                    success: function(data) {
+                        prisAct.select2({
+                            data: data.items,
+                            placeholder: '--',
+                            //minimumInputLength: 1,
+                            ajax: {
+                                url: '/strategy-document/load-pris-acts',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (ajaxData) {
+                                    return {
+                                        results: ajaxData.items,
+                                        pagination: {
+                                            more: ajaxData.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        setTimeout(function() {
+                            prisAct.trigger('query', {});
+                            console.log('trigger query');
+                        }, 250);
+                    }
+                });
+            }
+            loadPrisOptions();
 
             administrationSelect.val('').trigger('change');
             documentLevelSelect.val('').trigger('change');
