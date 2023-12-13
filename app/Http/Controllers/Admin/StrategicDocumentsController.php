@@ -122,12 +122,20 @@ class StrategicDocumentsController extends AdminController
             $query->where('locale', $currentLocale);
         })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
 
-
         $user = auth()->user();
         $adminUser = $user->hasRole('service_user') || $user->hasRole('super-admin');
 
         if ($user->hasRole('service_user') || $user->hasRole('super-admin')) {
-            $authoritiesAcceptingStrategic = $item->accept_act_institution_type_id ? AuthorityAcceptingStrategic::with('translations')->where('id', $item->accept_act_institution_type_id)->get() : AuthorityAcceptingStrategic::with('translations')->get();
+            //$authoritiesAcceptingStrategic = $item->accept_act_institution_type_id ? AuthorityAcceptingStrategic::with('translations')->where('id', $item->accept_act_institution_type_id)->get() : AuthorityAcceptingStrategic::with('translations')->get();
+            $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')
+                ->when($item->accept_act_institution_type_id, function ($query) use ($item) {
+                    // Load specific records when item is 1
+                    if ($item->accept_act_institution_type_id == 2 || $item->accept_act_institution_type_id == 1) {
+                        return $query->whereIn('id', [1,2]);
+                    }
+                    return $query->where('id', $item->accept_act_institution_type_id);
+                })->get();
+
             $strategicDocumentLevels = StrategicDocumentLevel::with('translations')->get();
             $ekateAreas = $ekateAreas->get();
             $ekateMunicipalities = $ekateMunicipalities->get();
@@ -142,7 +150,6 @@ class StrategicDocumentsController extends AdminController
             $authoritiesAcceptingStrategic = Arr::get($userInstitutions,'authority_accepting_strategic');
             $strategicDocumentLevels = Arr::get($userInstitutions,'strategic_document_level');
         }
-
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
@@ -607,7 +614,7 @@ class StrategicDocumentsController extends AdminController
             foreach ($prisActs as $prisAct) {
                 $prisOptions[] = [
                     'id' => $prisAct->id,
-                    'text' => $prisAct->displayName,//$prisAct->actType->name . ' N' . $prisAct->doc_num . ' ' . $prisAct->doc_date,
+                    'text' => $prisAct->displayName,
                 ];
             }
 
@@ -667,30 +674,12 @@ class StrategicDocumentsController extends AdminController
 
     public function loadPrisActs(Request $request)
     {
-        $term = $request->input('term');
-        $filter = request()->input('filter');
-        $paginatedResults = 20;
-        $prisActs = Pris::with('translations');
-        if (!empty($filter)) {
-            $filterParts = explode('=', $filter);
-            $key = Arr::get($filterParts, 0);
+        $strategicDocumentId = $request->get('strategicDocumentId');
+        $strategicDocumentsCommonService = app(CommonService::class);
+        $prisActs = $strategicDocumentsCommonService->prisActSelect2Search($request);
+        $prisActs = $prisActs->paginate(20);
 
-            $value = Arr::get($filterParts, 1);
-            if ($key == 'legal-act-type-id') {
-                if ($value != 'all') {
-                    $prisActs = Pris::where('legal_act_type_id', $value);
-                }
-            }
-        }
-
-        if ($term) {
-            $prisActs = $prisActs->where('doc_num', 'like', '%' . $term . '%')
-                ->orWhere('doc_date', 'like', '%' . $term . '%')->orWhereHas('actType.translations', function($query) use ($term) {
-                    $query->where('name', 'ilike', '%' . $term . '%');
-                });
-        }
-        $prisActs = $prisActs->paginate($paginatedResults);
-        return response()->json([
+        $prisOptions = [
             'items' => $prisActs->map(function ($prisAct) {
                 return [
                     'id' => $prisAct->id,
@@ -698,7 +687,23 @@ class StrategicDocumentsController extends AdminController
                 ];
             }),
             'more' => $prisActs->hasMorePages()
-        ]);
+        ];
+
+        if ($strategicDocumentId) {
+            $currentPrisOption = StrategicDocument::find($strategicDocumentId)?->pris;
+            if ($currentPrisOption) {
+                $customOption = [
+                    'id' => $currentPrisOption->id,
+                    'text' => $currentPrisOption->displayName,
+                ];
+                array_unshift($prisOptions['items'], $customOption);
+                $prisOptions['items'][0]['selected'] = true;
+            }
+        }
+
+        return response()->json(
+            $prisOptions,
+        );
     }
 
 }
