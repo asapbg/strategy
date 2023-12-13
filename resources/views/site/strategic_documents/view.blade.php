@@ -244,11 +244,11 @@
                                                     <div class="row file-content">
                                                         <div class="col-md-12">
                                                             @if ($mainDocument->content_type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
+                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
                                                                     Your browser does not support iframes.
                                                                 </iframe>
                                                             @elseif ($mainDocument->content_type === 'application/msword')
-                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
+                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
                                                                     Your browser does not support iframes.
                                                                 </iframe>
                                                             @else
@@ -335,13 +335,12 @@
                                                     </div>
                                                     <div class="row file-content">
                                                         <div class="col-md-12">
-
                                                             @if ($strategicDocumentFile['content_type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
+                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
                                                                     Your browser does not support iframes.
                                                                 </iframe>
                                                             @elseif ($strategicDocumentFile['content_type'] === 'application/msword')
-                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
+                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
                                                                     Your browser does not support iframes.
                                                                 </iframe>
                                                             @else
