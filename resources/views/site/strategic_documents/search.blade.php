@@ -182,7 +182,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3" id="ekate_areas_div_id">
+    <div class="col-md-4" id="ekate_areas_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
@@ -195,7 +195,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3" id="ekate_municipalities_div_id">
+    <div class="col-md-4" id="ekate_municipalities_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
@@ -212,9 +212,9 @@
 <div class="row mb-5 action-btn-wrapper" id="searchButtons">
     <div class="col-md-3 col-sm-12">
         <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
-        <span class="btn rss-sub main-color clear" id="clearForm">
+        <button class="btn btn-primary main-color clear" id="clearForm">
             <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
-        </span>
+        </button>
     </div>
 
     <div class="col-md-9 text-end col-sm-12">
