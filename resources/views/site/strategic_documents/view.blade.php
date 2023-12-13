@@ -243,7 +243,17 @@
 
                                                     <div class="row file-content">
                                                         <div class="col-md-12">
-                                                            {{ $mainDocument->file_text }}
+                                                            @if ($mainDocument->content_type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
+                                                                    Your browser does not support iframes.
+                                                                </iframe>
+                                                            @elseif ($mainDocument->content_type === 'application/msword')
+                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
+                                                                    Your browser does not support iframes.
+                                                                </iframe>
+                                                            @else
+                                                                {{ $mainDocument->file_text }}
+                                                            @endif
                                                         </div>
                                                     </div>
 
@@ -255,11 +265,13 @@
                                                                 </span>
                                                             </div>
                                                         </div>
+                                                        <!--
                                                         <div class="col-md-6 text-end">
                                                             <a href="{{ route('strategy-document.download-file', ['id' => $mainDocument->id]) }}" title="Download" download class="btn btn-primary">
                                                                 {{ trans_choice('custom.download', 1) }}
                                                             </a>
                                                         </div>
+                                                        -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,7 +305,7 @@
                                     <li class="list-group-item">
                                         <div class="accordion p-0" id="accordionFile_{{ $strategicDocumentFile['id'] }}">
                                             <span type="button" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>{!! $strategicDocumentFile['text'] !!}
+                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>
                                                 <div class="preview-download d-inline">
                                                     <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
                                                     <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
@@ -323,7 +335,18 @@
                                                     </div>
                                                     <div class="row file-content">
                                                         <div class="col-md-12">
-                                                            {{ $strategicDocumentFile['file_text'] }}
+
+                                                            @if ($strategicDocumentFile['content_type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
+                                                                    Your browser does not support iframes.
+                                                                </iframe>
+                                                            @elseif ($strategicDocumentFile['content_type'] === 'application/msword')
+                                                                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
+                                                                    Your browser does not support iframes.
+                                                                </iframe>
+                                                            @else
+                                                                {{ $strategicDocumentFile['file_text'] }}
+                                                            @endif
                                                         </div>
                                                     </div>
 
