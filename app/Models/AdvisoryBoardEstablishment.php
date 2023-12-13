@@ -10,33 +10,29 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property int $advisory_board_id
- * @property int $order
- *
- * @method static where(string $string, int $id)
- * @method static find(mixed $section_id)
  */
-class AdvisoryBoardCustom extends ModelActivityExtend
+class AdvisoryBoardEstablishment extends ModelActivityExtend
 {
 
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const MODULE_NAME = ('custom.advisory_board_custom');
-    const TRANSLATABLE_FIELDS = ['title', 'body'];
+    const MODULE_NAME = ('custom.advisory_board_establishments');
+    const TRANSLATABLE_FIELDS = ['description'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
 
     //activity
-    protected string $logName = "advisory_board_custom";
+    protected string $logName = "advisory_board_establishments";
 
-    protected $fillable = ['advisory_board_id', 'order'];
+    protected $fillable = ['advisory_board_id'];
 
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
+            ->where('doc_type', DocTypesEnum::AB_ESTABLISHMENT_RULES->value);
     }
 
     /**
@@ -50,13 +46,9 @@ class AdvisoryBoardCustom extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'title' => [
+            'establishment_description' => [
                 'type' => 'string',
                 'rules' => ['required'],
-            ],
-            'body' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
             ],
         ];
     }

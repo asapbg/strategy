@@ -17,16 +17,23 @@
                     @csrf
 
                     <div class="row mb-2">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="control-label"
-                                       for="title">{{ __('validation.attributes.title') }}:</label>
-                                <input type="text" class="form-control form-control-sm" id="title" name="title"/>
-                                <div id="titleHelp" class="form-text">{{ __('custom.custom_section_title_help') }}.
+                        @foreach(config('available_languages') as $lang)
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label"
+                                           for="title_{{ $lang['code'] }}">{{ __('validation.attributes.title') }}
+                                        ({{ Str::upper($lang['code']) }})
+                                        :
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" class="form-control form-control-sm"
+                                           id="title_{{ $lang['code'] }}" name="title_{{ $lang['code'] }}"/>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
+                    </div>
 
+                    <div class="row mb-2">
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="control-label" for="order">

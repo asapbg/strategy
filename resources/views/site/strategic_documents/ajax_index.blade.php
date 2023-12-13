@@ -22,7 +22,7 @@
                         <hr class="custom-hr">
 
                         <div class="collapse show mt-3" id="home-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small nav nav-tabs str-doc-tabs" >
+                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small nav nav-tabs menu-tabs" >
                                 <li class="nav-item mb-2 p-0">
                                     <a href="#table-view" class="nav-link tablinks active p-1"
                                     data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
@@ -48,7 +48,7 @@
                     {!! $pageTopContent->value !!}
                 </div>
             @endif
-    
+
             <!--
             <ul class=" tab nav nav-tabs mb-3" id="myTab">
                 <li class="nav-item pb-0">
@@ -65,27 +65,27 @@
             @include('site.strategic_documents.search-script')
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="table-view">
-    
+
                 </div>
             </div>
-        
+
         <div class="col-md-12">
-    
+
             <div class="tab-content">
-    
+
                 <div class="tab-pane fade show active" id="table-view">
                     <div class="row" id="pagination-container">
                     </div>
                 </div>
                 <div class="tab-pane fade" id="tree-view">
                     <div class="easy-tree">
-    
+
                     </div>
                 </div>
             </div>
         </div>
         </div>
-    
+
         @php
             $cancel_btn_text = $cancel_btn_text ?? '';
             $continue_btn_text = $continue_btn_text ?? '';
@@ -94,7 +94,7 @@
         @endphp
     @endsection
     @push('scripts')
-    
+
         <script type="text/javascript">
             $(document).on('click', '.open-delete-modal', function () {
                 const form = $(this).parent().find('form').attr('name');
@@ -102,7 +102,7 @@
                 let continueTxt = @json($continue_btn_text);
                 let titleTxt =  @json($title_text);
                 let fileChangeWarningTxt = @json($file_change_warning_txt);
-    
+
                 new MyModal({
                     title: titleTxt,
                     footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + continueTxt + '</button>' +
@@ -111,7 +111,7 @@
                 });
             });
         </script>
-    
+
     @endpush
     @push('styles')
         <style>
@@ -127,12 +127,12 @@
                 z-index: 10000;
                 pointer-events: none;
             }
-    
+
             #overlay .spinner {
                 pointer-events: none;
             }
         </style>
     @endpush
-    
+
     </div>
 </div>

@@ -638,7 +638,10 @@
 @endpush
 @push('scripts')
     <script type="text/javascript">
+
         $(document).ready(function () {
+            const documentId = {!! json_encode(isset($item) ? (int)$item->id : null) !!};
+
             $("#stayButton").click(function () {
                 $("#stay").val("true");
             });
@@ -698,38 +701,118 @@
                 });
             }
 
+            prisAct.select2({
+                placeholder: '--',
+                minimumInputLength: 1
+            });
+            prisAct.prop('disabled', false);
+            const loadPrisOptions = (filter = '', documentId) => {
+                $.ajax({
+                    url: '/admin/strategic-documents/load-pris-acts',
+                    dataType: 'json',
+                    data: {
+                        filter: filter,
+                        documentId: documentId,
+                    },
+                    success: function(data) {
+                        const isSingleResult = data.items.length === 1;
+                        prisAct.prop('disabled', isSingleResult);
+                        prisAct.select2({
+                            data: data.items,
+                            placeholder: '--',
+                            //minimumInputLength: 1,
+                            ajax: {
+                                url: '/admin/strategic-documents/load-pris-acts',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+
+                                    return {
+                                        filter: filter,
+                                        documentId: documentId,
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (ajaxData) {
+                                    const isSingleResult = data.items.length === 1;
+                                    prisAct.prop('disabled', isSingleResult);
+
+                                    return {
+                                        results: ajaxData.items,
+                                        pagination: {
+                                            more: ajaxData.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        setTimeout(function() {
+                            prisAct.trigger('query', {});
+                        }, 200);
+                    }
+                });
+            }
+            loadPrisOptions('', documentId);
+
+            const parentDocumentSelect = $('#parent_document_id');
+            const loadParentStrategicDocumentOptions = (filter = '', documentId) => {
+                $.ajax({
+                    url: '/admin/strategic-documents/load-parents',
+                    dataType: 'json',
+                    data: {
+                        filter: filter,
+                        documentId: documentId,
+                    },
+                    success: function(data) {
+                        parentDocumentSelect.select2({
+                            data: data.items,
+                            placeholder: '--',
+                            //minimumInputLength: 1,
+                            ajax: {
+                                url: '/admin/strategic-documents/load-parents',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        filter: filter,
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (ajaxData) {
+                                    return {
+                                        results: ajaxData.items,
+                                        pagination: {
+                                            more: ajaxData.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        setTimeout(function() {
+
+                        }, 250);
+                    }
+                });
+            }
+            loadParentStrategicDocumentOptions();
+
             const prisOptions = $('#pris_options');
             prisOptions.select2();
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
                 if (selectedValue) {
-                    $.ajax({
-                        url: `/admin/strategic-documents/pris-option/${selectedValue}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            let prisOptions = data.prisOptions;
-                            let parentActId = $('#pris_act_id');
-                            parentActId.empty();
-
-                            parentActId.append('<option value="">---</option>');
-
-                            $.each(prisOptions, function (index, option) {
-                                let selected = (option.id == '{{ old('pris_act_id', $item->pris ? $item->pris?->id : null) }}') ? 'selected' : '';
-                                parentActId.append('<option value="' + option.id + '" ' + selected + '>' + option.text + '</option>');
-                            });
-
-                            parentActId.trigger('change');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX Error:', status, error);
-                        }
-                    });
+                    const filter = 'legal-act-type-id=' + selectedValue;
+                    prisAct.empty().trigger('change');
+                    loadPrisOptions(filter);
                 }
             });
-            //$('#accept_act_institution_type_id')
-            console.log($('#accept_act_institution_type_id').val());
 
             $('#accept_act_institution_type_id').on('change', function () {
                 let selectedValue = $(this).val();
@@ -744,7 +827,6 @@
 
             prisAct.on('change', function () {
                 const selectedValue = $(this).val();
-
                 if (selectedValue && !!manualPrisActId) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-details/${selectedValue}`,
@@ -753,11 +835,14 @@
                         success: function (data) {
                             $('#document_date_accepted').val(data.date).trigger('change');
                             const publicConsultationId = data.public_consultation_id;
-
+                            const legalActTypeId = data.legal_act_type_id;
                             if (publicConsultationId) {
                                 manualChangeConsultationId = false;
                                 $('#public_consultation_id').val(publicConsultationId).trigger('change.select2');
                                 manualChangeConsultationId = true;
+                            }
+                            if (legalActTypeId) {
+                                $('#the_legal_act_type_filter').val(legalActTypeId).trigger('change.select2');
                             }
                         },
                         error: function (xhr, status, error) {
@@ -768,77 +853,20 @@
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
-
+                let filter = '';
                 if (selectedValue && !!manualChangeConsultationId) {
-                    $.ajax({
-                        url: `/admin/strategic-documents/public-consultation-details/${selectedValue}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            const prisOptions = data.pris_options;
-                            prisAct.prop('disabled', false);
-                            if (prisOptions.length > 0) {
-                                manualPrisActId = false;
-                                if ($('#accept_act_institution_type_id').val() == 1) {
-                                    $('#document_date_accepted').val(data.date).trigger('change');
-                                    if (prisOptions.length === 1) {
-                                        prisAct.empty();
-                                        populatePris(prisOptions);
-                                        prisAct.prop('disabled', true);
-                                    } else {
-                                        populatePris(prisOptions);
-                                        prisAct.prop('disabled', false);
-                                    }
-
-                                    $('#the_legal_act_type_filter').prop('disabled', true);
-                                    manualPrisActId = true;
-                                    const legalActTypeId = data.legal_act_type_id;
-
-                                    if (legalActTypeId) {
-                                        $('#the_legal_act_type_filter').val(legalActTypeId).trigger('change.select2');
-                                    }
-                                }
-                            } else {
-                                $('#the_legal_act_type_filter').prop('disabled', false);
-                                prisAct.empty();
-                                prisAct.val(null).trigger('change.select2');
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            //console.error('AJAX Error:', status, error);
-                        }
-                    });
+                    filter = 'public-consultation-id=' + selectedValue;
+                    prisAct.empty().trigger('change');
                 }
+                loadPrisOptions(filter);
             });
-
-            function populatePris(prisOptions) {
-                prisAct.empty();
-                $.each(prisOptions, function (index, option) {
-                    prisAct.append('<option value="' + option.id + '" ' +'>' + option.text + '</option>');
-                });
-            }
 
             $('#policy_area_id').on('change', function () {
                 const selectedValue = $(this).val();
-                const parentDocumentSelect = $('#parent_document_id');
                 if (selectedValue) {
-                    $.ajax({
-                        url: `/admin/strategic-documents/same-policy-area/${selectedValue}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            parentDocumentSelect.empty();
-                            $.each(data.strategicDocuments, function (index, item) {
-                                parentDocumentSelect.append($('<option>', {
-                                    value: item.id,
-                                    text: item.title,
-                                }));
-                            });
-                            parentDocumentSelect.trigger('change');
-                        },
-                        error: function (xhr, status, error) {
-                        }
-                    });
+                    const filter = 'policy-area-id=' + selectedValue;
+                    parentDocumentSelect.empty().trigger('change');
+                    loadParentStrategicDocumentOptions(filter);
                 }
             });
 

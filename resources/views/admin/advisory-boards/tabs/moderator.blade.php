@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        @if(auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARDS))
+        @if(auth()->user()->hasRole(\App\Models\CustomRole::MODERATOR_ADVISORY_BOARDS) || auth()->user()->hasRole(\App\Models\CustomRole::ADMIN_USER_ROLE))
             <div class="row">
                 <div class="col-12">
                     <hr/>

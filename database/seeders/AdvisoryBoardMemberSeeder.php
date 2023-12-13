@@ -28,10 +28,10 @@ class AdvisoryBoardMemberSeeder extends Seeder
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
-        AdvisoryBoardMember::truncate();
+        $all_member_ids = AdvisoryBoardMember::select('id')->pluck('id')->toArray();
 
         foreach ($old_members_db as $member) {
-            if (!in_array($member->councilID, $advisory_board_ids)) {
+            if (!in_array($member->councilID, $advisory_board_ids) || in_array($member->memberID, $all_member_ids)) {
                 $skipped++;
                 continue;
             }

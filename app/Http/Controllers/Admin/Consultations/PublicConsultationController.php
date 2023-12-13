@@ -154,7 +154,8 @@ class PublicConsultationController extends AdminController
         }
         $polls = $item->id ? Poll::whereDoesntHave('consultations')->Active()->NotExpired()->get() : null;
 
-        $pris = Pris::Decrees()->get();
+//        $pris = Pris::Decrees()->get();
+        $pris = $item->pris;
         $laws = Law::with(['translations'])->get();
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',

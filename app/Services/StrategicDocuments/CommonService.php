@@ -3,13 +3,18 @@
 namespace App\Services\StrategicDocuments;
 
 use App\Models\AuthorityAcceptingStrategic;
+use App\Models\Consultations\PublicConsultation;
+use App\Models\Pris;
+use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentLevel;
 use App\Models\User;
 use App\Services\Exports\ExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\PaginationState;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class CommonService
@@ -42,6 +47,75 @@ class CommonService
         $exportService = app(ExportService::class);
 
         return $exportService->export('', $strategicDocuments, 'report.pdf', 'pdf', 'pdf.report');
+    }
+
+    public function prisActSelect2Search(Request $request, ?StrategicDocument $strategicDocument = null)
+    {
+        $term = $request->input('term');
+        $filter = $request->input('filter');
+        $prisActs = Pris::with('translations');
+
+        if ($strategicDocument?->publicConsultation) {
+            $prisActs = $prisActs->where('public_consultation_id', $strategicDocument?->publicConsultation?->id);
+        }
+        if (!empty($filter)) {
+            $filterParts = explode('=', $filter);
+            $key = Arr::get($filterParts, 0);
+
+            $value = Arr::get($filterParts, 1);
+            if ($key == 'legal-act-type-id') {
+                if ($value != 'all') {
+                    $prisActs = Pris::where('legal_act_type_id', $value);
+                }
+            }
+            if ($key == 'public-consultation-id') {
+                if ($value != 'all') {
+                    $publicConsultation = PublicConsultation::findOrFail($value);
+                    if ($publicConsultation) {
+                        $prisActs = $prisActs->whereIn('public_consultation_id', [$publicConsultation->id]);
+                    }
+                }
+            }
+        }
+
+        if ($term) {
+            $prisActs = $prisActs->where('doc_num', 'like', '%' . $term . '%')
+                ->orWhere('doc_date', 'like', '%' . $term . '%')->orWhereHas('actType.translations', function($query) use ($term) {
+                    $query->where('name', 'ilike', '%' . $term . '%');
+                });
+        }
+        return $prisActs;
+    }
+
+    public function parentStrategicDocumentsSelect2Options(Request $request)
+    {
+        $documentId = $request->get('documentId');
+        $term = $request->input('term');
+        $filter = $request->input('filter');
+
+        $strategicDocuments = StrategicDocument::with('translations');
+        if ($documentId) {
+            $item = StrategicDocument::find($documentId);
+            if ($item) {
+                $strategicDocuments = $strategicDocuments->where('policy_area_id', $item->policy_area_id);
+            }
+        }
+        if ($term) {
+            $currentLocale = app()->getLocale();
+            $strategicDocuments = $strategicDocuments->whereHas('translations', function($query) use ($currentLocale, $term) {
+                $query->where('locale', $currentLocale)->where('title', 'ilike', '%' . $term . '%');
+            });
+        }
+        if (!empty($filter)) {
+            $filterParts = explode('=', $filter);
+            $key = Arr::get($filterParts, 0);
+            $value = Arr::get($filterParts, 1);
+            if ($key == 'policy-area-id') {
+                $strategicDocuments = $strategicDocuments->where('policy_area_id', $value);
+            }
+        }
+
+        return $strategicDocuments;
     }
 
     /**

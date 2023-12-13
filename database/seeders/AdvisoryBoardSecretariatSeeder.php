@@ -31,10 +31,10 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
-        AdvisoryBoardSecretariat::truncate();
+        $secretariat_ids = AdvisoryBoardSecretariat::select('id')->pluck('id')->toArray();
 
         foreach ($old_secretariats_db as $secretariat) {
-            if (!in_array($secretariat->councilID, $advisory_board_ids)) {
+            if (!in_array($secretariat->councilID, $advisory_board_ids) || in_array($secretariat->detailID, $secretariat_ids)) {
                 $skipped++;
                 continue;
             }

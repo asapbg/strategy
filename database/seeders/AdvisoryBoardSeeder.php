@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\File;
+use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -50,10 +51,10 @@ class AdvisoryBoardSeeder extends Seeder
         $advisory_boards_json = file_get_contents(database_path('/data/old_advisory_boards.json'));
         $advisory_boards = json_decode($advisory_boards_json, true);
 
-        AdvisoryBoard::truncate();
+        $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
         foreach ($advisory_boards as $board) {
-            if (!is_array($board)) {
+            if (!is_array($board) || in_array($board['councilID'], $advisory_board_ids)) {
                 continue;
             }
 
@@ -79,6 +80,9 @@ class AdvisoryBoardSeeder extends Seeder
                 $translation->name = $board['name'] ?? '';
                 $translation->save();
             }
+
+            $service = app(AdvisoryBoardService::class, ['board' => $new_advisory_board]);
+            $service->createDependencyTables();
 
             $imported++;
         }
@@ -109,8 +113,12 @@ class AdvisoryBoardSeeder extends Seeder
     private function callDependableSeeders(): void
     {
         $this->call([
-//            AdvisoryBoardMemberSeeder::class,
-//        AdvisoryBoardSecretariatSeeder::class,
+            AdvisoryBoardMemberSeeder::class,
+            AdvisoryBoardSecretariatSeeder::class,
+            AdvisoryBoardWorkingProgramsSeeder::class,
+            AdvisoryBoardRegulatoryFrameworkSeeder::class,
+            AdvisoryBoardMeetingsSeeder::class,
+            AdvisoryBoardCustomSectionsSeeder::class,
         ]);
     }
 }

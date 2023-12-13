@@ -1274,22 +1274,22 @@ input#startdate {
         margin-right: 0.5rem;
   } */
 
-.str-doc-tabs {
+.menu-tabs {
     display: inline-block;
     border: unset !important;
 }
 
-.str-doc-tabs .nav-link.tablinks.active {
+.menu-tabs .nav-link.tablinks.active {
     font-size: 14px !important;
     background: #21659e;
     border: unset !important;
     color: #fff !important;
     border-radius: 4px !important;
-    padding: 4px !important;
+    padding: 6px 4px !important;
     line-height: normal;
 }
 
-.str-doc-tabs .nav-link.tablinks{
+.menu-tabs .nav-link.tablinks{
     font-size: 14px !important;
     border: unset !important;
     color:#212529 !important;
@@ -1297,11 +1297,11 @@ input#startdate {
     line-height: normal;
 }
 
-.str-doc-tabs .nav-link.tablinks.active:hover {
+.menu-tabs .nav-link.tablinks.active:hover {
     text-decoration: underline;
 }
 
-.str-doc-tabs li.nav-item {
+.menu-tabs li.nav-item {
 display: flex;
 }
 

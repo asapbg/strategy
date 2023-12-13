@@ -151,15 +151,10 @@
                 <div class="form-group">
                     <label class="col-sm-12 control-label" for="pris_id">Постановление</label>
                     <div class="col-12">
-                        <select name="pris_id" class="form-control form-control-sm select2 @error('pris_id'){{ 'is-invalid' }}@enderror">
-                            <option value="0">---</option>
-                            @if(isset($pris) && $pris->count())
-                                @foreach($pris as $row)
-                                    <option value="{{ $row->id }}"
-                                            @if(old('pris_id', ($item->id ? $item->pris_id : 0)) == $row->id) selected @endif
-                                            data-id="{{ $row->id }}"
-                                    >{{ $row->displayName }}</option>
-                                @endforeach
+                        <select id="pris_id" name="pris_id" data-types2ajax="pris_doc" data-legalacttype="{{ \App\Models\LegalActType::TYPE_DECREES }}" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('pris_id'){{ 'is-invalid' }}@enderror">
+                            <option value="" @if(old('pris_id', ($item->id && $pris ? $item->pris_id : 0)) == 0) selected @endif>---</option>
+                            @if(!old('pris_id') && $pris)
+                                <option value="{{ $pris->id }}" selected>{{ $pris->displayName }}</option>
                             @endif
                         </select>
                         @error('pris_id')

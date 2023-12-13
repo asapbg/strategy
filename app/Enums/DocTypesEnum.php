@@ -29,7 +29,9 @@ enum DocTypesEnum: int
     case AB_FUNCTION = 12; // Файл към функции на консултативен съвет
     case AB_SECRETARIAT = 13; // Файл към секретариат на консултативен съвет
 
-    case AB_REGULATORY_FRAMEWORK = 14; // Файл към нормативна рамка на консултативен съвет
+    case AB_ORGANIZATION_RULES = 14; // Файл към нормативна рамка правилник на вътрешния ред на консултативен съвет
+
+    case AB_ESTABLISHMENT_RULES = 18; // Файл към нормативна рамка акт на създаване на консултативен съвет
 
     case AB_MEETINGS_AND_DECISIONS = 15; // Файл към заседания и решения на консултативен съвет
 
@@ -42,6 +44,7 @@ enum DocTypesEnum: int
     //case PC_MC_IMPACT_EVALUATION_OPINION = 6; //Становище на администрацията на Министерския съвет
 
     // Return enum name by value
+
     public static function keyByValue($searchVal): string
     {
         $keyName = '';

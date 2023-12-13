@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-regulatory-framework-file" aria-hidden="true">
+<div class="modal fade" id="modal-add-organization-rule-file" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,13 +11,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="REGULATORY_FRAMEWORK_FILE" enctype="multipart/form-data" class="pull-left">
+                <form method="POST" name="ORGANIZATION_RULES_FILE" enctype="multipart/form-data" class="pull-left">
                     @csrf
 
-                    <input type="hidden" name="object_id" value="{{ $item->id }}">
-                    <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_REGULATORY_FRAMEWORK->value }}"/>
+                    <input type="hidden" name="object_id" value="{{ $item->organizationRule?->id }}">
+                    <input type="hidden" name="doc_type_id"
+                           value="{{ \App\Enums\DocTypesEnum::AB_ORGANIZATION_RULES->value }}"/>
 
-                    @includeIf('admin.partial.file_fields', ['form' => 'REGULATORY_FRAMEWORK_FILE'])
+                    @includeIf('admin.partial.file_fields', ['form' => 'ORGANIZATION_RULES_FILE'])
                 </form>
             </div>
 

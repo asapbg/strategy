@@ -349,8 +349,8 @@ class seedOldPrisCsv extends Command
                                 documents.doctypeid as old_doc_type_id,
                                 -- as version
                                 -- as public_consultation_id
-                                documents.content  as to_parse_xml_details, -- doc_num, about, doc_date, institution_id/importer ??, newspaper_number ??, newspaper_year ??, legal_reason ??, protocol ??, tags ??, pris_change_pris
-                                contents.content as to_parse_txt_details2, -- same as to_parse_xml_details but in text format
+                                --documents.content  as to_parse_xml_details, -- doc_num, about, doc_date, institution_id/importer ??, newspaper_number ??, newspaper_year ??, legal_reason ??, protocol ??, tags ??, pris_change_pris
+                                --contents.content as to_parse_txt_details2, -- same as to_parse_xml_details but in text format
                                 case when documents.active = true then 1 else 0 end as active,
                                 documents.publishdate as published_at,
                                 documents.created as created_at,
@@ -360,8 +360,8 @@ class seedOldPrisCsv extends Command
                                 -- att.attachment as page_content,
                                 -- att.attachext as doc_type
                             from af_documents documents
-                            left join af_content_fts contents on contents.documentid = documents.documentid
-                            left join af_attachments att on att.documentid = documents.documentid
+                            -- left join af_content_fts contents on contents.documentid = documents.documentid
+                            -- left join af_attachments att on att.documentid = documents.documentid
                             where true
                                 and documents.documentid >= ' . $currentStep . '
                                 and documents.documentid < ' . ($currentStep + $step) . '
@@ -390,6 +390,7 @@ class seedOldPrisCsv extends Command
                             $prepareNewPris = [
                                 'old_id' => $item->old_id,
                                 'doc_num' => null,
+                                'parentdocumentid' => (int)$item->parentdocumentid,
                                 'doc_date' => null,
                                 'old_doc_num' => null,
                                 'active' => $item->active,
@@ -469,7 +470,7 @@ class seedOldPrisCsv extends Command
 
                             //get connection status
                             if(isset($itemCsvData[8])) {
-                                $prepareNewPris['connection_status'] = $prisStatuses[trim($itemCsvData[8])] ?? 0;
+                                $prepareNewPris['connection_status'] = $prisStatuses[trim($itemCsvData[14])] ?? 0;
                             }
                             //2. Create pris record and translations
                             $newItem = new Pris();

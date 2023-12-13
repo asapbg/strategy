@@ -116,6 +116,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
         Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
         Route::get('strategic-documents/accept-act-institution-options/{id?}', 'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
+        Route::get('strategic-documents/load-pris-acts', 'loadPrisActs')->name('strategic_documents.load-pris-acts');
+        Route::get('strategic-documents/load-parents', 'loadParentStrategicDocuments')->name('strategic_documents.load-parents');
     });
 
     // Static pages
@@ -481,8 +483,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
     });
 
-    Route::controller(\App\Http\Controllers\AdvisoryBoardRegulatoryFrameworkController::class)->prefix('/advisory-boards/{item}/regulatory-framework')->group(function () {
-        Route::post('/store/{framework?}', 'store')->name('advisory-boards.regulatory-framework.store');
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardRegulatoryFrameworkController::class)->prefix('/advisory-boards/{item}/regulatory-framework')->group(function () {
+        Route::post('/store/organization-rules/{rule?}',        'storeOrganizationRules')   ->name('advisory-boards.regulatory-framework.organization-rules.store');
+        Route::post('/store/establishment/{establishment?}',    'storeEstablishment')       ->name('advisory-boards.regulatory-framework.establishments.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {

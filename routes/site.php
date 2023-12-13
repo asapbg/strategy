@@ -77,6 +77,7 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
     Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
     Route::get('/strategy-document-institution/{documentLevelIds?}', 'getInstitutions')->name('strategy-document.institutions');
+    Route::get('/strategy-document/load-pris-acts', 'loadPrisOptions')->name('strategy-document.load-pris-acts');
 
 });
 

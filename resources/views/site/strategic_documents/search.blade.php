@@ -1,4 +1,4 @@
-<div class="row filter-results mb-2">
+<div class="row filter-results mb-2" id="searchDiv">
     <div class="col-md-6">
         <h2 class="mb-4">
             Търсене
@@ -182,7 +182,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3" id="ekate_areas_div_id">
+    <div class="col-md-4" id="ekate_areas_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
@@ -195,7 +195,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3" id="ekate_municipalities_div_id">
+    <div class="col-md-4" id="ekate_municipalities_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
@@ -209,12 +209,12 @@
         </div>
     </div>
 </div>
-<div class="row mb-5 action-btn-wrapper">
+<div class="row mb-5 action-btn-wrapper" id="searchButtons">
     <div class="col-md-3 col-sm-12">
         <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
-        <span class="btn rss-sub main-color clear" id="clearForm">
+        <button class="btn btn-primary main-color clear" id="clearForm">
             <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
-        </span>
+        </button>
     </div>
 
     <div class="col-md-9 text-end col-sm-12">
@@ -230,7 +230,7 @@
     </div>
 </div>
 
-<div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
+<div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0" id="sorting">
     <div class="col-md-3">
         @php
             $translation = trans_choice('custom.policy_area', 1);
@@ -274,7 +274,7 @@
     </div>
 </div>
 
-<div class="row justify-content-end my-3">
+<div class="row justify-content-end my-3" id="paginationResultsDiv">
     <div class="col-md-4">
 
     </div>

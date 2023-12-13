@@ -44,19 +44,25 @@ class AdvisoryBoardMeetingsSeeder extends Seeder
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
-        AdvisoryBoardMeeting::truncate();
-        AdvisoryBoardMeetingTranslation::truncate();
-
         foreach ($old_meetings_db as $meeting) {
             if (!in_array($meeting->councilID, $advisory_board_ids)) {
                 $skipped++;
                 continue;
             }
 
-            $new_meeting = new AdvisoryBoardMeeting();
-            $new_meeting->advisory_board_id = $meeting->councilID;
-            $new_meeting->next_meeting = Carbon::parse($meeting->sessionDate);
-            $new_meeting->save();
+            $is_new = false;
+
+            $record = AdvisoryBoardMeeting::find($meeting->sessionID);
+            if (!$record) {
+                $record = new AdvisoryBoardMeeting();
+                $record->id = $meeting->sessionID;
+                $record->advisory_board_id = $meeting->councilID;
+                $record->next_meeting = Carbon::parse($meeting->sessionDate);
+                $record->save();
+
+                $imported++;
+                $is_new = true;
+            }
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
@@ -66,7 +72,7 @@ class AdvisoryBoardMeetingsSeeder extends Seeder
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
-                $meeting->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_MEETINGS_AND_DECISIONS_UPLOAD_DIR . DIRECTORY_SEPARATOR . $new_meeting->id
+                $meeting->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_MEETINGS_AND_DECISIONS_UPLOAD_DIR . DIRECTORY_SEPARATOR . $record->id
             );
             mkdirIfNotExists($directory);
 
@@ -78,7 +84,7 @@ class AdvisoryBoardMeetingsSeeder extends Seeder
 
                 foreach ($copied_files as $file) {
                     $service->storeDbRecord(
-                        $new_meeting->id,
+                        $record->id,
                         File::CODE_AB,
                         $file['filename'],
                         DocTypesEnum::AB_MEETINGS_AND_DECISIONS->value,
@@ -91,15 +97,15 @@ class AdvisoryBoardMeetingsSeeder extends Seeder
                 }
             }
 
-            foreach (config('available_languages') as $language) {
-                $translation = new AdvisoryBoardMeetingTranslation();
-                $translation->locale = $language['code'];
-                $translation->advisory_board_meeting_id = $new_meeting->id;
-                $translation->description = $secretariat->description ?? '';
-                $translation->save();
+            if ($is_new) {
+                foreach (config('available_languages') as $language) {
+                    $translation = new AdvisoryBoardMeetingTranslation();
+                    $translation->locale = $language['code'];
+                    $translation->advisory_board_meeting_id = $record->id;
+                    $translation->description = $secretariat->description ?? '';
+                    $translation->save();
+                }
             }
-
-            $imported++;
         }
 
         $this->command->info("$imported advisory board meetings were imported successfully at " . date("H:i") . " and $skipped were skipped. Totally $files_imported files imported.");
