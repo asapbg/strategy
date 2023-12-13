@@ -234,7 +234,9 @@ class AdvisoryBoardController extends AdminController
                     $query->withTrashed();
                 });
             });
-        }, 'regulatoryFramework', 'meetings' => function ($query) {
+        }, 'regulatoryFramework' => function ($query) {
+            $query->with('files');
+        }, 'meetings' => function ($query) {
             $query->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
             })->whereYear('next_meeting', '>=', now()->year);

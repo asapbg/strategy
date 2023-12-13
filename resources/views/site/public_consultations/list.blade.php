@@ -66,21 +66,25 @@
                                                             title="{{ __('custom.period') }}"></i> {{ displayDate($consultation->open_from) }} -
                                 {{ displayDate($consultation->open_to) }}</span>
                             </div>
-                            <div class="meta-consul justify-content-start">
-                                @if($consultation->actType)
-                                    <span class="me-2 mb-2">
-                                    <strong>{{ __('site.public_consultation.type_consultation') }}:</strong>
-                                    <a class="act-type act-type-{{ $consultation->act_type_id }}" target="_blank" href="{{ route('public_consultation.index').'?actType='.$consultation->act_type_id }}">{{ $consultation->actType->name }}</a>
-                                </span>
-                                @endif
-                               <span class="item-separator mb-2">|</span>
-                                @if($consultation->consultation_level_id)
-                                    <span class="ms-2 mb-2">
-                                    <strong>{{ __('site.public_consultation.importer_type') }}:</strong>
-                                    <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$consultation->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}</a>
-                                </span>
-                                @endif
-                            </div>
+                            @if($consultation->actType || $consultation->consultation_level_id)
+                                <div class="meta-consul justify-content-start">
+                                    @if($consultation->actType)
+                                        <span class="me-2 mb-2">
+                                        <strong>{{ __('site.public_consultation.type_consultation') }}:</strong>
+                                        <a class="act-type act-type-{{ $consultation->act_type_id }}" target="_blank" href="{{ route('public_consultation.index').'?actType='.$consultation->act_type_id }}">{{ $consultation->actType->name }}</a>
+                                    </span>
+                                    @endif
+                                    @if($consultation->actType && $consultation->consultation_level_id)
+                                        <span class="item-separator mb-2">|</span>
+                                    @endif
+                                    @if($consultation->consultation_level_id)
+                                        <span class="ms-2 mb-2">
+                                        <strong>{{ __('site.public_consultation.importer_type') }}:</strong>
+                                        <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$consultation->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}</a>
+                                    </span>
+                                    @endif
+                                </div>
+                            @endif
                             <div class="meta-consul">
                             <span>
                                 <strong>{{ __('custom.status') }}:</strong>
@@ -99,7 +103,7 @@
 </div>
 <div class="row">
     @if(isset($pk) && $pk->count() > 0)
-        {{ $pk->appends(request()->query())->links() }}
+        {{ $pk->onEachSide(0)->appends(request()->query())->links() }}
         {{--                    {{ $items->appends(request()->query())->links() }}--}}
     @endif
 </div>

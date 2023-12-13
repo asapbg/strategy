@@ -114,7 +114,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                @include('admin.partial.files_table', ['files' => $regulatory_framework_files, 'item' => $item])
+                @include('admin.partial.files_table', ['files' => $item->regulatoryFramework?->files, 'item' => $item])
             </div>
         </div>
     </div>

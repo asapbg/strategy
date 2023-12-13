@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -26,27 +28,11 @@ class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
 
     protected $fillable = ['advisory_board_id'];
 
-    public function allFiles(): HasMany
-    {
-        return $this->hasMany(File::class, 'id_object')
-            ->withTrashed()
-            ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
-    }
-
-    public function siteFiles(): HasMany
-    {
-        return $this->hasMany(File::class, 'id_object')
-            ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
-            ->where('parent_id', null);
-    }
-
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
+            ->where('doc_type', DocTypesEnum::AB_REGULATORY_FRAMEWORK->value);
     }
 
     /**
