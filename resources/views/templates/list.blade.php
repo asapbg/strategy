@@ -49,6 +49,10 @@
 
 <br><a href="{{ route('templates.view', ['slug' => 'abonamenti']) }}">Абонаменти</a>
 <br>
+
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile']) }}">Профил на институция</a>
+<br>
+
 <br><a href="{{ route('templates.view', ['slug' => 'ks_filter']) }}">Консултативни съвети (списък)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети - вътрешна страница</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ks_news']) }}">Консултативни съвети - Новини</a>
