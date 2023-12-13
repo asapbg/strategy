@@ -109,11 +109,12 @@ class StrategicDocumentsController extends AdminController
         $mainFile = $strategicDocumentFilesBg->where('is_main', true)->sortByDesc('version')->first();
         $mainFiles = $item->files->where('is_main', true);
         $mainFile = $mainFile->parentFile?->latestVersion ?? $mainFile;
-        $strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
+        //$strategicDocuments = StrategicDocument::with('translations')->where('policy_area_id', $item->policy_area_id)->get();
+        //$strategicDocuments = collect();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //
         // testing
-        $strategicDocuments = collect();
+        //$strategicDocuments = collect();
         // end testing
         $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
@@ -153,7 +154,7 @@ class StrategicDocumentsController extends AdminController
 
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-            'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'strategicDocuments', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
+            'policyAreas', 'prisActs', 'consultations', 'fileData', 'fileDataEn', 'legalActTypes', 'documentDate', 'mainFile', 'mainFiles', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
     }
 
     public function store(StoreStrategicDocumentRequest $request)
@@ -706,4 +707,34 @@ class StrategicDocumentsController extends AdminController
         );
     }
 
+    public function loadParentStrategicDocuments(Request $request)
+    {
+        $strategicDocumentId = $request->get('strategicDocumentId');
+        $strategicDocumentsCommonService = app(CommonService::class);
+        $strategicDocuments = $strategicDocumentsCommonService->parentStrategicDocumentsSelect2Options($request);
+        $strategicDocuments = $strategicDocuments->paginate(20);
+        $documentOptions = [
+            'items' => $strategicDocuments->map(function ($strategicDocument) {
+                return [
+                    'id' => $strategicDocument->id,
+                    'text' => $strategicDocument->title
+                ];
+            }),
+            'more' => $strategicDocuments->hasMorePages()
+        ];
+
+        if ($strategicDocumentId) {
+            $parentDocument = StrategicDocument::find($strategicDocumentId)?->parentDocument;
+            if ($parentDocument) {
+                $customOption = [
+                    'id' => $parentDocument->id,
+                    'text' => $parentDocument->title,
+                ];
+                array_unshift($documentOptions['items'], $customOption);
+                $documentOptions['items'][0]['selected'] = true;
+            }
+        }
+
+        return response()->json($documentOptions);
+    }
 }

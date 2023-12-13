@@ -751,6 +751,54 @@
             }
             loadPrisOptions();
 
+            const parentDocumentSelect = $('#parent_document_id');
+            const loadParentStrategicDocumentOptions = (filter = '', documentId) => {
+                $.ajax({
+                    url: '/admin/strategic-documents/load-parents',
+                    dataType: 'json',
+                    data: {
+                        filter: filter,
+                        documentId: documentId,
+                    },
+                    success: function(data) {
+                        // Initialize Select2 with the first 10 items
+                        parentDocumentSelect.select2({
+                            data: data.items,
+                            placeholder: '--',
+                            //minimumInputLength: 1,
+                            ajax: {
+                                url: '/admin/strategic-documents/load-parents',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        filter: filter,
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (ajaxData) {
+                                    return {
+                                        results: ajaxData.items,
+                                        pagination: {
+                                            more: ajaxData.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        setTimeout(function() {
+                            prisAct.trigger('query', {});
+                            console.log('trigger query');
+                        }, 250);
+                    }
+                });
+            }
+            loadParentStrategicDocumentOptions();
+
+
             const prisOptions = $('#pris_options');
             prisOptions.select2();
 
@@ -812,25 +860,10 @@
 
             $('#policy_area_id').on('change', function () {
                 const selectedValue = $(this).val();
-                const parentDocumentSelect = $('#parent_document_id');
                 if (selectedValue) {
-                    $.ajax({
-                        url: `/admin/strategic-documents/same-policy-area/${selectedValue}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            parentDocumentSelect.empty();
-                            $.each(data.strategicDocuments, function (index, item) {
-                                parentDocumentSelect.append($('<option>', {
-                                    value: item.id,
-                                    text: item.title,
-                                }));
-                            });
-                            parentDocumentSelect.trigger('change');
-                        },
-                        error: function (xhr, status, error) {
-                        }
-                    });
+                    const filter = 'policy-area-id=' + selectedValue;
+                    parentDocumentSelect.empty().trigger('change');
+                    loadParentStrategicDocumentOptions(filter);
                 }
             });
 
