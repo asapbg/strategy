@@ -698,11 +698,67 @@
                 });
             }
 
+            prisAct.select2({
+                placeholder: '--',
+                minimumInputLength: 1
+            });
+
+            const loadPrisOptions = (filter = '') => {
+                $.ajax({
+                    url: '/admin/strategic-documents/load-pris-acts',
+                    dataType: 'json',
+                    data: {
+                        filter: filter,
+                    },
+                    success: function(data) {
+                        // Initialize Select2 with the first 10 items
+                        prisAct.select2({
+                            data: data.items,
+                            placeholder: '--',
+                            //minimumInputLength: 1,
+                            ajax: {
+                                url: '/admin/strategic-documents/load-pris-acts',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        filter: filter,
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (ajaxData) {
+                                    return {
+                                        results: ajaxData.items,
+                                        pagination: {
+                                            more: ajaxData.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        setTimeout(function() {
+                            prisAct.trigger('query', {});
+                            console.log('trigger query');
+                        }, 200);
+                    }
+                });
+            }
+            loadPrisOptions();
+
             const prisOptions = $('#pris_options');
             prisOptions.select2();
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
+                if (selectedValue) {
+                    const filter = 'legal-act-type-id=' + selectedValue;
+                    prisAct.empty().trigger('change');
+                    loadPrisOptions(filter);
+                }
+                /*
                 if (selectedValue) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-option/${selectedValue}`,
@@ -727,9 +783,8 @@
                         }
                     });
                 }
+                */
             });
-            //$('#accept_act_institution_type_id')
-            console.log($('#accept_act_institution_type_id').val());
 
             $('#accept_act_institution_type_id').on('change', function () {
                 let selectedValue = $(this).val();
@@ -744,7 +799,6 @@
 
             prisAct.on('change', function () {
                 const selectedValue = $(this).val();
-
                 if (selectedValue && !!manualPrisActId) {
                     $.ajax({
                         url: `/admin/strategic-documents/pris-details/${selectedValue}`,

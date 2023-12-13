@@ -665,4 +665,40 @@ class StrategicDocumentsController extends AdminController
             ->with('success', trans_choice('custom.strategic_documents', 1)." ".($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
     }
 
+    public function loadPrisActs(Request $request)
+    {
+        $term = $request->input('term');
+        $filter = request()->input('filter');
+        $paginatedResults = 20;
+        $prisActs = Pris::with('translations');
+        if (!empty($filter)) {
+            $filterParts = explode('=', $filter);
+            $key = Arr::get($filterParts, 0);
+
+            $value = Arr::get($filterParts, 1);
+            if ($key == 'legal-act-type-id') {
+                if ($value != 'all') {
+                    $prisActs = Pris::where('legal_act_type_id', $value);
+                }
+            }
+        }
+
+        if ($term) {
+            $prisActs = $prisActs->where('doc_num', 'like', '%' . $term . '%')
+                ->orWhere('doc_date', 'like', '%' . $term . '%')->orWhereHas('actType.translations', function($query) use ($term) {
+                    $query->where('name', 'ilike', '%' . $term . '%');
+                });
+        }
+        $prisActs = $prisActs->paginate($paginatedResults);
+        return response()->json([
+            'items' => $prisActs->map(function ($prisAct) {
+                return [
+                    'id' => $prisAct->id,
+                    'text' => $prisAct->displayName
+                ];
+            }),
+            'more' => $prisActs->hasMorePages()
+        ]);
+    }
+
 }
