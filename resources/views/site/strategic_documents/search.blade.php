@@ -1,4 +1,4 @@
-<div class="row filter-results mb-2">
+<div class="row filter-results mb-2" id="searchDiv">
     <div class="col-md-6">
         <h2 class="mb-4">
             Търсене
@@ -209,7 +209,7 @@
         </div>
     </div>
 </div>
-<div class="row mb-5 action-btn-wrapper">
+<div class="row mb-5 action-btn-wrapper" id="searchButtons">
     <div class="col-md-3 col-sm-12">
         <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
         <span class="btn rss-sub main-color clear" id="clearForm">
@@ -230,7 +230,7 @@
     </div>
 </div>
 
-<div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
+<div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0" id="sorting">
     <div class="col-md-3">
         @php
             $translation = trans_choice('custom.policy_area', 1);
@@ -274,7 +274,7 @@
     </div>
 </div>
 
-<div class="row justify-content-end my-3">
+<div class="row justify-content-end my-3" id="paginationResultsDiv">
     <div class="col-md-4">
 
     </div>
