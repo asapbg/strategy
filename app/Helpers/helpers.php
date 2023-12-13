@@ -503,8 +503,9 @@ if (!function_exists('optionsUserTypes')) {
                     $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
                     $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
                     break;
-                case 'application/msword':
+                case 'application/msword':https://strategy.asapbg.com/strategy-document/download-file/56
                     $content = __('custom.old_file_format');
+                    //$content = '<iframe src="https://view.officeapps.live.com/op/view.aspx?src='.route('download.file', $file).'" width="100%" /></iframe>';
                     break;
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
