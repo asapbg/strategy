@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @method static find(bool|float|int|string|null $get)
  * @method static truncate()
+ * @method static select(string $string)
  */
 class AdvisoryBoardMember extends Model
 {

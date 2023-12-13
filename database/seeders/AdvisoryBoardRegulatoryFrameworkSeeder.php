@@ -31,13 +31,10 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
     {
         $this->advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
-        AdvisoryBoardRegulatoryFramework::truncate();
-        AdvisoryBoardRegulatoryFrameworkTranslation::truncate();
-
-        $this->importOrganizationRules();
-
         $this->advisory_board_frameworks = AdvisoryBoardRegulatoryFramework::all();
         $this->advisory_board_framework_translations = AdvisoryBoardRegulatoryFrameworkTranslation::all();
+
+        $this->importOrganizationRules();
 
         $this->importEstablishments();
     }
@@ -60,9 +57,13 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                 continue;
             }
 
-            $establishment = $this->advisory_board_frameworks->first(fn($record) => $record->advisory_board_id === $framework->councilID) ?? new AdvisoryBoardRegulatoryFramework();
-            $establishment->advisory_board_id = $framework->councilID;
-            $establishment->save();
+            $establishment = $this->advisory_board_frameworks->first(fn($record) => $record->advisory_board_id === $framework->councilID);
+            if (!$establishment) {
+                $establishment = new AdvisoryBoardRegulatoryFramework();
+                $establishment->id = $framework->detailID;
+                $establishment->advisory_board_id = $framework->councilID;
+                $establishment->save();
+            }
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
@@ -128,12 +129,18 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
         );
 
         foreach ($old_frameworks as $framework) {
+            if (in_array($framework->detailID, $this->advisory_board_frameworks->pluck('id')->toArray())) {
+                $skipped++;
+                continue;
+            }
+
             if (!in_array($framework->councilID, $this->advisory_board_ids)) {
                 $skipped++;
                 continue;
             }
 
             $new_framework = new AdvisoryBoardRegulatoryFramework();
+            $new_framework->id = $framework->detailID;
             $new_framework->advisory_board_id = $framework->councilID;
             $new_framework->save();
 

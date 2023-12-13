@@ -50,10 +50,10 @@ class AdvisoryBoardSeeder extends Seeder
         $advisory_boards_json = file_get_contents(database_path('/data/old_advisory_boards.json'));
         $advisory_boards = json_decode($advisory_boards_json, true);
 
-        AdvisoryBoard::truncate();
+        $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
         foreach ($advisory_boards as $board) {
-            if (!is_array($board)) {
+            if (!is_array($board) || in_array($board['councilID'], $advisory_board_ids)) {
                 continue;
             }
 
@@ -109,8 +109,11 @@ class AdvisoryBoardSeeder extends Seeder
     private function callDependableSeeders(): void
     {
         $this->call([
-//            AdvisoryBoardMemberSeeder::class,
-//        AdvisoryBoardSecretariatSeeder::class,
+            AdvisoryBoardMemberSeeder::class,
+            AdvisoryBoardSecretariatSeeder::class,
+            AdvisoryBoardWorkingProgramsSeeder::class,
+            AdvisoryBoardRegulatoryFrameworkSeeder::class,
+            AdvisoryBoardMeetingsSeeder::class,
         ]);
     }
 }

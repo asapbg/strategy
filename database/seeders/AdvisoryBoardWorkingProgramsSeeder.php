@@ -30,11 +30,10 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
 
         $old_programs_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" LIKE '%working program%' and  c.\"toVersion\" is null");
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
-
-        AdvisoryBoardFunction::truncate();
+        $all_working_program_ids = AdvisoryBoardFunction::select('id')->pluck('id')->toArray();
 
         foreach ($old_programs_db as $program) {
-            if (!in_array($program->councilID, $advisory_board_ids)) {
+            if (!in_array($program->councilID, $advisory_board_ids) || in_array($program->detailID, $all_working_program_ids)) {
                 $skipped++;
                 continue;
             }
