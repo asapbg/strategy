@@ -64,10 +64,12 @@ class clearDb extends Command
                 DB::table('tag_translations')->truncate();
                 break;
             case 'users':
+                //TODO get only imported users and connected to them relations
                 DB::table('model_has_roles')->truncate();
                 DB::table('users')->truncate();
                 break;
             case 'pc':
+                //TODO get only imported pc and connected to them relations
                 DB::table('public_consultation_connection')->truncate();
                 DB::table('public_consultation_contact')->truncate();
                 DB::table('public_consultation_translations')->truncate();

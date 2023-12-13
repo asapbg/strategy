@@ -904,7 +904,7 @@ $(document).ready(function (e) {
                 data: function (params) {
                     if($(this).data('types2ajax') == 'pris_doc') {
                         var query = {
-                            actType: $('#legal_act_type_filter').val(),
+                            actType: typeof $(this).data('legalacttype') != 'undefined' ? parseInt($(this).data('legalacttype')) : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
                             search: params.term
                         }
                     }else if($(this).data('types2ajax') == 'lp_record') {
