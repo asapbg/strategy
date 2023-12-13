@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\File;
+use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -79,6 +80,9 @@ class AdvisoryBoardSeeder extends Seeder
                 $translation->name = $board['name'] ?? '';
                 $translation->save();
             }
+
+            $service = app(AdvisoryBoardService::class, ['board' => $new_advisory_board]);
+            $service->createDependencyTables();
 
             $imported++;
         }

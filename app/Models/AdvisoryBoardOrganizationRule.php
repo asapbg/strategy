@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property int $advisory_board_id
  */
-class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
+class AdvisoryBoardOrganizationRule extends ModelActivityExtend
 {
 
     use FilterSort, Translatable;
@@ -32,7 +32,7 @@ class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_REGULATORY_FRAMEWORK->value);
+            ->where('doc_type', DocTypesEnum::AB_ORGANIZATION_RULES->value);
     }
 
     /**
@@ -46,7 +46,7 @@ class AdvisoryBoardRegulatoryFramework extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'framework_description' => [
+            'rules_description' => [
                 'type' => 'string',
                 'rules' => ['required'],
             ],

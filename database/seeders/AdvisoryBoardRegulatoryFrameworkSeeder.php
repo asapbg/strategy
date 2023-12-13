@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardRegulatoryFramework;
-use App\Models\AdvisoryBoardRegulatoryFrameworkTranslation;
+use App\Models\AdvisoryBoardEstablishment;
+use App\Models\AdvisoryBoardEstablishmentTranslation;
+use App\Models\AdvisoryBoardOrganizationRule;
+use App\Models\AdvisoryBoardOrganizationRuleTranslation;
 use App\Models\File;
 use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
 use DB;
@@ -18,9 +20,9 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
     /** @var array - Our advisory board ids. */
     private array $advisory_board_ids = [];
 
-    private Collection $advisory_board_frameworks;
+    private Collection $advisory_board_organization_rules;
 
-    private Collection $advisory_board_framework_translations;
+    private Collection $advisory_board_establishments;
 
     /**
      * Run the database seeds.
@@ -31,8 +33,9 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
     {
         $this->advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
-        $this->advisory_board_frameworks = AdvisoryBoardRegulatoryFramework::all();
-        $this->advisory_board_framework_translations = AdvisoryBoardRegulatoryFrameworkTranslation::all();
+        $this->advisory_board_organization_rules = AdvisoryBoardOrganizationRule::all();
+
+        $this->advisory_board_establishments = AdvisoryBoardEstablishment::all();
 
         $this->importOrganizationRules();
 
@@ -51,19 +54,23 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
             "select * from councildetails c where c.\"name\" = 'establishment' and c.title ilike '%акт%' and c.\"toVersion\" is null"
         );
 
+        $all_establishment_ids = $this->advisory_board_establishments->pluck('id')->toArray();
+
         foreach ($old_establishments as $framework) {
+            if (in_array($framework->detailID, $all_establishment_ids)) {
+                $skipped++;
+                continue;
+            }
+
             if (!in_array($framework->councilID, $this->advisory_board_ids)) {
                 $skipped++;
                 continue;
             }
 
-            $establishment = $this->advisory_board_frameworks->first(fn($record) => $record->advisory_board_id === $framework->councilID);
-            if (!$establishment) {
-                $establishment = new AdvisoryBoardRegulatoryFramework();
-                $establishment->id = $framework->detailID;
-                $establishment->advisory_board_id = $framework->councilID;
-                $establishment->save();
-            }
+            $establishment = new AdvisoryBoardEstablishment();
+            $establishment->id = $framework->detailID;
+            $establishment->advisory_board_id = $framework->councilID;
+            $establishment->save();
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR .
@@ -89,7 +96,7 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                         $establishment->id,
                         File::CODE_AB,
                         $file['filename'],
-                        DocTypesEnum::AB_REGULATORY_FRAMEWORK->value,
+                        DocTypesEnum::AB_ESTABLISHMENT_RULES->value,
                         $file['content_type'],
                         $file['path'],
                         $file['version']
@@ -100,11 +107,9 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
             }
 
             foreach (config('available_languages') as $language) {
-                $translation = $this->advisory_board_framework_translations->first(fn($record) => $record->advisory_board_regulatory_framework_id === $establishment->id && $record->locale === $language['code']) ??
-                    new AdvisoryBoardRegulatoryFrameworkTranslation();
-
+                $translation = new AdvisoryBoardEstablishmentTranslation();
                 $translation->locale = $language['code'];
-                $translation->advisory_board_regulatory_framework_id = $establishment->id;
+                $translation->advisory_board_establishment_id = $establishment->id;
                 $translation->description .= '<br><br>' . $framework->description ?? '';
                 $translation->save();
             }
@@ -129,7 +134,7 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
         );
 
         foreach ($old_frameworks as $framework) {
-            if (in_array($framework->detailID, $this->advisory_board_frameworks->pluck('id')->toArray())) {
+            if (in_array($framework->detailID, $this->advisory_board_organization_rules->pluck('id')->toArray())) {
                 $skipped++;
                 continue;
             }
@@ -139,7 +144,7 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                 continue;
             }
 
-            $new_framework = new AdvisoryBoardRegulatoryFramework();
+            $new_framework = new AdvisoryBoardOrganizationRule();
             $new_framework->id = $framework->detailID;
             $new_framework->advisory_board_id = $framework->councilID;
             $new_framework->save();
@@ -168,7 +173,7 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                         $new_framework->id,
                         File::CODE_AB,
                         $file['filename'],
-                        DocTypesEnum::AB_REGULATORY_FRAMEWORK->value,
+                        DocTypesEnum::AB_ORGANIZATION_RULES->value,
                         $file['content_type'],
                         $file['path'],
                         $file['version']
@@ -179,9 +184,9 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
             }
 
             foreach (config('available_languages') as $language) {
-                $translation = new AdvisoryBoardRegulatoryFrameworkTranslation();
+                $translation = new AdvisoryBoardOrganizationRuleTranslation();
                 $translation->locale = $language['code'];
-                $translation->advisory_board_regulatory_framework_id = $new_framework->id;
+                $translation->advisory_board_organization_rule_id = $new_framework->id;
                 $translation->description = $framework->description ?? '';
                 $translation->save();
             }

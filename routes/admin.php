@@ -483,8 +483,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store/{secretariat?}', 'store')->name('advisory-boards.secretariat.store');
     });
 
-    Route::controller(\App\Http\Controllers\AdvisoryBoardRegulatoryFrameworkController::class)->prefix('/advisory-boards/{item}/regulatory-framework')->group(function () {
-        Route::post('/store/{framework?}', 'store')->name('advisory-boards.regulatory-framework.store');
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardRegulatoryFrameworkController::class)->prefix('/advisory-boards/{item}/regulatory-framework')->group(function () {
+        Route::post('/store/organization-rules/{rule?}',        'storeOrganizationRules')   ->name('advisory-boards.regulatory-framework.organization-rules.store');
+        Route::post('/store/establishment/{establishment?}',    'storeEstablishment')       ->name('advisory-boards.regulatory-framework.establishments.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardModeratorController::class)->prefix('/advisory-boards/{item}/moderator')->group(function () {

@@ -81,19 +81,6 @@ class AdvisoryBoard extends ModelActivityExtend
         return $this->hasOne(AdvisoryBoardModeratorInformation::class);
     }
 
-    public function regulatoryFiles(): HasMany
-    {
-        return $this->hasMany(File::class, 'id_object')
-            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
-    }
-
-    public function regulatoryAllFiles(): HasMany
-    {
-        return $this->hasMany(File::class, 'id_object')
-            ->withTrashed()
-            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_REGULATORY_FRAMEWORK]);
-    }
-
     public function members(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class)
@@ -112,9 +99,14 @@ class AdvisoryBoard extends ModelActivityExtend
             ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value);
     }
 
-    public function regulatoryFramework(): HasOne
+    public function establishment(): HasOne
     {
-        return $this->hasOne(AdvisoryBoardRegulatoryFramework::class);
+        return $this->hasOne(AdvisoryBoardEstablishment::class);
+    }
+
+    public function organizationRule(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoardOrganizationRule::class);
     }
 
     public function advisoryFunctions(): HasMany
