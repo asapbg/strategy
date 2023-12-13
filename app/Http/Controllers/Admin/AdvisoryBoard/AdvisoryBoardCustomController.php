@@ -110,6 +110,7 @@ class AdvisoryBoardCustomController extends AdminController
             $section = AdvisoryBoardCustom::find($validated['section_id']);
 
             $fillable = $this->getFillableValidated($validated, $section);
+            $fillable['order'] ??= '9999';
             $fillable['order'] = $section->order === 1 && $fillable['order'] === "9999" ? 1 : $this->reorder($fillable['order'], $item);
             $section->fill($fillable);
             $section->save();
