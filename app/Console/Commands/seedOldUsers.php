@@ -281,5 +281,6 @@ class seedOldUsers extends Command
                 $currentStep += $step;
             }
         }
+        $this->comment('Operation complete');
     }
 }

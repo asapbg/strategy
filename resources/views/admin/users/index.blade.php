@@ -43,13 +43,13 @@
                                        value="{{request()->get('name')}}">
                             </div>
 
-                            <div class="col-xs-12 col-md-3 mb-2">
+                            <div class="col-xs-12 col-md-3 mb-2 d-none">
                                 <input type="text" name="username" placeholder="{{__('validation.attributes.username')}}"
                                        class="form-control"
                                        value="{{request()->get('username')}}">
                             </div>
 
-                            <div class="col-xs-12 col-md-3 mb-2 d-none">
+                            <div class="col-xs-12 col-md-3 mb-2">
                                 <input type="text" name="email" placeholder="{{__('validation.attributes.email')}}"
                                        class="form-control"
                                        value="{{request()->get('email')}}">
