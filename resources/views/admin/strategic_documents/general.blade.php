@@ -638,8 +638,9 @@
 @endpush
 @push('scripts')
     <script type="text/javascript">
+
         $(document).ready(function () {
-            const documentId = {!! $item->id !!}
+            const documentId = {!! json_encode(isset($item) ? (int)$item->id : null) !!};
 
             $("#stayButton").click(function () {
                 $("#stay").val("true");
@@ -704,7 +705,7 @@
                 placeholder: '--',
                 minimumInputLength: 1
             });
-
+            prisAct.prop('disabled', false);
             const loadPrisOptions = (filter = '', documentId) => {
                 $.ajax({
                     url: '/admin/strategic-documents/load-pris-acts',
@@ -714,7 +715,8 @@
                         documentId: documentId,
                     },
                     success: function(data) {
-                        // Initialize Select2 with the first 10 items
+                        const isSingleResult = data.items.length === 1;
+                        prisAct.prop('disabled', isSingleResult);
                         prisAct.select2({
                             data: data.items,
                             placeholder: '--',
@@ -724,13 +726,18 @@
                                 dataType: 'json',
                                 delay: 250,
                                 data: function (params) {
+
                                     return {
                                         filter: filter,
+                                        documentId: documentId,
                                         term: params.term,
                                         page: params.page
                                     };
                                 },
                                 processResults: function (ajaxData) {
+                                    const isSingleResult = data.items.length === 1;
+                                    prisAct.prop('disabled', isSingleResult);
+
                                     return {
                                         results: ajaxData.items,
                                         pagination: {
@@ -744,12 +751,11 @@
 
                         setTimeout(function() {
                             prisAct.trigger('query', {});
-                            console.log('trigger query');
-                        }, 250);
+                        }, 200);
                     }
                 });
             }
-            loadPrisOptions();
+            loadPrisOptions('', documentId);
 
             const parentDocumentSelect = $('#parent_document_id');
             const loadParentStrategicDocumentOptions = (filter = '', documentId) => {
@@ -761,7 +767,6 @@
                         documentId: documentId,
                     },
                     success: function(data) {
-                        // Initialize Select2 with the first 10 items
                         parentDocumentSelect.select2({
                             data: data.items,
                             placeholder: '--',
@@ -790,14 +795,12 @@
                         });
 
                         setTimeout(function() {
-                            prisAct.trigger('query', {});
-                            console.log('trigger query');
+
                         }, 250);
                     }
                 });
             }
             loadParentStrategicDocumentOptions();
-
 
             const prisOptions = $('#pris_options');
             prisOptions.select2();
@@ -850,12 +853,12 @@
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
-
+                let filter = '';
                 if (selectedValue && !!manualChangeConsultationId) {
-                    const filter = 'public-consultation-id=' + selectedValue;
+                    filter = 'public-consultation-id=' + selectedValue;
                     prisAct.empty().trigger('change');
-                    loadPrisOptions(filter);
                 }
+                loadPrisOptions(filter);
             });
 
             $('#policy_area_id').on('change', function () {

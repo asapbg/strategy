@@ -49,11 +49,15 @@ class CommonService
         return $exportService->export('', $strategicDocuments, 'report.pdf', 'pdf', 'pdf.report');
     }
 
-    public function prisActSelect2Search(Request $request)
+    public function prisActSelect2Search(Request $request, ?StrategicDocument $strategicDocument = null)
     {
         $term = $request->input('term');
         $filter = $request->input('filter');
         $prisActs = Pris::with('translations');
+
+        if ($strategicDocument?->publicConsultation) {
+            $prisActs = $prisActs->where('public_consultation_id', $strategicDocument?->publicConsultation?->id);
+        }
         if (!empty($filter)) {
             $filterParts = explode('=', $filter);
             $key = Arr::get($filterParts, 0);
