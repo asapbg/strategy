@@ -49,9 +49,15 @@
 
     <div id="ajax-pagination" class="row">
         <div class="card-footer mt-2">
+            @desktop
             @if($advisory_boards->count() > 0 && $advisory_boards instanceof Illuminate\Pagination\LengthAwarePaginator)
                 {{ $advisory_boards->appends(request()->query())->links() }}
             @endif
+            @elsedesktop
+            @if($advisory_boards->count() > 0 && $advisory_boards instanceof Illuminate\Pagination\LengthAwarePaginator)
+                {{ $advisory_boards->onEachSide(0)->appends(request()->query())->links() }}
+            @endif
+            @enddesktop
         </div>
     </div>
 </div>

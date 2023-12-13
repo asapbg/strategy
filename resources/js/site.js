@@ -298,6 +298,14 @@ function clearSearchForm() {
     $("#search-form").find('select option[value=""]').prop('selected', true);
 }
 
+function isEmpty(arg){
+    return (
+        arg == null || // Check for null or undefined
+        arg.length === 0 || // Check for empty String (Bonus check for empty Array)
+        (typeof arg === 'object' && Object.keys(arg).length === 0) // Check for empty Object or Array
+    );
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -526,10 +534,20 @@ $(document).ready(function () {
 
     // Ajax search
     $(document).on('click', '#ajax-pagination .pagination li', function (e) {
+        if ($(this).hasClass('disabled')) {
+            return;
+        }
         ShowLoadingSpinner();
         e.preventDefault();
 
-        let page = $(this).find('a').html();
+        let anchor = $(this).find('a');
+        let page = $(anchor).html();
+        let rel = $(anchor).attr('rel');
+        if (!isEmpty(rel)) {
+            page = (rel == "prev")
+                ? parseInt($("#search-form .current_page").val()) - 1
+                : parseInt($("#search-form .current_page").val()) + 1
+        }
         $("#search-form .current_page").val(page);
         $("#searchBtn").trigger('click');
     });
@@ -549,6 +567,7 @@ $(document).ready(function () {
         ShowLoadingSpinner();
         e.preventDefault();
 
+        $(".current_page").val(1);
         let filter = $(this).data('filter');
         let filter_value = $(this).html()
         $("#"+filter).val($.trim(filter_value));
