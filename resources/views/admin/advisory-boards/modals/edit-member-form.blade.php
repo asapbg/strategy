@@ -62,7 +62,7 @@
                                 <div class="col-auto">
                                     <div class="form-check pl-4">
                                         <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER }}"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"
                                                name="advisory_type_id"
                                                id="edit_advisory_type_member"/>
                                         <label class="form-check-label" id="" for="edit_advisory_type_member">
@@ -74,7 +74,7 @@
                                 <div class="col-auto">
                                     <div class="form-check pl-4">
                                         <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN }}"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN->value }}"
                                                name="advisory_type_id"
                                                id="edit_advisory_type_chairman"/>
                                         <label class="form-check-label" id="" for="edit_advisory_type_chairman">
@@ -86,7 +86,7 @@
                                 <div class="col-auto">
                                     <div class="form-check pl-4">
                                         <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN }}"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value }}"
                                                name="advisory_type_id"
                                                id="edit_advisory_type_vice_chairman"/>
                                         <label class="form-check-label" id="" for="edit_advisory_type_vice_chairman">
@@ -98,7 +98,7 @@
                                 <div class="col-auto">
                                     <div class="form-check pl-4">
                                         <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY }}"
+                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY->value }}"
                                                name="advisory_type_id"
                                                id="edit_advisory_type_secretary"/>
                                         <label class="form-check-label" id="" for="edit_advisory_type_secretary">
