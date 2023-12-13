@@ -146,18 +146,33 @@
             let liveCycle = $('#liveCycle');
             let view = '';
             liveCycle.hide();
-
+            const searchDiv = $('#searchDiv');
+            const searchButtons = $('#searchButtons');
+            const sorting = $('#sorting');
+            const paginationResultsDiv = $('#paginationResultsDiv');
+            searchDiv.show();
+            searchButtons.show();
+            sorting.show();
+            paginationResultsDiv.show();
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 let target = $(e.target).attr("href");
 
                 if (target === '#tree-view') {
                     view = 'tree-view';
+                    searchDiv.hide();
+                    searchButtons.hide();
+                    sorting.hide();
+                    paginationResultsDiv.hide();
                     updateUrlParameters({ 'view': 'tree-view' });
                     liveCycle.show();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     loadStrategyDocuments(1, buildUrl())
                 } else {
                     view = 'table-view';
+                    searchDiv.show();
+                    searchButtons.show();
+                    sorting.show();
+                    paginationResultsDiv.show();
                     updateUrlParameters({ 'view': 'table-view' });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     liveCycle.hide();
