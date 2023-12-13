@@ -34,7 +34,7 @@
                                 <tr>
                                     <td>{{ $item->reg_num }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</td>
+                                    <td>@if($item->consultation_level_id){{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}@else{{ '---' }}@endif</td>
                                     <td>{{ $item->open_from }}</td>
                                     <td>{{ $item->open_to }}</td>
                                     <td>@if($item->active){{ __('custom.public_f') }}@else{{ __('custom.draft') }}@endif</td>
