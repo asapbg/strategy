@@ -94,6 +94,7 @@ class Controller extends BaseController
         $breadcrumbs = [];
 
         $exclude_routes = [
+            "site.home",
             "admin.home",
             "admin.activity-logs.show"
         ];

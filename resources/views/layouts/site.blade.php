@@ -38,9 +38,9 @@
         $class = 'advisory-boards-page';
     }
     @endphp
-    
+
     <section class="slider {{ $class }}" id="slider">
-        <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif">      
+        <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif">
             <div class="row">
                 <div class="col-md-12">
                     <div class="slider-content">
@@ -56,7 +56,7 @@
     </section>
 @endif
 @include('partials.breadcrumbs_front')
-@if(request()->route()->getName() != 'home' && !request()->input('sk'))
+@if(request()->route()->getName() != 'site.home' && !request()->input('sk'))
     <section class="public-page">
         <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif" id="app">
             @endif

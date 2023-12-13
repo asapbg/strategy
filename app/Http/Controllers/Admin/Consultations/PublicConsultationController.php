@@ -620,6 +620,12 @@ class PublicConsultationController extends AdminController
 
     private function filters($request)
     {
+        $fields = FieldOfAction::select('field_of_actions.*')
+            ->with('translations')
+            ->joinTranslation(FieldOfAction::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('field_of_action_translations.name', 'asc')
+            ->get();
         return array(
             'name' => array(
                 'type' => 'text',
@@ -635,7 +641,7 @@ class PublicConsultationController extends AdminController
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::get(), true),
+                'options' => optionsFromModel($fields, true),
                 'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.field_of_actions', 1),

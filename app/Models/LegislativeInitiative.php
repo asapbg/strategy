@@ -56,6 +56,12 @@ class LegislativeInitiative extends ModelActivityExtend
         return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id');
     }
 
+    public function operationalProgramTitle()
+    {
+        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id')
+            ->where('dynamic_structures_column_id', config('lp_op_programs.op_ds_col_title_id'));
+    }
+
     public function votes(): HasMany
     {
         return $this->hasMany(LegislativeInitiativeVote::class);
