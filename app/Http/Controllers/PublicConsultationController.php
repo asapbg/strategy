@@ -36,8 +36,8 @@ class PublicConsultationController extends Controller
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
             })
-            ->join('act_type', 'act_type.id', '=', 'public_consultation.act_type_id')
-            ->join('act_type_translations', function ($j){
+            ->leftjoin('act_type', 'act_type.id', '=', 'public_consultation.act_type_id')
+            ->leftjoin('act_type_translations', function ($j){
                 $j->on('act_type_translations.act_type_id', '=', 'act_type.id')
                     ->where('act_type_translations.locale', '=', app()->getLocale());
             })

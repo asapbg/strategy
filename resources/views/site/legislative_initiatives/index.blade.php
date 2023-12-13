@@ -280,7 +280,7 @@
             <div class="row">
                 <nav aria-label="Page navigation example">
                     @if(isset($items) && $items->count() > 0)
-                        {{ $items->appends(request()->query())->links() }}
+                        {{ $items->onEachSide(0)->appends(request()->query())->links() }}
                     @endif
                 </nav>
             </div>
