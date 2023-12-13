@@ -5,6 +5,7 @@ namespace App\Services\StrategicDocuments;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\Pris;
+use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentLevel;
 use App\Models\User;
 use App\Services\Exports\ExportService;
@@ -80,6 +81,37 @@ class CommonService
                 });
         }
         return $prisActs;
+    }
+
+    public function parentStrategicDocumentsSelect2Options(Request $request)
+    {
+        $documentId = $request->get('documentId');
+        $term = $request->input('term');
+        $filter = $request->input('filter');
+
+        $strategicDocuments = StrategicDocument::with('translations');
+        if ($documentId) {
+            $item = StrategicDocument::find($documentId);
+            if ($item) {
+                $strategicDocuments = $strategicDocuments->where('policy_area_id', $item->policy_area_id);
+            }
+        }
+        if ($term) {
+            $currentLocale = app()->getLocale();
+            $strategicDocuments = $strategicDocuments->whereHas('translations', function($query) use ($currentLocale, $term) {
+                $query->where('locale', $currentLocale)->where('title', 'ilike', '%' . $term . '%');
+            });
+        }
+        if (!empty($filter)) {
+            $filterParts = explode('=', $filter);
+            $key = Arr::get($filterParts, 0);
+            $value = Arr::get($filterParts, 1);
+            if ($key == 'policy-area-id') {
+                $strategicDocuments = $strategicDocuments->where('policy_area_id', $value);
+            }
+        }
+
+        return $strategicDocuments;
     }
 
     /**
