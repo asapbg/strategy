@@ -305,7 +305,7 @@
                                     <li class="list-group-item">
                                         <div class="accordion p-0" id="accordionFile_{{ $strategicDocumentFile['id'] }}">
                                             <span type="button" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i>
+                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i> {!! $strategicDocumentFile['text'] !!}
                                                 <div class="preview-download d-inline">
                                                     <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
                                                     <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
