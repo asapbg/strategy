@@ -11,4 +11,6 @@ class AdvisoryBoardEstablishmentTranslation extends ModelActivityExtend
 {
 
     public $timestamps = false;
+
+    protected string $logName = "advisory_board_establishment_translations";
 }
