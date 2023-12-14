@@ -25,7 +25,7 @@ class AdvisoryBoardFileService
      * @param string      $path
      * @param string|null $version
      *
-     * @return void
+     * @return File
      */
     public function storeDbRecord(
         int    $id_object,
@@ -36,8 +36,9 @@ class AdvisoryBoardFileService
         string $path,
         string $version = null,
         string $description = null,
-        string $custom_name = null
-    ): void
+        string $custom_name = null,
+        string $locale = null
+    ): File
     {
         $new = new File([
             'id_object' => $id_object,
@@ -49,10 +50,13 @@ class AdvisoryBoardFileService
             'version' => $version ?? '1.0',
             'description_bg' => $description,
             'description_en' => $description,
-            'custom_name' => $custom_name
+            'custom_name' => $custom_name,
+            'locale' => $locale,
         ]);
 
         $new->save();
+
+        return $new;
     }
 
     public function upload(

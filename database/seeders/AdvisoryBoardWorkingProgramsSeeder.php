@@ -8,6 +8,7 @@ use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardFunctionTranslation;
 use App\Models\File;
 use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
+use App\Services\FileOcr;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Seeder;
@@ -79,17 +80,23 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
-                    $service->storeDbRecord(
-                        $working_program->id,
-                        File::CODE_AB,
-                        $file['filename'],
-                        DocTypesEnum::AB_FUNCTION->value,
-                        $file['content_type'],
-                        $file['path'],
-                        $file['version'],
-                        $report->description,
-                        $report->title
-                    );
+                    foreach (config('available_languages') as $lang) {
+                        $file_record = $service->storeDbRecord(
+                            $working_program->id,
+                            File::CODE_AB,
+                            $file['filename'],
+                            DocTypesEnum::AB_FUNCTION->value,
+                            $file['content_type'],
+                            $file['path'],
+                            $file['version'],
+                            $report->description,
+                            $report->title,
+                            $lang['code'],
+                        );
+
+                        $ocr = new FileOcr($file_record->refresh());
+                        $ocr->extractText();
+                    }
 
                     $imported++;
                 }

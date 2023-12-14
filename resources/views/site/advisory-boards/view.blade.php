@@ -175,7 +175,9 @@
                             @if(isset($item->members) && $item->members->count() > 0)
                                 @foreach($item->members as $member)
                                     <li class="list-group-item">
-                                        @if(!empty($member->member_job))
+                                        @if(empty($member->member_name) && !empty($member->member_job))
+                                            {{ $member->member_job }}
+                                        @elseif(!empty($member->member_job))
                                             {{ $member->member_name . ', ' .$member->member_job }}
                                         @else
                                             {{ $member->member_name }}
