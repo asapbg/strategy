@@ -68,6 +68,7 @@
                         <div class="mb-3 d-flex flex-column w-100">
                             <label for="exampleFormControlInput1" class="form-label">Публична консултация</label>
                             <select class="form-select" id="processOfConsultation">
+                                <option value="all">Всички</option>
                                 <option value="process-of-consultation">В процес на консултация</option>
                                 <option value="expired">Изтекли</option>
                             </select>
