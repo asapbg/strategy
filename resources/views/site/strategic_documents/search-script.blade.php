@@ -19,10 +19,13 @@
             const processOfConsultation = $('#processOfConsultation');
             const ekateAreasId = $('#ekate_areas_id');
             const ekateMunicipalitiesId = $('#ekate_municipalities_id');
+            const processOfConsultationDiv = $('#processOfConsultationDiv');
             documentLevelSelect.add(administrationSelect).add(ekateAreasId).add(ekateMunicipalitiesId).select2({
                 multiple: true
             });
+
             processOfConsultation.select2();
+            processOfConsultationDiv.hide();
 
             const prisAct = $('#pris_act_ids');
             const loadPrisOptions = () => {
@@ -166,6 +169,7 @@
                     view = 'tree-view';
                     hideSearch();
                     updateUrlParameters({ 'view': 'tree-view' });
+                    processOfConsultationDiv.show();
                     liveCycle.show();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     loadStrategyDocuments(1, buildUrl())
@@ -175,6 +179,7 @@
                     searchButtons.show();
                     sorting.show();
                     paginationResultsDiv.show();
+                    processOfConsultationDiv.hide();
                     updateUrlParameters({ 'view': 'table-view' });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     liveCycle.hide();
@@ -237,6 +242,7 @@
             view = urlParams['view'];
             if (view &&  view == 'tree-view') {
                 hideSearch();
+                processOfConsultationDiv.show();
                 updateUrlParameters({ 'view': view });
             }
 
