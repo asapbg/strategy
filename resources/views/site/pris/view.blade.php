@@ -126,16 +126,20 @@
                         <a href="{{ route('pris.index').'?protocol='.$item->protocol }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
                     </div>
                 </div>
-
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper') }}
+                @if($item->newspaper)
+                    <div class="row pris-row pb-2 mb-2">
+                        <div class="col-md-3 pris-left-column">
+                            <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper') }}
+                        </div>
+                            <div class="col-md-9 pris-left-column">
+                                @if($item->newspaper_number || $item->newspaper_year)
+                                    <a href="{{ route('pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ __('validation.attributes.newspaper') }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
+                                @else
+                                    {{ $item->newspaper }}
+                                @endif
+                            </div>
                     </div>
-
-                    <div class="col-md-9 pris-left-column">
-                        <a href="{{ route('pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
-                    </div>
-                </div>
+                @endif
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
@@ -182,23 +186,23 @@
                     </div>
                 </div>
 
-                <div class="row pris-row pb-2 mb-2">
-                    <div class="col-md-3 pris-left-column">
-                        <i class="fa-solid fa-list-ol main-color me-1"></i>Версия
-                    </div>
-                    <div class="col-md-9 pris-left-column">
-                        <p class="mb-0">
-                            <a href="#" class="text-decoration-none">12.01.2023г. от потребител Георги Иванов</a>
-                        </p>
-                        <p class="mb-0">
-                            <a href="#" class="text-decoration-none">15.02.2023г. от потребител Георги Иванов</a>
-                        </p>
-                        <p class="mb-0">
-                            <a href="#" class="text-decoration-none">17.03.2023г. от потребител Георги Иванов</a>
-                        </p>
+{{--                <div class="row pris-row pb-2 mb-2">--}}
+{{--                    <div class="col-md-3 pris-left-column">--}}
+{{--                        <i class="fa-solid fa-list-ol main-color me-1"></i>Версия--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-9 pris-left-column">--}}
+{{--                        <p class="mb-0">--}}
+{{--                            <a href="#" class="text-decoration-none">12.01.2023г. от потребител Георги Иванов</a>--}}
+{{--                        </p>--}}
+{{--                        <p class="mb-0">--}}
+{{--                            <a href="#" class="text-decoration-none">15.02.2023г. от потребител Георги Иванов</a>--}}
+{{--                        </p>--}}
+{{--                        <p class="mb-0">--}}
+{{--                            <a href="#" class="text-decoration-none">17.03.2023г. от потребител Георги Иванов</a>--}}
+{{--                        </p>--}}
 
-                    </div>
-                </div>
+{{--                    </div>--}}
+{{--                </div>--}}
 
                 @if($item->files->count())
                     <div class="row mb-0 mt-5">

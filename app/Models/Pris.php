@@ -98,7 +98,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected function newspaper(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : '---'
+            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : (!empty($this->old_newspaper_full) ? $this->old_newspaper_full : null)
         );
     }
 
