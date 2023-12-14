@@ -45,7 +45,7 @@ class StrategicDocumentsController extends Controller
         $institutions = Institution::with('translations')->withoutTrashed()->get();
         $strategicDocuments = $this->prepareResults($request);
         $policyAreas = PolicyArea::with('translations')->get();
-        $preparedInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
+        //$preparedInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $strategicDocumentsCommonService = app(CommonService::class);
@@ -73,14 +73,14 @@ class StrategicDocumentsController extends Controller
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
         $ekateAreas = EkatteArea::with('translations')->get();
         $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
-        $prisActs = Pris::with('translations')->get();
+        //$prisActs = Pris::with('translations')->get();
         $pageTitle = trans('custom.strategy_documents_plural');
         $title_text = trans('custom.are_you_sure_to_delete');
         $continue_btn_text = trans('custom.delete');
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
+        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'editRouteName', 'deleteRouteName'));
 
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
@@ -369,6 +369,8 @@ class StrategicDocumentsController extends Controller
         $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';
         $currentLocale = app()->getLocale();
         $documentType = Arr::get($queryParams, 'document-type') ?? $request->input('document-type');
+        $documentType = ($documentType === 'null') ? null : $documentType;
+        //dd($documentType);
         $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
         $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
         $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
@@ -384,6 +386,7 @@ class StrategicDocumentsController extends Controller
                 });
             });
         }
+
         if ($policyArea) {
             $policyAreaArray = explode(',', $policyArea);
             $strategicDocuments->when(in_array('all', $policyAreaArray), function ($query) {
@@ -430,6 +433,8 @@ class StrategicDocumentsController extends Controller
         }
 
         $documentLevel = Arr::get($queryParams, 'document-level') ?? $request->input('document-level');
+        $documentLevel = ($documentLevel === 'null') ? null : $documentLevel;
+
         if ($documentLevel) {
             $documentLevelArray = explode(',', $documentLevel);
             $strategicDocuments->when(in_array('all', $documentLevelArray), function ($query) {
@@ -439,11 +444,18 @@ class StrategicDocumentsController extends Controller
             });
         }
 
+
         $documentDateFrom = Arr::get($queryParams, 'valid-from') ?? $request->input('valid-from');
         $documentDateTo = Arr::get($queryParams, 'valid-to') ?? $request->input('valid-to');
-        $documentDateInfinite = Arr::get($queryParams, 'date-infinite') ?? $request->input('date-infinite');
-        $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
 
+        $documentDateInfinite = Arr::get($queryParams, 'date-infinite') ?? $request->input('date-infinite');
+        $documentDateFrom = ($documentDateFrom === 'null') ? null : $documentDateFrom;
+        $documentDateTo = ($documentDateTo === 'null') ? null : $documentDateTo;
+
+        $documentDateInfinite = ($documentDateInfinite === 'null') ? null : $documentDateInfinite;
+
+
+        $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
             $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
             return $query->where(function ($subquery) use ($documentDateFrom, $documentDateInfinite) {
                 $subquery->where('document_date_accepted', '>=', $documentDateFrom);
@@ -459,10 +471,8 @@ class StrategicDocumentsController extends Controller
 
             return $query->whereBetween('document_date_accepted', [$documentDateFrom, $documentDateTo]);
         });
-
-        $strategicDocuments->when(!$documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateTo) {
+        $strategicDocuments->when(!$documentDateFrom && $documentDateTo && $documentDateInfinite == null, function ($query) use ($documentDateTo) {
             $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
-
             return $query->where('document_date_accepted', '<', $documentDateTo);
         });
 
@@ -525,6 +535,7 @@ class StrategicDocumentsController extends Controller
             });
         }
 
+        /*
         if ($prisActs) {
             $prisActsArray = explode(',', $prisActs);
             $strategicDocuments->whereIn('pris_act_id', $prisActsArray);
@@ -543,8 +554,9 @@ class StrategicDocumentsController extends Controller
                 });
             });
         }
+        */
 
-        if ($documentType != 'null') {
+        if ($documentType != null) {
             $strategicDocuments->where(function($query) use ($documentType) {
                 $query->where('strategic_document_type_id', $documentType);
             });

@@ -426,25 +426,33 @@
                 const policyArea = $('#policyArea');
                 policyArea.on('click', function() {
                     const clickedValue = $(this).data('policy-area-id');
-                    window.location.href = '/strategy-documents?policy-area=' + clickedValue;
+                    if (clickedValue) {
+                        window.location.href = '/strategy-documents?policy-area=' + clickedValue;
+                    }
                 });
 
                 const strategicDocumentType = $('#strategicDocumentType');
                 strategicDocumentType.on('click', function() {
                     const clickedValue = $(this).data('document-type-id');
-                    window.location.href = '/strategy-documents?document-type=' + clickedValue;
+                    if (clickedValue) {
+                        window.location.href = '/strategy-documents?document-type=' + clickedValue;
+                    }
                 });
                 const strategicDocumentLevel = $('#strategicDocumentLevel');
                 strategicDocumentLevel.on('click', function() {
                     const clickedValue = $(this).data('document-level-id');
-                    window.location.href = '/strategy-documents?document-level=' + clickedValue;
+                    if (clickedValue) {
+                        window.location.href = '/strategy-documents?document-level=' + clickedValue;
+                    }
+
                 });
 
                 const dateAccepted = $('#dateAccepted');
                 dateAccepted.on('click', function() {
                     const clickedValue = $(this).data('documentDateAccepted');
-
-                    window.location.href = '/strategy-documents?valid-from=' + clickedValue;
+                    if (clickedValue) {
+                        window.location.href = '/strategy-documents?valid-from=' + clickedValue;
+                    }
                 });
                 const dateExpiring = $('#dateExpiring');
                 dateExpiring.on('click', function() {

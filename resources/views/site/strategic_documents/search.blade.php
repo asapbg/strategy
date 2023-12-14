@@ -30,16 +30,11 @@
             <i class="fa-solid fa-download main-color me-2"></i>
             Справка с всички документи
         </button>
-        <!--
-        <button id="strategicDocumentsExport" class="btn btn-primary main-color">
-            <i
-                class="fas fa-download main-color me-1"></i>
-            Справка с всички документи </button>
-        -->
+
     </div>
 
 
-    <div class="col-md-12">
+    <div class="col-md-3">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.policy_area', 1) }}</label>
@@ -49,22 +44,23 @@
                         <option value="{{ $policyArea->id }}">{{ $policyArea->name }}</option>
                     @endforeach
                 </select>
-                <!--
-                <select class="form-select select2" multiple aria-label="Default select example">
-                    <option value="1">Всички</option>
-                    <option value="1">Регионална политика</option>
-                    <option value="1">Образование</option>
-                    <option value="1">Външна политика, сигурност и отбрана</option>
-                </select>
-                -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group ">
+            <div class="mb-3 d-flex flex-column  w-100">
+                <label for="exampleFormControlInput1" class="form-label">Търсене в
+                    Заглавие/Съдържание</label>
+                <input type="text" class="form-control" id="searchInTitle">
             </div>
         </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-3">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.category', 1) }}</label>
+                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.categories_based_on_livecycle', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="categorySelect">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     <option value="active">{{ trans_choice('custom.effective', 1) }}</option>
@@ -74,7 +70,9 @@
             </div>
         </div>
     </div>
+
     <!-- Pris -->
+    <!--
     <div class="col-md-12">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
@@ -86,29 +84,25 @@
             </div>
         </div>
     </div>
-
+    -->
     <!-- End Pris -->
+    <!--
     <div class="col-md-12">
         <div class="input-group" id="liveCycle">
             <div class="mb-3 d-flex flex-column  w-100">
+
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.categories_based_on_livecycle', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="category_select_livecycle">
-                    <option value="active">{{ trans_choice('custom.effective', 1) }}</option> <!-- default -->
+                    <option value="active">{{ trans_choice('custom.effective', 1) }}</option>
                     <option value="expired">{{ trans_choice('custom.expired', 1) }}</option>
                     <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}</option>
                 </select>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="input-group ">
-            <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">Търсене в
-                    Заглавие/Съдържание</label>
-                <input type="text" class="form-control" id="searchInTitle">
-            </div>
-        </div>
-    </div>
+    -->
+
+    <!--
     <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
@@ -135,8 +129,8 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
+    -->
+    <div class="col-md-3">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
@@ -152,6 +146,7 @@
             </div>
         </div>
     </div>
+    <!--
     <div class="col-md-4">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
@@ -165,6 +160,8 @@
             </div>
         </div>
     </div>
+    -->
+    <!--
     <div class="col-md-4">
         <div class="input-group">
             <div class="mb-3 d-flex flex-column w-100">
@@ -182,7 +179,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4" id="ekate_areas_div_id">
+    -->
+    <div class="col-md-3" id="ekate_areas_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
@@ -195,7 +193,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4" id="ekate_municipalities_div_id">
+    <div class="col-md-3" id="ekate_municipalities_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
