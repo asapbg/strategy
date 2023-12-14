@@ -83,8 +83,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function members(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMember::class)
-            ->where('advisory_type_id', AdvisoryTypeEnum::MEMBER->value);
+        return $this->hasMany(AdvisoryBoardMember::class);
     }
 
     public function viceChairmen(): HasMany

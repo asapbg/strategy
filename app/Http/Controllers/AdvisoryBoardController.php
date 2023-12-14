@@ -86,7 +86,7 @@ class AdvisoryBoardController extends Controller
         }
 
         return $this->view('site.advisory-boards.index', compact(
-           'pageTitle',
+            'pageTitle',
             'field_of_actions',
             'authority_advisory_boards',
             'advisory_act_types',
@@ -128,6 +128,10 @@ class AdvisoryBoardController extends Controller
      */
     public function show(AdvisoryBoard $item)
     {
+        $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
+            $query->with('files');
+        }])->first();
+
         return view('site.advisory-boards.view', compact('item'));
     }
 
