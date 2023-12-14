@@ -60,10 +60,12 @@
                                         </a>
                                         @if($item->institutions->count())
                                             @foreach($item->institutions as $i)
-                                                <a href="{{ route('pris.index').'?institutions[]='.$i->id }}" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank">
-                                                    <i class="fas fa-university fa-link main-color" title="{{ $i->name }}"></i>
-                                                    {{ $i->name }}
-                                                </a>
+                                                @if($i->id != config('app.default_institution_id'))
+                                                    <a href="{{ route('pris.index').'?institutions[]='.$i->id }}" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank">
+                                                        <i class="fas fa-university fa-link main-color" title="{{ $i->name }}"></i>
+                                                        {{ $i->name }}
+                                                    </a>
+                                                @endif
                                             @endforeach
                                         @endif
                                     </div>

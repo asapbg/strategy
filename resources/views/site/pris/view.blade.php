@@ -92,15 +92,17 @@
                     </div>
                 </div>
 
-                @if($item->institutions->count())
+                @if($item->institutions->count() && ($item->institutions->count() > 1 || $item->institutions->first()->id != config('app.default_institution_id')) )
                     <div class="row pris-row pb-2 mb-2">
                         <div class="col-md-3 pris-left-column">
                             <i class="fa-solid fa-university main-color me-1"></i>{{ trans_choice('custom.institutions', 1) }}
                         </div>
                         <div class="col-md-9 pris-left-column">
-                        @foreach($item->institutions as $i)
-                            <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
-                        @endforeach
+                            @foreach($item->institutions as $i)
+                                @if($i->id != config('app.default_institution_id'))
+                                    <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 @endif

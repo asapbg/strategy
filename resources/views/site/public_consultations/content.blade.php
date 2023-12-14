@@ -59,25 +59,29 @@
                   </span>
                 </a>
             </div>
-            <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
-                <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
-                  <span class="obj-icon-info">
-                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
-                      {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
-                  </span>
-                </a>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
-{{--                <a href="#" class="main-color text-decoration-none">--}}
-{{--                  <span class="obj-icon-info me-2">--}}
-{{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>--}}
-{{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
-{{--                  </span>--}}
-{{--                </a>--}}
-                <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
-            </div>
+            @if($item->importer_institution_id != config('app.default_institution_id'))
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
+                    <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
+                      <span class="obj-icon-info">
+                        <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
+                          {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
+                      </span>
+                    </a>
+                </div>
+            @endif
+            @if($item->consultation_level_id)
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
+    {{--                <a href="#" class="main-color text-decoration-none">--}}
+    {{--                  <span class="obj-icon-info me-2">--}}
+    {{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>--}}
+    {{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
+    {{--                  </span>--}}
+    {{--                </a>--}}
+                    <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
+                </div>
+            @endif
 {{--            <div class="col-md-4 ">--}}
 {{--                <h3 class="mb-2 fs-18">Предишна версия</h3>--}}
 {{--                <a href="#" class="main-color text-decoration-none">--}}
@@ -94,17 +98,15 @@
             </div>
         </div>
 
-        <div class="row mb-4 mt-4">
-            <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
-            @if($item->responsibleInstitution)
+        @if($item->responsibleInstitution && $item->responsibleInstitution->id != config('app.default_institution_id'))
+            <div class="row mb-4 mt-4">
+                <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
                 <p> <strong>{{ $item->responsibleInstitution->name }} </strong>
                     <br> {{ __('custom.address') }}: {{ ($item->responsibleInstitution->settlement ? $item->responsibleInstitution->settlement->ime.', ' : '').$item->responsibleInstitution->address }}
                     <br> {{ __('custom.email') }}: @if($item->responsibleInstitution->email) <a href="mailto:{{ $item->responsibleInstitution->email }}" class="main-color">{{ $item->responsibleInstitution->email }}</a>@else ---@endif
                 </p>
-            @else
-                <p>---</p>
-            @endif
-        </div>
+            </div>
+        @endif
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ __('site.public_consultation.contact_persons') }}</h3>
             @if($item->contactPersons->count())
