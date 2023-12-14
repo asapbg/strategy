@@ -41,6 +41,10 @@ class PrisController extends Controller
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('pris_translations', function ($j){
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
             ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
             ->leftJoin('institution_translations', function ($j){
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
@@ -51,11 +55,18 @@ class PrisController extends Controller
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
+            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
+            ->leftJoin('tag_translations', function ($j){
+                $j->on('tag_translations.tag_id', '=', 'tag.id')
+                    ->where('tag_translations.locale', '=', app()->getLocale());
+            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->GroupBy('pris.id')
             ->paginate($paginate);
+
 
         if( $request->ajax() ) {
             return view('site.pris.list', compact('filter','sorter', 'items', 'rf'));
@@ -181,39 +192,18 @@ class PrisController extends Controller
                 'value' => $request->input('legalActTypes'),
                 'col' => 'col-md-12'
             ),
+            'fullSearch' => array(
+                'type' => 'text',
+                'label' => __('custom.files').'/'.__('custom.pris_about').'/'.__('custom.pris_legal_reason').'/'.trans_choice('custom.tags', 2),
+                'value' => $request->input('fullSearch'),
+                'col' => 'col-md-12'
+            ),
             'docNum' => array(
                 'type' => 'text',
                 'label' => __('custom.document_number'),
                 'value' => $request->input('docNum'),
                 'col' => 'col-md-3'
             ),
-            'filesContent' => array(
-                'type' => 'text',
-                'label' => __('custom.content'),
-                'value' => $request->input('filesContent'),
-                'col' => 'col-md-3'
-            ),
-            'about' => array(
-                'type' => 'text',
-                'label' => __('custom.pris_about'),
-                'value' => $request->input('about'),
-                'col' => 'col-md-3'
-            ),
-            'legalReason' => array(
-                'type' => 'text',
-                'label' => __('custom.pris_legal_reason'),
-                'value' => $request->input('legalReason'),
-                'col' => 'col-md-3'
-            ),
-//            'tag' => array(
-//                'type' => 'select',
-//                'options' => optionsFromModel(Tag::get()),
-//                'multiple' => false,
-//                'default' => '',
-//                'label' => trans_choice('custom.tags', 2),
-//                'value' => $request->input('tag'),
-//                'col' => 'col-md-3'
-//            ),
             'institutions' => array(
                 'type' => 'subjects',
                 'label' => trans_choice('custom.institutions', 1),
