@@ -61,6 +61,22 @@
                 </li>
             </ul> -->
         </div>
+        <div class="col-md-12">
+            <div class="row filter-results mb-2">
+                <div class="col-md-4">
+                    <div class="input-group ">
+                        <div class="mb-3 d-flex flex-column w-100">
+                            <label for="exampleFormControlInput1" class="form-label">Публична консултация</label>
+                            <select class="form-select" id="processOfConsultation">
+                                <option value="process-of-consultation">В процес на консултация</option>
+                                <option value="expired">Изтекли</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
             @include('site.strategic_documents.search')
             @include('site.strategic_documents.search-script')
             <div class="tab-content">
@@ -78,6 +94,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="tree-view">
+
                     <div class="easy-tree">
 
                     </div>
