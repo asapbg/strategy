@@ -23,20 +23,22 @@
     $sort_array = [];
     $sort_icon = 'fa-sort';
 
-    if (!request()->has('order_by')) {
+    if (!request()->has('order_by') || isset($defaultOrderBy)) {
         $sort_array['order_by'] = $sort_by;
     }
 
-    if (request()->has('order_by')) {
+    if (request()->has('order_by') || isset($defaultOrderBy)) {
         $sort_array['order_by'] = $sort_by;
-        $sort_array['direction'] = 'desc';
+        $sort_array['direction'] = $defaultDirection ?? 'desc';
     }
 
-    if (!request()->has('direction') && request()->get('order_by' , '') === $sort_by) {
+    $asc = isset($defaultOrderBy) && isset($sort_array['order_by']) && $sort_array['order_by'] == $defaultOrderBy && $defaultDirection == 'asc';
+    if (!request()->has('direction') && request()->get('order_by' , '') === $sort_by|| $asc) {
         $sort_icon = 'fa-sort-asc';
     }
 
-    if (request()->has('direction') && request()->get('order_by' , '') === $sort_by) {
+    $desc = isset($defaultOrderBy) && isset($sort_array['order_by']) && $sort_array['order_by'] == $defaultOrderBy && 'desc';
+    if (request()->has('direction') && request()->get('order_by' , '') === $sort_by || $desc) {
         $sort_icon = 'fa-sort-desc';
         $sort_array = [];
 
