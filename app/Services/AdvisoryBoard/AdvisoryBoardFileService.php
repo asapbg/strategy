@@ -34,7 +34,9 @@ class AdvisoryBoardFileService
         int    $doc_type,
         string $content_type,
         string $path,
-        string $version = null
+        string $version = null,
+        string $description = null,
+        string $custom_name = null
     ): void
     {
         $new = new File([
@@ -45,6 +47,9 @@ class AdvisoryBoardFileService
             'content_type' => $content_type,
             'path' => $path,
             'version' => $version ?? '1.0',
+            'description_bg' => $description,
+            'description_en' => $description,
+            'custom_name' => $custom_name
         ]);
 
         $new->save();

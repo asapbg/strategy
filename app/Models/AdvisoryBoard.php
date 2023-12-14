@@ -114,6 +114,12 @@ class AdvisoryBoard extends ModelActivityExtend
         return $this->hasMany(AdvisoryBoardFunction::class);
     }
 
+    public function workingProgram(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoardFunction::class)
+            ->whereYear('working_year', '=', now()->year);
+    }
+
     protected function hasViceChairman(): Attribute
     {
         return Attribute::make(
