@@ -50,9 +50,6 @@
 <br><a href="{{ route('templates.view', ['slug' => 'abonamenti']) }}">Абонаменти</a>
 <br>
 
-<br><a href="{{ route('templates.view', ['slug' => 'institution-profile']) }}">Профил на институция</a>
-<br><a href="{{ route('templates.view', ['slug' => 'institution-profile-moderators']) }}">   Профил на институция - Модератори</a>
-<br>
 
 <br><a href="{{ route('templates.view', ['slug' => 'ks_filter']) }}">Консултативни съвети (списък)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети - вътрешна страница</a>
@@ -94,7 +91,22 @@
 <br><a href="{{ route('report.view') }}">Отчет - Преглед</a>
 
 <br>
-<br><a href="{{ route('partnerships.index') }}">Партньорство за открито управление</a>
+<!-- <br><a href="{{ route('partnerships.index') }}">Партньорство за открито управление</a> -->
+
+
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile']) }}">Профил на институция</a>
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile-moderators']) }}">   Профил на институция - Модератори</a>
+<br>
+<br><a href="{{ route('templates.view', ['slug' => 'user-profile']) }}">Профил на потребител</a>
+<br><a href="{{ route('templates.view', ['slug' => 'user-profile-subscription']) }}">   Профил на потребител - Абонаменти</a>
+<br><a href="{{ route('templates.view', ['slug' => 'user-profile-legislative-initiatives']) }}">   Профил на потребител - Законодателни инициативи</a>
+<br><a href="{{ route('templates.view', ['slug' => 'user-profile-impact-assessments']) }}">   Профил на потребител - Оценки на въздействието</a>
+<br><a href="{{ route('templates.view', ['slug' => 'user-profile-comments']) }}">   Профил на потребител - Коментари</a>
+
+
+
+
+<br>
 
 <br>
 <br><a href="{{ route('templates.view', ['slug' => 'not-found']) }}">Страница за 404</a>

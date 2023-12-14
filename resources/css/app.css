@@ -233,7 +233,7 @@ span.select2.select2-container.select2-container--default,span.select2.select2-c
     /* background: #eaf3fb75;
     border: 1px solid #cae0f4;*/
     background: #eaf3fb2e;
-    box-shadow: rgb(33 101 158 / 37%) 0px 0px 5px 0px;
+    box-shadow: rgb(33 101 158 / 20%) 0px 0px 5px 0px;
 }
 
 /* Header and top bar*/
@@ -1217,6 +1217,19 @@ input#startdate {
 
 /**/
 
+/*User Profile Page*/
+.user-profile-comment {
+    border-left: unset;
+    border-right: unset;
+    border-radius: unset !important;
+    padding: 16px;
+}
+
+.user-profile-comment .obj-comment:last-child {
+    margin-bottom: 0px !important;
+}
+/**/
+
 
 /* Strategic documents */
 /*
@@ -1587,6 +1600,10 @@ input[type=checkbox] {
 
 .obg-comments-section .obj-comment .info {
     margin-bottom: 5px;
+}
+
+.comment.rounded.py-2 {
+    padding-bottom: 0px !important;
 }
 
 .obg-comments-section .obj-comment .comment {

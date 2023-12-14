@@ -54,7 +54,7 @@
 
 
         <div class="col-md-12">
-            <h2 class="mb-2">Основна информация</h2>
+            <h2 class="mb-4">Основна информация</h2>
         </div>
 
         <div class="row pris-row pb-2 mb-2">
@@ -98,7 +98,7 @@
 
 
         <div class="col-md-12 mt-5">
-            <h2 class="mb-2">Адрес за кореспонденция</h2>
+            <h2 class="mb-4">Адрес за кореспонденция</h2>
         </div>
 
         <div class="row pris-row pb-2 mb-2">

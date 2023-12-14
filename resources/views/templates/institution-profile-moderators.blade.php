@@ -58,10 +58,7 @@
                 </button>
             </div>
         </div>
-
-        <hr class="custom-hr py-2">
-
-        <div class="row mt-3">
+        <div class="row">
             <div class="col-lg-6 mb-4 ">
                 <div class="member d-flex align-items-center p-3 custom-shadow br-08">
                     <div class="member-info">
