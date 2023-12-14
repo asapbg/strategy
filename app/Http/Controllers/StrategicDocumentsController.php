@@ -172,7 +172,7 @@ class StrategicDocumentsController extends Controller
                         $treeViewHtml .= '<li class="active-node parent_li">';
                         $treeViewHtml .= '<span>';
                         $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $parent->id]) . '">';
-                        $treeViewHtml .= $document->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
+                        $treeViewHtml .= $parent->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
                         $treeViewHtml .= '</a>';
                         $treeViewHtml .= '</span>';
 
