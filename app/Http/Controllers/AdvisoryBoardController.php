@@ -82,7 +82,7 @@ class AdvisoryBoardController extends Controller
             ->paginate(10);
 
         if ($is_search) {
-            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards', ''));
+            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards'));
         }
 
         return $this->view('site.advisory-boards.index', compact(
