@@ -57,11 +57,14 @@ class AdvisoryBoardController extends AdminController
 
         $items = $items->with(['policyArea', 'translations'])
             ->where(function ($query) use ($keywords) {
-                $query->when(!empty($keywords), function ($query) use ($keywords) {
-                    $query->whereHas('translations', function ($query) use ($keywords) {
-                        $query->where('name', 'like', '%' . $keywords . '%');
+                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
+                    $query->where('id', $keywords);
+                })
+                    ->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
+                        $query->whereHas('translations', function ($query) use ($keywords) {
+                            $query->where('name', 'like', '%' . $keywords . '%');
+                        });
                     });
-                });
             })
             ->when($status != '', function ($query) use ($status) {
                 $query->where('active', (bool)$status);
@@ -227,6 +230,7 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('update', $item);
 
         $archive_category = request()->get('archive_category', '');
+
         $query = $item->newQuery();
         $item = $query->with(['advisoryFunctions' => function ($query) {
             $query->when(request()->get('show_deleted_functions', 0) == 1, function ($query) {
@@ -252,16 +256,17 @@ class AdvisoryBoardController extends AdminController
             }, 'translations'])->when(request()->get('show_deleted_sections', 0) == 1, function ($query) {
                 $query->withTrashed();
             })->orderBy('order');
+        }, 'members' => function ($query) {
+            $query->withTrashed()->with('translations')->orderBy('id');
         }])->find($item->id);
 
-        $policy_areas = PolicyArea::orderBy('id')->get();
-        $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
-        $advisory_act_types = AdvisoryActType::orderBy('id')->get();
+        $policy_areas = PolicyArea::with('translations')->orderBy('id')->get();
+        $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
+        $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
-        $members = AdvisoryBoardMember::withTrashed()->where('advisory_board_id', $item->id)->orderBy('id')->get();
         $secretariat = $item->secretariat;
-        $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
+        $authorities = AuthorityAdvisoryBoard::with('translations')->orderBy('id')->get();
         $all_users = User::select(['id', 'username'])
             ->orderBy('username')
             ->whereNotIn('id', function ($query) {
@@ -297,7 +302,6 @@ class AdvisoryBoardController extends AdminController
                 'advisory_act_types',
                 'institutions',
                 'consultation_levels',
-                'members',
                 'authorities',
                 'secretariat',
                 'secretariat_files',

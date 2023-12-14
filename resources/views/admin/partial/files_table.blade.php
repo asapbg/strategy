@@ -10,6 +10,7 @@
     <tr>
         <th>ID</th>
         <th>{{ __('custom.name') }}</th>
+        <th>{{ __('custom.lang') }}</th>
         <th>{{ __('custom.description') }}</th>
         <th>{{ __('validation.attributes.created_at') }}</th>
         <th>{{ __('custom.version') }}</th>
@@ -23,6 +24,7 @@
             <tr>
                 <td>{{ $file->id }}</td>
                 <td>{{ $file->custom_name ?? $file->filename }}</td>
+                <td>{{ __('custom.' . $file->locale) }}</td>
                 <td>
                     @foreach(config('available_languages') as $language)
                         @if($file->{'description_' . $language['code']})

@@ -59,14 +59,22 @@ class AdvisoryBoardMemberSeeder extends Seeder
 
     private function determineAdvisoryType(int $type, string|null $position): int
     {
+        // Председател
         if ($type === 1) {
             return AdvisoryTypeEnum::CHAIRMAN->value;
         }
 
+        // Заместник-председател
+        if ($type === 2) {
+            return AdvisoryTypeEnum::VICE_CHAIRMAN->value;
+        }
+
+        // Секретар
         if (str_contains($position, "секретар")) {
             return AdvisoryTypeEnum::SECRETARY->value;
         }
 
-        return AdvisoryTypeEnum::MEMBER->value; // член
+        // Член
+        return AdvisoryTypeEnum::MEMBER->value;
     }
 }

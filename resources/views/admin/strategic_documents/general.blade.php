@@ -641,7 +641,6 @@
 
         $(document).ready(function () {
             const documentId = {!! json_encode(isset($item) ? (int)$item->id : null) !!};
-
             $("#stayButton").click(function () {
                 $("#stay").val("true");
             });
@@ -800,7 +799,7 @@
                     }
                 });
             }
-            loadParentStrategicDocumentOptions();
+            loadParentStrategicDocumentOptions(filter = '', documentId);
 
             const prisOptions = $('#pris_options');
             prisOptions.select2();

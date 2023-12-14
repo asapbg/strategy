@@ -711,7 +711,7 @@ class StrategicDocumentsController extends AdminController
 
     public function loadParentStrategicDocuments(Request $request)
     {
-        $strategicDocumentId = $request->get('strategicDocumentId');
+        $strategicDocumentId = $request->get('documentId');
         $strategicDocumentsCommonService = app(CommonService::class);
         $strategicDocuments = $strategicDocumentsCommonService->parentStrategicDocumentsSelect2Options($request);
         $strategicDocuments = $strategicDocuments->paginate(20);
@@ -732,6 +732,7 @@ class StrategicDocumentsController extends AdminController
                     'id' => $parentDocument->id,
                     'text' => $parentDocument->title,
                 ];
+                $documentOptions['items'] = $documentOptions['items']->toArray();
                 array_unshift($documentOptions['items'], $customOption);
                 $documentOptions['items'][0]['selected'] = true;
             }

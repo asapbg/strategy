@@ -26,13 +26,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(isset($members) && $members->count() > 0)
-                        @foreach($members as $member)
+                    @if(isset($item->members) && $item->members->count() > 0)
+                        @foreach($item->members as $member)
                             <tr>
                                 <td>{{ $member->id }}</td>
                                 <td>{{ $member->member_name }}</td>
                                 <td>{{ trans_choice('custom.' . Str::lower(\App\Enums\AdvisoryTypeEnum::tryFrom($member->advisory_type_id)->name), 1) }}</td>
-                                <td>{{ $member->advisoryChairmanType?->name }}</td>
+                                <td>{{ $member->member_job }}</td>
                                 <td class="text-center">
                                     @can('update', $item)
                                         <button type="button"

@@ -80,8 +80,8 @@ class StrategicDocumentsController extends Controller
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
 
-        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));  
-        
+        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'preparedInstitutions', 'editRouteName', 'deleteRouteName'));
+
         return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
 
@@ -94,8 +94,9 @@ class StrategicDocumentsController extends Controller
         $strategicDocuments = $this->prepareResults($request);
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
+        $view = Arr::get($queryParams, 'view') ?? $request->get('view');
 
-        if (Arr::get($queryParams, 'view') == 'tree-view') {
+        if ($view == 'tree-view') {
             $categoriesData = $this->prepareCategoriesData($strategicDocuments);
             $strategicDocumentsHtml = $this->prepareStrategicDocumentsTreeView($strategicDocuments->get(), $categoriesData);
             $pagination = '';
@@ -150,33 +151,60 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '</span>';
         $treeViewHtml .= '<ul>';
 
-        foreach ($categoriesData['national'] as $key => $documents) {
-            $treeViewHtml .= '<li class="parent_li">';
-            $treeViewHtml .= '<span>';
-            $treeViewHtml .= '<a href="#" class="main-color fs-18" data-toggle="collapse" data-target="#' . $key . '">';
-            $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
-            $treeViewHtml .= trans_choice('custom.central_level', 1);
-            $treeViewHtml .= '</a>';
-            $treeViewHtml .= '</span>';
-            $treeViewHtml .= '<ul class="collapse show" id="' . $key . '">';
+        $displayedIds = [];
+        foreach ($categoriesData['national'] as $categoryName => $documents) {
 
             if (isset($documents)) {
+                $categoryId = preg_replace('/[^\p{L}a-zA-Z0-9]/u', '-', $categoryName);
+
+                $treeViewHtml .= '<li class="parent_li">';
+                $treeViewHtml .= '<span>';
+                $treeViewHtml .= '<a href="#" class="main-color fs-18" data-toggle="collapse" data-target="#' . $categoryId . '">';
+                $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
+                $treeViewHtml .= $categoryName;
+                $treeViewHtml .= '</a>';
+                $treeViewHtml .= '</span>';
+
+                $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '">';
+
                 foreach ($documents as $document) {
-                    $treeViewHtml .= '<li class="active-node parent_li">';
-                    $treeViewHtml .= '<span>';
-                    $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
-                    $treeViewHtml .= $document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
-                    $treeViewHtml .= '</a>';
-                    $treeViewHtml .= '</span>';
+                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
+                        continue;
+                    }
+                    if ($document->parentDocument) {
+                        $parent = $document->parentDocument;
+                        $treeViewHtml .= '<li class="active-node parent_li">';
+                        $treeViewHtml .= '<span>';
+                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $parent->id]) . '">';
+                        $treeViewHtml .= $parent->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
+                        $treeViewHtml .= '</a>';
+                        $treeViewHtml .= '</span>';
+
+                        $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '-child">';
+                        $displayedIds[] = $parent->id;
+                    }
+                    //if (!in_array($document->id, $displayedIds)) {
+                        $treeViewHtml .= '<li class="active-node parent_li">';
+                        $treeViewHtml .= '<span>';
+                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
+                        $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
+                        $treeViewHtml .= '</a>';
+                        $treeViewHtml .= '</span>';
+                        $displayedIds[] = $document->id;
+                    //}
+
+                    if ($document->parentDocument) {
+                        $treeViewHtml .= '</ul>';
+                    }
+
                     $treeViewHtml .= '</li>';
+
                 }
+
             }
-
-
             $treeViewHtml .= '</ul>';
             $treeViewHtml .= '</li>';
         }
-
         $treeViewHtml .= '</ul>';
         $treeViewHtml .= '</li>';
 
@@ -190,8 +218,9 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '</span>';
         $treeViewHtml .= '<ul>';
 
+
         foreach ($categoriesData['regional'] as $key => $documents) {
-            $categoryName = $key == 'district-level' ? trans_choice('custom.area_level', 1) : trans_choice('custom.distrinct_level', 1);
+            $categoryName = $key == 'district-level' ? trans_choice('custom.area_level', 1) : trans_choice('custom.nomenclature_level.MUNICIPAL', 1);
 
             $treeViewHtml .= '<li class="parent_li">';
             $treeViewHtml .= '<span>';
@@ -204,16 +233,38 @@ class StrategicDocumentsController extends Controller
 
             if (isset($documents)) {
                 foreach ($documents as $document) {
+                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
+                        continue;
+                    }
+                    if ($document->parentDocument) {
+                        // Display the parent first
+                        $parent = $document->parentDocument;
+                        $treeViewHtml .= '<li class="active-node parent_li">';
+                        $treeViewHtml .= '<span>';
+                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $parent->id]) . '">';
+                        $treeViewHtml .= $parent->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
+                        $treeViewHtml .= '</a>';
+                        $treeViewHtml .= '</span>';
+
+                        $treeViewHtml .= '<ul class="collapse show" id="' . $key . '-child">';
+                        $displayedIds[] = $parent->id;
+                    }
                     $treeViewHtml .= '<li class="active-node parent_li">';
                     $treeViewHtml .= '<span>';
                     $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
-                    $treeViewHtml .= $document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
+                    $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
                     $treeViewHtml .= '</a>';
                     $treeViewHtml .= '</span>';
+                    $displayedIds[] = $document->id;
+
+                    if ($document->parentDocument) {
+                        $treeViewHtml .= '</ul>';
+                    }
+
                     $treeViewHtml .= '</li>';
+
                 }
             }
-
             $treeViewHtml .= '</ul>';
             $treeViewHtml .= '</li>';
         }
@@ -230,7 +281,6 @@ class StrategicDocumentsController extends Controller
     private function prepareStrategicDocumentsHtml($strategicDocuments, $editRouteName, $deleteRouteName)
     {
         $strategicDocumentsHtml = '';
-
         foreach ($strategicDocuments as $document) {
             if (!$document->active) {
                 continue;
@@ -500,6 +550,24 @@ class StrategicDocumentsController extends Controller
             });
         }
 
+        $inProcessOfConsultation = Arr::get($queryParams, 'in-process-of-consultation') ?? $request->input('in-process-of-consultation');
+
+        if ($inProcessOfConsultation) {
+            $strategicDocuments = $strategicDocuments->where(function($query) use ($inProcessOfConsultation) {
+                $query->when($inProcessOfConsultation == 'expired', function($query) {
+                    $query->whereHas('publicConsultation', function($query) {
+                        $query->where('open_to', '<', Carbon::now());
+                    });
+                });
+                $query->when($inProcessOfConsultation == 'process-of-consultation', function ($query) {
+                    $query->whereHas('publicConsultation', function ($query) {
+                        $query->where('open_to', '>=', Carbon::now())
+                            ->where('open_from', '<=', Carbon::now());
+                    });
+                });
+            });
+        }
+
         return $strategicDocuments;
     }
 
@@ -575,7 +643,8 @@ class StrategicDocumentsController extends Controller
         foreach ($categories as $category) {
             // Централно ниво
             if ($category->documentLevel?->id == 1) {
-                $categoriesData['national']['central-level'][] = $category;
+                //$categoriesData['national']['central-level'][] = $category;
+                $categoriesData['national'][$category->policyArea->name][] = $category;
             } else {
                 if (!$category->documentLevel) {
                     continue;

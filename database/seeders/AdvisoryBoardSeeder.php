@@ -81,8 +81,8 @@ class AdvisoryBoardSeeder extends Seeder
                 $translation->save();
             }
 
-            $service = app(AdvisoryBoardService::class, ['board' => $new_advisory_board]);
-            $service->createDependencyTables();
+//            $service = app(AdvisoryBoardService::class, ['board' => $new_advisory_board]);
+//            $service->createDependencyTables();
 
             $imported++;
         }

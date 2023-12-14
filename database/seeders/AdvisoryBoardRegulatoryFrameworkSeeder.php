@@ -10,6 +10,7 @@ use App\Models\AdvisoryBoardOrganizationRule;
 use App\Models\AdvisoryBoardOrganizationRuleTranslation;
 use App\Models\File;
 use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
+use App\Services\FileOcr;
 use DB;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
@@ -92,15 +93,23 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
-                    $service->storeDbRecord(
-                        $establishment->id,
-                        File::CODE_AB,
-                        $file['filename'],
-                        DocTypesEnum::AB_ESTABLISHMENT_RULES->value,
-                        $file['content_type'],
-                        $file['path'],
-                        $file['version']
-                    );
+                    foreach (config('available_languages') as $lang) {
+                        $file_record = $service->storeDbRecord(
+                            $establishment->id,
+                            File::CODE_AB,
+                            $file['filename'],
+                            DocTypesEnum::AB_ESTABLISHMENT_RULES->value,
+                            $file['content_type'],
+                            $file['path'],
+                            $file['version'],
+                            null,
+                            null,
+                            $lang['code'],
+                        );
+
+                        $ocr = new FileOcr($file_record->refresh());
+                        $ocr->extractText();
+                    }
 
                     $files_imported++;
                 }
@@ -169,15 +178,23 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
-                    $service->storeDbRecord(
-                        $new_framework->id,
-                        File::CODE_AB,
-                        $file['filename'],
-                        DocTypesEnum::AB_ORGANIZATION_RULES->value,
-                        $file['content_type'],
-                        $file['path'],
-                        $file['version']
-                    );
+                    foreach (config('available_languages') as $lang) {
+                        $file_record = $service->storeDbRecord(
+                            $new_framework->id,
+                            File::CODE_AB,
+                            $file['filename'],
+                            DocTypesEnum::AB_ORGANIZATION_RULES->value,
+                            $file['content_type'],
+                            $file['path'],
+                            $file['version'],
+                            null,
+                            null,
+                            $lang['code'],
+                        );
+
+                        $ocr = new FileOcr($file_record->refresh());
+                        $ocr->extractText();
+                    }
 
                     $files_imported++;
                 }
