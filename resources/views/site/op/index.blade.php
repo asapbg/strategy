@@ -11,6 +11,16 @@
                     {!! $pageTopContent->value !!}
                 </div>
             @endif
+            <div class="row mb-2">
+                <div class="col-md-6 mt-2">
+                    <div class="info-consul text-start">
+                        <p class="fw-600">
+                            {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->total()]) }}
+                        </p>
+                    </div>
+                </div>
+                {{--                @include('site.partial.paginate_filter', ['ajaxContainer' => '#listContainer'])--}}
+            </div>
             @if($items->count())
                 @foreach($items as $item)
                     <div class="row">

@@ -548,7 +548,7 @@ if (!function_exists('optionsUserTypes')) {
         function paginationSelect()
         {
             return $options = [
-                ['value' => 1, 'name' => 10],
+                ['value' => 10, 'name' => 10],
                 ['value' => 20, 'name' => 20],
                 ['value' => 30, 'name' => 30],
                 ['value' => 40, 'name' => 40],
