@@ -150,6 +150,8 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '</a>';
         $treeViewHtml .= '</span>';
         $treeViewHtml .= '<ul>';
+
+        $displayedIds = [];
         foreach ($categoriesData['national'] as $categoryName => $documents) {
 
             if (isset($documents)) {
@@ -166,8 +168,10 @@ class StrategicDocumentsController extends Controller
                 $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '">';
 
                 foreach ($documents as $document) {
+                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
+                        continue;
+                    }
                     if ($document->parentDocument) {
-                        // Display the parent first
                         $parent = $document->parentDocument;
                         $treeViewHtml .= '<li class="active-node parent_li">';
                         $treeViewHtml .= '<span>';
@@ -177,14 +181,17 @@ class StrategicDocumentsController extends Controller
                         $treeViewHtml .= '</span>';
 
                         $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '-child">';
+                        $displayedIds[] = $parent->id;
                     }
-
-                    $treeViewHtml .= '<li class="active-node parent_li">';
-                    $treeViewHtml .= '<span>';
-                    $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
-                    $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
-                    $treeViewHtml .= '</a>';
-                    $treeViewHtml .= '</span>';
+                    //if (!in_array($document->id, $displayedIds)) {
+                        $treeViewHtml .= '<li class="active-node parent_li">';
+                        $treeViewHtml .= '<span>';
+                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
+                        $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
+                        $treeViewHtml .= '</a>';
+                        $treeViewHtml .= '</span>';
+                        $displayedIds[] = $document->id;
+                    //}
 
                     if ($document->parentDocument) {
                         $treeViewHtml .= '</ul>';
@@ -193,6 +200,7 @@ class StrategicDocumentsController extends Controller
                     $treeViewHtml .= '</li>';
 
                 }
+
             }
             $treeViewHtml .= '</ul>';
             $treeViewHtml .= '</li>';
@@ -211,7 +219,6 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '<ul>';
 
 
-        // Regional
         foreach ($categoriesData['regional'] as $key => $documents) {
             $categoryName = $key == 'district-level' ? trans_choice('custom.area_level', 1) : trans_choice('custom.nomenclature_level.MUNICIPAL', 1);
 
@@ -226,6 +233,9 @@ class StrategicDocumentsController extends Controller
 
             if (isset($documents)) {
                 foreach ($documents as $document) {
+                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
+                        continue;
+                    }
                     if ($document->parentDocument) {
                         // Display the parent first
                         $parent = $document->parentDocument;
@@ -237,14 +247,15 @@ class StrategicDocumentsController extends Controller
                         $treeViewHtml .= '</span>';
 
                         $treeViewHtml .= '<ul class="collapse show" id="' . $key . '-child">';
+                        $displayedIds[] = $parent->id;
                     }
-
                     $treeViewHtml .= '<li class="active-node parent_li">';
                     $treeViewHtml .= '<span>';
                     $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
                     $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
                     $treeViewHtml .= '</a>';
                     $treeViewHtml .= '</span>';
+                    $displayedIds[] = $document->id;
 
                     if ($document->parentDocument) {
                         $treeViewHtml .= '</ul>';
