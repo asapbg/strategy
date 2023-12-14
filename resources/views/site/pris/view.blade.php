@@ -176,6 +176,9 @@
                                 </a>
                             @endforeach
                         @endif
+                        @if(!empty($item->old_connections))
+                                {!! $item->oldConnectionsHtml !!}
+                        @endif
                     </div>
                 </div>
 

@@ -65,6 +65,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    protected function oldConnectionsHtml(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !empty($this->old_connections) ? implode('<br>', explode('|', $this->old_connections)) : '',
+        );
+    }
+
     protected function displayName(): Attribute
     {
         $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
