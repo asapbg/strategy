@@ -235,7 +235,7 @@
             const prisActsResultValue = urlParams['pris-acts'];
 
             view = urlParams['view'];
-            if (view) {
+            if (view &&  view == 'tree-view') {
                 hideSearch();
                 updateUrlParameters({ 'view': view });
             }
