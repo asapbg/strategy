@@ -54,7 +54,7 @@ class clearDb extends Command
 
                     $deleted = 1;
                     while ($deleted > 0) {
-                        $deleted = File::where('id_object', '>=', 1)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->forceDelete();
+                        $deleted = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->forceDelete();
                         $this->comment('100 files are deleted');
                         sleep(1);
                     };

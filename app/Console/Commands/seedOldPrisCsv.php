@@ -349,8 +349,8 @@ class seedOldPrisCsv extends Command
                                 documents.doctypeid as old_doc_type_id,
                                 -- as version
                                 -- as public_consultation_id
-                                --documents.content  as to_parse_xml_details, -- doc_num, about, doc_date, institution_id/importer ??, newspaper_number ??, newspaper_year ??, legal_reason ??, protocol ??, tags ??, pris_change_pris
-                                --contents.content as to_parse_txt_details2, -- same as to_parse_xml_details but in text format
+                                -- documents.content  as to_parse_xml_details, -- doc_num, about, doc_date, institution_id/importer ??, newspaper_number ??, newspaper_year ??, legal_reason ??, protocol ??, tags ??, pris_change_pris
+                                -- contents.content as to_parse_txt_details2, -- same as to_parse_xml_details but in text format
                                 case when documents.active = true then 1 else 0 end as active,
                                 documents.publishdate as published_at,
                                 documents.created as created_at,
@@ -367,7 +367,7 @@ class seedOldPrisCsv extends Command
                                 and documents.documentid < ' . ($currentStep + $step) . '
                                 and documents.doctypeid <> 1 -- skip law records
                                 and documents.lastrevision = \'Y\' -- get final versions
-                            order by documents.documentid, att.pageid, documents.lastrevision asc');
+                            order by documents.documentid, documents.lastrevision asc');
 
                 if (sizeof($oldDbResult)) {
                     DB::beginTransaction();
