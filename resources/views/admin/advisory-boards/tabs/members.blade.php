@@ -26,8 +26,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(isset($members) && $members->count() > 0)
-                        @foreach($members as $member)
+                    @if(isset($item->members) && $item->members->count() > 0)
+                        @foreach($item->members as $member)
                             <tr>
                                 <td>{{ $member->id }}</td>
                                 <td>{{ $member->member_name }}</td>
