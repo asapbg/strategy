@@ -15,7 +15,7 @@
                         <hr class="custom-hr">
                         <div class="collapse show mt-3" id="home-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-    
+
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Публикации</a>
@@ -27,16 +27,15 @@
                 </ul>
             </div>
         </div>
-    
+
     </div>
-    
-    
+
     <div class="col-lg-10  py-5 right-side-content">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене
             </h2>
-    
+
             <div class="col-md-12">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -49,8 +48,8 @@
                     </div>
                 </div>
             </div>
-    
-    
+
+
             <div class="col-md-4">
                 <div class="input-group ">
                     <div class="mb-3 d-flex flex-column  w-100">
@@ -92,7 +91,7 @@
                 <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
             </div>
         </div>
-    
+
         <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
             <div class="col-md-3">
                 <p class="mb-0 cursor-pointer ">
@@ -115,7 +114,7 @@
                 </p>
             </div>
         </div>
-    
+
         <div class="row mb-2">
             <div class="col-md-6 mt-2">
                 <div class="info-consul text-start">
@@ -125,16 +124,16 @@
                 </div>
             </div>
             <div class="col-md-6 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
-            <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой резултати:</label>
-                    <select class="form-select w-auto " name="paginate" id="list-paginate" data-container="#listContainer">
-                        <option value="20" selected="">3</option>
-                        <option value="30">10</option>
-                        <option value="40">20</option>
-                        <option value="50">30</option>
-                   </select>
+                <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой резултати:</label>
+                <select class="form-select w-auto " name="paginate" id="list-paginate" data-container="#listContainer">
+                    <option value="20" selected="">3</option>
+                    <option value="30">10</option>
+                    <option value="40">20</option>
+                    <option value="50">30</option>
+               </select>
+            </div>
         </div>
-        </div>
-    
+
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="consul-wrapper">
@@ -180,12 +179,13 @@
                                     </a>
                                 </div>
                             </div>
-    
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="consul-wrapper">
@@ -195,7 +195,7 @@
                         </div>
                         <div class="consult-body">
                             <div href="#" class="consul-item">
-    
+
                                 <div class="consult-item-header d-flex justify-content-between">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none"
@@ -237,7 +237,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="consul-wrapper">
@@ -247,7 +247,7 @@
                         </div>
                         <div class="consult-body">
                             <div href="#" class="consul-item">
-    
+
                                 <div class="consult-item-header d-flex justify-content-between">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none"
@@ -267,8 +267,8 @@
                                         </a>
                                     </div>
                                 </div>
-    
-    
+
+
                                 <a href="#" class="text-decoration-none"><i class="fas fa-sitemap me-1"
                                         title="Област на политика"></i>
                                     Оценка на въздействието
@@ -286,13 +286,13 @@
                                     </a>
                                 </div>
                             </div>
-    
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    
+
         <div class="row">
             <nav aria-label="Page navigation example">
                 <ul class="pagination m-0">

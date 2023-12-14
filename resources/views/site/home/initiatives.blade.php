@@ -45,10 +45,6 @@
                                     @endif
                                 </div>
                             </div>
-{{--                            <a href="#" title="{{ $initiative->operationalProgram?->institution }}"--}}
-{{--                               class="text-decoration-none text-capitalize mb-3">--}}
-{{--                                {{ $initiative->operationalProgram?->institution }}--}}
-{{--                            </a>--}}
                             <div class="meta-consul">
                                 <span>Коментирано: <span class="voted-li">{{ $initiative->comments->count() }} пъти</span></span>
                             </div>
@@ -69,13 +65,13 @@
 
 <div id="initiatives_pagination" class="ajax_pagination row mb-4" data-id="initiatives">
     @desktop
-    @if($initiatives->count() > 0 && $initiatives instanceof Illuminate\Pagination\LengthAwarePaginator)
-        {{ $initiatives->onEachSide(2)->appends(request()->query())->links() }}
-    @endif
+        @if($initiatives->count() > 0 && $initiatives instanceof Illuminate\Pagination\LengthAwarePaginator)
+            {{ $initiatives->onEachSide(2)->appends(request()->query())->links() }}
+        @endif
     @elsedesktop
-    @if($initiatives->count() > 0 && $initiatives instanceof Illuminate\Pagination\LengthAwarePaginator)
-        {{ $initiatives->onEachSide(0)->appends(request()->query())->links() }}
-    @endif
+        @if($initiatives->count() > 0 && $initiatives instanceof Illuminate\Pagination\LengthAwarePaginator)
+            {{ $initiatives->onEachSide(0)->appends(request()->query())->links() }}
+        @endif
     @enddesktop
 </div>
 <div class="row mb-4 d-none">

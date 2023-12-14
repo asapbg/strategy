@@ -429,7 +429,7 @@ return [
     'settings.advisory_boards_text_en'                     => 'Начален текст в рздела (EN)',
     //public sections
     'public_sections'                           => 'Публична секция|Публични секции',
-    'public_sections.types.TYPE_LIBRARY'        => 'Библиотека',
+    'public_sections.types.TYPE_LIBRARY'        => 'Публикация',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
     'public_sections.types.TYPE_NEWS'           => 'Новина',
     //dynamic structures
@@ -554,6 +554,7 @@ return [
     'name_of_normative_act' => 'Наименование на нормативен акт',
     'description_of_suggested_change' => 'Описание на предложената промяна',
     'category' => 'Категория',
+    'categories' => 'Категория|Категории',
     'accept_act_institution_type' => 'Орган приел акта',
     'unique_consultation_number' => 'Уникален номер на консултация',
     'associated_documents'  => 'Прилежащи документи',

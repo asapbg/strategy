@@ -31,24 +31,52 @@
                                     <div class="col-12">
                                         <div class="col-md-2 col-12">
                                             <div class="form-group">
-                                                <label class="control-label" for="active">
-                                                    {{ __('validation.attributes.type') }}: @if($item->id) <span>{{ __('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type)) }}</span>@endif
+                                                <label class="control-label" for="type">
+                                                    {{ __('validation.attributes.type') }}:
+                                                    @if($item->id)
+                                                        <span>{{ __('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type)) }}</span>
+                                                    @endif
                                                 </label>
-                                                @if(!$item->id)
-                                                    <div class="d-inline">
-                                                        <select id="type" name="type"  class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
-                                                            @foreach(optionsPublicationTypes() as $row)
-                                                                <option value="{{ $row['value'] }}" @if(old('type', '') == $row['value']) selected @endif>{{ $row['name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('type')
-                                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                @endif
+                                                @php($type = old('type') ?? $item->type)
+                                                <div class="d-inline">
+                                                    <select id="type" name="type"  class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
+                                                        @foreach(optionsPublicationTypes() as $row)
+                                                            <option value="{{ $row['value'] }}" @if($type == $row['value']) selected @endif>{{ $row['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('type')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-12">
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="publication_category_id">
+                                                    {{ trans_choice('custom.categories', 1) }}:
+                                                </label>
+                                                @php($category_id = old('publication_category_id') ?? $item->publication_category_id)
+                                                <div class="d-inline">
+                                                    <select id="publication_category_id" name="publication_category_id"
+                                                            class="form-control form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
+                                                    >
+                                                        @foreach($publicationCategories as $category)
+                                                            <option value="{{ $category->id }}" @if($category_id == $category->id) selected @endif>
+                                                                {{ $category->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('publication_category_id')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="slug">
@@ -63,6 +91,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12"></div>
+
                                     @include('admin.partial.edit_field_translate', ['field' => 'title', 'required' => true])
                                     @include('admin.partial.edit_field_translate', ['field' => 'short_content', 'required' => false])
                                     @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => false])
@@ -70,6 +99,7 @@
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_title', 'required' => false])
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_keyword', 'required' => false])
+
                                     <div class="col-md-3 col-12">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="published_at">
@@ -83,6 +113,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-2 col-12">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="active">
@@ -101,6 +132,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12"></div>
+
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="active">
@@ -117,6 +149,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="form-group row">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,12 @@ Route::controller(\App\Http\Controllers\ReportController::class)->group(function
 
 Route::get('/consultations', function () {
     return view('site.consultations');
+});
+
+Route::controller(LibraryController::class)->group(function () {
+    Route::get('/library/publications', 'publications')->name('library.publications');
+    Route::get('/library/news', 'news')->name('library.news');
+    Route::get('/library/{type}/{id}/details', 'details')->name('library.details');
 });
 
 Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {

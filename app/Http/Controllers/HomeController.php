@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Consultations\OperationalProgramRow;
+use App\Enums\PublicationTypesEnum;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Enums\LegislativeInitiativeStatusesEnum;
@@ -21,8 +22,19 @@ class HomeController extends Controller
         $consultations = $this->getConsultations(new Request());
         $initiatives = $this->getInitiatives(new Request());
 
-        //dd($consultations->toArray());
-        return $this->view('site.home.index', compact('consultations','initiatives'));
+        $publications = Publication::select('publication.*')
+            ->whereActive(true)
+            ->with(['translation','mainImg','category.translation'])
+            ->joinTranslation(Publication::class)
+            ->whereLocale(currentLocale())
+            ->whereType(PublicationTypesEnum::TYPE_NEWS)
+            ->whereDate('published_at', '<=', date('Y-m-d'))
+            ->orderBy('published_at', 'DESC')
+            ->get();
+
+        //dd($publications->toArray());
+        return $this->view('site.home.index',
+            compact('consultations','initiatives', 'publications'));
     }
 
     /**
@@ -69,10 +81,8 @@ class HomeController extends Controller
         $keywords = $request->offsetGet('keywords');
         $initiatives = LegislativeInitiative::with(['comments:legislative_initiative_id','likes','operationalProgramTitle'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->whereHas('operationalProgram', function ($query) use ($keywords) {
-                    $operational_program_ids = OperationalProgramRow::select('operational_program_id')->where('value', 'ilike', "%$keywords%")->pluck('operational_program_id');
-
-                    $query->whereIn('operational_program_id', $operational_program_ids);
+                $query->whereHas('operationalProgramTitle', function ($query) use ($keywords) {
+                    $query->where('value', 'ilike', "%$keywords%");
                 })
                 ->orWhere('description', 'like', '%' . $keywords . '%')
                 ->orWhereHas('user', function ($query) use ($keywords) {

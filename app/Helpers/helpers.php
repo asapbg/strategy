@@ -237,10 +237,56 @@ if (!function_exists('getLocaleId')) {
 
 if (!function_exists('optionsUserTypes')) {
 
+/**
+ * Get all users types and return options
+ *
+ * @method optionsUserTypes
+ *
+ * @param bool       $any
+ * @param string|int $anyValue
+ * @param string|int $anyName
+ *
+ * @return array
+ */
+function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+{
+    $options = User::getUserTypes();
+    if ($any) {
+        $options[$anyValue] = $anyName;
+        ksort($options);
+    }
+    return $options;
+}
+
+/**
+ * return publication types options
+ *
+ * @method optionsApplicationStatus
+ *
+ * @param bool       $any
+ * @param string|int $anyValue
+ * @param string|int $anyName
+ *
+ * @return array
+ */
+function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+{
+    $options = [];
+    if ($any) {
+        $options[] = ['value' => $anyValue, 'name' => $anyName];
+    }
+    foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
+        $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.' . $key)];
+    }
+    return $options;
+}
+
+if (!function_exists('optionsStatuses')) {
+
     /**
-     * Get all users types and return options
+     * return regular status options
      *
-     * @method optionsUserTypes
+     * @method optionsStatuses
      *
      * @param bool       $any
      * @param string|int $anyValue
@@ -248,20 +294,141 @@ if (!function_exists('optionsUserTypes')) {
      *
      * @return array
      */
-    function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+    function optionsStatuses(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
     {
-        $options = User::getUserTypes();
+        $options = array(
+            1 => trans_choice('custom.active', 1),
+            0 => trans_choice('custom.inactive', 1),
+        );
         if ($any) {
             $options[$anyValue] = $anyName;
             ksort($options);
         }
         return $options;
     }
+}
+
+if (!function_exists('logError')) {
 
     /**
-     * return publication types options
+     * Write to error log file
      *
-     * @method optionsApplicationStatus
+     * @method logError
+     * @param string $method
+     * @param string $error
+     */
+    function logError(string $method, string $error): void
+    {
+        \Illuminate\Support\Facades\Log::error($method . ': ' . $error);
+    }
+}
+
+if (!function_exists('stripHtmlTags')) {
+
+    /**
+     * return striped html string
+     *
+     * @param string $html_string
+     * @param array  $tags
+     *
+     * @return string
+     */
+    function stripHtmlTags(string $html_string, array $tags = [])
+    {
+        $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
+        $tagsToStrip = sizeof($tags) ? $tags : ['p', 'ul', 'ol', 'li', 'b', 'i', 'u'];
+        return strip_tags($html_string, $tagsToStrip);
+    }
+}
+
+if (!function_exists('extractMonths')) {
+
+    /**
+     * return months (with or without year) from time period
+     *
+     * @param string $form
+     * @param string $to
+     * @param bool   $year
+     *
+     * @return array
+     */
+    function extractMonths(string $form, string $to, bool $year = true): array
+    {
+        $months = [];
+        $period = \Carbon\CarbonPeriod::create($form, '1 month', $to);
+        foreach ($period as $d) {
+            $months[] = $year ? $d->format("m.Y") : $d->format("m");
+        }
+        return $months;
+    }
+}
+
+if (!function_exists('fileIcon')) {
+    /**
+     * @param string $fileType
+     *
+     * @return string
+     */
+    function fileIcon($fileType): string
+    {
+        $icon = '<i class="fas fa-file-download text-secondary me-1"></i>';
+        switch ($fileType) {
+            case 'application/pdf':
+            case 'pdf':
+                $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
+                break;
+            case 'text/csv':
+                $icon = '<i class="fas fa-file-csv text-primary me-1"></i>';
+                break;
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                $icon = '<i class="fas fa-file-word text-info me-1"></i>';
+                break;
+            case 'application/vnd.ms-excel':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                $icon = '<i class="fas fa-file-excel text-success me-1"></i>';
+            case 'application/rar':
+            case 'application/x-rar':
+                $icon = '<i class="fas fa-file-zipper text-primary me-1"></i>';
+                break;
+        }
+        return $icon;
+    }
+}
+
+if (!function_exists('optionsFromModel')) {
+
+    /**
+     * return prepared options for search form from standard model option
+     *
+     * @method optionsFromModel
+     *
+     * @param            $dbOptions
+     * @param bool       $any
+     * @param string|int $anyValue
+     * @param string|int $anyName
+     *
+     * @return array
+     */
+    function optionsFromModel($dbOptions, bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+    {
+        $options = [];
+        if ($any) {
+            $options[] = ['value' => $anyValue, 'name' => $anyName];
+        }
+        foreach ($dbOptions as $option) {
+            $options[] = ['value' => $option->id, 'name' => $option->name];
+        }
+        return $options;
+    }
+}
+
+if (!function_exists('optionsStatusesFilter')) {
+
+    /**
+     * return regular status options for filter
+     *
+     * @method optionsStatusesFilter
      *
      * @param bool       $any
      * @param string|int $anyValue
@@ -269,410 +436,253 @@ if (!function_exists('optionsUserTypes')) {
      *
      * @return array
      */
-    function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+    function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
     {
-        $options = [];
+        $options = array(
+          ['value' => 1, 'name' => trans_choice('custom.active', 1)],
+          ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
+        );
         if ($any) {
             $options[] = ['value' => $anyValue, 'name' => $anyName];
-        }
-        foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
-            $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.' . $key)];
+            ksort($options);
         }
         return $options;
     }
+}
 
-    if (!function_exists('optionsStatuses')) {
+if (!function_exists('is_json')) {
 
-        /**
-         * return regular status options
-         *
-         * @method optionsStatuses
-         *
-         * @param bool       $any
-         * @param string|int $anyValue
-         * @param string|int $anyName
-         *
-         * @return array
-         */
-        function optionsStatuses(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
-        {
-            $options = array(
-                1 => trans_choice('custom.active', 1),
-                0 => trans_choice('custom.inactive', 1),
-            );
-            if ($any) {
-                $options[$anyValue] = $anyName;
-                ksort($options);
-            }
-            return $options;
-        }
+    /**
+     * Check if string is a json format.
+     *
+     * @param string $string
+     *
+     * @return bool
+     */
+    function is_json(string $string): bool
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
     }
+}
 
-    if (!function_exists('logError')) {
+if (!function_exists('compareByTimeStamp')) {
 
-        /**
-         * Write to error log file
-         *
-         * @method logError
-         * @param string $method
-         * @param string $error
-         */
-        function logError(string $method, string $error): void
-        {
-            \Illuminate\Support\Facades\Log::error($method . ': ' . $error);
-        }
+    /**
+     * Check if string is a json format.
+     *
+     * @param $time1
+     * @param $time2
+     * @return bool
+     */
+    function compareByTimeStamp($time1, $time2)
+    {
+        if (strtotime($time1) > strtotime($time2))
+            return 1;
+        else if (strtotime($time1) < strtotime($time2))
+            return -1;
+        else
+            return 0;
     }
+}
 
-    if (!function_exists('stripHtmlTags')) {
+if (!function_exists('fileHtmlContent')) {
 
-        /**
-         * return striped html string
-         *
-         * @param string $html_string
-         * @param array  $tags
-         *
-         * @return string
-         */
-        function stripHtmlTags(string $html_string, array $tags = [])
-        {
-            $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
-            $tagsToStrip = sizeof($tags) ? $tags : ['p', 'ul', 'ol', 'li', 'b', 'i', 'u'];
-            return strip_tags($html_string, $tagsToStrip);
+    /**
+     * Check if string is a json format.
+     *
+     * @param $file
+     * @return bool
+     */
+    function fileHtmlContent($file)
+    {
+        $content = '';
+        switch ($file->content_type) {
+            case 'application/pdf':
+                $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
+                $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
+                break;
+            case 'application/msword':
+                https://strategy.asapbg.com/strategy-document/download-file/56
+                //$content = __('custom.old_file_format');
+                //$content = '<iframe src="https://view.officeapps.live.com/op/view.aspx?src='.route('download.file', $file).'" width="100%" /></iframe>';
+                $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
+                break;
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                $content->setDefaultFontName('Fira Sans BGR');
+                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+                $content = $html->getContent();
+                break;
         }
+
+        return $content;
     }
+}
 
-    if (!function_exists('extractMonths')) {
+if (!function_exists('htmlToText')) {
 
-        /**
-         * return months (with or without year) from time period
-         *
-         * @param string $form
-         * @param string $to
-         * @param bool   $year
-         *
-         * @return array
-         */
-        function extractMonths(string $form, string $to, bool $year = true): array
-        {
-            $months = [];
-            $period = \Carbon\CarbonPeriod::create($form, '1 month', $to);
-            foreach ($period as $d) {
-                $months[] = $year ? $d->format("m.Y") : $d->format("m");
-            }
-            return $months;
-        }
+    /**
+     * return striped html string
+     *
+     * @param string $html_string
+     * @return string
+     */
+    function htmlToText(string $html_string)
+    {
+        $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
+        return strip_tags($html_string);
     }
+}
 
-    if (!function_exists('fileIcon')) {
-        /**
-         * @param string $fileType
-         *
-         * @return string
-         */
-        function fileIcon($fileType): string
-        {
-            $icon = '<i class="fas fa-file-download text-secondary me-1"></i>';
-            switch ($fileType) {
-                case 'application/pdf':
-                case 'pdf':
-                    $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
-                    break;
-                case 'text/csv':
-                    $icon = '<i class="fas fa-file-csv text-primary me-1"></i>';
-                    break;
-                case 'application/msword':
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                    $icon = '<i class="fas fa-file-word text-info me-1"></i>';
-                    break;
-                case 'application/vnd.ms-excel':
-                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    $icon = '<i class="fas fa-file-excel text-success me-1"></i>';
-                case 'application/rar':
-                case 'application/x-rar':
-                    $icon = '<i class="fas fa-file-zipper text-primary me-1"></i>';
-                    break;
-            }
-            return $icon;
-        }
+if (!function_exists('paginationSelect')) {
+
+    /**
+     * return pagination options
+     *
+     * @return array
+     */
+    function paginationSelect()
+    {
+        return [
+            ['value' => 1, 'name' => 10],
+            ['value' => 20, 'name' => 20],
+            ['value' => 30, 'name' => 30],
+            ['value' => 40, 'name' => 40],
+            ['value' => 50, 'name' => 50],
+        ];
     }
+}
 
-    if (!function_exists('optionsFromModel')) {
+if (!function_exists('enumToSelectOptions')) {
 
-        /**
-         * return prepared options for search form from standard model option
-         *
-         * @method optionsFromModel
-         *
-         * @param            $dbOptions
-         * @param bool       $any
-         * @param string|int $anyValue
-         * @param string|int $anyName
-         *
-         * @return array
-         */
-        function optionsFromModel($dbOptions, bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
-        {
-            $options = [];
-            if ($any) {
-                $options[] = ['value' => $anyValue, 'name' => $anyName];
-            }
-            foreach ($dbOptions as $option) {
-                $options[] = ['value' => $option->id, 'name' => $option->name];
-            }
-            return $options;
+    /**
+     * return pagination options
+     *
+     * @param array  $enums
+     * @param string $translationBase
+     * @param bool   $any
+     *
+     * @return array
+     */
+    function enumToSelectOptions(array $enums, string $translationBase = '', bool $any = false): array
+    {
+        $options = [];
+        if ($any) {
+            $options[] = ['value' => '', 'name' => ''];
         }
-
-        if (!function_exists('optionsStatusesFilter')) {
-
-            /**
-             * return regular status options for filter
-             *
-             * @method optionsStatusesFilter
-             *
-             * @param bool       $any
-             * @param string|int $anyValue
-             * @param string|int $anyName
-             *
-             * @return array
-             */
-            function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
-            {
-                $options = array(
-                    ['value' => 1, 'name' => trans_choice('custom.active', 1)],
-                    ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
-                );
-                if ($any) {
-                    $options[] = ['value' => $anyValue, 'name' => $anyName];
-                    ksort($options);
-                }
-                return $options;
+        if (sizeof($enums)) {
+            foreach ($enums as $name => $val) {
+                $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
             }
         }
+        return $options;
     }
+}
 
-    if (!function_exists('is_json')) {
+if (!function_exists('mkdirIfNotExists')) {
 
-        /**
-         * Check if string is a json format.
-         *
-         * @param string $string
-         *
-         * @return bool
-         */
-        function is_json(string $string): bool
-        {
-            json_decode($string);
-            return json_last_error() === JSON_ERROR_NONE;
+    /**
+     * Creates dir if do not exists.
+     *
+     * @param $directory - It should be an absolute path. Try using base_path()
+     *
+     * @return void
+     */
+    function mkdirIfNotExists($directory): void
+    {
+        if (file_exists($directory)) {
+            return;
         }
+
+        mkdir($directory, 0777, true);
     }
+}
 
-    if (!function_exists('compareByTimeStamp')) {
+if (!function_exists('currentLocale')) {
 
-        /**
-         * Check if string is a json format.
-         *
-         * @param string $string
-         *
-         * @return bool
-         */
-        function compareByTimeStamp($time1, $time2)
-        {
-            if (strtotime($time1) > strtotime($time2))
-                return 1;
-            else if (strtotime($time1) < strtotime($time2))
-                return -1;
-            else
-                return 0;
+    /**
+     * Get current locale
+     *
+     * @return string
+     */
+    function currentLocale(): string
+    {
+        return app()->getLocale();
+    }
+}
+
+if (!function_exists('copyFile')) {
+
+    /**
+     * Copy only non-existing files.
+     * Used to copy files from the previous project.
+     *
+     * @param $directory_copy
+     * @param $directory_paste
+     * @param $folder_id
+     *
+     * @return array
+     */
+    function copyFiles($directory_copy, $directory_paste, $folder_id): array
+    {
+        $copied_files = [];
+
+        if (!file_exists($directory_copy)) {
+            return [];
         }
-    }
 
-    if (!function_exists('fileHtmlContent')) {
+        $folders = array_filter(array_map('basename', scandir($directory_copy)), function ($file) use ($directory_copy) {
+            return is_dir($directory_copy . DIRECTORY_SEPARATOR . $file);
+        });
 
         /**
-         * Check if string is a json format.
-         *
-         * @param string $string
-         *
-         * @return bool
+         * Ex: array:3 [
+         *  0 => "."
+         *  1 => ".."
+         *  2 => "DLFE-7702.pdf"
+         * ]
          */
-        function fileHtmlContent($file)
-        {
-            $content = '';
-            switch ($file->content_type) {
-                case 'application/pdf':
-                    $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
-                    $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
-                    break;
-                case 'application/msword':
-                    https://strategy.asapbg.com/strategy-document/download-file/56
-                    //$content = __('custom.old_file_format');
-                    //$content = '<iframe src="https://view.officeapps.live.com/op/view.aspx?src='.route('download.file', $file).'" width="100%" /></iframe>';
-                    $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
-                    break;
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                    $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-                    $content->setDefaultFontName('Fira Sans BGR');
-                    $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-                    $content = $html->getContent();
-                    break;
+        if (count($folders) < 3) {
+            return [];
+        }
+
+        for ($i = 2; $i < count($folders); $i++) {
+            $sub_dir = $directory_copy . DIRECTORY_SEPARATOR . $folders[$i];
+            $file_info = explode('.', $folders[$i]);
+
+            if (count($file_info) !== 2) {
+                continue;
             }
 
-            return $content;
-        }
-    }
+            $file_name = $file_info[0];
+            $file_extension = $file_info[1];
 
-    if (!function_exists('htmlToText')) {
-
-        /**
-         * return striped html string
-         *
-         * @param string $html_string
-         * @param array  $tags
-         *
-         * @return string
-         */
-        function htmlToText(string $html_string)
-        {
-            $html_string = str_replace('style', 'tyle', $html_string); //clear web style when copy text
-            return strip_tags($html_string);
-        }
-    }
-
-    if (!function_exists('paginationSelect')) {
-
-        /**
-         * return pagination options
-         *
-         * @return array
-         */
-        function paginationSelect()
-        {
-            return $options = [
-                ['value' => 1, 'name' => 10],
-                ['value' => 20, 'name' => 20],
-                ['value' => 30, 'name' => 30],
-                ['value' => 40, 'name' => 40],
-                ['value' => 50, 'name' => 50],
-            ];
-        }
-    }
-
-    if (!function_exists('enumToSelectOptions')) {
-
-        /**
-         * return pagination options
-         *
-         * @param array  $enums
-         * @param string $translationBase
-         * @param bool   $any
-         *
-         * @return array
-         */
-        function enumToSelectOptions(array $enums, string $translationBase = '', bool $any = false): array
-        {
-            $options = [];
-            if ($any) {
-                $options[] = ['value' => '', 'name' => ''];
-            }
-            if (sizeof($enums)) {
-                foreach ($enums as $name => $val) {
-                    $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
-                }
-            }
-            return $options;
-        }
-    }
-
-    if (!function_exists('mkdirIfNotExists')) {
-
-        /**
-         * Creates dir if do not exists.
-         *
-         * @param $directory - It should be an absolute path. Try using base_path()
-         *
-         * @return void
-         */
-        function mkdirIfNotExists($directory): void
-        {
-            if (file_exists($directory)) {
-                return;
-            }
-
-            mkdir($directory, 0777, true);
-        }
-    }
-
-    if (!function_exists('copyFile')) {
-
-        /**
-         * Copy only non-existing files.
-         * Used to copy files from the previous project.
-         *
-         * @param $directory_copy
-         * @param $directory_paste
-         * @param $folder_id
-         *
-         * @return array
-         */
-        function copyFiles($directory_copy, $directory_paste, $folder_id): array
-        {
-            $copied_files = [];
-
-            if (!file_exists($directory_copy)) {
-                return [];
-            }
-
-            $folders = array_filter(array_map('basename', scandir($directory_copy)), function ($file) use ($directory_copy) {
-                return is_dir($directory_copy . DIRECTORY_SEPARATOR . $file);
+            $files = array_filter(scandir($sub_dir), function ($file) use ($sub_dir) {
+                return !is_dir($sub_dir . '/' . $file);
             });
+            $files = array_values($files);
 
-            /**
-             * Ex: array:3 [
-             *  0 => "."
-             *  1 => ".."
-             *  2 => "DLFE-7702.pdf"
-             * ]
-             */
-            if (count($folders) < 3) {
-                return [];
-            }
+            foreach ($files as $file) {
+                $source = $sub_dir . DIRECTORY_SEPARATOR . $file;
+                $to = $directory_paste . DIRECTORY_SEPARATOR . $file_name . '.' . $file_extension;
 
-            for ($i = 2; $i < count($folders); $i++) {
-                $sub_dir = $directory_copy . DIRECTORY_SEPARATOR . $folders[$i];
-                $file_info = explode('.', $folders[$i]);
-
-                if (count($file_info) !== 2) {
+                if (file_exists($to)) {
                     continue;
                 }
 
-                $file_name = $file_info[0];
-                $file_extension = $file_info[1];
-
-                $files = array_filter(scandir($sub_dir), function ($file) use ($sub_dir) {
-                    return !is_dir($sub_dir . '/' . $file);
-                });
-                $files = array_values($files);
-
-                foreach ($files as $file) {
-                    $source = $sub_dir . DIRECTORY_SEPARATOR . $file;
-                    $to = $directory_paste . DIRECTORY_SEPARATOR . $file_name . '.' . $file_extension;
-
-                    if (file_exists($to)) {
-                        continue;
-                    }
-
-                    if (copy($source, $to)) {
-                        $temp = [];
-                        $temp['filename'] = basename($to);
-                        $temp['content_type'] = mime_content_type($to);
-                        $temp['path'] = explode(DIRECTORY_SEPARATOR . 'files', $to)[1];
-                        $temp['version'] = $file;
-                        $copied_files[] = $temp;
-                    }
+                if (copy($source, $to)) {
+                    $temp = [];
+                    $temp['filename'] = basename($to);
+                    $temp['content_type'] = mime_content_type($to);
+                    $temp['path'] = explode(DIRECTORY_SEPARATOR . 'files', $to)[1];
+                    $temp['version'] = $file;
+                    $copied_files[] = $temp;
                 }
             }
-
-            return $copied_files;
         }
+
+        return $copied_files;
     }
+}
 }

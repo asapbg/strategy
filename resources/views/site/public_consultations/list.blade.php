@@ -102,8 +102,13 @@
     @endforeach
 </div>
 <div class="row">
-    @if(isset($pk) && $pk->count() > 0)
-        {{ $pk->onEachSide(0)->appends(request()->query())->links() }}
-        {{--                    {{ $items->appends(request()->query())->links() }}--}}
+    @desktop
+    @if($pk->count() > 0 && $pk instanceof Illuminate\Pagination\LengthAwarePaginator)
+        {{ $pk->onEachSide(2)->appends(request()->query())->links() }}
     @endif
+    @elsedesktop
+    @if($pk->count() > 0 && $pk instanceof Illuminate\Pagination\LengthAwarePaginator)
+        {{ $pk->onEachSide(0)->appends(request()->query())->links() }}
+    @endif
+    @enddesktop
 </div>

@@ -37,8 +37,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" type="button">Библиотека
-                    </a>
+                    <a href="{{ route('library.publications') }}" class="nav-link" type="button">Библиотека</a>
                 </li>
 
                 <li class="nav-item top-bar-left-side-mobile">
@@ -79,7 +78,7 @@
                             <a class="nav-link text-light me-3 text-decoration-none" id="register-link" style="padding-bottom:10px !important;"
                                     href="{{ route('register') }}">{{ __('custom.register') }}</a>
                                 <a class="nav-link text-light me-3 text-decoration-none" id="login-btn" style="padding:10px 0px !important;"
-                                 href="{{ route('login') }}">                  
+                                 href="{{ route('login') }}">
                                     {{ __('custom.login') }}</a>
                                 <a href="#" class="nav-link text-light me-3 text-decoration-none" style="padding-top:10px !important;"
                                     id="search-btn" data-toggle="modal" data-target="#searchModal">

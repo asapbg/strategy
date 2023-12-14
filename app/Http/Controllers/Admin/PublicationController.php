@@ -94,7 +94,8 @@ class PublicationController extends AdminController
 
             // Upload File
             if( $item && $itemImg ) {
-                $fileNameToStore = round(microtime(true)).'.'.$itemImg->getClientOriginalExtension();
+                $file_name = Str::limit($validated['slug'], 200);
+                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
                 // Upload File
                 $itemImg->storeAs(File::PUBLICATION_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
                 $file = new File([
@@ -102,7 +103,7 @@ class PublicationController extends AdminController
                     'code_object' => File::CODE_OBJ_PUBLICATION,
                     'filename' => $fileNameToStore,
                     'content_type' => $itemImg->getClientMimeType(),
-                    'path' => 'files/'.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'path' => 'files'.DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
                     'sys_user' => $request->user()->id,
                 ]);
                 $file->save();
