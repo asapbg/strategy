@@ -61,7 +61,7 @@
                 </li>
             </ul> -->
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" id="processOfConsultationDiv">
             <div class="row filter-results mb-2">
                 <div class="col-md-4">
                     <div class="input-group ">
