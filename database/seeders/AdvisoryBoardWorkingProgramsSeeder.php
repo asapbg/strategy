@@ -105,14 +105,18 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
 
         $imported = 0;
         $skipped = 0;
-        $files_imported = 0;
 
         $old_programs_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" LIKE '%working program%' and  c.\"toVersion\" is null");
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
         $all_working_program_ids = AdvisoryBoardFunction::select('id')->pluck('id')->toArray();
 
         foreach ($old_programs_db as $program) {
-            if (!in_array($program->councilID, $advisory_board_ids) || in_array($program->detailID, $all_working_program_ids)) {
+            if (!in_array($program->councilID, $advisory_board_ids)) {
+                $skipped++;
+                continue;
+            }
+
+            if (in_array($program->detailID, $all_working_program_ids)) {
                 $skipped++;
                 continue;
             }
@@ -134,27 +138,6 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
                 $program->councilID . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_FUNCTION_UPLOAD_DIR . DIRECTORY_SEPARATOR . $new_program->id
             );
             mkdirIfNotExists($directory);
-
-            $directory_to_copy_from = base_path('document_library' . DIRECTORY_SEPARATOR . '10108' . DIRECTORY_SEPARATOR . $program->folderID);
-            $copied_files = copyFiles($directory_to_copy_from, $directory, $program->folderID);
-
-            if (!empty($copied_files)) {
-                $service = app(AdvisoryBoardFileService::class);
-
-                foreach ($copied_files as $file) {
-                    $service->storeDbRecord(
-                        $new_program->id,
-                        File::CODE_AB,
-                        $file['filename'],
-                        DocTypesEnum::AB_FUNCTION->value,
-                        $file['content_type'],
-                        $file['path'],
-                        $file['version']
-                    );
-
-                    $files_imported++;
-                }
-            }
 
             foreach (config('available_languages') as $language) {
                 $translation = new AdvisoryBoardFunctionTranslation();
