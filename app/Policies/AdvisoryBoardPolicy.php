@@ -8,7 +8,11 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AdvisoryBoardPolicy
 {
+
     use HandlesAuthorization;
+
+    /** @var string - Role that determines moderator can operate exact advisory board. */
+    const MANAGE_ONE = 'manage.advisory-board';
 
     /**
      * Determine whether the user can view any models.
@@ -23,6 +27,25 @@ class AdvisoryBoardPolicy
     }
 
     /**
+     * General check for super-admin, moderator of whole advisory boards and particular moderator.
+     *
+     * @param User          $user
+     * @param AdvisoryBoard $advisoryBoard
+     *
+     * @return bool
+     */
+    private function generalCheckAndModerator(User $user, AdvisoryBoard $advisoryBoard): bool
+    {
+        $can_any = ['manage.*', 'manage.advisory-boards'];
+
+        if ($advisoryBoard->moderatorCanOperate()) {
+            $can_any[] = self::MANAGE_ONE;
+        }
+
+        return $user->canAny($can_any);
+    }
+
+    /**
      * Determine whether the user can view the model.
      *
      * @param User          $user
@@ -32,7 +55,7 @@ class AdvisoryBoardPolicy
      */
     public function view(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
+        return $this->generalCheckAndModerator($user, $advisoryBoard);
     }
 
     /**
@@ -57,7 +80,7 @@ class AdvisoryBoardPolicy
      */
     public function update(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
+        return $this->generalCheckAndModerator($user, $advisoryBoard);
     }
 
     /**

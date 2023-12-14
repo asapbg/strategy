@@ -71,6 +71,16 @@ class AdvisoryBoard extends ModelActivityExtend
         return $this->hasMany(AdvisoryBoardModerator::class);
     }
 
+    /**
+     * Check if current user is a moderator.
+     *
+     * @return bool
+     */
+    public function moderatorCanOperate(): bool
+    {
+        return !is_null($this->moderators->first(fn($record) => $record->user_id === auth()->user()->id && $record->advisory_board_id === $this->id));
+    }
+
     public function customSections(): HasMany
     {
         return $this->hasMany(AdvisoryBoardCustom::class)->orderBy('order');

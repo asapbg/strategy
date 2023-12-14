@@ -15,19 +15,23 @@
                                                 <h3>{{ $board->name }}</h3>
                                             </a>
                                         </div>
-                                        @if($board->active)
-                                            <div class="consult-item-header-edit">
-                                                <a href="#">
-                                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                       role="button" title="{{ __('custom.delete') }}"></i>
-                                                </a>
-                                                <a href="#" class="me-2">
-                                                    <i class="fas fa-pen-to-square float-end main-color fs-4"
-                                                       role="button"
-                                                       title="{{ __('custom.edit') }}">
-                                                    </i>
-                                                </a>
-                                            </div>
+
+                                        @if($board->active && auth()->user())
+                                            @can('update', $board)
+                                                <div class="consult-item-header-edit">
+                                                    <a href="{{ route('admin.advisory-boards.index') . '?keywords=' . $board->id . '&status=1' }}">
+                                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                                           role="button" title="{{ __('custom.delete') }}"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.advisory-boards.edit', ['item' => $board]) }}"
+                                                       class="me-2">
+                                                        <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                           role="button"
+                                                           title="{{ __('custom.edit') }}">
+                                                        </i>
+                                                    </a>
+                                                </div>
+                                            @endcan
                                         @endif
                                     </div>
                                     <div class="meta-consul">
@@ -36,7 +40,10 @@
                                                 <span
                                                     class="{{ $class }}">{{ $board->active ? __('custom.active') : __('custom.inactive_m') }}</span>
                                             </span>
-                                        <a href="#"><i class="fas fa-arrow-right read-more text-end"></i></a>
+
+                                        <a href="{{ route('advisory-boards.view', ['item' => $board]) }}">
+                                            <i class="fas fa-arrow-right read-more text-end"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
