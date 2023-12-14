@@ -7,6 +7,7 @@
                 loadStrategyDocuments(1, url);
             }, 100);
 
+
             let doExport = null;
             let documentReport = null;
             const pdfExport = $('#pdf_export');
@@ -15,12 +16,14 @@
             const documentsReport = $('#documents_report');
             const documentLevelSelect = $('#documentLevelSelect');
             const administrationSelect = $('#administrationSelect');
-            documentLevelSelect.select2({
+            const processOfConsultation = $('#processOfConsultation');
+            const ekateAreasId = $('#ekate_areas_id');
+            const ekateMunicipalitiesId = $('#ekate_municipalities_id');
+            documentLevelSelect.add(administrationSelect).add(ekateAreasId).add(ekateMunicipalitiesId).select2({
                 multiple: true
             });
-            administrationSelect.select2({
-                multiple: true
-            });
+            processOfConsultation.select2();
+
             const prisAct = $('#pris_act_ids');
             const loadPrisOptions = () => {
                 $.ajax({
@@ -60,22 +63,22 @@
             }
             loadPrisOptions();
 
+            processOfConsultation.on('change', function () {
+                setTimeout(function() {
+                    const url = buildUrl();
+                    loadStrategyDocuments(1, url);
+                }, 100);
+            })
+
             administrationSelect.val('').trigger('change');
             documentLevelSelect.val('').trigger('change');
+            processOfConsultation.val('').trigger('change');
             const ekateAreasDivId = $('#ekate_areas_div_id');
             const ekateMunicipalitiesDivId = $('#ekate_municipalities_div_id');
 
             ekateAreasDivId.hide();
             ekateMunicipalitiesDivId.hide();
-            const ekateAreasId = $('#ekate_areas_id');
-            const ekateMunicipalitiesId = $('#ekate_municipalities_id');
-            ekateAreasId.select2({
-                multiple: true
-            });
-            ekateAreasId.val('').trigger('change');
-            ekateMunicipalitiesId.select2({
-                multiple: true
-            });
+
             ekateMunicipalitiesId.val('').trigger('change');
             documentLevelSelect.on('change', function () {
                 const selectedDocuments = $(this).val();
@@ -98,26 +101,28 @@
                     ekateMunicipalitiesDivId.hide();
                 }
                 // AJAX request
-                $.ajax({
-                    url: '/strategy-document-institution/' + selectedDocuments.join(','),
-                    type: 'GET',
-                    dataType: 'json',
+                if (selectedDocuments.length > 0) {
+                    $.ajax({
+                        url: '/strategy-document-institution/' + selectedDocuments.join(','),
+                        type: 'GET',
+                        dataType: 'json',
 
-                    success: function (data) {
-                        administrationSelect.empty();
-                        console.log(data);
-                        $.each(data.institutions, function (index, item) {
-                            administrationSelect.append($('<option>', {
-                                value: item.id,
-                                text: item.name
-                            }));
-                        });
-                        administrationSelect.trigger('change');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
+                        success: function (data) {
+                            administrationSelect.empty();
+                            console.log(data);
+                            $.each(data.institutions, function (index, item) {
+                                administrationSelect.append($('<option>', {
+                                    value: item.id,
+                                    text: item.name
+                                }));
+                            });
+                            administrationSelect.trigger('change');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
             });
 
             documentsReport.on('click', function () {
@@ -159,10 +164,7 @@
 
                 if (target === '#tree-view') {
                     view = 'tree-view';
-                    searchDiv.hide();
-                    searchButtons.hide();
-                    sorting.hide();
-                    paginationResultsDiv.hide();
+                    hideSearch();
                     updateUrlParameters({ 'view': 'tree-view' });
                     liveCycle.show();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -191,6 +193,13 @@
             const categorySelectLivecycleSelect = $('#category_select_livecycle');
 
             let policyAreaSortOrder = 'asc';
+
+            const hideSearch = () => {
+                searchDiv.hide();
+                searchButtons.hide();
+                sorting.hide();
+                paginationResultsDiv.hide();
+            }
 
             const updateUrlParameters = (params) => {
                 const searchParams = new URLSearchParams(window.location.search);
@@ -224,6 +233,13 @@
             const ekatteAreaResultValue = urlParams['ekate-area'];
             const ekatteManipulicityResultValue = urlParams['ekate-municipality'];
             const prisActsResultValue = urlParams['pris-acts'];
+
+            view = urlParams['view'];
+            if (view) {
+                hideSearch();
+                updateUrlParameters({ 'view': view });
+            }
+
             const valuesToUpdate = {
                 policySelect : policySelectValues,
                 searchInTitle : searchInTitleValue,
@@ -237,6 +253,7 @@
                     $(element).val(value.split(',')).trigger('change');
                 }
             }
+
 
             $.each(valuesToUpdate, function (element, value) {
                 setAndTrigger(window[element], value);
@@ -395,6 +412,7 @@
                     '&direction=' +  encodeURIComponent(theDirection) +
                     '&prepared-institution=' + encodeURIComponent(administrationSelect.val()) +
                     '&document-type=' + encodeURIComponent(documentType) +
+                    '&in-process-of-consultation=' + encodeURIComponent(processOfConsultation.val()) +
                     '&view=' + encodeURIComponent(view) + '&export=' + doExport + '&document-report=' + documentReport
                     + '&ekate-area=' + ekateAreasId.val() + '&ekate-municipality=' + ekateMunicipalitiesId.val() + '&pris-acts=' + prisAct.val();//prisAct
                 doExport = null;
