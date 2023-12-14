@@ -49,6 +49,8 @@ class SyncAdvisoryBoards extends Command
 
         $this->info("Importing...");
 
+        File::where('code_object', File::CODE_AB)->forceDelete();
+
         Artisan::call('db:seed --class=AdvisoryBoardSeeder');
 
         $this->info("Finished");
