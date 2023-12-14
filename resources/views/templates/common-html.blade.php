@@ -12,6 +12,7 @@
     a.btn.btn-sm i,
     a.btn i {
         line-height: inherit;
+        vertical-align: middle;
     }
 
 </style>

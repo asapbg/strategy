@@ -48,72 +48,9 @@
 
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="row p-1">
-        <div class="accordion" id="accordionExample">
-
-            <div class="card custom-card">
-                <div class="card-header" id="heading60">
-                    <h2 class="mb-0">
-                        <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
-                            data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
-                            aria-controls="collapse60">
-                            <i class="me-1 bi bi-file-earmark-text fs-18"></i> ИМЕ НА ФАЙЛ
-                        </button>
-                    </h2>
-                </div>
-
-                <div id="collapse60" class="collapse show" aria-labelledby="heading60" data-parent="#accordionExample"
-                    style="">
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <div class="text-start">
-                                    <span class="text-start me-3">
-                                        <strong>Дата на създаване:</strong> 07.12.2023 г..
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-end">
-                                <a href="https://strategy.asapbg.com/download/60" class="btn btn-primary">Изтегли</a>
-                            </div>
-                        </div>
-
-                        <div class="row file-content">
-
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <div class="text-start">
-                                    <span class="text-start me-3">
-                                        <strong>Дата на създаване:</strong> 07.12.2023 г..
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-end">
-                                <a href="https://strategy.asapbg.com/download/60" class="btn btn-primary">Изтегли</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  
+ 
+   
 
 
 
@@ -579,13 +516,12 @@
             </div>
 
         </div>
-
     </div>
 </div>
 
 </div>
 </div>
-@endsection
+
 
 <!-- Past Event -->
 <div class="modal fade" id="pastEventExample" tabindex="-1" role="dialog" aria-labelledby="pastEventExampleLabel"
@@ -861,3 +797,4 @@
     </div>
 </div>
 <!-- End Future Event -->
+@endsection

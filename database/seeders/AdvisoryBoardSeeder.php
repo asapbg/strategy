@@ -118,6 +118,7 @@ class AdvisoryBoardSeeder extends Seeder
             AdvisoryBoardWorkingProgramsSeeder::class,
             AdvisoryBoardRegulatoryFrameworkSeeder::class,
             AdvisoryBoardMeetingsSeeder::class,
+            AdvisoryBoardCustomSectionsSeeder::class,
         ]);
     }
 }

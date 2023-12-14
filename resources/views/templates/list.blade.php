@@ -49,6 +49,12 @@
 
 <br><a href="{{ route('templates.view', ['slug' => 'abonamenti']) }}">Абонаменти</a>
 <br>
+
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile']) }}">Профил на институция</a>
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile-iisda-info']) }}">   Профил на институция - Информация от ИИСДА</a>
+<br><a href="{{ route('templates.view', ['slug' => 'institution-profile-moderators']) }}">   Профил на институция - Модератори</a>
+<br>
+
 <br><a href="{{ route('templates.view', ['slug' => 'ks_filter']) }}">Консултативни съвети (списък)</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ks']) }}">Консултативни съвети - вътрешна страница</a>
 <br><a href="{{ route('templates.view', ['slug' => 'ks_news']) }}">Консултативни съвети - Новини</a>

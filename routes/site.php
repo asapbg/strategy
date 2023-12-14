@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\ExecutorController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('site.home');
-})->name('home');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('site.home');
+    Route::get('/get-consultations', 'getConsultations')->name('get-consultations');
+    Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
+});
 
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');

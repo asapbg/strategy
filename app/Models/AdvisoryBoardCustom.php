@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property int $advisory_board_id
+ * @property int $order
  *
  * @method static where(string $string, int $id)
  * @method static find(mixed $section_id)
@@ -20,7 +22,7 @@ class AdvisoryBoardCustom extends ModelActivityExtend
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_custom');
-    const TRANSLATABLE_FIELDS = ['body'];
+    const TRANSLATABLE_FIELDS = ['title', 'body'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
@@ -28,7 +30,7 @@ class AdvisoryBoardCustom extends ModelActivityExtend
     //activity
     protected string $logName = "advisory_board_custom";
 
-    protected $fillable = ['advisory_board_id', 'title', 'order'];
+    protected $fillable = ['advisory_board_id', 'order'];
 
     public function files(): HasMany
     {
@@ -48,9 +50,13 @@ class AdvisoryBoardCustom extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'body' => [
+            'title' => [
                 'type' => 'string',
                 'rules' => ['required'],
+            ],
+            'body' => [
+                'type' => 'string',
+                'rules' => ['nullable'],
             ],
         ];
     }

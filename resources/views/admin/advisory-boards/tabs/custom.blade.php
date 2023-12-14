@@ -44,8 +44,8 @@
         <div class="row mt-3">
             <div class="col-md-12">
                 <div id="accordion">
-                    @if(isset($sections) && $sections->count() > 0)
-                        @foreach($sections as $key => $section)
+                    @if(isset($item->customSections) && $item->customSections->count() > 0)
+                        @foreach($item->customSections as $key => $section)
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title w-100">

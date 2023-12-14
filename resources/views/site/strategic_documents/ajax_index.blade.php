@@ -22,7 +22,7 @@
                         <hr class="custom-hr">
 
                         <div class="collapse show mt-3" id="home-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small nav nav-tabs str-doc-tabs" >
+                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small nav nav-tabs menu-tabs" >
                                 <li class="nav-item mb-2 p-0">
                                     <a href="#table-view" class="nav-link tablinks active p-1"
                                     data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>

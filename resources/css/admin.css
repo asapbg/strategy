@@ -13,6 +13,19 @@ font-family: "Fira Sans BGR";
 overflow-x: hidden;
 }
 
+/* Custom button with icons */
+a.btn.btn-sm i {
+    text-align: center;
+    min-width: 16px;
+    max-width: 16px;
+}
+a.btn.btn-sm i,
+a.btn i {
+    line-height: inherit;
+    vertical-align: middle;
+}
+/**/
+
 /*sidebar sub icons*/
 .nav-sidebar .nav-link p {
     font-size: 0.96rem;

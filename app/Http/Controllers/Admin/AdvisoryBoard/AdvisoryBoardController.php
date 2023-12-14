@@ -244,6 +244,14 @@ class AdvisoryBoardController extends AdminController
             $query->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
                 $query->withTrashed()->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
             })->whereYear('next_meeting', '>=', now()->year);
+        }, 'customSections' => function ($query) {
+            $query->with(['files' => function ($query) {
+                $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
+                    $query->withTrashed();
+                });
+            }, 'translations'])->when(request()->get('show_deleted_sections', 0) == 1, function ($query) {
+                $query->withTrashed();
+            })->orderBy('order');
         }])->find($item->id);
 
         $policy_areas = PolicyArea::orderBy('id')->get();
@@ -280,17 +288,6 @@ class AdvisoryBoardController extends AdminController
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
 
-        $sections = AdvisoryBoardCustom::query()->with(['files' => function ($query) {
-            $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {
-                $query->withTrashed();
-            });
-        }])
-            ->when(request()->get('show_deleted_sections', 0) == 1, function ($query) {
-                $query->withTrashed();
-            })
-            ->where('advisory_board_id', $item->id)
-            ->orderBy('order')->get();
-
         return $this->view(
             'admin.advisory-boards.edit',
             compact(
@@ -305,7 +302,6 @@ class AdvisoryBoardController extends AdminController
                 'secretariat',
                 'secretariat_files',
                 'regulatory_framework_files',
-                'sections',
                 'archive',
                 'all_users',
                 'moderators',

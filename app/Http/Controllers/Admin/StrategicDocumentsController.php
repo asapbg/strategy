@@ -675,11 +675,12 @@ class StrategicDocumentsController extends AdminController
 
     public function loadPrisActs(Request $request)
     {
-        $strategicDocumentId = $request->get('strategicDocumentId');
+        $strategicDocumentId = $request->get('documentId');
+        $strategicDocument = StrategicDocument::find($strategicDocumentId);
         $strategicDocumentsCommonService = app(CommonService::class);
-        $prisActs = $strategicDocumentsCommonService->prisActSelect2Search($request);
-        $prisActs = $prisActs->paginate(20);
+        $prisActs = $strategicDocumentsCommonService->prisActSelect2Search($request, $strategicDocument);
 
+        $prisActs = $prisActs->paginate(20);
         $prisOptions = [
             'items' => $prisActs->map(function ($prisAct) {
                 return [
@@ -690,13 +691,14 @@ class StrategicDocumentsController extends AdminController
             'more' => $prisActs->hasMorePages()
         ];
 
-        if ($strategicDocumentId) {
-            $currentPrisOption = StrategicDocument::find($strategicDocumentId)?->pris;
+        if ($strategicDocumentId && $prisActs->count() > 1) {
+            $currentPrisOption = $strategicDocument?->pris;
             if ($currentPrisOption) {
                 $customOption = [
                     'id' => $currentPrisOption->id,
                     'text' => $currentPrisOption->displayName,
                 ];
+                $prisOptions['items'] = $prisOptions['items']->toArray();
                 array_unshift($prisOptions['items'], $customOption);
                 $prisOptions['items'][0]['selected'] = true;
             }

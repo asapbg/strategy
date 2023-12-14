@@ -9,7 +9,7 @@
             const archive_url = @json(route('admin.advisory-boards.edit', $item) . '?archive_category=:id#archive');
 
             window.location.href = archive_url.replace(':id', id);
-            
+
             setTimeout(() => {
                 window.location.reload();
             }, 500)
@@ -217,7 +217,8 @@
                 dataType: 'json',
                 success: function (data) {
                     form.querySelector('input[name=section_id]').value = data.id;
-                    form.querySelector('input#title').value = data.title;
+                    form.querySelector('input[name=title_bg]').value = data.translations[0].title;
+                    form.querySelector('input[name=title_en]').value = data.translations[1].title;
 
                     form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
                     if (form.querySelector('#order').options.length - 1 === data.order) {

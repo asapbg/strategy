@@ -40,7 +40,7 @@
                                     <td class="text-center" style="width: 50px; white-space: nowrap;">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
-                                               class="btn btn-sm btn-info btn-action"
+                                               class="btn btn-sm btn-info mr-2 btn-action"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
@@ -82,10 +82,8 @@
         </div>
     </section>
     <style>
-        .btn-action {
-            width: 50px;
-            margin-right: 2px;
-        }
+
+
     </style>
 
 @endsection

@@ -44,7 +44,7 @@ class AdvisoryBoardPolicy
      */
     public function create(User $user): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards']);
     }
 
     /**
@@ -70,7 +70,7 @@ class AdvisoryBoardPolicy
      */
     public function delete(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards']);
     }
 
     /**
@@ -83,7 +83,7 @@ class AdvisoryBoardPolicy
      */
     public function restore(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards']);
     }
 
     /**
