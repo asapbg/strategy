@@ -31,11 +31,12 @@ class PrisController extends Controller
 
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
         $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
-
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
         $items = Pris::select('pris.*')
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
@@ -77,7 +78,7 @@ class PrisController extends Controller
             }
         }
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf'));
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection'));
     }
 
     public function archive(Request $request)
