@@ -51,7 +51,6 @@
 <br>
 
 <br><a href="{{ route('templates.view', ['slug' => 'institution-profile']) }}">Профил на институция</a>
-<br><a href="{{ route('templates.view', ['slug' => 'institution-profile-iisda-info']) }}">   Профил на институция - Информация от ИИСДА</a>
 <br><a href="{{ route('templates.view', ['slug' => 'institution-profile-moderators']) }}">   Профил на институция - Модератори</a>
 <br>
 

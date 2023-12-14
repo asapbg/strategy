@@ -1642,6 +1642,18 @@ input[type=checkbox] {
     margin-bottom: 3px;
 }
 
+.pris-tag-active {
+    background: rgba(var(--bs-success-rgb));
+    color: #fff !important;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    display: inline-flex;
+    margin-right: 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 .pris-list a.consul-item p {
     margin-bottom: 10px;
     font-size: 16px;
