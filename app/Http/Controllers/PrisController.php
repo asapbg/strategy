@@ -21,7 +21,7 @@ class PrisController extends Controller
         $rf = $request->all();
         $requestFilter = $request->all();
         if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
-            $actType = LegalActType::find((int)$requestFilter['legalАctТype']);
+            $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
             if( $actType && Str::slug($actType->name) != $category ){
                 return redirect(route('pris.index', $request->query()));
             }
@@ -39,7 +39,7 @@ class PrisController extends Controller
         $defaultDirection = $sortOrd;
         $items = Pris::select('pris.*')
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
+            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
             ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
             ->leftJoin('institution_translations', function ($j){
@@ -51,6 +51,7 @@ class PrisController extends Controller
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->GroupBy('pris.id')
@@ -65,7 +66,7 @@ class PrisController extends Controller
         $pageTitle = __('site.menu.pris');
 
         $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+        $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {
@@ -173,7 +174,7 @@ class PrisController extends Controller
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::Pris()->get(), true),
+                'options' => optionsFromModel(LegalActType::optionsList(true), true),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.legal_act_types', 1),
