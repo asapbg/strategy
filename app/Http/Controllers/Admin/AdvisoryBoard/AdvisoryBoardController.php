@@ -64,7 +64,7 @@ class AdvisoryBoardController extends AdminController
                     });
             })
             ->when($status != '', function ($query) use ($status) {
-                $query->where('active', (bool)$status);
+                $query->where('active', $status == '0' ? 'false' : 'true');
             })
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -370,6 +370,8 @@ class AdvisoryBoardController extends AdminController
     public function destroy(DeleteAdvisoryBoardRequest $request, AdvisoryBoard $item): RedirectResponse
     {
         try {
+            $item->active = false;
+            $item->save();
             $item->delete();
 
             return redirect()->route('admin.advisory-boards.index')
