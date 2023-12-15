@@ -113,9 +113,7 @@ class StrategicDocumentsController extends AdminController
         //$strategicDocuments = collect();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //
-        // testing
-        //$strategicDocuments = collect();
-        // end testing
+
         $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
             $query->where('locale', $currentLocale);
         })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
@@ -712,8 +710,9 @@ class StrategicDocumentsController extends AdminController
     public function loadParentStrategicDocuments(Request $request)
     {
         $strategicDocumentId = $request->get('documentId');
+        $strategicDocument = StrategicDocument::find($strategicDocumentId);
         $strategicDocumentsCommonService = app(CommonService::class);
-        $strategicDocuments = $strategicDocumentsCommonService->parentStrategicDocumentsSelect2Options($request);
+        $strategicDocuments = $strategicDocumentsCommonService->parentStrategicDocumentsSelect2Options($request, $strategicDocument);
         $strategicDocuments = $strategicDocuments->paginate(20);
         $documentOptions = [
             'items' => $strategicDocuments->map(function ($strategicDocument) {
@@ -724,17 +723,20 @@ class StrategicDocumentsController extends AdminController
             }),
             'more' => $strategicDocuments->hasMorePages()
         ];
-
         if ($strategicDocumentId) {
-            $parentDocument = StrategicDocument::find($strategicDocumentId)?->parentDocument;
+            $filter = $strategicDocumentsCommonService->documentFilter($request);
+            if (Arr::get($filter, 'key') == 'policy-area-id') {
+                $policyAreaIdFilter = Arr::get($filter, 'value');
+            }
+            $parentDocument = $strategicDocument?->parentDocument;
             if ($parentDocument) {
-                $customOption = [
-                    'id' => $parentDocument->id,
-                    'text' => $parentDocument->title,
-                ];
-                $documentOptions['items'] = $documentOptions['items']->toArray();
-                array_unshift($documentOptions['items'], $customOption);
-                $documentOptions['items'][0]['selected'] = true;
+                if (isset($policyAreaIdFilter) && $policyAreaIdFilter ==  $parentDocument->policy_area_id) {
+
+                    $documentOptions = $strategicDocumentsCommonService->parentStrategicDocumentSelectedOption($parentDocument, $documentOptions);
+                }
+                if (!isset($policyAreaIdFilter)) {
+                    $documentOptions = $strategicDocumentsCommonService->parentStrategicDocumentSelectedOption($parentDocument, $documentOptions);
+                }
             }
         }
 
