@@ -55,16 +55,47 @@
                             @endforeach
                         </div>
 
-                        <!-- Наличие на представител на НПО в състава на съвета -->
                         <div class="row mb-4">
                             <div class="col-auto">
                                 <div class="form-check pl-4">
                                     @php $checked = old('has_npo_presence', '') === 'on' ? 'checked' : '' @endphp
                                     <input type="checkbox" name="has_npo_presence" class="form-check-input"
-                                           id="npo_presence" {{ $checked }}>
+                                           id="npo_presence" {{ $checked }}
+                                           onchange="document.querySelector('.npo-container').classList.toggle('d-none'); resetNpoContainer();">
                                     <label class="form-check-label font-weight-semibold" for="npo_presence">
                                         {{ __('custom.presence_npo_representative') }}
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Наличие на представител на НПО в състава на съвета -->
+                        <div class="npo-container d-none">
+                            <div class="npo-children">
+                                <div class="row">
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-6">
+                                            <label for="npo_{{ $lang['code'] }}[]">
+                                                {{ __('validation.attributes.npo_presenter') }}
+                                                ({{ Str::upper($lang['code']) }})
+                                            </label>
+
+                                            <input type="text" id="npo_{{ $lang['code'] }}[]"
+                                                   name="npo_{{ $lang['code']}}[]"
+                                                   class="form-control form-control-sm"
+                                                   value="" autocomplete="off">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-auto mt-3">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" onclick="addNpo()">
+                                            {{ __('custom.add_npo_presenter') }}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -300,10 +331,73 @@
 
     @push('scripts')
         <script type="application/javascript">
+            const available_languages = @json(config('available_languages'));
+            const label_text = @json(__('validation.attributes.npo_presenter'));
+
             // Toggle vice president information fields
             document.querySelector('#has_vice_chairman').addEventListener('change', function (event) {
                 document.querySelector('#member_information').classList.toggle('d-none');
             });
+
+            function resetNpoContainer() {
+                document.querySelectorAll('.npo-custom-children').forEach(child => child.remove());
+            }
+
+            function addNpo() {
+                const container = document.querySelector('.npo-container .npo-children');
+
+                const row = document.createElement('div');
+                row.classList.add('row', 'mt-3', 'align-items-center', 'npo-custom-child');
+
+                for (let i in available_languages) {
+                    const is_even = i % 2 === 0;
+
+                    let column = generateNpoInput(available_languages[i]['code'], is_even);
+
+                    row.appendChild(column);
+
+                    if (is_even) {
+                        const remove_btn_col = document.createElement('div');
+                        remove_btn_col.classList.add('col-1');
+
+                        const remove_btn = document.createElement('button');
+                        remove_btn.classList.add('btn-close', 'float-right');
+                        remove_btn.type = 'button';
+                        remove_btn.onclick = () => remove_btn.closest('.npo-custom-child').remove();
+
+                        remove_btn_col.appendChild(remove_btn);
+
+                        row.appendChild(remove_btn_col);
+                    }
+                }
+
+                container.appendChild(row);
+            }
+
+            function generateNpoInput(language, add_space_for_close_btn = false) {
+                // Create column
+                const column = document.createElement('div');
+                column.classList.add(add_space_for_close_btn ? 'col-5' : 'col-6');
+
+                // Create label
+                const label = document.createElement('label');
+                label.for = `npo_${language}[]`;
+                label.textContent = label_text + ' (' + language.toUpperCase() + ')';
+
+                // Create a new input element
+                const input = document.createElement('input');
+
+                // Set the input attributes
+                input.type = 'text';
+                input.id = `npo_${language}[]`;
+                input.name = `npo_${language}[]`;
+                input.classList.add('form-control', 'form-control-sm');
+
+                column.appendChild(label);
+                column.appendChild(input);
+
+                return column;
+            }
         </script>
     @endpush
 @endsection

@@ -42,6 +42,8 @@ class UpdateAdvisoryBoardRequest extends FormRequest
         ];
 
         foreach (config('available_languages') as $lang) {
+            $rules['npo_' . $lang['code']] = ['nullable'];
+
             foreach (AdvisoryBoard::translationFieldsProperties() as $field => $properties) {
                 $rules[$field . '_' . $lang['code']] = $properties['rules'];
             }

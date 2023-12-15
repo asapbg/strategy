@@ -130,6 +130,8 @@ class AdvisoryBoardController extends Controller
     {
         $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
             $query->with('files');
+        }, 'npos' => function ($query) {
+            $query->with('translations');
         }])->first();
 
         return view('site.advisory-boards.view', compact('item'));

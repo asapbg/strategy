@@ -85,18 +85,15 @@
             </div>
 
             <!-- Представител на НПО -->
-            @if($item->has_npo_presence)
+            @if($item->has_npo_presence && isset($item->npos) && $item->npos->count() > 0)
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
-                            <h3 class="mb-2 fs-4">Наличие на представител на НПО в състава на съвета </h3>
+                            <h3 class="mb-2 fs-4">{{ __('custom.presence_npo_representative') }}</h3>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Представител/и на академичната общност;
-                                </li>
-                                <li class="list-group-item">Представител/и на местното самоуправление/на Националното
-                                    сдружение на
-                                    общините в Република България;
-                                </li>
+                                @foreach($item->npos as $npo)
+                                    <li class="list-group-item">{{ $npo->name }};</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -342,21 +339,23 @@
             <!-- Ръчно направени секции -->
             @if(isset($item->customSections) && $item->customSections->count() > 0)
                 @foreach($item->customSections as $section)
-                    <div class="row mb-4 ks-row">
-                        <div class="col-md-12">
-                            <div class="custom-card p-3">
-                                <h3 class="mb-2 fs-4">{{ $section->title }}</h3>
+                    @if(!empty($section->body))
+                        <div class="row mb-4 ks-row">
+                            <div class="col-md-12">
+                                <div class="custom-card p-3">
+                                    <h3 class="mb-2 fs-4">{{ $section->title }}</h3>
 
-                                <p>{!! $section->body !!}</p>
+                                    <p>{!! $section->body !!}</p>
 
-                                @if(!empty($section->files) && $section->files->count() > 0)
-                                    @foreach($section->files as $file)
-                                        @includeIf('site.partial.file', ['file' => $file])
-                                    @endforeach
-                                @endif
+                                    @if(!empty($section->files) && $section->files->count() > 0)
+                                        @foreach($section->files as $file)
+                                            @includeIf('site.partial.file', ['file' => $file])
+                                        @endforeach
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             @endif
         </div>

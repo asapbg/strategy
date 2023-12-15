@@ -454,5 +454,6 @@ return [
         'user_id' => 'user',
         'framework_description_bg' => 'Description',
         'framework_description_en' => 'Description',
+        'npo_presenter' => 'NPO presenter',
     ],
 ];
