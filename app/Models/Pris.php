@@ -65,6 +65,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    protected function oldConnectionsHtml(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !empty($this->old_connections) ? implode('<br>', explode('|', $this->old_connections)) : '',
+        );
+    }
+
     protected function displayName(): Attribute
     {
         $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
@@ -91,7 +98,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract
     protected function newspaper(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : '---'
+            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : (!empty($this->old_newspaper_full) ? $this->old_newspaper_full : null)
         );
     }
 

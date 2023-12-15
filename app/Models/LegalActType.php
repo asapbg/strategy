@@ -49,13 +49,21 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public static function optionsList()
+    public static function optionsList($withoutLaw = false, $withoutArchive = false)
     {
-        return DB::table('legal_act_type')
+        $q = DB::table('legal_act_type')
             ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
             ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-            ->where('legal_act_type_translations.locale', '=', app()->getLocale())
-            ->orderBy('legal_act_type_translations.name', 'asc')
+            ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+        if($withoutLaw) {
+            $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ORDER);
+        }
+
+        if($withoutLaw) {
+            $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ARCHIVE);
+        }
+
+        return $q->orderBy('legal_act_type_translations.name', 'asc')
             ->get();
     }
 }

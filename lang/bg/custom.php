@@ -690,4 +690,5 @@ return [
     'connections_by_op_lp' => 'Връзка с консултации (чрез Постановления)',
     'prepared_administration'  => 'Изработила администрация',
     'meeting_date' => 'Заседанието се проведе на',
+    'change_docs_from_import'   => 'Свързани документи (import)',
 ];

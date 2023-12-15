@@ -67,12 +67,13 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public static function optionsList()
+    public static function optionsList($withDefault = true)
     {
-        return DB::table('institution')
+        $q =  DB::table('institution')
             ->select(['institution.id', 'institution_translations.name'])
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
             ->where('institution_translations.locale', '=', app()->getLocale())
+            ->where('institution.id', '<>', config('app.default_institution_id'))
             ->orderBy('institution_translations.name', 'asc')
             ->get();
     }
@@ -84,6 +85,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
             ->where('institution.active', '=', 1)
             ->where('institution_translations.locale', '=', app()->getLocale())
+            ->where('institution.id', '<>', config('app.default_institution_id'))
             ->orderBy('institution_translations.name', 'asc')
             ->get();
     }
@@ -99,6 +101,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
             ->join('institution_level', 'institution_level.id', '=', 'institution.institution_level_id')
             ->where('institution.active', '=', 1)
             ->where('institution_translations.locale', '=', app()->getLocale())
+            ->where('institution.id', '<>', config('app.default_institution_id'))
             ->orderBy('institution_translations.name', 'asc')
             ->groupBy('institution.id', 'institution_translations.name')
             ->get();
@@ -120,6 +123,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
                 , DB::raw('1 as selectable')])
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
             ->where('institution.active', '=', 1)
+            ->where('institution.id', '<>', config('app.default_institution_id'))
             ->whereNull('institution.deleted_at')
             ->where('institution_translations.locale', '=', app()->getLocale());
 
@@ -131,6 +135,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
                 , DB::raw('0 as selectable')])
             ->join('institution_level_translations', 'institution_level_translations.institution_level_id', '=', 'institution_level.id')
             ->where('institution_level.active', '=', 1)
+            ->where('institution_level.id', '<>', config('app.default_institution_level_id'))
             ->where('institution_level_translations.locale', '=', app()->getLocale())
             ->union($subjects)->orderBy('name','asc')
             ->get();
