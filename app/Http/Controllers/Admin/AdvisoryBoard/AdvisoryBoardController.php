@@ -27,6 +27,7 @@ use App\Services\AdvisoryBoard\AdvisoryBoardNpoService;
 use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -392,6 +393,40 @@ class AdvisoryBoardController extends AdminController
 
             return redirect()->route('admin.advisory-boards.index')
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.restored_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Publish the specified resource.
+     */
+    public function publish(Request $request, AdvisoryBoard $item)
+    {
+        try {
+            $item->public = true;
+            $item->save();
+
+            return redirect()->route('admin.advisory-boards.index')
+                ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * Draft the specified resource.
+     */
+    public function draft(Request $request, AdvisoryBoard $item)
+    {
+        try {
+            $item->public = false;
+            $item->save();
+
+            return redirect()->route('admin.advisory-boards.index')
+                ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->with('danger', __('messages.system_error'));

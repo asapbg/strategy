@@ -78,6 +78,7 @@ class AdvisoryBoardController extends Controller
             ->when($status != '', function ($query) use ($status) {
                 $query->where('active', (bool)$status);
             })
+            ->where('public', true)
             ->orderBy('id', 'desc')
             ->paginate(10);
 

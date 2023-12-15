@@ -443,6 +443,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{item}/update',    'update')   ->name('advisory-boards.update');
         Route::post('{item}/delete',    'destroy')  ->name('advisory-boards.delete');
         Route::post('{item}/restore',   'restore')  ->name('advisory-boards.restore')->withTrashed();
+
+        Route::get('{item}/publish',    'publish')  ->name('advisory-boards.publish');
+        Route::get('{item}/draft',      'draft')    ->name('advisory-boards.draft');
     });
 
     Route::controller(ExecutorController::class)->prefix('/executors')->as('executors.')->group(function () {
