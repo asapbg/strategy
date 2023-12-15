@@ -14,6 +14,7 @@ use App\Models\PolicyArea;
 use App\Models\Pris;
 use App\Models\StrategicDocument;
 use App\Models\AuthorityAcceptingStrategic;
+use App\Models\CustomRole;
 use App\Models\StrategicActType;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
@@ -59,8 +60,13 @@ class StrategicDocumentsController extends AdminController
             'documentType', 'documentType.translation',
             'acceptActInstitution', 'acceptActInstitution.translation',
             'files', 'files.translation', 'files.documentType', 'files.documentType.translation'])
-            ->FilterBy($requestFilter)
-            ->paginate($paginate);
+            ->FilterBy($requestFilter);
+
+        if (!auth()->user()->hasRole(CustomRole::ADMIN_USER_ROLE) && !auth()->user()->hasRole(CustomRole::MODERATOR_ADVISORY_BOARDS)) {
+            $items->institutionListing();
+        }
+
+        $items = $items->paginate($paginate);
 
         $toggleBooleanModel = 'StrategicDocument';
         $editRouteName = self::EDIT_ROUTE;
