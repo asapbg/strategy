@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
+use App\Models\AdvisoryBoardNpo;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,17 +38,14 @@ class StoreAdvisoryBoardRequest extends FormRequest
             'meetings_per_year'         => 'required|integer',
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
+            'public'                    => 'nullable|integer',
         ];
 
         foreach (config('available_languages') as $lang) {
+            $rules['npo_' . $lang['code']] = ['nullable'];
+
             foreach (AdvisoryBoard::translationFieldsProperties() as $field => $properties) {
                 $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-
-            if ($this->request->has('has_vice_chairman')) {
-                foreach (AdvisoryBoardMember::translationFieldsProperties() as $field => $properties) {
-                    $rules[$field . '_' . $lang['code']] = $properties['rules'];
-                }
             }
         }
 

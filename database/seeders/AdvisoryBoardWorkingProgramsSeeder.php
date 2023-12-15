@@ -112,12 +112,37 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
 
         $imported = 0;
         $skipped = 0;
+        $from_this_year = 0;
+        $from_previous_years = 0;
 
-        $old_programs_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" LIKE '%working program%' and  c.\"toVersion\" is null");
+        $old_programs_db = DB::connection('old_strategy')->select(
+            "
+                    select
+                        *,
+                        (
+                        select
+                            cv.\"approveDate\"
+                        from
+                            councilversions cv
+                        where
+                            c.\"councilID\" = cv.\"councilID\"
+                            and c.\"fromVersion\" = cv.\"version\") as created_at
+                    from
+                        councildetails c
+                    where
+                        c.name = 'working program'
+                "
+        );
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
         $all_working_program_ids = AdvisoryBoardFunction::select('id')->pluck('id')->toArray();
 
         foreach ($old_programs_db as $program) {
+            $all_current_working_years = AdvisoryBoardFunction::select('working_year')->where('advisory_board_id', $program->councilID)->pluck('working_year')->toArray();
+
+            if (!is_null($program->toVersion) && in_array(Carbon::parse($program->created_at)->startOfYear(), $all_current_working_years)) {
+                continue;
+            }
+
             if (!in_array($program->councilID, $advisory_board_ids)) {
                 $skipped++;
                 continue;
@@ -131,8 +156,10 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
             $new_program = new AdvisoryBoardFunction();
             $new_program->id = $program->detailID;
             $new_program->advisory_board_id = $program->councilID;
-            $new_program->working_year = Carbon::now()->startOfYear();
+            $new_program->working_year = !$program->toVersion ? Carbon::now()->startOfYear() : Carbon::parse($program->created_at)->startOfYear();
             $new_program->save();
+
+            $new_program->working_year->isCurrentYear() ? $from_this_year++ : $from_previous_years++;
 
             $directory = base_path(
                 'public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR .
@@ -157,6 +184,6 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
             $imported++;
         }
 
-        $this->command->info("$imported advisory board working programs were imported successfully at " . date("H:i") . " and $skipped were skipped.");
+        $this->command->info("$imported advisory board working programs were imported successfully at " . date("H:i") . " from current year: $from_this_year and from previous years: $from_previous_years and $skipped were skipped.");
     }
 }

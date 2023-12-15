@@ -39,7 +39,7 @@
                     </button>
                 @else
                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#regulatory' }}"
-                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                       class="btn btn-info">{{ __('custom.editing') }}</a>
                 @endif
             </div>
         </div>
@@ -89,7 +89,7 @@
                     </button>
                 @else
                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#regulatory' }}"
-                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                       class="btn btn-info">{{ __('custom.editing') }}</a>
                 @endif
             </div>
         </div>

@@ -23,6 +23,8 @@ use Illuminate\Support\Collection;
  * @property int                      $meetings_per_year
  * @property bool                     $active
  * @property string                   $name
+ * @property bool                     $has_npo_presence
+ * @property bool                     $public
  *
  * @property Collection               $members
  * @property AdvisoryBoardFunction    $advisoryFunction
@@ -34,6 +36,7 @@ use Illuminate\Support\Collection;
  * @property Collection               $moderators
  * @property Collection               $meetingsAllFiles
  * @property Collection               $meetingsFiles
+ * @property Collection               $npos
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -56,7 +59,7 @@ class AdvisoryBoard extends ModelActivityExtend
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public'];
 
     /**
      * Listing only moderator's advisory boards.
@@ -64,6 +67,11 @@ class AdvisoryBoard extends ModelActivityExtend
     public function scopeModeratorListing(Builder $query): Builder
     {
         return $query->whereIn('id', AdvisoryBoardModerator::where('user_id', auth()->user()->id)->pluck('advisory_board_id'));
+    }
+
+    public function npos(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardNpo::class);
     }
 
     public function moderators(): HasMany

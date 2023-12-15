@@ -97,6 +97,7 @@ class AdvisoryBoardController extends Controller
             ->when($status != '', function ($query) use ($status) {
                 $query->where('active', (bool)$status);
             })
+            ->where('public', true)
             ->orderBy("$sort_table.$order_by", $sort)
 //            ->orderBy('id', 'desc')
             ->paginate($paginate);
@@ -150,6 +151,8 @@ class AdvisoryBoardController extends Controller
     {
         $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
             $query->with('files');
+        }, 'npos' => function ($query) {
+            $query->with('translations');
         }])->first();
 
         return view('site.advisory-boards.view', compact('item'));

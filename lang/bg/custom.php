@@ -691,4 +691,8 @@ return [
     'prepared_administration'  => 'Изработила администрация',
     'meeting_date' => 'Заседанието се проведе на',
     'change_docs_from_import'   => 'Свързани документи (import)',
+    'add_npo_presenter' => 'Добави НПО представител',
+    'as' => 'като',
+    'are_you_sure_public_advisory' => 'Сигурни ли сте, че искате да публикувате този съвет',
+    'are_you_sure_unpublic_advisory' => 'Сигурни ли сте, че искате да запазите този съвет като чернова',
 ];

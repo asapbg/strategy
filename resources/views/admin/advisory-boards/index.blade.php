@@ -84,20 +84,38 @@
                                     <td class="text-center">
                                         @can('view', $item)
                                             <a href="{{ route('admin.advisory-boards.view', $item) }}"
-                                               class="btn btn-sm btn-warning mr-2"
+                                               class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
-                                                <i class="fa fa-eye"></i>
+                                                <i class="fa fa-search"></i>
                                             </a>
                                         @endcan
 
                                         @can('update', $item)
                                             <a href="{{ route('admin.advisory-boards.edit', $item) }}"
-                                               class="btn btn-sm btn-warning mr-2"
+                                               class="btn btn-sm btn-info mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
+
+                                            @if(!$item->public)
+                                                <a href="#"
+                                                   class="btn btn-sm btn-success mr-2"
+                                                   title="{{__('custom.publish')}}"
+                                                   onclick="showModalConfirm('{{ route('admin.advisory-boards.publish', ['item' => $item]) }}', '{{ __('custom.are_you_sure_public_advisory') . '?' }}', '{{ __('custom.change') . " " . __('custom.status') }}');">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            @endif
+
+                                            @if($item->public)
+                                                <a href="#"
+                                                   class="btn btn-sm btn-secondary mr-2"
+                                                   title="{{__('custom.unpublish')}}"
+                                                   onclick="showModalConfirm('{{ route('admin.advisory-boards.draft', ['item' => $item]) }}', '{{ __('custom.are_you_sure_unpublic_advisory') . '?' }}', '{{ __('custom.change') . " " . __('custom.status') }}');">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                </a>
+                                            @endif
                                         @endcan
 
                                         @can('delete', $item)

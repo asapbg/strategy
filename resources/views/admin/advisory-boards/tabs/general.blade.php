@@ -65,10 +65,79 @@
                     <div class="form-check pl-4">
                         @php $checked = old('has_npo_presence', $item->has_npo_presence) ? 'checked' : '' @endphp
                         <input type="checkbox" name="has_npo_presence" class="form-check-input"
-                               id="npo_presence" {{ $checked }}>
+                               id="npo_presence" {{ $checked }}
+                               onchange="resetNpoContainer();">
                         <label class="form-check-label font-weight-semibold" for="npo_presence">
                             {{ __('custom.presence_npo_representative') }}
                         </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Наличие на представител на НПО в състава на съвета -->
+            @php $class = isset($item->npos) && $item->npos->count() > 0 ? '' : 'd-none' @endphp
+
+            <div class="npo-container {{ $class }}">
+                <div class="npo-children">
+                    @if(isset($item->npos) && $item->npos->count() > 0)
+                        @foreach($item->npos as $npo_key => $npo)
+                            @php $class = $npo_key > 0 ? ' npo-custom-child ' : ''; @endphp
+                            <div class="row mt-3 align-items-center {{ $class }}">
+                                @foreach(config('available_languages') as $key => $lang)
+                                    @php $class = $key % 2 === 0 && $npo_key > 0 ? 'col-5' : 'col-6'; @endphp
+                                    <div class="{{ $class }}">
+                                        <label for="npo_{{ $lang['code'] }}[]">
+                                            {{ __('validation.attributes.npo_presenter') }}
+                                            ({{ Str::upper($lang['code']) }})
+                                        </label>
+
+                                        @php
+                                            $value = $npo->translations->count() === 2 ?
+                                                $npo->translations->first(fn($row) => $row->locale == $lang['code'])->name :
+                                                old('npo_' . $lang['code'], '');
+                                        @endphp
+
+                                        <input type="text" id="npo_{{ $lang['code'] }}[]"
+                                               name="npo_{{ $lang['code']}}[]"
+                                               class="form-control form-control-sm"
+                                               value="{{ $value }}" autocomplete="off">
+                                    </div>
+
+                                    @if($class === 'col-5' && $npo_key > 0)
+                                        <div class="col-1">
+                                            <button class="btn-close float-right" type="button"
+                                                    onclick="this.closest('.npo-custom-child').remove();"></button>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="row">
+                            @foreach(config('available_languages') as $lang)
+                                <div class="col-6">
+                                    <label for="npo_{{ $lang['code'] }}[]">
+                                        {{ __('validation.attributes.npo_presenter') }}
+                                        ({{ Str::upper($lang['code']) }})
+                                    </label>
+
+                                    <input type="text" id="npo_{{ $lang['code'] }}[]"
+                                           name="npo_{{ $lang['code']}}[]"
+                                           class="form-control form-control-sm"
+                                           value="" autocomplete="off">
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-auto mt-3">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" onclick="addNpo()">
+                                {{ __('custom.add_npo_presenter') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -205,7 +274,19 @@
 
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
-                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                    @php $attributes = $item->public ? 'name="public" value="1"' : ''; @endphp
+                    <button id="save" class="btn btn-success" type="submit" {!! $attributes !!}>{{ __('custom.save') }}</button>
+
+                    @if(!$item->public)
+                        <button id="save" type="submit" name="public" value="1"
+                                class="btn btn-success">{{ __('custom.publish') }}</button>
+                    @endif
+
+                    @if($item->public)
+                        <button id="save" type="submit" name="public" value="0"
+                                class="btn btn-success">{{ __('custom.save') . ' ' . __('custom.as') . ' ' . Str::lower(__('custom.draft')) }}</button>
+                    @endif
+
                     <a href="{{ route('admin.advisory-boards.index') }}"
                        class="btn btn-primary">{{ __('custom.cancel') }}</a>
                 </div>
@@ -215,3 +296,71 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+    <script type="application/javascript">
+        const label_text = @json(__('validation.attributes.npo_presenter'));
+
+        function resetNpoContainer() {
+            document.querySelector('.npo-container').classList.toggle('d-none');
+            document.querySelectorAll('.npo-custom-child    ').forEach(child => child.remove());
+            document.querySelectorAll('.npo-children .row:first-child input').forEach(input => input.value = null);
+        }
+
+        function addNpo() {
+            const container = document.querySelector('.npo-container .npo-children');
+
+            const row = document.createElement('div');
+            row.classList.add('row', 'mt-3', 'align-items-center', 'npo-custom-child');
+
+            for (let i in available_languages) {
+                const is_even = i % 2 === 0;
+
+                let column = generateNpoInput(available_languages[i]['code'], is_even);
+
+                row.appendChild(column);
+
+                if (is_even) {
+                    const remove_btn_col = document.createElement('div');
+                    remove_btn_col.classList.add('col-1');
+
+                    const remove_btn = document.createElement('button');
+                    remove_btn.classList.add('btn-close', 'float-right');
+                    remove_btn.type = 'button';
+                    remove_btn.onclick = () => remove_btn.closest('.npo-custom-child').remove();
+
+                    remove_btn_col.appendChild(remove_btn);
+
+                    row.appendChild(remove_btn_col);
+                }
+            }
+
+            container.appendChild(row);
+        }
+
+        function generateNpoInput(language, add_space_for_close_btn = false) {
+            // Create column
+            const column = document.createElement('div');
+            column.classList.add(add_space_for_close_btn ? 'col-5' : 'col-6');
+
+            // Create label
+            const label = document.createElement('label');
+            label.for = `npo_${language}[]`;
+            label.textContent = label_text + ' (' + language.toUpperCase() + ')';
+
+            // Create a new input element
+            const input = document.createElement('input');
+
+            // Set the input attributes
+            input.type = 'text';
+            input.id = `npo_${language}[]`;
+            input.name = `npo_${language}[]`;
+            input.classList.add('form-control', 'form-control-sm');
+
+            column.appendChild(label);
+            column.appendChild(input);
+
+            return column;
+        }
+    </script>
+@endpush
