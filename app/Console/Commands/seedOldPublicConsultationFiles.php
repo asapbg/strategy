@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class seedOldPublicConsultationFiles extends Command
 {
@@ -47,6 +48,7 @@ class seedOldPublicConsultationFiles extends Command
         $formatTimestamp = 'Y-m-d H:i:s';
         $formatDate = 'Y-m-d';
 
+        $directory = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
         //records per query
         $step = 50;
         //max id in old db
@@ -59,61 +61,79 @@ class seedOldPublicConsultationFiles extends Command
         $ourUsers = User::get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 //        $ourInstitutions = Institution::with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
-        $directory = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
-        mkdirIfNotExists($directory);
-
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
                 echo "FromId: ".$currentStep.PHP_EOL;
                 $oldDbFiles= DB::connection('old_strategy_app')
                     ->select('
-                    select p.id ,
-                           f.folderid
-                        from dbo.publicconsultations p
-                        join dbo.files f on f.id = p.mainfileid
-                        where
-                            p.id >= ' . $currentStep . '
-                            and p.id < ' . ($currentStep + $step) . '
+                    select
+                        f.id ,
+                        f."name" as name,
+                        f.description,
+                        case when f.isdeleted = true then 1 else 0 end as deleted,
+                        case when f.isactive = true then 1 else 0 end as active,
+                        f.createdbyuserid as old_user_id,
+                        f.datecreated as created_at,
+                        f.datemodified as updated_at,
+                        folders.id as folder_id,
+                        folders."name" as folder_name,
+                        folders.description as folder_description
+                    from dbo.publicconsultations p
+                    left join dbo.used_files uf on uf.recordid = p.id
+                    left join dbo.files f on f.id = uf.fileid
+                    left join dbo.filefolders folders on folders.id = f.folderid
+                    where true
+                        and p.id >= ' . $currentStep . '
+                        and p.id < ' . ($currentStep + $step) . '
+                        and p.languageid = 1
+                        and f.id is not null
+                        and folders.id is not null
+                        and folders.id = 64 -- consultations
                     order by p.datecreated desc
-                    limit 100');
+                    ');
 
                 if (sizeof($oldDbFiles)) {
                     foreach ($oldDbFiles as $item) {
                     DB::beginTransaction();
                         try {
-                            $directory_to_copy_from = base_path('document_library' . DIRECTORY_SEPARATOR . '10108' . DIRECTORY_SEPARATOR . $item->folderid);
-                            //Storage::move($directory_to_copy_from, Storage::disk('public_uploads')->path($directory));
+                            $newName = str_replace('-', '_', Str::slug($item->name));
+                            $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name);
+                            $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$directory.$newName);
 
-                            $copied_files = copyFiles($directory_to_copy_from, Storage::disk('public_uploads')->path($directory), $item->folderid);
-dd($copied_files, $directory_to_copy_from, Storage::disk('public_uploads')->path($directory));
-                            if(!empty($copied_files)) {
-                                foreach ($copied_files as $file) {
-                                    $fileIds = [];
-                                    foreach (['bg', 'en'] as $code) {
-                                        //TODO catch file version
-                                        //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                                        $version = 0;
-                                        $newFile = new File([
-                                            'id_object' => $ourPc[$item->id],
-                                            'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
-                                            'filename' => $file['filename'],
-                                            'content_type' => $file['content_type'],
-                                            'path' => $directory.$file['filename'],
-                                            'description_' . $code => !empty($item->name) ? $item->name : $item->description,
-                                            'sys_user' => null,
-                                            'locale' => $code,
-                                            'version' => ($version + 1) . '.0'
-                                        ]);
-                                        $newFile->save();
-                                        $fileIds[] = $newFile->id;
-                                        $ocr = new FileOcr($newFile->refresh());
-                                        $ocr->extractText();
-                                    }
+                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
-                                    File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-                                    File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                            if($copied_file) {
+                                $contentType = Storage::disk('public_uploads')->mimeType($directory.$newName);
+                                $fileIds = [];
+                                foreach (['bg', 'en'] as $code) {
+                                    //TODO catch file version
+                                    //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                                    $version = 0;
+                                    $newFile = new File([
+                                        'id_object' => $ourPc[$item->id],
+                                        'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                                        'filename' => $newName,
+                                        'content_type' => $contentType,
+                                        'path' => $directory.$newName,
+                                        'description_' . $code => !empty($item->description) ? $item->description : $item->name,
+                                        'sys_user' => null,
+                                        'locale' => $code,
+                                        'version' => ($version + 1) . '.0',
+                                        'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
+                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp)
+                                    ]);
+                                    $newFile->save();
+                                    $fileIds[] = $newFile->id;
+                                    $ocr = new FileOcr($newFile->refresh());
+                                    $ocr->extractText();
                                 }
+
+                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                $this->comment('File Succesfuly saved for PC ID '.$ourPc[$item->id]);
+                            } else{
+                                $this->comment('Can\'t copy file');
                             }
 
                             DB::commit();

@@ -105,7 +105,8 @@ class PublicConsultationPolicy
      */
     public function comment(User $user, PublicConsultation $publicConsultation)
     {
-        return true;
+        return $publicConsultation->inPeriodBoolean;
+        //return true;
     }
 
     /**

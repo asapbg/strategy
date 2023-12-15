@@ -28,8 +28,9 @@
                 <span class="obj-icon-info fw-bold" style="font-size: 18px;">
                   <i class="far fa-calendar me-2 main-color" title="{{ __('site.public_consultation.open_from') }}"></i>{{ displayDate($item->open_from) }} {{ __('site.year_short') }} </span>
                 <span class="mx-2"> — </span>
-                <span class="obj-icon-info fw-bold" style="font-size: 18px;">
+                <span class="obj-icon-info fw-bold me-2" style="font-size: 18px;">
                   <i class="far fa-calendar-check me-2 main-color" title="{{ __('site.public_consultation.open_to') }}"></i>{{ displayDate($item->open_to) }} {{ __('site.year_short') }} </span>
+                <span class="{{ $item->inPeriodBoolean ? 'active' : 'inactive' }}-ks">{{ $item->inPeriod }}</span>
             </div>
             <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.reg_num') }}</h3>
