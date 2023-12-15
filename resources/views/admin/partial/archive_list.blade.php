@@ -19,7 +19,7 @@
                                     @endif
 
                                     @if($archive_category == 2)
-                                        {{ __('custom.function') . ' ' .  __('custom.from') . ' ' . $item->created_at->format('Y') . __('custom.year_short') }}
+                                        {{ __('custom.function') . ' ' .  __('custom.from') . ' ' . \Carbon\Carbon::parse($item->working_year)->format('Y') . __('custom.year_short') }}
                                     @endif
                                 </a>
                             </div>

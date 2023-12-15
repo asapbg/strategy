@@ -11,7 +11,6 @@ use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardOrganizationRule;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\File;
-use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Illuminate\Database\Seeder;
 
 /**

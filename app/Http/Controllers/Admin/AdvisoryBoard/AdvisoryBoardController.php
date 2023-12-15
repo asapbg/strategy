@@ -237,7 +237,7 @@ class AdvisoryBoardController extends AdminController
                 $query->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
                     $query->withTrashed();
                 });
-            });
+            })->whereYear('working_year', '>=', now()->year);
         }, 'organizationRule' => function ($query) {
             $query->with('files');
         }, 'establishment' => function ($query) {
@@ -286,7 +286,7 @@ class AdvisoryBoardController extends AdminController
         if ($archive_category == '2') {
             $archive = AdvisoryBoardFunction::with('files')
                 ->where('advisory_board_id', $item->id)
-                ->where('status', StatusEnum::INACTIVE->value)
+                ->whereYear('working_year', '<', now()->year)
                 ->orderBy('created_at', 'desc')->paginate(10);
         }
 
