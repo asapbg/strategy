@@ -20,12 +20,22 @@
                 </div>
                 <div class="col-md-4">
                     <div class="consult-item-header-edit">
-                        <a href="#">
-                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
-                        </a>
-                        <a href="#">
-                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
-                        </a>
+                        @can('delete', $news_row)
+                            <a href="javascript:;"
+                               data-target="#modal-delete-resource"
+                               data-resource-id="{{ $news_row->id }}"
+                               data-resource-name="{{ $news_row->title }}"
+                               data-resource-delete-url="{{ route('admin.publications.delete', $news_row) }}"
+                               data-toggle="tooltip"
+                               title="{{ __('custom.delete') }}">
+                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                            </a>
+                        @endcan
+                        @can('update', $news_row)
+                            <a href="{{ route('admin.publications.edit' , [$news_row->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
+                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </div>

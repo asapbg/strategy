@@ -19,15 +19,22 @@
                                     </h3>
                                 </div>
                                 <div class="consult-item-header-edit">
-                                    <a href="#">
-                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                           role="button" title="Изтриване"></i>
-                                    </a>
-                                    <a href="#">
-                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
-                                           title="Редакция">
-                                        </i>
-                                    </a>
+                                    @can('delete', $publication)
+                                        <a href="javascript:;"
+                                           data-target="#modal-delete-resource"
+                                           data-resource-id="{{ $publication->id }}"
+                                           data-resource-name="{{ $publication->title }}"
+                                           data-resource-delete-url="{{ route('admin.publications.delete', $publication) }}"
+                                           data-toggle="tooltip"
+                                           title="{{ __('custom.delete') }}">
+                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                        </a>
+                                    @endcan
+                                    @can('update', $publication)
+                                        <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
+                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                             <a href="{{ route('library.publications') }}?categories[]={{ $publication->publication_category_id }}"
