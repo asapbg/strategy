@@ -12,6 +12,7 @@ use App\Models\PublicConsultationContact;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class clearDb extends Command
 {
@@ -54,9 +55,17 @@ class clearDb extends Command
 
                     $deleted = 1;
                     while ($deleted > 0) {
-                        $deleted = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->forceDelete();
-                        $this->comment('100 files are deleted');
-                        sleep(1);
+                        $files = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->get();
+                        if($files->count()){
+                            foreach ($files as $f) {
+                                Storage::disk('public_uploads')->delete($f->path);
+                            }
+                            File::whereIn('id', $files->pluck('id')->toArray())->forceDelete();
+                            $this->comment('100 files are deleted');
+                            sleep(1);
+                        } else{
+                            $deleted = 0;
+                        }
                     };
 
                     CommonController::fixSequence('files');
@@ -75,7 +84,6 @@ class clearDb extends Command
                 DB::table('users')->truncate();
                 break;
             case 'pc':
-
                 //TODO get only imported pc and connected to them relations
                 $fromId = DB::table('public_consultation')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
@@ -87,9 +95,17 @@ class clearDb extends Command
 
                     $deleted = 1;
                     while ($deleted > 0) {
-                        $deleted = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->limit(100)->forceDelete();
-                        sleep(1);
-                        $this->comment('100 files are deleted');
+                        $files = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->limit(100)->get();
+                        if($files->count()){
+                            foreach ($files as $f) {
+                                Storage::disk('public_uploads')->delete($f->path);
+                            }
+                            File::whereIn('id', $files->pluck('id')->toArray())->forceDelete();
+                            $this->comment('100 files are deleted');
+                            sleep(1);
+                        } else{
+                            $deleted = 0;
+                        }
                     }
 
                     PublicConsultationTranslation::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
