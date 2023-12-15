@@ -148,7 +148,7 @@
                                             <label class="col-sm-12 control-label" for="active">
                                                 {{ __('validation.attributes.main_img') }}
                                             </label>
-                                            @if($item->id && $item->file_id)
+                                            @if($item->id && $item->mainImg)
                                                 <img src="{{ asset($item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
                                             @endif
                                             <div class="col-12">

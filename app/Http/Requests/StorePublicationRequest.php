@@ -43,6 +43,7 @@ class StorePublicationRequest extends FormRequest
 
         if(request()->isMethod('put')) {
             $rules['id'] = ['required', 'numeric', 'exists:publication,id'];
+            $rules['file'] = ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
 
             foreach (config('available_languages') as $lang) {
                 $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
