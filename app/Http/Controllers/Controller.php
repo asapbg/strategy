@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LanguageFileUploadRequest;
+use App\Models\File;
 use App\Models\User;
+use App\Services\FileOcr;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 class Controller extends BaseController
@@ -253,5 +259,76 @@ class Controller extends BaseController
         $this->title_singular   = $title;
         $this->title_plural     = $title;
         $this->breadcrumb_title = $title;
+    }
+
+    /**
+     * @param LanguageFileUploadRequest $request
+     * @param $objectId
+     * @param $typeObject
+     * @param bool $redirect
+     * @return Application|RedirectResponse|Redirector|void
+     */
+    public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
+        try {
+            $validated = $request->all();
+
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
+                File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
+                default => '',
+            };
+
+            $fileIds = [];
+
+            foreach ($this->languages as $lang) {
+
+                $default = $lang['default'];
+                $code = $lang['code'];
+
+                if ($default && !isset($validated['file_'.$code])) {
+                    return;
+                }
+                if (!isset($validated['file_'.$code])) {
+                    $file = $validated['file_bg'];
+                    $desc = $validated['description_bg'] ?? null;
+                } else {
+                    $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
+                    $desc = $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null);
+                }
+                $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+                $newFile = new File([
+                    'id_object' => $objectId,
+                    'code_object' => $typeObject,
+                    'filename' => $fileNameToStore,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $pDir.$fileNameToStore,
+                    'description_'.$code => $desc,
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => ($version + 1).'.0'
+                ]);
+                $newFile->save();
+                $fileIds[] = $newFile->id;
+                $ocr = new FileOcr($newFile->refresh());
+                $ocr->extractText();
+            }
+
+            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+
+            $route = match ((int)$typeObject) {
+                File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
+                default => '',
+            };
+            if ($redirect) {
+                return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
+            }
+        } catch (Exception $e) {
+            logError('Upload file', $e->getMessage());
+            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+        }
     }
 }

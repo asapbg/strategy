@@ -375,7 +375,7 @@ if (!function_exists('fileIcon')) {
         switch ($fileType) {
             case 'application/pdf':
             case 'pdf':
-                $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
+                $icon = '<i class="fas fa-file-pdf text-danger me-1"></i>';
                 break;
             case 'text/csv':
                 $icon = '<i class="fas fa-file-csv text-primary me-1"></i>';
@@ -387,6 +387,7 @@ if (!function_exists('fileIcon')) {
             case 'application/vnd.ms-excel':
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                 $icon = '<i class="fas fa-file-excel text-success me-1"></i>';
+                break;
             case 'application/rar':
             case 'application/x-rar':
                 $icon = '<i class="fas fa-file-zipper text-primary me-1"></i>';

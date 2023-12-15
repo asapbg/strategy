@@ -153,3 +153,11 @@ table .toggle i { color: #269740 }
 .note-editor p {
     margin-bottom: 0;
 }
+.fade:not(.show) {
+    height: 0;
+    z-index: 0;
+}
+.fade.active {
+    position: relative;
+    z-index: 1000;
+}

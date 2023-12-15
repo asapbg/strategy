@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AdvisoryBoardCustom;
 use App\Models\File;
 use App\Models\Publication;
 use Illuminate\Foundation\Http\FormRequest;
@@ -32,20 +33,35 @@ class StorePublicationRequest extends FormRequest
             'type' => ['required', 'numeric'],
             'publication_category_id' => ['nullable', 'numeric'],
             'published_at' => ['required'],
-            'active' => ['required', 'numeric', 'in:0,1'],
-            'file' => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['jpg', 'jpeg', 'png'])],
+            'active' => ['required', 'numeric', 'in:0,1']
         ];
-
-        if( request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:publication,id'];
-        }
-
         foreach (config('available_languages') as $lang) {
             foreach (Publication::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }
 
+        if(request()->isMethod('put')) {
+            $rules['id'] = ['required', 'numeric', 'exists:publication,id'];
+
+            foreach (config('available_languages') as $lang) {
+                $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+                $rules['description_' . $lang['code']] = ['nullable', 'string'];
+            }
+        } else {
+            $rules['file'] = ['required', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
+        }
+
         return $rules;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function messages()
+    {
+        return [
+            'file.required' => 'Трябва да изберете Основна снимка',
+        ];
     }
 }

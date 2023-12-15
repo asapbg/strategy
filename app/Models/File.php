@@ -32,6 +32,7 @@ class File extends ModelActivityExtend
     /** @var int Advisory Board */
     const CODE_AB = 7;
 
+    const MAX_UPLOAD_FILE_SIZE = 30720;
 
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_DIR = 'pages' . DIRECTORY_SEPARATOR;
@@ -49,8 +50,11 @@ class File extends ModelActivityExtend
     const ADVISORY_BOARD_MODERATOR_UPLOAD_DIR = 'moderator';
     const ADVISORY_BOARD_CUSTOM_SECTION_UPLOAD_DIR = 'custom-sections';
 
+    const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
+
+    const CONTENT_TYPE_IMAGES = ['image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];
     protected $guarded = [];
 
     //activity

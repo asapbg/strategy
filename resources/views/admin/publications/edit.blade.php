@@ -7,21 +7,27 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">{{ __('custom.general_info') }}</a>
+                            <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">
+                                {{ __('custom.general_info') }}
+                            </a>
                         </li>
                         @if($item->id)
                             <li class="nav-item">
-                                <a class="nav-link" id="ct-files-tab" data-toggle="pill" href="#ct-files" role="tab" aria-controls="ct-files" aria-selected="false">{{ trans_choice('custom.files',2) }}</a>
+                                <a class="nav-link" id="ct-files-tab" data-toggle="pill" href="#ct-files" role="tab" aria-controls="ct-files" aria-selected="false">
+                                    {{ trans_choice('custom.files',2) }}
+                                </a>
                             </li>
                         @endif
                     </ul>
                 </div>
+                @php
+                    $storeRoute = route($storeRouteName, ['item' => $item]);
+                @endphp
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabsContent">
-                        <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
-                            @php($storeRoute = route($storeRouteName, ['item' => $item]))
-                            <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
-                                @csrf
+                        <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                            @csrf
+                            <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
                                 @if($item->id)
                                     @method('PUT')
                                     <input type="hidden" name="type" value="{{ $item->type ?? 0 }}">
@@ -37,7 +43,9 @@
                                                         <span>{{ __('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type)) }}</span>
                                                     @endif
                                                 </label>
-                                                @php($type = old('type') ?? $item->type)
+                                                @php
+                                                    $type = old('type') ?? $item->type;
+                                                @endphp
                                                 <div class="d-inline">
                                                     <select id="type" name="type"  class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
                                                         @foreach(optionsPublicationTypes() as $row)
@@ -58,7 +66,9 @@
                                                 <label class="control-label" for="publication_category_id">
                                                     {{ trans_choice('custom.categories', 1) }}:
                                                 </label>
-                                                @php($category_id = old('publication_category_id') ?? $item->publication_category_id)
+                                                @php
+                                                    $category_id = old('publication_category_id') ?? $item->publication_category_id;
+                                                @endphp
                                                 <div class="d-inline">
                                                     <select id="publication_category_id" name="publication_category_id"
                                                             class="form-control form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
@@ -151,66 +161,94 @@
                                     </div>
 
                                 </div>
-
-                                <div class="form-group row">
-                                    <div class="col-md-6 col-md-offset-3">
-                                        <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                        <a href="{{ route($listRouteName) }}"
-                                           class="btn btn-primary">{{ __('custom.cancel') }}</a>
-                                    </div>
-                                </div>
-                                <br/>
-                            </form>
-                        </div>
-                        @if($item->id)
-                            <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
-                                <form action="{{ route('admin.upload.file', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PUBLICATION]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="description" class="form-label">Публично име <span class="required">*</span> </label>
-                                        <input value="{{ old('description', '') }}" class="form-control form-control-sm @error('description') is-invalid @enderror" id="description" type="text" name="description">
-                                        @error('description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="file" class="form-label">Изберете файл <span class="required">*</span> </label>
-                                        <input class="form-control form-control-sm @error('file') is-invalid @enderror" id="file" type="file" name="file">
-                                        @error('file')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                </form>
-                                @if($item->files)
-                                    <table class="table table-sm table-hover table-bordered mt-4">
-                                        <tbody>
-                                        <tr>
-                                            <th>Преглед</th>
-                                            <th>Име</th>
-                                            <th></th>
-                                        </tr>
-                                        @foreach($item->files as $f)
-                                            <tr>
-                                                <td>{!! $f->preview !!}</td>
-                                                <td>{{ $f->description }} @if($f->id == $item->file_id)({{ __('validation.attributes.main_img') }})@endif</td>
-                                                <td>
-                                                    <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                                                        <i class="fas fa-download me-1" role="button"
-                                                           data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
-                                                    </a>
-                                                    <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
-                                                        <i class="fas fa-trash me-1" role="button"
-                                                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                @endif
                             </div>
-                        @endif
+                            @if($item->id)
+                                <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
+
+                                    <div class="row">
+                                        @foreach($languages as $lang)
+                                            @php
+                                                $default = $lang['default'];
+                                                $code = $lang['code'];
+                                                $code_upper = mb_strtoupper($code);
+                                            @endphp
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="description_{{ $code }}" class="form-label">
+                                                        Публично име ({{ $code_upper }})
+                                                    </label>
+                                                    <input value="{{ old("description_$code", '') }}" class="form-control form-control-sm @error("description_$code") is-invalid @enderror"
+                                                           id="description_{{ $code }}" type="text" name="description_{{ $code }}"
+                                                    >
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="file_{{ $code }}" class="form-label">
+                                                        Изберете файл ({{ $code_upper }})
+                                                    </label>
+                                                    <input class="form-control form-control-sm @error("file_$code") is-invalid @enderror"
+                                                           id="file_{{ $code }}" type="file" name="file_{{ $code }}"
+                                                    >
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    @if($item->files)
+                                        <table class="table table-sm table-hover table-bordered mt-4">
+                                            <tbody>
+                                            <tr>
+                                                <th>Преглед</th>
+                                                <th>Име</th>
+                                                <th></th>
+                                            </tr>
+                                            @foreach($item->files as $f)
+                                                <tr>
+                                                    @if(in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
+                                                        @continue
+                                                        <td>{!! $f->preview !!}</td>
+                                                        <td>{{ $f->description }} @if($f->id == $item->file_id)({{ __('validation.attributes.main_img') }})@endif</td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-download me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-trash me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            </a>
+                                                        </td>
+                                                    @else
+                                                        <td>
+                                                            {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                            - {{ __('custom.'.$f->locale) }} | {{ __('custom.version_short').' '.$f->version }}
+                                                            | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                        </td>
+                                                        <td>{{ $f->description }}</td>
+                                                        <td>
+
+                                                            <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $f->id }}"
+                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                            >
+                                                                {{ __('custom.preview') }}
+                                                            </button>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
+                                </div>
+                            @endif
+
+                            <div class="form-group row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                    <a href="{{ route($listRouteName) }}"
+                                       class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
                 </div>

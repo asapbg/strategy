@@ -404,6 +404,7 @@ return [
         'importer_en'     => 'Вносител (EN)',
         'file_bg'           => 'Файл (BG)',
         'file_en'           => 'Файл (EN)',
+        'file_name_bg'           => 'Публично име (BG)',
         'connect_type'           => 'Тип на изменение',
         'new_name'           => 'Наименование',
         'new_email'           => 'Електронна поща',

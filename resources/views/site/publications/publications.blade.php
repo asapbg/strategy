@@ -3,52 +3,67 @@
         <div class="col-md-12">
             <div class="consul-wrapper">
                 <div class="single-library d-flex">
-
-
-                    <div class="col-lg-10 py-5 right-side-content">
-                        <h2 class="obj-title mb-4">{{ $publication->translation->title }}</h2>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <a href="#" class="text-decoration-none">
-                                <span class="obj-icon-info me-2">
-                                    <i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>{{ displayDate($publication->published_at) }} г.
+                    <div class="library-img-holder">
+                        <img class="img-fluid" src="{{ asset($publication->mainImg?->path) }}" alt="{{ $publication->translation?->title }}">
+                    </div>
+                    <div class="consult-body">
+                        <div class="consul-item">
+                            <div class="consult-item-header d-flex justify-content-between">
+                                <div class="consult-item-header-link">
+                                    <h3>
+                                        <a href="{{ route('library.details', [$publication->type, $publication->id]) }}"
+                                           class="text-decoration-none" title="{{ $publication->translation?->title }}"
+                                        >
+                                            {{ $publication->translation?->title }}
+                                        </a>
+                                    </h3>
+                                </div>
+                                <div class="consult-item-header-edit">
+                                    <a href="#">
+                                        <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
+                                           role="button" title="Изтриване"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button"
+                                           title="Редакция">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <a href="{{ route('library.publications') }}?categories[]={{ $publication->publication_category_id }}"
+                               title="{{ $publication->category?->name }}" class="text-decoration-none mb-3"
+                            >
+                                <i class="fas fa-sitemap me-1" title="{{ $publication->category?->name }}"></i>
+                                {{ $publication->category?->name }}
+                            </a>
+                            <div class="anotation text-secondary mb-2 mt-2">
+                                {!! $publication->translation?->short_content ? Str::limit($publication->translation?->short_content, 200) : "" !!}
+                            </div>
+                            <div class="meta-consul">
+                                <span class="text-secondary">
+                                    <i class="far fa-calendar text-secondary" title="Публикувано"></i> {{ displayDate($publication->published_at) }} г.
                                 </span>
-                                </a>
-                                <a href="#" class="text-decoration-none">
-                                <span class="obj-icon-info me-2">
-                                    <i class="fas fa-sitemap me-1 dark-blue" title="Област на политика"></i>{{ $publication->category?->name }}
-                                </span>
+                                <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" title="{{ $publication->translation?->title }}">
+                                    <i class="fas fa-arrow-right read-more"></i>
                                 </a>
                             </div>
-                            <div class="col-md-4 text-end">
-                                @can('update', $publication)
-                                    <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" class="btn btn-sm btn-primary main-color">
-                                        <i class="fas fa-pen me-2 main-color"></i>Редактиране на публикация
-                                    </a>
-                                @endcan
-                                @can('delete', $publication)
-                                    <a href="javascript:;"
-                                       class="btn btn-sm btn-danger"
-                                       data-target="#modal-delete-resource"
-                                       data-resource-id="{{ $publication->id }}"
-                                       data-resource-name="{{ $publication->title }}"
-                                       data-resource-delete-url="{{ route('admin.publications.delete', $publication) }}"
-                                       data-toggle="tooltip"
-                                       title="{{ __('custom.delete') }}">
-                                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на публикация
-                                    </a>
-                                @endcan
-                            </div>
                         </div>
-                        <hr>
-                        <div>
-                            {!! $publication->translation->content !!}
-                            <a href="">Министерство на електронното управление</a>
-                        </div>
-                        <a class="btn btn-primary mt-4 mb-5" href="{{ route('library.news') }}">Обратно към списъка с новини</a>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endforeach
+
+<div id="publications_pagination" class="ajax_pagination row mb-4" data-id="publications">
+    @desktop
+    @if($publications->count() > 0 && $publications instanceof Illuminate\Pagination\LengthAwarePaginator)
+        {{ $publications->onEachSide(2)->appends(request()->query())->links() }}
+    @endif
+    @elsedesktop
+    @if($publications->count() > 0 && $publications instanceof Illuminate\Pagination\LengthAwarePaginator)
+        {{ $publications->onEachSide(0)->appends(request()->query())->links() }}
+    @endif
+    @enddesktop
+</div>

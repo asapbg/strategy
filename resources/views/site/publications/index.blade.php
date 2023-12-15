@@ -12,9 +12,11 @@
             @php
                 $current_page = 1;
                 if (isset($publications)) {
+                    $current_type = "publications";
                     $current_page = ($publications->count() > 0 ) ? $publications->currentPage() : 1;
                 }
                 if (isset($news)) {
+                    $current_type = "news";
                     $current_page = ($news->count() > 0 ) ? $news->currentPage() : 1;
                 }
             @endphp
@@ -22,6 +24,7 @@
                 <input type="hidden" name="search" value="true">
                 <input type="hidden" name="page" class="current_page" value="{{ $current_page }}">
                 <input type="hidden" name="sort" class="sort" value="DESC">
+                <input type="hidden" id="model_type" value="{{ $current_type }}">
                 <div class="row filter-results mb-2">
                     <h2 class="mb-4">
                         Търсене
@@ -29,12 +32,13 @@
 
                     <div class="col-md-12">
                         <div class="input-group ">
-                            <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="exampleFormControlInput1" class="form-label">Категория:</label>
-                                <select class="form-select select2" multiple aria-label="Default select example">
-                                    <option value="1">Всички</option>
-                                    <option value="1">Оценка на въздействието</option>
-                                    <option value="1">Стратегическо планиране</option>
+                            <div class="mb-3 d-flex flex-column w-100">
+                                <label for="categories" class="form-label">Категория:</label>
+                                <select class="form-select select2" name="categories[]" id="categories" multiple aria-label="Категорияe">
+                                    <option value="">Всички</option>
+                                    @foreach($publicationCategories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -43,9 +47,9 @@
                     <div class="col-md-4">
                         <div class="input-group ">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="title" class="form-label">Търсене в Заглавие/Съдържание</label>
-                                <input type="text" id="title" name="title" class="form-control"
-                                       value="{{ request()->offsetGet('title') }}">
+                                <label for="keywords" class="form-label">Търсене в Заглавие/Съдържание</label>
+                                <input type="text" id="keywords" name="keywords" class="form-control"
+                                       value="{{ request()->offsetGet('keywords') }}">
                             </div>
                         </div>
                     </div>
@@ -78,7 +82,12 @@
                 </div>
                 <div class="row mb-5 action-btn-wrapper">
                     <div class="col-md-4">
-                        <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
+                        <span id="searchBtn" class="btn rss-sub main-color search-btn">
+                            <i class="fas fa-search main-color"></i> {{ __('custom.searching') }}
+                        </span>
+                        <span class="btn rss-sub main-color search-btn clear">
+                            <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
+                        </span>
                     </div>
                     <div class="col-md-8 text-end">
                         <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
@@ -119,7 +128,7 @@
             @endif
 
             @if(isset($news))
-                <div id="publications-results">
+                <div id="news-results" class="row">
                     @includeIf('site.publications.news')
                 </div>
             @endif
@@ -128,3 +137,12 @@
 
     </div>
 @endsection
+@if(request()->has('categories'))
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#search-form").find('.select2').val(@json(request()->offsetGet('categories'))).trigger('change');
+        });
+    </script>
+@endpush
+@endif

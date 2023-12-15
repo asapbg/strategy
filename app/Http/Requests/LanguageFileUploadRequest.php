@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LanguageFileUploadRequest extends FormRequest
@@ -24,6 +23,9 @@ class LanguageFileUploadRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->routeIs('publications.store')) {
+            return [];
+        }
         $formatInput = request()->input('formats');
         $formats = constant("\App\Models\File::$formatInput");
         return [
