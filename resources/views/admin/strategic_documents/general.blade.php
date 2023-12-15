@@ -702,7 +702,8 @@
 
             prisAct.select2({
                 placeholder: '--',
-                minimumInputLength: 1
+                minimumInputLength: 1,
+                allowClear: true,
             });
             prisAct.prop('disabled', false);
             const loadPrisOptions = (filter = '', documentId) => {
@@ -719,6 +720,7 @@
                         prisAct.select2({
                             data: data.items,
                             placeholder: '--',
+                            allowClear: true,
                             //minimumInputLength: 1,
                             ajax: {
                                 url: '/admin/strategic-documents/load-pris-acts',
@@ -757,7 +759,13 @@
             loadPrisOptions('', documentId);
 
             const parentDocumentSelect = $('#parent_document_id');
+            parentDocumentSelect.select2({
+                placeholder: '--',
+                minimumInputLength: 1,
+                allowClear: true,
+            });
             const loadParentStrategicDocumentOptions = (filter = '', documentId) => {
+                documentId = 46;
                 $.ajax({
                     url: '/admin/strategic-documents/load-parents',
                     dataType: 'json',
@@ -769,6 +777,7 @@
                         parentDocumentSelect.select2({
                             data: data.items,
                             placeholder: '--',
+                            allowClear: true,
                             //minimumInputLength: 1,
                             ajax: {
                                 url: '/admin/strategic-documents/load-parents',
@@ -777,6 +786,7 @@
                                 data: function (params) {
                                     return {
                                         filter: filter,
+                                        documentId: documentId,
                                         term: params.term,
                                         page: params.page
                                     };
@@ -794,7 +804,7 @@
                         });
 
                         setTimeout(function() {
-
+                            parentDocumentSelect.trigger('query', {});
                         }, 250);
                     }
                 });

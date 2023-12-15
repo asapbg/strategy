@@ -2,7 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\CommonController;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardCustom;
+use App\Models\AdvisoryBoardEstablishment;
+use App\Models\AdvisoryBoardFunction;
+use App\Models\AdvisoryBoardMember;
+use App\Models\AdvisoryBoardOrganizationRule;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\File;
 use App\Services\AdvisoryBoard\AdvisoryBoardService;
@@ -91,6 +97,8 @@ class AdvisoryBoardSeeder extends Seeder
 
         // we call all other seeders that depends on advisory boards
         $this->callDependableSeeders();
+
+        $this->callCleanUp();
     }
 
     private function determineChairmanType(string|null $position): int
@@ -120,5 +128,15 @@ class AdvisoryBoardSeeder extends Seeder
             AdvisoryBoardMeetingsSeeder::class,
             AdvisoryBoardCustomSectionsSeeder::class,
         ]);
+    }
+
+    private function callCleanUp(): void
+    {
+        CommonController::fixSequence((new AdvisoryBoard())->getTable());
+        CommonController::fixSequence((new AdvisoryBoardMember())->getTable());
+        CommonController::fixSequence((new AdvisoryBoardFunction())->getTable());
+        CommonController::fixSequence((new AdvisoryBoardOrganizationRule())->getTable());
+        CommonController::fixSequence((new AdvisoryBoardEstablishment())->getTable());
+        CommonController::fixSequence((new AdvisoryBoardCustom())->getTable());
     }
 }

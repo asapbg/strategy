@@ -691,4 +691,5 @@ return [
     'prepared_administration'  => 'Изработила администрация',
     'meeting_date' => 'Заседанието се проведе на',
     'change_docs_from_import'   => 'Свързани документи (import)',
+    'add_npo_presenter' => 'Добави НПО представител',
 ];

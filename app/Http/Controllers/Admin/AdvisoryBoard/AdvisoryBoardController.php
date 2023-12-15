@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
-use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\AdminController;
@@ -13,10 +12,8 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardRequest;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
-use App\Models\AdvisoryBoardEstablishment;
 use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
-use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
@@ -26,7 +23,7 @@ use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
-use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
+use App\Services\AdvisoryBoard\AdvisoryBoardNpoService;
 use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -67,7 +64,7 @@ class AdvisoryBoardController extends AdminController
                     });
             })
             ->when($status != '', function ($query) use ($status) {
-                $query->where('active', (bool)$status);
+                $query->where('active', $status == '0' ? 'false' : 'true');
             })
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -117,14 +114,14 @@ class AdvisoryBoardController extends AdminController
 
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if (isset($validated['member_name_' . app()->getLocale()])) {
-                $member = new AdvisoryBoardMember();
-                $member->advisory_board_id = $item->id;
-                $member->advisory_type_id = AdvisoryTypeEnum::CHAIRMAN->value;
-                $member->advisory_chairman_type_id = AdvisoryChairmanType::VICE_CHAIRMAN;
-                $member->save();
+            $npo_service = app(AdvisoryBoardNpoService::class, ['board' => $item]);
 
-                $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
+            if (isset($validated['npo_bg'])) {
+                foreach ($validated['npo_bg'] as $key => $presenter) {
+                    $names = [$presenter];
+                    $names[] = $validated['npo_en'][$key] ?? $presenter;
+                    $npo_service->storeMember($names);
+                }
             }
 
             $service = app(AdvisoryBoardService::class, ['board' => $item]);
@@ -258,6 +255,8 @@ class AdvisoryBoardController extends AdminController
             })->orderBy('order');
         }, 'members' => function ($query) {
             $query->withTrashed()->with('translations')->orderBy('id');
+        }, 'npos' => function ($query) {
+            $query->with('translations');
         }])->find($item->id);
 
         $policy_areas = PolicyArea::with('translations')->orderBy('id')->get();
@@ -333,6 +332,23 @@ class AdvisoryBoardController extends AdminController
 
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
+            $npo_service = app(AdvisoryBoardNpoService::class, ['board' => $item]);
+
+            $npo_service->removeCompletely();
+
+            if (isset($validated['npo_bg'])) {
+                foreach ($validated['npo_bg'] as $key => $presenter) {
+                    $names = [$presenter];
+                    $names[] = $validated['npo_en'][$key] ?? $presenter;
+                    $npo_service->storeMember($names);
+                }
+            }
+
+            if (!isset($validated['has_npo_presence'])) {
+                $item->has_npo_presence = false;
+                $item->save();
+            }
+
             DB::commit();
             return redirect()->route('admin.advisory-boards.edit', $item)
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.updated_successfully_m'));
@@ -354,6 +370,8 @@ class AdvisoryBoardController extends AdminController
     public function destroy(DeleteAdvisoryBoardRequest $request, AdvisoryBoard $item): RedirectResponse
     {
         try {
+            $item->active = false;
+            $item->save();
             $item->delete();
 
             return redirect()->route('admin.advisory-boards.index')

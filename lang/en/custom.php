@@ -528,4 +528,5 @@ return [
     'inactive_document' => 'Inactive document',
     'moderators' => 'Moderator|Moderators',
     'meeting_date' => 'Meeting took place at',
+    'add_npo_presenter' => 'Add NPO presenter',
 ];

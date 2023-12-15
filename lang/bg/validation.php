@@ -471,5 +471,6 @@ return [
         'institutions' => 'Институции',
         'framework_description_bg' => 'Описание',
         'framework_description_en' => 'Описание',
+        'npo_presenter' => 'НПО представител',
     ],
 ];

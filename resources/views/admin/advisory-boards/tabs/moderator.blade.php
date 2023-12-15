@@ -16,7 +16,7 @@
                     </button>
                 @else
                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#secretariat' }}"
-                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                       class="btn btn-info">{{ __('custom.editing') }}</a>
                 @endif
             </div>
         </div>

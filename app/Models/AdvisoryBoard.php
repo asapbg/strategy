@@ -23,6 +23,7 @@ use Illuminate\Support\Collection;
  * @property int                      $meetings_per_year
  * @property bool                     $active
  * @property string                   $name
+ * @property bool                     $has_npo_presence
  *
  * @property Collection               $members
  * @property AdvisoryBoardFunction    $advisoryFunction
@@ -34,6 +35,7 @@ use Illuminate\Support\Collection;
  * @property Collection               $moderators
  * @property Collection               $meetingsAllFiles
  * @property Collection               $meetingsFiles
+ * @property Collection               $npos
  *
  * @method static orderBy(string $string, string $string1)
  * @method static find(mixed $get)
@@ -64,6 +66,11 @@ class AdvisoryBoard extends ModelActivityExtend
     public function scopeModeratorListing(Builder $query): Builder
     {
         return $query->whereIn('id', AdvisoryBoardModerator::where('user_id', auth()->user()->id)->pluck('advisory_board_id'));
+    }
+
+    public function npos(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardNpo::class);
     }
 
     public function moderators(): HasMany

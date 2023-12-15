@@ -59,7 +59,7 @@
                                                         <div class="col-auto">
                                                             @can('update', $item)
                                                                 <button type="button"
-                                                                        class="btn btn-sm btn-warning mr-2"
+                                                                        class="btn btn-sm btn-info mr-2"
                                                                         data-toggle="modal"
                                                                         data-target="#modal-edit-function"
                                                                         title="{{ __('custom.edit') }}"
