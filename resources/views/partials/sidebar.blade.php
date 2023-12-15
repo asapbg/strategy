@@ -108,6 +108,7 @@
                         <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
                     </a>
                 </li>
+                @canany(['manage.*', 'manage.executors'])
                 <li class="nav-item">
                     <a href="{{ route('admin.executors.index') }}"
                        class="nav-link @if(strstr(url()->current(), '/executors')) active @endif">
@@ -115,6 +116,7 @@
                         <p>{{ __('List of the preparers of evaluations under the ZNA') }}</p>
                     </a>
                 </li>
+                @endcan
                 <!-- Admin -->
 {{--                <li class="nav-item">--}}
 {{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">--}}
