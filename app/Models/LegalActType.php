@@ -17,6 +17,12 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const TYPE_ORDER = 7;
     const TYPE_ARCHIVE = 8;
     const TYPE_DECREES = 1;
+    /**
+     * 2 - Decision
+     * 3 - Protocol Decisions
+     *
+     * The client only wants these two legal act types to show up in the category selection. The rest are not applicable. */
+    const EDIT_STORE_IDS = [ 2, 3 ];
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

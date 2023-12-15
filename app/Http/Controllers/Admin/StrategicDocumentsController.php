@@ -101,7 +101,7 @@ class StrategicDocumentsController extends AdminController
         $fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
         //$fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
         $fileDataEn = [];
-        $legalActTypes = LegalActType::with('translations')->get();
+        $legalActTypes = LegalActType::whereIn('id', LegalActType::EDIT_STORE_IDS)->with('translations')->get();
 
         //$consultations = PublicConsultation::Active()->get()->pluck('title', 'id');
         $consultations = PublicConsultation::Active()->with('translations')->get();
