@@ -88,7 +88,7 @@ class AdvisoryBoardCustomController extends AdminController
      *
      * @return JsonResponse
      */
-    public function ajaxEdit(AdvisoryBoardCustom $item, AdvisoryBoardCustom $section)
+    public function ajaxEdit(AdvisoryBoard $item, AdvisoryBoardCustom $section)
     {
         return response()->json($section);
     }

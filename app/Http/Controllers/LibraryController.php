@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
 use App\Models\Publication;
+use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,8 +25,9 @@ class LibraryController extends Controller
             return $this->view('site.publications.publications', compact('publications'));
         }
 
-        return $this->view('site.publications.index', compact('publications','type'));
+        $publicationCategories = PublicationCategory::optionsList(true);
 
+        return $this->view('site.publications.index', compact('publications','type', 'publicationCategories'));
     }
 
     /**
@@ -40,21 +42,25 @@ class LibraryController extends Controller
         $news = $this->getPublications($request, $type);
 
         if ($is_search) {
-            return $this->view('site.publications.publications', compact('news'));
+            return $this->view('site.publications.news', compact('news'));
         }
 
-        return $this->view('site.publications.index', compact('news','type'));
+        $publicationCategories = PublicationCategory::optionsList(true);
+
+        return $this->view('site.publications.index', compact('news','type', 'publicationCategories'));
     }
 
     /**
      * Display publication details page
      *
+     * @param $type
      * @param $id
      * @return View
      */
     public function details($type, $id)
     {
-        $publication = Publication::with(['translation','mainImg','category.translation'])
+        $publication = Publication::select('publication.*')
+            ->with(['translation','mainImg','category.translation'])
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->find($id);
@@ -81,14 +87,19 @@ class LibraryController extends Controller
         $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
         $published_from = $request->get('published_from');
         $published_till = $request->get('published_till');
-        $title = $request->get('title');
+        $keywords = $request->get('keywords');
+        $categories = $request->get('categories');
 
-        $publications = Publication::with(['translation', 'mainImg', 'category.translation'])
+        $publications = Publication::select('publication.*')
+            ->with(['translation', 'mainImg', 'category.translation'])
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->whereType($type)
-            ->when($title, function ($query, $title) {
-                return $query->where('title', 'ILIKE', "%$title%");
+            ->when($categories, function ($query, $categories) {
+                return $query->whereIn('publication_category_id', $categories);
+            })
+            ->when($keywords, function ($query, $keywords) {
+                return $query->whereRaw("(title::text ILIKE '%$keywords%' OR content::text ILIKE '%$keywords%')");
             })
             ->when($published_from, function ($query, $published_from) {
                 return $query->where('published_at', '>=', databaseDate($published_from));

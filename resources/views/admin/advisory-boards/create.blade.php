@@ -316,7 +316,12 @@
 
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
-                                <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                <button id="save" type="submit"
+                                        class="btn btn-success">{{ __('custom.save') . ' ' . __('custom.as') . ' ' . Str::lower(__('custom.draft')) }}</button>
+
+                                <button id="save" type="submit" name="public" value="1"
+                                        class="btn btn-success">{{ __('custom.publish') }}</button>
+
                                 <a href="{{ route('admin.advisory-boards.index') }}"
                                    class="btn btn-primary">{{ __('custom.cancel') }}</a>
                             </div>

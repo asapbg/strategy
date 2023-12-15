@@ -24,6 +24,7 @@ use Illuminate\Support\Collection;
  * @property bool                     $active
  * @property string                   $name
  * @property bool                     $has_npo_presence
+ * @property bool                     $public
  *
  * @property Collection               $members
  * @property AdvisoryBoardFunction    $advisoryFunction
@@ -58,7 +59,7 @@ class AdvisoryBoard extends ModelActivityExtend
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public'];
 
     /**
      * Listing only moderator's advisory boards.

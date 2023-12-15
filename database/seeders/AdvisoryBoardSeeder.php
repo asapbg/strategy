@@ -11,7 +11,6 @@ use App\Models\AdvisoryBoardMember;
 use App\Models\AdvisoryBoardOrganizationRule;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\File;
-use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -72,6 +71,7 @@ class AdvisoryBoardSeeder extends Seeder
             $new_advisory_board->advisory_chairman_type_id = $this->determineChairmanType($board['positionOther']);
             $new_advisory_board->meetings_per_year = $board['requiredSessionsCount'];
             $new_advisory_board->active = $board['active'] !== 0;
+            $new_advisory_board->public = $new_advisory_board->active;
 
             $new_advisory_board->save();
 

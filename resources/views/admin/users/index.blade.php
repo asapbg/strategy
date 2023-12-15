@@ -161,5 +161,21 @@
     </section>
 
 @endsection
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.roles').on('change', function (){
+                let selectedRoles = $('.roles:checked').map(function () {
+                    return $(this).data('institution')
+                }).get();
+                if(jQuery.inArray(1, selectedRoles) !== -1) {
+                    $('#institution_select').removeClass('d-none');
+                } else {
+                    $('#institution_select').addClass('d-none');
+                }
+            });
+        });
+    </script>
+@endpush
 
 

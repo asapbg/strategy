@@ -56,6 +56,7 @@
             <input type="hidden" name="search" value="true">
             <input type="hidden" name="page" class="current_page" value="{{ $advisory_boards->currentPage() }}">
             <input type="hidden" name="sort" class="sort" value="DESC">
+            <input type="hidden" id="model_type" value="advisory-boards">
 
             <div class="row filter-results mb-2">
                 <h2 class="mb-4">
@@ -156,7 +157,7 @@
                     </div>
                 </div>
             </div>
-    
+
 
     <div class="row mb-5 action-btn-wrapper">
         <div class="col-md-4 col-sm-12">
@@ -229,21 +230,21 @@
             </select>
         </div>
         <div class="col-md-7 mb-3 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
-            <label for="paginate"
-                class="form-label fw-bold mb-0 me-3">{{ __('custom.count') . ' ' . trans_choice('custom.results', 2) . ':' }}</label>
-            <select class="form-select w-auto group-by-select" name="paginate" id="paginate">
-                <option value="1">10</option>
-                <option value="1">20</option>
-                <option value="1">30</option>
-                <option value="1">40</option>
-                <option value="1">50</option>
-                <option value="1">100</option>
+            <label for="paginate" class="form-label fw-bold mb-0 me-3">
+                {{ __('custom.count') . ' ' . trans_choice('custom.results', 2) . ':' }}
+            </label>
+            <select class="form-select w-auto group-by-select" name="paginate" id="results-per-page">
+                @foreach([5,10,50,100,150,200] as $per_page)
+                    <option value="{{ $per_page }}" @if(request()->offsetGet('paginate') == $per_page) selected @endif>
+                        {{ $per_page }}
+                    </option>
+                @endforeach
             </select>
         </div>
     </div>
     </form>
 
-    <div id="executors-results">
+    <div id="advisory-boards-results">
         @includeIf('site.advisory-boards.ajax-results')
     </div>
 </div>

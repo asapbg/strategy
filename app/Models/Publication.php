@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Publication extends ModelActivityExtend implements TranslatableContract
 {
@@ -58,15 +59,25 @@ class Publication extends ModelActivityExtend implements TranslatableContract
             'meta_description' => [
                 'type' => 'text',
                 'rules' => ['nullable', 'string', 'max:255']
+            ],
+            'file' => [
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255']
             ]
         );
     }
 
+    /**
+     * @return HasOne
+     */
     public function category()
     {
         return $this->hasOne(PublicationCategory::class, 'id', 'publication_category_id');
     }
 
+    /**
+     * @return HasOne
+     */
     public function mainImg()
     {
         return $this->hasOne(File::class, 'id', 'file_id');

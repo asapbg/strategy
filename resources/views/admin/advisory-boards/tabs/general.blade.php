@@ -274,7 +274,19 @@
 
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
-                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                    @php $attributes = $item->public ? 'name="public" value="1"' : ''; @endphp
+                    <button id="save" class="btn btn-success" type="submit" {!! $attributes !!}>{{ __('custom.save') }}</button>
+
+                    @if(!$item->public)
+                        <button id="save" type="submit" name="public" value="1"
+                                class="btn btn-success">{{ __('custom.publish') }}</button>
+                    @endif
+
+                    @if($item->public)
+                        <button id="save" type="submit" name="public" value="0"
+                                class="btn btn-success">{{ __('custom.save') . ' ' . __('custom.as') . ' ' . Str::lower(__('custom.draft')) }}</button>
+                    @endif
+
                     <a href="{{ route('admin.advisory-boards.index') }}"
                        class="btn btn-primary">{{ __('custom.cancel') }}</a>
                 </div>

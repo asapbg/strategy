@@ -25,6 +25,7 @@
                         <input type="hidden" name="page" class="current_page" value="{{ $executors->currentPage() }}">
                         <input type="hidden" name="sort" class="sort" value="DESC">
                         <input type="hidden" name="eik" id="eik" value="">
+                        <input type="hidden" id="model_type" value="executors">
                         <div class="row filter-results mb-2">
                             <h2 class="mb-4">
                                 Търсене

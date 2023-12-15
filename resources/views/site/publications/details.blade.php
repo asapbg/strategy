@@ -8,18 +8,22 @@
 
     @includeIf('site.publications.sidemenu')
 
+    @php
+        $current_type = ($type == App\Enums\PublicationTypesEnum::TYPE_NEWS->value) ? "news" : "publications";
+    @endphp
+
     <div class="col-lg-10 py-5 right-side-content">
         <h2 class="obj-title mb-4">{{ $publication->translation->title }}</h2>
         <div class="row">
             <div class="col-md-8">
-                <a href="#" class="text-decoration-none">
+                <a href="javascript:;" class="text-decoration-none">
                     <span class="obj-icon-info me-2">
                         <i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>{{ displayDate($publication->published_at) }} г.
                     </span>
                 </a>
-                <a href="#" class="text-decoration-none">
+                <a href="{{ route("library.$current_type") }}?categories[]={{ $publication->publication_category_id }}" class="text-decoration-none">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-sitemap me-1 dark-blue" title="Област на политика"></i>{{ $publication->category?->name }}
+                        <i class="fas fa-sitemap me-1 dark-blue" title="{{ $publication->category?->name }}"></i>{{ $publication->category?->name }}
                     </span>
                 </a>
             </div>
@@ -44,10 +48,34 @@
             </div>
         </div>
         <hr>
-        <div>
+        <div class="mb-3">
             {!! $publication->translation->content !!}
-            <a href="">Министерство на електронното управление</a>
+            <a href="">
+                Министерство на електронното управление
+            </a>
         </div>
+
+        @php
+            $files = $publication->files()
+                ->whereNotIn('content_type', App\Models\File::CONTENT_TYPE_IMAGES)
+                ->whereLocale(currentLocale())
+                ->get();
+        @endphp
+        @if($files->count() > 0)
+            <div class="mb-3">
+                <h5>Файлове</h5>
+                @foreach($files as $f)
+                    <p>
+                        @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
+                            <a href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                            </a>
+                        @endif
+                    </p>
+                @endforeach
+            </div>
+        @endif
+
         <a class="btn btn-primary mt-4 mb-5" href="{{ route('library.news') }}">Обратно към списъка с новини</a>
     </div>
 

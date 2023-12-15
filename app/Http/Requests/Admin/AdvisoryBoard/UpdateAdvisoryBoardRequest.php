@@ -39,6 +39,7 @@ class UpdateAdvisoryBoardRequest extends FormRequest
             'meetings_per_year'         => 'required|integer',
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
+            'public'                    => 'nullable|integer',
         ];
 
         foreach (config('available_languages') as $lang) {

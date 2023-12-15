@@ -155,54 +155,6 @@ class CommonController extends Controller
         }
     }
 
-    public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject) {
-        try {
-            $validated = $request->validated();
-
-            // Upload File
-            $pDir = match ((int)$typeObject) {
-                File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
-                default => '',
-            };
-
-            $fileIds = [];
-
-            foreach (['bg', 'en'] as $code) {
-                $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
-                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
-                $item = new File([
-                    'id_object' => $objectId,
-                    'code_object' => $typeObject,
-                    'filename' => $fileNameToStore,
-                    'content_type' => $file->getClientMimeType(),
-                    'path' => $pDir.$fileNameToStore,
-                    'description_'.$code => $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null),
-                    'sys_user' => $request->user()->id,
-                    'locale' => $code,
-                    'version' => ($version + 1).'.0'
-                ]);
-                $item->save();
-                $fileIds[] = $item->id;
-                $ocr = new FileOcr($item->refresh());
-                $ocr->extractText();
-            }
-
-            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-
-            $route = match ((int)$typeObject) {
-                File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
-                default => '',
-            };
-            return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
-        } catch (\Exception $e) {
-            logError('Upload file', $e->getMessage());
-            return back()->with(['danger' => 'Възникна грешка. Презаредете страницата и опитайте отново.']);
-        }
-    }
-
     /**
      * Download public file
      * @param Request $request
