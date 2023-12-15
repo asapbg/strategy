@@ -36,7 +36,7 @@
                                 <td class="text-center">
                                     @can('update', $item)
                                         <button type="button"
-                                                class="btn btn-sm btn-warning"
+                                                class="btn btn-sm btn-info"
                                                 data-toggle="modal"
                                                 data-target="#modal-edit-member"
                                                 title="{{ __('custom.edit') }}"

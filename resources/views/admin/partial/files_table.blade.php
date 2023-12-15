@@ -44,11 +44,10 @@
                             <div class="row">
                                 <div class="col-auto">
                                     <button type="button"
-                                            class="btn btn-sm btn-outline-info preview-file-modal mr-2"
+                                            class="btn btn-sm btn-outline-primary preview-file-modal mr-2"
                                             data-file="{{ $file->id }}"
                                             data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}">
                                         {!! fileIcon($file->content_type) !!}
-                                        {{ __('custom.preview') }}
                                     </button>
                                 </div>
 
@@ -66,7 +65,7 @@
                             <div class="col-auto">
                                 @can('update', $item)
                                     <button type="button"
-                                            class="btn btn-sm btn-warning mr-2"
+                                            class="btn btn-sm btn-info mr-2"
                                             data-toggle="modal"
                                             data-target="#modal-edit-function-file"
                                             title="{{ __('custom.edit') }}"
