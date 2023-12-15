@@ -62,7 +62,7 @@
             </ul> -->
         </div>
         <div class="col-md-12" id="processOfConsultationDiv">
-            <div class="row filter-results mb-2">
+            {{-- <div class="row filter-results mb-2">
                 <div class="col-md-4">
                     <div class="input-group ">
                         <div class="mb-3 d-flex flex-column w-100">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
             @include('site.strategic_documents.search')
