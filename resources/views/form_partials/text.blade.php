@@ -10,4 +10,7 @@ if (!isset($nameDots)) {
 @else
 <input type="{{ isset($type) ? $type : 'text' }}" id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror"
     value="{{ old($name, isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '')) }}">
+    @error($nameDots)
+        <div class="text-danger input-err">{{ $message }}</div>
+    @enderror
 @endif

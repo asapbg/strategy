@@ -493,7 +493,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 ];
                 switch ($e) {
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
-                        $sortedTimeline['1'] = $eData;
+                        if(!$this->old_id){
+                            $sortedTimeline['1'] = $eData;
+                        }
                         break;
                     case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
                         $sortedTimeline['5'] = $eData;

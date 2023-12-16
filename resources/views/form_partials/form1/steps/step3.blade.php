@@ -12,16 +12,16 @@
     </div>
 </div>
 @for($n=0; $n<$loop; $n++)
-<div class="row">
-    <div class="col-md-3">
-        <h5>{{ __('forms.on_problem') . ' ' . $n+1 . ': ' . __('forms.variant') }}</h5>
+    <div class="row @if($n) mt-3 @endif">
+        <div class="col-md-3">
+            <h5>{{ __('forms.on_problem') . ' ' . $n+1 . ': ' . __('forms.variant') }}</h5>
+        </div>
+        <div class="col-md-9">
+            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n", 'value' => data_get($state, "chosen_variants.$n")])
+        </div>
     </div>
-    <div class="col-md-9">
-        @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n", 'value' => data_get($state, "chosen_variants.$n")])
-    </div>
-</div>
 @endfor
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12 mt-5">
         <h4>6.1. Промяна в административната тежест за физическите и юридическите лица от прилагането на препоръчителния вариант (включително по отделните проблеми):</h4>
         <p>
@@ -38,12 +38,12 @@
         @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 2, 'label' => 'forms.no_effect', 'clickSubmit' => true])
         @if(Arr::has($state, 'change_admin_weight') && in_array(data_get($state, 'change_admin_weight'), [0, 1]))
             <br>
-            @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => ''])
+            @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => '', 'class' => 'mt-3'])
         @endif
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-12 mt-4">
+<div class="row mb-5">
+    <div class="col-sm-12">
         <h4>6.2. Създават ли се нови/засягат ли се съществуващи регулаторни режими и услуги от прилагането на препоръчителния вариант (включително по отделните проблеми)?</h4>
         <p>
             <i>
@@ -60,33 +60,37 @@
                 1.6. В случай че се изменят регулаторни режими или административни услуги, посочете промяната.
             </i>
         </p>
-        @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
+        <div>
+            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true, 'class' => 'me-3'])
+            @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
+        </div>
+
         @if(Arr::has($state, 'affects_regulatory_acts') && data_get($state, 'affects_regulatory_acts') == 1)
             <br>
-            @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => ''])
+            @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => '', 'class' => 'mt-3'])
         @endif
-        <br>
-        @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-12  mt-4">
+<div class="row mb-5">
+    <div class="col-sm-12">
         <h4>6.3. Създават ли се нови регистри от прилагането на препоръчителния вариант (включително по отделните проблеми)?</h4>
         <p>
             <i>
                 Когато отговорът е „Да“, посочете регистрите, които се създават и по какъв начин те ще бъдат интегрирани в общата регистрова инфраструктура.
             </i>
         </p>
-        @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
+        <div>
+            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true, 'class' => 'me-3'])
+            @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
+        </div>
+
         @if(Arr::has($state, 'affects_registry') && data_get($state, 'affects_registry') == 1)
             <br>
-            @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => ''])
+            @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => '', 'class' => 'mt-3'])
         @endif
-        <br>
-        @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12  mt-4">
         <h4>6.4. По какъв начин препоръчителният вариант въздейства върху микро-, малките и средните предприятия (МСП) (включително по отделните проблеми)?</h4>
         <p>
@@ -99,7 +103,7 @@
         @include('form_partials.radio', ['name' => 'affects_companies', 'value' => 0, 'label' => 'forms.act_not_affects_smc'])
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>6.5. Потенциални рискове от прилагането на препоръчителния вариант (включително по отделните проблеми):</h4>
         <p>

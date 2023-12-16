@@ -1,4 +1,4 @@
-<form id="ia-form" action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]) }}" method="POST">
+<form id="ia-form" class="mb-4" action="{{ route('impact_assessment.store', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]) }}" method="POST">
     @csrf
     <input type="hidden" name="currentStep" value="{{ $step }}">
 

@@ -9,5 +9,8 @@ if (!isset($nameDots)) {
     <p>{{ array_key_exists($name, $state) ? $state[$name] : '' }} </p>
 @else
 <input type="{{ isset($type) ? $type : 'text' }}" id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm datepicker @error($nameDots){{ 'is-invalid' }}@enderror"
-    value="{{ isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '') }}" autocomplete="off">
+    value="{{ old($name, isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '')) }}" autocomplete="off">
+    @error($nameDots)
+        <div class="text-danger input-err">{{ $message }}</div>
+    @enderror
 @endif

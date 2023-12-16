@@ -1,10 +1,10 @@
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>7. Консултации:</h4>
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 1, 'label' => 'forms.conducted_consultations', 'clickSubmit' => true])
         <br>
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 0, 'label' => 'forms.not_conducted_consultations', 'clickSubmit' => true])
-        @if(Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 0)
+        @if((Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 0) || old('conducted_consultations') == 0)
             <p class="mt-2">
                 <i>
                     Обобщете най-важните въпроси за обществени консултации. Посочете индикативен график за тяхното провеждане и видовете консултационни процедури.
@@ -14,12 +14,12 @@
         @endif
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>8. Приемането на нормативния акт произтича ли от правото на Европейския съюз?</h4>
         @include('form_partials.radio', ['name' => 'is_from_eu', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
         <br>
-        @if(Arr::has($state, 'is_from_eu') && data_get($state, 'is_from_eu') == 1)
+        @if((Arr::has($state, 'is_from_eu') && data_get($state, 'is_from_eu') == 1) || old('is_from_eu') == 1)
             <p class="mt-2">
                 <i>
                     1.1. Посочете изискванията на правото на Европейския съюз, включително информацията по т. 6.2 и 6.3, дали е извършена оценка на въздействието на ниво Европейски съюз, и я приложете (или посочете връзка към източник).
@@ -32,7 +32,7 @@
         @include('form_partials.radio', ['name' => 'is_from_eu', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>9.  Изисква ли се извършване на цялостна предварителна оценка на въздействието поради очаквани значителни последици?</h4>
         <p>
@@ -45,7 +45,7 @@
         @include('form_partials.radio', ['name' => 'initial_assessment_required', 'value' => 0, 'label' => 'forms.no'])
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>10. Приложения:</h4>
         <p>
@@ -64,7 +64,7 @@
         @include('form_partials.textarea', ['name' => 'info_sources', 'label' => '', 'placeholder' => 'forms.field_required'])
     </div>
 </div>
-<div class="row">
+<div class="row mb-5">
     <div class="col-sm-12">
         <h4>12. Име, длъжност, дата и подпис на директора на дирекцията, отговорна за извършването на частичната предварителна оценка на въздействието:</h4>
         <div class="col-md-4">
