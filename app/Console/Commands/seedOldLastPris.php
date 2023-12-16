@@ -20,7 +20,7 @@ class seedOldLastPris extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'old:pris_last';
+    protected $signature = 'old:pris';
 
     /**
      * The console command description.
@@ -363,8 +363,8 @@ class seedOldLastPris extends Command
                                 //main record
                                 $prepareNewPris = [
                                     'old_id' => $item->old_id,
-                                    'doc_num' => null,
-                                    'doc_date' => $item->doc_num,
+                                    'doc_num' => $item->doc_num,
+                                    'doc_date' => null,
                                     'old_doc_num' => $item->doc_num,
                                     'active' => $item->active,
                                     'legal_act_type_id' => $legalTypeDocs[$item->old_doc_type_id],
@@ -405,7 +405,7 @@ class seedOldLastPris extends Command
                                             echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
                                             $prepareNewPris['old_doc_num'] = $att['Value']['Value'];
                                             $docNum = explode('-', $att['Value']['Value']);
-                                            $prepareNewPris['doc_num'] = sizeof($docNum) == 2 ? (int)$docNum[1] : (int)$docNum[0];
+                                            $prepareNewPris['doc_num'] = sizeof($docNum) == 2 ? (int)$docNum[1] : $docNum[0];
                                         }
                                     }
                                     //get protocol

@@ -59,7 +59,7 @@ class FileOcr
             $file = escapeshellarg(Storage::disk('public_uploads')->path($this->file->path));
             $text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file);
             $clearText = html_entity_decode(trim($text));
-            $this->file->file_text = $clearText;
+            $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
             $this->file->save();
         } catch (\Exception $e) {
             logError('DOC to text file: '.$this->file->path, $e->getMessage());
