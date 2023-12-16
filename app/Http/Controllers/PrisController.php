@@ -74,7 +74,7 @@ class PrisController extends Controller
 
 
 
-        $pageTitle = __('site.menu.pris');
+        $pageTitle = __('site.pris.page_title');
 
         $menuCategories = [];
         $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)

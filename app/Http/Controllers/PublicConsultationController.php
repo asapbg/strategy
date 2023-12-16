@@ -74,9 +74,10 @@ class PublicConsultationController extends Controller
         $pageTitle = $item->title;
         $this->setBreadcrumbsTitle($pageTitle);
         $documents = $item->lastDocumentsByLocaleAndSection(true);
+        $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent'));
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport'));
     }
 
     public function addComment(StoreCommentRequest $request)

@@ -222,6 +222,21 @@
                         @endif
                     </ul>
                 </div>
+
+                @if($documentsImport->count())
+                    <div class="col-12">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.other_documents') }}</p>
+                        <ul class="list-group list-group-flush">
+                            @foreach($documentsImport as $doc)
+                                <li class="list-group-item">
+                                    <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                        {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ displayDate($doc->created_at) }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
 

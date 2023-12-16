@@ -81,6 +81,10 @@ class seedOldLastPris extends Command
             5022 => 6, //'Стенограма',
         ];
 
+        //If category is 'Протокол' and doc_num is float and doc_num is < 100, then we should move document to 'Протоколни решения',
+        $protocolsId = 5;
+        $protocolDecisionsId = 3;
+
         $importers = [
             ':FIL' => [
                 'importer' => ':FIL',
@@ -316,7 +320,8 @@ class seedOldLastPris extends Command
         //max id in old db
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
         //start from this id in old database
-        $currentStep = (int)DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+        $currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
 
@@ -328,6 +333,8 @@ class seedOldLastPris extends Command
                                 pris.parentid as parentdocumentid,
                                 pris.rootid as rootdocumentid,
                                 pris.masterid,
+                                pris.state,
+                                pris.xstate,
                                 case when pris.islatestrevision = false then 0 else 1 end as last_vesrion,
                                 pris.itemtypeid as old_doc_type_id,
                                 pris."xml" as to_parse_xml_details,
@@ -344,7 +351,7 @@ class seedOldLastPris extends Command
                                 and pris.itemtypeid <> 5017 -- skip law records
                                 -- and documents.lastrevision = \'Y\' -- get final versions
                             group by pris.id
-                            order by pris.datecreated asc');
+                            order by pris.id asc');
 
                 if (sizeof($oldDbResult)) {
                     DB::beginTransaction();
@@ -383,6 +390,8 @@ class seedOldLastPris extends Command
                                     'about' => '',
                                     'legal_reason' => '',
                                     'importer' => '',
+                                    'state' => $item->state,
+                                    'xstate' => $item->xstate,
                                 ];
                                 //Do something
                                 //1. Parse tags and insert if need to
@@ -392,6 +401,9 @@ class seedOldLastPris extends Command
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             echo "Tags: ".$att['Value']['Value'].PHP_EOL;
                                             $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            echo "Tags: ".$att['Value'].PHP_EOL;
+                                            $tags = preg_split('/\r\n|\r|\n/', $att['Value']);
                                         }
                                     }
                                     //get date
@@ -402,7 +414,8 @@ class seedOldLastPris extends Command
                                     }
                                     //get number
                                     if(empty($prepareNewPris['doc_num']) && isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                        $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
+                                        if($val) {
                                             echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
                                             $prepareNewPris['old_doc_num'] = $att['Value']['Value'];
                                             $docNum = explode('-', $att['Value']['Value']);
@@ -412,31 +425,40 @@ class seedOldLastPris extends Command
                                     //get protocol
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Протокол') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            $prepareNewPris['protocol'] = $att['Value']['Value'];
+                                            $prepareNewPris['protocol'] = is_array($att['Value']['Value']) ? (!empty($att['Value']['Value']) ? implode(';', $att['Value']['Value']) : null) : $att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['protocol'] = is_array($att['Value']) ? (!empty($att['Value']) ? implode(';', $att['Value']) : null) : $att['Value'];
                                         }
                                     }
                                     //newspaper num
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ брой') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_number'] = (int)$att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['newspaper_number'] = (int)$att['Value'];
                                         }
                                     }
                                     //newspaper year
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ година') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_year'] = (int)$att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['newspaper_year'] = (int)$att['Value'];
                                         }
                                     }
                                     //newspaper full
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Обнародвано в ДВ') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['old_newspaper_full'] = $att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['old_newspaper_full'] = $att['Value'];
                                         }
                                     }
                                     //importer
                                     //institution_id
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                        $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
+                                        if($val) {
                                             echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                             $importerStr = [];
                                             $importerInstitutions = [];
@@ -460,27 +482,43 @@ class seedOldLastPris extends Command
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['about'] = $att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['about'] = $att['Value'];
                                         }
                                     }
                                     //get about
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['legal_reason'] = $att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['legal_reason'] = $att['Value'];
                                         }
                                     }
                                     //4. Parse id doc connections and create them in pris_change_pris
                                     //get old pris change pris
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Промени') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                        $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
+                                        if($val) {
                                             echo "Changes: ".$att['Value']['Value'].PHP_EOL;
                                             $oldChanges = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
                                             $prepareNewPris['old_connections'] = sizeof($oldChanges) ? implode('; ', $oldChanges) : $oldChanges;
                                         }
                                     }
+
+                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Статус') {
+                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                            $prepareNewPris['connection_status'] = (int)$att['Value']['Value'];
+                                        } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                            $prepareNewPris['connection_status'] = (int)$att['Value'];
+                                        }
+                                    }
+
                                 }
-if(empty($prepareNewPris['about'])) {
-    dd($item, $prepareNewPris, $xml, $json, $data);
-}
+
+                                //Legal type category correction if need to
+                                if($prepareNewPris['legal_act_type_id'] == $protocolsId && str_contains($prepareNewPris['doc_num'], '.')) {
+                                    $prepareNewPris['legal_act_type_id'] = $protocolDecisionsId;
+                                }
                                 //2. Create pris record and translations
                                 $newItem = new Pris();
                                 $newItem->fill($prepareNewPris);
@@ -591,7 +629,7 @@ if(empty($prepareNewPris['about'])) {
                         } catch (\Exception $e) {
                             Log::error('Migration old pris: ' . $e);
                             DB::rollBack();
-                            dd($prepareNewPris ?? 'no prepared data', $newItemTags ?? 'no tags', $fileForExeption ?? 'no file');
+                            dd($prepareNewPris ?? 'no prepared data', $newItemTags ?? 'no tags', $fileForExeption ?? 'no file', $data ?? 'no xml data');
                         }
                     }
                 }
