@@ -70,7 +70,8 @@ class seedOldLastPris extends Command
             $dInstitution->save();
         }
 
-        $ourTags = Tag::with(['translation'])->get()->pluck('translation.label', 'id')->toArray();
+        $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
+
         $legalTypeDocs = [
             5017 => 7, //'Заповед',
             5018 => 2, //'Решение',
