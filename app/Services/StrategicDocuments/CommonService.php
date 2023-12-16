@@ -59,20 +59,24 @@ class CommonService
             $prisActs = $prisActs->where('public_consultation_id', $strategicDocument?->publicConsultation?->id);
         }
         if (!empty($filter)) {
-            $filterParts = explode('=', $filter);
-            $key = Arr::get($filterParts, 0);
+            $filterParams = explode('&', $filter);
 
-            $value = Arr::get($filterParts, 1);
-            if ($key == 'legal-act-type-id') {
-                if ($value != 'all') {
-                    $prisActs = Pris::where('legal_act_type_id', $value);
+            foreach ($filterParams as $filterParam) {
+                $filterParts = explode('=', $filterParam);
+                $key = Arr::get($filterParts, 0);
+
+                $value = Arr::get($filterParts, 1);
+                if ($key == 'legal-act-type-id') {
+                    if ($value != 'all') {
+                        $prisActs = $prisActs->where('legal_act_type_id', $value);
+                    }
                 }
-            }
-            if ($key == 'public-consultation-id') {
-                if ($value != 'all') {
-                    $publicConsultation = PublicConsultation::findOrFail($value);
-                    if ($publicConsultation) {
-                        $prisActs = $prisActs->whereIn('public_consultation_id', [$publicConsultation->id]);
+                if ($key == 'public-consultation-id') {
+                    if ($value != 'all') {
+                        $publicConsultation = PublicConsultation::findOrFail($value);
+                        if ($publicConsultation) {
+                            $prisActs = $prisActs->whereIn('public_consultation_id', [$publicConsultation->id]);
+                        }
                     }
                 }
             }

@@ -717,6 +717,18 @@
                     success: function(data) {
                         const isSingleResult = data.items.length === 1;
                         prisAct.prop('disabled', isSingleResult);
+
+                        /**
+                         * If we have a single result, insert an empty item at the beginning of the array.
+                         * This way we force the user to make a change so we can set the values of the legal type and public consultation via the pris act on change event.
+                        */
+                        if (!isSingleResult && data.items.length) {
+                            data.items.unshift({
+                                id: '',
+                                text: '--'
+                            });
+                        }
+
                         prisAct.select2({
                             data: data.items,
                             placeholder: '--',
@@ -816,8 +828,9 @@
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
+                const publicConsultationValue = $('#public_consultation_id').val();
                 if (selectedValue) {
-                    const filter = 'legal-act-type-id=' + selectedValue;
+                    const filter = 'legal-act-type-id=' + selectedValue + '&public-consultation-id=' + publicConsultationValue;
                     prisAct.empty().trigger('change');
                     loadPrisOptions(filter);
                 }
@@ -862,9 +875,10 @@
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
+                const legalActTypeId = $('#the_legal_act_type_filter').val();
                 let filter = '';
                 if (selectedValue && !!manualChangeConsultationId) {
-                    filter = 'public-consultation-id=' + selectedValue;
+                    filter = 'public-consultation-id=' + selectedValue + '&legal-act-type-id=' + legalActTypeId;
                     prisAct.empty().trigger('change');
                 }
                 loadPrisOptions(filter);
