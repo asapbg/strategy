@@ -16,7 +16,7 @@
             @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 0, 'label' => 'forms.not_included_in_program'])
         </div>
         <div class="col-sm-6">
-            @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 0, 'label' => 'forms.included_in_program'])
+            @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 1, 'label' => 'forms.included_in_program'])
         </div>
     </div>
     <div class="row">

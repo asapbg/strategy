@@ -401,7 +401,7 @@ class seedOldLastPris extends Command
                                         }
                                     }
                                     //get number
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
+                                    if(empty($prepareNewPris['doc_num']) && isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
                                             $prepareNewPris['old_doc_num'] = $att['Value']['Value'];
@@ -478,7 +478,9 @@ class seedOldLastPris extends Command
                                         }
                                     }
                                 }
-
+if(empty($prepareNewPris['about'])) {
+    dd($item, $prepareNewPris, $xml, $json, $data);
+}
                                 //2. Create pris record and translations
                                 $newItem = new Pris();
                                 $newItem->fill($prepareNewPris);

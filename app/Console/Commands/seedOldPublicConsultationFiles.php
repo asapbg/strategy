@@ -91,6 +91,7 @@ class seedOldPublicConsultationFiles extends Command
                         and f.id is not null
                         and folders.id is not null
                         and folders.id = 64 -- consultations
+                        -- check if uf.tabletype should be 3
                     order by p.datecreated desc
                     ');
 
