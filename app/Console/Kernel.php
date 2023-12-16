@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('sync:iisda')->daily();
         $schedule->command('programs:actual')->daily();
+        $schedule->command('generate:comments')->everyTenMinutes();
     }
 
     /**

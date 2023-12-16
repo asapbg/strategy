@@ -57,9 +57,9 @@ class seedOldPublicConsultationFiles extends Command
         $currentStep = 1;
 
 //        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
-        $ourPc = PublicConsultation::get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
-        $ourUsers = User::get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
-//        $ourInstitutions = Institution::with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
+        $ourPc = PublicConsultation::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
+        $ourFiles = File::where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->whereNotNull('import_old_id')->withTrashed()->get()->pluck('id', 'import_old_id')->toArray();
+        $ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -68,7 +68,8 @@ class seedOldPublicConsultationFiles extends Command
                 $oldDbFiles= DB::connection('old_strategy_app')
                     ->select('
                     select
-                        f.id ,
+                        uf.fileid as file_old_id,
+                        uf.recordid as id,
                         f."name" as name,
                         f.description,
                         case when f.isdeleted = true then 1 else 0 end as deleted,
@@ -95,12 +96,18 @@ class seedOldPublicConsultationFiles extends Command
 
                 if (sizeof($oldDbFiles)) {
                     foreach ($oldDbFiles as $item) {
-                    DB::beginTransaction();
+                        if(isset($ourFiles[(int)$item->file_old_id])) { continue; }
+
+                        DB::beginTransaction();
                         try {
-                            $newName = str_replace('-', '_', Str::slug($item->name));
+                            $info = pathinfo($item->name);
+                            $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_')).'.'.$info['extension'];
                             $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name);
                             $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$directory.$newName);
-
+                            if(!file_exists($copy_from)) {
+                                $this->comment('File '.$copy_from. 'do not exist!');
+                                continue;
+                            }
                             $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
                             if($copied_file) {
@@ -117,11 +124,12 @@ class seedOldPublicConsultationFiles extends Command
                                         'content_type' => $contentType,
                                         'path' => $directory.$newName,
                                         'description_' . $code => !empty($item->description) ? $item->description : $item->name,
-                                        'sys_user' => null,
+                                        'sys_user' => $ourUsers[(int)$item->old_user_id] ?? null,
                                         'locale' => $code,
                                         'version' => ($version + 1) . '.0',
                                         'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
-                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp)
+                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
+                                        'import_old_id' => $item->file_old_id
                                     ]);
                                     $newFile->save();
                                     $fileIds[] = $newFile->id;

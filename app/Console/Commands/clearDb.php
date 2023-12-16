@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Models\Pris;
 use App\Models\PrisTranslation;
 use App\Models\PublicConsultationContact;
+use App\Models\Timeline;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -88,7 +89,12 @@ class clearDb extends Command
                 $fromId = DB::table('public_consultation')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
                     Schema::disableForeignKeyConstraints();
+
+                    DB::table('public_consultation_poll')->where('public_consultation_id', '>=', $fromId->id)->delete();
                     DB::table('public_consultation_connection')->where('public_consultation_id', '>=', $fromId->id)->delete();
+
+                    Timeline::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
+                    CommonController::fixSequence('public_consultation_timeline');
 
                     PublicConsultationContact::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
                     CommonController::fixSequence('public_consultation_contact');
