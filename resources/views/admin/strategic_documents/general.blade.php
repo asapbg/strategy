@@ -218,7 +218,7 @@
                                     <select id="public_consultation_id" name="public_consultation_id"
                                             class="form-control form-control-sm select2 @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
                                         @if(!$item->id)
-                                            <option value="" @if(old('public_consultation_id', '') == '') selected @endif>
+                                            <option value="all" @if(old('public_consultation_id', '') == '') selected @endif>
                                                 ---
                                             </option>
                                         @endif
