@@ -599,7 +599,7 @@ class seedOldLastPris extends Command
         if(sizeof($institutionForMapping)) {
             $fp = fopen('institutions_for_mapping_last_pris.csv', 'w');
             foreach ($institutionForMapping as $fields) {
-                fputcsv($fp, $fields);
+                fputcsv($fp, [$fields]);
             }
             fclose($fp);
         }
