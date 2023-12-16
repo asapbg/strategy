@@ -57,9 +57,9 @@ class seedOldPublicConsultationFiles extends Command
         $currentStep = 1;
 
 //        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
-        $ourPc = PublicConsultation::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
-        $ourFiles = File::where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->whereNotNull('import_old_id')->get()->pluck('id', 'import_old_id')->toArray();
-        $ourUsers = User::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourPc = PublicConsultation::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
+        $ourFiles = File::where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->whereNotNull('import_old_id')->withTrashed()->get()->pluck('id', 'import_old_id')->toArray();
+        $ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -125,7 +125,8 @@ class seedOldPublicConsultationFiles extends Command
                                         'locale' => $code,
                                         'version' => ($version + 1) . '.0',
                                         'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
-                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp)
+                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
+                                        'import_old_id' => $item->file_old_id
                                     ]);
                                     $newFile->save();
                                     $fileIds[] = $newFile->id;

@@ -81,9 +81,9 @@ class seedOldPublicConsultations extends Command
             $dInstitution->save();
         }
 
-        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
-        $ourUsers = User::get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
-        $ourInstitutions = Institution::with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
+        $ourUsersInstitutions = User::withTrashed()->get()->pluck('institution_id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+        $ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
