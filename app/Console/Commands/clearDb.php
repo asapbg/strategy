@@ -88,6 +88,8 @@ class clearDb extends Command
                 $fromId = DB::table('public_consultation')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
                     Schema::disableForeignKeyConstraints();
+
+                    DB::table('public_consultation_poll')->where('public_consultation_id', '>=', $fromId->id)->delete();
                     DB::table('public_consultation_connection')->where('public_consultation_id', '>=', $fromId->id)->delete();
 
                     PublicConsultationContact::where('public_consultation_id', '>=', $fromId->id)->forceDelete();

@@ -101,10 +101,13 @@ class seedOldPublicConsultationFiles extends Command
                         DB::beginTransaction();
                         try {
                             $info = pathinfo($item->name);
-                            $newName = str_replace('-', '_', Str::slug($info['filename'], '_')).'.'.$info['extension'];
+                            $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_')).'.'.$info['extension'];
                             $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name);
                             $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$directory.$newName);
-
+                            if(!file_exists($copy_from)) {
+                                $this->comment('File '.$copy_from. 'do not exist!');
+                                continue;
+                            }
                             $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
                             if($copied_file) {
