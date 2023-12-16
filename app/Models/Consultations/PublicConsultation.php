@@ -332,6 +332,21 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $documents;
     }
 
+    public function lastDocumentsByLocaleImport()
+    {
+        return DB::table('public_consultation')
+            ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version'])
+            ->join('files', function ($j){
+                $j->on('files.id_object', '=', 'public_consultation.id')
+                    ->where('files.locale','=', app()->getLocale())
+                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION);
+                    //->whereNull('files.doc_type');
+            })
+            ->where('public_consultation.id', '=', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
     public static function optionsList()
     {
         return DB::table('public_consultation')
