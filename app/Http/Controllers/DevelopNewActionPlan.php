@@ -10,6 +10,7 @@ use App\Models\OgpAreaCommitment;
 use App\Models\OgpAreaOffer;
 use App\Models\OgpAreaOfferComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -43,6 +44,9 @@ class DevelopNewActionPlan extends Controller
         $item = OgpArea::findOrFail($otg_area_id);
         $fields = $request->get('fields');
         $offer_id = $request->get('offer', 0);
+        $commitment_id = $request->get('commitment_id', 0);
+
+        DB::beginTransaction();
 
         try {
             if($offer_id) {
@@ -55,8 +59,8 @@ class DevelopNewActionPlan extends Controller
             }
 
             if($offer) {
-                if(!is_null($validated['commitment_id']) && $validated['commitment_id']) {
-                    $commitment = OgpAreaCommitment::findOrFail($validated['commitment_id']);
+                if($commitment_id) {
+                    $commitment = OgpAreaCommitment::findOrFail($commitment_id);
                 } else {
                     $commitment = $offer->commitments()->create([
                         'name' => $validated['commitment_name']
@@ -87,10 +91,11 @@ class DevelopNewActionPlan extends Controller
                 }
 
             } // offer
-
+            DB::commit();
             return to_route('ogp.develop_new_action_plans.show', $item->id)
                 ->with('success', trans_choice('custom.ogp_areas', 1)." ".__('messages.updated_successfully_f'));
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
