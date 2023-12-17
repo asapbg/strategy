@@ -120,7 +120,8 @@ class seedOldPublicConsultations extends Command
                         -- short_term_reason
                         -- responsible_unit
                         -- importer
-                        pc.createdbyuserid as author_id
+                        pc.createdbyuserid as author_id,
+                        pc.summary as description
                     from dbo.publicconsultations pc
                         where pc.languageid = 1
                         and pc.id >= ' . $currentStep . '
@@ -157,7 +158,8 @@ class seedOldPublicConsultations extends Command
                                 'field_of_actions_id' => $item->field_of_actions_id,
                                 'law_id' => null,
                                 'pris_id' => null,
-                                'title' => $item->title
+                                'title' => $item->title,
+                                'description' => $item->description
                             ];
 
                             $newPc = new PublicConsultation();
@@ -168,6 +170,7 @@ class seedOldPublicConsultations extends Command
                                 $newPc->reg_num = $newPc->id.'-K';
                                 foreach ($locales as $locale) {
                                     $newPc->translateOrNew($locale['code'])->title = $prepareNewPc['title'];
+                                    $newPc->translateOrNew($locale['code'])->description = $prepareNewPc['description'];
                                 }
                                 $newPc->save();
 
