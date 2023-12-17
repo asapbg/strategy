@@ -416,9 +416,9 @@ class seedOldLastPris extends Command
                                     if(empty($prepareNewPris['doc_num']) && isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                         if($val) {
-                                            echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
-                                            $prepareNewPris['old_doc_num'] = $att['Value']['Value'];
-                                            $docNum = explode('-', $att['Value']['Value']);
+                                            //echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
+                                            $prepareNewPris['old_doc_num'] = $val;
+                                            $docNum = explode('-', $val);
                                             $prepareNewPris['doc_num'] = sizeof($docNum) == 2 ? (int)$docNum[1] : $docNum[0];
                                         }
                                     }
@@ -459,11 +459,11 @@ class seedOldLastPris extends Command
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                         if($val) {
-                                            echo "Importer: ".$att['Value']['Value'].PHP_EOL;
+                                            //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                             $importerStr = [];
                                             $importerInstitutions = [];
 
-                                            $explode = explode(',', $att['Value']['Value']);
+                                            $explode = explode(',', $val);
                                             foreach ($explode as $e) {
                                                 //TODO for mapping
                                                 $institutionForMapping[trim($e)] = trim($e);
@@ -499,8 +499,8 @@ class seedOldLastPris extends Command
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Промени') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                         if($val) {
-                                            echo "Changes: ".$att['Value']['Value'].PHP_EOL;
-                                            $oldChanges = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
+                                            //echo "Changes: ".$att['Value']['Value'].PHP_EOL;
+                                            $oldChanges = preg_split('/\r\n|\r|\n/', $val);
                                             $prepareNewPris['old_connections'] = sizeof($oldChanges) ? implode('; ', $oldChanges) : $oldChanges;
                                         }
                                     }
