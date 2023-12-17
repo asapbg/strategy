@@ -106,8 +106,7 @@ class clearDb extends Command
                             $deleted = 0;
                         }
                     }
-
-                    DB::table('comments')->truncate();
+                    Comments::where('object_code', '>=', Comments::PC_OBJ_CODE)->forceDelete();
                     DB::table('public_consultation_translations')->truncate();
                     DB::table('public_consultation')->truncate();
                     Schema::enableForeignKeyConstraints();
