@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\DevelopNewActionPlan;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
+use App\Http\Controllers\OpenGovernmentPartnership;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -130,4 +132,17 @@ Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentController::
 Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentStatController::class)->prefix('/legislative-initiatives/comments/{comment}/stats')->group(function () {
     Route::get('store/{is_like}', 'store')->name('legislative_initiatives.comments.stats.store');
     Route::get('revert', 'revert')->name('legislative_initiatives.comments.stats.revert');
+});
+
+//OGP
+Route::controller(OpenGovernmentPartnership::class)->group(function () {
+    Route::get('ogp', 'index')->name('ogp.list');
+});
+
+Route::controller(DevelopNewActionPlan::class)->group(function () {
+    Route::get('develop-a-new-action-plans', 'index')->name('ogp.develop_new_action_plans');
+    Route::get('develop-a-new-action-plans/{ogpArea}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
+    Route::post('develop-a-new-action-plans/store/{otg_area_id}', 'store')->name('ogp.develop_new_action_plans.store')->whereNumber('otg_area_id');
+    Route::get('develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
+
 });

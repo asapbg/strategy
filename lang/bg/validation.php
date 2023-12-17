@@ -171,7 +171,10 @@ return [
         ],
         'a' => [
             'required' => 'Изберете поне един отговор'
-        ]
+        ],
+        'fields.*' => [
+            'required' => 'Полето е задължително'
+        ],
     ],
 
     /*
@@ -471,5 +474,10 @@ return [
         'institutions' => 'Институции',
         'framework_description_bg' => 'Описание',
         'framework_description_en' => 'Описание',
+        'status_id' => 'Статус',
+        'commitment_name' => 'Ангажимент',
+        'commitment_id' => 'Съществуващ ангажимент',
+        'arrangement_name' => 'Мярка',
+        'arrangement_id' => 'Съществуваща мярка',
     ],
 ];

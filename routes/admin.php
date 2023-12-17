@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\NomenclatureController;
+use App\Http\Controllers\Admin\Ogp\Area;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PermissionsController;
@@ -521,4 +522,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::get('common-html', [\App\Http\Controllers\CommonController::class, 'commonHtml'])->name('common-html');
+
+
+    Route::controller(Area::class)->prefix('/ogp/area')->group(function () {
+        Route::get('', 'index')->name('ogp.area.index');
+        Route::get('create', 'create')->name('ogp.area.create');
+        Route::get('edit/{id}', 'edit')->name('ogp.area.edit');
+        Route::post('edit/store', 'store')->name('ogp.area.create_store');
+        Route::put('edit/store', 'store')->name('ogp.area.edit_store');
+    });
 });

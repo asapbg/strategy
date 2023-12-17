@@ -272,6 +272,27 @@
                         </ul>
                     </li>
                 @endcan
+
+                @canany(['manage.*', 'manage.partnership'])
+                    <li class="nav-item @if(strstr(url()->current(), 'advisory-boards')) menu-open @endif">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-weight"></i>
+                            <p>{{ __('custom.open_government_partnership') }}<i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.area.index') }}"
+                                   class="nav-link @if(Str::endsWith(url()->current(), 'advisory-boards')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.develop_new_action_plan') }}</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                @endcan
+
                 @canany(['manage.*','manage.nomenclatures'])
                     <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     <li class="nav-item">

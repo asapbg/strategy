@@ -10,23 +10,20 @@
                     <hr class="custom-hr">
                     <div class="collapse show mt-3" id="home-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-
-                            <li class="mb-2  active-item-left p-1"><a href="#"
-                                                                      class="link-dark text-decoration-none">Законодателни
-                                    инициативи</a>
-                            </li>
-                            <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Отворено
-                                    управление</a>
-                            </li>
+                            <li class="mb-2  active-item-left p-1"><a href="#" class="link-dark text-decoration-none">Законодателни инициативи</a></li>
+                            <li class="mb-2"><a href="{{ route('ogp.list') }}" class="link-dark text-decoration-none">{{ __('custom.open_government_partnership') }}</a></li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Планове
-                                        </a></li>
+                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#"
-                                                        class="link-dark  text-decoration-none">Отчети</a>
-                                    </li>
+                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a></li>
+                                    <hr class="custom-hr">
+                                    <li class="my-2"><a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a></li>
+                                    <hr class="custom-hr">
+                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a></li>
+                                    <hr class="custom-hr">
+                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.news_events') }}</a></li>
                                     <hr class="custom-hr">
                                 </ul>
                             </ul>
