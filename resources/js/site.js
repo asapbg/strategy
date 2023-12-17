@@ -294,8 +294,9 @@ function ajaxList(domElement) {
 
 function clearSearchForm() {
     $("#results-per-page").prop("selectedIndex", 0);
-    $("#search-form").find("input, textarea").not("#amount").val("");
+    $("#search-form").find("input, textarea").not("#amount").not('#model_type').val("");
     $("#search-form").find('select option[value=""]').prop('selected', true);
+    $("#search-form").find('.select2').val('clear').trigger('change');
 }
 
 function isEmpty(arg){
@@ -482,7 +483,6 @@ $(document).ready(function () {
             },
             success: function (res) {
                 if (res.success) {
-                    $("#executors-results").html(res);
                     HideLoadingSpinner();
                     $(btn).find('span').html(text);
                     $(btn).removeClass('subscribe').addClass('unsubscribe');
@@ -517,7 +517,6 @@ $(document).ready(function () {
             },
             success: function (res) {
                 if (res.success) {
-                    $("#executors-results").html(res);
                     HideLoadingSpinner();
                     $(btn).find('span').html(text);
                     $(btn).removeClass('unsubscribe').addClass('subscribe');
@@ -585,13 +584,14 @@ $(document).ready(function () {
         if ($(this).hasClass('clear')) {
             clearSearchForm();
         }
-
+        let model_type = $("#model_type").val();
+console.log(model_type);
         $.ajax({
             type: 'GET',
             url: $("#search-form").attr('action'),
             data: $("#search-form").serialize(),
             success: function (res) {
-                $("#executors-results").html(res);
+                $("#"+model_type+"-results").html(res);
                 HideLoadingSpinner();
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#search-form").offset().top

@@ -28,8 +28,9 @@
                 <span class="obj-icon-info fw-bold" style="font-size: 18px;">
                   <i class="far fa-calendar me-2 main-color" title="{{ __('site.public_consultation.open_from') }}"></i>{{ displayDate($item->open_from) }} {{ __('site.year_short') }} </span>
                 <span class="mx-2"> — </span>
-                <span class="obj-icon-info fw-bold" style="font-size: 18px;">
+                <span class="obj-icon-info fw-bold me-2" style="font-size: 18px;">
                   <i class="far fa-calendar-check me-2 main-color" title="{{ __('site.public_consultation.open_to') }}"></i>{{ displayDate($item->open_to) }} {{ __('site.year_short') }} </span>
+                <span class="{{ $item->inPeriodBoolean ? 'active' : 'inactive' }}-ks">{{ $item->inPeriod }}</span>
             </div>
             <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-18">{{ __('site.public_consultation.reg_num') }}</h3>
@@ -59,25 +60,29 @@
                   </span>
                 </a>
             </div>
-            <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
-                <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
-                  <span class="obj-icon-info">
-                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
-                      {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
-                  </span>
-                </a>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
-{{--                <a href="#" class="main-color text-decoration-none">--}}
-{{--                  <span class="obj-icon-info me-2">--}}
-{{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>--}}
-{{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
-{{--                  </span>--}}
-{{--                </a>--}}
-                <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
-            </div>
+            @if($item->importer_institution_id != config('app.default_institution_id'))
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
+                    <a class="main-color text-decoration-none" href="{{ route('public_consultation.index').'?importer='.$item->importer_institution_id }}" target="_blank">
+                      <span class="obj-icon-info">
+                        <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
+                          {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
+                      </span>
+                    </a>
+                </div>
+            @endif
+            @if($item->consultation_level_id)
+                <div class="col-md-4 mb-4">
+                    <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer_type') }}</h3>
+    {{--                <a href="#" class="main-color text-decoration-none">--}}
+    {{--                  <span class="obj-icon-info me-2">--}}
+    {{--                    <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>--}}
+    {{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
+    {{--                  </span>--}}
+    {{--                </a>--}}
+                    <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
+                </div>
+            @endif
 {{--            <div class="col-md-4 ">--}}
 {{--                <h3 class="mb-2 fs-18">Предишна версия</h3>--}}
 {{--                <a href="#" class="main-color text-decoration-none">--}}
@@ -94,17 +99,15 @@
             </div>
         </div>
 
-        <div class="row mb-4 mt-4">
-            <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
-            @if($item->responsibleInstitution)
+        @if($item->responsibleInstitution && $item->responsibleInstitution->id != config('app.default_institution_id'))
+            <div class="row mb-4 mt-4">
+                <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
                 <p> <strong>{{ $item->responsibleInstitution->name }} </strong>
                     <br> {{ __('custom.address') }}: {{ ($item->responsibleInstitution->settlement ? $item->responsibleInstitution->settlement->ime.', ' : '').$item->responsibleInstitution->address }}
                     <br> {{ __('custom.email') }}: @if($item->responsibleInstitution->email) <a href="mailto:{{ $item->responsibleInstitution->email }}" class="main-color">{{ $item->responsibleInstitution->email }}</a>@else ---@endif
                 </p>
-            @else
-                <p>---</p>
-            @endif
-        </div>
+            </div>
+        @endif
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ __('site.public_consultation.contact_persons') }}</h3>
             @if($item->contactPersons->count())
@@ -154,71 +157,88 @@
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.documents', 2) }}</h3>
             <div class="row table-light">
-                <div class="col-12 mb-2">
-                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
-                    <ul class="list-group list-group-flush">
-                        @php($foundBaseDoc = false)
-                        @if(isset($documents) && sizeof($documents))
-                            @foreach($documents as $doc)
-                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'base')))
-                                    <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
-                                        </a>
-                                    </li>
-                                    @php($foundBaseDoc = true)
-                                @endif
-                            @endforeach
-                        @endif
-                        @if(!$foundBaseDoc)
-                            <p>---</p>
-                        @endif
-                    </ul>
-                </div>
+                @if(!$item->old_id)
+                    <div class="col-12 mb-2">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+                        <ul class="list-group list-group-flush">
+                            @php($foundBaseDoc = false)
+                            @if(isset($documents) && sizeof($documents))
+                                @foreach($documents as $doc)
+                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'base')))
+                                        <li class="list-group-item">
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                            </a>
+                                        </li>
+                                        @php($foundBaseDoc = true)
+                                    @endif
+                                @endforeach
+                            @endif
+                            @if(!$foundBaseDoc)
+                                <p>---</p>
+                            @endif
+                        </ul>
+                    </div>
 
-                <div class="col-12 mb-2">
-                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
-                    <ul class="list-group list-group-flush">
-                        @php($foundKdDoc = false)
-                        @if(isset($documents) && sizeof($documents))
-                            @foreach($documents as $doc)
-                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
-                                    <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
-                                        </a>
-                                    </li>
-                                    @php($foundKdDoc = true)
-                                @endif
-                            @endforeach
-                        @endif
-                        @if(!$foundKdDoc)
-                            <p>---</p>
-                        @endif
-                    </ul>
-                </div>
+                    <div class="col-12 mb-2">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
+                        <ul class="list-group list-group-flush">
+                            @php($foundKdDoc = false)
+                            @if(isset($documents) && sizeof($documents))
+                                @foreach($documents as $doc)
+                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
+                                        <li class="list-group-item">
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                            </a>
+                                        </li>
+                                        @php($foundKdDoc = true)
+                                    @endif
+                                @endforeach
+                            @endif
+                            @if(!$foundKdDoc)
+                                <p>---</p>
+                            @endif
+                        </ul>
+                    </div>
 
-                <div class="col-12">
-                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
-                    <ul class="list-group list-group-flush">
-                        @php($foundReportDoc = false)
-                        @if(isset($documents) && sizeof($documents))
-                            @foreach($documents as $doc)
-                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
+                    <div class="col-12">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
+                        <ul class="list-group list-group-flush">
+                            @php($foundReportDoc = false)
+                            @if(isset($documents) && sizeof($documents))
+                                @foreach($documents as $doc)
+                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
+                                        <li class="list-group-item">
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                            </a>
+                                        </li>
+                                        @php($foundReportDoc = true)
+                                    @endif
+                                @endforeach
+                            @endif
+                            @if(!$foundReportDoc)
+                                <p>---</p>
+                            @endif
+                        </ul>
+                    </div>
+                @else
+                    @if($documentsImport->count())
+                        <div class="col-12">
+                            <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+                            <ul class="list-group list-group-flush">
+                                @foreach($documentsImport as $doc)
                                     <li class="list-group-item">
                                         <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
-                                    @php($foundReportDoc = true)
-                                @endif
-                            @endforeach
-                        @endif
-                        @if(!$foundReportDoc)
-                            <p>---</p>
-                        @endif
-                    </ul>
-                </div>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
 

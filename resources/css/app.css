@@ -2697,3 +2697,11 @@ html #slider-range .ui-button.ui-state-disabled:active {
           transform: scale3D(0, 0, 1);
       }
 }
+
+/*input validation error messages*/
+.input-err {
+    font-size: 14px;
+    font-weight: normal;
+    font-style: italic;
+    padding-top: 7px;
+}

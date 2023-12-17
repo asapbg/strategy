@@ -26,9 +26,13 @@ class PublicConsultationController extends Controller
 
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'date';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         $paginate = $requestFilter['paginate'] ?? PublicConsultation::PAGINATE;
+
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
         $pk = PublicConsultation::select('public_consultation.*')
             ->ActivePublic()
             ->with(['translation'])
@@ -55,7 +59,7 @@ class PublicConsultationController extends Controller
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent'));
+        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -70,9 +74,10 @@ class PublicConsultationController extends Controller
         $pageTitle = $item->title;
         $this->setBreadcrumbsTitle($pageTitle);
         $documents = $item->lastDocumentsByLocaleAndSection(true);
+        $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent'));
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport'));
     }
 
     public function addComment(StoreCommentRequest $request)
@@ -143,7 +148,7 @@ class PublicConsultationController extends Controller
             ),
             'actTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(ActType::get()),
+                'options' => optionsFromModel(ActType::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.act_type', 1),

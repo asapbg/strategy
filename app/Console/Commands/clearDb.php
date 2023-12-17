@@ -3,15 +3,20 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\CommonController;
+use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\Consultations\PublicConsultationTranslation;
 use App\Models\File;
 use App\Models\Pris;
 use App\Models\PrisTranslation;
 use App\Models\PublicConsultationContact;
+use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentTranslation;
+use App\Models\Timeline;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class clearDb extends Command
 {
@@ -46,23 +51,25 @@ class clearDb extends Command
                 $fromId = DB::table('pris')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
                     Schema::disableForeignKeyConstraints();
-                    DB::table('pris_tag')->where('pris_id', '>=', $fromId->id)->delete();
-                    DB::table('pris_change_pris')->where('pris_id', '>=', $fromId->id)->delete();
-
-                    PrisTranslation::where('pris_id', '>=', $fromId->id)->forceDelete();
-                    CommonController::fixSequence('pris_translations');
+                    DB::table('pris_tag')->truncate();
+                    DB::table('pris_change_pris')->truncate();
+                    DB::table('pris_translations')->truncate();
 
                     $deleted = 1;
                     while ($deleted > 0) {
-                        $deleted = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->forceDelete();
-                        $this->comment('100 files are deleted');
-                        sleep(1);
-                    };
-
-                    CommonController::fixSequence('files');
-
-                    Pris::where('id', '>=', $fromId->id)->forceDelete();
-                    CommonController::fixSequence('pris');
+                        $files = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->limit(100)->get();
+                        if($files->count()){
+                            foreach ($files as $f) {
+                                Storage::disk('public_uploads')->delete($f->path);
+                            }
+                            File::whereIn('id', $files->pluck('id')->toArray())->forceDelete();
+                            $this->comment('100 files are deleted');
+                            sleep(1);
+                        } else{
+                            $deleted = 0;
+                        }
+                    }
+                    DB::table('pris')->truncate();
                     Schema::enableForeignKeyConstraints();
                 }
                 //DB::table('tag')->truncate();
@@ -75,31 +82,46 @@ class clearDb extends Command
                 DB::table('users')->truncate();
                 break;
             case 'pc':
-
                 //TODO get only imported pc and connected to them relations
                 $fromId = DB::table('public_consultation')->select(DB::raw('min(old_id) as max'), 'id')->groupBy('id')->first();
                 if($fromId) {
                     Schema::disableForeignKeyConstraints();
-                    DB::table('public_consultation_connection')->where('public_consultation_id', '>=', $fromId->id)->delete();
 
-                    PublicConsultationContact::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
-                    CommonController::fixSequence('public_consultation_contact');
+                    DB::table('public_consultation_poll')->truncate();
+                    DB::table('public_consultation_connection')->truncate();
+                    DB::table('public_consultation_timeline')->truncate();
+                    DB::table('public_consultation_contact')->truncate();
 
                     $deleted = 1;
                     while ($deleted > 0) {
-                        $deleted = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->limit(100)->forceDelete();
-                        sleep(1);
-                        $this->comment('100 files are deleted');
+                        $files = File::where('id_object', '>=', $fromId->id)->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->limit(100)->get();
+                        if($files->count()){
+                            foreach ($files as $f) {
+                                Storage::disk('public_uploads')->delete($f->path);
+                            }
+                            File::whereIn('id', $files->pluck('id')->toArray())->forceDelete();
+                            $this->comment('100 files are deleted');
+                            sleep(1);
+                        } else{
+                            $deleted = 0;
+                        }
                     }
-
-                    PublicConsultationTranslation::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
-                    CommonController::fixSequence('pris_translations');
-
-                    PublicConsultation::where('id', '>=', $fromId->id)->forceDelete();
-                    CommonController::fixSequence('public_consultation');
+                    Comments::where('object_code', '>=', Comments::PC_OBJ_CODE)->forceDelete();
+                    DB::table('public_consultation_translations')->truncate();
+                    DB::table('public_consultation')->truncate();
                     Schema::enableForeignKeyConstraints();
                 }
 
+                break;
+
+            case 'sd':
+                $ids = StrategicDocument::whereNotNull('old_id')->withTrashed()->get()->pluck('id');
+
+                StrategicDocumentTranslation::whereIn('strategic_document_id', $ids)->forceDelete();
+                CommonController::fixSequence('strategic_document_translations');
+
+                StrategicDocument::whereIn('id', $ids)->withTrashed()->forceDelete();
+                CommonController::fixSequence('strategic_document');
                 break;
             default:
                 $this->error('Section not found!');

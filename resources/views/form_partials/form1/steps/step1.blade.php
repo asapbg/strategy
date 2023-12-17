@@ -16,7 +16,7 @@
             @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 0, 'label' => 'forms.not_included_in_program'])
         </div>
         <div class="col-sm-6">
-            @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 0, 'label' => 'forms.included_in_program'])
+            @include('form_partials.radio', ['name' => 'included_in_program', 'value' => 1, 'label' => 'forms.included_in_program'])
         </div>
     </div>
     <div class="row">
@@ -24,7 +24,7 @@
             <h5>@include('form_partials.text', ['name' => 'contact_person'])</h5>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-sm-6">
             <h5>@include('form_partials.text', ['name' => 'phone'])</h5>
         </div>
@@ -32,7 +32,7 @@
             <h5>@include('form_partials.text', ['name' => 'email'])</h5>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-sm-12">
             <h4>1. {{ __('forms.problem_to_solve') }}</h4>
             <p>
@@ -45,7 +45,7 @@
             @include('form_partials.shared.problems')
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-sm-12">
             <h4>2. {{ __('forms.goal_goals') }}</h4>
             <p>
@@ -63,4 +63,4 @@
             @include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party', 'class' => 'summernote'])
         </div>
     </div>
-</table>
+</div>

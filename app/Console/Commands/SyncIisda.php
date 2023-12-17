@@ -143,7 +143,7 @@ class SyncIisda extends Command
                             //remove from local subjects array, it means that we found it in sync array.
                             // At the end we will deactivate all items not removed from local subject array
                             if( isset($localSubjects[$subject['IdentificationNumber']]) ) {
-                                Log::error($subject['Name'].': '.(int)($subject['Status'] == 'Active').PHP_EOL);
+                                //Log::error($subject['Name'].': '.(int)($subject['Status'] == 'Active').PHP_EOL);
                                 $updated = false;
                                 $localSubject = $localSubjects[$subject['IdentificationNumber']];
 

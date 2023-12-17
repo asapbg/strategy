@@ -17,6 +17,12 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const TYPE_ORDER = 7;
     const TYPE_ARCHIVE = 8;
     const TYPE_DECREES = 1;
+    /**
+     * 2 - Decision
+     * 3 - Protocol Decisions
+     *
+     * The client only wants these two legal act types to show up in the category selection. The rest are not applicable. */
+    const EDIT_STORE_IDS = [ 2, 3 ];
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -49,13 +55,21 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public static function optionsList()
+    public static function optionsList($withoutLaw = false, $withoutArchive = false)
     {
-        return DB::table('legal_act_type')
+        $q = DB::table('legal_act_type')
             ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
             ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-            ->where('legal_act_type_translations.locale', '=', app()->getLocale())
-            ->orderBy('legal_act_type_translations.name', 'asc')
+            ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+        if($withoutLaw) {
+            $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ORDER);
+        }
+
+        if($withoutLaw) {
+            $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ARCHIVE);
+        }
+
+        return $q->orderBy('legal_act_type_translations.name', 'asc')
             ->get();
     }
 }

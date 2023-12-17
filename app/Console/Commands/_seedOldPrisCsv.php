@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Storage;
 
 class seedOldPrisCsv extends Command
 {
+    /** !!!!!!!!!!!!!!!!!!!! */
+    /** WI DO NOT USE THIS */
+    /** !!!!!!!!!!!!!!!!!!!! */
     /**
      * The name and signature of the console command.
-     *
+     * @deprecated
      * @var string
      */
+
     protected $signature = 'old:pris_csv';
 
     /**
@@ -521,19 +525,21 @@ class seedOldPrisCsv extends Command
                                         -- file contents
                                          att.pageid as page_ord,
                                          att.attachment as page_content,
-                                         att.attachext as doc_type
+                                         att.attachext as doc_type,
+                                         att.description
                                     from af_attachments att
+                                    join af_document_pages pages on pages.pageid = att.pageid
                                     where true
                                         and att.documentid = '.$newItem->old_id.'
                                     order by att.documentid asc, att.pageid asc');
 
                                 if (sizeof($oldPages)) {
-                                    foreach ($oldPages as $item) {
+                                    foreach ($oldPages as $page) {
                                         $file = null;
-                                        if(!empty($item->page_content)) {
-                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($item->doc_type);
+                                        if(!empty($page->page_content)) {
+                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($page->doc_type);
                                             $fullPath = $path.$fileNameToStore;
-                                            Storage::disk('public_uploads')->put($fullPath, $item->page_content);
+                                            Storage::disk('public_uploads')->put($fullPath, $page->page_content);
                                             $file = Storage::disk('public_uploads')->get($fullPath);
                                         }
 
@@ -549,7 +555,7 @@ class seedOldPrisCsv extends Command
                                                     'filename' => $fileNameToStore,
                                                     'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
                                                     'path' => $fullPath,
-                                                    'description_'.$code => null,
+                                                    'description_'.$code => $page->description,
                                                     'sys_user' => null,
                                                     'locale' => $code,
                                                     'version' => ($version + 1).'.0'

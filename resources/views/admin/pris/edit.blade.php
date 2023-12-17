@@ -37,7 +37,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="doc_num">
-                                                        {{ __('validation.attributes.doc_num') }}
+                                                        {{ __('validation.attributes.doc_num') }} <span class="required">*</span>
                                                     </label>
                                                     <div class="col-12">
                                                         <input type="text" name="doc_num" value="{{ old('doc_num', $item->id ? $item->doc_num : '') }}" class="form-control form-control-sm @error('doc_num'){{ 'is-invalid' }}@enderror">
@@ -51,7 +51,7 @@
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="doc_date">
-                                                        {{ __('validation.attributes.doc_date') }}
+                                                        {{ __('validation.attributes.doc_date') }} <span class="required">*</span>
                                                     </label>
                                                     <div class="col-12">
                                                         <input type="text" name="doc_date" value="{{ old('doc_date', $item->id ? $item->doc_date : '') }}" class="form-control form-control-sm datepicker @error('doc_date'){{ 'is-invalid' }}@enderror">
@@ -65,7 +65,7 @@
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="legal_act_type_id">
-                                                        {{ trans_choice('custom.legal_act_types', 1) }}
+                                                        {{ trans_choice('custom.legal_act_types', 1) }} <span class="required">*</span>
                                                     </label>
                                                     <div class="col-12">
                                                         <select id="legal_act_type_id" name="legal_act_type_id"  class="form-control form-control-sm select2 @error('legal_act_type_id'){{ 'is-invalid' }}@enderror">
@@ -88,7 +88,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="col-12 control-label" for="institutions">
-                                                        {{ trans_choice('custom.institutions', 2) }}
+                                                        {{ trans_choice('custom.institutions', 2) }} <span class="required">*</span>
                                                     </label>
                                                     <div class=" col-12 d-flex flex-row">
                                                         <div class="input-group">
@@ -117,7 +117,7 @@
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="protocol">
-                                                        {{ __('validation.attributes.protocol') }}
+                                                        {{ __('validation.attributes.protocol') }} <span class="required">*</span>
                                                     </label>
                                                     <div class="col-12">
                                                         <input type="text" name="protocol" value="{{ old('protocol', $item->id ? $item->protocol : '') }}" class="form-control form-control-sm @error('protocol'){{ 'is-invalid' }}@enderror">
@@ -235,11 +235,19 @@
                                                                 @foreach($item->changedDocs as $pris)
                                                                     <div id="disconnect_{{ $pris->id }}">
                                                                         <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
-                                                                           <i class="text-primary fas fa-link"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} №{{ $pris->regNum }} {{ $pris->docYear }} г.
+                                                                           <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }} {{ $pris->docYear }} г.
                                                                         </a>
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
                                                                     </div>
                                                                 @endforeach
+                                                            </div>
+                                                        @endif
+                                                        @if(!empty($item->old_connections))
+                                                            <div class="col-12 mt-4" id="old_documents">
+                                                                <label class="col-sm-12 control-label">
+                                                                    {{ __('custom.change_docs_from_import') }}
+                                                                </label>
+                                                                {!! $item->oldConnectionsHtml !!}
                                                             </div>
                                                         @endif
                                                     </div>

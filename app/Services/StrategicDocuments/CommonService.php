@@ -59,20 +59,24 @@ class CommonService
             $prisActs = $prisActs->where('public_consultation_id', $strategicDocument?->publicConsultation?->id);
         }
         if (!empty($filter)) {
-            $filterParts = explode('=', $filter);
-            $key = Arr::get($filterParts, 0);
+            $filterParams = explode('&', $filter);
 
-            $value = Arr::get($filterParts, 1);
-            if ($key == 'legal-act-type-id') {
-                if ($value != 'all') {
-                    $prisActs = Pris::where('legal_act_type_id', $value);
+            foreach ($filterParams as $filterParam) {
+                $filterParts = explode('=', $filterParam);
+                $key = Arr::get($filterParts, 0);
+
+                $value = Arr::get($filterParts, 1);
+                if ($key == 'legal-act-type-id') {
+                    if ($value != 'all') {
+                        $prisActs = $prisActs->where('legal_act_type_id', $value);
+                    }
                 }
-            }
-            if ($key == 'public-consultation-id') {
-                if ($value != 'all') {
-                    $publicConsultation = PublicConsultation::findOrFail($value);
-                    if ($publicConsultation) {
-                        $prisActs = $prisActs->whereIn('public_consultation_id', [$publicConsultation->id]);
+                if ($key == 'public-consultation-id') {
+                    if ($value != 'all') {
+                        $publicConsultation = PublicConsultation::findOrFail($value);
+                        if ($publicConsultation) {
+                            $prisActs = $prisActs->whereIn('public_consultation_id', [$publicConsultation->id]);
+                        }
                     }
                 }
             }
@@ -87,18 +91,16 @@ class CommonService
         return $prisActs;
     }
 
-    public function parentStrategicDocumentsSelect2Options(Request $request)
+    public function parentStrategicDocumentsSelect2Options(Request $request, ?StrategicDocument $item = null)
     {
-        $documentId = $request->get('documentId');
+        //$documentId = $request->get('documentId');
         $term = $request->input('term');
-        $filter = $request->input('filter');
-
+        $filter = $this->documentFilter($request);
+        $key = Arr::get($filter, 'key');
+        $policyAreaIdFilter = Arr::get($filter, 'value');
         $strategicDocuments = StrategicDocument::with('translations');
-        if ($documentId) {
-            $item = StrategicDocument::find($documentId);
-            if ($item) {
-                $strategicDocuments = $strategicDocuments->where('policy_area_id', $item->policy_area_id);
-            }
+        if ($item && empty($policyAreaIdFilter)) {
+            $strategicDocuments = $strategicDocuments->where('policy_area_id', $item->policy_area_id);
         }
         if ($term) {
             $currentLocale = app()->getLocale();
@@ -106,16 +108,49 @@ class CommonService
                 $query->where('locale', $currentLocale)->where('title', 'ilike', '%' . $term . '%');
             });
         }
+
+        if ($key == 'policy-area-id') {
+            $strategicDocuments = $strategicDocuments->where('policy_area_id', $policyAreaIdFilter);
+        }
+
+        return $strategicDocuments;
+    }
+
+    /**
+     * @param Request $request
+     * @return string[]
+     */
+    public function documentFilter(Request $request)
+    {
+        $filterArray = ['key' => '', 'value' => ''];
+        $filter = $request->input('filter');
         if (!empty($filter)) {
             $filterParts = explode('=', $filter);
             $key = Arr::get($filterParts, 0);
             $value = Arr::get($filterParts, 1);
-            if ($key == 'policy-area-id') {
-                $strategicDocuments = $strategicDocuments->where('policy_area_id', $value);
-            }
+            $filterArray['key'] = $key;
+            $filterArray['value'] = $value;
         }
 
-        return $strategicDocuments;
+        return $filterArray;
+    }
+
+    /**
+     * @param StrategicDocument $parentDocument
+     * @param $documentOptions
+     * @return array
+     */
+    public function parentStrategicDocumentSelectedOption(StrategicDocument $parentDocument, $documentOptions): array
+    {
+        $customOption = [
+            'id' => $parentDocument->id,
+            'text' => $parentDocument->title,
+        ];
+        $documentOptions['items'] = $documentOptions['items']->toArray();
+        array_unshift($documentOptions['items'], $customOption);
+        $documentOptions['items'][0]['selected'] = true;
+
+        return $documentOptions;
     }
 
     /**

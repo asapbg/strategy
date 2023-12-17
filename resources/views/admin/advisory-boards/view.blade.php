@@ -65,7 +65,7 @@
 
                                 <div class="col-auto">
                                     <a href="{{ route('admin.advisory-boards.edit', $item) }}"
-                                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                                       class="btn btn-info">{{ __('custom.editing') }}</a>
                                 </div>
                             </div>
 
@@ -140,7 +140,7 @@
 
                                 <div class="col-auto">
                                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#members' }}"
-                                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                                       class="btn btn-info">{{ __('custom.editing') }}</a>
                                 </div>
                             </div>
 
@@ -185,7 +185,7 @@
 
                                 <div class="col-auto">
                                     <a href="{{ route('admin.advisory-boards.edit', $item) . '#functions' }}"
-                                       class="btn btn-warning">{{ __('custom.editing') }}</a>
+                                       class="btn btn-info">{{ __('custom.editing') }}</a>
                                 </div>
                             </div>
 

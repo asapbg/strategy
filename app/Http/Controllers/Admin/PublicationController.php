@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\PublicationTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
 use App\Models\File;
 use App\Models\Publication;
@@ -41,6 +42,7 @@ class PublicationController extends AdminController
         $items = Publication::with(['category', 'category.translation', 'translation', 'mainImg'])
             ->whereIn('type', [PublicationTypesEnum::TYPE_LIBRARY->value, PublicationTypesEnum::TYPE_NEWS->value])
             ->FilterBy($requestFilter)
+            ->orderBy('id', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
         $editRouteName = static::EDIT_ROUTE;
@@ -55,7 +57,7 @@ class PublicationController extends AdminController
      */
     public function edit(Request $request, $item = null)
     {
-        $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'files', 'translations']);
+        $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'translations']);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
@@ -67,11 +69,7 @@ class PublicationController extends AdminController
     }
 
     public function store(StorePublicationRequest $request, Publication $item)
-//    public function store(Request $request, Publication $item)
     {
-//        $r = new StorePublicationRequest();
-//        $validator = Validator::make($request->all(), $r->rules());
-//        dd($request->all(),$validator->errors());
         $id = $item->id;
         $validated = $request->validated();
 
@@ -79,6 +77,7 @@ class PublicationController extends AdminController
             || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
         DB::beginTransaction();
         try {
             if( empty($validated['slug']) ) {
@@ -94,7 +93,7 @@ class PublicationController extends AdminController
 
             // Upload File
             if( $item && $itemImg ) {
-                $file_name = Str::limit($validated['slug'], 200);
+                $file_name = Str::limit($validated['slug'], 70);
                 $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
                 // Upload File
                 $itemImg->storeAs(File::PUBLICATION_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
@@ -113,9 +112,14 @@ class PublicationController extends AdminController
                     $item->save();
                 }
             }
+
+            $langReq = LanguageFileUploadRequest::createFrom($request);
+            $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_PUBLICATION, false);
+
             $this->storeTranslateOrNew(Publication::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
+
             if( $id ) {
                 return redirect(route(static::EDIT_ROUTE, $item) )
                     ->with('success', trans_choice('custom.publications', 1)." ".__('messages.updated_successfully_f'));
@@ -126,7 +130,7 @@ class PublicationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return $this->backWithError('danger', __('messages.system_error'));
         }
 
     }

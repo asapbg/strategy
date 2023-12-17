@@ -39,5 +39,7 @@ return [
     'successful_send_comment' => 'Коментарът е записан успешно',
     'to_administration' => 'Към Администрация',
     'pris.archive' => 'Актове на МС (архив)',
+    'pris.page_title' => 'Актове на Министерския съвет',
+    'public_consultation.other_documents' => 'Други',
 
 ];

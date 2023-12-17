@@ -375,7 +375,7 @@ if (!function_exists('fileIcon')) {
         switch ($fileType) {
             case 'application/pdf':
             case 'pdf':
-                $icon = '<i class="fas fa-file-pdf main-color me-1"></i>';
+                $icon = '<i class="fas fa-file-pdf text-danger me-1"></i>';
                 break;
             case 'text/csv':
                 $icon = '<i class="fas fa-file-csv text-primary me-1"></i>';
@@ -387,6 +387,7 @@ if (!function_exists('fileIcon')) {
             case 'application/vnd.ms-excel':
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                 $icon = '<i class="fas fa-file-excel text-success me-1"></i>';
+                break;
             case 'application/rar':
             case 'application/x-rar':
                 $icon = '<i class="fas fa-file-zipper text-primary me-1"></i>';
@@ -503,9 +504,6 @@ if (!function_exists('fileHtmlContent')) {
                 $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
                 break;
             case 'application/msword':
-                https://strategy.asapbg.com/strategy-document/download-file/56
-                //$content = __('custom.old_file_format');
-                //$content = '<iframe src="https://view.officeapps.live.com/op/view.aspx?src='.route('download.file', $file).'" width="100%" /></iframe>';
                 $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
                 break;
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -545,7 +543,7 @@ if (!function_exists('paginationSelect')) {
     function paginationSelect()
     {
         return [
-            ['value' => 1, 'name' => 10],
+            ['value' => 10, 'name' => 10],
             ['value' => 20, 'name' => 20],
             ['value' => 30, 'name' => 30],
             ['value' => 40, 'name' => 40],

@@ -528,4 +528,8 @@ return [
     'inactive_document' => 'Inactive document',
     'moderators' => 'Moderator|Moderators',
     'meeting_date' => 'Meeting took place at',
+    'add_npo_presenter' => 'Add NPO presenter',
+    'as' => 'as',
+    'are_you_sure_public_advisory' => 'Are you sure you want to publish this advisory board',
+    'are_you_sure_unpublic_advisory' => 'Are you sure you want to save this advisory board as draft',
 ];

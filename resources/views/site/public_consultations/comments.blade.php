@@ -34,8 +34,7 @@
                     </div>
                 @endforeach
             @endif
-{{--            TODO fix me why do not read policy allow after start and do not stop after end--}}
-{{--            @can('comment', $item)--}}
+            @can('comment', $item)
                 <div class="col-md-12 mt-4">
                     <form action="{{ route('public_consultation.comment.add') }}" method="post">
                         @csrf
@@ -49,7 +48,7 @@
                         <button class="cstm-btn btn btn-primary m-0 mt-2">{{ __('custom.add_comment') }}</button>
                     </form>
                 </div>
-{{--            @endcan--}}
+            @endcan
         </div>
     </div>
 </div>

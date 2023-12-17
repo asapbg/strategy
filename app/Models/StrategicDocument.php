@@ -113,6 +113,18 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeInstitutionListing(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder {
+        return $query->whereHas('pris', function ($query) {
+            $query->whereHas('institutions', function ($query) {
+                $query->where('id', auth()->user()->institution_id);
+            });
+        });
+    }
+
+    /**
      * @return BelongsTo
      */
     public function publicConsultation(): BelongsTo

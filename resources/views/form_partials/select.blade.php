@@ -7,11 +7,14 @@
     @endphp
     <p>{{ $selected ? $selected['name'] : '' }}</p>
 @else
-    <select id="{{ $name }}" name="{{ $name }}" class="select2 form-control form-control-sm">
+    <select id="{{ $name }}" name="{{ $name }}" class="select2 form-control form-control-sm @error($name){{ 'is-invalid' }}@enderror">
         @foreach ($options as $option)
-            <option value="{{ $option->id }}" {{ array_key_exists($name, $state) ? ($state[$name] == $option->id ? 'selected' : '') : '' }}>
+            <option value="{{ $option->id }}" @if(in_array($option->id, old($name, []))){{ 'selected' }}@else{{ array_key_exists($name, $state) ? ($state[$name] == $option->id ? 'selected' : '') : '' }}@endif>
                 {{ $option->name }}
             </option>
-        @endforeach    
+        @endforeach
     </select>
+    @error($name)
+        <div class="text-danger input-err">{{ $message }}</div>
+    @enderror
 @endif

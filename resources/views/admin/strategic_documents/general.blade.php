@@ -218,7 +218,7 @@
                                     <select id="public_consultation_id" name="public_consultation_id"
                                             class="form-control form-control-sm select2 @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
                                         @if(!$item->id)
-                                            <option value="" @if(old('public_consultation_id', '') == '') selected @endif>
+                                            <option value="all" @if(old('public_consultation_id', '') == '') selected @endif>
                                                 ---
                                             </option>
                                         @endif
@@ -702,7 +702,8 @@
 
             prisAct.select2({
                 placeholder: '--',
-                minimumInputLength: 1
+                minimumInputLength: 1,
+                allowClear: true,
             });
             prisAct.prop('disabled', false);
             const loadPrisOptions = (filter = '', documentId) => {
@@ -716,9 +717,22 @@
                     success: function(data) {
                         const isSingleResult = data.items.length === 1;
                         prisAct.prop('disabled', isSingleResult);
+
+                        /**
+                         * If we have a single result, insert an empty item at the beginning of the array.
+                         * This way we force the user to make a change so we can set the values of the legal type and public consultation via the pris act on change event.
+                        */
+                        if (!isSingleResult && data.items.length) {
+                            data.items.unshift({
+                                id: '',
+                                text: '--'
+                            });
+                        }
+
                         prisAct.select2({
                             data: data.items,
                             placeholder: '--',
+                            allowClear: true,
                             //minimumInputLength: 1,
                             ajax: {
                                 url: '/admin/strategic-documents/load-pris-acts',
@@ -757,7 +771,13 @@
             loadPrisOptions('', documentId);
 
             const parentDocumentSelect = $('#parent_document_id');
+            parentDocumentSelect.select2({
+                placeholder: '--',
+                minimumInputLength: 1,
+                allowClear: true,
+            });
             const loadParentStrategicDocumentOptions = (filter = '', documentId) => {
+                documentId = 46;
                 $.ajax({
                     url: '/admin/strategic-documents/load-parents',
                     dataType: 'json',
@@ -769,6 +789,7 @@
                         parentDocumentSelect.select2({
                             data: data.items,
                             placeholder: '--',
+                            allowClear: true,
                             //minimumInputLength: 1,
                             ajax: {
                                 url: '/admin/strategic-documents/load-parents',
@@ -777,6 +798,7 @@
                                 data: function (params) {
                                     return {
                                         filter: filter,
+                                        documentId: documentId,
                                         term: params.term,
                                         page: params.page
                                     };
@@ -794,7 +816,7 @@
                         });
 
                         setTimeout(function() {
-
+                            parentDocumentSelect.trigger('query', {});
                         }, 250);
                     }
                 });
@@ -806,8 +828,9 @@
 
             $('#the_legal_act_type_filter').on('change', function () {
                 let selectedValue = $(this).val();
+                const publicConsultationValue = $('#public_consultation_id').val();
                 if (selectedValue) {
-                    const filter = 'legal-act-type-id=' + selectedValue;
+                    const filter = 'legal-act-type-id=' + selectedValue + '&public-consultation-id=' + publicConsultationValue;
                     prisAct.empty().trigger('change');
                     loadPrisOptions(filter);
                 }
@@ -852,9 +875,10 @@
             });
             $('#public_consultation_id').on('change', function () {
                 const selectedValue = $(this).val();
+                const legalActTypeId = $('#the_legal_act_type_filter').val();
                 let filter = '';
                 if (selectedValue && !!manualChangeConsultationId) {
-                    filter = 'public-consultation-id=' + selectedValue;
+                    filter = 'public-consultation-id=' + selectedValue + '&legal-act-type-id=' + legalActTypeId;
                     prisAct.empty().trigger('change');
                 }
                 loadPrisOptions(filter);

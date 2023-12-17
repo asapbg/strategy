@@ -402,7 +402,7 @@
                             <p class="short-decription text-secondary">
                                 {{ $publication->translation->short_content }}
                             </p>
-                            <a href="{{ route('library.details', [$publication->category->id, $publication->id]) }}" class="readmore stretched-link mt-1" title="{{ $publication->translation->title }}">
+                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore stretched-link mt-1" title="{{ $publication->translation->title }}">
                                 Прочетете още <i class="fas fa-long-arrow-right"></i>
                             </a>
                         </div>
