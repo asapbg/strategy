@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('strategic_document', function (Blueprint $table) {
             $table->unsignedBigInteger('policy_area_id')->nullable()->change();
             $table->unsignedBigInteger('public_consultation_id')->nullable()->change();
+            $table->unsignedBigInteger('accept_act_institution_type_id')->nullable()->change();
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration
         Schema::table('strategic_document', function (Blueprint $table) {
             $table->unsignedBigInteger('policy_area_id')->nullable(false)->change();
             $table->unsignedBigInteger('public_consultation_id')->nullable(false)->change();
+            $table->unsignedBigInteger('accept_act_institution_type_id')->nullable(false)->change();
         });
     }
 };

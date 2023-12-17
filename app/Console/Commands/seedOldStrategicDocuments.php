@@ -54,10 +54,13 @@ class seedOldStrategicDocuments extends Command
                 sd.institutiontypeid AS accept_act_institution_type_id,
                 -- sd.documenttypeid AS pris_act_type_id -- TODO: IDK
                 sd_it.institutiontypename AS institution_type_name,
+                sd.documentdate AS document_date_accepted,
+                datecreated AS created_at,
+                datemodified AS updated_at,
                 CASE WHEN sd.isactive = true THEN 1 ELSE 0 END AS active,
                 CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at
             FROM dbo.strategicdocuments AS sd
-            JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
+            LEFT JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
             WHERE sd.languageid = 1"
         );
         $policyAreas = PolicyArea::with('translations')->get();
@@ -129,7 +132,7 @@ class seedOldStrategicDocuments extends Command
                     }
                 }
 
-                $data['accept_act_institution_type_id'] = $acceptingInstitution->id;
+                $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
                 //
 
                 // TODO: This is seemingly missing from the old DB
