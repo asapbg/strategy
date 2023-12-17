@@ -209,8 +209,8 @@ class seedOldUsers extends Command
                     join dbo.roles roles on roles.roleid = uroles.roleid
                     left join dbo.profile profile on profile.userid = u.userid
                     where u.userid >= '.(int)$currentStep.'
-                    order by u.userid asc
-                    group by u.userid, m.userid, profile.userid');
+                    group by u.userid, m.userid, profile.userid
+                    order by u.userid asc');
 
                 if (sizeof($oldDbResult)) {
                     foreach ($oldDbResult as $item) {

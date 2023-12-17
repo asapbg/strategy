@@ -149,14 +149,15 @@ class seedOldPublicConsultationFiles extends Command
 
                                 File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
                                 File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                                $this->comment('File Succesfuly saved for PC ID '.$ourPc[$item->id]. ' Old ID: '.$item->id );
+                                $this->comment('File ID '.$newFile->id.' Successfully saved for PC ID '.$ourPc[$item->id]. ' Old ID: '.$item->id );
                             } else{
                                 $this->comment('Can\'t copy file');
                             }
 
                             DB::commit();
+//                            dd($newFile->id, $item->file_old_id, 'pc id:'. $item->id);
                         } catch (\Exception $e) {
-                            Log::error('Migration old startegy public consultations, comment and files: ' . $e);
+                            Log::error('Migration old strategy public consultations, comment and files: ' . $e);
                             DB::rollBack();
                             dd($item, $copied_files ?? 'no copied files');
                         }
