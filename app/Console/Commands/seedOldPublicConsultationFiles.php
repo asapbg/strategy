@@ -90,7 +90,6 @@ class seedOldPublicConsultationFiles extends Command
                         and p.languageid = 1
                         and f.id is not null
                         and folders.id is not null
-                        and folders.id = 64 -- consultations
                         and uf.tabletype = 3
                         -- check if uf.tabletype should be 3
                     order by p.datecreated desc
@@ -106,9 +105,15 @@ class seedOldPublicConsultationFiles extends Command
                         DB::beginTransaction();
                         try {
                             $info = pathinfo($item->name);
-                            $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_')).'.'.$info['extension'];
+                            if(isset($info['extension'])) {
+                                $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_')).'.'.$info['extension'];
+                            } else{
+                                $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_'));
+                            }
+
                             $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name);
                             $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$directory.$newName);
+
                             if(!file_exists($copy_from)) {
                                 $this->comment('File '.$copy_from. 'do not exist!');
                                 continue;
@@ -144,7 +149,7 @@ class seedOldPublicConsultationFiles extends Command
 
                                 File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
                                 File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                                $this->comment('File Succesfuly saved for PC ID '.$ourPc[$item->id]);
+                                $this->comment('File Succesfuly saved for PC ID '.$ourPc[$item->id]. ' Old ID: '.$item->id );
                             } else{
                                 $this->comment('Can\'t copy file');
                             }

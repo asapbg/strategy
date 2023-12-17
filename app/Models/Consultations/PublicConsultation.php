@@ -339,8 +339,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->join('files', function ($j){
                 $j->on('files.id_object', '=', 'public_consultation.id')
                     ->where('files.locale','=', app()->getLocale())
-                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION);
-                    //->whereNull('files.doc_type');
+                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->whereNull('files.doc_type');
             })
             ->where('public_consultation.id', '=', $this->id)
             ->orderBy('created_at', 'desc')
