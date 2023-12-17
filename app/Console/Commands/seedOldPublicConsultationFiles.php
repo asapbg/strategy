@@ -114,48 +114,49 @@ class seedOldPublicConsultationFiles extends Command
                             $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name);
                             $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$directory.$newName);
 
-                            if(!file_exists($copy_from)) {
-                                $this->comment('File '.$copy_from. 'do not exist!');
-                                continue;
-                            }
-                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+//                            if(!file_exists($copy_from)) {
+//                                $this->comment('File '.$copy_from. 'do not exist!');
+//                                continue;
+//                            }
+                            if(file_exists($copy_from)) {
+                                $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
-                            if($copied_file) {
-                                $contentType = Storage::disk('public_uploads')->mimeType($directory.$newName);
-                                $fileIds = [];
-                                foreach (['bg', 'en'] as $code) {
-                                    //TODO catch file version
-                                    //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                                    $version = 0;
-                                    $newFile = new File([
-                                        'id_object' => $ourPc[$item->id],
-                                        'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
-                                        'filename' => $newName,
-                                        'content_type' => $contentType,
-                                        'path' => $directory.$newName,
-                                        'description_' . $code => !empty($item->description) ? $item->description : $item->name,
-                                        'sys_user' => $ourUsers[(int)$item->old_user_id] ?? null,
-                                        'locale' => $code,
-                                        'version' => ($version + 1) . '.0',
-                                        'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
-                                        'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
-                                        'import_old_id' => $item->file_old_id
-                                    ]);
-                                    $newFile->save();
-                                    $fileIds[] = $newFile->id;
-                                    $ocr = new FileOcr($newFile->refresh());
-                                    $ocr->extractText();
+                                if($copied_file) {
+                                    $contentType = Storage::disk('public_uploads')->mimeType($directory.$newName);
+                                    $fileIds = [];
+                                    foreach (['bg', 'en'] as $code) {
+                                        //TODO catch file version
+                                        //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                                        $version = 0;
+                                        $newFile = new File([
+                                            'id_object' => $ourPc[$item->id],
+                                            'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                                            'filename' => $newName,
+                                            'content_type' => $contentType,
+                                            'path' => $directory.$newName,
+                                            'description_' . $code => !empty($item->description) ? $item->description : $item->name,
+                                            'sys_user' => $ourUsers[(int)$item->old_user_id] ?? null,
+                                            'locale' => $code,
+                                            'version' => ($version + 1) . '.0',
+                                            'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
+                                            'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
+                                            'import_old_id' => $item->file_old_id
+                                        ]);
+                                        $newFile->save();
+                                        $fileIds[] = $newFile->id;
+                                        $ocr = new FileOcr($newFile->refresh());
+                                        $ocr->extractText();
+                                    }
+
+                                    File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                    File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                    $this->comment('File ID '.$newFile->id.' Successfully saved for PC ID '.$ourPc[$item->id]. ' Old ID: '.$item->id );
+                                } else{
+                                    $this->comment('Can\'t copy file');
                                 }
-
-                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                                $this->comment('File ID '.$newFile->id.' Successfully saved for PC ID '.$ourPc[$item->id]. ' Old ID: '.$item->id );
-                            } else{
-                                $this->comment('Can\'t copy file');
                             }
-
                             DB::commit();
-//                            dd($newFile->id, $item->file_old_id, 'pc id:'. $item->id);
+
                         } catch (\Exception $e) {
                             Log::error('Migration old strategy public consultations, comment and files: ' . $e);
                             DB::rollBack();
