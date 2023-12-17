@@ -58,7 +58,7 @@ class seedOldPublicConsultationFiles extends Command
 
 //        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
         $ourPc = PublicConsultation::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
-        $ourFiles = File::where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->whereNotNull('import_old_id')->withTrashed()->get()->pluck('id', 'import_old_id')->toArray();
+        $ourFiles = File::where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)->whereNotNull('import_old_id')->get()->pluck('id', 'import_old_id')->toArray();
         $ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
@@ -91,13 +91,17 @@ class seedOldPublicConsultationFiles extends Command
                         and f.id is not null
                         and folders.id is not null
                         and folders.id = 64 -- consultations
+                        and uf.tabletype = 3
                         -- check if uf.tabletype should be 3
                     order by p.datecreated desc
                     ');
 
                 if (sizeof($oldDbFiles)) {
                     foreach ($oldDbFiles as $item) {
-                        if(isset($ourFiles[(int)$item->file_old_id])) { continue; }
+                        if(isset($ourFiles[(int)$item->file_old_id])) {
+                            $this->comment('File with old id '.$item->file_old_id.' already exist');
+                            continue;
+                        }
 
                         DB::beginTransaction();
                         try {
