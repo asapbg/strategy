@@ -682,5 +682,29 @@ if (!function_exists('copyFile')) {
 
         return $copied_files;
     }
+
 }
+
+    if (!function_exists('canPreview')) {
+
+        /**
+         * Check if string is a json format.
+         * @param $file
+         * @return bool
+         */
+        function canPreview($file): bool
+        {
+            $can = false;
+            switch ($file->content_type) {
+                case 'application/pdf':
+                case 'application/msword':
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                    $can = true;
+                    break;
+            }
+
+            return $can;
+        }
+    }
 }

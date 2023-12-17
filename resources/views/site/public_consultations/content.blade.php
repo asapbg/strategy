@@ -230,9 +230,7 @@
                             <ul class="list-group list-group-flush">
                                 @foreach($documentsImport as $doc)
                                     <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ displayDate($doc->created_at) }}
-                                        </a>
+                                        @include('site.partial.file_preview_or_download', ['f' => $doc])
                                     </li>
                                 @endforeach
                             </ul>
