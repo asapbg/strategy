@@ -142,6 +142,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/pris/disconnect-documents', 'disconnectDocuments')->name('pris.disconnect');
         Route::match(['put', 'post'], '/pris/edit', 'store')->name('pris.store');
         Route::post('/pris/{item}/delete', 'destroy')->name('pris.delete');
+        Route::get('/pris/tag/ajax-form/{item}','ajaxForm')->name('pris.tag.ajax.form');
+        Route::post('/pris/tag/ajax-store/{item}','ajaxStore')   ->name('pris.tag.ajax.create');
     });
 
     //Dynamic Structures

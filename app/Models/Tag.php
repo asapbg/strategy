@@ -60,4 +60,26 @@ class Tag extends ModelActivityExtend implements TranslatableContract
             ->orderBy('tag_translations.label', 'asc')
             ->get();
     }
+
+    public static function select2AjaxOptions($filters)
+    {
+        $q = DB::table('tag')
+            ->select(['tag.id', DB::raw('tag_translations.label as name')])
+            ->join('tag_translations', function ($j){
+                $j->on('tag.id', '=', 'tag_translations.tag_id')
+                    ->where('tag_translations.locale', '=', app()->getLocale());
+            });
+
+        if(isset($filters['search'])) {
+            $q->where('tag_translations.label', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        if(isset($filters['exclude']) && (int)$filters['exclude']) {
+            $q->where('tag.id', '<>', (int)$filters['exclude']);
+        }
+
+        $q->whereNull('tag.deleted_at');
+
+        return $q->get();
+    }
 }

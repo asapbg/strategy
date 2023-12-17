@@ -22,7 +22,7 @@
                         @default
                             <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"
                                    class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"
-                                   value="{{ $value ?? old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
+                                   value="{{ $value ?? old($fieldName, (isset($item) && $item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
                     @endswitch
                     @error($fieldName)
                     <div class="text-danger mt-1">{{ $message }}</div>
