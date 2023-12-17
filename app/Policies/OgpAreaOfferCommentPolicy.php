@@ -65,7 +65,7 @@ class OgpAreaOfferCommentPolicy
      */
     public function delete(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
     {
-        return $this->viewAny($user);
+        return $user->id == $ogpAreaOfferComment->users_id && $ogpAreaOfferComment->offer->area->status->can_edit;
     }
 
     /**

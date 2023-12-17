@@ -34,4 +34,9 @@ return [
     'title_content' => "Заглавие/Съдържание",
     'unlimited' => "Безсрочен",
     'comment_field_required' => "Коментарът е задължителен",
+    'comment_delete_title' => 'Изтриване на коментар',
+    'ogp_area_delete_title' => 'Изтриване на област',
+    'comment_delete_warning' => 'Сигурни ли сте, че искате да изтриете този коментар?',
+    'ogp_area_delete_warning' => 'Сигурни ли сте, че искате да изтриете този област?',
+
 ];

@@ -1,4 +1,4 @@
-<div class="row mb-4">
+<div class="row mb-4" id="ogp-area-row-{{ $item->id }}">
     <div class="col-md-12">
         <div class="consul-wrapper">
             <div class="single-consultation d-flex">
@@ -15,9 +15,18 @@
                             </div>
                             <div class="consult-item-header-edit">
                                 @can('delete', $item)
-                                <a href="#delete">
-                                    <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
-                                </a>
+                                    @php
+                                        $modalId = 'modal_ogp_area_'. $item->id;
+                                        $deleteUrl = route('admin.ogp.area.delete', $item->id);
+                                        $rowId = 'ogp-area-row-'. $item->id;
+                                        $warningTitle = __('ogp.comment_delete_title');
+                                        $warningMessage = __('ogp.ogp_area_delete_warning');
+                                    @endphp
+                                    <x-modal.delete :modal_id="$modalId" :url="$deleteUrl" :row_id="$rowId" :title="$warningTitle" :warning_message="$warningMessage" >
+                                        <a href="javascript:;" class="show-delete-modal" data-id="{{ $modalId }}" data-toggle="modal" data-target="#{{ $modalId }}">
+                                            <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
+                                        </a>
+                                    </x-modal.delete>
                                 @endcan
                                 @can('update', $item)
                                 <a href="{{ route('admin.ogp.area.edit', ['id' => $item->id]) }}">

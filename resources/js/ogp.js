@@ -29,4 +29,20 @@ $(function() {
         });
     });
 
+    $(document).on('click', '.ajax-modal-delete', function() {
+        ShowLoadingSpinner();
+
+        $.post($(this).data('url'), {
+            '_token': $('meta[name="csrf-token"]').attr('content'),
+            'row_id': $(this).data('row-id')
+        }, function(response) {
+            HideLoadingSpinner();
+            if(response.error) {
+                alert(response.message)
+            } else {
+                $('#'+response.row_id).remove();
+            }
+        });
+    });
+
 });

@@ -19,7 +19,12 @@ class OgpAreaOfferComment extends ModelActivityExtend
     //activity
     protected string $logName = "ogp_area_offer_comment";
 
-    protected $fillable = ['ogp_area_id', 'users_id', 'content'];
+    protected $fillable = ['ogp_area_offer_id', 'users_id', 'content'];
+
+    public function offer(): HasOne
+    {
+        return $this->hasOne(OgpAreaOffer::class, 'id', 'ogp_area_offer_id');
+    }
 
     public function author(): HasOne
     {

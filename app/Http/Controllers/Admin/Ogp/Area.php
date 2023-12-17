@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Ogp;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\OgpAreaRequest;
 use App\Models\OgpArea;
+use App\Models\OgpAreaOfferComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -76,5 +77,32 @@ class Area extends AdminController
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
+    }
+
+    public function destroy(Request $request, OgpArea $area): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        if($user->cannot('delete', $area)) {
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.no_rights_to_view_content')
+            ]);
+        }
+
+        try {
+            $area->delete();
+            return response()->json([
+                'error' => 0,
+                'row_id' => $request->get('row_id')
+            ]);
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.system_error')
+            ]);
+        }
     }
 }

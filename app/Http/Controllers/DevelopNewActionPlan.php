@@ -8,6 +8,7 @@ use App\Models\OgpArea;
 use App\Models\OgpAreaArrangement;
 use App\Models\OgpAreaCommitment;
 use App\Models\OgpAreaOffer;
+use App\Models\OgpAreaOfferComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -143,4 +144,32 @@ class DevelopNewActionPlan extends Controller
             'html' => view('site.ogp.develop_new_action_plan.comment_row', compact('comment'))->render()
         ]);
     }
+
+    public function deleteComment(Request $request, OgpAreaOfferComment $comment): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        if($user->cannot('delete', $comment)) {
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.no_rights_to_view_content')
+            ]);
+        }
+
+        try {
+            $comment->delete();
+            return response()->json([
+                'error' => 0,
+                'row_id' => $request->get('row_id')
+            ]);
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.system_error')
+            ]);
+        }
+    }
+
 }

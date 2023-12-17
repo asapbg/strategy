@@ -530,5 +530,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('edit/{id}', 'edit')->name('ogp.area.edit');
         Route::post('edit/store', 'store')->name('ogp.area.create_store');
         Route::put('edit/store', 'store')->name('ogp.area.edit_store');
+        Route::post('delete/{area}', 'destroy')->name('ogp.area.delete');
     });
 });
