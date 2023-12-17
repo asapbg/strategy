@@ -10,6 +10,8 @@ use App\Models\File;
 use App\Models\Pris;
 use App\Models\PrisTranslation;
 use App\Models\PublicConsultationContact;
+use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentTranslation;
 use App\Models\Timeline;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -126,6 +128,16 @@ class clearDb extends Command
                     Schema::enableForeignKeyConstraints();
                 }
 
+                break;
+
+            case 'sd':
+                $ids = StrategicDocument::whereNotNull('old_id')->pluck('id');
+
+                StrategicDocumentTranslation::whereIn('strategic_document_id', $ids)->forceDelete();
+                CommonController::fixSequence('strategic_document_translations');
+
+                StrategicDocument::whereIn('id', $ids)->forceDelete();
+                CommonController::fixSequence('strategic_document');
                 break;
             default:
                 $this->error('Section not found!');

@@ -115,7 +115,7 @@ class seedOldStrategicDocuments extends Command
                 );
 
                 $title = $data['title'];
-                $description = $data['description'];
+                $description = htmlspecialchars_decode($data['description']);
 
                 // Create accept act institution if missing
                 $acceptingInstitution = $acceptingInstitutions->where('name', $data['institution_type_name'])->first();
