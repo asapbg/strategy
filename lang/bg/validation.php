@@ -171,7 +171,55 @@ return [
         ],
         'a' => [
             'required' => 'Изберете поне един отговор'
-        ]
+        ],
+        'problem_to_solve.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'goals.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'interested_parties.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.description' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.positive_impact' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.negative_impact' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.small_mid_impact' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.admin_weight' => [
+            'required' => 'Полето е задължително'
+        ],
+        'comparison.*.*.*.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'chosen_variants.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'change_admin_weight_text' => [
+            'required_if' => 'Полето е задължително'
+        ],
+        'affects_regulatory_acts_text' => [
+            'required_if' => 'Полето е задължително'
+        ],
+        'affects_registry_text' => [
+            'required_if' => 'Полето е задължително'
+        ],
+        'not_conducted_consultations_text' => [
+            'required_if' => 'Полето е задължително'
+        ],
+        'is from eu text ' => [
+            'required_if' => 'Полето е задължително'
+        ],
+        'potential_risks' => [
+            'required' => 'Полето е задължително'
+        ],
     ],
 
     /*
@@ -473,5 +521,9 @@ return [
         'framework_description_bg' => 'Описание',
         'framework_description_en' => 'Описание',
         'npo_presenter' => 'НПО представител',
+        'contact_person' => 'Лице за контакт',
+        'regulatory_act' => 'Нормативен акт',
+        'applications' => 'Приложения',
+        'info_sources' => 'Информационни източници',
     ],
 ];

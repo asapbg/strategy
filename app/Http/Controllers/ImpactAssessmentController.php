@@ -95,7 +95,7 @@ class ImpactAssessmentController extends Controller
             if ($validator->fails()) {
                 return redirect()
                     ->route('impact_assessment.form', ['form' => $formName, 'step' => $currentStep, 'inputId' => $inputId])
-                    ->withErrors($validator->errors());
+                    ->withInput()->withErrors($validator->errors());
             }
         }
 

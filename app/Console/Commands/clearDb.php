@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\CommonController;
+use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\Consultations\PublicConsultationTranslation;
 use App\Models\File;
@@ -113,6 +114,9 @@ class clearDb extends Command
                             $deleted = 0;
                         }
                     }
+
+                    Comments::where('object_code', '>=', Comments::PC_OBJ_CODE)->where('object_id', '=>', $fromId->id)->forceDelete();
+                    CommonController::fixSequence('comments');
 
                     PublicConsultationTranslation::where('public_consultation_id', '>=', $fromId->id)->forceDelete();
                     CommonController::fixSequence('pris_translations');

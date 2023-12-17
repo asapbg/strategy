@@ -171,7 +171,7 @@ class seedOldUsers extends Command
         //max id in old db
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.users.userid) from dbo.users');
         //start from this id in old database
-        $currentStep = (int)DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+        $currentStep = (int)(DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max) + 1;
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -209,7 +209,7 @@ class seedOldUsers extends Command
                     join dbo.roles roles on roles.roleid = uroles.roleid
                     left join dbo.profile profile on profile.userid = u.userid
                     where u.userid >= '.(int)$currentStep.'
-                    -- order by u.userid
+                    order by u.userid asc
                     group by u.userid, m.userid, profile.userid');
 
                 if (sizeof($oldDbResult)) {

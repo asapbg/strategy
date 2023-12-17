@@ -83,7 +83,8 @@ class seedOldPublicConsultations extends Command
 
         $ourUsersInstitutions = User::withTrashed()->get()->pluck('institution_id', 'old_id')->toArray();
         $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
-        $ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
+
+        //$ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -130,9 +131,10 @@ class seedOldPublicConsultations extends Command
                     DB::beginTransaction();
                     try {
                         foreach ($oldDbResult as $item) {
-                            $comments = [];
-                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                            $institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
+//                            //$institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                            $institutionId = $dInstitution->id;
+                            //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
+                            $institutionLevel = $dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level;
 
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
@@ -162,6 +164,7 @@ class seedOldPublicConsultations extends Command
                             $newPc->fill($prepareNewPc);
                             $newPc->save();
                             if($newPc) {
+                                $comments = [];
                                 $newPc->reg_num = $newPc->id.'-K';
                                 foreach ($locales as $locale) {
                                     $newPc->translateOrNew($locale['code'])->title = $prepareNewPc['title'];
@@ -178,14 +181,16 @@ class seedOldPublicConsultations extends Command
                                         case when pcomments.isactive = true then 1 else 0 end as active,
                                         case when pcomments.isapproved  = true then 1 else 0 end as approved
                                     from dbo.publicconsultationcomments pcomments
-                                    where pcomments.consultationid = '.$newPc->id.'
+                                    where pcomments.consultationid = '.$item->old_id.'
                                     order by pcomments.datecreated asc');
 
                                 if(sizeof($oldDbComments)) {
                                     foreach ($oldDbComments as $c) {
+                                        $content = str_replace('&quot;', '"', $c->content);
+                                        $content = str_replace('\n', '<br>', $content);
                                         $newComment = Comments::create([
                                             'user_id' => $ourUsers[$c->user_id] ?? null,
-                                            'content' => $c->content,
+                                            'content' => $content,
                                             'object_code' => Comments::PC_OBJ_CODE,
                                             'object_id' => $newPc->id,
                                             'created_at' => $c->created_at,
@@ -204,7 +209,7 @@ class seedOldPublicConsultations extends Command
                     } catch (\Exception $e) {
                         Log::error('Migration old startegy public consultations, comment and files: ' . $e);
                         DB::rollBack();
-                        dd($prepareNewPc, $comments);
+                        dd($prepareNewPc, $comments ?? []);
                     }
                 }
                 $currentStep += $step;

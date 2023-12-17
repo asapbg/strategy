@@ -6,7 +6,7 @@
 
 @include('form_partials.shared.variant', ['point' => 4])
 
-<div class="row">
+<div class="row mt-5">
     <div class="col-sm-12">
         <h5>5. Сравняване на вариантите:</h5>
         <p>Степени на изпълнение по критерии: 1) висока; 2) средна; 3) ниска.</p>

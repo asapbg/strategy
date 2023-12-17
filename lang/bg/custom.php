@@ -634,7 +634,7 @@ return [
     'reseniia' => 'Решения',
     'reseniia_slug_one' => 'Решение',
     'postanovleniia' => 'Постановления',
-    'postanovleniia_slug_one' => 'Протоколно решение',
+    'postanovleniia_slug_one' => 'Постановление',
     'protokolni_reseniia' => 'Протоколни решения',
     'protokolni-reseniia' => 'Протоколни решения',
     'protokolni_reseniia_slug_one' => 'Протоколно решение',
