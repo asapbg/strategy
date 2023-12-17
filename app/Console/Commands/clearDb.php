@@ -115,12 +115,12 @@ class clearDb extends Command
                 break;
 
             case 'sd':
-                $ids = StrategicDocument::whereNotNull('old_id')->pluck('id');
+                $ids = StrategicDocument::whereNotNull('old_id')->withTrashed()->get()->pluck('id');
 
                 StrategicDocumentTranslation::whereIn('strategic_document_id', $ids)->forceDelete();
                 CommonController::fixSequence('strategic_document_translations');
 
-                StrategicDocument::whereIn('id', $ids)->forceDelete();
+                StrategicDocument::whereIn('id', $ids)->withTrashed()->forceDelete();
                 CommonController::fixSequence('strategic_document');
                 break;
             default:
