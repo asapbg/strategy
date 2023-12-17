@@ -32,4 +32,6 @@ return [
     'from_date' => "Срок от",
     'to_date' => "Срок до",
     'title_content' => "Заглавие/Съдържание",
+    'unlimited' => "Безсрочен",
+    'comment_field_required' => "Коментарът е задължителен",
 ];

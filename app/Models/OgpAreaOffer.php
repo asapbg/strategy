@@ -36,4 +36,9 @@ class OgpAreaOffer extends ModelActivityExtend
     {
         return $this->hasMany(OgpAreaCommitment::class, 'ogp_area_offer_id', 'id');
     }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(OgpAreaOfferComment::class, 'ogp_area_offer_id', 'id');
+    }
 }

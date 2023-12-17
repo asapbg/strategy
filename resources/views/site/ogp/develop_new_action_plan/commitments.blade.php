@@ -1,9 +1,9 @@
-@php $fi = 1; @endphp
+{{--@php $ci = 1; @endphp--}}
 @foreach($item->commitments as $c)
     @php $ci = $loop->iteration; @endphp
     <div class="col-md-12 mb-3">
         <p class="fs-18 fw-600 mb-2">
-            {{ $fi }}. {{ $c->name }}
+            {{ $ci }}. {{ $c->name }}
         </p>
         @foreach($c->arrangements as $a)
             @php $ai = $loop->iteration; @endphp

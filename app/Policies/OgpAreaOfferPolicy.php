@@ -16,7 +16,7 @@ class OgpAreaOfferPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): \Illuminate\Auth\Access\Response|bool
     {
         return $user->id;
     }
@@ -53,7 +53,7 @@ class OgpAreaOfferPolicy
      */
     public function update(User $user, OgpAreaOffer $ogpAreaOffer)
     {
-        return $this->viewAny($user) && $user->id == $ogpAreaOffer->users_id;
+        return $this->viewAny($user) && $user->id == $ogpAreaOffer->users_id && $ogpAreaOffer->area->status->can_edit;
     }
 
     /**
@@ -90,5 +90,15 @@ class OgpAreaOfferPolicy
     public function forceDelete(User $user, OgpAreaOffer $ogpAreaOffer)
     {
         return false;
+    }
+
+    /**
+     * @param User $user
+     * @param OgpAreaOffer $ogpAreaOffer
+     * @return bool
+     */
+    public function createComment(User $user, OgpAreaOffer $ogpAreaOffer): bool
+    {
+        return $ogpAreaOffer->area->status->can_edit;
     }
 }

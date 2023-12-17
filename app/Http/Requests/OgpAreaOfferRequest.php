@@ -28,9 +28,8 @@ class OgpAreaOfferRequest extends FormRequest
         if($offer) {
             return [
                 'commitment_name' => 'required_without:commitment_id|max:255',
-                'commitment_id' => 'required_without:commitment_name|gt:0',
-                'arrangement_name' => 'required_without:arrangement_id|max:255',
-                'arrangement_id' => 'required_without:arrangement_name|gt:0',
+                'commitment_id' => 'required_without:commitment_name',
+                'arrangement_name' => 'required|max:255',
                 'fields.*' => 'required'
             ];
         }
@@ -42,13 +41,11 @@ class OgpAreaOfferRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         $messages = parent::messages();
-
         $messages['commitment_id.gt'] = __('validation.required');
         $messages['arrangement_id.gt'] = __('validation.required');
-
         return $messages;
     }
 

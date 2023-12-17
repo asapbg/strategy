@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 @endif
-                <div @class(["col-md-12" => !$hasOffer, 'col-md-6' => $hasOffer])>
+                <div class="col-md-12">
                     <div class="input-group ">
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="arrangement_name" class="form-label fw-600">
@@ -64,40 +64,25 @@
                         </div>
                     </div>
                 </div>
-                @if($hasOffer)
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="arrangement_id" class="form-label fw-600">{{ __('ogp.exists_arrangement') }}</label>
-                                <select name="arrangement_id" id="arrangement_id" class="form-select @error('arrangement_id'){{ 'is-invalid' }}@enderror">
-                                    <option value="0"></option>
-                                    @foreach($offer->commitments as $v)
-                                        <optgroup label="{{ $v->name }}">
-                                        @foreach($v->arrangements as $a)
-                                            <option value="{{ $a->id }}" @if(old('arrangement_id') == $a->id) selected="selected" @endif>{{ $a->name }}</option>
-                                        @endforeach
-                                        </optgroup>
-                                    @endforeach
-                                </select>
-                                @error('arrangement_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                @endif
                 @foreach(\App\Enums\OgpAreaArrangementFieldEnum::options() as $v)
                 <div class="col-md-12">
-                    <div class="input-group ">
-                        <div class="mb-3 d-flex flex-column  w-100">
-                            <label for="field_{{ $v }}" class="form-label fw-600">
-                                {{ __('ogp.arrangement_fields.'.$v) }}
-                            </label>
-                            <input type="text" name="fields[{{$v}}]" id="field_{{ $v }}" class="form-control @error('fields.'.$v){{ 'is-invalid' }}@enderror" value="{{ old('fields.'.$v) }}">
-                            @error('fields.'.$v)
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
+                    <div class="mb-3 d-flex flex-column w-100">
+                        <label for="field_{{ $v }}" class="form-label fw-600">
+                            {{ __('ogp.arrangement_fields.'.$v) }}
+                        </label>
+                        <div class="input-group">
+                            <input type="text" name="fields[{{$v}}]" id="field_{{ $v }}"
+                                   class="form-control @error('fields.'.$v){{ 'is-invalid' }}@enderror" @if(old('unlimited', 0) == 1) disabled @endif
+                                   value="{{ old('fields.'.$v) }}">
+                            @if($v == \App\Enums\OgpAreaArrangementFieldEnum::DEADLINE->value)
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0 me-2 unlimited-time" name="unlimited" type="checkbox" value="1" @if(old('unlimited', 0) == 1) checked="checked" @endif>{{ __('ogp.unlimited') }}
+                                </div>
+                            @endif
                         </div>
+                        @error('fields.'.$v)
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 @endforeach

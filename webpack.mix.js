@@ -27,6 +27,7 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.bg.min.js',
         'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.js',
         'resources/js/site.js',
+        'resources/js/ogp.js',
     ], 'public/js/app_vendor.js')
     .styles([
         'resources/adminlte-3.2/plugins/select2/css/select2.min.css',

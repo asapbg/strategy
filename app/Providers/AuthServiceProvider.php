@@ -7,11 +7,11 @@ use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\OgpArea;
-use App\Models\OgpAreaMeasure;
 use App\Models\OgpAreaOffer;
+use App\Models\OgpAreaOfferComment;
 use App\Models\Setting;
 use App\Policies\LegislativeProgramPolicy;
-use App\Policies\OgpAreaMeasurePolicy;
+use App\Policies\OgpAreaOfferCommentPolicy;
 use App\Policies\OgpAreaOfferPolicy;
 use App\Policies\OgpAreaPolicy;
 use App\Policies\OperationalProgramPolicy;
@@ -33,8 +33,8 @@ class AuthServiceProvider extends ServiceProvider
         OperationalProgram::class => OperationalProgramPolicy::class,
         Setting::class => SettingsPolicy::class,
         OgpArea::class => OgpAreaPolicy::class,
-        OgpAreaMeasure::class => OgpAreaMeasurePolicy::class,
         OgpAreaOffer::class => OgpAreaOfferPolicy::class,
+        OgpAreaOfferComment::class => OgpAreaOfferCommentPolicy::class,
     ];
 
     /**

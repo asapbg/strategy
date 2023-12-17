@@ -59,8 +59,10 @@
                 </div>
 
                 {{--comments --}}
-                @include('site.ogp.develop_new_action_plan.comment_row')
-                @include('site.ogp.develop_new_action_plan.add_comment')
+                <div id="offer-comments-{{ $item->id }}">
+                    @each('site.ogp.develop_new_action_plan.comment_row', $item->comments, 'comment')
+                </div>
+                @include('site.ogp.develop_new_action_plan.add_comment', ['offer' => $item])
             </div>
         </div>
     </div>

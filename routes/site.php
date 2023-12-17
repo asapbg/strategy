@@ -145,4 +145,7 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::post('develop-a-new-action-plans/store/{otg_area_id}', 'store')->name('ogp.develop_new_action_plans.store')->whereNumber('otg_area_id');
     Route::get('develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
 
+    Route::post('develop-a-new-action-plans/add-comment/{offer}', 'storeComment')->name('ogp.develop_new_action_plans.add_comment');
+
+
 });

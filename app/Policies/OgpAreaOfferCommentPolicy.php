@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\OgpAreaMeasure;
+use App\Models\OgpAreaOfferComment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class OgpAreaMeasurePolicy
+class OgpAreaOfferCommentPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class OgpAreaMeasurePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaMeasure  $ogpAreaMeasure
+     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, OgpAreaMeasure $ogpAreaMeasure)
+    public function view(User $user, OgpAreaOfferComment $ogpAreaOfferComment)
     {
         return $this->viewAny($user);
     }
@@ -48,22 +48,22 @@ class OgpAreaMeasurePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaMeasure  $ogpAreaMeasure
+     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, OgpAreaMeasure $ogpAreaMeasure)
+    public function update(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
     {
-        return $this->viewAny($user);
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaMeasure  $ogpAreaMeasure
+     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, OgpAreaMeasure $ogpAreaMeasure)
+    public function delete(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
     {
         return $this->viewAny($user);
     }
@@ -72,10 +72,10 @@ class OgpAreaMeasurePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaMeasure  $ogpAreaMeasure
+     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, OgpAreaMeasure $ogpAreaMeasure)
+    public function restore(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
     {
         return false;
     }
@@ -84,10 +84,10 @@ class OgpAreaMeasurePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaMeasure  $ogpAreaMeasure
+     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, OgpAreaMeasure $ogpAreaMeasure)
+    public function forceDelete(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
     {
         return false;
     }

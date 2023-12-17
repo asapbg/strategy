@@ -10,6 +10,7 @@ use App\Models\OgpAreaCommitment;
 use App\Models\OgpAreaOffer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class DevelopNewActionPlan extends Controller
@@ -41,9 +42,8 @@ class DevelopNewActionPlan extends Controller
         $item = OgpArea::findOrFail($otg_area_id);
         $fields = $request->get('fields');
         $offer_id = $request->get('offer', 0);
-dd($validated);
+
         try {
-            //TODO: if offer id is set dont create new offer
             if($offer_id) {
                 $offer = OgpAreaOffer::findOrFail($offer_id);
             } else {
@@ -54,26 +54,19 @@ dd($validated);
             }
 
             if($offer) {
-
-                if(true) {
+                if(!is_null($validated['commitment_id']) && $validated['commitment_id']) {
                     $commitment = OgpAreaCommitment::findOrFail($validated['commitment_id']);
                 } else {
-                    //create commitment
                     $commitment = $offer->commitments()->create([
                         'name' => $validated['commitment_name']
                     ]);
                 }
 
                 if($commitment) {
-
-                    if($validated['arrangement_id']) {
-                        $arrangement = OgpAreaArrangement::findOrFail($validated['arrangement_id']);
-                    } else {
-                        //create arrangements
-                        $arrangement = $commitment->arrangements()->create([
-                            'name' => $validated['arrangement_name']
-                        ]);
-                    }
+                    //create arrangements
+                    $arrangement = $commitment->arrangements()->create([
+                        'name' => $validated['arrangement_name']
+                    ]);
 
                     if($arrangement) {
                         //create commitment fields
@@ -81,18 +74,18 @@ dd($validated);
                         foreach (OgpAreaArrangementFieldEnum::options()  as $key => $value) {
                             $fieldsData[] = [
                                 'name' => $key,
-                                'content' => $value,
+                                'content' => $fields[$value] ?? '',
                                 'is_system' => isset($fields[$value]),
                             ];
                         }
                         if($fieldsData) {
-                            $fields = $arrangement->fields()->createMany($fieldsData);
+                            $arrangement->fields()->createMany($fieldsData);
                         }
                     }
 
                 }
 
-            }
+            } // offer
 
             return to_route('ogp.develop_new_action_plans.show', $item->id)
                 ->with('success', trans_choice('custom.ogp_areas', 1)." ".__('messages.updated_successfully_f'));
@@ -103,8 +96,7 @@ dd($validated);
 
     }
 
-
-    public function editOffer(Request $request, OgpAreaOffer $offer)
+    public function editOffer(Request $request, OgpAreaOffer $offer): View|\Illuminate\Http\RedirectResponse
     {
         $user = $request->user();
 
@@ -116,5 +108,39 @@ dd($validated);
 
 
         return $this->view('site.ogp.offer.edit', compact('offer', 'ogpArea'));
+    }
+
+    public function storeComment(Request $request, OgpAreaOffer $offer): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+
+        if($user->cannot('createComment', $offer)) {
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.no_rights_to_view_content')
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'content' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 1,
+                'message' => __('ogp.comment_field_required')
+            ]);
+        }
+
+        $comment = $offer->comments()->create([
+            'content' => $request->get('content'),
+            'users_id' => $user->id
+        ]);
+
+        return response()->json([
+            'error' => 0,
+            'offer_id' => $offer->id,
+            'html' => view('site.ogp.develop_new_action_plan.comment_row', compact('comment'))->render()
+        ]);
     }
 }
