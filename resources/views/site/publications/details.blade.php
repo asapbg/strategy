@@ -77,7 +77,7 @@
             </div>
         @endif
 
-        <a class="btn btn-primary mt-4 mb-5" href="{{ route('library.news') }}">Обратно към списъка с новини</a>
+        <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">Обратно към списъка с новини</a>
     </div>
 
 </div>

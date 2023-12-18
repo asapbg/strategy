@@ -65,7 +65,7 @@ class MigrateNewsAndPublications extends Command
                 SELECT id,name,datecreated,datemodified
                   FROM newscategories
                  WHERE isdeleted = FALSE AND isactive = TRUE AND isapproved = TRUE AND languageid = '1'
-                 LIMIT 1
+                 --LIMIT 1
             ");
 
         foreach ($newsCategories as $newsCategory) {
@@ -88,8 +88,8 @@ class MigrateNewsAndPublications extends Command
             }
             $category->save();
 
-            $news = [];
-            $news = DB::connection('old_strategy_app')
+            $oldNews = [];
+            $oldNews = DB::connection('old_strategy_app')
                 ->select("
                     SELECT id,title,text,imagepath,date as published_at,datecreated as created_at,datemodified as updated_at, createdbyuserid
                       FROM news
@@ -98,11 +98,11 @@ class MigrateNewsAndPublications extends Command
                      --LIMIT 1
                 ");
 
-            if (count($news) == 0) {
+            if (count($oldNews) == 0) {
                 continue;
             }
 
-            foreach ($news as $row) {
+            foreach ($oldNews as $row) {
 
                 //dd($row);
                 $news_id = $row->id;
@@ -156,7 +156,7 @@ class MigrateNewsAndPublications extends Command
 
                 foreach ($languages as $lang) {
                     $news->translateOrNew($lang['code'])->title = $title;
-                    $news->translateOrNew($lang['code'])->short_content = (!empty($text)) ? Str::limit($text, 300) : null;
+                    $news->translateOrNew($lang['code'])->short_content = (!empty($text)) ? Str::limit($text, 400) : null;
                     $news->translateOrNew($lang['code'])->content = $text;
                 }
                 $news->save();
@@ -194,7 +194,7 @@ class MigrateNewsAndPublications extends Command
 
                                     $version = 0;
                                     $newFile = new File([
-                                        'id_object' => $news_id,
+                                        'id_object' => $news->id,
                                         'code_object' => File::CODE_OBJ_PUBLICATION,
                                         'filename' => $old_file->name,
                                         'content_type' => $mime_type,
@@ -238,7 +238,7 @@ class MigrateNewsAndPublications extends Command
                 SELECT id,name,datecreated,datemodified
                   FROM publicationcategories
                  WHERE isdeleted = FALSE AND isactive = TRUE AND isapproved = TRUE AND languageid = '1'
-                 LIMIT 1
+                 --LIMIT 1
             ");
 
         foreach ($publicationsCategories as $publicationsCategory) {
@@ -261,21 +261,22 @@ class MigrateNewsAndPublications extends Command
             }
             $category->save();
 
-            $publications = [];
-            $publications = DB::connection('old_strategy_app')
+            $oldPublications = [];
+            $oldPublications = DB::connection('old_strategy_app')
                 ->select("
                     SELECT id,title,text,image,date as published_at,datecreated as created_at,datemodified as updated_at, createdbyuserid
                       FROM publications
                      WHERE isdeleted = FALSE AND isactive = TRUE AND isapproved = TRUE AND languageid = '1'
                        AND publicationcategoryid = '$publicationcategoryid'
-                     --LIMIT 1
+                    --ORDER BY datecreated DESC
+                     --LIMIT 10
                 ");
 
-            if (count($publications) == 0) {
+            if (count($oldPublications) == 0) {
                 continue;
             }
 
-            foreach ($publications as $row) {
+            foreach ($oldPublications as $row) {
 
                 //dd($row);
                 $publications_id = $row->id;
@@ -292,9 +293,9 @@ class MigrateNewsAndPublications extends Command
                 $publications_row['created_at'] = $row->created_at;
                 $publications_row['updated_at'] = $row->updated_at;
 
-                $publications = new Publication();
-                $publications->fill($publications_row);
-                $publications->save();
+                $publication = new Publication();
+                $publication->fill($publications_row);
+                $publication->save();
 
                 //dump($row->image);
                 if (!empty($row->image)) {
@@ -311,7 +312,7 @@ class MigrateNewsAndPublications extends Command
                         $mime_type = mime_content_type($to);
                         if ($copied_file) {
                             $file = new File([
-                                'id_object' => $publications->id,
+                                'id_object' => $publication->id,
                                 'code_object' => File::CODE_OBJ_PUBLICATION,
                                 'filename' => $row->image,
                                 'content_type' => $mime_type,
@@ -321,18 +322,18 @@ class MigrateNewsAndPublications extends Command
                             $file->save();
 
                             if ($file) {
-                                $publications->file_id = $file->id;
+                                $publication->file_id = $file->id;
                             }
                         }
                     }
                 }
 
                 foreach ($languages as $lang) {
-                    $publications->translateOrNew($lang['code'])->title = $title;
-                    $publications->translateOrNew($lang['code'])->short_content = (!empty($text)) ? Str::limit($text, 300) : null;
-                    $publications->translateOrNew($lang['code'])->content = $text;
+                    $publication->translateOrNew($lang['code'])->title = $title;
+                    $publication->translateOrNew($lang['code'])->short_content = (!empty($text)) ? Str::limit($text, 400) : null;
+                    $publication->translateOrNew($lang['code'])->content = $text;
                 }
-                $publications->save();
+                $publication->save();
 
                 /**
                  * tabletype = 1 / New, tabletype = 2 / Publications
@@ -367,7 +368,7 @@ class MigrateNewsAndPublications extends Command
 
                                     $version = 0;
                                     $newFile = new File([
-                                        'id_object' => $news_id,
+                                        'id_object' => $publication->id,
                                         'code_object' => File::CODE_OBJ_PUBLICATION,
                                         'filename' => $old_file->name,
                                         'content_type' => $mime_type,

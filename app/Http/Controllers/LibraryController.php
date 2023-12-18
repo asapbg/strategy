@@ -91,7 +91,7 @@ class LibraryController extends Controller
             : "DESC";
         $order_by = ($request->offsetGet('order_by'))
             ? $request->offsetGet('order_by')
-            : "id";
+            : "published_at";
         $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
             ? "publication_translations"
             : "publication";
