@@ -36,7 +36,7 @@ class seedOldStrategicDocumentFiles extends Command
     {
         $formatTimestamp = 'Y-m-d H:i:s';
 
-        $maxOldId = DB::connection('old_strategy_app')->select('SELECT MAX(dbo.strategicdocuments.id) FROM dbo.strategicdocuments')[0]->max;
+        $maxOldId = StrategicDocument::select(DB::raw('MAX(old_id)'))->first()->max ?? 0;
 
         $ourDocs = StrategicDocument::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
         $ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
