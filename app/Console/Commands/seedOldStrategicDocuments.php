@@ -144,8 +144,6 @@ class seedOldStrategicDocuments extends Command
                 }
                 //
 
-                // TODO: This is seemingly missing from the old DB
-                $data['strategic_document_type_id'] = 1;
                 $data['user_id'] = $ourUsers[$oldDocument->user_id] ?? null;
 
                 unset(
