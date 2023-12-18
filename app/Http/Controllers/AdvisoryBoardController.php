@@ -30,7 +30,7 @@ class AdvisoryBoardController extends Controller
         $pageTitle = trans_choice('custom.advisory_boards', 2);
         $slider = ['title' => $pageTitle, 'img' => '/img/ms-w-2023.jpg'];
 
-        $field_of_actions = FieldOfAction::select('field_of_actions.*')
+        $field_of_actions = FieldOfAction::advisoryBoard()->select('field_of_actions.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(FieldOfAction::class)
             ->with(['translation'])
@@ -157,7 +157,7 @@ class AdvisoryBoardController extends Controller
     public function show(AdvisoryBoard $item)
     {
         $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
-            $query->with(['files', 'translations']);
+            $query->with(['files' => fn($query) => $query->with('versions'), 'translations']);
         }, 'npos' => function ($query) {
             $query->with('translations');
         }, 'members' => function($query) {

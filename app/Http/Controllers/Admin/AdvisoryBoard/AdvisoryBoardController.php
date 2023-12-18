@@ -21,7 +21,6 @@ use App\Models\ConsultationLevel;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
-use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use App\Services\AdvisoryBoard\AdvisoryBoardNpoService;
@@ -84,7 +83,7 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('create', AdvisoryBoard::class);
 
         $item = new AdvisoryBoard();
-        $policy_areas = PolicyArea::orderBy('id')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->orderBy('id')->get();
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
@@ -92,7 +91,7 @@ class AdvisoryBoardController extends AdminController
 
         return $this->view(
             'admin.advisory-boards.create',
-            compact('item', 'policy_areas', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions')
+            compact('item', 'field_of_actions', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions')
         );
     }
 
@@ -261,7 +260,7 @@ class AdvisoryBoardController extends AdminController
             $query->with('translations');
         }])->find($item->id);
 
-        $field_of_actions = FieldOfAction::with('translations')->orderBy('id')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
