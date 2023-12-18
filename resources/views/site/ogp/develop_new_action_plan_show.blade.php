@@ -43,7 +43,7 @@
             <div class="col-md-12">
                 <h2 class="obj-title mb-4">{{ __('ogp.list_all_proposals') }}</h2>
                 <div class="accordion" id="accordionExample">
-                    @foreach($ogpArea->offers as $item)
+                    @foreach($ogpArea->offers()->orderBy('created_at', 'desc')->get() as $item)
                         @include('site.ogp.develop_new_action_plan.ogp_are_offer_row')
                     @endforeach
                 </div>

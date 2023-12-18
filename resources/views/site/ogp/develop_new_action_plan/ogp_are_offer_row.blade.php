@@ -37,13 +37,8 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-end mb-0">
-                                                <a href="#" class="me-2 text-decoration-none">
-                                                    10 <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
-                                                </a>
-                                                <a href="#" class="text-decoration-none">
-                                                    1 <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
-                                                </a>
+                                            <div class="text-end mb-0" id="offer-vote-{{ $item->id }}">
+                                               @include('site.ogp.partial.vote', ['item' => $item, 'route' => 'ogp.develop_new_action_plans.vote', 'container' => 'offer-vote-'.$item->id])
                                             </div>
                                         </div>
                                     </div>

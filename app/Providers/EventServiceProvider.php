@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\OgpAreaOfferVote;
 use App\Observers\CommentsObserver;
+use App\Observers\OgpAreaOfferVoteObserver;
 use App\Observers\PublicConsultationObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -31,6 +33,8 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         PublicConsultation::class => [PublicConsultationObserver::class],
         Comments::class => [CommentsObserver::class],
+        OgpAreaOfferVote::class => [OgpAreaOfferVoteObserver::class],
+
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\OgpAreaOffer;
+use App\Models\OgpAreaOfferVote;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -100,5 +101,16 @@ class OgpAreaOfferPolicy
     public function createComment(User $user, OgpAreaOffer $ogpAreaOffer): bool
     {
         return $ogpAreaOffer->area->status->can_edit;
+    }
+
+    /**
+     * @param User $user
+     * @param OgpAreaOffer $ogpAreaOffer
+     * @return bool
+     */
+    public function vote(User $user, OgpAreaOffer $ogpAreaOffer): bool
+    {
+        $exits = OgpAreaOfferVote::VoteExits($ogpAreaOffer->id, $user->id);
+        return !$exits;
     }
 }

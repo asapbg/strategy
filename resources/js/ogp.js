@@ -45,4 +45,22 @@ $(function() {
         });
     });
 
+    $(document).on('click', '.ogp-vote-ajax', function(e) {
+        e.preventDefault();
+        ShowLoadingSpinner();
+
+        $.post($(this).attr('href'), {
+            '_token': $('meta[name="csrf-token"]').attr('content'),
+            'container': $(this).data('container')
+        }, function(response) {
+            HideLoadingSpinner();
+            if(response.error) {
+                alert(response.message)
+            } else {
+                $('#'+response.container).html(response.html);
+            }
+        });
+
+    });
+
 });
