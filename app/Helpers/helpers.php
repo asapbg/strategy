@@ -738,4 +738,27 @@ if (!function_exists('copyFile')) {
             return $can;
         }
     }
+
+    if (!function_exists('getOldFileInformation')) {
+
+        /**
+         * Get information for an old file from the old db.
+         * It's using the lportal.dlfileentry table.
+         *
+         * @param       $search_name - The file name.
+         * @param array $files       - Array of file objects.
+         *
+         * @return mixed|null
+         */
+        function getOldFileInformation($search_name, array $files): object|null
+        {
+            foreach ($files as $file) {
+                if ($file->name == $search_name) {
+                    return $file;
+                }
+            }
+
+            return null;
+        }
+    }
 }
