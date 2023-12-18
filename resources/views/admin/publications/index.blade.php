@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ __('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type)) }}</td>
+                                    <td>{{ trans_choice('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type), 1) }}</td>
                                     <td>@if($item->category){{ $item->category->name }}@endif</td>
                                     <td>{{ displayDate($item->published_at) }}</td>
                                     <td>

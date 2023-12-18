@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\PublicationTypesEnum;
-use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
 use App\Models\File;
@@ -12,7 +11,6 @@ use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 

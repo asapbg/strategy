@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
+use App\Models\PublicationCategory;
 use App\Models\User;
 use App\Services\FileOcr;
 use Exception;
@@ -325,6 +326,8 @@ class Controller extends BaseController
             };
             if ($redirect) {
                 return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
+            } else {
+                return $newFile;
             }
         } catch (Exception $e) {
             logError('Upload file', $e->getMessage());

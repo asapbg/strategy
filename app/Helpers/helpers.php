@@ -276,7 +276,7 @@ function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', s
         $options[] = ['value' => $anyValue, 'name' => $anyName];
     }
     foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
-        $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.' . $key)];
+        $options[] = ['value' => $value, 'name' => trans_choice("custom.public_sections.types.$key", 1)];
     }
     return $options;
 }

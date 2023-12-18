@@ -429,9 +429,9 @@ return [
     'settings.advisory_boards_text_en'                     => 'Начален текст в рздела (EN)',
     //public sections
     'public_sections'                           => 'Публична секция|Публични секции',
-    'public_sections.types.TYPE_LIBRARY'        => 'Публикация',
+    'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
-    'public_sections.types.TYPE_NEWS'           => 'Новина',
+    'public_sections.types.TYPE_NEWS'           => 'Новина|Новини',
     //dynamic structures
     'dynamic_structures.columns'                => 'Поле (динамична структура)|Полета (динамични структури)',
     'dynamic_structures'                        => 'Динамична структура|Динамични структури',
