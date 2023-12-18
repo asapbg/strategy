@@ -90,6 +90,8 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
             $copied_files = copyFiles($directory_to_copy_from, $directory, $framework->folderID);
 
             if (!empty($copied_files)) {
+                $old_establishment_files_db = DB::connection('old_strategy')->select("select * from dlfileentry d where d.\"folderId\" = $framework->folderID");
+
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
@@ -102,9 +104,10 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                             $file['content_type'],
                             $file['path'],
                             $file['version'],
-                            null,
-                            null,
+                            getOldFileInformation($file['filename'], $old_establishment_files_db)?->description,
+                            getOldFileInformation($file['filename'], $old_establishment_files_db)?->title,
                             $lang['code'],
+                            getOldFileInformation($file['filename'], $old_establishment_files_db)?->createDate
                         );
 
                         $ocr = new FileOcr($file_record->refresh());
@@ -175,6 +178,8 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
             $copied_files = copyFiles($directory_to_copy_from, $directory, $framework->folderID);
 
             if (!empty($copied_files)) {
+                $old_organization_files_db = DB::connection('old_strategy')->select("select * from dlfileentry d where d.\"folderId\" = $framework->folderID");
+
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
@@ -187,9 +192,10 @@ class AdvisoryBoardRegulatoryFrameworkSeeder extends Seeder
                             $file['content_type'],
                             $file['path'],
                             $file['version'],
-                            null,
-                            null,
+                            getOldFileInformation($file['filename'], $old_organization_files_db)?->description,
+                            getOldFileInformation($file['filename'], $old_organization_files_db)?->title,
                             $lang['code'],
+                            getOldFileInformation($file['filename'], $old_organization_files_db)?->createDate
                         );
 
                         $ocr = new FileOcr($file_record->refresh());
