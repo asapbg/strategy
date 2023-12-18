@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedOldPris extends Command
+class _seedOldPris extends Command
 {
     /** !!!!!!!!!!!!!!!!!!!! */
     /** WI DO NOT USE THIS */

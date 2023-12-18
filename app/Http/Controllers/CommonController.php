@@ -13,6 +13,7 @@ use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\Tag;
 use App\Services\FileOcr;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -284,6 +285,9 @@ class CommonController extends Controller
                 $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
                 $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
                 $data = PublicConsultation::select2AjaxOptions($requestData);
+                break;
+            case 'tag':
+                $data = Tag::select2AjaxOptions($requestData);
                 break;
         }
 

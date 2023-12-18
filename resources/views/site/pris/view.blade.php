@@ -125,7 +125,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="{{ route('pris.index').'?protocol='.$item->protocol }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
+                        <a href="{{ route('pris.view', ['category' => $item->actType->name, 'id' => $item->id]) }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
                     </div>
                 </div>
                 @if($item->newspaper)

@@ -36,6 +36,8 @@ class seedOldStrategicDocumentFiles extends Command
     {
         $formatTimestamp = 'Y-m-d H:i:s';
 
+        $maxOldId = DB::connection('old_strategy_app')->select('SELECT MAX(dbo.strategicdocuments.id) FROM dbo.strategicdocuments')[0]->max;
+
         $ourDocs = StrategicDocument::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
         $ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
         $oldDbFiles = DB::connection('old_strategy_app')
@@ -64,6 +66,7 @@ class seedOldStrategicDocumentFiles extends Command
             and f.id is not null
             and folders.id is not null
             and uf.tabletype = 4
+            and sd.id > $maxOldId
             -- check if uf.tabletype should be 4
         order by sd.datecreated desc
         ");

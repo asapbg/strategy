@@ -623,7 +623,7 @@ class StrategicDocumentsController extends Controller
                 return __('messages.record_not_found');
             }
 
-            return fileHtmlContent($strategicDocumentFile);
+            return strategicFileHtmlContent($strategicDocumentFile);
         } catch (\Throwable $throwable) {
             return '';
         }
@@ -656,7 +656,13 @@ class StrategicDocumentsController extends Controller
             // Централно ниво
             if ($category->documentLevel?->id == 1) {
                 //$categoriesData['national']['central-level'][] = $category;
-                $categoriesData['national'][$category->policyArea->name][] = $category;
+
+                /**
+                 * TODO: This is a bad fix but its temporary. In the future this function will most likely be rewritten.
+                 * If not, we have to check the name here because the area/municipality level documents lack a policy area
+                */
+                $policyAreaName = $category->policyArea->name ?? '';
+                $categoriesData['national'][$policyAreaName][] = $category;
             } else {
                 if (!$category->documentLevel) {
                     continue;

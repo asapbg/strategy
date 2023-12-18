@@ -75,8 +75,8 @@ class PrisController extends AdminController
         $institutions = optionsFromModel(Institution::simpleOptionsList());
         $publicConsultations = PublicConsultation::optionsList();
         $translatableFields = Pris::translationFieldsProperties();
-        $tags = Tag::optionsList();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'legalActTypes', 'institutions', 'publicConsultations', 'translatableFields', 'tags'));
+        //$tags = Tag::optionsList();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'legalActTypes', 'institutions', 'publicConsultations', 'translatableFields'));
     }
 
     public function store(PrisStoreRequest $request)
@@ -180,6 +180,40 @@ class PrisController extends AdminController
             Log::error($e);
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
+        }
+    }
+
+    public function ajaxForm(Request $request, Pris $item)
+    {
+        return view('admin.pris.new_tag_modal', compact('item'));
+    }
+
+    public function ajaxStore(Request $request, Pris $item){
+        if($item){
+            if(!auth()->user()->can('update', $item)) {
+                return redirect(route('admin.pris.edit', $item))->with('error', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
+            }
+
+            $exist = Tag::whereHas('translation', function ($q) use($request){
+                $q->where('label', '=', $request->input('label_bg'))->where('locale', '=', 'bg');
+            })->orWhereHas('translation', function ($q) use($request){
+                $q->where('label', '=', $request->input('label_en'))->where('locale', '=', 'en');
+            })->first();
+            if($exist) {
+                return redirect(route('admin.pris.edit', $item))->with('warning', 'Вече съществува Термин с това име: '.$exist->translate('bg')->label.'|'.$exist->translate('en')->label);
+            }
+
+            try {
+                $tag = new Tag();
+                $tag->save();
+                $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $tag, $request->all());
+                $item->tags()->attach([$tag->id]);
+                return redirect(route('admin.pris.edit', $item))
+                    ->with('success',  trans_choice('custom.nomenclature.tags', 1)." ".__('messages.created_successfully_m'));
+            } catch (\Exception $e){
+                Log::error($e);
+                return redirect(route('admin.pris.edit', $item))->with('danger', __('messages.system_error'));
+            }
         }
     }
 

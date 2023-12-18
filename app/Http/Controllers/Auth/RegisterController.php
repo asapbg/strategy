@@ -43,6 +43,14 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegistrationForm()
+    {
+        if(config('app.disable_registration')){
+            return view('auth.no_registration');
+        }
+        return view('auth.register');
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *

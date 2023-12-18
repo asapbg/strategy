@@ -39,9 +39,12 @@ class seedOldStrategicDocuments extends Command
     {
         $locales = config('available_languages');
 
+        $maxOldId = DB::connection('old_strategy_app')->select('SELECT MAX(dbo.strategicdocuments.id) FROM dbo.strategicdocuments')[0]->max;
+
         $oldCategories = collect(
             DB::connection('old_strategy_app')->select('SELECT id, parentid, sectionid, categoryname FROM dbo.categories WHERE languageid = 1')
         );
+
         $oldDocuments = DB::connection('old_strategy_app')->select(
             "SELECT
                 sd.id AS old_id,
@@ -61,8 +64,9 @@ class seedOldStrategicDocuments extends Command
                 CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at
             FROM dbo.strategicdocuments AS sd
             LEFT JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
-            WHERE sd.languageid = 1"
+            WHERE sd.languageid = 1 AND sd.id > $maxOldId"
         );
+
         $policyAreas = PolicyArea::with('translations')->get();
         $ekatteMuncipalities = EkatteMunicipality::with('translations')->get();
         $ekatteAreas = EkatteArea::with('translations')->get();

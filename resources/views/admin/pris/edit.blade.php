@@ -257,14 +257,18 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="tags[]">
-                                                        {{ trans_choice('custom.tags', 2) }}
+                                                        {{ trans_choice('custom.tags', 2) }} <i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}"></i>
                                                     </label>
                                                     <div class="col-12">
-                                                        @php($itemTagsIds = $item->tags->pluck('id')->toArray())
-                                                        <select id="tags" name="tags[]" multiple="multiple" class="form-control form-control-sm select2 select2-hidden-accessible @error('tags'){{ 'is-invalid' }}@enderror">
-                                                            @if(isset($tags) && $tags->count())
-                                                                @foreach($tags as $row)
-                                                                    <option value="{{ $row->id }}" @if(in_array($row->id, old('tags', $itemTagsIds))) selected @endif>{{ $row->label }}</option>
+{{--                                                        @php($itemTagsIds = $item->tags->pluck('id')->toArray())--}}
+                                                        <select id="tags" name="tags[]" multiple="multiple"
+                                                                class="form-control form-control-sm select2-autocomplete-ajax @error('tags'){{ 'is-invalid' }}@enderror"
+                                                                data-types2ajax="tag" data-urls2="{{ route('admin.select2.ajax', 'tag') }}"
+                                                        >
+                                                            @php($oldTags = old('tags', []) ? \App\Models\Tag::with(['translation'])->whereIn('id', old('tags', []))->get() : $item->tags)
+                                                            @if($oldTags)
+                                                                @foreach($oldTags as $row)
+                                                                    <option value="{{ $row->id }}" selected >{{ $row->label }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
@@ -368,6 +372,20 @@
 
 @push('scripts')
     <script type="text/javascript">
+        function validateTagForm(){
+            $('#ajax_tag_err').html('');
+            let err = false;
+            if($('input[name="label_bg"]').val().length == 0 || $('input[name="label_en"]').val().length == 0){
+                $('#ajax_tag_err').html($('#ajax_tag_err').html() + '<?php echo __('validation.required', ['attribute' => __('custom.name')]) ?>');
+                err = true;
+            } else{
+                $('#ajax_tag_err').html('');
+            }
+            if(!err) {
+                $('#ajax_tag').submit();
+            }
+        }
+
         $(document).ready(function (){
             let errorContainer = $('#connect-doc-error');
             $('#connect-documents').on('click', function(){
@@ -408,6 +426,14 @@
                     error : function() {
                         errorContainer.html('System error');
                     }
+                });
+            });
+
+            $('.add-tag').on('click', function (){
+                new MyModal({
+                    title: '<?php echo __('custom.new_tag') ?>',
+                    footer: '<button type="button" class="btn btn-success" onclick="validateTagForm();">' + '<?php echo __('custom.add') ?> ' + '</button><button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ '<?php echo __('custom.cancel') ?>' +'">'+ '<?php echo __('custom.cancel') ?>' +'</button>',
+                    bodyLoadUrl: '{{ route('admin.pris.tag.ajax.form', $item) }}',
                 });
             });
         });

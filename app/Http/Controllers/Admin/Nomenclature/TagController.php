@@ -87,10 +87,10 @@ class TagController extends AdminController
     private function filters($request)
     {
         return array(
-            'label' => array(
+            'title' => array(
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.label'),
-                'value' => $request->input('label'),
+                'value' => $request->input('title'),
                 'col' => 'col-md-4'
             ),
             'status' => array(
