@@ -256,7 +256,7 @@
                                             <div class="col-12"></div>
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="tags[]"
+                                                    <label class="col-sm-12 control-label" for="tags[]">
                                                     {{ trans_choice('custom.tags', 2) }} @if($item->id)<i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}" data-url="{{ route('admin.pris.tag.ajax.form', $item) }}"></i>@endif
                                                     </label>
                                                     <div class="col-12">

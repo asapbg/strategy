@@ -35,6 +35,15 @@ class AdvisoryBoardEstablishment extends ModelActivityExtend
             ->where('doc_type', DocTypesEnum::AB_ESTABLISHMENT_RULES->value);
     }
 
+    public function siteFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB)
+            ->where('doc_type', DocTypesEnum::AB_ESTABLISHMENT_RULES->value)
+            ->where('parent_id', null)
+            ->whereLocale(app()->getLocale());
+    }
+
     /**
      * Get the model name
      */
