@@ -14,14 +14,14 @@
 
 @php($loop = array_key_exists('problem_to_solve', $state) ? count($state['problem_to_solve']) : 1)
 @for($n=0; $n<$loop; $n++)
-    <h5>Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем {{ $n+1 }}:</h5>
+    <h5 class="@if($n > 0) mt-5 @endif" >Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем {{ $n+1 }}:</h5>
 
     @php($loop2 = Arr::get($state, "variant_simple.$n", false) ? count(Arr::get($state, "variant_simple.$n")) : 1)
     @for($m=0; $m<$loop2; $m++)
     <table width="100%">
         <tr>
-            <th>Проблем {{ $n+1 }}</th>
-            <th class="text-center">Вариант {{ $m+1 }}</th>
+            <th colspan="2">Проблем {{ $n+1 }} / Вариант {{ $m+1 }}</th>
+{{--            <th class="text-center">Вариант {{ $m+1 }}</th>--}}
         </tr>
     </table>
     @php($loop3 = 3)

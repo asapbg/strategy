@@ -1,4 +1,4 @@
-<h5>Списък на използваните съкращения</h5>
+<h5 class="@if(isset($readOnly) && $readOnly) mt-5 @endif">Списък на използваните съкращения</h5>
 <table width="100%" class="table">
 <thead>
     <td width="40%">Съкращение</td>

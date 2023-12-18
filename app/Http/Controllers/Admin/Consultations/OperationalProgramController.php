@@ -28,8 +28,8 @@ class OperationalProgramController extends AdminController
     const LIST_VIEW = 'admin.consultations.operational_programs.index';
     const EDIT_VIEW = 'admin.consultations.operational_programs.edit';
     const SHOW_VIEW = 'admin.consultations.operational_programs.show';
-    const DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID = 12;
-    const DYNAMIC_STRUCTURE_COLUMN_TITLE_ID = 11;
+//    const DYNAMIC_STRUCTURE_COLUMN_INSTITUTION_ID = 12;
+//    const DYNAMIC_STRUCTURE_COLUMN_TITLE_ID = 11;
 
     public function index(Request $request)
     {
@@ -152,14 +152,16 @@ class OperationalProgramController extends AdminController
                 if (isset($validated['col']) && sizeof($validated['col'])) {
                     foreach ($validated['col'] as $rowKey => $colIds) {
                         if (isset($validated['val']) && sizeof($validated['val'])
-                            && isset($validated['val'][$rowKey]) && (sizeof($validated['col'][$rowKey]) === sizeof($validated['val'][$rowKey])) ) {
+                            && isset($validated['val'][$rowKey])
+                            //&& (sizeof($validated['col'][$rowKey]) === sizeof($validated['val'][$rowKey]))
+                        ) {
                             foreach ($colIds as $key => $id) {
                                 $oldCol = $item->records()->where('id', '=', (int)$id)->first();
                                 if($oldCol) {
                                     if($oldCol->dynamic_structures_column_id != config('lp_op_programs.op_ds_col_institution_id')) {
-                                        $oldCol->update(['value' => $validated['val'][$rowKey][$key]]);
+                                        $oldCol->update(['value' => $validated['val'][$rowKey][$key] ?? null]);
                                     } else{
-                                        $oldCol->institutions()->sync($validated['val'][$rowKey][$key]);
+                                        $oldCol->institutions()->sync($validated['val'][$rowKey][$key] ?? []);
                                     }
                                 }
                             }
