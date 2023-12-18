@@ -15,6 +15,6 @@
 
 <h6>3. Събрани данни</h6>
 <p>Посочва се информация за други използвани източници на относими за оценката данни.</p>
-@include('form_partials.textarea', ['name' => "collected_data[$a][sources]", 'class' => 'mb-3'])
+@include('form_partials.textarea', ['name' => "collected_data[$a][sources]", 'class' => 'mb-2'])
 
 @endfor

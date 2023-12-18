@@ -4,7 +4,7 @@
 <h3>{{ __('forms.form3') }}</h3>
 
 <h4 class="mt-3">1. {{ __('forms.problem_to_solve') }}</h4>
-<div class="row">
+<div class="row mb-3">
     <div class="col-sm-12">
         <h5 class="mt-3">1. {{ __('forms.problem_to_solve') }}</h5>
         <p>

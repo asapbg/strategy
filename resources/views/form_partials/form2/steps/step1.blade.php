@@ -1,43 +1,43 @@
-<p>
+<p class="@if(isset($readOnly) && $readOnly) mt-5 @endif">
     <b>
         Образецът на резюме на цялостна предварителна оценка на въздействието влиза в сила от 01 януари 2021 г.
     </b>
 </p>
 <h3>Резюме на цялостна предварителна оценка на въздействието</h3>
 
-<div class="row">
-    <div class="col-sm-6">
-        <h5>@include('form_partials.text', ['name' => 'institution'])</h5>
+<div class="row mb-4">
+    <div class="col-sm-4">
+        <div>@include('form_partials.text', ['name' => 'institution'])</div>
     </div>
-    <div class="col-sm-6">
-        <h5>@include('form_partials.text', ['name' => 'regulatory_act'])</h5>
+    <div class="col-sm-4">
+        <div>@include('form_partials.text', ['name' => 'regulatory_act'])</div>
+    </div>
+    <div class="col-sm-4">
+        <div>@include('form_partials.text', ['name' => 'period_assessment'])</div>
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-6">
-        <h5>@include('form_partials.text', ['name' => 'period_assessment'])</h5>
-    </div>
-    <div class="col-sm-6">
+<div class="row mb-4">
+    <div class="col-12">
         <h5>
             От какво ниво възниква необходимостта от предприемане на действието?
         </h5>
-        @include('form_partials.radio', ['name' => 'level', 'value' => 0, 'label' => 'forms.national'])
-        @include('form_partials.radio', ['name' => 'level', 'value' => 1, 'label' => 'forms.european'])
-        @include('form_partials.radio', ['name' => 'level', 'value' => 2, 'label' => 'forms.national_and_european'])
-        @include('form_partials.radio', ['name' => 'level', 'value' => 3, 'label' => 'forms.international'])
+        @include('form_partials.radio', ['name' => 'level', 'value' => 0, 'label' => 'forms.national', 'class' => 'me-2'])
+        @include('form_partials.radio', ['name' => 'level', 'value' => 1, 'label' => 'forms.european', 'class' => 'me-2'])
+        @include('form_partials.radio', ['name' => 'level', 'value' => 2, 'label' => 'forms.national_and_european', 'class' => 'me-2'])
+        @include('form_partials.radio', ['name' => 'level', 'value' => 3, 'label' => 'forms.international', 'class' => 'me-2'])
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <h5>@include('form_partials.text', ['name' => 'contact_person'])</h5>
+        <div>@include('form_partials.text', ['name' => 'contact_person'])</div>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
-        <h5>@include('form_partials.text', ['name' => 'phone'])</h5>
+        <div>@include('form_partials.text', ['name' => 'phone'])</div>
     </div>
     <div class="col-sm-6">
-        <h5>@include('form_partials.text', ['name' => 'email'])</h5>
+        <div>@include('form_partials.text', ['name' => 'email'])</div>
     </div>
 </div>
 
