@@ -1,8 +1,9 @@
 @php
     $file ??= new \App\Models\File();
+    $debug ??= false;
 
     // Take the up-to-date file
-    $file_up_to_date = empty($file->versions) ? $file : $file->versions->sortByDesc('id')->first();
+    $file_up_to_date = $file->versions->count() === 0 ? $file : $file->versions->sortByDesc('id')->first();
 @endphp
 
 <div class="document-wrapper-ks mt-3">
