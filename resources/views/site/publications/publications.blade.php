@@ -4,7 +4,7 @@
             <div class="consul-wrapper">
                 <div class="single-library d-flex">
                     <div class="library-img-holder">
-                        <img class="img-fluid" src="{{ asset($publication->mainImg?->path) }}" alt="{{ $publication->translation?->title }}">
+                        <img class="img-fluid" src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}">
                     </div>
                     <div class="consult-body">
                         <div class="consul-item">
@@ -63,7 +63,7 @@
     </div>
 @endforeach
 
-<div id="publications_pagination" class="ajax_pagination row mb-4" data-id="publications">
+<div id="ajax-pagination" class="row mb-4" data-id="publications">
     @desktop
     @if($publications->count() > 0 && $publications instanceof Illuminate\Pagination\LengthAwarePaginator)
         {{ $publications->onEachSide(2)->appends(request()->query())->links() }}

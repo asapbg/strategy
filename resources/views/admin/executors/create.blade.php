@@ -22,7 +22,7 @@
                                             <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
                                             @if(isset($institutions) && $institutions->count())
                                                 @foreach($institutions as $option)
-                                                    <option value="{{ $option->value }}" @if($option->value == old('institution_id', ($item->id ? $item->institution_id : ''))) selected @endif
+                                                    <option value="{{ $option->value }}" @if($option->value == old('institution_id')) selected @endif
                                                     data-level="{{ $option->level }}" data-foa="{{ $option->foa }}">{{ $option->name }}</option>
                                                 @endforeach
                                             @endif

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\File;
 use App\Models\LegislativeInitiative;
 use App\Models\Publication;
 use Illuminate\Http\Request;
@@ -28,13 +29,15 @@ class HomeController extends Controller
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->whereType(PublicationTypesEnum::TYPE_NEWS)
-            ->whereDate('published_at', '<=', date('Y-m-d'))
-            ->orderBy('published_at', 'DESC')
+            ->whereDate('created_at', '<=', date('Y-m-d'))
+            ->orderBy('created_at', 'DESC')
             ->paginate(3);
+
+        $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
 
         //dd($publications->toArray());
         return $this->view('site.home.index',
-            compact('consultations','initiatives', 'publications'));
+            compact('consultations','initiatives', 'publications','default_img'));
     }
 
     /**

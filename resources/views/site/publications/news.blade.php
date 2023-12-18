@@ -2,7 +2,9 @@
     <div class="col-lg-4 mb-4">
         <div class="post-box">
             <div class="post-img">
-                <img class="img-fluid" src="{{ asset($news_row->mainImg?->path) }}" alt="{{ $news_row->translation?->title }}">
+                <img class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img" src="{{ asset($news_row->mainImg?->path ?? $default_img) }}"
+                     alt="{{ $news_row->translation?->title }}"
+                >
             </div>
             <span class="post-date text-secondary">{{ displayDate($news_row->published_at) }} г.</span>
             <h3 class="post-title">
@@ -51,7 +53,7 @@
     </div>
 @endforeach
 
-<div id="news_pagination" class="ajax_pagination row mb-4" data-id="news">
+<div id="ajax-pagination" class="row mb-4" data-id="news">
     @desktop
     @if($news->count() > 0 && $news instanceof Illuminate\Pagination\LengthAwarePaginator)
         {{ $news->onEachSide(2)->appends(request()->query())->links() }}
