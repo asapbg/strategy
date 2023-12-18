@@ -4,7 +4,7 @@ use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardTranslation;
 use App\Models\AdvisoryChairmanType;
-use App\Models\PolicyArea;
+use App\Models\FieldOfAction;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +22,7 @@ return new class extends Migration {
         Schema::create((new AdvisoryBoard())->getTable(), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('policy_area_id');
-            $table->foreign('policy_area_id')->references('id')->on((new PolicyArea())->getTable())->onDelete('cascade');
+            $table->foreign('policy_area_id')->references('id')->on((new FieldOfAction())->getTable())->onDelete('cascade');
             $table->unsignedBigInteger('advisory_chairman_type_id');
             $table->foreign('advisory_chairman_type_id')->references('id')->on((new AdvisoryChairmanType())->getTable())->onDelete('cascade');
             $table->unsignedBigInteger('advisory_act_type_id');

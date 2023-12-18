@@ -157,9 +157,19 @@ class AdvisoryBoardController extends Controller
     public function show(AdvisoryBoard $item)
     {
         $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
-            $query->with('files');
+            $query->with(['files', 'translations']);
         }, 'npos' => function ($query) {
             $query->with('translations');
+        }, 'members' => function($query) {
+            $query->with('translations');
+        }, 'meetings' => function($query) {
+            $query->with(['translations', 'siteFiles' => function($query) {
+                $query->with('versions');
+            }]);
+        }, 'secretariat' => function($query) {
+            $query->with(['translations', 'siteFiles']);
+        }, 'workingProgram' => function($query) {
+            $query->with(['translations', 'siteFiles']);
         }])->first();
 
         return view('site.advisory-boards.view', compact('item'));

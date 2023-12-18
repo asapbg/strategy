@@ -17,6 +17,7 @@ class LibraryController extends Controller
     public function publications(Request $request)
     {
         $type = PublicationTypesEnum::TYPE_LIBRARY;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
 
         $publications = $this->getPublications($request, $type);
@@ -27,7 +28,8 @@ class LibraryController extends Controller
 
         $publicationCategories = PublicationCategory::optionsList(true);
 
-        return $this->view('site.publications.index', compact('publications','type', 'publicationCategories'));
+        return $this->view('site.publications.index',
+            compact('publications','type', 'publicationCategories', 'pageTitle'));
     }
 
     /**
@@ -37,6 +39,7 @@ class LibraryController extends Controller
     public function news(Request $request)
     {
         $type = PublicationTypesEnum::TYPE_NEWS;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
 
         $news = $this->getPublications($request, $type);
@@ -47,7 +50,8 @@ class LibraryController extends Controller
 
         $publicationCategories = PublicationCategory::optionsList(true);
 
-        return $this->view('site.publications.index', compact('news','type', 'publicationCategories'));
+        return $this->view('site.publications.index',
+            compact('news','type', 'publicationCategories', 'pageTitle'));
     }
 
     /**
@@ -64,8 +68,9 @@ class LibraryController extends Controller
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->find($id);
+        $pageTitle = $publication->translation?->title;
 
-        return $this->view('site.publications.details', compact('publication','type'));
+        return $this->view('site.publications.details', compact('publication','type', 'pageTitle'));
     }
 
     /**
@@ -84,7 +89,9 @@ class LibraryController extends Controller
         $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
             ? "publication_translations"
             : "publication";
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : 6;
         $published_from = $request->get('published_from');
         $published_till = $request->get('published_till');
         $keywords = $request->get('keywords');

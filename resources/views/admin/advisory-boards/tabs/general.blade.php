@@ -100,7 +100,7 @@
                                         <input type="text" id="npo_{{ $lang['code'] }}[]"
                                                name="npo_{{ $lang['code']}}[]"
                                                class="form-control form-control-sm"
-                                               value="{{ $value }}" autocomplete="off">
+                                               value="{{ $value[0] ?? '' }}" autocomplete="off">
                                     </div>
 
                                     @if($class === 'col-5' && $npo_key > 0)

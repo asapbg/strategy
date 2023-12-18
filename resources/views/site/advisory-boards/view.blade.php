@@ -249,18 +249,18 @@
             @endif
 
             <!-- Работна програма -->
-            @if(!empty($item->advisoryFunction))
+            @if(!empty($item->workingProgram))
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-3 fs-4">{{ __('custom.function') }}</h3>
 
                             <p>
-                                {!! $item->advisoryFunction->description !!}
+                                {!! $item->workingProgram->description !!}
                             </p>
 
-                            @if(!empty($item->advisoryFunction?->files) && $item->advisoryFunction?->files->count() > 0)
-                                @foreach($item->advisoryFunction?->files as $file)
+                            @if(!empty($item->workingProgram->siteFiles) && $item->workingProgram->siteFiles->count() > 0)
+                                @foreach($item->workingProgram->siteFiles as $file)
                                     @includeIf('site.partial.file', ['file' => $file])
                                 @endforeach
                             @endif
@@ -284,9 +284,9 @@
                             @endforeach
 
                             @foreach($item->meetings as $meeting)
-                                @if(isset($meeting->files) && $meeting->files->count() > 0)
-                                    @foreach($meeting->files as $file)
-                                        @includeIf('site.partial.file', ['file' => $file])
+                                @if(isset($meeting->siteFiles) && $meeting->siteFiles->count() > 0)
+                                    @foreach($meeting->siteFiles as $file)
+                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
                                     @endforeach
                                 @endif
                             @endforeach

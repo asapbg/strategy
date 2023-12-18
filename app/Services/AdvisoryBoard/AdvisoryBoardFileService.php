@@ -37,7 +37,8 @@ class AdvisoryBoardFileService
         string $version = null,
         string $description = null,
         string $custom_name = null,
-        string $locale = null
+        string $locale = null,
+        string $effective_at = null
     ): File
     {
         $new = new File([
@@ -52,6 +53,7 @@ class AdvisoryBoardFileService
             'description_en' => $description,
             'custom_name' => $custom_name,
             'locale' => $locale,
+            'effective_at' => Carbon::parse($effective_at)
         ]);
 
         $new->save();

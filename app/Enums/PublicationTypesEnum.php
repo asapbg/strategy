@@ -26,4 +26,18 @@ enum PublicationTypesEnum: int
         return $keyName;
     }
 
+    /**
+     * Get publication type name's list
+     *
+     * @return array
+     */
+    public static function getTypeName()
+    {
+        return [
+            self::TYPE_LIBRARY->value       => 'custom.public_sections.types.TYPE_LIBRARY',
+            self::TYPE_NEWS->value          => 'custom.public_sections.types.TYPE_NEWS',
+            self::TYPE_OGP_NEWS->value      => 'custom.public_sections.types.TYPE_OGP_NEWS'
+        ];
+    }
+
 }
