@@ -24,7 +24,7 @@ class _seedOldPris extends Command
      * @deprecated
      * @var string
      */
-    protected $signature = 'old:pris';
+    protected $signature = '_old:pris';
 
     /**
      * The console command description.
