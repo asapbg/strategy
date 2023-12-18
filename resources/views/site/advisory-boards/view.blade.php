@@ -347,8 +347,8 @@
 
                                     <p>{!! $section->body !!}</p>
 
-                                    @if(!empty($section->files) && $section->files->count() > 0)
-                                        @foreach($section->files as $file)
+                                    @if(!empty($section->siteFiles) && $section->siteFiles->count() > 0)
+                                        @foreach($section->siteFiles as $file)
                                             @includeIf('site.partial.file', ['file' => $file])
                                         @endforeach
                                     @endif

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
  * @method static create(array $array)
  * @method static paginate(int $PAGINATION)
  * @method static orderBy(string $string)
+ * @method static advisoryBoard() - Scope to get all advisory board categories
  */
 class FieldOfAction extends ModelActivityExtend implements TranslatableContract
 {
@@ -38,6 +39,18 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         return Attribute::make(
             get: fn() => $this->$name
         );
+    }
+
+    /**
+     * Used to get only advisory boards categories.
+     *
+     * @param $query
+     *
+     * @return void
+     */
+    public function scopeAdvisoryBoard($query): void
+    {
+        $query->where('parentid', 1);
     }
 
     public function scopeActive($query){
