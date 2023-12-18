@@ -40,7 +40,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
 
         <!-- Right side -->
@@ -64,20 +63,6 @@
                                        title="{{ $item->policyArea?->name }}"></i>
                                     {{ $item->policyArea?->name }}
                                 </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Наименование -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('custom.name_of_advisory_board') }}</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                {{ $item->name }}
                             </li>
                         </ul>
                     </div>
@@ -141,13 +126,14 @@
             </div>
 
             <!-- Заместник председатели -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('custom.vice_chairman_site') }}</h3>
+            @if(isset($item->viceChairmen) && $item->viceChairmen->count() > 0)
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('custom.vice_chairman_site') }}</h3>
 
-                        <ul class="list-group list-group-flush">
-                            @if(isset($item->viceChairmen) && $item->viceChairmen->count() > 0)
+                            <ul class="list-group list-group-flush">
+
                                 @foreach($item->viceChairmen as $chairman)
                                     <li class="list-group-item">
                                         @if(!empty($chairman->member_job))
@@ -157,11 +143,11 @@
                                         @endif
                                     </li>
                                 @endforeach
-                            @endif
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Членове -->
             <div class="row mb-4 ks-row">

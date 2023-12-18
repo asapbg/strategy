@@ -34,25 +34,25 @@ class AdvisoryBoardController extends Controller
             ->whereLocale(app()->getLocale())
             ->joinTranslation(FieldOfAction::class)
             ->with(['translation'])
-            ->orderBy('id')
+            ->orderBy('name')
             ->get();
         $authority_advisory_boards = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AuthorityAdvisoryBoard::class)
             ->with(['translation'])
-            ->orderBy('id')
+            ->orderBy('name')
             ->get();
         $advisory_act_types = AdvisoryActType::select('advisory_act_type.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AdvisoryActType::class)
             ->with(['translation'])
-            ->orderBy('id')
+            ->orderBy('name')
             ->get();
         $advisory_chairman_types = AdvisoryChairmanType::select('advisory_chairman_type.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AdvisoryChairmanType::class)
             ->with(['translation'])
-            ->orderBy('id')
+            ->orderBy('name')
             ->get();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS . '_' . app()->getLocale())->first();
         $status = request()->offsetGet('status');
@@ -69,11 +69,11 @@ class AdvisoryBoardController extends Controller
             : "DESC";
         $order_by = ($request->offsetGet('order_by'))
             ? $request->offsetGet('order_by')
-            : "id";
+            : "name";
         $sort_table = (in_array($order_by, AdvisoryBoard::TRANSLATABLE_FIELDS))
             ? "advisory_board_translations"
             : "advisory_boards";
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : 50;
 
         $advisory_boards = AdvisoryBoard::select('advisory_boards.*')
             ->whereLocale(app()->getLocale())
@@ -106,7 +106,6 @@ class AdvisoryBoardController extends Controller
             })
             ->where('public', true)
             ->orderBy("$sort_table.$order_by", $sort)
-//            ->orderBy('id', 'desc')
             ->paginate($paginate);
 
         if ($is_search) {
@@ -156,7 +155,7 @@ class AdvisoryBoardController extends Controller
      */
     public function show(AdvisoryBoard $item)
     {
-        $item = $item->where('id', $item->id)->with(['customSections' => function ($query) {
+        $item = AdvisoryBoard::where('id', $item->id)->with(['customSections' => function ($query) {
             $query->with(['files' => fn($query) => $query->with('versions'), 'translations']);
         }, 'npos' => function ($query) {
             $query->with('translations');
@@ -172,7 +171,9 @@ class AdvisoryBoardController extends Controller
             $query->with(['translations', 'siteFiles']);
         }])->first();
 
-        return view('site.advisory-boards.view', compact('item'));
+        $pageTitle = $item->name;
+
+        return view('site.advisory-boards.view', compact('item', 'pageTitle'));
     }
 
     /**
