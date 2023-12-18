@@ -51,8 +51,7 @@
             <img src="{{ asset($publication->mainImg?->path) }}" alt="{{ $publication->translation?->title }}"
                  class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
             >
-            {{ $publication->translation->content  }}
-{{--            {!! $publication->translation->content !!}--}}
+            {!! $publication->translation->content !!}
 
             <a href=""></a>
         </div>
