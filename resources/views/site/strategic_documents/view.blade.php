@@ -180,7 +180,7 @@
                 <div class="col-md-12">
                     <h3 class="mb-3">{{ trans_choice('custom.description', 1) }}</h3>
                     <div class="str-doc-info">
-                        {!! $strategicDocument->description !!}
+                        {!! htmlspecialchars_decode($strategicDocument->description) !!}
                     </div>
                 </div>
             </div>

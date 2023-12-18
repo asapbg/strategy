@@ -39,7 +39,7 @@ class seedOldStrategicDocuments extends Command
     {
         $locales = config('available_languages');
 
-        $maxOldId = StrategicDocument::select(DB::raw('MAX(old_id)'))->first()->max ?? 0;
+        $ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         $oldCategories = collect(
             DB::connection('old_strategy_app')->select('SELECT id, parentid, sectionid, categoryname FROM dbo.categories WHERE languageid = 1')
@@ -64,7 +64,7 @@ class seedOldStrategicDocuments extends Command
                 CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at
             FROM dbo.strategicdocuments AS sd
             LEFT JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
-            WHERE sd.languageid = 1 AND sd.id > $maxOldId"
+            WHERE sd.languageid = 1"
         );
 
         $policyAreas = PolicyArea::with('translations')->get();
@@ -122,7 +122,7 @@ class seedOldStrategicDocuments extends Command
                 );
 
                 $title = $data['title'];
-                $description = htmlspecialchars_decode($data['description']);
+                $description = $data['description'];
 
                 // Create accept act institution if missing
                 if (isset($data['institution_type_name'])) {
@@ -153,9 +153,17 @@ class seedOldStrategicDocuments extends Command
                     $data['institution_type_name']
                 );
 
-                $strategicDoc = StrategicDocument::create($data);
+                if (isset($ourDocuments[$oldDocument->old_id])) {
+                    $strategicDoc = StrategicDocument::withTrashed()->find($ourDocuments[$oldDocument->old_id]);
 
-                $this->info('Inserted data with ID: ' . $strategicDoc->id);
+                    $strategicDoc->update($data);
+
+                    $this->info('Updated data with ID: ' . $strategicDoc->id);
+                } else {
+                    $strategicDoc = StrategicDocument::create($data);
+
+                    $this->info('Inserted data with ID: ' . $strategicDoc->id);
+                }
 
                 foreach ($locales as $locale) {
                     $strategicDoc->translateOrNew($locale['code'])->title = $title;
