@@ -39,7 +39,7 @@ class seedOldStrategicDocuments extends Command
     {
         $locales = config('available_languages');
 
-        $maxOldId = DB::connection('old_strategy_app')->select('SELECT MAX(dbo.strategicdocuments.id) FROM dbo.strategicdocuments')[0]->max;
+        $maxOldId = StrategicDocument::select(DB::raw('MAX(old_id)'))->first()->max ?? 0;
 
         $oldCategories = collect(
             DB::connection('old_strategy_app')->select('SELECT id, parentid, sectionid, categoryname FROM dbo.categories WHERE languageid = 1')
@@ -125,22 +125,25 @@ class seedOldStrategicDocuments extends Command
                 $description = htmlspecialchars_decode($data['description']);
 
                 // Create accept act institution if missing
-                $acceptingInstitution = $acceptingInstitutions->where('name', $data['institution_type_name'])->first();
+                if (isset($data['institution_type_name'])) {
+                    $institutionName = trim($data['institution_type_name']);
 
-                if (!isset($acceptingInstitution)) {
-                    $acceptingInstitution = new AuthorityAcceptingStrategic();
-                    $acceptingInstitution->save();
+                    $acceptingInstitution = $acceptingInstitutions->where('name', $institutionName)->first();
 
-                    foreach ($locales as $locale) {
-                        $acceptingInstitution->translateOrNew($locale['code'])->name = $data['institution_type_name'];
+                    if (!isset($acceptingInstitution)) {
+                        $acceptingInstitution = new AuthorityAcceptingStrategic();
+
+                        foreach ($locales as $locale) {
+                            $acceptingInstitution->translateOrNew($locale['code'])->name = $institutionName;
+                        }
+
+                        $acceptingInstitution->save();
                     }
-                }
 
-                $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+                    $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+                }
                 //
 
-                // TODO: This is seemingly missing from the old DB
-                $data['strategic_document_type_id'] = 1;
                 $data['user_id'] = $ourUsers[$oldDocument->user_id] ?? null;
 
                 unset(

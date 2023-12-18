@@ -55,7 +55,7 @@
                        class="main-color text-decoration-none fs-18" id="strategicDocumentType"
                        data-document-type-id="{{ $strategicDocument->documentType?->id }}">
                          <span class="obj-icon-info me-2">
-                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType?->name }}
+                            <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->documentType?->name ?? __('custom.unidentified') }}
                          </span>
                     </a>
                 </div>
@@ -119,10 +119,12 @@
                                 {{ $strategicDocument->strategic_act_number }}
                             </a>
                         @endif
-                        <span>{{ trans_choice('custom.for', 1) }}</span>
-                            <a href="#" class="main-color text-decoration-none">
-                                {{ $strategicDocument->acceptActInstitution?->name }}
-                            </a>
+                        @isset($strategicDocument->acceptActInstitution)
+                            <span>{{ trans_choice('custom.for', 1) }}</span>
+                                <a href="#" class="main-color text-decoration-none">
+                                    {{ $strategicDocument->acceptActInstitution?->name }}
+                                </a>
+                        @endisset
                     </div>
                 </div>
             </div>
@@ -155,7 +157,7 @@
                             </a>
                         @endif
                 </div>
-                @if (! $strategicDocument->link_to_monitorstat)
+                @isset($strategicDocument->link_to_monitorstat)
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
                         <a href="{{ $strategicDocument->link_to_monitorstat  }}" class="main-color text-decoration-none fs-18">
@@ -163,7 +165,7 @@
                             <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
                         </a>
                     </div>
-                @endif
+                @endisset
             </div>
 
 

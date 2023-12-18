@@ -518,6 +518,37 @@ if (!function_exists('fileHtmlContent')) {
     }
 }
 
+if (!function_exists('strategicFileHtmlContent')) {
+
+    /**
+     * Check if string is a json format.
+     *
+     * @param $file
+     * @return bool
+     */
+    function strategicFileHtmlContent($file)
+    {
+        $content = '';
+        switch ($file->content_type) {
+            case 'application/pdf':
+                $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
+                $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
+                break;
+            case 'application/msword':
+                $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('strategy-document.download-file', $file) . '" width="100%" height="700px;"/></iframe>';
+                break;
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+                $content->setDefaultFontName('Fira Sans BGR');
+                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+                $content = $html->getContent();
+                break;
+        }
+
+        return $content;
+    }
+}
+
 if (!function_exists('htmlToText')) {
 
     /**
@@ -705,6 +736,29 @@ if (!function_exists('copyFile')) {
             }
 
             return $can;
+        }
+    }
+
+    if (!function_exists('getOldFileInformation')) {
+
+        /**
+         * Get information for an old file from the old db.
+         * It's using the lportal.dlfileentry table.
+         *
+         * @param       $search_name - The file name.
+         * @param array $files       - Array of file objects.
+         *
+         * @return mixed|null
+         */
+        function getOldFileInformation($search_name, array $files): object|null
+        {
+            foreach ($files as $file) {
+                if ($file->name == $search_name) {
+                    return $file;
+                }
+            }
+
+            return null;
         }
     }
 }

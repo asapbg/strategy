@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedOldPris extends Command
+class _seedOldPris extends Command
 {
     /** !!!!!!!!!!!!!!!!!!!! */
     /** WI DO NOT USE THIS */
@@ -24,7 +24,7 @@ class seedOldPris extends Command
      * @deprecated
      * @var string
      */
-    protected $signature = 'old:pris';
+    protected $signature = '_old:pris';
 
     /**
      * The console command description.

@@ -9,6 +9,7 @@ use App\Models\OgpAreaArrangement;
 use App\Models\OgpAreaCommitment;
 use App\Models\OgpAreaOffer;
 use App\Models\OgpAreaOfferComment;
+use App\Models\OgpAreaOfferVote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -166,8 +167,7 @@ class DevelopNewActionPlan extends Controller
                 'error' => 0,
                 'row_id' => $request->get('row_id')
             ]);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error($e);
 
             return response()->json([
@@ -175,6 +175,51 @@ class DevelopNewActionPlan extends Controller
                 'message' => __('messages.system_error')
             ]);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param int $like
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function voteOffer(Request $request, $id, $like = 0): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        $offer = OgpAreaOffer::findOrFail($id);
+        $container = $request->get('container');
+
+        if($user->cannot('vote', $offer)) {
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.no_rights_to_view_content')
+            ]);
+        }
+
+        try {
+            $vote = new OgpAreaOfferVote(['is_like' => $like, 'users_id' => $user->id]);
+            $offer->votes()->save($vote);
+
+            $offer->refresh();
+
+            return response()->json([
+                'error' => 0,
+                'container' => $container,
+                'html' => view('site.ogp.partial.vote', [
+                    'item' => $offer,
+                    'route' => 'ogp.develop_new_action_plans.vote',
+                    'container' => $container
+                ])->render(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e);
+
+            return response()->json([
+                'error' => 1,
+                'message' => __('messages.system_error')
+            ]);
+        }
+
     }
 
 }

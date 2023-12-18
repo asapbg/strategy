@@ -623,7 +623,7 @@ class StrategicDocumentsController extends Controller
                 return __('messages.record_not_found');
             }
 
-            return fileHtmlContent($strategicDocumentFile);
+            return strategicFileHtmlContent($strategicDocumentFile);
         } catch (\Throwable $throwable) {
             return '';
         }

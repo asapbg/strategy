@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedOldPrisCsv extends Command
+class _seedOldPrisCsv extends Command
 {
     /** !!!!!!!!!!!!!!!!!!!! */
     /** WI DO NOT USE THIS */
@@ -26,7 +26,7 @@ class seedOldPrisCsv extends Command
      * @var string
      */
 
-    protected $signature = 'old:pris_csv';
+    protected $signature = '_old:pris_csv';
 
     /**
      * The console command description.

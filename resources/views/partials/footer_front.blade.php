@@ -2,18 +2,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
-                <h3 class="text-light fs-4 fw-400">Условия за ползване</h3>
+                <h3 class="text-light fs-4 fw-400">Контакти</h3>
                 <ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Обща информация</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Помощ за системата</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Права на потребителите</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Политика за поверителност</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Политика за бисквитки</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Петя Цанкова</a></li>
+                    <li class="nav-item mb-2"><a href="mailto:p.tsankova@goverment.bg" class="p-0 text-light">»  p.tsankova@goverment.bg</a></li>
                 </ul>
             </div>
 
             <div class="col-md-4 col-sm-12 mb-3">
-                <h3 class="text-light fs-4 fw-400">Контакти</h3>
+                <img class="d-block w-100 px-md-3 footer-img" src="../img/eu_white.png" alt="Европейски Съюз Европейски Социален Фонд" title="Европейски Съюз Европейски Социален Фонд">
+               <!-- <h3 class="text-light fs-4 fw-400">Контакти</h3>
                 <ul class="nav flex-column footer-nav">
                     <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Министерски съвет</a></li>
                     <li class="nav-item mb-2"><a
@@ -24,26 +22,23 @@
                     <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Контакт с администрация</a></li>
                     <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Към стария сайт</a></li>
                 </ul>
+            -->
             </div>
 
             <div class="col-md-4 col-sm-12 mb-3">
+                <img class="d-block w-100 px-md-3 footer-img" src="../img/op-white.png" alt="Оперативна програма Добро управление" title="Оперативна програма Добро управление">
                 <!-- Секция за добавяне на страници от админ панела -->
-                <h3 class="text-light fs-4 fw-400">Страници</h3>
-                <ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
+                 <!-- <h3 class="text-light fs-4 fw-400">Страници</h3> -->
+                 <!--<ul class="nav flex-column footer-nav">
+                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li> 
                 </ul>
+                -->
             </div>
         </div>
 
 
-        <div class="d-flex flex-column flex-sm-row justify-content-between pt-4 border-top">
-            <p class="m-0 text-light">© 2023 Портал за обществени консултации. Всички права запазени.</p>
-            <a class="m-0 text-light text-danger text-decoration-none" href="https://www.asap.bg/"
-                target="_blank">Софтуерна разработка и поддръжка от ASAP</a>
+        <div class="d-flex flex-column flex-sm-row justify-content-center pt-4 border-top">
+            <p class="m-0 text-light text-center">© 2023 Портал за обществени консултации. Всички права запазени МС.</p>
         </div>
     </div>
 </footer>

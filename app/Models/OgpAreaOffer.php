@@ -20,7 +20,7 @@ class OgpAreaOffer extends ModelActivityExtend
     //activity
     protected string $logName = "ogp_area_offer";
 
-    protected $fillable = ['ogp_area_id', 'users_id'];
+    protected $fillable = ['ogp_area_id', 'users_id', 'likes_cnt', 'dislikes_cnt'];
 
     public function area(): HasOne
     {
@@ -40,5 +40,10 @@ class OgpAreaOffer extends ModelActivityExtend
     public function comments(): HasMany
     {
         return $this->hasMany(OgpAreaOfferComment::class, 'ogp_area_offer_id', 'id');
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(OgpAreaOfferVote::class, 'ogp_area_offer_id', 'id');
     }
 }

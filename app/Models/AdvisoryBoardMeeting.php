@@ -45,6 +45,15 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
             ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS);
     }
 
+    public function siteFiles()
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB)
+            ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS)
+            ->where('parent_id', null)
+            ->whereLocale(app()->getLocale());
+    }
+
     /**
      * Get the model name
      */
