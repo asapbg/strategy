@@ -122,6 +122,7 @@ class ExecutorController extends AdminController
      */
     public function edit(Executor $executor)
     {
+
         return $this->view('admin.executors.edit', compact('executor'));
     }
 

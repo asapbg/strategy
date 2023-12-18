@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
 use App\Models\User;
+use App\Services\FileOcr;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -123,27 +124,32 @@ class MigrateNewsAndPublications extends Command
                 $news->save();
 
                 //dump($row->imagepath);
-                $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'News'.DIRECTORY_SEPARATOR.$row->imagepath);
-                $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->imagepath);
+                if (!empty($row->imagepath)) {
+                    $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'News'.DIRECTORY_SEPARATOR.$row->imagepath);
+                    $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->imagepath);
 
-                //dd($copy_from);
-                if (file_exists($copy_from)) {
-                    $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                    //dd($copy_from);
+                    if (file_exists($copy_from)) {
+                        $copied_file = true;
+                        if (!file_exists($to)) {
+                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                        }
 
-                    $mime_type = mime_content_type($to);
-                    if ($copied_file) {
-                        $file = new File([
-                            'id_object' => $news->id,
-                            'code_object' => File::CODE_OBJ_PUBLICATION,
-                            'filename' => $row->imagepath,
-                            'content_type' => $mime_type,
-                            'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->imagepath,
-                            'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
-                        ]);
-                        $file->save();
+                        $mime_type = mime_content_type($to);
+                        if ($copied_file) {
+                            $file = new File([
+                                'id_object' => $news->id,
+                                'code_object' => File::CODE_OBJ_PUBLICATION,
+                                'filename' => $row->imagepath,
+                                'content_type' => $mime_type,
+                                'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->imagepath,
+                                'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
+                            ]);
+                            $file->save();
 
-                        if ($file) {
-                            $news->file_id = $file->id;
+                            if ($file) {
+                                $news->file_id = $file->id;
+                            }
                         }
                     }
                 }
@@ -160,7 +166,7 @@ class MigrateNewsAndPublications extends Command
                  */
                 $old_files = DB::connection('old_strategy_app')
                     ->select("
-                        SELECT folderid,name,description,datecreated as created_at,datemodified as updated_at
+                        SELECT folderid,name,description,datecreated as created_at,datemodified as updated_at, createdbyuserid
                           FROM used_files as uf
                     INNER JOIN files ON files.id = uf.fileid
                          WHERE tabletype = '1' AND recordid = '$news_id' AND
@@ -175,11 +181,37 @@ class MigrateNewsAndPublications extends Command
                         $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$upload_dir.$old_file->name);
 
                         if (file_exists($copy_from)) {
-                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                            $copied_file = true;
+                            if (!file_exists($to)) {
+                                $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                            }
 
                             if ($copied_file) {
-                                $langReq = new LanguageFileUploadRequest();
-                                $controller->uploadFileLanguages($langReq, $news->id, File::CODE_OBJ_PUBLICATION, false);
+                                foreach ($languages as $lang) {
+
+                                    $code = $lang['code'];
+                                    $mime_type = mime_content_type($to);
+
+                                    $version = 0;
+                                    $newFile = new File([
+                                        'id_object' => $news_id,
+                                        'code_object' => File::CODE_OBJ_PUBLICATION,
+                                        'filename' => $old_file->name,
+                                        'content_type' => $mime_type,
+                                        'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$old_file->name,
+                                        'description_'.$code => $old_file->description,
+                                        'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
+                                        'locale' => $code,
+                                        'version' => ($version + 1).'.0'
+                                    ]);
+                                    $newFile->save();
+                                    $fileIds[] = $newFile->id;
+                                    $ocr = new FileOcr($newFile->refresh());
+                                    $ocr->extractText();
+                                }
+
+                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
                             }
                         }
 
@@ -187,7 +219,6 @@ class MigrateNewsAndPublications extends Command
                 }
 
                 $news_inserts++;
-
             }
         }
 
@@ -266,27 +297,32 @@ class MigrateNewsAndPublications extends Command
                 $publications->save();
 
                 //dump($row->image);
-                $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'Publications'.DIRECTORY_SEPARATOR.$row->image);
-                $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->image);
+                if (!empty($row->image)) {
+                    $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'Publications'.DIRECTORY_SEPARATOR.$row->image);
+                    $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->image);
 
-                //dd($copy_from);
-                if (file_exists($copy_from)) {
-                    $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                    //dd($copy_from);
+                    if (file_exists($copy_from)) {
+                        $copied_file = true;
+                        if (!file_exists($to)) {
+                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                        }
 
-                    $mime_type = mime_content_type($to);
-                    if ($copied_file) {
-                        $file = new File([
-                            'id_object' => $publications->id,
-                            'code_object' => File::CODE_OBJ_PUBLICATION,
-                            'filename' => $row->image,
-                            'content_type' => $mime_type,
-                            'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->image,
-                            'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
-                        ]);
-                        $file->save();
+                        $mime_type = mime_content_type($to);
+                        if ($copied_file) {
+                            $file = new File([
+                                'id_object' => $publications->id,
+                                'code_object' => File::CODE_OBJ_PUBLICATION,
+                                'filename' => $row->image,
+                                'content_type' => $mime_type,
+                                'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->image,
+                                'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
+                            ]);
+                            $file->save();
 
-                        if ($file) {
-                            $publications->file_id = $file->id;
+                            if ($file) {
+                                $publications->file_id = $file->id;
+                            }
                         }
                     }
                 }
@@ -303,7 +339,7 @@ class MigrateNewsAndPublications extends Command
                  */
                 $old_files = DB::connection('old_strategy_app')
                     ->select("
-                        SELECT folderid,name,description,datecreated as created_at,datemodified as updated_at
+                        SELECT folderid,name,description,datecreated as created_at,datemodified as updated_at, createdbyuserid
                           FROM used_files as uf
                     INNER JOIN files ON files.id = uf.fileid
                          WHERE tabletype = '2' AND recordid = '$publications_id' AND
@@ -318,11 +354,37 @@ class MigrateNewsAndPublications extends Command
                         $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$upload_dir.$old_file->name);
 
                         if (file_exists($copy_from)) {
-                            $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                            $copied_file = true;
+                            if (!file_exists($to)) {
+                                $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+                            }
 
                             if ($copied_file) {
-                                $langReq = new LanguageFileUploadRequest();
-                                $controller->uploadFileLanguages($langReq, $publications->id, File::CODE_OBJ_PUBLICATION, false);
+                                foreach ($languages as $lang) {
+
+                                    $code = $lang['code'];
+                                    $mime_type = mime_content_type($to);
+
+                                    $version = 0;
+                                    $newFile = new File([
+                                        'id_object' => $news_id,
+                                        'code_object' => File::CODE_OBJ_PUBLICATION,
+                                        'filename' => $old_file->name,
+                                        'content_type' => $mime_type,
+                                        'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$old_file->name,
+                                        'description_'.$code => $old_file->description,
+                                        'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
+                                        'locale' => $code,
+                                        'version' => ($version + 1).'.0'
+                                    ]);
+                                    $newFile->save();
+                                    $fileIds[] = $newFile->id;
+                                    $ocr = new FileOcr($newFile->refresh());
+                                    $ocr->extractText();
+                                }
+
+                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
                             }
                         }
 

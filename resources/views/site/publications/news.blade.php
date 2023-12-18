@@ -40,7 +40,7 @@
                 </div>
             </div>
             <p class="short-decription text-secondary">
-                {!! $news_row->translation?->short_content ? Str::limit($news_row->translation?->short_content, 200) : "" !!}
+                {!! strip_tags($news_row->translation?->short_content) ? strip_tags(Str::limit($news_row->translation?->short_content, 200)) : "" !!}
             </p>
             <a href="{{ route('library.details', [$news_row->type, $news_row->id]) }}" class="readmore mt-1"
                title="{{ $news_row->translation?->title }}"

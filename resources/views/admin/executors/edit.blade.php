@@ -11,6 +11,25 @@
                         <div class="form-group">
 
                             <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="eik">
+                                        {{ __('Name of contractor') }}
+                                    </label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <select class="form-control form-control-sm select2 @error('institution_id') is-invalid @enderror" name="institution_id" id="institution_id">
+                                            <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
+                                            @if(isset($institutions) && $institutions->count())
+                                                @foreach($institutions as $option)
+                                                    <option value="{{ $option->value }}" @if($option->value == old('institution_id', ($item->id ? $item->institution_id : ''))) selected @endif
+                                                    data-level="{{ $option->level }}" data-foa="{{ $option->foa }}">{{ $option->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 @foreach($languages as $lang)
                                     @php
                                         $default = $lang['default'];
@@ -19,17 +38,17 @@
                                         $translation = $executor->translations->where('locale', $code)->first();
                                     @endphp
                                     <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="col-sm-12 control-label" for="contractor_name_{{ $code }}">
-                                                {{ __('Name of contractor') }} ({{ $code_upper }})
-                                                @if($default)<span class="required">*</span>@endif
-                                            </label>
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <input type="text" name="contractor_name_{{ $code }}" id="contractor_name_{{ $code }}"
-                                                       class="form-control @error("contractor_name_$code"){{ 'is-invalid' }}@enderror"
-                                                       value="{{ old("contractor_name_$code") ?? $translation->contractor_name }}">
-                                            </div>
-                                        </div>
+{{--                                        <div class="form-group">--}}
+{{--                                            <label class="col-sm-12 control-label" for="contractor_name_{{ $code }}">--}}
+{{--                                                {{ __('Name of contractor') }} ({{ $code_upper }})--}}
+{{--                                                @if($default)<span class="required">*</span>@endif--}}
+{{--                                            </label>--}}
+{{--                                            <div class="col-md-12 col-sm-12 col-xs-12">--}}
+{{--                                                <input type="text" name="contractor_name_{{ $code }}" id="contractor_name_{{ $code }}"--}}
+{{--                                                       class="form-control @error("contractor_name_$code"){{ 'is-invalid' }}@enderror"--}}
+{{--                                                       value="{{ old("contractor_name_$code") ?? $translation->contractor_name }}">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
 
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="executor_name_{{ $code }}">
