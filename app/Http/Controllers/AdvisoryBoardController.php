@@ -79,8 +79,15 @@ class AdvisoryBoardController extends Controller
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AdvisoryBoard::class)
             ->with(['policyArea', 'translations'])
-            ->when($keywords, function ($query) use ($keywords) {
-                $query->where('name', 'like', '%' . $keywords . '%');
+            ->where(function ($query) use ($keywords) {
+                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
+                    $query->where('id', $keywords);
+                })
+                    ->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
+                        $query->whereHas('translations', function ($query) use ($keywords) {
+                            $query->where('name', 'like', '%' . $keywords . '%');
+                        });
+                    });
             })
             ->when($filter_field_of_action, function ($query) use ($filter_field_of_action) {
                 $query->where('policy_area_id', $filter_field_of_action);
