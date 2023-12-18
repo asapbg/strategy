@@ -189,7 +189,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function policyArea(): BelongsTo
     {
-        return $this->belongsTo(PolicyArea::class);
+        return $this->belongsTo(FieldOfAction::class);
     }
 
     /**

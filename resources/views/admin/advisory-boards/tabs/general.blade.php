@@ -17,8 +17,8 @@
                         <select id="policy_area_id" name="policy_area_id"
                                 class="form-control form-control-sm select2-no-clear">
                             <option value="">---</option>
-                            @if(isset($policy_areas) && $policy_areas->count() > 0)
-                                @foreach($policy_areas as $area)
+                            @if(isset($field_of_actions) && $field_of_actions->count() > 0)
+                                @foreach($field_of_actions as $area)
                                     @php $selected = old('policy_area_id', $item->policy_area_id ?? '') == $area->id ? 'selected' : '' @endphp
 
                                     <option

@@ -55,7 +55,6 @@ class AdvisoryBoardController extends Controller
             ->orderBy('id')
             ->get();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS . '_' . app()->getLocale())->first();
-        $keywords = '';
         $status = request()->offsetGet('status');
 
         $is_search = $request->has('search');
@@ -63,6 +62,7 @@ class AdvisoryBoardController extends Controller
         $filter_authority = $request->get('filter_authority');
         $filter_act_of_creation = $request->get('filter_act_of_creation');
         $filter_chairman_type = $request->get('filter_chairman_type');
+        $keywords = $request->get('keywords');
 
         $sort = ($request->offsetGet('sort'))
             ? $request->offsetGet('sort')

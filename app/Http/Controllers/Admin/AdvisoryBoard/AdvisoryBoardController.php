@@ -19,6 +19,7 @@ use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
 use App\Models\CustomRole;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\StrategicDocuments\Institution;
@@ -260,7 +261,7 @@ class AdvisoryBoardController extends AdminController
             $query->with('translations');
         }])->find($item->id);
 
-        $policy_areas = PolicyArea::with('translations')->orderBy('id')->get();
+        $field_of_actions = FieldOfAction::with('translations')->orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
@@ -297,7 +298,7 @@ class AdvisoryBoardController extends AdminController
             'admin.advisory-boards.edit',
             compact(
                 'item',
-                'policy_areas',
+                'field_of_actions',
                 'advisory_chairman_types',
                 'advisory_act_types',
                 'institutions',
