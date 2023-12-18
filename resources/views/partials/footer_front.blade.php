@@ -10,7 +10,7 @@
             </div>
 
             <div class="col-md-4 col-sm-12 mb-3">
-                <img class="d-block w-100 px-md-3 footer-img" src="../img/eu_white.png" alt="Европейски Съюз Европейски Социален Фонд" title="Европейски Съюз Европейски Социален Фонд">
+                <img class="d-block w-100 px-md-3 footer-img" src="{{ asset('/img/eu_white.png') }}" alt="Европейски Съюз Европейски Социален Фонд" title="Европейски Съюз Европейски Социален Фонд">
                <!-- <h3 class="text-light fs-4 fw-400">Контакти</h3>
                 <ul class="nav flex-column footer-nav">
                     <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Министерски съвет</a></li>
@@ -26,11 +26,11 @@
             </div>
 
             <div class="col-md-4 col-sm-12 mb-3">
-                <img class="d-block w-100 px-md-3 footer-img" src="../img/op-white.png" alt="Оперативна програма Добро управление" title="Оперативна програма Добро управление">
+                <img class="d-block w-100 px-md-3 footer-img" src="{{ asset('/img/op-white.png') }}" alt="Оперативна програма Добро управление" title="Оперативна програма Добро управление">
                 <!-- Секция за добавяне на страници от админ панела -->
                  <!-- <h3 class="text-light fs-4 fw-400">Страници</h3> -->
                  <!--<ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li> 
+                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
                 </ul>
                 -->
             </div>
@@ -95,12 +95,12 @@
             if (pageWidth > 991) {
                 navItem.forEach(function (item) {
                 item.style.padding = '2px 10px';
-            });           
+            });
             }
 
 
-     
-        } 
+
+        }
         else {
 
             if (document.getElementById("profile-toggle")) {
@@ -113,21 +113,21 @@
 
             document.getElementById("siteLogo").style.width = "55px";
 
-            
+
             if (pageWidth < 480) {
                 navItem.forEach(function (item) {
 
             document.getElementById("ms").style.fontSize = "14px";
             document.getElementById("ok").style.fontSize = "14px";
 
-            });           
+            });
             }
             else {
                 document.getElementById("ms").style.fontSize = "16px";
             document.getElementById("ok").style.fontSize = "16px";
             }
 
-         
+
 
             if (document.getElementById("register-link")) {
                 document.getElementById("register-link").style.fontSize = "16px";
