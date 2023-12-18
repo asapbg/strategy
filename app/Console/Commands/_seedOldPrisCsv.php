@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedOldPrisCsv extends Command
+class _seedOldPrisCsv extends Command
 {
     /** !!!!!!!!!!!!!!!!!!!! */
     /** WI DO NOT USE THIS */

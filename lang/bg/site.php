@@ -41,5 +41,7 @@ return [
     'pris.archive' => 'Актове на МС (архив)',
     'pris.page_title' => 'Актове на Министерския съвет',
     'public_consultation.other_documents' => 'Други',
+    'registration_in_system' => 'Регистрация в системата',
+    'registration_disabled' => 'Регистрацията в платформата е преустановена временно поради обновяване на системата.',
 
 ];
