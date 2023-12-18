@@ -167,7 +167,7 @@ class ImpactAssessmentController extends Controller
         $sort_table = (in_array($order_by, Executor::TRANSLATABLE_FIELDS))
             ? "executor_translations"
             : "executors";
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : 50;
         $contractor_name = $request->get('contractor_name');
         $executor_name = $request->get('executor_name');
         $contract_subject = $request->get('contract_subject');
@@ -221,7 +221,9 @@ class ImpactAssessmentController extends Controller
         if ($is_search) {
             return $this->view('impact_assessment.executors-results', compact('executors'));
         }
+
+        $pageTitle = __('List of individuals and legal entities');
         return $this->view('impact_assessment.executors',
-            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search'));
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle'));
     }
 }

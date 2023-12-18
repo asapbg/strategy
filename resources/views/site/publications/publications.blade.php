@@ -44,7 +44,7 @@
                                 {{ $publication->category?->name }}
                             </a>
                             <div class="anotation text-secondary mb-2 mt-2">
-                                {!! $publication->translation?->short_content ? Str::limit($publication->translation?->short_content, 200) : "" !!}
+                                {!! strip_tags($publication->translation?->short_content) ? strip_tags(Str::limit($publication->translation?->short_content, 200)) : "" !!}
                             </div>
                             <div class="meta-consul">
                                 <span class="text-secondary">

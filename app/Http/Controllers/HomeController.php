@@ -30,7 +30,7 @@ class HomeController extends Controller
             ->whereType(PublicationTypesEnum::TYPE_NEWS)
             ->whereDate('published_at', '<=', date('Y-m-d'))
             ->orderBy('published_at', 'DESC')
-            ->get();
+            ->paginate(3);
 
         //dd($publications->toArray());
         return $this->view('site.home.index',

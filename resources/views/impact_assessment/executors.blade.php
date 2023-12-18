@@ -202,7 +202,7 @@
                 max: {{ $max_price }},
                 values: [ {{ $p_min ?? $min_price }}, {{ $p_max ?? $max_price }} ],
                 slide: function( event, ui ) {
-                    $("#amount").val(ui.values[0] + "лв. - " + ui.values[1] + "лв." );
+                    $("#amount").val(ui.values[0] + " лв. - " + ui.values[1] + " лв." );
                     $("#price_range_min").val(ui.values[0]);
                     $("#price_range_max").val(ui.values[1]);
                 },
@@ -210,7 +210,7 @@
                     $(".current_page").val(1);
                 }
             });
-            $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1 ) + "лв." );
+            $("#amount").val($("#slider-range").slider("values", 0) + " лв. - " + $("#slider-range").slider("values", 1 ) + " лв." );
         });
     </script>
 @endpush

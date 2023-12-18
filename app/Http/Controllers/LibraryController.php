@@ -19,6 +19,9 @@ class LibraryController extends Controller
         $type = PublicationTypesEnum::TYPE_LIBRARY;
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : 6;
 
         $publications = $this->getPublications($request, $type);
 
@@ -29,7 +32,7 @@ class LibraryController extends Controller
         $publicationCategories = PublicationCategory::optionsList(true);
 
         return $this->view('site.publications.index',
-            compact('publications','type', 'publicationCategories', 'pageTitle'));
+            compact('publications','type', 'publicationCategories', 'pageTitle','paginate'));
     }
 
     /**
@@ -41,6 +44,9 @@ class LibraryController extends Controller
         $type = PublicationTypesEnum::TYPE_NEWS;
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : 6;
 
         $news = $this->getPublications($request, $type);
 
@@ -51,7 +57,7 @@ class LibraryController extends Controller
         $publicationCategories = PublicationCategory::optionsList(true);
 
         return $this->view('site.publications.index',
-            compact('news','type', 'publicationCategories', 'pageTitle'));
+            compact('news','type', 'publicationCategories', 'pageTitle','paginate'));
     }
 
     /**
@@ -85,7 +91,7 @@ class LibraryController extends Controller
             : "DESC";
         $order_by = ($request->offsetGet('order_by'))
             ? $request->offsetGet('order_by')
-            : "id";
+            : "published_at";
         $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
             ? "publication_translations"
             : "publication";

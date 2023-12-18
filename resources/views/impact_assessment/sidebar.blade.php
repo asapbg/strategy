@@ -43,7 +43,7 @@
                             </ul>
                             <li class="mb-2 @if(str_contains(url()->current(), '/executors')) active-item-left p-1 @endif">
                                 <a href="{{ route('impact_assessment.executors') }}" class="link-dark text-decoration-none">
-                                    {{ __('List of the preparers of evaluations under the ZNA') }}
+                                    {{ __('List of individuals and legal entities') }}
                                 </a>
                             </li>
                         </ul>
