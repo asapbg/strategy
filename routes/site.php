@@ -147,6 +147,7 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
 
     Route::post('develop-a-new-action-plans/add-comment/{offer}', 'storeComment')->name('ogp.develop_new_action_plans.add_comment');
     Route::post('develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
+    Route::post('develop-a-new-action-plans/offer-vote/{id}/{like}', 'voteOffer')->name('ogp.develop_new_action_plans.vote');
 
 
 });

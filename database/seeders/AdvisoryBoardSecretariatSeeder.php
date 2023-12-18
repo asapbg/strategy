@@ -28,7 +28,7 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
         $skipped = 0;
         $files_imported = 0;
 
-        $old_secretariats_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" LIKE '%secretariate%'");
+        $old_secretariats_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" iLIKE '%secretariate%' and c.\"toVersion\" is null");
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 

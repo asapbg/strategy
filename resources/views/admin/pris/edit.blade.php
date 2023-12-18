@@ -256,8 +256,8 @@
                                             <div class="col-12"></div>
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="tags[]">
-                                                        {{ trans_choice('custom.tags', 2) }} <i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}"></i>
+                                                    <label class="col-sm-12 control-label" for="tags[]"
+                                                    {{ trans_choice('custom.tags', 2) }} @if($item->id)<i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}" data-url="{{ route('admin.pris.tag.ajax.form', $item) }}"></i>@endif
                                                     </label>
                                                     <div class="col-12">
 {{--                                                        @php($itemTagsIds = $item->tags->pluck('id')->toArray())--}}
@@ -429,13 +429,15 @@
                 });
             });
 
-            $('.add-tag').on('click', function (){
-                new MyModal({
-                    title: '<?php echo __('custom.new_tag') ?>',
-                    footer: '<button type="button" class="btn btn-success" onclick="validateTagForm();">' + '<?php echo __('custom.add') ?> ' + '</button><button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ '<?php echo __('custom.cancel') ?>' +'">'+ '<?php echo __('custom.cancel') ?>' +'</button>',
-                    bodyLoadUrl: '{{ route('admin.pris.tag.ajax.form', $item) }}',
+            @if($item->id)
+                $('.add-tag').on('click', function (){
+                    new MyModal({
+                        title: '<?php echo __('custom.new_tag') ?>',
+                        footer: '<button type="button" class="btn btn-success" onclick="validateTagForm();">' + '<?php echo __('custom.add') ?> ' + '</button><button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ '<?php echo __('custom.cancel') ?>' +'">'+ '<?php echo __('custom.cancel') ?>' +'</button>',
+                        bodyLoadUrl: $(this).data('url'),
+                    });
                 });
-            });
+            @endif
         });
     </script>
 @endpush

@@ -63,6 +63,18 @@
                     {{ __('custom.searching') }}
                 </h2>
 
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div class="mb-3 d-flex flex-column  w-100">
+                            <label for="keywords"
+                                   class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
+                            <input id="keywords" value="{{ request()->get('keywords') }}"
+                                   class="form-control form-control-sm"
+                                   type="text" name="keywords">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="input-group">
                         <div class="mb-3 d-flex flex-column  w-100">
