@@ -155,7 +155,7 @@
                             </a>
                         @endif
                 </div>
-                @if (! $strategicDocument->link_to_monitorstat)
+                @isset($strategicDocument->link_to_monitorstat)
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
                         <a href="{{ $strategicDocument->link_to_monitorstat  }}" class="main-color text-decoration-none fs-18">
@@ -163,7 +163,7 @@
                             <i class="fas fa-link me-2 main-color fs-18" title="Тип консултация"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
                         </a>
                     </div>
-                @endif
+                @endisset
             </div>
 
 
