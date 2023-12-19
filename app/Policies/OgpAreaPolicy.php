@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\OgpStatusEnum;
 use App\Models\OgpArea;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -94,6 +95,6 @@ class OgpAreaPolicy
 
     public function createOffer(User $user, OgpArea $ogpArea): bool
     {
-        return $user->id && $ogpArea->status->can_edit;
+        return $user->id && $ogpArea->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 }

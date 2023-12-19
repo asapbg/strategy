@@ -707,7 +707,13 @@ return [
     'deadline' => 'Срок',
     'edit_ogp_area' => 'Редактиране на план за действие',
     'new_tag' => 'Нов Термин',
-    'unidentified' => 'Неустановен',
     'Area' => "Област|Области",
-
+    'unidentified' => 'Неустановен',
+    'develop_a_new_action_plans' => 'Разработване на нов план за действие',
+    'area' => "Област|Области",
+    'plans' => "План|Планове",
+    'ogp_plans_commitment' => "Ангажимент|Ангажименти",
+    'ogp_plans_arrangement' => "Мярка|Мерки",
+    'ogp_plans_area' => "Област|Области",
+    'arrangement' => 'Мярка|Мерки',
 ];

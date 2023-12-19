@@ -9,7 +9,7 @@
                     <div class="consul-item">
                         <div class="consult-item-header d-flex justify-content-between">
                             <div class="consult-item-header-link">
-                                <a href="{{ route('ogp.develop_new_action_plans.show', $item->id) }}" class="text-decoration-none" title="{{ $item->name }}">
+                                <a href="{{ route($route_view_name, $item->id) }}" class="text-decoration-none" title="{{ $item->name }}">
                                     <h3>{{ $item->name }}</h3>
                                 </a>
                             </div>
@@ -43,7 +43,7 @@
                                     <span class="text-secondary">
                                     <span class="text-dark">{{ __('custom.deadline') }}: </span> {{ displayDate($item->from_date) }} - {{ displayDate($item->to_date) }}
                                     </span>
-                            <a href="{{ route('ogp.develop_new_action_plans.show', $item->id) }}" title="{{ $item->name }}">
+                            <a href="{{ route($route_view_name, $item->id) }}" title="{{ $item->name }}">
                                 <i class="fas fa-arrow-right read-more"></i>
                             </a>
                         </div>

@@ -26,9 +26,6 @@ class OgpAreaRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'from_date' => 'required',
-            'to_date' => 'required',
-            'status_id' => 'required|gt:0',
             'active' => '',
         ];
 

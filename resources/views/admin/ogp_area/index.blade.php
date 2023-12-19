@@ -51,7 +51,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="fa fa-search"></i> {{__('custom.search')}}
                                 </button>
-                                <a href="{{route('admin.users')}}" class="btn btn-default">
+                                <a href="{{route('admin.ogp.area.index')}}" class="btn btn-default">
                                     <i class="fas fa-eraser"></i> {{__('custom.clear')}}
                                 </a>
                             </div>
@@ -66,9 +66,9 @@
 
                     <div class="mb-3">
 
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Area@index'])
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Plans@index'])
 
-                        <a href="{{ route('admin.ogp.area.create') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route('admin.ogp.plan.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{__('custom.add')}}
                         </a>
 
@@ -105,7 +105,7 @@
                                            data-target="#modal-delete-resource"
                                            data-resource-id="{{ $v->id }}"
                                            data-resource-name="{{ "$v->name" }}"
-                                           data-resource-delete-url="{{ route('admin.users.delete', $v->id) }}"
+                                           data-resource-delete-url="{{ route('admin.ogp.area.delete', $v->id) }}"
                                            data-toggle="tooltip"
                                            title="{{__('custom.deletion')}}">
                                             <i class="fa fa-trash"></i>

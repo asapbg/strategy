@@ -113,6 +113,31 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="member_institution">
+                                            {{ trans_choice('custom.institution', 1) }}
+                                        </label>
+
+                                        <select id="member_institution" name="institution_id"
+                                                class="form-control form-control-sm select2-no-clear">
+                                            <option value="">---</option>
+                                            @if(isset($institutions) && $institutions->count() > 0)
+                                                @foreach($institutions as $institution)
+                                                    <option
+                                                        value="{{ $institution->id }}">{{ $institution->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label class="control-label" for="member_job_bg">

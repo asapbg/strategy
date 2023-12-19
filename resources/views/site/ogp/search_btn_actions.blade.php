@@ -7,7 +7,9 @@
         <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
 
         @can('create', \App\Models\OgpArea::class)
-        <a href="{{ route('admin.ogp.area.create') }}" class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</a>
+            @if(!strstr(url()->current(), 'national-action-plans'))
+            <a href="{{ route('admin.ogp.plan.create') }}" class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>{{ __('custom.adding') }}</a>
+            @endif
         @endcan
     </div>
 </div>

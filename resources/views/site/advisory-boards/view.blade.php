@@ -158,13 +158,23 @@
                             @if(isset($item->members) && $item->members->count() > 0)
                                 @foreach($item->members as $member)
                                     <li class="list-group-item">
-                                        @if(empty($member->member_name) && !empty($member->member_job))
-                                            {{ $member->member_job }}
-                                        @elseif(!empty($member->member_job))
-                                            {{ $member->member_name . ', ' .$member->member_job }}
-                                        @else
-                                            {{ $member->member_name }}
-                                        @endif
+                                        @php
+                                            $name = '';
+
+                                            if (!empty($member->member_name)) {
+                                                $name .= $member->member_name;
+                                            }
+
+                                            if (!empty($member->member_job)) {
+                                                $name .= ', ' . $member->member_job;
+                                            }
+
+                                            if (!empty($member->institution)) {
+                                                $name .= ', ' . '<a href="#" class="text-decoration-none">' . $member->institution->name . '</a>';
+                                            }
+                                        @endphp
+
+                                        {!! $name !!}
                                     </li>
                                 @endforeach
                             @endif
@@ -280,7 +290,6 @@
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
-
 
                             @foreach($item->meetings as $meeting)
                                 <p>
