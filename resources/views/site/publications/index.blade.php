@@ -92,7 +92,11 @@
                     <div class="col-md-8 text-end">
                         <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS Абониране</button>
                         <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
-                        <button class="btn btn-success text-success"><i class="fas fa-circle-plus text-success me-1"></i>Добавяне</button>
+                        @canany(['manage.*', 'manage.publications'])
+                            <a href="{{ route('admin.publications.edit') }}" class="btn btn-success text-success" target="_blank">
+                                <i class="fas fa-circle-plus text-success me-1"></i>{{ trans_choice('custom.adding', 1) }}
+                            </a>
+                        @endcan
                     </div>
                 </div>
 

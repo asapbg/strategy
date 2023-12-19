@@ -11,6 +11,7 @@ use App\Models\Pris;
 use App\Models\PrisTranslation;
 use App\Models\PublicConsultationContact;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentTranslation;
 use App\Models\Timeline;
 use Illuminate\Console\Command;
@@ -122,6 +123,22 @@ class clearDb extends Command
 
                 StrategicDocument::whereIn('id', $ids)->withTrashed()->forceDelete();
                 CommonController::fixSequence('strategic_document');
+
+                $files = StrategicDocumentFile::whereNotNull('old_file_id')->withTrashed()->get();
+
+                foreach ($files as $file) {
+                    $didDelete = Storage::disk('public_uploads')->delete($file->path);
+
+                    if ($didDelete) {
+                        StrategicDocumentFile::where('id', $file->id)->forceDelete();
+
+                        $this->info('Deleted file with ID: ' . $file->id);
+                    } else {
+                        $this->info('File with ID: ' . $file->id . ' couldn\'t be deleted!!');
+                    }
+                }
+
+                CommonController::fixSequence('strategic_document_file');
                 break;
             default:
                 $this->error('Section not found!');

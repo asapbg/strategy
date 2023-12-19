@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('publication_category_translations');
+        Schema::dropIfExists('publication_category');
+
         Schema::create('publication_category', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('active')->default(1);
+            $table->smallInteger('type')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

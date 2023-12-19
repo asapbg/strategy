@@ -77,6 +77,8 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
             $copied_files = copyFiles($directory_to_copy_from, $directory, $report->folderID);
 
             if (!empty($copied_files)) {
+                $old_report_files_db = DB::connection('old_strategy')->select("select * from dlfileentry d where d.\"folderId\" = $report->folderID");
+
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
@@ -89,9 +91,10 @@ class AdvisoryBoardWorkingProgramsSeeder extends Seeder
                             $file['content_type'],
                             $file['path'],
                             $file['version'],
-                            $report->description,
-                            $report->title,
+                            getOldFileInformation($file['filename'], $old_report_files_db)?->description,
+                            getOldFileInformation($file['filename'], $old_report_files_db)?->title,
                             $lang['code'],
+                            getOldFileInformation($file['filename'], $old_report_files_db)?->createDate
                         );
 
                         $ocr = new FileOcr($file_record->refresh());

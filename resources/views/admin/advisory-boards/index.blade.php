@@ -67,6 +67,7 @@
                             <th>ID</th>
                             <th>{{ trans_choice('validation.attributes.advisory_name', 1) }}</th>
                             <th>{{ __('custom.active_m') }}</th>
+                            <th>{{ __('custom.published') }}</th>
                             <th>{{ __('validation.attributes.created_at') }}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
@@ -80,6 +81,7 @@
                                     <td>
                                         @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => 'AdvisoryBoard'])
                                     </td>
+                                    <td>{{ $item->public ? __('custom.yes') : __('custom.no') }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('view', $item)

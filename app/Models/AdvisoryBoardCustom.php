@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $advisory_board_id
  * @property int $order
  *
- * @method static where(string $string, int $id)
  * @method static find(mixed $section_id)
  */
 class AdvisoryBoardCustom extends ModelActivityExtend
@@ -37,6 +36,15 @@ class AdvisoryBoardCustom extends ModelActivityExtend
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
+    }
+
+    public function siteFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_AB)
+            ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION)
+            ->where('parent_id', null)
+            ->whereLocale(app()->getLocale());
     }
 
     /**

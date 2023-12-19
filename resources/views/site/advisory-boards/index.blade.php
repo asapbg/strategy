@@ -63,6 +63,18 @@
                     {{ __('custom.searching') }}
                 </h2>
 
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div class="mb-3 d-flex flex-column  w-100">
+                            <label for="keywords"
+                                   class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
+                            <input id="keywords" value="{{ request()->get('keywords') }}"
+                                   class="form-control form-control-sm"
+                                   type="text" name="keywords">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="input-group">
                         <div class="mb-3 d-flex flex-column  w-100">
@@ -235,7 +247,7 @@
             </label>
             <select class="form-select w-auto group-by-select" name="paginate" id="results-per-page">
                 @foreach([5,10,50,100,150,200] as $per_page)
-                    <option value="{{ $per_page }}" @if(request()->offsetGet('paginate') == $per_page) selected @endif>
+                    <option value="{{ $per_page }}" @if(request()->offsetGet('paginate') ?? 50 == $per_page) selected @endif>
                         {{ $per_page }}
                     </option>
                 @endforeach

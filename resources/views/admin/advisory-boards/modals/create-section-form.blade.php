@@ -33,31 +33,6 @@
                         @endforeach
                     </div>
 
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="control-label" for="order">
-                                    {{ trans_choice('custom.order', 1) }}
-                                </label>
-
-                                <select id="order" name="order"
-                                        class="form-control form-control-sm select2-no-clear">
-                                    <option value="" selected>{{ __('custom.custom_section_order_end') }}</option>
-
-                                    @if(isset($sections) && $sections->count() >= 2)
-                                        @for($i=2; $i<=$sections->count(); $i++)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    @endif
-
-                                    <option value="9999">{{ __('custom.custom_section_order_start') }}</option>
-                                </select>
-
-                                <div class="text-danger mt-1 error_advisory_type_id"></div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Описание -->
                     <div class="row mb-2">
                         @foreach(config('available_languages') as $lang)

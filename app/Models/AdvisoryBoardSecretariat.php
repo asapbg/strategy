@@ -48,7 +48,8 @@ class AdvisoryBoardSecretariat extends ModelActivityExtend
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
-            ->where('parent_id', null);
+            ->where('parent_id', null)
+            ->whereLocale(app()->getLocale());
     }
 
     public function files(): HasMany

@@ -39,7 +39,7 @@ class seedOldStrategicDocuments extends Command
     {
         $locales = config('available_languages');
 
-        $maxOldId = DB::connection('old_strategy_app')->select('SELECT MAX(dbo.strategicdocuments.id) FROM dbo.strategicdocuments')[0]->max;
+        $ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         $oldCategories = collect(
             DB::connection('old_strategy_app')->select('SELECT id, parentid, sectionid, categoryname FROM dbo.categories WHERE languageid = 1')
@@ -64,7 +64,7 @@ class seedOldStrategicDocuments extends Command
                 CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at
             FROM dbo.strategicdocuments AS sd
             LEFT JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
-            WHERE sd.languageid = 1 AND sd.id > $maxOldId"
+            WHERE sd.languageid = 1"
         );
 
         $policyAreas = PolicyArea::with('translations')->get();
@@ -122,25 +122,28 @@ class seedOldStrategicDocuments extends Command
                 );
 
                 $title = $data['title'];
-                $description = htmlspecialchars_decode($data['description']);
+                $description = $data['description'];
 
                 // Create accept act institution if missing
-                $acceptingInstitution = $acceptingInstitutions->where('name', $data['institution_type_name'])->first();
+                if (isset($data['institution_type_name'])) {
+                    $institutionName = trim($data['institution_type_name']);
 
-                if (!isset($acceptingInstitution)) {
-                    $acceptingInstitution = new AuthorityAcceptingStrategic();
-                    $acceptingInstitution->save();
+                    $acceptingInstitution = $acceptingInstitutions->where('name', $institutionName)->first();
 
-                    foreach ($locales as $locale) {
-                        $acceptingInstitution->translateOrNew($locale['code'])->name = $data['institution_type_name'];
+                    if (!isset($acceptingInstitution)) {
+                        $acceptingInstitution = new AuthorityAcceptingStrategic();
+
+                        foreach ($locales as $locale) {
+                            $acceptingInstitution->translateOrNew($locale['code'])->name = $institutionName;
+                        }
+
+                        $acceptingInstitution->save();
                     }
-                }
 
-                $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+                    $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+                }
                 //
 
-                // TODO: This is seemingly missing from the old DB
-                $data['strategic_document_type_id'] = 1;
                 $data['user_id'] = $ourUsers[$oldDocument->user_id] ?? null;
 
                 unset(
@@ -150,9 +153,17 @@ class seedOldStrategicDocuments extends Command
                     $data['institution_type_name']
                 );
 
-                $strategicDoc = StrategicDocument::create($data);
+                if (isset($ourDocuments[$oldDocument->old_id])) {
+                    $strategicDoc = StrategicDocument::withTrashed()->find($ourDocuments[$oldDocument->old_id]);
 
-                $this->info('Inserted data with ID: ' . $strategicDoc->id);
+                    $strategicDoc->update($data);
+
+                    $this->info('Updated data with ID: ' . $strategicDoc->id);
+                } else {
+                    $strategicDoc = StrategicDocument::create($data);
+
+                    $this->info('Inserted data with ID: ' . $strategicDoc->id);
+                }
 
                 foreach ($locales as $locale) {
                     $strategicDoc->translateOrNew($locale['code'])->title = $title;

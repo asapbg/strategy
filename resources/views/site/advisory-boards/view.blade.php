@@ -40,7 +40,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
 
         <!-- Right side -->
@@ -64,20 +63,6 @@
                                        title="{{ $item->policyArea?->name }}"></i>
                                     {{ $item->policyArea?->name }}
                                 </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Наименование -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('custom.name_of_advisory_board') }}</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                {{ $item->name }}
                             </li>
                         </ul>
                     </div>
@@ -141,13 +126,14 @@
             </div>
 
             <!-- Заместник председатели -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('custom.vice_chairman_site') }}</h3>
+            @if(isset($item->viceChairmen) && $item->viceChairmen->count() > 0)
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('custom.vice_chairman_site') }}</h3>
 
-                        <ul class="list-group list-group-flush">
-                            @if(isset($item->viceChairmen) && $item->viceChairmen->count() > 0)
+                            <ul class="list-group list-group-flush">
+
                                 @foreach($item->viceChairmen as $chairman)
                                     <li class="list-group-item">
                                         @if(!empty($chairman->member_job))
@@ -157,11 +143,11 @@
                                         @endif
                                     </li>
                                 @endforeach
-                            @endif
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Членове -->
             <div class="row mb-4 ks-row">
@@ -172,13 +158,23 @@
                             @if(isset($item->members) && $item->members->count() > 0)
                                 @foreach($item->members as $member)
                                     <li class="list-group-item">
-                                        @if(empty($member->member_name) && !empty($member->member_job))
-                                            {{ $member->member_job }}
-                                        @elseif(!empty($member->member_job))
-                                            {{ $member->member_name . ', ' .$member->member_job }}
-                                        @else
-                                            {{ $member->member_name }}
-                                        @endif
+                                        @php
+                                            $name = '';
+
+                                            if (!empty($member->member_name)) {
+                                                $name .= $member->member_name;
+                                            }
+
+                                            if (!empty($member->member_job)) {
+                                                $name .= ', ' . $member->member_job;
+                                            }
+
+                                            if (!empty($member->institution)) {
+                                                $name .= ', ' . '<a href="#" class="text-decoration-none">' . $member->institution->name . '</a>';
+                                            }
+                                        @endphp
+
+                                        {!! $name !!}
                                     </li>
                                 @endforeach
                             @endif
@@ -234,13 +230,32 @@
             @endif
 
             <!-- Правилник за вътрешната организация на дейността -->
-            @if(!empty($item->regulatoryFiles) && $item->regulatoryFiles->count() > 0)
+            @if(!empty($item->organizationRule) && $item->organizationRule->count() > 0)
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.rules_internal_organization') }}</h3>
 
-                            @foreach($item->regulatoryFiles as $file)
+                            {!! $item->organizationRule->description !!}
+
+                            @foreach($item->organizationRule->siteFiles as $file)
+                                @includeIf('site.partial.file', ['file' => $file])
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Акт на създаване -->
+            @if(!empty($item->establishment) && $item->establishment->count() > 0)
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('validation.attributes.act_of_creation') }}</h3>
+
+                            {!! $item->establishment->description !!}
+
+                            @foreach($item->establishment->siteFiles as $file)
                                 @includeIf('site.partial.file', ['file' => $file])
                             @endforeach
                         </div>
@@ -249,18 +264,18 @@
             @endif
 
             <!-- Работна програма -->
-            @if(!empty($item->advisoryFunction))
+            @if(!empty($item->workingProgram))
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-3 fs-4">{{ __('custom.function') }}</h3>
 
                             <p>
-                                {!! $item->advisoryFunction->description !!}
+                                {!! $item->workingProgram->description !!}
                             </p>
 
-                            @if(!empty($item->advisoryFunction?->files) && $item->advisoryFunction?->files->count() > 0)
-                                @foreach($item->advisoryFunction?->files as $file)
+                            @if(!empty($item->workingProgram->siteFiles) && $item->workingProgram->siteFiles->count() > 0)
+                                @foreach($item->workingProgram->siteFiles as $file)
                                     @includeIf('site.partial.file', ['file' => $file])
                                 @endforeach
                             @endif
@@ -276,7 +291,6 @@
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
 
-
                             @foreach($item->meetings as $meeting)
                                 <p>
                                     {!! $meeting->description !!}
@@ -284,9 +298,9 @@
                             @endforeach
 
                             @foreach($item->meetings as $meeting)
-                                @if(isset($meeting->files) && $meeting->files->count() > 0)
-                                    @foreach($meeting->files as $file)
-                                        @includeIf('site.partial.file', ['file' => $file])
+                                @if(isset($meeting->siteFiles) && $meeting->siteFiles->count() > 0)
+                                    @foreach($meeting->siteFiles as $file)
+                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
                                     @endforeach
                                 @endif
                             @endforeach
@@ -347,8 +361,8 @@
 
                                     <p>{!! $section->body !!}</p>
 
-                                    @if(!empty($section->files) && $section->files->count() > 0)
-                                        @foreach($section->files as $file)
+                                    @if(!empty($section->siteFiles) && $section->siteFiles->count() > 0)
+                                        @foreach($section->siteFiles as $file)
                                             @includeIf('site.partial.file', ['file' => $file])
                                         @endforeach
                                     @endif

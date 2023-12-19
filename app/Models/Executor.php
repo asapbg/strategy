@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
 
 class Executor extends ModelActivityExtend implements TranslatableContract
 {
@@ -11,7 +13,6 @@ class Executor extends ModelActivityExtend implements TranslatableContract
 
     const MODULE_NAME = ('custom.executors');
     const TRANSLATABLE_FIELDS = [
-        'contractor_name',
         'executor_name',
         'contract_subject',
         'services_description',
@@ -26,7 +27,7 @@ class Executor extends ModelActivityExtend implements TranslatableContract
     /**
      * @var string[]
      */
-    protected $fillable = ['eik', 'contract_date', 'price'];
+    protected $fillable = ['eik', 'contract_date', 'price', 'institution_id'];
 
     /**
      * The name of the Model that will be used for activity logs
@@ -34,4 +35,12 @@ class Executor extends ModelActivityExtend implements TranslatableContract
      * @var string
      */
     protected string $logName = 'executors';
+
+    /**
+     * @return belongsTo
+     */
+    public function institution()
+    {
+        return $this->belongsTo(Institution::class);
+    }
 }

@@ -369,7 +369,9 @@
                     <div class="col-lg-4 mb-4">
                         <div class="post-box">
                             <div class="post-img">
-                                <img src="{{ asset($publication->mainImg?->path) }}" class="img-fluid" alt="{{ $publication->translation->title }}">
+                                <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
+                                     alt="{{ $publication->translation->title }}"
+                                >
                             </div>
                             <span class="post-date text-secondary">{{ displayDate($publication->published_at) }} г.</span>
                             <h3 class="post-title">{{ $publication->translation->title }}</h3>
@@ -400,9 +402,9 @@
                             </div>
                             <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
                             <p class="short-decription text-secondary">
-                                {{ $publication->translation->short_content }}
+                                {!! strip_tags($publication->translation?->short_content) ? strip_tags(Str::limit($publication->translation?->short_content, 200)) : "" !!}
                             </p>
-                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore stretched-link mt-1" title="{{ $publication->translation->title }}">
+                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
                                 Прочетете още <i class="fas fa-long-arrow-right"></i>
                             </a>
                         </div>

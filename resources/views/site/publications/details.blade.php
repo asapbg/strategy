@@ -13,7 +13,6 @@
     @endphp
 
     <div class="col-lg-10 py-5 right-side-content">
-        <h2 class="obj-title mb-4">{{ $publication->translation->title }}</h2>
         <div class="row">
             <div class="col-md-8">
                 <a href="javascript:;" class="text-decoration-none">
@@ -49,10 +48,12 @@
         </div>
         <hr>
         <div class="mb-3">
+            <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}"
+                 class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
+            >
             {!! $publication->translation->content !!}
-            <a href="">
-                Министерство на електронното управление
-            </a>
+
+            <a href=""></a>
         </div>
 
         @php
@@ -76,7 +77,7 @@
             </div>
         @endif
 
-        <a class="btn btn-primary mt-4 mb-5" href="{{ route('library.news') }}">Обратно към списъка с новини</a>
+        <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">Обратно към списъка с новини</a>
     </div>
 
 </div>

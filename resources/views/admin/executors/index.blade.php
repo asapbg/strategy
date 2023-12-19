@@ -12,12 +12,20 @@
 
                         <div class="row">
 
-                            <div class="col-md-3 col-sm-6">
+                            <div class="col-md-12">
                                 <div class="input-group">
                                     <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="contractor_name" class="form-label">{{ __('Name of contractor') }}</label>
-                                        <input id="contractor_name" class="form-control" name="contractor_name" type="text"
-                                               value="{{ request()->get('contractor_name', '') }}">
+                                        <label for="institutions" class="form-label">{{ __('Name of contractor') }}</label>
+                                        <select class="form-control form-control-sm select2" name="institutions[]" id="institutions" multiple>
+                                            <option value=""></option>
+                                            @foreach($institutions as $institution)
+                                                <option value="{{ $institution->id }}"
+                                                        @if(is_array($req_institutions) && in_array($institution->id,$req_institutions)) selected @endif
+                                                >
+                                                    {{ $institution->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +63,8 @@
                             </div>
 
                             <div class="col-xs-12 col-md-3 col-sm-4 mb-2">
-                                <div>
+                                <label class="form-label">&nbsp;</label>
+                                <div class="input-group">
                                     <button type="submit" name="search" value="1" class="btn btn-success mr-1">
                                         <i class="fa fa-search"></i> {{ __('custom.search') }}
                                     </button>
@@ -95,7 +104,7 @@
                         @foreach($executors as $executor)
                             <tr>
                                 <td>{{ $executor->id }}</td>
-                                <td>{{ $executor->contractor_name }}</td>
+                                <td>{{ $executor->institution?->name ?? $translation?->contractor_name }}</td>
                                 <td>{{ $executor->executor_name }}</td>
                                 <td>{{ displayDate($executor->contract_date) }}</td>
                                 <td>

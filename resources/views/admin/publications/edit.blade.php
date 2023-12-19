@@ -40,7 +40,9 @@
                                                 <label class="control-label" for="type">
                                                     {{ __('validation.attributes.type') }}:
                                                     @if($item->id)
-                                                        <span>{{ __('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type)) }}</span>
+                                                        <span>
+                                                            {{ trans_choice('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type), 1) }}
+                                                        </span>
                                                     @endif
                                                 </label>
                                                 @php

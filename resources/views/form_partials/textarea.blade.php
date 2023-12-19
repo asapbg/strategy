@@ -6,7 +6,7 @@ if (!isset($nameDots)) {
     $nameDots = str_replace('[', '.', $name);
     $nameDots = str_replace(']', '', $nameDots);
 }
-$value = old('', isset($value) ? $value : (\Arr::has($state, $nameDots) ? data_get($state, $nameDots) : ''));
+$value = old($nameDots, isset($value) ? $value : (\Arr::has($state, $nameDots) ? data_get($state, $nameDots) : ''));
 @endphp
 @if (isset($readOnly))
 <p class="@if(isset($pure_text_class) && $pure_text_class){{ $pure_text_class }}@endif">{{ $value }}</p>

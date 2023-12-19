@@ -26,7 +26,7 @@ class _seedOldPrisCsv extends Command
      * @var string
      */
 
-    protected $signature = 'old:pris_csv';
+    protected $signature = '_old:pris_csv';
 
     /**
      * The console command description.

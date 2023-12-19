@@ -276,7 +276,7 @@ function optionsPublicationTypes(bool $any = false, string|int $anyValue = '', s
         $options[] = ['value' => $anyValue, 'name' => $anyName];
     }
     foreach (\App\Enums\PublicationTypesEnum::options() as $key => $value) {
-        $options[] = ['value' => $value, 'name' => __('custom.public_sections.types.' . $key)];
+        $options[] = ['value' => $value, 'name' => trans_choice("custom.public_sections.types.$key", 1)];
     }
     return $options;
 }
@@ -641,6 +641,27 @@ if (!function_exists('currentLocale')) {
     }
 }
 
+if (!function_exists('clearString')) {
+
+    /**
+     * Clear string from new lines and multiple spaces
+     *
+     * @param $string
+     * @return string
+     */
+    function clearString($string): string
+    {
+        // Create an array with the values you want to replace
+        $searches = ["\r", "\n", "\r\n"];
+
+        // Replace the line breaks with a space
+        $string = str_replace($searches, " ", $string);
+
+        // Replace multiple spaces with one
+        return preg_replace('!\s+!', ' ', $string);
+    }
+}
+
 if (!function_exists('copyFile')) {
 
     /**
@@ -736,6 +757,29 @@ if (!function_exists('copyFile')) {
             }
 
             return $can;
+        }
+    }
+
+    if (!function_exists('getOldFileInformation')) {
+
+        /**
+         * Get information for an old file from the old db.
+         * It's using the lportal.dlfileentry table.
+         *
+         * @param       $search_name - The file name.
+         * @param array $files       - Array of file objects.
+         *
+         * @return mixed|null
+         */
+        function getOldFileInformation($search_name, array $files): object|null
+        {
+            foreach ($files as $file) {
+                if ($file->name == $search_name) {
+                    return $file;
+                }
+            }
+
+            return null;
         }
     }
 }

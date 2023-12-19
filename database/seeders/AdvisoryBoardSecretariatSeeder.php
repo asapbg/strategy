@@ -28,7 +28,9 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
         $skipped = 0;
         $files_imported = 0;
 
-        $old_secretariats_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" LIKE '%secretariate%'");
+        AdvisoryBoardSecretariat::truncate();
+
+        $old_secretariats_db = DB::connection('old_strategy')->select("SELECT * FROM councildetails c WHERE c.\"name\" iLIKE '%secretariate%' and c.\"toVersion\" is null");
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
@@ -61,6 +63,8 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
             $copied_files = copyFiles($directory_to_copy_from, $directory, $secretariat->folderID);
 
             if (!empty($copied_files)) {
+                $old_secretariat_files_db = DB::connection('old_strategy')->select("select * from dlfileentry d where d.\"folderId\" = $secretariat->folderID");
+
                 $service = app(AdvisoryBoardFileService::class);
 
                 foreach ($copied_files as $file) {
@@ -73,9 +77,10 @@ class AdvisoryBoardSecretariatSeeder extends Seeder
                             $file['content_type'],
                             $file['path'],
                             $file['version'],
-                            null,
-                            null,
-                            $lang['code']
+                            getOldFileInformation($file['filename'], $old_secretariat_files_db)?->description,
+                            getOldFileInformation($file['filename'], $old_secretariat_files_db)?->title,
+                            $lang['code'],
+                            getOldFileInformation($file['filename'], $old_secretariat_files_db)?->createDate
                         );
 
                         $ocr = new FileOcr($file_record->refresh());

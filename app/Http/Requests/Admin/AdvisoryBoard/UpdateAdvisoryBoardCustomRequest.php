@@ -31,7 +31,6 @@ class UpdateAdvisoryBoardCustomRequest extends FormRequest
         $rules = [
             'section_id'    => 'required|integer|exists:advisory_board_customs,id',
             'title'         => 'nullable|string',
-            'order'         => 'nullable|integer',
         ];
 
         foreach (config('available_languages') as $lang) {

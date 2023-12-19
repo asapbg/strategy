@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
+use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
@@ -10,6 +11,17 @@ use Illuminate\View\View;
 
 class LibraryController extends Controller
 {
+
+    /**
+     * @var string
+     */
+    protected $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
+
+    /**
+     * @var int
+     */
+    protected $paginate = 50;
+
     /**
      * @param Request $request
      * @return View
@@ -17,17 +29,23 @@ class LibraryController extends Controller
     public function publications(Request $request)
     {
         $type = PublicationTypesEnum::TYPE_LIBRARY;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : $this->paginate;
 
         $publications = $this->getPublications($request, $type);
 
+        $default_img = $this->default_img;
         if ($is_search) {
-            return $this->view('site.publications.publications', compact('publications'));
+            return $this->view('site.publications.publications', compact('publications', 'default_img'));
         }
 
-        $publicationCategories = PublicationCategory::optionsList(true);
+        $publicationCategories = PublicationCategory::optionsList(true, $type);
 
-        return $this->view('site.publications.index', compact('publications','type', 'publicationCategories'));
+        return $this->view('site.publications.index',
+            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));
     }
 
     /**
@@ -37,17 +55,23 @@ class LibraryController extends Controller
     public function news(Request $request)
     {
         $type = PublicationTypesEnum::TYPE_NEWS;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : $this->paginate;
 
         $news = $this->getPublications($request, $type);
 
+        $default_img = $this->default_img;
         if ($is_search) {
-            return $this->view('site.publications.news', compact('news'));
+            return $this->view('site.publications.news', compact('news', 'default_img'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true);
 
-        return $this->view('site.publications.index', compact('news','type', 'publicationCategories'));
+        return $this->view('site.publications.index',
+            compact('news','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));
     }
 
     /**
@@ -64,8 +88,10 @@ class LibraryController extends Controller
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->find($id);
+        $pageTitle = $publication->translation?->title;
+        $default_img = $this->default_img;
 
-        return $this->view('site.publications.details', compact('publication','type'));
+        return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
 
     /**
@@ -80,11 +106,13 @@ class LibraryController extends Controller
             : "DESC";
         $order_by = ($request->offsetGet('order_by'))
             ? $request->offsetGet('order_by')
-            : "id";
+            : "created_at";
         $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
             ? "publication_translations"
             : "publication";
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : 5;
+        $paginate = $request->filled('paginate')
+            ? $request->get('paginate')
+            : $this->paginate;
         $published_from = $request->get('published_from');
         $published_till = $request->get('published_till');
         $keywords = $request->get('keywords');

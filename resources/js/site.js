@@ -295,7 +295,7 @@ function ajaxList(domElement) {
 function clearSearchForm() {
     $("#results-per-page").prop("selectedIndex", 0);
     $("#search-form").find("input, textarea").not("#amount").not('#model_type').val("");
-    $("#search-form").find('select option[value=""]').prop('selected', true);
+    $("#search-form").find('select option[value=""]').not("#results-per-page").prop('selected', true);
     $("#search-form").find('.select2').val('clear').trigger('change');
 }
 
@@ -567,9 +567,15 @@ $(document).ready(function () {
         e.preventDefault();
 
         $(".current_page").val(1);
+        let filter_id = $(this).data('id');
         let filter = $(this).data('filter');
-        let filter_value = $(this).html()
-        $("#"+filter).val($.trim(filter_value));
+        let filter_value = $(this).html();
+        let element = document.getElementById(filter);
+        if (element.tagName == 'SELECT') {
+            $("#"+filter+" option[value='"+filter_id+"']").prop('selected', true).change();
+        } else {
+            $("#"+filter).val($.trim(filter_value));
+        }
         $("#searchBtn").trigger('click');
     });
 

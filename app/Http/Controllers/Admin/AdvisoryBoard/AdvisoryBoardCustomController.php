@@ -12,7 +12,9 @@ use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Log;
+use Validator;
 
 class AdvisoryBoardCustomController extends AdminController
 {
@@ -33,8 +35,6 @@ class AdvisoryBoardCustomController extends AdminController
         DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $section);
-
-            $fillable['order'] = $this->reorder($fillable['order'], $item);
 
             $fillable['advisory_board_id'] = $item->id;
 
@@ -83,7 +83,7 @@ class AdvisoryBoardCustomController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param AdvisoryBoardCustom $item
+     * @param AdvisoryBoard       $item
      * @param AdvisoryBoardCustom $section
      *
      * @return JsonResponse
@@ -110,8 +110,6 @@ class AdvisoryBoardCustomController extends AdminController
             $section = AdvisoryBoardCustom::find($validated['section_id']);
 
             $fillable = $this->getFillableValidated($validated, $section);
-            $fillable['order'] ??= '9999';
-            $fillable['order'] = $section->order === 1 && $fillable['order'] === "9999" ? 1 : $this->reorder($fillable['order'], $item);
             $section->fill($fillable);
             $section->save();
 
@@ -127,34 +125,35 @@ class AdvisoryBoardCustomController extends AdminController
         }
     }
 
-    /**
-     * Reorder sections.
-     * Current order is only passed when updating section.
-     *
-     * @param int|null      $order
-     * @param AdvisoryBoard $item
-     *
-     * @return int
-     */
-    private function reorder(?int $order, AdvisoryBoard $item): int
+    public function order(Request $request, AdvisoryBoard $item)
     {
-        $custom_sections_db = AdvisoryBoardCustom::where('advisory_board_id', $item->id);
+        $this->authorize('update', $item);
 
-        if (!$order) {
-            $order = 1 + $custom_sections_db->count();
+        $route = route('admin.advisory-boards.edit', $item->id) . '#custom';
+
+        $rules = ['order' => 'required|json'];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect($route)
+                ->withInput()
+                ->withErrors($validator);
         }
 
-        if ($order && $order != 9999) {
-            $custom_sections_db->where('order', '>=', $order)->update(['order' => DB::raw('"order" + 1')]);
-        }
+        $validated = $validator->validated();
 
-        // Put at first position
-        if ($order == 9999) {
-            $order = 1;
-            $custom_sections_db->update(['order' => DB::raw('"order" + 1')]);
-        }
+        try {
+            $order = json_decode($validated['order']);
 
-        return $order;
+            foreach ($order as $position => $id) {
+                AdvisoryBoardCustom::where(['id' => $id, 'advisory_board_id' => $item->id])->update(['order' => $position + 1]);
+            }
+
+            return redirect($route)->with('success', __('messages.sections_order_successfully'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect($route)->withInput(request()->all())->with('danger', __('messages.sections_order_failed'));
+        }
     }
 
     /**

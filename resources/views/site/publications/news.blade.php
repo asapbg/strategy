@@ -2,7 +2,9 @@
     <div class="col-lg-4 mb-4">
         <div class="post-box">
             <div class="post-img">
-                <img class="img-fluid" src="{{ asset($news_row->mainImg?->path) }}" alt="{{ $news_row->translation?->title }}">
+                <img class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img" src="{{ asset($news_row->mainImg?->path ?? $default_img) }}"
+                     alt="{{ $news_row->translation?->title }}"
+                >
             </div>
             <span class="post-date text-secondary">{{ displayDate($news_row->published_at) }} г.</span>
             <h3 class="post-title">
@@ -40,7 +42,7 @@
                 </div>
             </div>
             <p class="short-decription text-secondary">
-                {!! $news_row->translation?->short_content ? Str::limit($news_row->translation?->short_content, 200) : "" !!}
+                {!! strip_tags($news_row->translation?->short_content) ? strip_tags(Str::limit($news_row->translation?->short_content, 200)) : "" !!}
             </p>
             <a href="{{ route('library.details', [$news_row->type, $news_row->id]) }}" class="readmore mt-1"
                title="{{ $news_row->translation?->title }}"
@@ -51,7 +53,7 @@
     </div>
 @endforeach
 
-<div id="news_pagination" class="ajax_pagination row mb-4" data-id="news">
+<div id="ajax-pagination" class="row mb-4" data-id="news">
     @desktop
     @if($news->count() > 0 && $news instanceof Illuminate\Pagination\LengthAwarePaginator)
         {{ $news->onEachSide(2)->appends(request()->query())->links() }}

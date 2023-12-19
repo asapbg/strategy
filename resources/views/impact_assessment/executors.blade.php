@@ -24,18 +24,29 @@
                         <input type="hidden" name="search" value="true">
                         <input type="hidden" name="page" class="current_page" value="{{ $executors->currentPage() }}">
                         <input type="hidden" name="sort" class="sort" value="DESC">
+                        <input type="hidden" name="use_price" class="use_price" value="0">
                         <input type="hidden" name="eik" id="eik" value="">
                         <input type="hidden" id="model_type" value="executors">
                         <div class="row filter-results mb-2">
                             <h2 class="mb-4">
                                 Търсене
                             </h2>
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="executor_name" class="form-label">Изпълнител</label>
-                                        <input type="text" id="executor_name" name="executor_name" class="form-control"
-                                            value="{{ request()->offsetGet('executor_name') }}">
+                                        <label for="institutions" class="form-label">Изпълнител</label>
+                                        <select class="form-control form-control-sm select2" name="institutions[]" id="institutions" multiple>
+                                            <option value=""></option>
+                                            @if(isset($institutions) && $institutions->count())
+                                                @foreach($institutions as $institution)
+                                                    <option value="{{ $institution->id }}"
+                                                            @if(is_array(old('institutions')) && in_array($institution->id,old('institution_id'))) selected @endif
+                                                    >
+                                                        {{ $institution->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -181,8 +192,10 @@
 
                     </form>
 
-                    <div id="executors-results">
-                        @includeIf('impact_assessment.executors-results')
+                    <div id="accordion">
+                        <div id="executors-results">
+                            @includeIf('impact_assessment.executors-results')
+                        </div>
                     </div>
 
                 </div>
@@ -202,15 +215,16 @@
                 max: {{ $max_price }},
                 values: [ {{ $p_min ?? $min_price }}, {{ $p_max ?? $max_price }} ],
                 slide: function( event, ui ) {
-                    $("#amount").val(ui.values[0] + "лв. - " + ui.values[1] + "лв." );
+                    $("#amount").val(ui.values[0] + " лв. - " + ui.values[1] + " лв." );
                     $("#price_range_min").val(ui.values[0]);
                     $("#price_range_max").val(ui.values[1]);
                 },
-                change: function( event, ui ) {
+                change: function() {
                     $(".current_page").val(1);
+                    $(".use_price").val(1)
                 }
             });
-            $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1 ) + "лв." );
+            $("#amount").val($("#slider-range").slider("values", 0) + " лв. - " + $("#slider-range").slider("values", 1 ) + " лв." );
         });
     </script>
 @endpush

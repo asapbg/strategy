@@ -27,6 +27,7 @@ class StoreExecutorRequest extends FormRequest
     {
         $rules = [
             'eik'                           => ['nullable', 'numeric'],
+            'institution_id'                => ['required', 'numeric'],
             'contract_date'                 => ['required', 'date'],
             'price'                         => ['required', 'numeric', 'between:0,99999999.99'],
         ];
