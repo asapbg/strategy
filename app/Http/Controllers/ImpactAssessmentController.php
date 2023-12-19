@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Executor;
 use App\Models\FormInput;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -157,6 +158,7 @@ class ImpactAssessmentController extends Controller
      */
     public function executors(Request $request)
     {
+        $locale = currentLocale();
         $is_search = $request->has('search');
         $sort = ($request->offsetGet('sort'))
             ? $request->offsetGet('sort')
@@ -168,22 +170,23 @@ class ImpactAssessmentController extends Controller
             ? "executor_translations"
             : "executors";
         $paginate = $request->filled('paginate') ? $request->get('paginate') : 50;
-        $contractor_name = $request->get('contractor_name');
+        $institutions = $request->get('institutions');
         $executor_name = $request->get('executor_name');
         $contract_subject = $request->get('contract_subject');
         $services_description = $request->get('services_description');
         $contract_date_from = $request->get('contract_date_from');
         $contract_date_till = $request->get('contract_date_till');
         $eik = $request->get('eik');
+        $use_price = $request->get('use_price');
         $p_min = $request->get('p_min');
         $p_max = $request->get('p_max');
 
         $executors = Executor::select('executors.*')
-            ->with('translation')
-            ->whereLocale(app()->getLocale())
+            ->with(['translation','institution.translation'])
+            ->whereLocale($locale)
             ->joinTranslation(Executor::class)
-            ->when($contractor_name, function ($query, $contractor_name) {
-                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
+            ->when($institutions, function ($query, $institutions) {
+                return $query->whereIn('institution_id', $institutions);
             })
             ->when($executor_name, function ($query, $executor_name) {
                 return $query->where('executor_name', 'ILIKE', "%$executor_name%");
@@ -200,11 +203,8 @@ class ImpactAssessmentController extends Controller
             ->when($contract_date_till, function ($query, $contract_date_till) {
                 return $query->where('contract_date', '<=', databaseDate($contract_date_till));
             })
-            ->when($p_min, function ($query, $p_min) {
-                return $query->where('price', '>=', $p_min);
-            })
-            ->when($p_max, function ($query, $p_max) {
-                return $query->where('price', '<=', $p_max);
+            ->when($use_price, function ($query) use($p_min, $p_max) {
+                return $query->whereRaw("((price >= $p_min AND price <= $p_max) OR price IS NULL)");
             })
             ->when($eik, function ($query, $eik) {
                 return $query->where('eik', $eik);
@@ -222,8 +222,16 @@ class ImpactAssessmentController extends Controller
             return $this->view('impact_assessment.executors-results', compact('executors'));
         }
 
+        $institutions = Institution::select('institution.id', 'institution_translations.name')
+            ->joinTranslation(Institution::class)
+            ->with('translation')
+            ->whereLocale($locale)
+            ->whereIn('institution.id', Executor::selectRaw('DISTINCT(institution_id)')->get()->pluck('institution_id')->toArray())
+            ->orderBy('name')
+            ->get();
+
         $pageTitle = __('List of individuals and legal entities');
         return $this->view('impact_assessment.executors',
-            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle'));
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions'));
     }
 }

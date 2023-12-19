@@ -641,6 +641,27 @@ if (!function_exists('currentLocale')) {
     }
 }
 
+if (!function_exists('clearString')) {
+
+    /**
+     * Clear string from new lines and multiple spaces
+     *
+     * @param $string
+     * @return string
+     */
+    function clearString($string): string
+    {
+        // Create an array with the values you want to replace
+        $searches = ["\r", "\n", "\r\n"];
+
+        // Replace the line breaks with a space
+        $string = str_replace($searches, " ", $string);
+
+        // Replace multiple spaces with one
+        return preg_replace('!\s+!', ' ', $string);
+    }
+}
+
 if (!function_exists('copyFile')) {
 
     /**

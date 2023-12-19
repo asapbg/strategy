@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +35,12 @@ class AdvisoryBoardMember extends Model
     //activity
     protected string $logName = "advisory_board_members";
 
-    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'email'];
+    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'email', 'institution_id'];
+
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(Institution::class);
+    }
 
     public function consultationLevel(): BelongsTo
     {

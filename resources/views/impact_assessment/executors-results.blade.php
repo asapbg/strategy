@@ -2,8 +2,8 @@
     <div class="col-md-12">
         @foreach($executors as $executor)
             @php($translation = $executor->translation)
-            <div class="custom-card p-3 mb-3">
-                <div class="row m-0">
+            <div class="custom-card card p-3 mb-3">
+                <div class="row m-0" style="position: relative;z-index: 900">
                     <div class="col-md-12 text-end p-0">
                         @canany(['manage.*', 'manage.executors'])
                             <a href="javascript:;"
@@ -22,64 +22,77 @@
                         @endcan
                     </div>
                 </div>
-                <div class="row single-record">
-                    <div class="col-md-12 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
-                        <p>
-                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="contractor_name">
-                                {{ $translation?->contractor_name }}
-                            </a>
-                        </p>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('Name of executor') }}</p>
-                        <p>
-                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="executor_name">
-                                {{ $translation?->executor_name }}
-                            </a>
-                        </p>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('custom.eik') }}</p>
-                        <p>
-                            <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="eik">
-                                {{ $executor->eik }}
-                            </a>
-                        </p>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('Contract date') }}</p>
-                        <p>{{ displayDate($executor->contract_date) }}</p>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('custom.price_with_vat') }}</p>
-                        <p>{{ $executor->price }}</p>
-                    </div>
-                    <div class="col-md-12 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('custom.contract_subject') }}</p>
-                        <p>{!! $translation?->contract_subject !!}</p>
-                    </div>
-                    <div class="col-md-12 mb-2">
-                        <p class="fs-18 fw-600 mb-1">{{ __('custom.services_description') }}</p>
-                        <p>{!! $translation?->services_description !!}</p>
-                    </div>
+                <div class="col-md-12 mb-2">
+                    <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
+                    <a href="#collapse_{{ $executor->id }}" class="main-color stretched-link text-decoration-none d-block accordion-link" data-toggle="collapse">
+                        <span>{{ $executor->institution?->name ?? $translation?->contractor_name }}</span>
+                    </a>
+                </div>
+                <div id="collapse_{{ $executor->id }}" class="collapse" data-parent="#accordion">
+                    <div class="row single-record">
+                        <div class="col-md-12 mb-2 d-none">
+                            <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
+                            <p>
+                                <a href="javascript:;" class="main-color text-decoration-none filter_link"
+                                   data-filter="institutions" data-id="{{ $executor->institution?->id }}"
+                                >
+                                    {{ $executor->institution?->name ?? $translation?->contractor_name }}
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('Name of executor') }}</p>
+                            <p>
+                                <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="executor_name">
+                                    {{ $translation?->executor_name }}
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('custom.eik') }}</p>
+                            <p>
+                                <a href="javascript:;" class="main-color text-decoration-none filter_link" data-filter="eik">
+                                    {{ $executor->eik }}
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('Contract date') }}</p>
+                            <p>{{ displayDate($executor->contract_date) }}</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('custom.price_with_vat') }}</p>
+                            <p>{{ $executor->price }}</p>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('custom.contract_subject') }}</p>
+                            <p>{!! $translation?->contract_subject !!}</p>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <p class="fs-18 fw-600 mb-1">{{ __('custom.services_description') }}</p>
+                            <p>{!! $translation?->services_description !!}</p>
+                        </div>
 
-                    <div class="col-md-8">
-                        <p class="mb-0">
-                            <strong>{{ __('Order information') }}:</strong>
-                            <a href="{{ $translation?->hyperlink ?? "javascript:;" }}" class="text-decoration-none"
-                               @if($translation?->hyperlink) target="_blank" @endif title="ЦАИС"
-                            >ЦАИС</a>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="mb-0 text-end">
-                            <a href="{{ $translation?->hyperlink ?? "javascript:;" }}" title="линк към ЦАИС или друг източник"
-                               @if($translation?->hyperlink) target="_blank" @endif
-                            >
-                                <i class="fas fa-arrow-right read-more text-end"></i><span class="d-none">Линк</span>
-                            </a>
-                        </p>
+                        @if ($translation?->hyperlink)
+                            <div class="col-md-8">
+                                <p class="mb-0">
+                                    <strong>{{ __('Order information') }}:</strong>
+                                    <a href="{{ $translation?->hyperlink }}" class="text-decoration-none"
+                                       @if($translation?->hyperlink) target="_blank" @endif title="ЦАИС"
+                                    >ЦАИС</a>
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-0 text-end">
+                                    <a href="{{ $translation?->hyperlink }}" title="линк към ЦАИС или друг източник"
+                                       @if($translation?->hyperlink) target="_blank" @endif
+                                    >
+                                        <i class="fas fa-arrow-right read-more text-end"></i><span class="d-none">Линк</span>
+                                    </a>
+                                </p>
+                            </div>
+                        @endif
+                        
                     </div>
                 </div>
             </div>

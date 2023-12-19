@@ -34,6 +34,7 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
             'advisory_board_id' => 'required|integer|exists:advisory_boards,id',
             'advisory_type_id'  => 'required|integer|in:' . rtrim(implode(',', AdvisoryTypeEnum::values()), ','),
             'email'             => 'nullable|email',
+            'institution_id'    => 'nullable|integer|exists:institution,id',
         ];
 
         foreach (config('available_languages') as $lang) {
