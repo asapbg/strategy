@@ -4,7 +4,7 @@
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 1, 'label' => 'forms.conducted_consultations', 'clickSubmit' => true])
         <br>
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 0, 'label' => 'forms.not_conducted_consultations', 'clickSubmit' => true])
-        @if((Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 0) || old('conducted_consultations') == 0)
+        @if((Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 0) || old('conducted_consultations', 1) == 0)
             <p class="mt-2">
                 <i>
                     Обобщете най-важните въпроси за обществени консултации. Посочете индикативен график за тяхното провеждане и видовете консултационни процедури.
@@ -19,7 +19,7 @@
         <h4>8. Приемането на нормативния акт произтича ли от правото на Европейския съюз?</h4>
         @include('form_partials.radio', ['name' => 'is_from_eu', 'value' => 1, 'label' => 'forms.yes', 'clickSubmit' => true])
         <br>
-        @if((Arr::has($state, 'is_from_eu') && data_get($state, 'is_from_eu') == 1) || old('is_from_eu') == 1)
+        @if((Arr::has($state, 'is_from_eu') && data_get($state, 'is_from_eu') == 1) || old('is_from_eu', 0) == 1)
             <p class="mt-2">
                 <i>
                     1.1. Посочете изискванията на правото на Европейския съюз, включително информацията по т. 6.2 и 6.3, дали е извършена оценка на въздействието на ниво Европейски съюз, и я приложете (или посочете връзка към източник).

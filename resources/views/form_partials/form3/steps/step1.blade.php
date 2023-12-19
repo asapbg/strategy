@@ -26,4 +26,4 @@
         Когато заинтересованите страни се посочват по групи е необходимо да се посочи техният брой, за да се определи мащаба на въздействията.
     </i>
 </p>
-@include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party'])
+@include('form_partials.array_textarea_number', ['name' => 'interested_parties[]', 'buttonLabel' => 'forms.interested_party', 'class_textarea' => 'summernote'])

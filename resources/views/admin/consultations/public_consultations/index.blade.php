@@ -57,7 +57,7 @@
                                         @endcan
                                         @can('unPublish', $item)
                                             <a href="{{ route('admin.consultations.public_consultations.unpublish', $item) }}"
-                                               class="btn btn-sm btn-danger mr-2"
+                                               class="btn btn-sm btn-secondary mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.unpublish') }}">
                                                 <i class="fas fa-eye-slash"></i>

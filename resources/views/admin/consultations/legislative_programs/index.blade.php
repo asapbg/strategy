@@ -36,10 +36,10 @@
                                     <td class="text-start">
                                         @can('view', $item)
                                             <a href="{{ route('admin.consultations.legislative_programs.view', $item) }}"
-                                               class="btn btn-sm btn-warning mr-2"
+                                               class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
-                                                <i class="fa fa-eye"></i>
+                                                <i class="fa fa-search"></i>
                                             </a>
                                         @endcan
                                         @can('publish', $item)
@@ -52,7 +52,7 @@
                                         @endcan
                                         @can('unPublish', $item)
                                             <a href="{{ route('admin.consultations.legislative_programs.unpublish', $item) }}"
-                                               class="btn btn-sm btn-danger mr-2"
+                                               class="btn btn-sm btn-secondary mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.unpublish') }}">
                                                 <i class="fas fa-eye-slash"></i>

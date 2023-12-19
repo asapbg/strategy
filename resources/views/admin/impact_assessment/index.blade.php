@@ -19,6 +19,7 @@
                             <th>ID</th>
                             <th>{{ __('validation.attributes.type') }}</th>
                             <th>{{ __('validation.attributes.user') }}</th>
+                            <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.updated_at')}}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
@@ -26,26 +27,28 @@
                         <tbody>
                         @if(isset($items) && $items->count() > 0)
                             @foreach($items as $item)
+                                @php($json = $item->dataParsed)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>
                                         {{ __("forms.$item->form") }}
-                                        @if(rand(0,1))
+                                        @if(isset($json['institution']) && !empty($json['institution']))
                                             <i class="d-block">
-                                                @if(rand(0,1))
-                                                    Законодателна програма 01 януари - 30 юни от 2017 г.
-                                                @else
-                                                    Оперативна програма 06 юли - 31 декември от 2019 г.
-                                                @endif
+                                                {{ $json['institution'] }}
                                             </i>
-                                            <a href="" class="d-block text-primary"><i>Наименование на запис от законодателна/оперативна програма</i></a>
+                                        @endif
+                                        @if(isset($json['regulatory_act']) && !empty($json['regulatory_act']))
+                                            <i class="d-block text-primary">
+                                                {{ $json['regulatory_act'] }}
+                                            </i>
                                         @endif
                                     </td>
                                     <td>{{ $item->user ? $item->user->fullName() : '---' }}</td>
+                                    <td>@if(!(isset($json['submit']) && (int)$json['submit'])){{ __('custom.draft') }}@else{{ __('custom.completed_f') }}@endif</td>
                                     <td>{{ displayDate($item->updated_at) }}</td>
                                     <td class="text-center">
-                                        @if(\App\Http\Controllers\ImpactAssessmentController::getSteps($item->form) > $item->dataParsed['step'] && $item->user->id == auth()->user()->id)
-                                            <a href="{{ route('impact_assessment.form', ['form' => $item->form, 'inputId' => $item->id, 'step' => $item->dataParsed['step']]) }}"
+                                        @if(\App\Http\Controllers\ImpactAssessmentController::getSteps($item->form) > $json['step'] && $item->user->id == auth()->user()->id)
+                                            <a href="{{ route('impact_assessment.form', ['form' => $item->form, 'inputId' => $item->id, 'step' => $json['step']]) }}"
                                                 target="_blank"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
@@ -55,10 +58,16 @@
                                         @else
                                             <a href="{{ route('impact_assessment.show', ['form' => $item->form, 'inputId' => $item->id]) }}"
                                                target="_blank"
-                                               class="btn btn-sm btn-warning"
+                                               class="btn btn-sm btn-primary"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.view') }}">
-                                                <i class="fa fa-eye"></i>
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                            <a href="{{ route('impact_assessment.pdf', ['form' => $item->form, 'inputId' => $item->id]) }}"
+                                               class="btn btn-sm btn-success"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.download') }}">
+                                                <i class="fa fa-download"></i>
                                             </a>
                                         @endif
                                     </td>
