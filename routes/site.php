@@ -141,18 +141,11 @@ Route::controller(OpenGovernmentPartnership::class)->group(function () {
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::get('develop-a-new-action-plans', 'index')->name('ogp.develop_new_action_plans');
-    Route::get('develop-a-new-action-plans/{plan}', 'show')->name('ogp.develop_new_action_plans.show');
+    Route::get('develop-a-new-action-plans/{id}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
     Route::get('develop-a-new-action-plan/{plan}/view/{planArea}', 'area')->name('ogp.develop_new_action_plans.area');
-
-
-    //TODO: да се прерпавят
     Route::post('develop-a-new-action-plans/store-offer/{id}', 'store')->name('ogp.develop_new_action_plans.store_offer')->whereNumber('otg_area_id');
     Route::get('develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
-
-
     Route::post('develop-a-new-action-plans/add-comment/{offer}', 'storeComment')->name('ogp.develop_new_action_plans.add_comment');
     Route::post('develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
     Route::post('develop-a-new-action-plans/offer-vote/{id}/{like}', 'voteOffer')->name('ogp.develop_new_action_plans.vote');
-
-
 });

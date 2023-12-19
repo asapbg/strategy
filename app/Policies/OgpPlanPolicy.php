@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\OgpStatusEnum;
 use App\Models\OgpPlan;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -91,4 +92,10 @@ class OgpPlanPolicy
     {
         return false;
     }
+
+    public function newOffer(User $user, OgpPlan $ogpPlan)
+    {
+        return $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+    }
+
 }

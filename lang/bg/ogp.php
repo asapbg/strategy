@@ -48,6 +48,7 @@ return [
     'npo_partner' => 'НПО партньор',
     'responsible_administration' => 'Отговорна администрация',
     'deadline' => 'Срок на изпълнение',
+    'proposals' => 'Предложение|Предложения',
 
 
 ];

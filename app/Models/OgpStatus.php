@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OgpStatusEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -30,8 +31,20 @@ class OgpStatus extends ModelActivityExtend implements TranslatableContract
         return $query->where('active', '=', true);
     }
 
-    public function scopePeinding($query)
+    public function scopeDraft($query)
     {
-        return $query->where('can_edit', '=', 1);
+        return $query->where('type', '=', OgpStatusEnum::DRAFT->value);
+    }
+    public function scopeInDevelopment($query)
+    {
+        return $query->where('type', '=', OgpStatusEnum::IN_DEVELOPMENT->value);
+    }
+    public function scopeFinal($query)
+    {
+        return $query->where('type', '=', OgpStatusEnum::FINAL->value);
+    }
+    public function scopeActiveStatus($query)
+    {
+        return $query->where('type', '=', OgpStatusEnum::ACTIVE->value);
     }
 }

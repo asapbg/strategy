@@ -50,7 +50,7 @@
             <div class="col-md-4">
                 <h3 class="mb-2 fs-5">{{ __('custom.status') }}</h3>
                 <span class="main-color text-decoration-none fs-18">
-                    <span class="active-ks fs-16">{{ $plan->status->name }}</span>
+                    <span class="{{ $plan->status->css_class }} fs-16">{{ $plan->status->name }}</span>
                 </span>
             </div>
         </div>
@@ -61,15 +61,6 @@
             </div>
         </div>
         <div class="row mb-4 mt-5">
-{{--            <div class="col-md-12">--}}
-{{--                <div class="accordion" id="accordionExample">--}}
-{{--                    @foreach($plan->offers()->orderBy('created_at', 'desc')->get() as $item)--}}
-{{--                        @include('site.ogp.develop_new_action_plan.ogp_are_offer_row')--}}
-{{--                    @endforeach--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-
             <div class="col-md-12">
                 <div class="accordion" id="accordionExample">
                     @foreach($plan->areas as $row)

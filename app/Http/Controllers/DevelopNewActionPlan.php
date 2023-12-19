@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\OgpAreaArrangementFieldEnum;
+use App\Enums\OgpStatusEnum;
 use App\Http\Requests\OgpPlanAreaOfferRequest;
-use App\Models\OgpArea;
-use App\Models\OgpAreaArrangement;
-use App\Models\OgpAreaCommitment;
-use App\Models\OgpAreaOffer;
-use App\Models\OgpPlanAreaOfferComment;
-use App\Models\OgpPlanAreaOfferVote;
 use App\Models\OgpPlan;
 use App\Models\OgpPlanArea;
 use App\Models\OgpPlanAreaOffer;
+use App\Models\OgpPlanAreaOfferComment;
+use App\Models\OgpPlanAreaOfferVote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -30,6 +26,8 @@ class DevelopNewActionPlan extends Controller
     {
         //TODO: get only specific status for discussion
         $items = OgpPlan::Active()
+            ->whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
+            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
             ->FilterBy($request->all())
             ->orderBy('created_at', 'desc')
             ->paginate(OgpPlan::PAGINATE);
@@ -41,8 +39,11 @@ class DevelopNewActionPlan extends Controller
      * @param OgpPlan $plan
      * @return View
      */
-    public function show(Request $request, OgpPlan $plan): View
+    public function show(Request $request, $id): View
     {
+        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
+            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
+            ->findOrFail($id);
         return $this->view('site.ogp.plan_show', compact('plan'));
     }
 
@@ -82,13 +83,12 @@ class DevelopNewActionPlan extends Controller
 
             DB::commit();
             return to_route('ogp.develop_new_action_plans.area', ['plan' => $item->ogp_plan_id, 'planArea' => $item->id])
-                ->with('success', trans_choice('custom.ogp_areas', 1)." ".__('messages.updated_successfully_f'));
+                ->with('success', trans_choice('custom.proposals', 1)." ".__('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
     }
 
     public function editOffer(Request $request, OgpPlanAreaOffer $offer): View|\Illuminate\Http\RedirectResponse

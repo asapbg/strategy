@@ -71,19 +71,24 @@ class Plans extends AdminController
         try {
             if($id == 0) {
                 $item->author_id = $request->user()->id;
+                $item->ogp_status_id = OgpStatus::Draft()->first()->id;
+            } else {
+                $item->ogp_status_id = $request->get('status');
+            }
                 $item->from_date = Carbon::parse($validated['from_date'])->format('Y-m-d');
                 $item->to_date = Carbon::parse($validated['to_date'])->format('Y-m-d');
-                $item->ogp_status_id = OgpStatus::Peinding()->first()->id;
-            }
+
             $item->save();
 
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
 
-            //create ogp_plan_area
-            $item->areas()->create([
-                'ogp_plan_id' => $item->id,
-                'ogp_area_id' => $validated['ogp_area']
-            ]);
+            if($id == 0) {
+                //create ogp_plan_area
+                $item->areas()->create([
+                    'ogp_plan_id' => $item->id,
+                    'ogp_area_id' => $validated['ogp_area']
+                ]);
+            }
 
             DB::commit();
             return to_route('admin.ogp.plan.edit', ['id' => $item->id])
@@ -180,7 +185,7 @@ class Plans extends AdminController
         try {
 
             $opa = new OgpPlanArrangement();
-            $opa->ogp_plan_area_id = $ogpPlanArea->ogp_area_id;
+            $opa->ogp_plan_area_id = $ogpPlanArea->id;
             foreach ($validated as $field => $value) {
                 if((!is_null($value) || !empty($value)) && in_array($field, ['from_date', 'to_date']) ) {
                     $opa->{$field} = Carbon::parse($value)->format('Y-m-d');
@@ -191,15 +196,12 @@ class Plans extends AdminController
             $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);
 
             DB::commit();
-            return redirect( route('admin.ogp.plan.edit', $ogpPlanArea->ogp_plan_id). '#area-tab-'. $ogpPlanArea->ogp_area_id)
+            return redirect( route('admin.ogp.plan.edit', $ogpPlanArea->ogp_plan_id). '#area-tab-'. $ogpPlanArea->id)
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
-
-
-
     }
 }

@@ -14,6 +14,7 @@
                 </a>
             </div>
         </div>
+        @can('newOffer', $plan)
         @include('site.ogp.develop_new_action_plan.new_offer', ['planArea' => $planArea, 'offer' => null])
         <div class="row mb-4 mt-5">
             <div class="col-md-12">
@@ -25,6 +26,7 @@
                 </button>
             </div>
         </div>
+        @endcan
         <div class="row mb-4 mt-5">
             <div class="col-md-12">
                 <h2 class="obj-title mb-4">{{ __('ogp.list_all_proposals') }}</h2>

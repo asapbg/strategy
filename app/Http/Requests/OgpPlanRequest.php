@@ -26,12 +26,16 @@ class OgpPlanRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->request->get('id', 0);
+
         $rules = [
             'from_date' => 'required',
             'to_date' => 'required',
             'active' => '',
-            'ogp_area' => 'required|gt:0',
         ];
+        if($id = 0) {
+            $rules['ogp_area'] = 'required|gt:0';
+        }
 
         foreach (config('available_languages') as $lang) {
             foreach (OgpPlan::translationFieldsProperties() as $field => $properties) {

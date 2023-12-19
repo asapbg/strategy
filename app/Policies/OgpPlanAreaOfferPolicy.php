@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\OgpStatusEnum;
 use App\Models\OgpPlanAreaOffer;
 use App\Models\OgpPlanAreaOfferVote;
 use App\Models\User;
@@ -54,7 +55,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function update(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
-        return $this->viewAny($user) && $user->id == $ogpPlanAreaOffer->users_id && $ogpPlanAreaOffer->planArea->plan->status->can_edit;
+        return $this->viewAny($user) && $user->id == $ogpPlanAreaOffer->users_id && $ogpPlanAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 
     /**
@@ -100,7 +101,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function createComment(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
-        return $ogpAreaOffer->planArea->plan->status->can_edit;
+        return $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 
     /**
@@ -111,6 +112,6 @@ class OgpPlanAreaOfferPolicy
     public function vote(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
         $exits = OgpPlanAreaOfferVote::VoteExits($ogpAreaOffer->id, $user->id);
-        return !$exits;
+        return !$exits && $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 }

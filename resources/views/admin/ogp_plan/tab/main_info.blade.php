@@ -26,8 +26,8 @@
             @csrf
             @if($item->id)
                 @method('PUT')
+                <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
             @endif
-            <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
 
             <div class="row mb-4">
                 @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
@@ -68,6 +68,26 @@
             <div class="row">
                 <div class="col-6">
                     @include('admin.partial.active_field')
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label" for="status">{{ __('custom.status') }} <span class="required">*</span></label>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <select id="status" name="status" class="form-control form-control-sm @error('status'){{ 'is-invalid' }}@enderror">
+                                    <option></option>
+                                    @foreach(\App\Models\OgpStatus::get() as $v)
+                                        <option value="{{ $v->id }}" @if(old('status', $item->ogp_status_id ?? '') == $v->id) selected="selected" @endif>{{ $v->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('status')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
