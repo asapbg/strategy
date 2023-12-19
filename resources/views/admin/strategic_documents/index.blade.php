@@ -61,10 +61,21 @@
                                                    class="btn btn-sm btn-success mr-2 btn-action"
                                                    data-toggle="tooltip"
                                                    title="{{ __('custom.publish') }}">
-                                                    <i class="fa fa-plus"></i>
+                                                    <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan
                                         @endif
+                                        @can('delete', $item)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $item->id }}"
+                                               data-resource-name="{{ $item->id }} ({{ $item->title }})"
+                                               data-resource-delete-url="{{ route('admin.strategic_documents.delete', $item) }}"
+                                               data-toggle="tooltip"
+                                               title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -73,6 +84,7 @@
                     </table>
                 </div>
 
+                @includeIf('modals.delete-resource', ['resource' => $title_singular])
                 <div class="card-footer mt-2">
                     @if(isset($items) && $items->count() > 0)
                         {{ $items->appends(request()->query())->links() }}
