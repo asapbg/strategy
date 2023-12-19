@@ -160,7 +160,7 @@ class AdvisoryBoardController extends Controller
         }, 'npos' => function ($query) {
             $query->with('translations');
         }, 'members' => function($query) {
-            $query->with('translations');
+            $query->with(['translations', 'institution']);
         }, 'meetings' => function($query) {
             $query->with(['translations', 'siteFiles']);
         }, 'secretariat' => function($query) {
