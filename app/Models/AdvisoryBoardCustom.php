@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $advisory_board_id
  * @property int $order
  *
- * @method static where(string $string, int $id)
  * @method static find(mixed $section_id)
  */
 class AdvisoryBoardCustom extends ModelActivityExtend

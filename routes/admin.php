@@ -520,6 +520,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-update',         'ajaxUpdate')   ->name('advisory-boards.sections.update');
         Route::post('{section}/delete',     'destroy')      ->name('advisory-boards.sections.delete');
         Route::post('{section}/restore',    'restore')      ->name('advisory-boards.sections.restore')->withTrashed();
+        Route::post('order',                'order')        ->name('advisory-boards.sections.order');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/archive')->group(function () {

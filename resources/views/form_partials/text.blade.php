@@ -8,7 +8,7 @@ if (!isset($nameDots)) {
 @if (isset($readOnly))
     <p>{{ array_key_exists($name, $state) ? $state[$name] : '' }} </p>
 @else
-<input type="{{ isset($type) ? $type : 'text' }}" id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror"
+<input type="{{ isset($type) ? $type : 'text' }}" id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror @if(isset($class)){{ $class }}@endif"
     value="{{ old($name, isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '')) }}">
     @error($nameDots)
         <div class="text-danger input-err">{{ $message }}</div>

@@ -17,6 +17,8 @@
     'restored_successfully_n'   => 'беше възстановено успешно',
     'added_successfully_m'      => 'беше добавен успешно',
     'removed_successfully_m'    => 'беше премахнат успешно',
+    'sections_order_successfully' => 'Редът на секциите беше обновен успешно',
+    'sections_order_failed'     => 'Редът на секциите не бе обновен успешно',
     'file_uploaded_successfully' => 'Файлът беше успешно импортиран',
     'invalid_excel_file'        => 'Невалиден excel файл',
     'invalid_voice_file'        => 'Невалиден гласов файл',

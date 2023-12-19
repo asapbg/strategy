@@ -223,6 +223,90 @@ return [
         'fields.*' => [
             'required' => 'Полето е задължително'
         ],
+        'variant_simple.*.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.risks' => [
+            'required' => 'Полето е задължително'
+        ],
+        'expenses.*.*.expenses' => [
+            'required' => 'Полето е задължително'
+        ],
+        'expenses.*.*.benefits' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.economic_impacts' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.social_impact' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.ecologic_impact' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.specific_impact_1' => [
+            'required' => 'Полето е задължително'
+        ],
+        'variants.*.*.specific_impact_2' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.problem_to_solve.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.resources_used' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.achieved_results' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.direct_effects' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.impacts' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.links_regulatory_acts' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.main_highlights' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.results_court' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.criteria1' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.criteria2' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.criteria3' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.criteria4' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.criteria5' => [
+            'required' => 'Полето е задължително'
+        ],
+        'changes.*.questions.*' => [
+            'required' => 'Полето е задължително'
+        ],
+        'collected_data.*.interested_parties' => [
+            'required' => 'Полето е задължително'
+        ],
+        'collected_data.*.consultations' => [
+            'required' => 'Полето е задължително'
+        ],
+        'collected_data.*.sources' => [
+            'required' => 'Полето е задължително'
+        ],
+        'analysis.*.answers_info' => [
+            'required' => 'Полето е задължително'
+        ],
+        'impact.*.conclusion' => [
+            'required' => 'Полето е задължително'
+        ],
     ],
 
     /*
@@ -532,5 +616,13 @@ return [
         'commitment_id' => 'Съществуващ ангажимент',
         'arrangement_name' => 'Мярка',
         'arrangement_id' => 'Съществуваща мярка',
+        'period_assessment' => 'Период на извършване на оценката',
+        'consultations' => 'Проведени консултации',
+        'resume' => 'Резюме',
+        'introduction' => 'Увод',
+        'conclusions' => 'Заключения',
+        'distribution' => 'Начини на разпространение',
+        'recommendations' => 'Препоръки за последващи действия',
+        'sources' => 'Източници',
     ],
 ];

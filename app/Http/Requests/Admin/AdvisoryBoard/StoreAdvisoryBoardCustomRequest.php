@@ -31,7 +31,6 @@ class StoreAdvisoryBoardCustomRequest extends FormRequest
     {
         $rules = [
             'title' => 'nullable|string',
-            'order' => 'nullable|integer',
         ];
 
         foreach (config('available_languages') as $lang) {
