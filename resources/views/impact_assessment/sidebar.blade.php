@@ -11,14 +11,14 @@
                     <div class="collapse show mt-3" id="home-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.index') active-item-left p-1 @endif"><a href="{{ route('impact_assessment.index') }}" class="link-dark text-decoration-none">Оценки</a></li>
-                            <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Инструменти</a></li>
-                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">
-                                <ul class="list-unstyled ps-3">
-                                    <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Калкулатор</a></li>
-                                    <hr class="custom-hr">
-                                </ul>
-                            </ul>
+{{--                            <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Инструменти</a></li>--}}
+{{--                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">--}}
+{{--                                <ul class="list-unstyled ps-3">--}}
+{{--                                    <hr class="custom-hr">--}}
+{{--                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Калкулатор</a></li>--}}
+{{--                                    <hr class="custom-hr">--}}
+{{--                                </ul>--}}
+{{--                            </ul>--}}
                             <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.forms') active-item-left p-1 @endif">
                                 <a href="{{ route('impact_assessment.forms') }}" class="link-dark text-decoration-none">Образци и форми</a></li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
@@ -43,7 +43,7 @@
                             </ul>
                             <li class="mb-2 @if(str_contains(url()->current(), '/executors')) active-item-left p-1 @endif">
                                 <a href="{{ route('impact_assessment.executors') }}" class="link-dark text-decoration-none">
-                                    {{ __('List of the preparers of evaluations under the ZNA') }}
+                                    {{ __('List of individuals and legal entities') }}
                                 </a>
                             </li>
                         </ul>

@@ -12,6 +12,8 @@
     'deleted_successfully_n'        => 'беше изтрито успешно',
     'deleted_successfully_m'        => 'беше изтрит успешно',
     'deleted_successfully_f'        => 'беше изтрита успешно',
+    'sections_order_successfully'   => 'Sections order updated successfully',
+    'sections_order_failed'         => 'Sections order failed to be updated',
     'restored_successfully_m'       => 'was restored successfully',
     'restored_successfully_f'       => 'was restored successfully',
     'restored_successfully_n'       => 'was restored successfully',

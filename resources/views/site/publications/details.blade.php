@@ -48,7 +48,7 @@
         </div>
         <hr>
         <div class="mb-3">
-            <img src="{{ asset($publication->mainImg?->path) }}" alt="{{ $publication->translation?->title }}"
+            <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}"
                  class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
             >
             {!! $publication->translation->content !!}
@@ -77,7 +77,7 @@
             </div>
         @endif
 
-        <a class="btn btn-primary mt-4 mb-5" href="{{ route('library.news') }}">Обратно към списъка с новини</a>
+        <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">Обратно към списъка с новини</a>
     </div>
 
 </div>

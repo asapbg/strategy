@@ -56,15 +56,25 @@ class AdvisoryBoardSeeder extends Seeder
 
         $advisory_board_ids = AdvisoryBoard::select('id')->pluck('id')->toArray();
 
+        $advisory_board_policy_area_map = file_get_contents(database_path('data/advisory_board_policy_area_map.json'));
+        $advisory_board_policy_area_map = json_decode($advisory_board_policy_area_map, true);
+
         foreach ($old_advisory_boards_db as $board) {
             if (in_array($board->councilID, $advisory_board_ids)) {
                 $skipped++;
                 continue;
             }
 
+            $policy_area_mapped = array_reduce($advisory_board_policy_area_map, fn($carry, $item) => $carry === false && $item['id'] === $board->councilID ? $item : $carry, false);
+
+            if (!$policy_area_mapped) {
+                $skipped++;
+                continue;
+            }
+
             $new_advisory_board = new AdvisoryBoard();
             $new_advisory_board->id = $board->councilID;
-            $new_advisory_board->policy_area_id = $board->category == 0 ? 1 : $board->category;
+            $new_advisory_board->policy_area_id = $policy_area_mapped['policy_area_id'] ?? 1;
             $new_advisory_board->authority_id = $board->institutionType == 0 ? 1 : $board->institutionType;
             $new_advisory_board->advisory_act_type_id = $board->actType == 0 ? 1 : $board->actType;
             $new_advisory_board->advisory_chairman_type_id = $this->determineChairmanType($board->positionOther);

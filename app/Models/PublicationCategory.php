@@ -42,7 +42,7 @@ class PublicationCategory extends ModelActivityExtend implements TranslatableCon
         );
     }
 
-    public static function optionsList($onlyActive = false): \Illuminate\Support\Collection
+    public static function optionsList($onlyActive = false, $type = null): \Illuminate\Support\Collection
     {
         $list = DB::table('publication_category')
             ->select(['publication_category.id', 'publication_category_translations.name'])
@@ -52,6 +52,9 @@ class PublicationCategory extends ModelActivityExtend implements TranslatableCon
         if($onlyActive) {
             $list->where('publication_category.active', '=', 1)
                 ->whereNull('publication_category.deleted_at');
+        }
+        if($type) {
+            $list->where('publication_category.type', $type);
         }
         return $list->get();
     }

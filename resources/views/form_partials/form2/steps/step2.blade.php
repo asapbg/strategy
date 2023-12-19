@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mb-3">
     <div class="col-sm-12">
         <h5>1.2. Цели:</h5>
         @include('form_partials.shared.goals')

@@ -220,13 +220,32 @@
             @endif
 
             <!-- Правилник за вътрешната организация на дейността -->
-            @if(!empty($item->regulatoryFiles) && $item->regulatoryFiles->count() > 0)
+            @if(!empty($item->organizationRule) && $item->organizationRule->count() > 0)
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.rules_internal_organization') }}</h3>
 
-                            @foreach($item->regulatoryFiles as $file)
+                            {!! $item->organizationRule->description !!}
+
+                            @foreach($item->organizationRule->siteFiles as $file)
+                                @includeIf('site.partial.file', ['file' => $file])
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Акт на създаване -->
+            @if(!empty($item->establishment) && $item->establishment->count() > 0)
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('validation.attributes.act_of_creation') }}</h3>
+
+                            {!! $item->establishment->description !!}
+
+                            @foreach($item->establishment->siteFiles as $file)
                                 @includeIf('site.partial.file', ['file' => $file])
                             @endforeach
                         </div>

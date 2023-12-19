@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Executor;
 use App\Http\Requests\StoreExecutorRequest;
 use App\Http\Requests\UpdateExecutorRequest;
+use App\Models\StrategicDocuments\Institution;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,7 +66,9 @@ class ExecutorController extends AdminController
      */
     public function create()
     {
-        return $this->view('admin.executors.create');
+        $institutions = Institution::optionsListWithAttr();
+
+        return $this->view('admin.executors.create', compact('institutions'));
     }
 
     /**
@@ -122,7 +125,9 @@ class ExecutorController extends AdminController
      */
     public function edit(Executor $executor)
     {
-        return $this->view('admin.executors.edit', compact('executor'));
+        $institutions = Institution::optionsListWithAttr();
+
+        return $this->view('admin.executors.edit', compact('executor', 'institutions'));
     }
 
     /**

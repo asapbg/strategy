@@ -12,9 +12,9 @@
         <h4 class="mt-5">5. Привеждане в действие и изпълнение</h4>
     </div>
 </div>
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-4">
-        @include('form_partials.text', ['name' => 'effective_from', 'type' => 'date', 'label' => 'forms.effective_from', 'value' => Arr::get($state, 'effective_from')])
+        @include('form_partials.text', ['name' => 'effective_from', 'type' => 'text', 'label' => 'forms.effective_from', 'value' => Arr::get($state, 'effective_from'), 'class' => 'datepicker'])
     </div>
 </div>
 <div class="row">
@@ -26,7 +26,7 @@
         </p>
     </div>
 </div>
-<div class="row">
+<div class="row mb-3">
     <div class="col-sm-12">
         <div class="col-md-4">
             @include('form_partials.text', ['name' => 'name', 'label' => 'forms.name'])

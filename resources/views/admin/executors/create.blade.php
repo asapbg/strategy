@@ -11,6 +11,27 @@
                         <div class="form-group">
 
                             <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="eik">
+                                        {{ __('Name of contractor') }}
+                                    </label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <select class="form-control form-control-sm select2 @error('institution_id') is-invalid @enderror"
+                                                name="institution_id" id="institution_id"
+                                        >
+                                            <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
+                                            @if(isset($institutions) && $institutions->count())
+                                                @foreach($institutions as $option)
+                                                    <option value="{{ $option->value }}" @if($option->value == old('institution_id')) selected @endif
+                                                    data-level="{{ $option->level }}" data-foa="{{ $option->foa }}">{{ $option->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 @foreach($languages as $lang)
                                     @php
                                         $default = $lang['default'];

@@ -21,7 +21,7 @@
     </div>
 </div>
 @endfor
-<div class="row">
+<div class="row mb-3">
     <div class="col-sm-12">
     @include('form_partials.add_button', ['name' => "goals.$n", 'buttonLabel' => 'forms.goals'])
     </div>
