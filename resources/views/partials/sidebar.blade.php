@@ -282,7 +282,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.publications.index') . '?type=' . \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
+                                <a href="{{ route('admin.publications.index', \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) . '?type=' . \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
                                    class="nav-link">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.news', 2) }}</p>
