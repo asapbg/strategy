@@ -404,7 +404,7 @@
                             <p class="short-decription text-secondary">
                                 {!! strip_tags($publication->translation?->short_content) ? strip_tags(Str::limit($publication->translation?->short_content, 200)) : "" !!}
                             </p>
-                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore stretched-link mt-1" title="{{ $publication->translation->title }}">
+                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
                                 Прочетете още <i class="fas fa-long-arrow-right"></i>
                             </a>
                         </div>

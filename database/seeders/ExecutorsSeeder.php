@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\CommonController;
 use App\Models\Executor;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +20,8 @@ class ExecutorsSeeder extends Seeder
     {
         $this->command->info("Start seeding executors");
 
+        activity()->disableLogging();
+
         $file = DIRECTORY_SEPARATOR."files".DIRECTORY_SEPARATOR."executors.csv";
         if (file_exists(public_path($file))) {
             $file_handle = fopen(public_path($file), 'r');
@@ -28,13 +30,28 @@ class ExecutorsSeeder extends Seeder
 
             DB::beginTransaction();
 
+            DB::statement('TRUNCATE executors CASCADE');
+
             while (!feof($file_handle)) {
                 $line_of_text = fgetcsv($file_handle, 0, ',');
                 if ($key > 3 && is_array($line_of_text)) {
                     //dd($line_of_text);
 
-                    $data['contractor_name_bg'] = $line_of_text[1];
-                    $data['contractor_name_en'] = $line_of_text[1];
+                    $institution_name = trim(clearString($line_of_text[1]));
+                    $institution = Institution::select('institution.id', 'institution_translations.name')
+                        ->joinTranslation(Institution::class)
+                        ->where('name', $institution_name)
+                        ->first();
+                    if (!$institution) {
+                        $institution = Institution::select('institution.id', 'institution_translations.name')
+                            ->joinTranslation(Institution::class)
+                            ->where('name', 'ILIKE', "$institution_name%")
+                            ->first();
+                    }
+
+                    $data['institution_id'] = $institution ? $institution->id : null;
+                    $data['contractor_name_bg'] = $institution ? $institution->name : $institution_name;
+                    $data['contractor_name_en'] = $data['contractor_name_bg'];
                     $data['executor_name_bg'] = $line_of_text[2];
                     $data['executor_name_en'] = $line_of_text[2];
                     $data['contract_subject_bg'] = $line_of_text[5];

@@ -1029,7 +1029,6 @@ a.box-link span {
     display: flex;
     align-items: center;
     font-weight: 600;
-    line-height: normal;
     transition: 0.3s;
     line-height: 0;
     margin-left: 4px;
@@ -1044,8 +1043,12 @@ a.box-link span {
 }
 
 .post-box .post-img img {
-    transition: 0.5s;
+    transition: .5s;
     width: 100%;
+    min-height: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    object-position: center;
 }
 
 .post-box:hover .post-img img {

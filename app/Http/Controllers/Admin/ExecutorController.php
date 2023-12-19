@@ -22,23 +22,21 @@ class ExecutorController extends AdminController
      */
     public function index(Request $request)
     {
+        $locale = currentLocale();
         $paginate = $request->filled('paginate') ? $request->get('paginate') : Executor::PAGINATE;
         $active = $request->filled('active') ? $request->get('active') : 1;
-        $contractor_name = $request->get('contractor_name');
+        $req_institutions = $request->get('institutions');
         $executor_name = $request->get('executor_name');
         $contract_date = $request->get('contract_date');
         $contract_date_from = $request->get('contract_date_from');
         $contract_date_till = $request->get('contract_date_till');
 
         $executors = Executor::select('executors.*')
-            ->with('translation')
-            ->whereLocale(app()->getLocale())
+            ->with(['translation','institution.translation'])
+            ->whereLocale($locale)
             ->joinTranslation(Executor::class)
-            ->when($contractor_name, function ($query, $contractor_name) {
-                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
-            })
-            ->when($contractor_name, function ($query, $contractor_name) {
-                return $query->where('contractor_name', 'ILIKE', "%$contractor_name%");
+            ->when($req_institutions, function ($query, $req_institutions) {
+                return $query->whereIn('institution_id', $req_institutions);
             })
             ->when($executor_name, function ($query, $executor_name) {
                 return $query->where('executor_name', 'ILIKE', "%$executor_name%");
@@ -56,7 +54,9 @@ class ExecutorController extends AdminController
             ->orderBy('executors.id', 'desc')
             ->paginate($paginate);
 
-        return $this->view('admin.executors.index', compact('executors'));
+        $institutions = $this->getInstitutions($locale);
+
+        return $this->view('admin.executors.index', compact('executors','institutions','req_institutions'));
     }
 
     /**
@@ -66,7 +66,7 @@ class ExecutorController extends AdminController
      */
     public function create()
     {
-        $institutions = Institution::optionsListWithAttr();
+        $institutions = $this->getInstitutions(currentLocale());
 
         return $this->view('admin.executors.create', compact('institutions'));
     }
@@ -89,6 +89,11 @@ class ExecutorController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
+
+            $inst = Institution::select('institution.id', 'institution_translations.name')
+                ->joinTranslation(Institution::class)
+                ->find($validated['institution_id']);
+            $validated['contractor_name_bg'] = $inst->name;
 
             $this->storeTranslateOrNew($item->translatedAttributes, $item, $validated);
 
@@ -125,7 +130,7 @@ class ExecutorController extends AdminController
      */
     public function edit(Executor $executor)
     {
-        $institutions = Institution::optionsListWithAttr();
+        $institutions = $this->getInstitutions(currentLocale());
 
         return $this->view('admin.executors.edit', compact('executor', 'institutions'));
     }
@@ -188,5 +193,19 @@ class ExecutorController extends AdminController
             $this->backWithError('danger', __('messages.system_error'));
 
         }
+    }
+
+    /**
+     * @param string $locale
+     * @return mixed
+     */
+    private function getInstitutions(string $locale)
+    {
+        return Institution::select('institution.id', 'institution_translations.name')
+            ->joinTranslation(Institution::class)
+            ->with('translation')
+            ->whereLocale($locale)
+            ->orderBy('name')
+            ->get();
     }
 }
