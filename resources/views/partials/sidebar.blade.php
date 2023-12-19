@@ -276,7 +276,7 @@
                 @endcan
 
                 @canany(['manage.*', 'manage.partnership'])
-                    <li class="nav-item @if(strstr(url()->current(), 'advisory-boards')) menu-open @endif">
+                    <li class="nav-item @if(strstr(url()->current(), 'areas') || strstr(url()->current(), 'plans') ) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-weight"></i>
                             <p>{{ __('custom.open_government_partnership') }}<i class="fas fa-angle-left right"></i>
@@ -285,12 +285,18 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.ogp.area.index') }}"
-                                   class="nav-link @if(Str::endsWith(url()->current(), 'advisory-boards')) active @endif">
+                                   class="nav-link @if(strstr(url()->current(), 'areas')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ __('custom.develop_new_action_plan') }}</p>
+                                    <p>{{ trans_choice('custom.area', 2) }}</p>
                                 </a>
                             </li>
-
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.plan.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'plans')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.plans', 2) }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

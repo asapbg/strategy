@@ -5,7 +5,7 @@
             {{ __('ogp.proposal_number', ['number' => $loop->iteration]) }}  <span class="ms-1 fs-18 fw-normal">{{ __('custom.from') }} {{ $item->author->fullName() }} {{ displayDate($item->created_at) }}</span>
         </button>
     </h2>
-    <div id="collapse_{{ $loop->iteration }}" class="accordion-collapse collapse show" aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample">
+    <div id="collapse_{{ $loop->iteration }}" @class(["accordion-collapse", "collapse", "show" => $loop->first]) aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionOffer">
         <div class="accordion-body">
 
             <div class="custom-card p-3 mb-2">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @include('site.ogp.develop_new_action_plan.commitments')
+                            <div class="col-md-12 mb-3"> {!! $item->content !!}</div>
                             <div class="col-md-12">
                                 <hr class="custom-hr">
                             </div>

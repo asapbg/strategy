@@ -5,19 +5,16 @@ namespace App\Http\Controllers\Admin\Ogp;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\OgpAreaRequest;
 use App\Models\OgpArea;
-use App\Models\OgpAreaOfferComment;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class Area extends AdminController
+class Areas extends AdminController
 {
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\View\View
     {
         $name = ($request->filled('name')) ? $request->get('name') : null;
         $active = $request->filled('active') ? $request->get('active') : 1;
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : User::PAGINATE;
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : OgpArea::PAGINATE;
 
         $items = OgpArea::where('active', $active)
             ->when($name, function ($query, $name) {
@@ -30,25 +27,25 @@ class Area extends AdminController
         );
     }
 
-    public function create(Request $request)
+    public function create(Request $request): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         return $this->edit($request);
     }
 
-    public function edit(Request $request, $id = 0)
+    public function edit(Request $request, $id = 0): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         $item = $id ? OgpArea::find($id) : new OgpArea();
 
-       if($request->user()->cannot($id ? 'update' : 'create', $item)) {
-           return back()->with('warning', __('messages.unauthorized'));
-       }
+        if($request->user()->cannot($id ? 'update' : 'create', $item)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
 
         $translatableFields = \App\Models\OgpArea::translationFieldsProperties();
 
         return $this->view('admin.ogp_area.edit', compact('item', 'translatableFields'));
     }
 
-    public function store(OgpAreaRequest $request)
+    public function store(OgpAreaRequest $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validated();
         $id = $request->get('id');
@@ -59,10 +56,6 @@ class Area extends AdminController
         }
 
         try {
-            $item->ogp_status_id = $validated['status_id'];
-            $item->active = $validated['active'];
-            $item->from_date = Carbon::parse($validated['from_date'])->format('Y-m-d');
-            $item->to_date = Carbon::parse($validated['to_date'])->format('Y-m-d');
             if($id == 0) {
                 $item->author_id = $request->user()->id;
             }

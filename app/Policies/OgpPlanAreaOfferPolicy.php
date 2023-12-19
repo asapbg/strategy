@@ -2,15 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\OgpAreaOffer;
+use App\Models\OgpPlanAreaOffer;
 use App\Models\OgpPlanAreaOfferVote;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-/**
- * @deprecated
- */
-class OgpAreaOfferPolicy
+class OgpPlanAreaOfferPolicy
 {
     use HandlesAuthorization;
 
@@ -20,7 +17,7 @@ class OgpAreaOfferPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user): \Illuminate\Auth\Access\Response|bool
+    public function viewAny(User $user)
     {
         return $user->id;
     }
@@ -29,10 +26,10 @@ class OgpAreaOfferPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOffer  $ogpAreaOffer
+     * @param  \App\Models\OgpPlanAreaOffer  $ogpPlanAreaOffer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, OgpAreaOffer $ogpAreaOffer)
+    public function view(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
         return $this->viewAny($user);
     }
@@ -52,22 +49,22 @@ class OgpAreaOfferPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOffer  $ogpAreaOffer
+     * @param  \App\Models\OgpPlanAreaOffer  $ogpPlanAreaOffer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, OgpAreaOffer $ogpAreaOffer)
+    public function update(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
-        return $this->viewAny($user) && $user->id == $ogpAreaOffer->users_id && $ogpAreaOffer->area->status->can_edit;
+        return $this->viewAny($user) && $user->id == $ogpPlanAreaOffer->users_id && $ogpPlanAreaOffer->planArea->plan->status->can_edit;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOffer  $ogpAreaOffer
+     * @param  \App\Models\OgpPlanAreaOffer  $ogpPlanAreaOffer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, OgpAreaOffer $ogpAreaOffer)
+    public function delete(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
         return false;
     }
@@ -76,10 +73,10 @@ class OgpAreaOfferPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOffer  $ogpAreaOffer
+     * @param  \App\Models\OgpPlanAreaOffer  $ogpPlanAreaOffer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, OgpAreaOffer $ogpAreaOffer)
+    public function restore(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
         return false;
     }
@@ -88,30 +85,30 @@ class OgpAreaOfferPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOffer  $ogpAreaOffer
+     * @param  \App\Models\OgpPlanAreaOffer  $ogpPlanAreaOffer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, OgpAreaOffer $ogpAreaOffer)
+    public function forceDelete(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
         return false;
     }
 
     /**
      * @param User $user
-     * @param OgpAreaOffer $ogpAreaOffer
+     * @param OgpPlanAreaOffer $ogpAreaOffer
      * @return bool
      */
-    public function createComment(User $user, OgpAreaOffer $ogpAreaOffer): bool
+    public function createComment(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
-        return $ogpAreaOffer->area->status->can_edit;
+        return $ogpAreaOffer->planArea->plan->status->can_edit;
     }
 
     /**
      * @param User $user
-     * @param OgpAreaOffer $ogpAreaOffer
+     * @param OgpPlanAreaOffer $ogpAreaOffer
      * @return bool
      */
-    public function vote(User $user, OgpAreaOffer $ogpAreaOffer): bool
+    public function vote(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
         $exits = OgpPlanAreaOfferVote::VoteExits($ogpAreaOffer->id, $user->id);
         return !$exits;

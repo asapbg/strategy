@@ -2,18 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ActType;
 use App\Models\OgpArea;
+use App\Models\OgpPlanArrangement;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OgpAreaRequest extends FormRequest
+class OgpPlanArrangementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -26,11 +26,12 @@ class OgpAreaRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'active' => '',
+            'from_date' => '',
+            'to_date' => '',
         ];
 
         foreach (config('available_languages') as $lang) {
-            foreach (OgpArea::translationFieldsProperties() as $field => $properties) {
+            foreach (OgpPlanArrangement::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }

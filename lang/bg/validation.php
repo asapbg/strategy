@@ -532,5 +532,11 @@ return [
         'commitment_id' => 'Съществуващ ангажимент',
         'arrangement_name' => 'Мярка',
         'arrangement_id' => 'Съществуваща мярка',
+        'ogp_area' => 'Област',
+
+        'npo_partner_bg'              => 'НПО партньор (BG)',
+        'npo_partner_en'              => 'НПО партньор (EN)',
+        'responsible_administration_bg'              => 'Отговорна администрация (BG)',
+        'responsible_administration_en'              => 'Отговорна администрация (EN)',
     ],
 ];

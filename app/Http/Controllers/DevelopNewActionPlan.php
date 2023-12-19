@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OgpAreaArrangementFieldEnum;
-use App\Http\Requests\OgpAreaOfferRequest;
+use App\Http\Requests\OgpPlanAreaOfferRequest;
 use App\Models\OgpArea;
 use App\Models\OgpAreaArrangement;
 use App\Models\OgpAreaCommitment;
 use App\Models\OgpAreaOffer;
-use App\Models\OgpAreaOfferComment;
-use App\Models\OgpAreaOfferVote;
+use App\Models\OgpPlanAreaOfferComment;
+use App\Models\OgpPlanAreaOfferVote;
+use App\Models\OgpPlan;
+use App\Models\OgpPlanArea;
+use App\Models\OgpPlanAreaOffer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,75 +28,60 @@ class DevelopNewActionPlan extends Controller
      */
     public function index(Request $request): View
     {
-        $items = OgpArea::Active()
+        //TODO: get only specific status for discussion
+        $items = OgpPlan::Active()
             ->FilterBy($request->all())
             ->orderBy('created_at', 'desc')
-            ->paginate(OgpArea::PAGINATE);
-        return $this->view('site.ogp.develop_new_action_plan', compact('items'));
+            ->paginate(OgpPlan::PAGINATE);
+        return $this->view('site.ogp.plans', compact('items'));
     }
 
-    public function show(Request $request, OgpArea $ogpArea): View
+    /**
+     * @param Request $request
+     * @param OgpPlan $plan
+     * @return View
+     */
+    public function show(Request $request, OgpPlan $plan): View
     {
-        return $this->view('site.ogp.develop_new_action_plan_show', compact('ogpArea'));
+        return $this->view('site.ogp.plan_show', compact('plan'));
     }
 
-    public function store(OgpAreaOfferRequest $request, $otg_area_id): \Illuminate\Http\RedirectResponse
+    /**
+     * @param Request $request
+     * @param OgpPlan $plan
+     * @param OgpPlanArea $area
+     * @return View
+     */
+    public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
+    {
+        return $this->view('site.ogp.plan_area_show', compact('plan', 'planArea'));
+    }
+
+    public function store(OgpPlanAreaOfferRequest $request, $id): \Illuminate\Http\RedirectResponse
     {
         $user = $request->user();
         $validated = $request->validated();
         $validated['users_id'] = $request->user()->id;
-        $item = OgpArea::findOrFail($otg_area_id);
-        $fields = $request->get('fields');
+        $item = OgpPlanArea::findOrFail($id);
         $offer_id = $request->get('offer', 0);
-        $commitment_id = $request->get('commitment_id', 0);
 
         DB::beginTransaction();
 
         try {
             if($offer_id) {
-                $offer = OgpAreaOffer::findOrFail($offer_id);
+                $offer = OgpPlanAreaOffer::findOrFail($offer_id);
+                $offer->content = $validated['content'];
+                $offer->save();
             } else {
                 //create new offer
                 $offer = $item->offers()->create([
-                    'users_id' => $user->id
+                    'users_id' => $user->id,
+                    'content' => $validated['content']
                 ]);
             }
 
-            if($offer) {
-                if($commitment_id) {
-                    $commitment = OgpAreaCommitment::findOrFail($commitment_id);
-                } else {
-                    $commitment = $offer->commitments()->create([
-                        'name' => $validated['commitment_name']
-                    ]);
-                }
-
-                if($commitment) {
-                    //create arrangements
-                    $arrangement = $commitment->arrangements()->create([
-                        'name' => $validated['arrangement_name']
-                    ]);
-
-                    if($arrangement) {
-                        //create commitment fields
-                        $fieldsData = [];
-                        foreach (OgpAreaArrangementFieldEnum::options()  as $key => $value) {
-                            $fieldsData[] = [
-                                'name' => $key,
-                                'content' => $fields[$value] ?? '',
-                                'is_system' => isset($fields[$value]),
-                            ];
-                        }
-                        if($fieldsData) {
-                            $arrangement->fields()->createMany($fieldsData);
-                        }
-                    }
-
-                }
-
-            } // offer
             DB::commit();
-            return to_route('ogp.develop_new_action_plans.show', $item->id)
+            return to_route('ogp.develop_new_action_plans.area', ['plan' => $item->ogp_plan_id, 'planArea' => $item->id])
                 ->with('success', trans_choice('custom.ogp_areas', 1)." ".__('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -103,7 +91,7 @@ class DevelopNewActionPlan extends Controller
 
     }
 
-    public function editOffer(Request $request, OgpAreaOffer $offer): View|\Illuminate\Http\RedirectResponse
+    public function editOffer(Request $request, OgpPlanAreaOffer $offer): View|\Illuminate\Http\RedirectResponse
     {
         $user = $request->user();
 
@@ -111,13 +99,12 @@ class DevelopNewActionPlan extends Controller
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 
-        $ogpArea = $offer->area;
+        $planArea = $offer->planArea;
 
-
-        return $this->view('site.ogp.offer.edit', compact('offer', 'ogpArea'));
+        return $this->view('site.ogp.offer.edit', compact('offer', 'planArea'));
     }
 
-    public function storeComment(Request $request, OgpAreaOffer $offer): \Illuminate\Http\JsonResponse
+    public function storeComment(Request $request, OgpPlanAreaOffer $offer): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
@@ -151,7 +138,7 @@ class DevelopNewActionPlan extends Controller
         ]);
     }
 
-    public function deleteComment(Request $request, OgpAreaOfferComment $comment): \Illuminate\Http\JsonResponse
+    public function deleteComment(Request $request, OgpPlanAreaOfferComment $comment): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
         if($user->cannot('delete', $comment)) {
@@ -186,7 +173,7 @@ class DevelopNewActionPlan extends Controller
     public function voteOffer(Request $request, $id, $like = 0): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
-        $offer = OgpAreaOffer::findOrFail($id);
+        $offer = OgpPlanAreaOffer::findOrFail($id);
         $container = $request->get('container');
 
         if($user->cannot('vote', $offer)) {
@@ -197,7 +184,7 @@ class DevelopNewActionPlan extends Controller
         }
 
         try {
-            $vote = new OgpAreaOfferVote(['is_like' => $like, 'users_id' => $user->id]);
+            $vote = new OgpPlanAreaOfferVote(['is_like' => $like, 'users_id' => $user->id]);
             $offer->votes()->save($vote);
 
             $offer->refresh();

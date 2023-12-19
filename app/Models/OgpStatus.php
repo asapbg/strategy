@@ -29,4 +29,9 @@ class OgpStatus extends ModelActivityExtend implements TranslatableContract
     {
         return $query->where('active', '=', true);
     }
+
+    public function scopePeinding($query)
+    {
+        return $query->where('can_edit', '=', 1);
+    }
 }

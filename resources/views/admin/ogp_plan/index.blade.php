@@ -15,7 +15,7 @@
                             <select name="paginate" class="form-control d-inline w-auto">
                                 @foreach(range(1,3) as $multiplier)
                                     @php
-                                        $paginate = $multiplier * App\Models\OgpArea::PAGINATE;
+                                        $paginate = $multiplier * App\Models\OgpPlan::PAGINATE;
                                     @endphp
                                     <option value="{{ $paginate }}"
                                             @if (request()->get('paginate') == $paginate) selected="selected" @endif
@@ -51,7 +51,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="fa fa-search"></i> {{__('custom.search')}}
                                 </button>
-                                <a href="{{route('admin.ogp.area.index')}}" class="btn btn-default">
+                                <a href="{{route('admin.ogp.plan.index')}}" class="btn btn-default">
                                     <i class="fas fa-eraser"></i> {{__('custom.clear')}}
                                 </a>
                             </div>
@@ -80,6 +80,7 @@
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
                             <th>{{__('custom.active_m')}}</th>
+                            <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
                         </thead>
@@ -89,11 +90,12 @@
                                 <tr>
                                     <td>{{ $v->id }}</td>
                                     <td>{{ $v->name }}</td>
+                                    <td>{{ $v->status->name }}</td>
                                     <td>
-                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpArea'])
+                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.ogp.area.edit', $v->id )}}"
+                                        <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
                                            class="btn btn-sm btn-info"
                                            data-toggle="tooltip"
                                            title="{{__('custom.edit')}}">
@@ -105,7 +107,7 @@
                                            data-target="#modal-delete-resource"
                                            data-resource-id="{{ $v->id }}"
                                            data-resource-name="{{ "$v->name" }}"
-                                           data-resource-delete-url="{{ route('admin.ogp.area.delete', $v->id) }}"
+                                           data-resource-delete-url="{{ route('admin.ogp.plan.delete', $v->id) }}"
                                            data-toggle="tooltip"
                                            title="{{__('custom.deletion')}}">
                                             <i class="fa fa-trash"></i>

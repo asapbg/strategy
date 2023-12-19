@@ -26,7 +26,7 @@ use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\NomenclatureController;
-use App\Http\Controllers\Admin\Ogp\Area;
+use App\Http\Controllers\Admin\Ogp\Areas;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
 use App\Http\Controllers\Admin\PermissionsController;
@@ -529,7 +529,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::get('common-html', [\App\Http\Controllers\CommonController::class, 'commonHtml'])->name('common-html');
 
 
-    Route::controller(Area::class)->prefix('/ogp/area')->group(function () {
+    Route::controller(Areas::class)->prefix('/ogp/areas')->group(function () {
         Route::get('', 'index')->name('ogp.area.index');
         Route::get('create', 'create')->name('ogp.area.create');
         Route::get('edit/{id}', 'edit')->name('ogp.area.edit');
@@ -537,4 +537,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put('edit/store', 'store')->name('ogp.area.edit_store');
         Route::post('delete/{area}', 'destroy')->name('ogp.area.delete');
     });
+
+    Route::controller(\App\Http\Controllers\Admin\Ogp\Plans::class)->prefix('/ogp/plans')->group(function () {
+        Route::get('', 'index')->name('ogp.plan.index');
+        Route::get('create', 'create')->name('ogp.plan.create');
+        Route::post('add-area/{plan}', 'addArea')->name('ogp.plan.add_area');
+        Route::get('edit/{id}', 'edit')->name('ogp.plan.edit');
+        Route::post('edit/store', 'store')->name('ogp.plan.create_store');
+        Route::put('edit/store', 'store')->name('ogp.plan.edit_store');
+        Route::post('delete/{plan}', 'destroy')->name('ogp.plan.delete');
+
+        Route::get('arrangement/{ogpPlanArea}/{id?}', 'editArrangement')->name('ogp.plan.arrangement.edit');
+        Route::post('arrangement/{ogpPlanArea}', 'editArrangementStore')->name('ogp.plan.arrangement.edit_store');
+
+    });
+
+
 });

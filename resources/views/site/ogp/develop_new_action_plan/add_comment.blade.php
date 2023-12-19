@@ -1,4 +1,4 @@
-@can('createComment', $offer)
+{{--@can('createComment', $offer)--}}
 <form method="POST" action="{{ route('ogp.develop_new_action_plans.add_comment', $offer->id) }}" class="ogp-offer-comments">
     @csrf
     <div class="row">
@@ -11,4 +11,4 @@
         </div>
     </div>
 </form>
-@endcan
+{{--@endcan--}}
