@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
+use App\Models\CustomRole;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -37,8 +39,8 @@ class PublicationController extends AdminController
             $requestFilter['active'] = 1;
         }
 
-        $items = Publication::with(['category', 'category.translation', 'translation', 'mainImg'])
-            ->where('type', $type)
+        $items = Publication::with(['translation', 'mainImg'])
+            ->whereIn('type', [PublicationTypesEnum::TYPE_LIBRARY->value, PublicationTypesEnum::TYPE_NEWS->value, PublicationTypesEnum::TYPE_ADVISORY_BOARD->value])
             ->FilterBy($requestFilter)
             ->orderBy('id', 'desc')
             ->paginate($paginate);
@@ -66,8 +68,21 @@ class PublicationController extends AdminController
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
         $publicationCategories = PublicationCategory::optionsList(true);
-        return $this->view(static::EDIT_VIEW,
-            compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories','type'));
+        $fieldOfActionCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
+
+        if (auth()->user()->hasExactRoles([CustomRole::MODERATOR_ADVISORY_BOARD])) {
+            $fieldOfActionCategories = $fieldOfActionCategories->whereIn('id', auth()->user()->getModerateFieldOfActionIds());
+            $fieldOfActionCategories = $fieldOfActionCategories->values();
+        }
+
+        return $this->view(static::EDIT_VIEW, compact(
+            'item',
+            'storeRouteName',
+            'listRouteName',
+            'translatableFields',
+            'publicationCategories',
+            'fieldOfActionCategories',
+        ));
     }
 
     public function store(StorePublicationRequest $request, Publication $item)

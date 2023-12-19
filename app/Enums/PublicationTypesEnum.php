@@ -11,8 +11,10 @@ enum PublicationTypesEnum: int
     use Names, Options, Values;
 
     case TYPE_LIBRARY = 1;
-    case TYPE_NEWS = 3;
     case TYPE_OGP_NEWS = 2;
+
+    case TYPE_NEWS = 3;
+    case TYPE_ADVISORY_BOARD = 4;
 
     // Return enum name by value
     public static function keyByValue($searchVal): string
@@ -31,12 +33,13 @@ enum PublicationTypesEnum: int
      *
      * @return array
      */
-    public static function getTypeName()
+    public static function getTypeName(): array
     {
         return [
-            self::TYPE_LIBRARY->value       => 'custom.public_sections.types.TYPE_LIBRARY',
-            self::TYPE_NEWS->value          => 'custom.public_sections.types.TYPE_NEWS',
-            self::TYPE_OGP_NEWS->value      => 'custom.public_sections.types.TYPE_OGP_NEWS'
+            self::TYPE_LIBRARY->value           => 'custom.public_sections.types.TYPE_LIBRARY',
+            self::TYPE_NEWS->value              => 'custom.public_sections.types.TYPE_NEWS',
+            self::TYPE_OGP_NEWS->value          => 'custom.public_sections.types.TYPE_OGP_NEWS',
+            self::TYPE_ADVISORY_BOARD->value    => 'custom.public_sections.types.TYPE_ADVISORY_BOARD',
         ];
     }
 

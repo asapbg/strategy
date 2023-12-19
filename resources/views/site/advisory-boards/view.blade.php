@@ -23,15 +23,21 @@
                             <hr class="custom-hr">
                             <div class="collapse show mt-3" id="home-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
+                                    <li class="mb-2 ">
+                                        <a href="#" class="link-dark text-decoration-none">
+                                            {{ trans_choice('custom.contacts', 2) }}
+                                        </a>
+                                    </li>
 
-                                    <li class="mb-2 "><a href="#" class="link-dark text-decoration-none">Контакти</a>
+                                    <li class="mb-2">
+                                        <a href="#" class="link-dark text-decoration-none">{{ __('custom.up_to_date_information') }}</a>
                                     </li>
-                                    <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Актуална
-                                            информация
-                                            и
-                                            събития</a>
-                                    </li>
-                                    <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини</a>
+
+                                    <li class="mb-2">
+                                        <a href="{{ route('library.publications', ['type' => \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value]) . '?categories[]=' . $item->policy_area_id }}"
+                                           class="link-dark text-decoration-none">
+                                            {{ trans_choice('custom.news', 2) }}
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

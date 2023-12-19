@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -185,6 +186,19 @@ class User extends Authenticatable
             return $query->join('model_has_roles', "model_has_roles.model_id", "=", "users.id")
                 ->where('role_id', Role::where('name', $roles)->value('id'));
         }
+    }
+
+    public function moderateAdvisoryBoards(): HasMany
+    {
+        return $this->hasMany(AdvisoryBoardModerator::class);
+    }
+
+    public function getModerateFieldOfActionIds(): array
+    {
+        $own_advisory_board_ids = $this->moderateAdvisoryBoards->pluck('advisory_board_id');
+        $policy_area_ids = AdvisoryBoard::whereIn('id', $own_advisory_board_ids)->pluck('policy_area_id');
+
+        return empty($policy_area_ids) ? [] : $policy_area_ids->toArray();
     }
 
     /**

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\PublicationTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Publication extends ModelActivityExtend implements TranslatableContract
@@ -14,7 +16,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['title', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = ('custom.publications');
-//
+
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -67,12 +69,20 @@ class Publication extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    /**
-     * @return HasOne
-     */
-    public function category()
+    public function getRelatedClass(): string
     {
-        return $this->hasOne(PublicationCategory::class, 'id', 'publication_category_id');
+        return match ($this->type) {
+            PublicationTypesEnum::TYPE_ADVISORY_BOARD->value => FieldOfAction::class,
+            default => PublicationCategory::class,
+        };
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo($this->getRelatedClass(), 'publication_category_id');
     }
 
     /**
