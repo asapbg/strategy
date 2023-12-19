@@ -10,7 +10,7 @@
             @include('form_partials.text', ['name' => $nameSimple."[$a][number]", 'type' => 'number', 'label' => 'forms.number_people', 'value' => old($nameSimple."[$a][number]", (array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.number") : ''))])
         </div>
         @php($label = __($buttonLabel) . ' ' . $a+1)
-        @include('form_partials.textarea', ['name' => $nameSimple."[$a][text]", 'value' => old($nameSimple.'['.$a.']', array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.text") : ''), 'class' => $class ?? ''])
+            @include('form_partials.textarea', ['name' => $nameSimple."[$a][text]", 'value' => old($nameSimple.'['.$a.']', array_key_exists($nameSimple, $state) ? data_get($state, "$nameSimple.$a.text") : ''), 'class' => $class_textarea ?? ''])
         @if($a > 0)
             <div class="col-12 my-2">
                 @include('form_partials.remove_button')

@@ -30,11 +30,16 @@
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)
             <td>
-                <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][0]" class="form-control @error("comparison.$p.$n.$m.0"){{ 'is-invalid' }}@enderror" type="number"
-                    value="{{ data_get($state, "comparison.$p.$n.$m.0") }}">
-                @error("comparison.$p.$n.$m.0")
+                @if(isset($readOnly))
+                    {{ data_get($state, "comparison.$p.$n.$m.0") }}
+                @else
+                    <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][0]" class="form-control @error("comparison.$p.$n.$m.0"){{ 'is-invalid' }}@enderror" type="number"
+                           value="{{ data_get($state, "comparison.$p.$n.$m.0") }}">
+                    @error("comparison.$p.$n.$m.0")
                     <div class="text-danger input-err">{{ $message }}</div>
-                @enderror
+                    @enderror
+                @endif
+
             </td>
             @endfor
         </tr>
@@ -47,11 +52,15 @@
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)
             <td>
-                <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][1]" class="form-control @error("comparison.$p.$n.$m.1"){{ 'is-invalid' }}@enderror" type="number"
-                    value="{{ data_get($state, "comparison.$p.$n.$m.1") }}">
-                @error("comparison.$p.$n.$m.1")
+                @if(isset($readOnly))
+                    {{ data_get($state, "comparison.$p.$n.$m.1") }}
+                @else
+                    <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][1]" class="form-control @error("comparison.$p.$n.$m.1"){{ 'is-invalid' }}@enderror" type="number"
+                           value="{{ data_get($state, "comparison.$p.$n.$m.1") }}">
+                    @error("comparison.$p.$n.$m.1")
                     <div class="text-danger input-err">{{ $message }}</div>
-                @enderror
+                    @enderror
+                @endif
             </td>
             @endfor
         </tr>
@@ -64,11 +73,15 @@
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)
             <td>
-                <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][2]" class="form-control @error("comparison.$p.$n.$m.2"){{ 'is-invalid' }}@enderror" type="number"
-                    value="{{ data_get($state, "comparison.$p.$n.$m.2") }}">
-                @error("comparison.$p.$n.$m.2")
+                @if(isset($readOnly))
+                    {{ data_get($state, "comparison.$p.$n.$m.2") }}
+                @else
+                    <input name="comparison[{{ $p }}][{{ $n }}][{{ $m }}][2]" class="form-control @error("comparison.$p.$n.$m.2"){{ 'is-invalid' }}@enderror" type="number"
+                           value="{{ data_get($state, "comparison.$p.$n.$m.2") }}">
+                    @error("comparison.$p.$n.$m.2")
                     <div class="text-danger input-err">{{ $message }}</div>
-                @enderror
+                    @enderror
+                @endif
             </td>
             @endfor
         </tr>

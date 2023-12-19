@@ -374,6 +374,7 @@ return [
     'draft'                           => 'Чернова',
     'public_f'                        => 'Публична',
     'completed'                       => 'Завършен',
+    'completed_f'                       => 'Завършена',
     'change'                          => 'Промени',
     'change_f'                        => 'Промяна',
     'btn.reset_password'              => 'Смени парола',

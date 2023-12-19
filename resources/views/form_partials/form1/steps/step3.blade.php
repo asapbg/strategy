@@ -17,7 +17,7 @@
             <h5>{{ __('forms.on_problem') . ' ' . $n+1 . ': ' . __('forms.variant') }}</h5>
         </div>
         <div class="col-md-9">
-            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n", 'value' => data_get($state, "chosen_variants.$n")])
+            @include('form_partials.text', ['name' => 'chosen_variants[]', 'label' => '', 'nameDots' => "chosen_variants.$n", 'value' => old("chosen_variants.$n", data_get($state, "chosen_variants.$n"))])
         </div>
     </div>
 @endfor
@@ -36,7 +36,7 @@
         @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 1, 'label' => 'forms.will_decrease', 'clickSubmit' => true])
         <br>
         @include('form_partials.radio', ['name' => 'change_admin_weight', 'value' => 2, 'label' => 'forms.no_effect', 'clickSubmit' => true])
-        @if(Arr::has($state, 'change_admin_weight') && in_array(data_get($state, 'change_admin_weight'), [0, 1]))
+        @if((Arr::has($state, 'change_admin_weight') && in_array(data_get($state, 'change_admin_weight'), [0, 1])) || in_array(old('change_admin_weight'), [0,1]))
             <br>
             @include('form_partials.textarea', ['name' => 'change_admin_weight_text', 'label' => '', 'class' => 'mt-3'])
         @endif
@@ -65,7 +65,7 @@
             @include('form_partials.radio', ['name' => 'affects_regulatory_acts', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
         </div>
 
-        @if(Arr::has($state, 'affects_regulatory_acts') && data_get($state, 'affects_regulatory_acts') == 1)
+        @if((Arr::has($state, 'affects_regulatory_acts') && data_get($state, 'affects_regulatory_acts') == 1) || old('affects_regulatory_acts') == 1)
             <br>
             @include('form_partials.textarea', ['name' => 'affects_regulatory_acts_text', 'label' => '', 'class' => 'mt-3'])
         @endif
@@ -84,7 +84,7 @@
             @include('form_partials.radio', ['name' => 'affects_registry', 'value' => 0, 'label' => 'forms.no', 'clickSubmit' => true])
         </div>
 
-        @if(Arr::has($state, 'affects_registry') && data_get($state, 'affects_registry') == 1)
+        @if((Arr::has($state, 'affects_registry') && data_get($state, 'affects_registry') == 1)  || old('affects_registry') == 1)
             <br>
             @include('form_partials.textarea', ['name' => 'affects_registry_text', 'label' => '', 'class' => 'mt-3'])
         @endif

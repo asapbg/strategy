@@ -307,6 +307,9 @@ return [
         'impact.*.conclusion' => [
             'required' => 'Полето е задължително'
         ],
+        'is_from_eu_text' => [
+            'required_if' => 'Полето е задължително когато приемането на нормативния акт произтича от правото на Европейския съюз',
+        ],
     ],
 
     /*
@@ -625,10 +628,10 @@ return [
         'recommendations' => 'Препоръки за последващи действия',
         'sources' => 'Източници',
         'ogp_area' => 'Област',
-
         'npo_partner_bg'              => 'НПО партньор (BG)',
         'npo_partner_en'              => 'НПО партньор (EN)',
         'responsible_administration_bg'              => 'Отговорна администрация (BG)',
         'responsible_administration_en'              => 'Отговорна администрация (EN)',
+        'responsibility' => 'Отговорна институция',
     ],
 ];

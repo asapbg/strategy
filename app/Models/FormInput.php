@@ -13,6 +13,10 @@ class FormInput extends ModelActivityExtend
 
     protected $fillable = ['user_id', 'data', 'form'];
 
+    public function scopeFromInternalUsers($query){
+        $query->where('by_admin', '=', 1);
+    }
+
     public function getDataParsedAttribute() {
         return json_decode($this->data, true);
     }
