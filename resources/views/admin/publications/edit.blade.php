@@ -45,11 +45,8 @@
                                                         </span>
                                                     @endif
                                                 </label>
-                                                @php
-                                                    $type = old('type') ?? $item->type;
-                                                @endphp
                                                 <div class="d-inline">
-                                                    <select id="type" name="type"  class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
+                                                    <select id="type" name="type" readonly class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
                                                         @foreach(optionsPublicationTypes() as $row)
                                                             <option value="{{ $row['value'] }}" @if($type == $row['value']) selected @endif>{{ $row['name'] }}</option>
                                                         @endforeach
@@ -246,8 +243,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6 col-md-offset-3">
                                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                    <a href="{{ route($listRouteName) }}"
-                                       class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                    <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                 </div>
                             </div>
                         </form>

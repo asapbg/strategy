@@ -28,8 +28,8 @@ class LibraryController extends Controller
      */
     public function publications(Request $request)
     {
-        $type = PublicationTypesEnum::TYPE_LIBRARY;
-        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
+        $type = PublicationTypesEnum::TYPE_LIBRARY->value;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
             ? $request->get('paginate')
@@ -54,8 +54,8 @@ class LibraryController extends Controller
      */
     public function news(Request $request)
     {
-        $type = PublicationTypesEnum::TYPE_NEWS;
-        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
+        $type = PublicationTypesEnum::TYPE_NEWS->value;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
             ? $request->get('paginate')
@@ -90,16 +90,17 @@ class LibraryController extends Controller
             ->find($id);
         $pageTitle = $publication->translation?->title;
         $default_img = $this->default_img;
+        $this->setBreadcrumbsTitle($pageTitle);
 
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
 
     /**
      * @param Request $request
-     * @param PublicationTypesEnum $type
+     * @param $type
      * @return mixed
      */
-    private function getPublications(Request $request, PublicationTypesEnum $type)
+    private function getPublications(Request $request, $type)
     {
         $sort = ($request->offsetGet('sort'))
             ? $request->offsetGet('sort')

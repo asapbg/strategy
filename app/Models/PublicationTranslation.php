@@ -18,7 +18,7 @@ class PublicationTranslation extends Model
     {
         return Attribute::make(
             get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
-            //set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
 
@@ -29,7 +29,7 @@ class PublicationTranslation extends Model
     {
         return Attribute::make(
             get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
-            //set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
 }

@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-md-12 mb-2">
                     <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
-                    <a href="#collapse_{{ $executor->id }}" class="main-color stretched-link text-decoration-none d-block accordion-link" data-toggle="collapse">
+                    <a href="#collapse_{{ $executor->id }}" class="main-color text-decoration-none d-block accordion-link" data-toggle="collapse">
                         <span>{{ $executor->institution?->name ?? $translation?->contractor_name }}</span>
                     </a>
                 </div>
@@ -92,7 +92,7 @@
                                 </p>
                             </div>
                         @endif
-                        
+
                     </div>
                 </div>
             </div>

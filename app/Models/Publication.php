@@ -42,7 +42,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
             ],
             'short_content' => [
                 'type' => 'textarea',
-                'rules' => ['required', 'string']
+                'rules' => ['nullable', 'string']
             ],
             'content' => [
                 'type' => 'summernote',

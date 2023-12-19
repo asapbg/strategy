@@ -35,13 +35,15 @@
                             <p>{{ trans_choice('custom.public_sections', 2) }}<i class="fas fa-angle-left right"></i></p>
                         </a>
                         <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.publications.index') }}"
-                                   class="nav-link @if($activePublications) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.publications', 2) }} <span style="font-size: 10px;">({{ __('custom.news_library_ogp') }})</span></p>
-                                </a>
-                            </li>
+                            @foreach (App\Enums\PublicationTypesEnum::options() as $key => $value)
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.publications.index', ['type' => $value]) }}"
+                                       class="nav-link @if(request()->route('type') == $value) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice("custom.public_sections.types.$key", 2) }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
                             <li class="nav-item">
                                 <a href="{{ route('admin.nomenclature.publication_category') }}"
                                    class="nav-link @if($activePublicationCategories) active @endif">
@@ -52,6 +54,21 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.page') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.static_pages', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item @if(strstr(url()->current(), '/page')) menu-open @endif">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            <p>{{ trans_choice('custom.static_pages', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.page') }}"
+                                   class="nav-link @if(strstr(url()->current(), '/page'))  active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                                 </a>

@@ -31,7 +31,7 @@
                                         </a>
                                     @endcan
                                     @can('update', $publication)
-                                        <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
+                                        <a href="{{ route('admin.publications.edit' , ['type' => $type, $publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
                                             <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
                                         </a>
                                     @endcan
