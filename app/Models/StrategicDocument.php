@@ -146,9 +146,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function getDocumentDisplayNameAttribute(): string
     {
         $expiringDate = $this->document_date_expiring == null ? trans('custom.infinite') : Carbon::parse($this->document_date_expiring)->format('d-m-Y');
-        return $this->title .' ' . '{' . trans('custom.published_at') . ' ' .
-            Carbon::parse($this->document_date_accepted)->format('d-m-Y') . ' / ' . trans('custom.valid_at')
-            . ' ' . $expiringDate  . ' / ' . $this->documentType->name . '}';
+        return $this->title .' ';
 
     }
 
