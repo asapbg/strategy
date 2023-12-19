@@ -103,9 +103,15 @@
                             <i class="fa fa-search"></i> {{ __('custom.search') }}
                         </button>
                         @if(isset($listRouteName))
-                            <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-sm btn-default">
-                                <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
-                            </a>
+                            @if(isset($type))
+                                <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-sm btn-default">
+                                    <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
+                                </a>
+                            @else
+                                <a href="{{ route($listRouteName) }}" class="btn btn-sm btn-default">
+                                    <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
+                                </a>
+                            @endif
                         @endif
                     </div>
                 </div>
