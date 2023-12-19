@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('type')->default(1);
         });
 
-        \Illuminate\Support\Facades\Artisan::call('db:seed OgpStatusSeeder');
+        //\Illuminate\Support\Facades\Artisan::call('db:seed OgpStatusSeeder');
     }
 
     /**
