@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -23,12 +24,14 @@ class LibraryController extends Controller
     protected $paginate = 50;
 
     /**
-     * @param Request $request
+     * @param Request  $request
+     * @param int|null $type
+     *
      * @return View
      */
-    public function publications(Request $request)
+    public function publications(Request $request, int $type = null)
     {
-        $type = PublicationTypesEnum::TYPE_LIBRARY;
+        $type = PublicationTypesEnum::tryFrom($type) ?? PublicationTypesEnum::TYPE_LIBRARY;
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
@@ -44,6 +47,10 @@ class LibraryController extends Controller
 
         $publicationCategories = PublicationCategory::optionsList(true, $type);
 
+        if ($type->value === PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) {
+            $publicationCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
+        }
+
         return $this->view('site.publications.index',
             compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));
     }
@@ -54,8 +61,8 @@ class LibraryController extends Controller
      */
     public function news(Request $request)
     {
-        $type = PublicationTypesEnum::TYPE_NEWS;
-        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
+        $type = PublicationTypesEnum::TYPE_NEWS->value;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
             ? $request->get('paginate')
@@ -90,16 +97,17 @@ class LibraryController extends Controller
             ->find($id);
         $pageTitle = $publication->translation?->title;
         $default_img = $this->default_img;
+        $this->setBreadcrumbsTitle($pageTitle);
 
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
 
     /**
      * @param Request $request
-     * @param PublicationTypesEnum $type
+     * @param $type
      * @return mixed
      */
-    private function getPublications(Request $request, PublicationTypesEnum $type)
+    private function getPublications(Request $request, $type)
     {
         $sort = ($request->offsetGet('sort'))
             ? $request->offsetGet('sort')

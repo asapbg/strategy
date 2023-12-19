@@ -24,7 +24,9 @@
             </div>
         </div>
         <div class="row">
-            @each('site.ogp.develop_new_action_plan.row_item', $items, 'item')
+            @foreach($items as $item)
+                @include('site.ogp.develop_new_action_plan.row_item', compact('item', 'route_view_name'))
+            @endforeach
         </div>
         <div class="row">
             {{ $items->links() }}

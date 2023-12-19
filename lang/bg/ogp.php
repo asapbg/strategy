@@ -3,6 +3,7 @@
 return [
     'add_new_ogp_area' => 'Добавяне на ново предложение',
     'add_new_proposal' => 'Добавяне на предложение',
+    'edit_proposal' => 'Редактиране на предложение',
     'template_new_proposal' => 'Образец за формуляра на предложение',
     'template_new_proposal_info' => 'Изтеглете формуляра за предложение, който впоследствие трябва да изпратите. След изпращане предложението става видимо в тази секция.',
     'download_template_new_proposal' => 'Изтегляне на образец',
@@ -38,5 +39,16 @@ return [
     'ogp_area_delete_title' => 'Изтриване на област',
     'comment_delete_warning' => 'Сигурни ли сте, че искате да изтриете този коментар?',
     'ogp_area_delete_warning' => 'Сигурни ли сте, че искате да изтриете този област?',
+    'action_plan_measures' => 'Мерки по плана за действие',
+    'add_new_arrangement' => 'Добави Нова мярка',
+    'start_of_execution' => 'Начало на изпълнение',
+    'end_of_execution' => 'Край на изпълнение',
+    'plan_sublevel' => 'Подниво мярка',
+    'subject_area_no' => 'Тематична област №:number',
+    'npo_partner' => 'НПО партньор',
+    'responsible_administration' => 'Отговорна администрация',
+    'deadline' => 'Срок на изпълнение',
+    'proposals' => 'Предложение|Предложения',
+
 
 ];

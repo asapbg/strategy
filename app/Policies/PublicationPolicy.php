@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PublicationTypesEnum;
 use App\Models\CustomRole;
 use App\Models\Publication;
 use App\Models\User;
@@ -19,7 +20,7 @@ class PublicationPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARD]);
     }
 
     /**
@@ -42,7 +43,13 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE];
+
+        if (!empty($user->getModerateFieldOfActionIds())) {
+            $roles[] = CustomRole::MODERATOR_ADVISORY_BOARD;
+        }
+
+        return $user->hasRole($roles);
     }
 
     /**
@@ -54,7 +61,17 @@ class PublicationPolicy
      */
     public function update(User $user, Publication $publication)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE];
+
+        if (
+            $publication->type === PublicationTypesEnum::TYPE_ADVISORY_BOARD->value &&
+            (in_array($publication->publication_category_id, $user->getModerateFieldOfActionIds())) ||
+            empty($publication->id)
+        ) {
+            $roles[] = CustomRole::MODERATOR_ADVISORY_BOARD;
+        }
+
+        return $user->hasRole($roles);
     }
 
     /**

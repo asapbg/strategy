@@ -13,7 +13,7 @@ class ImpactAssessmentController extends AdminController
 
     public function index(Request $request)
     {
-        $items = FormInput::with(['user'])->orderBy('created_at', 'desc')->get();
+        $items = FormInput::with(['user'])->FromInternalUsers()->orderBy('created_at', 'desc')->get();
         $listRouteName = self::LIST_ROUTE;
         return $this->view(self::LIST_VIEW, compact('items','listRouteName'));
     }

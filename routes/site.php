@@ -52,7 +52,7 @@ Route::controller(LibraryController::class)->group(function () {
     Route::get('/library', function () {
         return redirect(route('library.publications'));
     });
-    Route::get('/library/publications', 'publications')->name('library.publications');
+    Route::get('/library/publications/{type?}', 'publications')->name('library.publications');
     Route::get('/library/news', 'news')->name('library.news');
     Route::get('/library/{type}/{id}/details', 'details')->name('library.details');
 });
@@ -144,13 +144,17 @@ Route::controller(OpenGovernmentPartnership::class)->group(function () {
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::get('develop-a-new-action-plans', 'index')->name('ogp.develop_new_action_plans');
-    Route::get('develop-a-new-action-plans/{ogpArea}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
-    Route::post('develop-a-new-action-plans/store/{otg_area_id}', 'store')->name('ogp.develop_new_action_plans.store')->whereNumber('otg_area_id');
+    Route::get('develop-a-new-action-plans/{id}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
+    Route::get('develop-a-new-action-plan/{plan}/view/{planArea}', 'area')->name('ogp.develop_new_action_plans.area');
+    Route::post('develop-a-new-action-plans/store-offer/{id}', 'store')->name('ogp.develop_new_action_plans.store_offer')->whereNumber('otg_area_id');
     Route::get('develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
-
     Route::post('develop-a-new-action-plans/add-comment/{offer}', 'storeComment')->name('ogp.develop_new_action_plans.add_comment');
     Route::post('develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
     Route::post('develop-a-new-action-plans/offer-vote/{id}/{like}', 'voteOffer')->name('ogp.develop_new_action_plans.vote');
+});
 
-
+Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(function () {
+    Route::get('national-action-plans', 'index')->name('ogp.national_action_plans');
+    Route::get('national-action-plans/{id}', 'show')->name('ogp.national_action_plans.show')->whereNumber('id');
+    Route::get('national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
 });

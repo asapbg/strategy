@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
 use App\Models\User;
@@ -139,6 +140,13 @@ class Controller extends BaseController
             $segments[] = $heading;
         }
 
+        if ($links_count && $this->route_name == "library.details") {
+            array_pop($segments);
+            $type = request()->route('type');
+            $segments[] = ($type == PublicationTypesEnum::TYPE_LIBRARY->value) ? "publications" : "news";
+            $segments[] = "";
+        }
+
         $breadcrumbs['heading'] = $this->breadcrumb_title ?? $heading ?? '';
         $url = '';
 
@@ -148,6 +156,7 @@ class Controller extends BaseController
                 $segment == 'view'
                 || ($segment == "profile" && in_array("users", $segments))
                 || $segment == "users" && in_array("profile", $segments)
+                || is_numeric($segment)
             ) {
                 continue;
             }

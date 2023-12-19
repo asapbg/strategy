@@ -374,6 +374,7 @@ return [
     'draft'                           => 'Чернова',
     'public_f'                        => 'Публична',
     'completed'                       => 'Завършен',
+    'completed_f'                       => 'Завършена',
     'change'                          => 'Промени',
     'change_f'                        => 'Промяна',
     'btn.reset_password'              => 'Смени парола',
@@ -432,6 +433,7 @@ return [
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
     'public_sections.types.TYPE_NEWS'           => 'Новина|Новини',
+    'public_sections.types.TYPE_ADVISORY_BOARD' => 'Консултативен съвет|Консултативни съвети',
     //dynamic structures
     'dynamic_structures.columns'                => 'Поле (динамична структура)|Полета (динамични структури)',
     'dynamic_structures'                        => 'Динамична структура|Динамични структури',
@@ -707,7 +709,13 @@ return [
     'deadline' => 'Срок',
     'edit_ogp_area' => 'Редактиране на план за действие',
     'new_tag' => 'Нов Термин',
-    'unidentified' => 'Неустановен',
     'Area' => "Област|Области",
-
+    'unidentified' => 'Неустановен',
+    'develop_a_new_action_plans' => 'Разработване на нов план за действие',
+    'area' => "Област|Области",
+    'plans' => "План|Планове",
+    'ogp_plans_commitment' => "Ангажимент|Ангажименти",
+    'ogp_plans_arrangement' => "Мярка|Мерки",
+    'ogp_plans_area' => "Област|Области",
+    'arrangement' => 'Мярка|Мерки',
 ];

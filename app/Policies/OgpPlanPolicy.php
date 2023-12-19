@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\OgpAreaOfferComment;
+use App\Enums\OgpStatusEnum;
+use App\Models\OgpPlan;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class OgpAreaOfferCommentPolicy
+class OgpPlanPolicy
 {
     use HandlesAuthorization;
 
@@ -18,17 +19,17 @@ class OgpAreaOfferCommentPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->id;
+        return $user->canAny(['manage.*','manage.partnership']);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
+     * @param  \App\Models\OgpPlan  $ogpPlan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, OgpAreaOfferComment $ogpAreaOfferComment)
+    public function view(User $user, OgpPlan $ogpPlan)
     {
         return $this->viewAny($user);
     }
@@ -48,34 +49,34 @@ class OgpAreaOfferCommentPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
+     * @param  \App\Models\OgpPlan  $ogpPlan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
+    public function update(User $user, OgpPlan $ogpPlan)
     {
-        return false;
+        return $this->viewAny($user) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
+     * @param  \App\Models\OgpPlan  $ogpPlan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
+    public function delete(User $user, OgpPlan $ogpPlan)
     {
-        return $user->id == $ogpAreaOfferComment->users_id && $ogpAreaOfferComment->offer->area->status->can_edit;
+        return $this->viewAny($user) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
+     * @param  \App\Models\OgpPlan  $ogpPlan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
+    public function restore(User $user, OgpPlan $ogpPlan)
     {
         return false;
     }
@@ -84,11 +85,17 @@ class OgpAreaOfferCommentPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\OgpAreaOfferComment  $ogpAreaOfferComment
+     * @param  \App\Models\OgpPlan  $ogpPlan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, OgpAreaOfferComment $ogpAreaOfferComment): \Illuminate\Auth\Access\Response|bool
+    public function forceDelete(User $user, OgpPlan $ogpPlan)
     {
         return false;
     }
+
+    public function newOffer(User $user, OgpPlan $ogpPlan)
+    {
+        return $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+    }
+
 }

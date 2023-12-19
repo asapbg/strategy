@@ -35,7 +35,7 @@
                                 <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        <div class="col-md-2 col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="type">
                                                     {{ __('validation.attributes.type') }}:
@@ -45,11 +45,8 @@
                                                         </span>
                                                     @endif
                                                 </label>
-                                                @php
-                                                    $type = old('type') ?? $item->type;
-                                                @endphp
                                                 <div class="d-inline">
-                                                    <select id="type" name="type"  class="form-control form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
+                                                    <select id="type" name="type" onchange="changePublicationType(this)" class="form-control select2 form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
                                                         @foreach(optionsPublicationTypes() as $row)
                                                             <option value="{{ $row['value'] }}" @if($type == $row['value']) selected @endif>{{ $row['name'] }}</option>
                                                         @endforeach
@@ -63,7 +60,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <div class="col-md-2 col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="publication_category_id">
                                                     {{ trans_choice('custom.categories', 1) }}:
@@ -73,7 +70,7 @@
                                                 @endphp
                                                 <div class="d-inline">
                                                     <select id="publication_category_id" name="publication_category_id"
-                                                            class="form-control form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
+                                                            class="form-control select2 form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
                                                     >
                                                         @foreach($publicationCategories as $category)
                                                             <option value="{{ $category->id }}" @if($category_id == $category->id) selected @endif>
@@ -246,8 +243,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6 col-md-offset-3">
                                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                    <a href="{{ route($listRouteName) }}"
-                                       class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                    <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                 </div>
                             </div>
                         </form>
@@ -257,4 +253,34 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        <script type="application/javascript">
+            const field_of_action_categories = @json($fieldOfActionCategories);
+            const categories_select = document.querySelector('#publication_category_id');
+            const is_field_of_action_category_selected = @json(old('type', 1) == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value || !empty($item->type));
+            const preselected_field_of_action = @json(old('publication_category_id', $item->publication_category_id));
+
+            if (is_field_of_action_category_selected) {
+                populateCategoriesWithFieldOfActions(preselected_field_of_action);
+            }
+
+            function changePublicationType(select) {
+                // Консултативни съвети
+                if (select.value == 4) {
+                    populateCategoriesWithFieldOfActions();
+                }
+            }
+
+            function populateCategoriesWithFieldOfActions(preselected = null) {
+                for (let category of field_of_action_categories) {
+                    const option = document.createElement("option");
+                    option.value = category.id;
+                    option.text = category.name;
+                    option.selected = preselected == option.value;
+                    categories_select.appendChild(option);
+                }
+            }
+        </script>
+    @endpush
 @endsection

@@ -152,11 +152,59 @@ class seedFixInstitutionPris extends Command
                 'importer' => [],
                 'institutions_id' => [132,142],
             ],
+            'МФ МРРБ МТ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МФ МРРБ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МРРБ МЗ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МИС МФ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МФ МП' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МВР МИЕТ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МИЕТ МК' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МФ МИЕТ' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МИЕТ МВнР' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
+            'МФ МТСП' => [
+                'importer' => [],
+                'institutions_id' => [],
+            ],
         ];
         $importers = [
+            'М' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
             'МЕ' => [
                 'importer' => '',
                 'institution_id' => 131,
+            ],
+            'ММРБ' => [
+                'importer' => '',
+                'institution_id' => null,
             ],
             'МЗем' => [
                 'importer' => '',
@@ -168,6 +216,26 @@ class seedFixInstitutionPris extends Command
             ],
             //Министерство на енергетиката и енергийните ресурси
             'МЕРР' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МУСЕС' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'мзх' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'ВОМН' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'момн' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МРЕП' => [
                 'importer' => '',
                 'institution_id' => null,
             ],
@@ -226,6 +294,10 @@ class seedFixInstitutionPris extends Command
             'МВР' => [
                 'importer' => '',
                 'institution_id' => 129,
+            ],
+            'МВнВ' => [
+                'importer' => '',
+                'institution_id' => null,
             ],
             'МВр' => [
                 'importer' => '',
@@ -364,6 +436,30 @@ class seedFixInstitutionPris extends Command
                 'importer' => '',
                 'institution_id' => 142,
             ],
+            'МРР' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МИП' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'ЗМПИР' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'ЗМП' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МЗПИР' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'мррб' => [
+                'importer' => '',
+                'institution_id' => 142,
+            ],
             'МС' => [
                 'importer' => '',
                 'institution_id' => null,
@@ -385,6 +481,10 @@ class seedFixInstitutionPris extends Command
                 'institution_id' => 143,
             ],
             'МТС_' => [
+                'importer' => '',
+                'institution_id' => 143,
+            ],
+            'МTС' => [
                 'importer' => '',
                 'institution_id' => 143,
             ],
@@ -425,8 +525,48 @@ class seedFixInstitutionPris extends Command
                 'importer' => '',
                 'institution_id' => 140,
             ],
+            'МБПСЕС' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МОНВ' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МООСВ' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МИе' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'МДДАР' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
+            'мис' => [
+                'importer' => '',
+                'institution_id' => null,
+            ],
             'министър без портфейл' => [
                 'importer' => 'министър без портфейл',
+                'institution_id' => null,
+            ],
+            '"м-р Хюсменова"' => [
+                'importer' => 'м-р Хюсменова',
+                'institution_id' => null,
+            ],
+            'м-р Хюсменова' => [
+                'importer' => 'м-р Хюсменова',
+                'institution_id' => null,
+            ],
+            'МИНИСТЪР-ПРЕДСЕДАТЕЛЯТ' => [
+                'importer' => 'министър-председателят',
+                'institution_id' => null,
+            ],
+            'МС-ДирЕИОМФИ' => [
+                'importer' => 'МС-ДирЕИОМФИ',
                 'institution_id' => null,
             ],
             'министър без портфейл (Ал. Праматарски)' => [
@@ -579,6 +719,10 @@ class seedFixInstitutionPris extends Command
             ],
             'заместник министър-председател по икономическите и социалните политики и министър на труда и социалната политика;' => [
                 'importer' => 'заместник министър-председател по икономическите и социалните политики и министър на труда и социалната политика;',
+                'institution_id' => null,
+            ],
+            'заместник министър-председател по икономическите и социалните политики и министър на труда и социалната политика' => [
+                'importer' => 'заместник министър-председател по икономическите и социалните политики и министър на труда и социалната политика',
                 'institution_id' => null,
             ],
             'заместник министър-председателят по управление на европейските средства' => [
@@ -1293,8 +1437,34 @@ class seedFixInstitutionPris extends Command
                 'importer' => 'и.д.главен секретар на МС',
                 'institution_id' => null,
             ],
-
-
+            'мин.-председателят' => [
+                'importer' => 'мин.-председателят',
+                'institution_id' => null,
+            ],
+            'м-р М. Кунева' => [
+                'importer' => 'м-р М. Кунева',
+                'institution_id' => null,
+            ],
+            'министър-председателя' => [
+                'importer' => 'министър-председателя',
+                'institution_id' => null,
+            ],
+            'зам. министър-председател' => [
+                'importer' => 'зам. министър-председател',
+                'institution_id' => null,
+            ],
+            'замистник министър-председателят и министър на вътрешните работи' => [
+                'importer' => 'замистник министър-председателят и министър на вътрешните работи',
+                'institution_id' => null,
+            ],
+            'заместник министър-председателят по икономическото развитие; МК' => [
+                'importer' => 'заместник министър-председателят по икономическото развитие',
+                'institution_id' => null,
+            ],
+            'заместник министър-председателят по икономическа политика' => [
+                'importer' => 'заместник министър-председателят по икономическа политика',
+                'institution_id' => null,
+            ],
         ];
 
         //records per query
@@ -1308,7 +1478,7 @@ class seedFixInstitutionPris extends Command
             $maxOldId = (int)$maxOldId[0]->max;
 
             while ($currentStep < $maxOldId) {
-                echo "FromId: ".$currentStep.' to Id: '.($currentStep + $step).PHP_EOL;
+                //echo "FromId: ".$currentStep.' to Id: '.($currentStep + $step).PHP_EOL;
                 $oldDbResult = DB::connection('pris')->select('select
                                 pris.id as old_id,
                                 pris."xml" as to_parse_xml_details
@@ -1342,16 +1512,20 @@ class seedFixInstitutionPris extends Command
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                         if(!empty($val)) {
+                                            $val = mb_convert_encoding($val, mb_detect_encoding($val), 'UTF-8');
                                             $val = str_replace('"', '', $val);
-                                            $val = str_replace(['\n\r', '\n', '\r'], ' ', $val);
+                                            $val = str_replace(['\r\n', '\n\r','\n', '\r'], ' ', $val);
                                             $explode = explode(',', $val);
                                             foreach ($explode as $e) {
+                                                $e = str_replace('"', '', $e);
+                                                $e = str_replace(['\r\n', '\n\r', '\n', '\r'], ' ', $e);
                                                 $missing = 0;
                                                 //mapping
                                                 if(isset($importers[trim($e)])) {
                                                     if(!is_null($importers[trim($e)]['importer'])) {
                                                         $importerStr[]= $importers[trim($e)]['importer'];
                                                     } else {
+                                                        //dd('ок', $val, $explode, trim($e), $importers[trim($e)] ?? null);
                                                         $missing += 1;
                                                     }
                                                     if(!is_null($importers[trim($e)]['institution_id'])) {
@@ -1371,11 +1545,14 @@ class seedFixInstitutionPris extends Command
                                                         $missing += 1;
                                                     }
                                                 } else{
+                                                    //dd('ок2', $val, $explode, $e, $importers[trim($e)] ?? null);
                                                     $missing = 2;
                                                 }
 
                                                 if($missing == 2) {
-                                                    $institutionForMapping[trim($e)] = trim($e);
+                                                    //dd($val, $explode, trim($e));
+                                                    $institutionForMapping[trim($e)] = mb_convert_encoding(trim($e), mb_detect_encoding($e), 'UTF-8');
+                                                    $this->comment('Missing: '. trim($e));
                                                 }
                                             }
 
@@ -1414,6 +1591,7 @@ class seedFixInstitutionPris extends Command
 
         if(sizeof($institutionForMapping)) {
             $fp = fopen('institutions_for_mapping_last_pris.csv', 'w');
+            fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF) );
             foreach ($institutionForMapping as $fields) {
                 fputcsv($fp, [$fields]);
             }

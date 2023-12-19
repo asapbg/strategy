@@ -1,29 +1,6 @@
 @if(isset($filter) && count($filter))
     <div class="card @if(isset($filterClass)){{ $filterClass }}@endif">
         <form method="GET">
-{{--            <div class="card-header with-border">--}}
-{{--                <div class="card-tools pull-right">--}}
-{{--                    <label>{{ trans_choice('custom.results', 2) }}: </label>--}}
-{{--                    <select name="paginate" class="form-control d-inline w-auto">--}}
-{{--                        @foreach(range(1,3) as $multiplier)--}}
-{{--                            @php--}}
-{{--                                $paginate = $multiplier * App\Models\User::PAGINATE;--}}
-{{--                            @endphp--}}
-{{--                            <option value="{{ $paginate }}"--}}
-{{--                                    @if (request()->get('paginate') == $paginate) selected="selected" @endif--}}
-{{--                            >{{ $paginate }}</option>--}}
-{{--                        @endforeach--}}
-{{--                    </select>--}}
-{{--                    <button type="button" class="btn btn-box-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">--}}
-{{--                        <i class="fas fa-minus"></i>--}}
-{{--                    </button>--}}
-{{--                    <button type="button" class="btn btn-box-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">--}}
-{{--                        <i class="fas fa-times"></i>--}}
-{{--                    </button>--}}
-{{--                </div>--}}
-{{--                <h3 class="card-title">{{ __('custom.search') }}</h3>--}}
-{{--            </div>--}}
-
             <div class="card-body">
                 <div class="row">
                     @foreach($filter as $key => $field)
@@ -71,8 +48,21 @@
                                             @endforeach
                                         @else
                                             {{-- regular select --}}
-                                            @foreach($field['options'] as $option)
-                                                <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif>{{ $option['name'] }}</option>
+                                            @foreach($field['options'] as $key => $option)
+                                                @php
+                                                    $value = $option['value'] ?? $key;
+                                                    $name = $option['name'] ?? $option;
+                                                @endphp
+                                                <option value="{{ $value }}"
+                                                        @if(
+                                                              (isset($field['multiple']) && $field['multiple']
+                                                              && in_array($value, old($key.'[]', $field['value'] ?? [])))
+                                                              || ((!isset($field['multiple'])
+                                                              || !$field['multiple']) && $value == old($key, $field['value']))
+                                                        )
+                                                            selected
+                                                    @endif
+                                                >{{ $name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -82,17 +72,27 @@
                                     <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                             @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}"
                                             data-placeholder="{{ $field['placeholder'] }}">
-                                        @foreach($field['options'] as $option)
-                                            <option value="{{ $option['value'] }}"
-                                                    @if((isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) || ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key, $field['value']))) selected @endif
-                                            >{{ $option['name'] }}</option>
+                                        @foreach($field['options'] as $key => $option)
+                                            @php
+                                                $value = $option['value'] ?? $key;
+                                                $name = $option['name'] ?? $option;
+                                            @endphp
+                                            <option value="{{ $value }}"
+                                                    @if(
+                                                      (isset($field['multiple']) && $field['multiple'] && in_array($value, old($key.'[]', $field['value'] ?? [])))
+                                                      || ((!isset($field['multiple'])
+                                                      || !$field['multiple']) && $value == old($key, $field['value']))
+                                                    )
+                                                        selected
+                                                @endif
+                                            >{{ $name }}</option>
                                         @endforeach
-                                    </select>                     
+                                    </select>
                                     <button type="button" class="btn btn-sm btn-primary ms-1 pick-institution"
                                             data-title="{{ trans_choice('custom.institutions',2) }}"
                                             data-url="{{ route('modal.institutions').'?select=1&multiple='.(isset($field['multiple']) && $field['multiple'] ? '1' : '0').'&admin=1&dom='.$key }}">
                                         <i class="fa fa-list"></i>
-                                    </button>                          
+                                    </button>
 {{--                                </div>--}}
                                 @break('subjects')
                             @endswitch
@@ -103,9 +103,15 @@
                             <i class="fa fa-search"></i> {{ __('custom.search') }}
                         </button>
                         @if(isset($listRouteName))
-                            <a href="{{ route($listRouteName) }}" class="btn btn-sm btn-default">
-                                <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
-                            </a>
+                            @if(isset($type))
+                                <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-sm btn-default">
+                                    <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
+                                </a>
+                            @else
+                                <a href="{{ route($listRouteName) }}" class="btn btn-sm btn-default">
+                                    <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
+                                </a>
+                            @endif
                         @endif
                     </div>
                 </div>

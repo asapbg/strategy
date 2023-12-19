@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Executor;
 use App\Models\FormInput;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -72,7 +74,9 @@ class ImpactAssessmentController extends Controller
         if ($inputId) $data['inputId'] = $inputId;
         session(["forms.$formName" => $data]);
 
-        if (!$isDataEmpty && (($userId && !$inputId) || $submit)) {
+//        if (!$isDataEmpty && (($userId && !$inputId) || $submit)) {
+        //Always save data
+        if (!$isDataEmpty && (($userId))) {
             $fi = FormInput::find($inputId);
             if ($fi) {
                 $state = $this->getState($formName, $inputId);
@@ -80,13 +84,13 @@ class ImpactAssessmentController extends Controller
                 $fi = new FormInput([
                     'form' => $formName,
                     'user_id' => $userId,
+                    'by_admin' => auth()->user() && auth()->user()->user_type = User::USER_TYPE_INTERNAL,
                 ]);
             }
             $fi->data = json_encode($data);
             $fi->save();
             $inputId = $fi->id;
         }
-
         $step = $request->input('step', 1);
         $currentStep = $request->input('currentStep', 1);
         $rules = config("validation.$formName.step$currentStep");
@@ -137,7 +141,9 @@ class ImpactAssessmentController extends Controller
     private function getState($formName, $inputId = null)
     {
         $state = session("forms.$formName", []);
-        if (!$inputId) $inputId = app('request')->input('inputId', 0);
+        if (!$inputId) {
+            $inputId = app('request')->input('inputId', 0);
+        }
         if ($inputId) {
             $item = FormInput::find($inputId);
             $state = json_decode($item->data, true);

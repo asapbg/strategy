@@ -8,12 +8,18 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\OgpArea;
 use App\Models\OgpAreaOffer;
-use App\Models\OgpAreaOfferComment;
+use App\Models\OgpPlanAreaOfferComment;
+use App\Models\OgpPlan;
+use App\Models\OgpPlanAreaOffer;
+use App\Models\OgpPlanArrangement;
 use App\Models\Setting;
 use App\Policies\LegislativeProgramPolicy;
 use App\Policies\OgpAreaOfferCommentPolicy;
 use App\Policies\OgpAreaOfferPolicy;
 use App\Policies\OgpAreaPolicy;
+use App\Policies\OgpPlanAreaOfferPolicy;
+use App\Policies\OgpPlanArrangementPolicy;
+use App\Policies\OgpPlanPolicy;
 use App\Policies\OperationalProgramPolicy;
 use App\Policies\PublicConsultationPolicy;
 use App\Policies\SettingsPolicy;
@@ -33,8 +39,10 @@ class AuthServiceProvider extends ServiceProvider
         OperationalProgram::class => OperationalProgramPolicy::class,
         Setting::class => SettingsPolicy::class,
         OgpArea::class => OgpAreaPolicy::class,
-        OgpAreaOffer::class => OgpAreaOfferPolicy::class,
-        OgpAreaOfferComment::class => OgpAreaOfferCommentPolicy::class,
+        OgpPlan::class => OgpPlanPolicy::class,
+        OgpPlanArrangement::class => OgpPlanArrangementPolicy::class,
+        OgpPlanAreaOffer::class => OgpPlanAreaOfferPolicy::class,
+//        OgpAreaOfferComment::class => OgpAreaOfferCommentPolicy::class,
     ];
 
     /**

@@ -5,14 +5,14 @@
         <div class="container-fluid">
 
             @include('admin.partial.filter_form')
-
+`
             <div class="card">
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PublicationController@index'])
 
-                        <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
+                        <a href="{{ route($editRouteName, ['type' => $type]) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>
                     </div>
@@ -22,7 +22,6 @@
                         <tr>
                             <th>ID</th>
                             <th>{{ __('validation.attributes.title') }}</th>
-                            <th>{{ __('validation.attributes.type') }}</th>
                             <th>{{ __('validation.attributes.category') }}</th>
                             <th>{{__('custom.public_from')}}</th>
                             <th>{{__('custom.active_m')}}</th>
@@ -35,7 +34,6 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ trans_choice('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type), 1) }}</td>
                                     <td>@if($item->category){{ $item->category->name }}@endif</td>
                                     <td>{{ displayDate($item->published_at) }}</td>
                                     <td>
@@ -49,7 +47,7 @@
                                     </td>
                                     <td class="text-center">
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
+                                            <a href="{{ route( $editRouteName , ['type' => $type, $item->id]) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

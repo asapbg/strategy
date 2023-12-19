@@ -35,13 +35,15 @@
                             <p>{{ trans_choice('custom.public_sections', 2) }}<i class="fas fa-angle-left right"></i></p>
                         </a>
                         <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.publications.index') }}"
-                                   class="nav-link @if($activePublications) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.publications', 2) }} <span style="font-size: 10px;">({{ __('custom.news_library_ogp') }})</span></p>
-                                </a>
-                            </li>
+                            @foreach (App\Enums\PublicationTypesEnum::options() as $key => $value)
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.publications.index', ['type' => $value]) }}"
+                                       class="nav-link @if(request()->route('type') == $value) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice("custom.public_sections.types.$key", 2) }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
                             <li class="nav-item">
                                 <a href="{{ route('admin.nomenclature.publication_category') }}"
                                    class="nav-link @if($activePublicationCategories) active @endif">
@@ -52,6 +54,21 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.page') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.static_pages', 2) }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item @if(strstr(url()->current(), '/page')) menu-open @endif">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            <p>{{ trans_choice('custom.static_pages', 2) }}<i class="fas fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.page') }}"
+                                   class="nav-link @if(strstr(url()->current(), '/page'))  active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                                 </a>
@@ -265,6 +282,14 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('admin.publications.index', \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) . '?type=' . \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
+                                   class="nav-link">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.news', 2) }}</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('admin.advisory-boards.archive.index') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
@@ -276,7 +301,7 @@
                 @endcan
 
                 @canany(['manage.*', 'manage.partnership'])
-                    <li class="nav-item @if(strstr(url()->current(), 'advisory-boards')) menu-open @endif">
+                    <li class="nav-item @if(strstr(url()->current(), 'areas') || strstr(url()->current(), 'plans') ) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-weight"></i>
                             <p>{{ __('custom.open_government_partnership') }}<i class="fas fa-angle-left right"></i>
@@ -285,12 +310,18 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.ogp.area.index') }}"
-                                   class="nav-link @if(Str::endsWith(url()->current(), 'advisory-boards')) active @endif">
+                                   class="nav-link @if(strstr(url()->current(), 'areas')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ __('custom.develop_new_action_plan') }}</p>
+                                    <p>{{ trans_choice('custom.area', 2) }}</p>
                                 </a>
                             </li>
-
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.plan.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'plans')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.plans', 2) }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

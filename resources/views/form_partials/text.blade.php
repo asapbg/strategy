@@ -6,7 +6,7 @@ if (!isset($nameDots)) {
 }
 @endphp
 @if (isset($readOnly))
-    <p>{{ array_key_exists($name, $state) ? $state[$name] : '' }} </p>
+    <p>{{ array_key_exists($name, $state) ? $state[$name] : (isset($value) ? $value : '') }} </p>
 @else
 <input type="{{ isset($type) ? $type : 'text' }}" id="{{ $name }}" name="{{ $name }}" class="form-control form-control-sm @error($nameDots){{ 'is-invalid' }}@enderror @if(isset($class)){{ $class }}@endif"
     value="{{ old($name, isset($value) ? $value : (array_key_exists($name, $state) ? $state[$name] : '')) }}">

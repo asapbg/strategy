@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
+use App\Models\CustomRole;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -28,24 +30,26 @@ class PublicationController extends AdminController
      *
      * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request, $type)
     {
         $requestFilter = $request->all();
-        $filter = $this->filters($request);
+        $filter = $this->filters($request, $type);
         $paginate = $filter['paginate'] ?? Publication::PAGINATE;
         if( !isset($requestFilter['active']) ) {
             $requestFilter['active'] = 1;
         }
 
-        $items = Publication::with(['category', 'category.translation', 'translation', 'mainImg'])
-            ->whereIn('type', [PublicationTypesEnum::TYPE_LIBRARY->value, PublicationTypesEnum::TYPE_NEWS->value])
+        $items = Publication::with(['translation', 'mainImg'])
+            ->whereIn('type', [PublicationTypesEnum::TYPE_LIBRARY->value, PublicationTypesEnum::TYPE_NEWS->value, PublicationTypesEnum::TYPE_ADVISORY_BOARD->value])
             ->FilterBy($requestFilter)
             ->orderBy('id', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
         $editRouteName = static::EDIT_ROUTE;
         $listRouteName = static::LIST_ROUTE;
-        return $this->view(static::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        return $this->view(static::LIST_VIEW,
+            compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'type')
+        );
     }
 
     /**
@@ -59,17 +63,40 @@ class PublicationController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+        $type = $request->route('type');
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
         $publicationCategories = PublicationCategory::optionsList(true);
-        return $this->view(static::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'publicationCategories'));
+        $fieldOfActionCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
+
+        if (auth()->user()->hasExactRoles([CustomRole::MODERATOR_ADVISORY_BOARD])) {
+            $fieldOfActionCategories = $fieldOfActionCategories->whereIn('id', auth()->user()->getModerateFieldOfActionIds());
+            $fieldOfActionCategories = $fieldOfActionCategories->values();
+        }
+
+        return $this->view(static::EDIT_VIEW, compact(
+            'item',
+            'storeRouteName',
+            'listRouteName',
+            'translatableFields',
+            'publicationCategories',
+            'fieldOfActionCategories',
+        ));
     }
 
     public function store(StorePublicationRequest $request, Publication $item)
     {
         $id = $item->id;
         $validated = $request->validated();
+
+        foreach ($this->languages as $lang) {
+            foreach (Publication::translationFieldsProperties() as $field => $properties) {
+                if (empty($validated['short_content_'.$lang['code']])) {
+                    $validated['short_content_'.$lang['code']] = Str::limit(strip_tags($validated['content_'.$lang['code']]), 1000);
+                }
+            }
+        }
 
         if( ($item->id && $request->user()->cannot('update', $item))
             || $request->user()->cannot('create', Publication::class) ) {
@@ -133,20 +160,20 @@ class PublicationController extends AdminController
 
     }
 
-    private function filters($request)
+    private function filters($request, $type)
     {
         return array(
+            'category' => array(
+                'type' => 'select',
+                'value' => $request->input('category'),
+                'options' => PublicationCategory::optionsList(true, $type)->pluck('name','id')->toArray(),
+                'col' => 'col-md-4'
+            ),
             'title' => array(
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
                 'col' => 'col-md-3'
-            ),
-            'type' => array(
-                'type' => 'select',
-                'value' => $request->input('type'),
-                'options' => optionsPublicationTypes(true),
-                'col' => 'col-md-2'
             )
         );
     }
