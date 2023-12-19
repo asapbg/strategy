@@ -282,6 +282,14 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('admin.publications.index') . '?type=' . \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
+                                   class="nav-link">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.news', 2) }}</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('admin.advisory-boards.archive.index') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>

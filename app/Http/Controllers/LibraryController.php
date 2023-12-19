@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -23,13 +24,15 @@ class LibraryController extends Controller
     protected $paginate = 50;
 
     /**
-     * @param Request $request
+     * @param Request  $request
+     * @param int|null $type
+     *
      * @return View
      */
-    public function publications(Request $request)
+    public function publications(Request $request, int $type = null)
     {
-        $type = PublicationTypesEnum::TYPE_LIBRARY->value;
-        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
+        $type = PublicationTypesEnum::tryFrom($type) ?? PublicationTypesEnum::TYPE_LIBRARY;
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
             ? $request->get('paginate')
@@ -43,6 +46,10 @@ class LibraryController extends Controller
         }
 
         $publicationCategories = PublicationCategory::optionsList(true, $type);
+
+        if ($type->value === PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) {
+            $publicationCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
+        }
 
         return $this->view('site.publications.index',
             compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));

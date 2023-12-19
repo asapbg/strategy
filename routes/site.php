@@ -52,7 +52,7 @@ Route::controller(LibraryController::class)->group(function () {
     Route::get('/library', function () {
         return redirect(route('library.publications'));
     });
-    Route::get('/library/publications', 'publications')->name('library.publications');
+    Route::get('/library/publications/{type?}', 'publications')->name('library.publications');
     Route::get('/library/news', 'news')->name('library.news');
     Route::get('/library/{type}/{id}/details', 'details')->name('library.details');
 });

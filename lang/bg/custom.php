@@ -432,6 +432,7 @@ return [
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
     'public_sections.types.TYPE_NEWS'           => 'Новина|Новини',
+    'public_sections.types.TYPE_ADVISORY_BOARD' => 'Консултативен съвет|Консултативни съвети',
     //dynamic structures
     'dynamic_structures.columns'                => 'Поле (динамична структура)|Полета (динамични структури)',
     'dynamic_structures'                        => 'Динамична структура|Динамични структури',
