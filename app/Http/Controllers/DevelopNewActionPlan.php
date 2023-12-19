@@ -24,14 +24,15 @@ class DevelopNewActionPlan extends Controller
      */
     public function index(Request $request): View
     {
-        //TODO: get only specific status for discussion
         $items = OgpPlan::Active()
             ->whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
             ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
             ->FilterBy($request->all())
             ->orderBy('created_at', 'desc')
             ->paginate(OgpPlan::PAGINATE);
-        return $this->view('site.ogp.plans', compact('items'));
+        $route_view_name = 'ogp.develop_new_action_plans.show';
+
+        return $this->view('site.ogp.plans', compact('items', 'route_view_name'));
     }
 
     /**

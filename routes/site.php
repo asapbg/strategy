@@ -149,3 +149,9 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::post('develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
     Route::post('develop-a-new-action-plans/offer-vote/{id}/{like}', 'voteOffer')->name('ogp.develop_new_action_plans.vote');
 });
+
+Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(function () {
+    Route::get('national-action-plans', 'index')->name('ogp.national_action_plans');
+    Route::get('national-action-plans/{id}', 'show')->name('ogp.national_action_plans.show')->whereNumber('id');
+    Route::get('national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
+});

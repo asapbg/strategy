@@ -18,8 +18,8 @@ class OgpStatusSeeder extends Seeder
         $locales = config('available_languages');
 
         $items = [
-            ['name' => 'Чернова', 'css_class' => 'active-ks', 'type' => OgpStatusEnum::DRAFT->value, 'can_edit' => 0],
-            ['name' => 'Действащ', 'css_class' => 'closed-li', 'type' => OgpStatusEnum::ACTIVE->value, 'can_edit' => 0],
+            ['name' => 'Чернова', 'css_class' => 'closed-li', 'type' => OgpStatusEnum::DRAFT->value, 'can_edit' => 0],
+            ['name' => 'Действащ', 'css_class' => 'active-ks', 'type' => OgpStatusEnum::ACTIVE->value, 'can_edit' => 0],
             ['name' => 'В разработка', 'css_class' => 'closed-li', 'type' => OgpStatusEnum::IN_DEVELOPMENT->value, 'can_edit' => 1],
             ['name' => 'Финализирай план', 'css_class' => 'closed-li', 'type' => OgpStatusEnum::FINAL->value, 'can_edit' => 0],
         ];

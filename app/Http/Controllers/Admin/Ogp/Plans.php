@@ -94,6 +94,7 @@ class Plans extends AdminController
             return to_route('admin.ogp.plan.edit', ['id' => $item->id])
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
+            dd($e->getMessage());
             Log::error($e);
             DB::rollBack();
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));

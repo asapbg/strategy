@@ -95,13 +95,15 @@
                                         @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
                                     </td>
                                     <td class="text-center">
+                                        @can('edit', $v)
                                         <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
                                            class="btn btn-sm btn-info"
                                            data-toggle="tooltip"
                                            title="{{__('custom.edit')}}">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        @if(true)
+                                        @endcan
+                                        @can('delete', $v)
                                         <a href="javascript:;"
                                            class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
                                            data-target="#modal-delete-resource"
@@ -112,7 +114,7 @@
                                            title="{{__('custom.deletion')}}">
                                             <i class="fa fa-trash"></i>
                                         </a>
-                                        @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

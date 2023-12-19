@@ -15,7 +15,7 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
+                                    <li class="my-2"><a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a></li>
                                     <hr class="custom-hr">

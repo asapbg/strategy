@@ -699,6 +699,7 @@ return [
     'national_action_plans' => 'Национални планове за действие',
     'evaluation_implementation_action_plans_monitoring' => 'Оценка за изпълнението на плановете за действие – мониторинг',
     'develop_new_action_plan' => 'Разработване на нов план за действие',
+    'develop_a_new_action_plans' => 'Разработване на нов план за действие',
     'ogp_forum' => 'OGP FORUM',
     'news_events' => 'Новини и събития',
     'from_date' => 'От дата',
