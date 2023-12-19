@@ -181,6 +181,8 @@
                     $(form.querySelector('#member_notes_en')).summernote("code", data.translations[1].member_notes);
                     form.querySelector('#email').value = data.email;
                     $('#consultation_level_id_change').trigger('change');
+                    form.querySelector('#member_institution').value = data.institution_id;
+                    $('#member_institution').trigger('change');
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);
