@@ -30,12 +30,12 @@ class PublicationController extends AdminController
      * Show the public consultations.
      *
      * @param Request $request
-     * @param $type
      * @return View
      */
-    public function index(Request $request, $type)
+    public function index(Request $request)
     {
         $requestFilter = $request->all();
+        $type = $request->route('type') ?? $request->offsetGet('type');
         $filter = $this->filters($request, $type);
         $paginate = $filter['paginate'] ?? Publication::PAGINATE;
         if( !isset($requestFilter['active']) ) {
@@ -66,7 +66,7 @@ class PublicationController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-        $type = $request->route('type');
+        $type = $request->route('type') ?? $request->offsetGet('type');
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();

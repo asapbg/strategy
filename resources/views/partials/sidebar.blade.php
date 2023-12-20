@@ -39,7 +39,7 @@
                                 @continue($key == "TYPE_ADVISORY_BOARD")
                                 <li class="nav-item">
                                     <a href="{{ route('admin.publications.index', ['type' => $value]) }}"
-                                       class="nav-link @if(request()->route('type') == $value) active @endif">
+                                       class="nav-link @if(request()->route('type') == $value || request()->offsetGet('type') == $value) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice("custom.public_sections.types.$key", 2) }}</p>
                                     </a>
