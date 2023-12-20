@@ -93,14 +93,21 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
 
 });
 
-Route::controller(ImpactAssessmentController::class)->prefix('/impact_assessments')->as('impact_assessment.')->group(function () {
-    Route::get('', 'index')->name('index');
-    Route::get('/executors', 'executors')->name('executors');
-    Route::get('/forms', 'forms')->name('forms');
-    Route::get('/{form}', 'form')->name('form');
-    Route::post('/{form}', 'store')->name('store');
-    Route::get('/{form}/pdf/{inputId}', 'pdf')->name('pdf');
-    Route::get('/{form}/show/{inputId}', 'show')->name('show');
+Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentCalculatorsController::class)->group(function () {
+    Route::get('/impact_assessments/tools', 'tools')->name('impact_assessment.tools');
+    Route::match(['get', 'post'],'/impact_assessments/tools/{calc}', 'calc')->name('impact_assessment.tools.calc');
+    Route::get('/impact_assessments/tools/calc/get-blade/{type}', 'templates')->name('impact_assessment.tools.templates');
+
+});
+
+Route::controller(ImpactAssessmentController::class)->group(function () {
+    Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
+    Route::get('/impact_assessments/executors', 'executors')->name('impact_assessment.executors');
+    Route::get('/impact_assessments/forms', 'forms')->name('impact_assessment.forms');
+    Route::get('/impact_assessments/{form}', 'form')->name('impact_assessment.form');
+    Route::post('/impact_assessments/{form}', 'store')->name('impact_assessment.store');
+    Route::get('/impact_assessments/{form}/pdf/{inputId}', 'pdf')->name('impact_assessment.pdf');
+    Route::get('/impact_assessments/{form}/show/{inputId}', 'show')->name('impact_assessment.show');
 });
 
 Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {

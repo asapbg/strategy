@@ -33,11 +33,11 @@
                     </div>
                     <div class="col-md-6 text-end">
                         <!--
-                        И в двата вида визуализация (табличен и дървовиден), 
+                        И в двата вида визуализация (табличен и дървовиден),
                         нека най-отгоре да има линк към основната справка
-                         „Справка с всички документи“, която да сваля PDF 
-                         с дървото и всички прилежащи файлове за всеки документ 
-                         като линкове, за които е дадено „видими в справката“. 
+                         „Справка с всички документи“, която да сваля PDF
+                         с дървото и всички прилежащи файлове за всеки документ
+                         като линкове, за които е дадено „видими в справката“.
                          Това е подобно на сегашната функционалност:
                         -->
                         <button class="btn btn-primary main-color"><i
@@ -112,7 +112,7 @@
                             <div class="mb-3 d-flex flex-column  w-100">
                                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
                                 <select class="form-select">
-                                    <!-- 
+                                    <!--
                                         Важно - При второто и третото трябва да се появява или да става активно поле за избор на съответната област или община.
                                     -->
                                     <option value="1">--</option>
@@ -130,8 +130,7 @@
                     </div>
                     <div class="col-md-9 text-end col-sm-12">
                         <button class="btn btn-primary  main-color"><i
-                                class="fas fa-square-rss text-warning me-1"></i>RSS
-                            Абониране</button>
+                                class="fas fa-square-rss text-warning me-1"></i>RSS</button>
                         <button class="btn btn-primary main-color"><i
                                 class="fas fa-envelope me-1"></i>Абониране</button>
                         <button class="btn btn-success text-success"><i
@@ -453,11 +452,11 @@
                     </div>
                     <div class="col-md-6 text-end">
                         <!--
-                        И в двата вида визуализация (табличен и дървовиден), 
+                        И в двата вида визуализация (табличен и дървовиден),
                         нека най-отгоре да има линк към основната справка
-                         „Справка с всички документи“, която да сваля PDF 
-                         с дървото и всички прилежащи файлове за всеки документ 
-                         като линкове, за които е дадено „видими в справката“. 
+                         „Справка с всички документи“, която да сваля PDF
+                         с дървото и всички прилежащи файлове за всеки документ
+                         като линкове, за които е дадено „видими в справката“.
                          Това е подобно на сегашната функционалност:
                         -->
                         <button class="btn btn-primary main-color"><i
@@ -546,7 +545,7 @@
                             <div class="mb-3 d-flex flex-column  w-100">
                                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
                                 <select class="form-select">
-                                    <!-- 
+                                    <!--
                                         Важно - При второто и третото трябва да се появява или да става активно поле за избор на съответната област или община.
                                     -->
                                     <option value="1">--</option>
@@ -564,8 +563,7 @@
                     </div>
                     <div class="col-md-9 text-end col-sm-12">
                         <button class="btn btn-primary  main-color"><i
-                                class="fas fa-square-rss text-warning me-1"></i>RSS
-                            Абониране</button>
+                                class="fas fa-square-rss text-warning me-1"></i>RSS</button>
                         <button class="btn btn-primary main-color"><i
                                 class="fas fa-envelope me-1"></i>Абониране</button>
                         <button class="btn btn-success text-success"><i
@@ -659,21 +657,21 @@
                                 </li>
 
                                 <li class="active-node parent_li">
-                                    <span><!-- Това е стр документ без родителска категория                                    
-                                        Във всяка от така дефинираните единици стратегиите са йерархични, 
+                                    <span><!-- Това е стр документ без родителска категория
+                                        Във всяка от така дефинираните единици стратегиите са йерархични,
                                         като всички без родител са първо ниво, всички със родител са под родителя си с collapse/expand
                                     -->
                                         <a href="#" class="dark-text">
-                                            Национални програми за развитие на образованието за 2023 г.    
+                                            Национални програми за развитие на образованието за 2023 г.
                                         </a>
                                     </span>
                                 </li>
                                 <li class="active-node parent_li">
-                                    <span><!-- Това е стр документ без родителска категория                                    
-                                        Във всяка от така дефинираните единици стратегиите са йерархични, 
+                                    <span><!-- Това е стр документ без родителска категория
+                                        Във всяка от така дефинираните единици стратегиите са йерархични,
                                         като всички без родител са първо ниво, всички със родител са под родителя си с collapse/expand
                                     -->
-                                        <a href="#" class="dark-text">    
+                                        <a href="#" class="dark-text">
                                             Национален план за противодействие на тероризма
                                         </a>
                                     </span>
