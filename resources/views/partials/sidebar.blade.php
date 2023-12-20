@@ -36,6 +36,7 @@
                         </a>
                         <ul class="nav nav-treeview" style="display: none;">
                             @foreach (App\Enums\PublicationTypesEnum::options() as $key => $value)
+                                @continue($key == "TYPE_ADVISORY_BOARD")
                                 <li class="nav-item">
                                     <a href="{{ route('admin.publications.index', ['type' => $value]) }}"
                                        class="nav-link @if(request()->route('type') == $value) active @endif">
@@ -49,13 +50,6 @@
                                    class="nav-link @if($activePublicationCategories) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.publication_category', 2) }}</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.page') }}"
-                                   class="nav-link @if(Str::endsWith(url()->current(), 'pages')) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.static_pages', 2) }}</p>
                                 </a>
                             </li>
                         </ul>

@@ -10,6 +10,7 @@ use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +29,8 @@ class PublicationController extends AdminController
     /**
      * Show the public consultations.
      *
+     * @param Request $request
+     * @param $type
      * @return View
      */
     public function index(Request $request, $type)
@@ -55,7 +58,7 @@ class PublicationController extends AdminController
     /**
      * @param Request $request
      * @param Publication $item
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return View
      */
     public function edit(Request $request, $item = null)
     {
@@ -77,6 +80,7 @@ class PublicationController extends AdminController
 
         return $this->view(static::EDIT_VIEW, compact(
             'item',
+            'type',
             'storeRouteName',
             'listRouteName',
             'translatableFields',
@@ -85,6 +89,11 @@ class PublicationController extends AdminController
         ));
     }
 
+    /**
+     * @param StorePublicationRequest $request
+     * @param Publication $item
+     * @return RedirectResponse
+     */
     public function store(StorePublicationRequest $request, Publication $item)
     {
         $id = $item->id;
@@ -163,17 +172,18 @@ class PublicationController extends AdminController
     private function filters($request, $type)
     {
         return array(
-            'category' => array(
-                'type' => 'select',
-                'value' => $request->input('category'),
-                'options' => PublicationCategory::optionsList(true, $type)->pluck('name','id')->toArray(),
-                'col' => 'col-md-4'
-            ),
             'title' => array(
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
                 'col' => 'col-md-3'
+            ),
+            'category' => array(
+                'type' => 'select',
+                'placeholder' => trans_choice('custom.categories', 1),
+                'value' => $request->input('category'),
+                'options' => PublicationCategory::optionsList(true, $type)->pluck('name','id')->toArray(),
+                'col' => 'col-md-4'
             )
         );
     }
