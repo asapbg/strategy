@@ -156,7 +156,7 @@ class Controller extends BaseController
                 $segment == 'view'
                 || ($segment == "profile" && in_array("users", $segments))
                 || $segment == "users" && in_array("profile", $segments)
-                || is_numeric($segment)
+                || (is_numeric($segment) && !in_array('publications', $segments))
             ) {
                 continue;
             }
@@ -183,7 +183,7 @@ class Controller extends BaseController
                 $display_name = $segment;
             }
 
-            if (!empty($display_name) && !is_numeric($display_name)) {
+            if (!empty($display_name) && (!is_numeric($display_name))) {
                 $breadcrumbs['links'][] = [
                     'url'   => $url,
                     'name'  => $display_name

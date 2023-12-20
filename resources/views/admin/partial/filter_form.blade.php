@@ -30,7 +30,7 @@
                                 @case('select')
                                     <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                             @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
-                                    @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
+                                     @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                         {{-- select with groups--}}
                                         @if(isset($field['group']) && $field['group'])
                                             @foreach($field['options'] as $group_name => $group)
@@ -48,6 +48,7 @@
                                             @endforeach
                                         @else
                                             {{-- regular select --}}
+                                            <option value=""></option>
                                             @foreach($field['options'] as $key => $option)
                                                 @php
                                                     $value = $option['value'] ?? $key;
@@ -68,10 +69,10 @@
                                     </select>
                                 @break('select')
                                 @case('subjects')
-{{--                                <div class="input-group input-group-sm d-flex">--}}
                                     <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                             @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}"
                                             data-placeholder="{{ $field['placeholder'] }}">
+                                        <option value=""></option>
                                         @foreach($field['options'] as $key => $option)
                                             @php
                                                 $value = $option['value'] ?? $key;
@@ -93,7 +94,6 @@
                                             data-url="{{ route('modal.institutions').'?select=1&multiple='.(isset($field['multiple']) && $field['multiple'] ? '1' : '0').'&admin=1&dom='.$key }}">
                                         <i class="fa fa-list"></i>
                                     </button>
-{{--                                </div>--}}
                                 @break('subjects')
                             @endswitch
                         </div>

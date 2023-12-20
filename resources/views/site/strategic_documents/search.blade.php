@@ -1,9 +1,5 @@
-<div class="row filter-results mb-2" id="searchDiv">
-    <div class="col-md-6">
-        <h2 class="mb-4">
-            Търсене
-        </h2>
-    </div>
+<div class="row filter-results mb-2">
+<div class="col-md-6"></div>
 
     <div class="col-md-6 text-end">
         <!--
@@ -15,7 +11,8 @@
          Това е подобно на сегашната функционалност:
         -->
         <div class="dropdown d-inline">
-            <button class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button" data-toggle="dropdown"
+                aria-expanded="false">
                 <i class="fa-solid fa-download main-color me-2"></i>
                 Експорт
             </button>
@@ -26,18 +23,27 @@
                 <li><a id="csv_export" class="dropdown-item" href="#">Експорт като Csv</a></li>
             </ul>
         </div>
-        <button id="documents_report" class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button" data-toggle="dropdown" aria-expanded="false">
+        <button id="documents_report" class="btn btn-primary main-color dropdown-toggle mt-2 mb-3" type="button"
+            data-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-download main-color me-2"></i>
             Справка с всички документи
         </button>
 
     </div>
+</div>
 
+<div class="row filter-results" id="searchDiv">
+    <div class="col-md-12">
+        <h2 class="mb-4">
+            Търсене
+        </h2>
+    </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.policy_area', 1) }}</label>
+                <label for="exampleFormControlInput1"
+                    class="form-label">{{ trans_choice('custom.policy_area', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="policySelect">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($policyAreas as $policyArea)
@@ -47,7 +53,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Търсене в
@@ -57,15 +63,17 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.categories_based_on_livecycle', 1) }}</label>
+                <label for="exampleFormControlInput1"
+                    class="form-label">{{ trans_choice('custom.categories_based_on_livecycle', 1) }}</label>
                 <select class="form-select select2" multiple aria-label="Default select example" id="categorySelect">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     <option value="active">{{ trans_choice('custom.effective', 1) }}</option>
                     <option value="expired">{{ trans_choice('custom.expired', 1) }}</option>
-                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}</option>
+                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}
+                    </option>
                 </select>
             </div>
         </div>
@@ -130,7 +138,7 @@
         </div>
     </div>
     -->
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column w-100">
                 <label for="exampleFormControlInput1" class="form-label">Ниво</label>
@@ -154,8 +162,8 @@
                 <select class="form-select" id="administrationSelect">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($institutions as $institution)
-                        <option value="{{ $institution->id }}">{{ $institution->name }}</option>
-                    @endforeach
+<option value="{{ $institution->id }}">{{ $institution->name }}</option>
+@endforeach
                 </select>
             </div>
         </div>
@@ -183,7 +191,8 @@
     <div class="col-md-3" id="ekate_areas_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
+                <label for="exampleFormControlInput1"
+                    class="form-label">{{ trans_choice('custom.areas', 1) }}</label>
                 <select class="form-select" id="ekate_areas_id">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($ekateAreas as $ekateArea)
@@ -196,7 +205,8 @@
     <div class="col-md-3" id="ekate_municipalities_div_id">
         <div class="input-group ">
             <div class="mb-3 d-flex flex-column  w-100">
-                <label for="exampleFormControlInput1" class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
+                <label for="exampleFormControlInput1"
+                    class="form-label">{{ trans_choice('custom.municipalities', 1) }}</label>
                 <select class="form-select" id="ekate_municipalities_id">
                     <option value="all">{{ trans_choice('custom.all', 1) }}</option>
                     @foreach ($ekateMunicipalities as $ekateMunicipality)
@@ -209,21 +219,20 @@
 </div>
 <div class="row mb-5 action-btn-wrapper" id="searchButtons">
     <div class="col-md-3 col-sm-12">
-        <button id="searchBtn" class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
+        <button id="searchBtn" class="btn rss-sub main-color"><i
+                class="fas fa-search main-color"></i>Търсене</button>
         <button class="btn btn-primary main-color clear" id="clearForm">
             <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
         </button>
     </div>
 
     <div class="col-md-9 text-end col-sm-12">
-        <button class="btn btn-primary  main-color"><i
-                class="fas fa-square-rss text-warning me-1"></i>RSS</button>
-        <button class="btn btn-primary main-color"><i
-                class="fas fa-envelope me-1"></i>Абониране</button>
+        <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS</button>
+        <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>
 
         @can('create', auth()->user())
-            <a href="{{ route( $editRouteName) }}" class="btn btn-success text-success"><i
-                class="fas fa-circle-plus text-success me-1"></i>{{ trans_choice('custom.adding', 1) }}</a>
+            <a href="{{ route($editRouteName) }}" class="btn btn-success text-success"><i
+                    class="fas fa-circle-plus text-success me-1"></i>{{ trans_choice('custom.adding', 1) }}</a>
         @endcan
     </div>
 </div>
@@ -254,10 +263,10 @@
 
     <div class="col-md-3">
         @php
-           $ajax = true;
-           $ajaxContainer = '#valid-from';
-           $translation = trans_choice('custom.valid_from', 1);
-           $sort_by = 'valid-from';
+            $ajax = true;
+            $ajaxContainer = '#valid-from';
+            $translation = trans_choice('custom.valid_from', 1);
+            $sort_by = 'valid-from';
         @endphp
         @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
@@ -265,8 +274,8 @@
         @php
             $ajax = true;
             $ajaxContainer = '#valid-to';
-           $translation = trans_choice('custom.valid_to', 1);
-           $sort_by = 'valid-to';
+            $translation = trans_choice('custom.valid_to', 1);
+            $sort_by = 'valid-to';
         @endphp
         @include('components.sortable-link', compact('sort_by', 'translation', 'ajax', 'ajaxContainer'))
     </div>
@@ -276,8 +285,7 @@
     <div class="col-md-4">
 
     </div>
-    <div
-        class="col-md-8 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
+    <div class="col-md-8 text-end col-sm-12 d-flex align-items-center justify-content-end flex-direction-row">
         <label for="exampleFormControlInput1" class="form-label fw-bold mb-0 me-3">Брой
             резултати:</label>
         <select class="form-select w-auto" id="paginationResults">
