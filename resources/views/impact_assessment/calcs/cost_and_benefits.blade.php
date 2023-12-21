@@ -39,6 +39,16 @@
         </div>
     </form>
 </div>
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-success text-success w-auto" id="add-year">
+            <i class="fas fa-circle-plus me-1"></i>{{ __('custom.add') }} {{ __('site.year') }}
+        </button>
+        <button class="btn btn-primary text-primary w-auto" id="calculate" onclick="$('#form').submit();">
+            <i class="fas fa-calculator  me-1"></i>{{ __('site.calculate') }}
+        </button>
+    </div>
+</div>
 @if(isset($old) && sizeof($old) && isset($old['results']))
     <div class="row">
         <div class="col-12"><span class="w-bold bg-primary text-white d-block px-3 py-2">{{ __('site.calc.results') }}:</span></div>
@@ -70,17 +80,6 @@
         </div>
     </div>
 @endif
-
-<div class="row">
-    <div class="col-12">
-        <button class="btn btn-success text-success w-auto" id="add-year">
-            <i class="fas fa-circle-plus me-1"></i>{{ __('custom.add') }} {{ __('site.year') }}
-        </button>
-        <button class="btn btn-primary text-primary w-auto" id="calculate" onclick="$('#form').submit();">
-            <i class="fas fa-calculator  me-1"></i>{{ __('site.calculate') }}
-        </button>
-    </div>
-</div>
 
 @push('scripts')
     <script type="text/javascript">

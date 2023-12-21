@@ -39,14 +39,21 @@
         </div>
     </form>
 </div>
-{{--@if(isset($old) && sizeof($old) && isset($old['results']))--}}
-{{--    <div class="row">--}}
-{{--        <div class="col-12">--}}
-{{--            <span class="fw-bold">{{ __('site.calc.'.\App\Enums\CalcTypesEnum::COSTS_AND_BENEFITS->value.'.total') }}:</span>--}}
-{{--            <span class="fw-bold text-primary">{{ number_format(array_sum(array_column($old['results'], 'pure_num')), 2, '.', '') }} лв.</span>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--@endif--}}
+@if(isset($old) && sizeof($old) && isset($old['results']))
+    <div class="row">
+        <div class="col-12"><span class="w-bold bg-primary text-white d-block px-3 py-2">{{ __('site.calc.results') }}:</span></div>
+        <div class="col-12">
+            <span class="fw-bold d-block px-3 py-2">#1 {{ __('site.calc.cer_b_c') }}</span>
+            <span class="px-3">CER (B/C)</span>
+            <span class="fw-bold text-primary px-3">{{ $old['results']['cer_b_c'] }}</span>
+        </div>
+        <div class="col-12">
+            <span class="fw-bold d-block px-3 py-2">#1 {{ __('site.calc.cer_b_c') }}</span>
+            <span class="px-3">CER (C/B)</span>
+            <span class="fw-bold text-primary px-3">{{ $old['results']['cer_c_b'] }}</span>
+        </div>
+    </div>
+@endif
 
 <div class="row">
     <div class="col-12">

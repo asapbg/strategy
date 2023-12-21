@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\CalcTypesEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,7 +30,7 @@ class ImpactAssessmentCalculatorsController extends Controller
             return redirect(route('impact_assessment.tools.calc', $type))->with('old', $request->all())->withErrors($rv->errors());
         }
         $validated = $rv->validated();
-        if(in_array($type, [CalcTypesEnum::COST_EFFECTIVENESS->value, CalcTypesEnum::MULTICRITERIA->value])){
+        if(in_array($type, [CalcTypesEnum::MULTICRITERIA->value])){
             return redirect(route('impact_assessment.tools.calc', $type))->with('old', $request->all())->with('warning', 'Изчисленията са в процес на разработка');
         }
         $results = $this->methodCalculation($type, $validated);
@@ -80,12 +81,15 @@ class ImpactAssessmentCalculatorsController extends Controller
                     //* регулаторните ползи на проекта в година 't'
                     // Incoming / (1 + (diskont/100))^ където '^' е на степен 't' //integer
                     $nvpB = $data['incoming'][$key] > 0 ? $data['incoming'][$key] / ((1 + ($diskont)) ** ($key + 1)) : 0;
-                    $results['nvp_b'] += round($nvpB);
+                    $results['nvp_b'] += (int)round($nvpB, 0, PHP_ROUND_HALF_DOWN);
+                    $results[$key]['nvp_b'] = (int)round($nvpB, 0, PHP_ROUND_HALF_DOWN);
                     //* регулаторните разходи на проекта в година 't' //integer
                     // Costs / (1 + (diskont/100))^ където '^' е на степен 't'
                     $nvpC = $data['costs'][$key] > 0 ? $data['costs'][$key] / ((1 + ($diskont)) ** ($key + 1)) : 0;
-                    $results['nvp_c'] += round($nvpC);
+                    $results[$key]['nvp_c'] = (int)round($nvpC, 0, PHP_ROUND_HALF_DOWN);
+                    $results['nvp_c'] += (int)round($nvpC, 0, PHP_ROUND_HALF_DOWN);
                 }
+                $results['nvp_c'] = $results['nvp_c'] + $investmentCosts;
                 //=================================
                 //** NVP нетна настояща стойност
                 //=================================
@@ -95,7 +99,7 @@ class ImpactAssessmentCalculatorsController extends Controller
                 //=================================
                 //** BCR съотношение „ползи / разходи“
                 //=================================
-                $results['bcr'] = $results['nvp_b'] / $results['nvp_c'];
+                $results['bcr'] = round(($results['nvp_b'] / $results['nvp_c']), 2);
                 $results['bcr_result'] = $results['bcr'] > 1 ? 'Атрактивен' : ( $results['bcr'] < 1 ? ' Неатрактивен' : 'Граничен случай');
                 $results['bcr_result_class'] = $results['bcr'] > 1 ? 'success' : ( $results['bcr'] < 1 ? 'danger' : 'secondary');
                 //=================================
@@ -104,22 +108,52 @@ class ImpactAssessmentCalculatorsController extends Controller
                 //* CRF -  капиталовъзстановителният фактор
                 //((diskont/100) * ((1 + (diskont/100)) ** (Y - 1)) / ((1+(diskont/100) ** Y) -1))
                 $y = sizeof($data['year']) + 1;
+                $results['y'] = sizeof($data['year']) + 1;
                 $crf = ($diskont * ((1 + $diskont) ** ($y - 1)) / (((1+$diskont) ** $y) -1));
-                $results['crf'] = $crf;
-                //* AVC -  анюализираната стойност на регулаторните разходи
-                //PVC * CRF
+                $results['crf'] = round($crf, 4);
+                //* AVC = PVC * CRF(round to 4 decimal)-  анюализираната стойност на регулаторните разходи
                 //* PVC - сборът от настоящите стойности на регулаторните разходи;
-                $pvc = array_sum($data['costs']) + $investmentCosts;
-                $results['avc'] = round($pvc * $crf);
-                //* AVB -  анюализираната стойност на регулаторните ползи
-                //PVB * CRF
+                $results['pvc'] = $results['nvp_c'];
+                $results['avc'] = (int)round(($results['pvc'] * $results['crf']), 0);
+                //* AVB = PVB * CRF(round to 4 decimal) -  анюализираната стойност на регулаторните ползи
                 //* PVB - сборът от настоящите стойности на регулаторните ползи;
-                $pvb = array_sum($data['incoming']);
-                $results['avb'] = round($pvb * $crf);
+                $results['pvb'] = $results['nvp_b'];
+                $results['avb'] = (int)round(($results['pvb'] * $results['crf']), 0);
                 $results['compare_result'] = $results['avb'] > $results['avc'] ? 'Атрактивен' : ( $results['avb'] < $results['avc'] ? ' Неатрактивен' : 'Граничен случай');
                 $results['compare_result_class'] = $results['avb'] > $results['avc'] ? 'success' : ( $results['avb'] < $results['avc'] ? 'danger' : 'secondary');
                 break;
+            case CalcTypesEnum::COST_EFFECTIVENESS->value:
+                $diskont = $data['diskont'] / 100;
+                $investmentCosts = $data['investment_costs'];
+
+                $results['nvp_b'] = 0;
+                $results['nvp_c'] = 0;
+                foreach ($data['year'] as $key => $value){
+                    //=================================
+                    //** NVP
+                    //=================================
+                    //* регулаторните ползи на проекта в година 't'
+                    // Incoming / (1 + (diskont/100))^ където '^' е на степен 't' //integer
+                    $nvpB = $data['incoming'][$key] > 0 ? $data['incoming'][$key] / ((1 + ($diskont)) ** ($key + 1)) : 0;
+                    $results['nvp_b'] += (int)round($nvpB, 0, PHP_ROUND_HALF_DOWN);
+                    $results[$key]['nvp_b'] = (int)round($nvpB, 0, PHP_ROUND_HALF_DOWN);
+                    //* регулаторните разходи на проекта в година 't' //integer
+                    // Costs / (1 + (diskont/100))^ където '^' е на степен 't'
+                    $nvpC = $data['costs'][$key] > 0 ? $data['costs'][$key] / ((1 + ($diskont)) ** ($key + 1)) : 0;
+                    $results[$key]['nvp_c'] = (int)round($nvpC, 0, PHP_ROUND_HALF_DOWN);
+                    $results['nvp_c'] += (int)round($nvpC, 0, PHP_ROUND_HALF_DOWN);
+                }
+                $results['nvp_c'] = $results['nvp_c'] + $investmentCosts;
+                //=================================
+                //** CER съотношение „разходи / ефективност (ползи / разходи)“
+                //=================================
+                //** CER = B/C
+                $results['cer_b_c'] = round(($results['nvp_b'] / $results['nvp_c']), 2);
+                //** CER = C/B
+                $results['cer_c_b'] = round(($results['nvp_c'] / $results['nvp_b']), 2);
+                break;
         }
+//        Log::error($results);
         return $results;
     }
 
@@ -140,6 +174,18 @@ class ImpactAssessmentCalculatorsController extends Controller
                 ]
             ),
             CalcTypesEnum::COSTS_AND_BENEFITS->value => array(
+                1 => [
+                    'diskont' => ['required', 'numeric', 'gt:0'],
+                    'investment_costs' => ['required', 'numeric', 'min:0'],
+                    'year' => ['required', 'array'],
+                    'year.*' => ['nullable'],
+                    'incoming' => ['required', 'array'],
+                    'incoming.*' => ['required', 'numeric', 'min:0'],
+                    'costs' => ['required', 'array'],
+                    'costs.*' => ['required', 'numeric', 'min:0'],
+                ]
+            ),
+            CalcTypesEnum::COST_EFFECTIVENESS->value => array(
                 1 => [
                     'diskont' => ['required', 'numeric', 'gt:0'],
                     'investment_costs' => ['required', 'numeric', 'min:0'],
