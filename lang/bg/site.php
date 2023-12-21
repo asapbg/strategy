@@ -73,5 +73,12 @@ return [
     'calc.cost_and_benefits.regular_incoming' => 'Регулаторни ползи',
     'calc.cost_and_benefits.regular_costs' => 'Регулаторни разходи',
     'calc.msg.at_least_one_year' => 'Необходими са данни за поне една година',
+    'calc.the_project_is' => 'Проектът е',
+    'calc.results' => 'Резултати от анализа',
+    'calc.nvp' => 'Нетна настояща стойност (NVP)',
+    'calc.bcr' => 'Съотношение „ползи / разходи“ (BCR)',
+    'calc.avc_avb_compare' => 'Сравняване на анюализираните стойности на разходите и ползите (AVC|AVB)',
+    'calc.avc_tooltip' => 'Анюализираната стойност на регулаторните разходи',
+    'calc.avb_tooltip' => 'Аанюализираната стойност на регулаторните ползи',
 
 ];

@@ -39,14 +39,37 @@
         </div>
     </form>
 </div>
-{{--@if(isset($old) && sizeof($old) && isset($old['results']))--}}
-{{--    <div class="row">--}}
-{{--        <div class="col-12">--}}
-{{--            <span class="fw-bold">{{ __('site.calc.'.\App\Enums\CalcTypesEnum::COSTS_AND_BENEFITS->value.'.total') }}:</span>--}}
-{{--            <span class="fw-bold text-primary">{{ number_format(array_sum(array_column($old['results'], 'pure_num')), 2, '.', '') }} лв.</span>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--@endif--}}
+@if(isset($old) && sizeof($old) && isset($old['results']))
+    <div class="row">
+        <div class="col-12"><span class="w-bold bg-primary text-white d-block px-3 py-2">{{ __('site.calc.results') }}:</span></div>
+        <div class="col-12">
+            <span class="fw-bold d-block px-3 py-2">#1 {{ __('site.calc.nvp') }}</span>
+            <span class="px-3">NVP</span>
+            <span class="fw-bold text-primary px-3">{{ number_format($old['results']['nvp'], 0, '.', '') }} лв.</span>
+            <span class="px-3">
+                <span class="px-3 fw-normal badge bg-{{ $old['results']['nvp_result_class'] }}">{{ __('site.calc.the_project_is') }} {{ $old['results']['nvp_result'] }}</span>
+            </span>
+        </div>
+        <div class="col-12">
+            <span class="fw-bold d-block px-3 py-2">#2 {{ __('site.calc.bcr') }}</span>
+            <span class="px-3">BCR:</span>
+            <span class="fw-bold text-primary px-3">{{ number_format($old['results']['bcr'], 2, '.', '') }}</span>
+            <span class="px-3">
+                <span class="px-3 fw-normal badge bg-{{ $old['results']['bcr_result_class'] }}">{{ __('site.calc.the_project_is') }} {{ $old['results']['bcr_result'] }}</span>
+            </span>
+        </div>
+        <div class="col-12">
+            <span class="fw-bold d-block px-3 py-2">#3 {{ __('site.calc.avc_avb_compare') }}</span>
+            <span class="px-3"><i class="fas fa-info-circle text-primary me-2 fs-6" title="{{ __('site.calc.avc_tooltip') }}"></i>AVC:</span>
+            <span class="fw-bold text-primary px-3">{{ number_format($old['results']['avc'], 0, '.', '') }} лв.</span>
+            <span class="px-3"><i class="fas fa-info-circle text-primary me-2 fs-6" title="{{ __('site.calc.avb_tooltip') }}"></i>AVB:</span>
+            <span class="fw-bold text-primary px-3">{{ number_format($old['results']['avb'], 0, '.', '') }} лв.</span>
+            <span class="px-3">
+                <span class="px-3 fw-normal badge bg-{{ $old['results']['compare_result_class'] }}">{{ __('site.calc.the_project_is') }} {{ $old['results']['compare_result'] }}</span>
+            </span>
+        </div>
+    </div>
+@endif
 
 <div class="row">
     <div class="col-12">
