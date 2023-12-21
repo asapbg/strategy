@@ -70,7 +70,7 @@
 
 <div class="row">
     <div class="col-12">
-        <button class="btn btn-primary text-primary w-auto" id="calculate" onclick="$('#form').submit();">
+        <button class="btn btn-primary text-primary w-auto" id="calculate">
             <i class="fas fa-calculator  me-1"></i>{{ __('site.calculate') }}
         </button>
     </div>
