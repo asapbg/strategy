@@ -30,9 +30,6 @@ class ImpactAssessmentCalculatorsController extends Controller
             return redirect(route('impact_assessment.tools.calc', $type))->with('old', $request->all())->withErrors($rv->errors());
         }
         $validated = $rv->validated();
-        if(in_array($type, [CalcTypesEnum::MULTICRITERIA->value])){
-            return redirect(route('impact_assessment.tools.calc', $type))->with('old', $request->all())->with('warning', 'Изчисленията са в процес на разработка');
-        }
         $results = $this->methodCalculation($type, $validated);
         return redirect(route('impact_assessment.tools.calc', $type))->with('old', array_merge($request->all(), ['results' => $results]));
     }
@@ -152,6 +149,21 @@ class ImpactAssessmentCalculatorsController extends Controller
                 //** CER = C/B
                 $results['cer_c_b'] = round(($results['nvp_c'] / $results['nvp_b']), 2);
                 break;
+            case CalcTypesEnum::MULTICRITERIA->value:
+                foreach ($data['variants'] as $v => $vName){
+                    $results[$v] = 0;
+                    Log::error('Вариант '.$vName.'('.$v.'):'.PHP_EOL);
+                    foreach ($data['criteria'] as $k => $kName){
+                        Log::error('Variant evals:' .json_encode($data['evaluation'][$k]));
+                        foreach ($data['evaluation'][$k] as $e => $eval){
+                            if(isset($data['evaluation'][$k][$v]) && $e == $v){
+                                Log::error('Add eval:' .$data['evaluation'][$k][$v].' | weight: '.$data['weight'][$k]);
+                                $results[$v] += ($data['weight'][$k] * $data['evaluation'][$k][$v]);
+                            }
+                        }
+                    }
+                }
+                break;
         }
 //        Log::error($results);
         return $results;
@@ -195,6 +207,20 @@ class ImpactAssessmentCalculatorsController extends Controller
                     'incoming.*' => ['required', 'numeric', 'min:0'],
                     'costs' => ['required', 'array'],
                     'costs.*' => ['required', 'numeric', 'min:0'],
+                ]
+            ),
+            CalcTypesEnum::MULTICRITERIA->value => array(
+                1 => [
+                    'step' => ['required', 'numeric', 'gt:0'],
+                    'criteria' => ['required', 'array'],
+                    'criteria.*' => ['required', 'string'],
+                    'variants' => ['required', 'array'],
+                    'variants.*' => ['required', 'string'],
+                    'weight' => ['required', 'array'],
+                    'weight.*' => ['required', 'numeric', 'gt:0'],
+                    'evaluation' => ['required', 'array'],
+                    'evaluation.*' => ['required', 'array'],
+                    'evaluation.*.*' => ['required', 'numeric'],
                 ]
             )
         );
