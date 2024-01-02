@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.site')
 
 @section('title')
     {{ __('custom.page_500_text') }}
