@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PublicationTypesEnum;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
+use App\Models\Publication;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,11 +19,14 @@ use Illuminate\View\View;
 
 class AdvisoryBoardController extends Controller
 {
-
+    private $pageTitle;
+    private $slider;
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->title_singular = __('custom.legislative_initiatives');
+        $this->pageTitle = trans_choice('custom.advisory_boards', 2);
+        $this->slider = ['title' => $this->pageTitle, 'img' => '/img/ms-w-2023.jpg'];
     }
 
     /**
@@ -30,8 +36,8 @@ class AdvisoryBoardController extends Controller
      */
     public function index(Request $request)
     {
-        $pageTitle = trans_choice('custom.advisory_boards', 2);
-        $slider = ['title' => $pageTitle, 'img' => '/img/ms-w-2023.jpg'];
+        $pageTitle = $this->pageTitle;
+        $slider = $this->slider;
 
         $field_of_actions = FieldOfAction::advisoryBoard()->select('field_of_actions.*')
             ->whereLocale(app()->getLocale())
@@ -220,7 +226,86 @@ class AdvisoryBoardController extends Controller
 
     public function contacts(Request $request)
     {
+        $pageTitle = $this->pageTitle;
+        $slider = $this->slider;
         $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
-        return $this->view('site.advisory-boards.contacts', compact('moderators'));
+        return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle', 'slider'));
+    }
+
+    public function news(Request $request)
+    {
+        $requestFilter = $request->all();
+        $filter = $this->newsFilters($request);
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'published_at';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? Publication::PAGINATE;
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $pageTitle = $this->pageTitle;
+        $slider = $this->slider;
+        $items = Publication::select('publication.*')
+            ->ActivePublic()
+            ->with(['translations', 'category', 'category.translations'])
+            ->leftJoin('publication_translations', function ($j){
+                $j->on('publication_translations.publication_id', '=', 'publication.id')
+                    ->where('publication_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'publication.publication_category_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($requestFilter)
+            //->where('publication.type', PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+            ->where(function ($q){
+                $q->whereNotNull('publication.advisory_boards_id')
+                    ->orWhere('is_adv_board_user', 1);
+            })
+            ->SortedBy($sort,$sortOrd)
+            ->GroupBy('publication.id', 'publication_translations.id', 'field_of_action_translations.id')
+            ->paginate($paginate);
+
+        if( $request->ajax() ) {
+            return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items'));
+        }
+
+        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'slider', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+    }
+
+    private function sorters()
+    {
+        return array(
+            'category' => ['class' => 'col-md-3', 'label' => trans_choice('custom.category', 1)],
+            'title' => ['class' => 'col-md-3', 'label' => __('custom.title')],
+            'publishDate' => ['class' => 'col-md-3', 'label' => __('custom.date_published')],
+        );
+    }
+
+    private function newsFilters($request)
+    {
+        return array(
+            'titleContent' => array(
+                'type' => 'text',
+                'label' => __('custom.title_content'),
+                'value' => $request->input('title_content'),
+                'col' => 'col-md-4'
+            ),
+            'from' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('from'),
+                'label' => __('custom.from_date'),
+                'col' => 'col-md-4'
+            ),
+            'to' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('to'),
+                'label' => __('custom.to_date'),
+                'col' => 'col-md-4'
+            ),
+        );
     }
 }

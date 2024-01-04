@@ -128,6 +128,13 @@ class PublicationController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->advisory_boards_id = $validated['adv_board'] ?? null;
+            if(!$id){
+                $item->users_id = auth()->user()->id;
+                //cache for search adv board publication by users role
+                if($request->user()->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
+                    $item->is_adv_board_user = 1;
+                }
+            }
             $item->save();
 
             // Upload File

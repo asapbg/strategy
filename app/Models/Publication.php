@@ -6,6 +6,7 @@ use App\Enums\PublicationTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -26,13 +27,18 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "publication";
 
-    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id'];
+    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id', 'users_id', 'is_adv_board_user'];
 
     /**
      * Get the model name
      */
     public function getModelName() {
         return $this->title;
+    }
+
+    public function scopeActivePublic($query){
+        $query->where('publication.active', true)
+            ->where('publication.published_at', '<=', Carbon::now()->format('Y-m-d'));
     }
 
     public static function translationFieldsProperties(): array
@@ -104,5 +110,10 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     public function advBoard(): HasOne
     {
         return $this->hasOne(AdvisoryBoard::class, 'id', 'advisory_boards_id');
+    }
+
+    public function author(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'users_id');
     }
 }

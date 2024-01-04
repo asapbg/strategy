@@ -28,8 +28,8 @@
             </div>
             <div class="col-md-4 text-end">
                 @can('update', $publication)
-                    <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" class="btn btn-sm btn-primary main-color">
-                        <i class="fas fa-pen me-2 main-color"></i>Редактиране на публикация
+                    <a href="{{ route('admin.publications.edit' , ['type' => $publication->type, 'item' => $publication->id]) }}" class="btn btn-sm btn-primary main-color">
+                        <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}
                     </a>
                 @endcan
                 @can('delete', $publication)
@@ -41,7 +41,7 @@
                        data-resource-delete-url="{{ route('admin.publications.delete', $publication) }}"
                        data-toggle="tooltip"
                        title="{{ __('custom.delete') }}">
-                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>Изтриване на публикация
+                        <i class="fas fa-regular fa-trash-can me-2 text-danger"></i>{{ __('custom.delete') }}
                     </a>
                 @endcan
             </div>
