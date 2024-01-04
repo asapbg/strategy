@@ -11,8 +11,7 @@
 
                     <div class="mb-3">
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PublicationController@index'])
-
-                        <a href="{{ route($editRouteName, ['type' => $type]) }}" class="btn btn-sm btn-success">
+                        <a href="{{ route($editRouteName, ['type' => $type, 0]).'?source='.$source }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>
                     </div>
@@ -47,7 +46,7 @@
                                     </td>
                                     <td class="text-center">
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , ['type' => $type, $item->id]) }}"
+                                            <a href="{{ route( $editRouteName , ['type' => $type, $item->id]).'?source='.$source }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

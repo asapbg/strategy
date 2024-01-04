@@ -55,7 +55,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Publications
     Route::controller(PublicationController::class)->group(function () {
-        Route::get('/publications/{type?}', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
         Route::get('/publications/edit/{type}/{item?}', 'edit')->name('publications.edit');
         Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
     });

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property int                      $id
@@ -208,5 +209,23 @@ class AdvisoryBoard extends ModelActivityExtend
                 'rules' => ['required'],
             ],
         ];
+    }
+
+    public static function select2AjaxOptions($filters)
+    {
+        $q = DB::table('advisory_boards')
+            ->select(['advisory_boards.id', DB::raw('advisory_board_translations.name')])
+            ->join('advisory_board_translations', function ($j){
+                $j->on('advisory_boards.id', '=', 'advisory_board_translations.advisory_board_id')
+                    ->where('advisory_board_translations.locale', '=', app()->getLocale());
+            });
+
+        if(isset($filters['search'])) {
+            $q->where('advisory_board_translations.name', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        $q->whereNull('advisory_boards.deleted_at');
+
+        return $q->get();
     }
 }

@@ -31,9 +31,12 @@ class StorePublicationRequest extends FormRequest
             'id' => ['required', 'numeric'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('publication', 'slug')->ignore((int)request()->input('id'))],
             'type' => ['required', 'numeric'],
+            'stay' => ['nullable', 'numeric'],
+            'source' => ['nullable', 'string'],
             'publication_category_id' => ['nullable', 'numeric'],
             'published_at' => ['required'],
-            'active' => ['required', 'numeric', 'in:0,1']
+            'active' => ['required', 'numeric', 'in:0,1'],
+            'adv_board' => ['nullable', 'numeric']
         ];
         foreach (config('available_languages') as $lang) {
             foreach (Publication::translationFieldsProperties() as $field => $properties) {

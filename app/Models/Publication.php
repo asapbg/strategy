@@ -26,7 +26,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "publication";
 
-    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active'];
+    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id'];
 
     /**
      * Get the model name
@@ -96,5 +96,13 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     public function files()
     {
         return $this->hasMany(File::class, 'id_object', 'id')->where('code_object', '=', File::CODE_OBJ_PUBLICATION);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function advBoard(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoard::class, 'id', 'advisory_boards_id');
     }
 }

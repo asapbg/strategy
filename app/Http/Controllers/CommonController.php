@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
+use App\Models\AdvisoryBoard;
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
@@ -288,6 +289,9 @@ class CommonController extends Controller
                 break;
             case 'tag':
                 $data = Tag::select2AjaxOptions($requestData);
+                break;
+            case 'adv_board':
+                $data = AdvisoryBoard::select2AjaxOptions($requestData);
                 break;
         }
 

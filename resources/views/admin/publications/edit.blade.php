@@ -27,6 +27,7 @@
                     <div class="tab-content" id="custom-tabsContent">
                         <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" name="source" value="{{ $source }}">
                             <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
                                 @if($item->id)
                                     @method('PUT')
@@ -48,7 +49,7 @@
                                                 <div class="d-inline">
                                                     <select id="type" name="type" onchange="changePublicationType(this)" class="form-control select2 form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
                                                         @foreach(optionsPublicationTypes() as $row)
-                                                            <option value="{{ $row['value'] }}" @if($type == $row['value']) selected @endif>{{ $row['name'] }}</option>
+                                                            <option value="{{ $row['value'] }}" @if($type == $row['value'] || ($item && $item->id && $item->type == $row['value']) || (old('type', 1) == $row['value'])) selected @endif>{{ $row['name'] }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('type')
@@ -59,15 +60,41 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
-                                        <div class="col-md-6 col-12">
+                                    <div class="col-12" id="adv_board_section">
+                                        <div class="col-md-6 col-12 @if((int)old('type', $item && $item->id ? $item->type : $type) != \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value ) d-none @endif">
                                             <div class="form-group">
-                                                <label class="control-label" for="publication_category_id">
-                                                    {{ trans_choice('custom.categories', 1) }}:
+                                                <label class="control-label" for="adv_board">
+                                                    {{ trans_choice('custom.advisory_boards', 2) }}
                                                 </label>
-                                                @php
-                                                    $category_id = old('publication_category_id') ?? $item->publication_category_id;
-                                                @endphp
+                                                <div class="d-inline">
+                                                    @php
+                                                        $oldAdvBoard = old('adv_board', $item->id ? $item->advisory_boards_id : 0) ? \App\Models\AdvisoryBoard::with(['translation'])->where('id', old('adv_board', $item->id ? $item->advisory_boards_id : 0))->first() : null
+                                                    @endphp
+                                                    <select id="adv_board" name="adv_board"
+                                                            class="form-control form-control-sm select2-autocomplete-ajax @error('adv_board'){{ 'is-invalid' }}@enderror"
+                                                            data-types2ajax="adv_board" data-urls2="{{ route('admin.select2.ajax', 'adv_board') }}"
+                                                    >
+                                                            @if($oldAdvBoard)
+                                                                <option value="{{ $oldAdvBoard->id }}" selected >{{ $oldAdvBoard->name }}</option>
+                                                            @endif
+                                                        </select>
+                                                        @error('adv_board')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="publication_category_id">
+                                                        {{ trans_choice('custom.categories', 1) }}:
+                                                    </label>
+                                                    @php
+                                                        $category_id = old('publication_category_id') ?? $item->publication_category_id;
+                                                    @endphp
                                                 <div class="d-inline">
                                                     <select id="publication_category_id" name="publication_category_id"
                                                             class="form-control select2 form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
@@ -103,7 +130,7 @@
 
                                     @include('admin.partial.edit_field_translate', ['field' => 'title', 'required' => true])
                                     @include('admin.partial.edit_field_translate', ['field' => 'short_content', 'required' => false])
-                                    @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => false])
+                                    @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
                                     <div class="col-12 mb-md-3"></div>
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_title', 'required' => false])
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
@@ -145,7 +172,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="active">
-                                                {{ __('validation.attributes.main_img') }}
+                                                {{ __('validation.attributes.main_img') }} <span class="required">*</span>
                                             </label>
                                             @if($item->id && $item->mainImg)
                                                 <img src="{{ asset($item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
@@ -243,6 +270,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6 col-md-offset-3">
                                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                    <button id="stay" type="submit" name="stay" class="btn btn-success" value="1">{{ __('custom.save_and_stay') }}</button>
                                     <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                 </div>
                             </div>
@@ -281,6 +309,17 @@
                     categories_select.appendChild(option);
                 }
             }
+
+            $(document).ready(function (){
+                $('#type').on('change', function (){
+                    if($(this).val() == parseInt('<?php echo \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value; ?>')) {
+                        $('#adv_board_section').show();
+                    } else{
+                        $('#adv_board_section select option').remove();
+                        $('#adv_board_section').hide();
+                    }
+                });
+            });
         </script>
     @endpush
 @endsection

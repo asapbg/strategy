@@ -38,7 +38,7 @@
                             @foreach (App\Enums\PublicationTypesEnum::options() as $key => $value)
                                 @continue($key == "TYPE_ADVISORY_BOARD")
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.publications.index', ['type' => $value]) }}"
+                                    <a href="{{ route('admin.publications.index', ).'?type='.$value }}"
                                        class="nav-link @if(request()->route('type') == $value || request()->offsetGet('type') == $value) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
                                         <p>{{ trans_choice("custom.public_sections.types.$key", 2) }}</p>
@@ -276,7 +276,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.publications.index', \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) . '?type=' . \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
+                                <a href="{{ route('admin.publications.index') .'?source=adv_board&type='.\App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
                                    class="nav-link">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.news', 2) }}</p>

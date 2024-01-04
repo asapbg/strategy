@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
+use App\Models\AdvisoryBoard;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
@@ -36,6 +37,7 @@ class PublicationController extends AdminController
     {
         $requestFilter = $request->all();
         $type = $request->route('type') ?? $request->offsetGet('type');
+        $source = $request->filled('source') ? $request->get('source') : '';
         $filter = $this->filters($request, $type);
         $paginate = $filter['paginate'] ?? Publication::PAGINATE;
         if( !isset($requestFilter['active']) ) {
@@ -51,7 +53,7 @@ class PublicationController extends AdminController
         $editRouteName = static::EDIT_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         return $this->view(static::LIST_VIEW,
-            compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'type')
+            compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'type', 'source')
         );
     }
 
@@ -60,13 +62,14 @@ class PublicationController extends AdminController
      * @param Publication $item
      * @return View
      */
-    public function edit(Request $request, $item = null)
+    public function edit(Request $request, $type = 0, $item = null)
     {
         $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'translations']);
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-        $type = $request->route('type') ?? $request->offsetGet('type');
+//        $type = $request->route('type') ?? $request->offsetGet('type');
+        $source = $request->filled('source') ? $request->get('source') : '';
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
@@ -86,6 +89,7 @@ class PublicationController extends AdminController
             'translatableFields',
             'publicationCategories',
             'fieldOfActionCategories',
+            'source'
         ));
     }
 
@@ -123,6 +127,7 @@ class PublicationController extends AdminController
 
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+            $item->advisory_boards_id = $validated['adv_board'] ?? null;
             $item->save();
 
             // Upload File
@@ -151,16 +156,18 @@ class PublicationController extends AdminController
             $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_PUBLICATION, false);
 
             $this->storeTranslateOrNew(Publication::TRANSLATABLE_FIELDS, $item, $validated);
-
             DB::commit();
 
-            if( $id ) {
-                return redirect(route(static::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.publications', 1)." ".__('messages.updated_successfully_f'));
-            }
 
-            return to_route(static::LIST_ROUTE)
-                ->with('success', trans_choice('custom.publications', 1)." ".__('messages.created_successfully_f'));
+            if(isset($validated['stay']) && $validated['stay']) {
+                $source = isset($validated['source']) ? '?source='.$validated['source'] : '';
+                $route = route(static::EDIT_ROUTE, ['type' => $validated['type'], 'item' => $item]).$source;
+            } else{
+                $source = isset($validated['source']) ? '&source='.$validated['source'] : '';
+                $route = route(static::LIST_ROUTE).'?type='.$validated['type'].$source;
+            }
+            return redirect($route)
+                ->with('success', trans_choice('custom.publications', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
