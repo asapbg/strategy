@@ -16,6 +16,8 @@ Route::controller(HomeController::class)->group(function () {
 
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');
+    Route::get('/news', 'news')->name('advisory-boards.news');
+    Route::get('/contacts', 'contacts')->name('advisory-boards.contacts');
     Route::get('{item}/view', 'show')->name('advisory-boards.view');
 });
 

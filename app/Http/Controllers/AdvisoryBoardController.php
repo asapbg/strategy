@@ -6,9 +6,12 @@ use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
+use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AdvisoryBoardController extends Controller
@@ -212,5 +215,11 @@ class AdvisoryBoardController extends Controller
     public function destroy(AdvisoryBoard $advisoryBoard)
     {
         dd('destroy');
+    }
+
+    public function contacts(Request $request)
+    {
+        $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
+        return $this->view('site.advisory-boards.contacts', compact('moderators'));
     }
 }

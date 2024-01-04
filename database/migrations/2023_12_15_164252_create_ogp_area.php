@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('active')->default('1');
             $table->string('css_class')->nullable();
             $table->boolean('can_edit')->default('0');
+            $table->unsignedInteger('type')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
