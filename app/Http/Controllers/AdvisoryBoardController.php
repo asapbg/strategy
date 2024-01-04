@@ -81,7 +81,7 @@ class AdvisoryBoardController extends Controller
         $advisory_boards = AdvisoryBoard::select('advisory_boards.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AdvisoryBoard::class)
-            ->with(['policyArea', 'translations'])
+            ->with(['policyArea', 'translations', 'moderators'])
             ->where(function ($query) use ($keywords) {
                 $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
                     $query->where('id', $keywords);
@@ -108,6 +108,7 @@ class AdvisoryBoardController extends Controller
                 $query->where('active', (bool)$status);
             })
             ->where('public', true)
+            ->orderBy('active', 'desc')
             ->orderBy("$sort_table.$order_by", $sort)
             ->paginate($paginate);
 
