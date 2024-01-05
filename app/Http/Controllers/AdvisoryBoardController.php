@@ -6,6 +6,8 @@ use App\Enums\PublicationTypesEnum;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
+use App\Models\AdvisoryBoardFunction;
+use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\Consultations\PublicConsultation;
@@ -23,13 +25,12 @@ use Symfony\Component\HttpFoundation\Response;
 class AdvisoryBoardController extends Controller
 {
     private $pageTitle;
-    private $slider;
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->title_singular = trans_choice('custom.advisory_boards', 2);
         $this->pageTitle = trans_choice('custom.advisory_boards', 2);
-        $this->slider = ['title' => $this->pageTitle, 'img' => '/img/ms-w-2023.jpg'];
+        $this->setSlider(trans_choice('custom.advisory_boards', 2), AdvisoryBoard::DEFAULT_HEADER_IMG);
     }
 
     /**
@@ -40,8 +41,6 @@ class AdvisoryBoardController extends Controller
     public function index(Request $request)
     {
         $pageTitle = $this->pageTitle;
-        $slider = $this->slider;
-
         $field_of_actions = FieldOfAction::advisoryBoard()->select('field_of_actions.*')
             ->whereLocale(app()->getLocale())
             ->joinTranslation(FieldOfAction::class)
@@ -133,7 +132,6 @@ class AdvisoryBoardController extends Controller
             'advisory_chairman_types',
             'pageTopContent',
             'advisory_boards',
-            'slider'
         ));
     }
 
@@ -187,6 +185,7 @@ class AdvisoryBoardController extends Controller
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;
         $this->title_singular = $item->name;
+        $this->setSlider($item->name, $item->headerImg);
         return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle'));
     }
 
@@ -199,9 +198,59 @@ class AdvisoryBoardController extends Controller
         }
 
         $this->title_singular = $pageTitle = $item->name;
-        $slider = $this->slider;
+        $this->setSlider($item->name, $item->headerImg);
 
-        return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle', 'slider'));
+        return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle'));
+    }
+
+    public function archiveMeetings(Request $request, AdvisoryBoard $item)
+    {
+        $requestFilter = $request->all();
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : AdvisoryBoard::PAGINATE;
+
+        if(!isset($requestFilter['to'])) {
+            $requestFilter['to'] = Carbon::now()->startOfYear();
+        }
+        $filter = $this->archiveFilters($request);
+        $pageTitle = $this->pageTitle;
+        $this->setSlider($item->name, $item->headerImg);
+        $items = AdvisoryBoardMeeting::with(['translations', 'siteFiles', 'siteFiles.versions'])
+            ->where('advisory_board_id', $item->id)
+            ->with(['translations', 'siteFiles'])
+            ->FilterBy($requestFilter)
+            ->paginate($paginate);
+
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+        if( $request->ajax() ) {
+            return view('site.advisory-boards.archive_meeting_list', compact('filter','items', 'item'));
+        }
+
+        return $this->view('site.advisory-boards.archive_meeting', compact('filter','items', 'pageTitle', 'item', 'customSections'));
+    }
+
+    public function archiveWorkPrograms(Request $request, AdvisoryBoard $item)
+    {
+        $requestFilter = $request->all();
+        $paginate = $request->filled('paginate') ? $request->get('paginate') : AdvisoryBoard::PAGINATE;
+
+        if(!isset($requestFilter['to'])) {
+            $requestFilter['to'] = Carbon::now()->startOfYear();
+        }
+        $filter = $this->archiveFilters($request);
+        $pageTitle = $this->pageTitle;
+        $this->setSlider($item->name, $item->headerImg);
+        $items = AdvisoryBoardFunction::with(['translations', 'siteFiles', 'siteFiles.versions'])
+            ->where('advisory_board_id', $item->id)
+            ->with(['translations', 'siteFiles'])
+            ->FilterBy($requestFilter)
+            ->paginate($paginate);
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+
+        if( $request->ajax() ) {
+            return view('site.advisory-boards.archive_wotk_programs_list', compact('filter','items', 'item'));
+        }
+
+        return $this->view('site.advisory-boards.archive_work_programs', compact('filter','items', 'pageTitle', 'item', 'customSections'));
     }
 
     public function itemNews(Request $request, AdvisoryBoard $item)
@@ -227,9 +276,9 @@ class AdvisoryBoardController extends Controller
             ->get();
 
         $pageTitle = $item->name;
-        $slider = $this->slider;
+        $this->setSlider($item->name, $item->headerImg);
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
-        return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'slider', 'customSections'));
+        return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'customSections'));
     }
 
     /**
@@ -275,9 +324,8 @@ class AdvisoryBoardController extends Controller
     public function contacts(Request $request)
     {
         $pageTitle = $this->pageTitle;
-        $slider = $this->slider;
         $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
-        return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle', 'slider'));
+        return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
     }
 
     public function news(Request $request)
@@ -294,7 +342,6 @@ class AdvisoryBoardController extends Controller
         $defaultDirection = $sortOrd;
 
         $pageTitle = $this->pageTitle;
-        $slider = $this->slider;
         $items = Publication::select('publication.*')
             ->ActivePublic()
             ->with(['translations', 'category', 'category.translations'])
@@ -321,7 +368,7 @@ class AdvisoryBoardController extends Controller
             return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items'));
         }
 
-        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'slider', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
     }
 
     private function sorters()
@@ -333,6 +380,32 @@ class AdvisoryBoardController extends Controller
         );
     }
 
+    private function archiveFilters($request)
+    {
+        return array(
+            'from' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('from'),
+                'label' => __('custom.from_date'),
+                'col' => 'col-md-4'
+            ),
+            'to' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('to'),
+                'label' => __('custom.to_date'),
+                'col' => 'col-md-4'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? Publication::PAGINATE,
+                'col' => 'col-md-3'
+            ),
+        );
+    }
     private function newsFilters($request)
     {
         return array(

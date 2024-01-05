@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int                      $id
@@ -51,6 +52,7 @@ class AdvisoryBoard extends ModelActivityExtend
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board');
     const TRANSLATABLE_FIELDS = ['name', 'advisory_specific_name', 'advisory_act_specific_name', 'report_institution_specific_name'];
+    const DEFAULT_HEADER_IMG = '/img/ms-w-2023.jpg';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
@@ -60,7 +62,7 @@ class AdvisoryBoard extends ModelActivityExtend
     //activity
     protected string $logName = "advisory_board";
 
-    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public'];
+    protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public', 'file_id'];
 
     /**
      * Listing only moderator's advisory boards.
@@ -138,6 +140,11 @@ class AdvisoryBoard extends ModelActivityExtend
             ->whereYear('working_year', '=', now()->year);
     }
 
+    public function workingProgramAll(): HasOne
+    {
+        return $this->hasOne(AdvisoryBoardFunction::class);
+    }
+
     protected function hasViceChairman(): Attribute
     {
         return Attribute::make(
@@ -149,6 +156,17 @@ class AdvisoryBoard extends ModelActivityExtend
                 }
 
                 return false;
+            }
+        );
+    }
+    protected function headerImg(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->file_id > 0) {
+                    return asset($this->mainImg->path);
+                }
+                return asset(self::DEFAULT_HEADER_IMG);
             }
         );
     }
@@ -191,6 +209,14 @@ class AdvisoryBoard extends ModelActivityExtend
     public function policyArea(): BelongsTo
     {
         return $this->belongsTo(FieldOfAction::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function mainImg()
+    {
+        return $this->hasOne(File::class, 'id', 'file_id');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DocTypesEnum;
+use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AdvisoryBoardMeeting extends ModelActivityExtend
 {
 
-    use SoftDeletes, Translatable;
+    use SoftDeletes, Translatable, FilterSort;
 
     const PAGINATE = 5;
     const MODULE_NAME = ('custom.advisory_board_meetings');

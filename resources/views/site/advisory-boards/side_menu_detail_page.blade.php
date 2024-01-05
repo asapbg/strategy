@@ -18,9 +18,19 @@
                             <li class="mb-2">
                                 <a href="{{ route('advisory-boards.view', ['item' => $item]) }}" class="@if(request()->route()->getName() == 'advisory-boards.view') active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ __('custom.up_to_date_information') }}</a>
                             </li>
-                            <li class="mb-2">
-                                <a href="{{ route('advisory-boards.view', ['item' => $item]) }}" class="link-dark text-decoration-none">{{ __('custom.archive') }}</a>
-                            </li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'view/archive')) active-item-left text-white p-1 @endif">{{ __('custom.archive') }}</li>
+                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
+                                <ul class="list-unstyled ps-3">
+                                    <hr class="custom-hr">
+                                    <li class="my-2 @if(str_contains(url()->current(), 'view/archive/meetings')) active-item-left p-1 @endif">
+                                        <a href="{{ route('advisory-boards.view.archive.meetings', ['item' => $item]) }}" class=" text-decoration-none link-dark">{{ __('custom.meetings_and_decisions') }}</a></li>
+                                    <hr class="custom-hr">
+                                    <li class="my-2 @if(str_contains(url()->current(), 'view/archive/work_programs')) active-item-left p-1 @endif">
+                                        <a href="{{ route('advisory-boards.view.archive.work_programs', ['item' => $item]) }}" class=" p-1 text-decoration-none link-dark">{{ __('custom.work_programs') }}</a>
+                                    </li>
+                                    <hr class="custom-hr">
+                                </ul>
+                            </ul>
                             <li class="mb-2">
                                 <a href="{{ route('advisory-boards.view.news', ['item' => $item]) }}" class="@if(request()->route()->getName() == 'advisory-boards.view.news')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
                                     {{ trans_choice('custom.news', 2) }}
@@ -37,7 +47,6 @@
                         </ul>
                     </div>
                 </li>
-                <hr class="custom-hr">
             </ul>
         </div>
     </div>

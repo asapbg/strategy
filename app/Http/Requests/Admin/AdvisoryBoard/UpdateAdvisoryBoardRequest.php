@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
+use App\Models\File;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -40,6 +41,7 @@ class UpdateAdvisoryBoardRequest extends FormRequest
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
             'public'                    => 'nullable|integer',
+            'file'                    => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
         ];
 
         foreach (config('available_languages') as $lang) {

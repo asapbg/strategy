@@ -30,6 +30,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AdvisoryBoardController extends AdminController
@@ -108,10 +109,35 @@ class AdvisoryBoardController extends AdminController
 
         DB::beginTransaction();
         try {
+            $itemImg = $validated['file'] ?? null;
+            unset($validated['file']);
+
             $item = new AdvisoryBoard();
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
+
+            // Upload File
+            if( $item && $itemImg ) {
+                $file_name = Str::limit($itemImg->getClientOriginalName(), 70);
+                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
+                // Upload File
+                $itemImg->storeAs(File::ADVISORY_BOARD_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
+                $file = new File([
+                    'id_object' => $item->id,
+                    'code_object' => File::CODE_AB,
+                    'filename' => $fileNameToStore,
+                    'content_type' => $itemImg->getClientMimeType(),
+                    'path' => 'files'.DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'sys_user' => $request->user()->id,
+                ]);
+                $file->save();
+
+                if( $file ) {
+                    $item->file_id = $file->id;
+                    $item->save();
+                }
+            }
 
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
@@ -327,9 +353,42 @@ class AdvisoryBoardController extends AdminController
 
         DB::beginTransaction();
         try {
+
+            $itemImg = $validated['file'] ?? null;
+            unset($validated['file']);
+
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
+
+            // Upload File
+            if( $item && $itemImg ) {
+                $file_name = Str::limit($itemImg->getClientOriginalName(), 70);
+                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
+                // Upload File
+                $itemImg->storeAs(File::ADVISORY_BOARD_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
+
+                if($item->file_id) {
+                    $file = File::find($item->file_id);
+                    $file->filename = $fileNameToStore;
+                    $file->content_type = $itemImg->getClientMimeType();
+                    $file->path = 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore;
+                    $file->sys_user = $request->user()->id;
+                    $file->save();
+                } else{
+                    $file = new File([
+                        'id_object' => $item->id,
+                        'code_object' => File::CODE_AB,
+                        'filename' => $fileNameToStore,
+                        'content_type' => $itemImg->getClientMimeType(),
+                        'path' => 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore,
+                        'sys_user' => $request->user()->id,
+                    ]);
+                    $file->save();
+                    $item->file_id = $file->id;
+                    $item->save();
+                }
+            }
 
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 

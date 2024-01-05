@@ -1,7 +1,7 @@
 <div class="tab-content">
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <form action="{{ route('admin.advisory-boards.update', $item) }}" method="post" name="form"
-              id="form">
+              id="form"  enctype="multipart/form-data">
             @csrf
 
             <!-- Областна Политика -->
@@ -267,6 +267,26 @@
                                        value="{{ old('integration_link', $item->integration_link ?? '') }}"
                                        autocomplete="off">
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label" for="active">
+                            {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                            <br><span class="text-primary"><i>Препоръчителен размер 1900px x 400px</i></span>
+                        </label>
+                        @if($item->id && $item->mainImg)
+                            <img src="{{ $item->headerImg }}" class="img-thumbnail mt-2 mb-4">
+                        @endif
+                        <div class="col-12">
+                            <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">
+                            @error('file')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>

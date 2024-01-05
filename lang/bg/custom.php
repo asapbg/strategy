@@ -630,6 +630,7 @@ return [
     'infinite' =>           'Безсрочна',
     'regulatory_framework' => 'Нормативна рамка',
     'meetings_and_decisions' => 'Заседания и решения',
+    'work_programs' => 'Работни програми и отчети на програми',
     'meetings' => 'Заседание|Заседания',
     'op_project_timeline_label'              => 'Проектът на акт в Оперативната програма',
     'lp_project_timeline_label'              => 'Проектът на акт в Законодателната програма',

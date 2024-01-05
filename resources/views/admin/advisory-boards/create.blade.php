@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.advisory-boards.store') }}" method="post" name="form" id="form">
+                    <form action="{{ route('admin.advisory-boards.store') }}" method="post" name="form" id="form" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Областна Политика -->
@@ -309,6 +309,26 @@
                                                    value="{{ old('integration_link', '') }}"
                                                    autocomplete="off">
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="active">
+                                        {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                                        <br><span class="text-primary"><i>Препоръчителен размер 1900px x 400px</i></span>
+                                    </label>
+                                    @if($item->id && $item->mainImg)
+                                        <img src="{{ $item->headerImg }}" class="img-thumbnail mt-2 mb-4">
+                                    @endif
+                                    <div class="col-12">
+                                        <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">
+                                        @error('file')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>

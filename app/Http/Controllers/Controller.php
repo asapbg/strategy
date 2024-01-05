@@ -40,6 +40,8 @@ class Controller extends BaseController
     /** @var string $route_name */
     private ?string $route_name;
 
+    protected array $slider = [];
+
     /**
      * Set pages titles in singular and plural according to controller / model
      * Get the request
@@ -73,6 +75,7 @@ class Controller extends BaseController
                     'title_plural'      => $this->title_plural,
                     'languages'         => $this->languages,
                     'breadcrumbs'       => $this->breadcrumbs(),
+                    'slider'       => $this->slider,
                 ],
                 $this->request,
                 $variables
@@ -345,5 +348,15 @@ class Controller extends BaseController
             logError('Upload file', $e->getMessage());
             return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
+    }
+
+    /**
+     * @param string $title
+     * @param string $img
+     * @return void
+     */
+    protected function setSlider(string $title, string $img)
+    {
+        $this->slider = ['title' => $title, 'img' => $img];
     }
 }
