@@ -36,6 +36,7 @@ class UpdateAdvisoryBoardMemberRequest extends FormRequest
             'advisory_type_id'          => 'required|integer|in:' . rtrim(implode(',', AdvisoryTypeEnum::values()), ','),
             'email'                     => 'nullable|email',
             'institution_id'            => 'nullable|integer|exists:institution,id',
+            'is_member' => 'nullable|numeric'
         ];
 
         foreach (config('available_languages') as $lang) {

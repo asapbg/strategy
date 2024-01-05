@@ -35,8 +35,16 @@ class AdvisoryBoardMemberController extends AdminController
             $item->save();
 
             $validated['advisory_member_id'] = $item->id;
-
             $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated);
+
+            if(isset($validated['is_member']) && $validated['advisory_type_id'] == 4){
+                $validated['advisory_type_id'] = 2;
+                $member = new AdvisoryBoardMember();
+                $fillable = $this->getFillableValidated($validated, $member);
+                $member->fill($fillable);
+                $member->save();
+                $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
+            }
             DB::commit();
 
             return response()->json(['status' => 'success']);

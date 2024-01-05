@@ -19,7 +19,7 @@
                     <h3 class="mb-2 fs-4">{{ __('custom.work_program') }}</h3>
 
                     @foreach($items as $program)
-                        <p class="fw-bold">Година: <span class="fw-normal">{{ \Carbon\Carbon::parse($program->working_year)->format('Y') }}</span></p>
+                        <p class="fw-bold mt-3">Година: <span class="fw-normal">{{ \Carbon\Carbon::parse($program->working_year)->format('Y') }}</span></p>
                         <hr>
                         <p>
                             {!! $program->description !!}

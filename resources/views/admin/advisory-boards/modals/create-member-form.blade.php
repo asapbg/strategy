@@ -110,6 +110,20 @@
                         </div>
                     </div>
 
+                    <div class="row mb-2" id="member-checkbox">
+                        <div class="col-12">
+                            <div class="form-check pl-4">
+                                <input class="form-check-input" type="checkbox"
+                                       value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"
+                                       name="is_member"
+                                />
+                                <label class="form-check-label" id="" for="is_member">
+                                    {{ trans_choice('custom.member', 1) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
                             <div class="row">

@@ -110,6 +110,20 @@
                         </div>
                     </div>
 
+                    <div class="row" id="member-checkbox">
+                        <div class="col-12">
+                            <div class="form-check pl-4">
+                                <input class="form-check-input" type="checkbox"
+                                       value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"
+                                       name="is_member"
+                                />
+                                <label class="form-check-label" id="" for="is_member">
+                                    {{ trans_choice('custom.member', 1) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
@@ -207,3 +221,24 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            function controlMemberCheckbox(){
+                if($('#advisory_type_secretary').is(':checked')) {
+                    $('#member-checkbox').show();
+                } else{
+                    $('#member-checkbox input').prop('checked', false);
+                    $('#member-checkbox').hide();
+                }
+            }
+
+            $('#advisory_type_secretary').change(function (){
+                controlMemberCheckbox();
+            });
+
+            controlMemberCheckbox();
+        });
+    </script>
+@endpush

@@ -208,6 +208,12 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         $paginate = $request->filled('paginate') ? $request->get('paginate') : AdvisoryBoard::PAGINATE;
 
+        $itemsCalendar = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', $item->id)->get()->pluck('next_meeting', 'id')->toArray();
+        if(sizeof($itemsCalendar)) {
+            foreach ($itemsCalendar as $key => $date) {
+                $itemsCalendar[$key] = Carbon::parse($date)->format('Y-m-d');
+            }
+        }
         if(!isset($requestFilter['to'])) {
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
@@ -216,16 +222,15 @@ class AdvisoryBoardController extends Controller
         $this->setSlider($item->name, $item->headerImg);
         $items = AdvisoryBoardMeeting::with(['translations', 'siteFiles', 'siteFiles.versions'])
             ->where('advisory_board_id', $item->id)
-            ->with(['translations', 'siteFiles'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         if( $request->ajax() ) {
-            return view('site.advisory-boards.archive_meeting_list', compact('filter','items', 'item'));
+            return view('site.advisory-boards.archive_meeting_list', compact('filter','items', 'item', 'itemsCalendar'));
         }
 
-        return $this->view('site.advisory-boards.archive_meeting', compact('filter','items', 'pageTitle', 'item', 'customSections'));
+        return $this->view('site.advisory-boards.archive_meeting', compact('filter','items', 'pageTitle', 'item', 'customSections', 'itemsCalendar'));
     }
 
     public function archiveWorkPrograms(Request $request, AdvisoryBoard $item)

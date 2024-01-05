@@ -1,5 +1,8 @@
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer'])
 
+{{--<div class="row">--}}
+{{--    <div id="calendar" class="datepicker"></div>--}}
+{{--</div>--}}
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
@@ -19,7 +22,7 @@
                     <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
 
                     @foreach($items as $meeting)
-                        <p class="fw-bold">Дата: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
+                        <p class="fw-bold mt-3">Дата: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
                         <hr>
                         <p>
                             {!! $meeting->description !!}
@@ -41,3 +44,34 @@
         {{ $items->onEachSide(0)->appends(request()->query())->links() }}
     @endif
 </div>
+
+{{--@push('scripts')--}}
+{{--    <script type="text/javascript">--}}
+{{--        $(document).ready(function (){--}}
+{{--            var dateToHilight = <?php echo json_encode($itemsCalendar);?>;--}}
+{{--            var datesArr = Object.entries(dateToHilight);--}}
+
+{{--            jQuery(document).ready(function() {--}}
+
+{{--                // An array of dates--}}
+{{--                var eventDates = {};--}}
+{{--                for(let i=0; i < datesArr.length; i++){--}}
+{{--                    eventDates[datesArr[i][1]] = datesArr[i][1].toString();--}}
+{{--                }--}}
+
+{{--                // datepicker--}}
+{{--                jQuery('#calendar').datepicker({--}}
+{{--                    beforeShowDay: function( date ) {--}}
+{{--                        console.log(date);--}}
+{{--                        var highlight = eventDates[date];--}}
+{{--                        if( highlight ) {--}}
+{{--                            return [true, "event", highlight];--}}
+{{--                        } else {--}}
+{{--                            return [true, '', ''];--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
+{{--@endpush--}}
