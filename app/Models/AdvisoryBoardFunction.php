@@ -37,7 +37,7 @@ class AdvisoryBoardFunction extends ModelActivityExtend
     //activity
     protected string $logName = "advisory_board_functions";
 
-    protected $fillable = ['advisory_board_id', 'working_year'];
+    protected $fillable = ['advisory_board_id', 'working_year', 'ord'];
 
     public function advisoryBoard(): BelongsTo
     {

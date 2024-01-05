@@ -19,6 +19,8 @@ Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix(
     Route::get('/news', 'news')->name('advisory-boards.news');
     Route::get('/contacts', 'contacts')->name('advisory-boards.contacts');
     Route::get('{item}/view', 'show')->name('advisory-boards.view');
+    Route::get('{item}/view/news', 'itemNews')->name('advisory-boards.view.news');
+    Route::get('{item}/view/{section}/section/', 'showSection')->name('advisory-boards.view.section');
 });
 
 Route::controller(\App\Http\Controllers\ArchiveController::class)->group(function () {

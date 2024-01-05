@@ -222,14 +222,17 @@
                     form.querySelector('input[name=title_bg]').value = data.translations[0].title;
                     form.querySelector('input[name=title_en]').value = data.translations[1].title;
 
-                    form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
-                    if (form.querySelector('#order').options.length - 1 === data.order) {
-                        form.querySelector('#order').value = '';
-                    }
+                    if(form.querySelector('#order')) {
+                        form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
+                        if (form.querySelector('#order').options.length - 1 === data.order) {
+                            form.querySelector('#order').value = '';
+                        }
 
-                    $(form.querySelector('#order')).trigger('change');
+                        $(form.querySelector('#order')).trigger('change');
+                    }
                     $(form.querySelector('#body_bg')).summernote("code", data.translations[0].body);
                     $(form.querySelector('#body_en')).summernote("code", data.translations[1].body);
+
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

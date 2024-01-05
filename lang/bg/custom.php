@@ -610,7 +610,7 @@ return [
     'old_file_format' => 'Стар формат на файлът. Информацията не може да бъде показана.',
     'main_information'  => 'Основна информация',
     'main_file'  => 'Основен файл',
-    'up_to_date_information' => 'Актуална информация и събития',
+    'up_to_date_information' => 'Основна информация',
     'type_of_governing' => 'Вид орган',
     'public_consultation_link_missing'   => 'Няма връзка с обществена консултация',
     'strategic_document_link_missing'   => 'Няма връзка с друг стратегически документ',
@@ -673,7 +673,7 @@ return [
     'add_information_for_meeting' => 'Добави информация към заседание',
     'pris_act' => 'акт',
     'name_of_advisory_board' => 'Наименование на консултативния съвет',
-    'rules_internal_organization' => 'Правилник за вътрешната организация на дейността',
+    'rules_internal_organization' => 'Нормативна рамка',
     'effective_at' => 'В сила от',
     'versions' => 'Версии',
     'advisory_board_moderator_info' => 'Инфорация за модератора „Консултативен съвет“',
@@ -724,4 +724,5 @@ return [
     'cost_effectiveness' => 'Анализ на ефективността на разходите',
     'multicriteria' => 'Мултикритериен анализ',
     'title_content' => 'Заглавие/Съдържание',
+    'work_program' => 'Работна програма и отчети на работната програма',
 ];

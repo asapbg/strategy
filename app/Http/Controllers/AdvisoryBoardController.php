@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PublicationTypesEnum;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\Consultations\PublicConsultation;
@@ -13,9 +14,11 @@ use App\Models\FieldOfAction;
 use App\Models\Publication;
 use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdvisoryBoardController extends Controller
 {
@@ -24,7 +27,7 @@ class AdvisoryBoardController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->title_singular = __('custom.legislative_initiatives');
+        $this->title_singular = trans_choice('custom.advisory_boards', 2);
         $this->pageTitle = trans_choice('custom.advisory_boards', 2);
         $this->slider = ['title' => $this->pageTitle, 'img' => '/img/ms-w-2023.jpg'];
     }
@@ -165,23 +168,68 @@ class AdvisoryBoardController extends Controller
      */
     public function show(AdvisoryBoard $item)
     {
-        $item = AdvisoryBoard::where('id', $item->id)->with(['customSections' => function ($query) {
-            $query->with(['files', 'translations']);
-        }, 'npos' => function ($query) {
-            $query->with('translations');
-        }, 'members' => function($query) {
-            $query->with(['translations', 'institution']);
-        }, 'meetings' => function($query) {
-            $query->with(['translations', 'siteFiles']);
-        }, 'secretariat' => function($query) {
-            $query->with(['translations', 'siteFiles']);
-        }, 'workingProgram' => function($query) {
-            $query->with(['translations', 'siteFiles']);
+        $item = AdvisoryBoard::where('id', $item->id)
+            ->with(['customSections' => function ($query) {
+                $query->with(['files', 'translations']);
+            }, 'npos' => function ($query) {
+                $query->with('translations');
+            }, 'members' => function($query) {
+                $query->with(['translations', 'institution']);
+            }, 'meetings' => function($query) {
+                $query->where('next_meeting', '>=', Carbon::now()->startOfYear())
+                    ->with(['translations', 'siteFiles']);
+            }, 'secretariat' => function($query) {
+                $query->with(['translations', 'siteFiles']);
+            }, 'workingProgram' => function($query) {
+                $query->with(['translations', 'siteFiles']);
         }])->first();
 
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;
+        $this->title_singular = $item->name;
+        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle'));
+    }
 
-        return view('site.advisory-boards.view', compact('item', 'pageTitle'));
+    public function showSection(Request $request, AdvisoryBoard $item, $sectionId = 0)
+    {
+        $section = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->where('id', $sectionId)->first();
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+        if(!$section) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        $this->title_singular = $pageTitle = $item->name;
+        $slider = $this->slider;
+
+        return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle', 'slider'));
+    }
+
+    public function itemNews(Request $request, AdvisoryBoard $item)
+    {
+        $news = Publication::select('publication.*')
+            ->ActivePublic()
+            ->with(['translations', 'category', 'category.translations', 'mainImg'])
+            ->leftJoin('publication_translations', function ($j){
+                $j->on('publication_translations.publication_id', '=', 'publication.id')
+                    ->where('publication_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'publication.publication_category_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->where(function ($q) use ($item){
+                $q->where('publication.advisory_boards_id', $item->id)
+                    ->orWhereIn('is_adv_board_user', ($item->moderators->count() ? $item->moderators->pluck('id')->toArray() : []));
+            })
+            ->orderBy('published_at', 'desc')
+            ->GroupBy('publication.id', 'publication_translations.id', 'field_of_action_translations.id')
+            ->get();
+
+        $pageTitle = $item->name;
+        $slider = $this->slider;
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+        return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'slider', 'customSections'));
     }
 
     /**
@@ -305,6 +353,15 @@ class AdvisoryBoardController extends Controller
                 'value' => $request->input('to'),
                 'label' => __('custom.to_date'),
                 'col' => 'col-md-4'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? Publication::PAGINATE,
+                'col' => 'col-md-3'
             ),
         );
     }
