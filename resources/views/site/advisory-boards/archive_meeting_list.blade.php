@@ -1,8 +1,8 @@
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer'])
 
-{{--<div class="row">--}}
-{{--    <div id="calendar" class="datepicker"></div>--}}
-{{--</div>--}}
+<div class="row">
+    <div id="calendar"></div>
+</div>
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
@@ -23,7 +23,6 @@
 
                     @foreach($items as $meeting)
                         <p class="fw-bold mt-3">Дата: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
-                        <hr>
                         <p>
                             {!! $meeting->description !!}
                         </p>
@@ -31,6 +30,9 @@
                             @foreach($meeting->siteFiles as $file)
                                 @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
                             @endforeach
+                        @endif
+                        @if(!$loop->last)
+                            <hr>
                         @endif
                     @endforeach
                 </div>
@@ -45,33 +47,38 @@
     @endif
 </div>
 
-{{--@push('scripts')--}}
-{{--    <script type="text/javascript">--}}
-{{--        $(document).ready(function (){--}}
-{{--            var dateToHilight = <?php echo json_encode($itemsCalendar);?>;--}}
-{{--            var datesArr = Object.entries(dateToHilight);--}}
+@push('scripts')
+    <script type="text/javascript">
+        $(function () {
+            let events = <?php echo json_encode($itemsCalendar); ?>;
+            var Calendar = FullCalendar.Calendar;
 
-{{--            jQuery(document).ready(function() {--}}
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new Calendar(calendarEl, {
+                headerToolbar: {
+                    left  : 'prev,next today',
+                    center: 'title',
+                    // right : 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                themeSystem: 'standard',
+                displayEventTime: false,
+                {{--lang: '<?php echo app()->getLocale();?>',--}}
+                locale: 'bg-BG',
+                //Random default events
+                events: <?php echo json_encode($itemsCalendar); ?>,
+                eventDidMount: function(info) {
 
-{{--                // An array of dates--}}
-{{--                var eventDates = {};--}}
-{{--                for(let i=0; i < datesArr.length; i++){--}}
-{{--                    eventDates[datesArr[i][1]] = datesArr[i][1].toString();--}}
-{{--                }--}}
+                    $(info.el).tooltip({
+                        title: info.event.extendedProps.description,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body',
+                        delay: { "show": 50, "hide": 50 }
+                    });
+                },
+            });
 
-{{--                // datepicker--}}
-{{--                jQuery('#calendar').datepicker({--}}
-{{--                    beforeShowDay: function( date ) {--}}
-{{--                        console.log(date);--}}
-{{--                        var highlight = eventDates[date];--}}
-{{--                        if( highlight ) {--}}
-{{--                            return [true, "event", highlight];--}}
-{{--                        } else {--}}
-{{--                            return [true, '', ''];--}}
-{{--                        }--}}
-{{--                    }--}}
-{{--                });--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
-{{--@endpush--}}
+            calendar.render();
+        });
+    </script>
+@endpush

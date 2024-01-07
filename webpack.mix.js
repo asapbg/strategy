@@ -26,6 +26,8 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js',
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker.bg.min.js',
         'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.js',
+        'resources/adminlte-3.2/plugins/fullcalendar/main.js',
+        'resources/adminlte-3.2/plugins/fullcalendar/locales/bg.js',
         'resources/js/site.js',
         'resources/js/ogp.js',
     ], 'public/js/app_vendor.js')
@@ -37,6 +39,7 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/adminlte-3.2/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css',
         'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.css',
         'resources/css/assets/bootstrap-icons.css',
+        'resources/adminlte-3.2/plugins/fullcalendar/main.css',
         'resources/css/app.css',
     ], 'public/css/app_vendor.css')
     .sass('resources/sass/app.scss', 'public/css');

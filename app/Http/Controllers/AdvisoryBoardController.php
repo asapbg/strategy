@@ -175,18 +175,20 @@ class AdvisoryBoardController extends Controller
                 $query->with(['translations', 'institution']);
             }, 'meetings' => function($query) {
                 $query->where('next_meeting', '>=', Carbon::now()->startOfYear())
-                    ->with(['translations', 'siteFiles']);
+                    ->with(['translations', 'siteFiles'])->orderBy('next_meeting', 'asc');
             }, 'secretariat' => function($query) {
                 $query->with(['translations', 'siteFiles']);
             }, 'workingProgram' => function($query) {
                 $query->with(['translations', 'siteFiles']);
         }])->first();
 
+        $nextMeeting = AdvisoryBoardMeeting::where('next_meeting' ,'>', Carbon::now())->orderBy('next_meeting', 'asc')->get()->first();
+
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;
         $this->title_singular = $item->name;
         $this->setSlider($item->name, $item->headerImg);
-        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle'));
+        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting'));
     }
 
     public function showSection(Request $request, AdvisoryBoard $item, $sectionId = 0)
@@ -208,10 +210,19 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         $paginate = $request->filled('paginate') ? $request->get('paginate') : AdvisoryBoard::PAGINATE;
 
-        $itemsCalendar = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', $item->id)->get()->pluck('next_meeting', 'id')->toArray();
-        if(sizeof($itemsCalendar)) {
-            foreach ($itemsCalendar as $key => $date) {
-                $itemsCalendar[$key] = Carbon::parse($date)->format('Y-m-d');
+        $itemsCalendar = array();
+        $itemsCalendarDB = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', $item->id)->get();
+        if($itemsCalendarDB->count()) {
+            foreach ($itemsCalendarDB as $event) {
+                $itemsCalendar[] = array(
+                    "id" => $event->id,
+                    "title" => trans_choice('custom.meetings', 1),
+                    "description" => $event->description ? strip_tags($event->description) : '---',
+                    "start" => Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d H:i:s'),
+                    "end" => Carbon::parse($event->next_meeting)->endOfDay()->format('Y-m-d H:i:s'),
+                    "backgroundColor" => (Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                    "borderColor" => (Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef')
+                );
             }
         }
         if(!isset($requestFilter['to'])) {

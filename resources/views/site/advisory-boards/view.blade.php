@@ -254,23 +254,36 @@
             @endif
 
             <!-- Заседания и решения -->
-            @if(!empty($item->meetings) && $item->meetings->count() > 0)
+            @if((!empty($item->meetings) && $item->meetings->count() > 0) || (isset($nextMeeting) && $nextMeeting))
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
-
+                            @if((isset($nextMeeting) && $nextMeeting))
+                                <p class="fw-bold mt-3">{{ __('validation.attributes.next_meeting') }} {{ __('custom.of') }} {{ __('custom.date') }}: <span class="fw-normal">{{ displayDate($nextMeeting->next_meeting) }}</span></p>
+                                <p>
+                                    {!! $nextMeeting->description !!}
+                                </p>
+                                @if(isset($nextMeeting->siteFiles) && $nextMeeting->siteFiles->count() > 0)
+                                    @foreach($nextMeeting->siteFiles as $file)
+                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
+                                    @endforeach
+                                @endif
+                                <hr>
+                            @endif
                             @foreach($item->meetings as $meeting)
+                                @continue(isset($nextMeeting) && $nextMeeting && $nextMeeting->id == $meeting->id)
+                                <p class="fw-bold mt-3">{{ __('custom.date') }}: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
                                 <p>
                                     {!! $meeting->description !!}
                                 </p>
-                            @endforeach
-
-                            @foreach($item->meetings as $meeting)
                                 @if(isset($meeting->siteFiles) && $meeting->siteFiles->count() > 0)
                                     @foreach($meeting->siteFiles as $file)
                                         @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
                                     @endforeach
+                                @endif
+                                @if(!$loop->last)
+                                    <hr>
                                 @endif
                             @endforeach
                         </div>
@@ -318,29 +331,6 @@
                     </div>
                 </div>
             @endif
-
-{{--            <!-- Ръчно направени секции -->--}}
-{{--            @if(isset($item->customSections) && $item->customSections->count() > 0)--}}
-{{--                @foreach($item->customSections as $section)--}}
-{{--                    @if(!empty($section->body))--}}
-{{--                        <div class="row mb-4 ks-row">--}}
-{{--                            <div class="col-md-12">--}}
-{{--                                <div class="custom-card p-3">--}}
-{{--                                    <h3 class="mb-2 fs-4">{{ $section->title }}</h3>--}}
-
-{{--                                    <p>{!! $section->body !!}</p>--}}
-
-{{--                                    @if(!empty($section->siteFiles) && $section->siteFiles->count() > 0)--}}
-{{--                                        @foreach($section->siteFiles as $file)--}}
-{{--                                            @includeIf('site.partial.file', ['file' => $file])--}}
-{{--                                        @endforeach--}}
-{{--                                    @endif--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
-{{--                @endforeach--}}
-{{--            @endif--}}
         </div>
     </div>
 @endsection

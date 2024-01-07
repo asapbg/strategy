@@ -112,15 +112,26 @@ class AdvisoryBoardSeeder extends Seeder
 
     private function determineChairmanType(string|null $position): int
     {
+        if (str_contains($position, "съветник")) {
+            return 4;
+        }
+        if (str_contains($position, "министър-председател на Република България") || str_contains($position, 'министър-председателят на Република България') || str_contains($position, 'Министър-председател на Република България')) {
+            return 1;
+        }
+
+        if (str_contains($position, "заместник министър-председател") || str_contains($position, 'зам.министър председателят') || str_contains($position, 'ЗАМЕСТНИК МИНИСТЪР-ПРЕДСЕДАТЕЛ')  || str_contains($position, 'Заместник министър-председател')) {
+            return 2;
+        }
+
+        if (str_contains($position, "заместник-министър на ") || str_contains($position, "заместник-министър") || str_contains($position, "зам.министър на") || str_contains($position, "заместник министър на") || str_contains($position, "заместник-министрите") || str_contains($position, "зам. министър на") || str_contains($position, "Заместник-министър на") || str_contains($position, "заместник-министър  на") || str_contains($position, "МИНИСТЪР НА") || str_contains($position, "ЗАМЕСТНИК-МИНИСТЪР НА") || str_contains($position, "зам.министър-председател по") || str_contains($position, "заместник -министър на") || str_contains($position, "заместник - министър на") || str_contains($position, "зам.-министър на") || str_contains($position, "заместник-министърът на")) {
+            return 3;
+        }
+
         if (str_contains($position, "министър-председател")) {
             return 1;
         }
 
-        if (str_contains($position, "заместник-министър") || str_contains($position, "зам.")) {
-            return 2;
-        }
-
-        if (str_contains($position, "министър")) {
+        if (str_contains($position, "министър") || str_contains($position, "министърът на") || str_contains($position, "министъра на") || str_contains($position, "Министър на") || str_contains($position, "министър на")) {
             return 3;
         }
 
