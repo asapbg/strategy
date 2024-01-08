@@ -57,6 +57,11 @@ class Controller extends BaseController
 
         $this->title_singular = trans_choice($trans_lang, 1);
         $this->title_plural   = trans_choice($trans_lang, 2);
+
+        //Seo
+        seo()->title(__('site.seo_title'));
+        seo()->meta('keywords', __('site.seo_description'));
+        seo()->meta('description', __('site.seo_keywords'));
     }
 
     /**
@@ -358,5 +363,18 @@ class Controller extends BaseController
     protected function setSlider(string $title, string $img)
     {
         $this->slider = ['title' => $title, 'img' => $img];
+    }
+
+    /**
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $keywords
+     * @return void
+     */
+    protected function setSeo(string|null $title = '', string|null $description ='', string|null $keywords = '')
+    {
+        seo()->title(!empty($title) ? $title : __('site.seo_title'));
+        seo()->meta('keywords', !empty($description) ? $description : __('site.seo_description'));
+        seo()->meta('description', !empty($keywords) ? $keywords : __('site.seo_keywords'));
     }
 }

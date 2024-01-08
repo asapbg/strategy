@@ -597,7 +597,7 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="meta_keyword_bg">Ключови думи (meta) (BG)</label>
+                                                <label class="col-sm-12 control-label" for="meta_keyword_bg"></label>
                                                 <div class="col-12">
                                                     <input type="text" id="meta_keyword_bg" name="meta_keyword_bg"
                                                            class="form-control form-control-sm "

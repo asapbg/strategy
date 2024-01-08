@@ -98,7 +98,7 @@ class LibraryController extends Controller
         $pageTitle = $publication->translation?->title;
         $default_img = $this->default_img;
         $this->setBreadcrumbsTitle($pageTitle);
-
+        $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword);
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
 

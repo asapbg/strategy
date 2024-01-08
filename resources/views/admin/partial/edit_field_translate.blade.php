@@ -6,7 +6,7 @@
         @php($value = $value ?? null)
         <div class="col-md-{{ $col ?? 6 }} col-12">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="{{ $fieldName }}">{{ __('validation.attributes.'.$fieldName) }} @if(isset($required) && $required)<span class="required">*</span>@endif</label>
+                <label class="col-sm-12 control-label" for="{{ $fieldName }}">@if(isset($tooltip) && !empty($tooltip)) <i class="fas fa-info-circle text-info mr-1" title="{{ $tooltip }}"></i>@endif{{ __('validation.attributes.'.$fieldName) }} @if(isset($required) && $required)<span class="required">*</span>@endif</label>
                 <div class="col-12">
                     @switch($fieldProperties['type'])
                         @case('textarea')

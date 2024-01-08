@@ -134,7 +134,7 @@
                                     <div class="col-12 mb-md-3"></div>
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_title', 'required' => false])
                                     @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
-                                    @include('admin.partial.edit_field_translate', ['field' => 'meta_keyword', 'required' => false])
+                                    @include('admin.partial.edit_field_translate', ['field' => 'meta_keyword', 'required' => false, 'tooltip' => 'Въведете думите с разделител ";"'])
 
                                     <div class="col-md-3 col-12">
                                         <div class="form-group">
