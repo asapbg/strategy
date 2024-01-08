@@ -323,7 +323,7 @@
                                     <a href="{{ $item->integration_link }}" target="_blank"
                                        class="main-color text-decoration-none">
                                         <i class=" fa-solid fa-link main-color me-2 fs-5"></i>
-                                        {{ __('custom.advisory_board_description_link') }}
+                                        {{ $item->name }}
                                     </a>
                                 </li>
                             </ul>
