@@ -43,8 +43,8 @@ class User extends Authenticatable
         'moderator-advisory',
         'moderator-strategic',
 //        'moderator-legal',
-        'moderator-advisory-boards',
-        'moderator-advisory-board',
+//        'moderator-advisory-boards',
+//        'moderator-advisory-board',
         'moderator-partnership',
     ];
 
