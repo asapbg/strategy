@@ -24,3 +24,4 @@ app/Http/Controllers/Test.php
 /document_library
 /oldfiles
 institutions_for_mapping_last_pris.csv
+adv_board_positions.csv

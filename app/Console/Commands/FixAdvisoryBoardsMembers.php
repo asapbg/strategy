@@ -32,7 +32,8 @@ class FixAdvisoryBoardsMembers extends Command
     public function handle(): int
     {
         $positions = [];
-        $this->comment("Fix advisory board members begins at " . date("H:i"));
+        $positionsToUpdate = [];
+        $this->comment("Fix  advisory board chairman  prepare json begins at " . date("H:i"));
         $old_advisory_boards_db = DB::connection('old_strategy')->select("
             select
                  councils.\"councilID\",
@@ -62,9 +63,7 @@ class FixAdvisoryBoardsMembers extends Command
 
         foreach ($old_advisory_boards_db as $board) {
             $positions[] = $board->positionOther;
-            if (in_array($board->councilID, $advisory_board_ids)) {
-                AdvisoryBoard::where('id', $board->councilID)->update(['advisory_chairman_type_id' => $this->determineChairmanType($board->positionOther)]);
-            }
+            $positionsToUpdate[(int)$board->councilID] = $this->determineChairmanType($board->positionOther);
         }
 
         if(sizeof($positions)) {
@@ -75,7 +74,13 @@ class FixAdvisoryBoardsMembers extends Command
             fclose($fp);
         }
 
-        $this->comment("Fix  advisory board members were imported successfully at " . date("H:i"));
+        if($positionsToUpdate) {
+            $fp = fopen(database_path('data/fix_adv_board_positions.json'), 'w');
+            fputs($fp, json_encode($positionsToUpdate));
+            fclose($fp);
+        }
+
+        $this->comment("Fix  advisory board chairman  json prepared for update" . date("H:i"));
         return CommandAlias::SUCCESS;
     }
 
