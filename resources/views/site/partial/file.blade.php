@@ -11,7 +11,9 @@
         {!! fileIcon($file_up_to_date->content_type) !!}
         {{ $file_up_to_date->name }}
     </a>
-
+    @if(isset($file->description) && !empty($file->description))
+        <div class="document-info-field">{!! $file->description !!}</div>
+    @endif
     <div class="document-info-field d-flex mt-3 pb-2">
         <div class="doc-info-item">
             <strong> {{ __('custom.status') }}:</strong>

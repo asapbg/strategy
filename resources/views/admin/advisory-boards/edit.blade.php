@@ -33,7 +33,7 @@
                         <li class="nav-item">
                             <a class="nav-link" id="regulatory-tab" data-toggle="pill" href="#regulatory" role="tab"
                                aria-controls="regulatory"
-                               aria-selected="false">{{ trans_choice('custom.regulatory_framework', 2) }}</a>
+                               aria-selected="false">{{ __('custom.regulatory_framework_act_and_riles') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="decisions-tab" data-toggle="pill" href="#decisions" role="tab"

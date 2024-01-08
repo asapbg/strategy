@@ -629,6 +629,7 @@ return [
     'secretariat' => 'Секретариат',
     'infinite' =>           'Безсрочна',
     'regulatory_framework' => 'Нормативна рамка',
+    'regulatory_framework_act_and_riles' => 'Акт за създаване и правилник за дейността',
     'meetings_and_decisions' => 'Заседания и решения',
     'work_programs' => 'Работни програми и отчети на програми',
     'meetings' => 'Заседание|Заседания',
@@ -674,7 +675,7 @@ return [
     'add_information_for_meeting' => 'Добави информация към заседание',
     'pris_act' => 'акт',
     'name_of_advisory_board' => 'Наименование на консултативния съвет',
-    'rules_internal_organization' => 'Нормативна рамка',
+    'rules_internal_organization' => 'Правилник за дейността',
     'effective_at' => 'В сила от',
     'versions' => 'Версии',
     'advisory_board_moderator_info' => 'Инфорация за модератора „Консултативен съвет“',
@@ -726,4 +727,5 @@ return [
     'multicriteria' => 'Мултикритериен анализ',
     'title_content' => 'Заглавие/Съдържание',
     'work_program' => 'Работна програма и отчети на работната програма',
+    'save_organization_rules_btn' => 'Запази правилник',
 ];

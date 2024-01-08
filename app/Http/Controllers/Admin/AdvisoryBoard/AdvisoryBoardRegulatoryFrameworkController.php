@@ -116,11 +116,11 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
             $establishment->fill($fillable);
             $establishment->save();
 
-            $this->storeTranslateOrNew(AdvisoryBoardOrganizationRule::TRANSLATABLE_FIELDS, $establishment, $validated);
+            $this->storeTranslateOrNew(AdvisoryBoardEstablishment::TRANSLATABLE_FIELDS, $establishment, $validated);
 
             DB::commit();
 
-            return redirect($route)->with('success', trans_choice('custom.regulatory_framework', 1) . " " . __('messages.updated_successfully_f'));
+            return redirect($route)->with('success', __('validation.attributes.act_of_creation') . " " . __('messages.updated_successfully_m'));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

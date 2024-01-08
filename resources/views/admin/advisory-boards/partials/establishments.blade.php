@@ -1,6 +1,8 @@
-<div class="row justify-content-between align-items-center">
+<div class="row justify-content-between align-items-center mt-3">
     <div class="col-auto">
-        <h4>{{ __('validation.attributes.act_of_creation') }}</h4>
+        <hr class="mb-1">
+        <h4 class="pr-5"><i class="fas fa-grip-lines-vertical text-primary mr-2"></i> {{ __('validation.attributes.act_of_creation') }}</h4>
+        <hr class="mt-1">
     </div>
 
     <div class="col-auto">
@@ -19,7 +21,7 @@
     <div class="col-12">
         @if(!$view_mode)
             <form name="ADVISORY_BOARD_ESTABLISHMENTS"
-                  action="{{ route('admin.advisory-boards.regulatory-framework.establishments.store', ['item' => $item, 'rule' => $item->establishment]) }}"
+                  action="{{ route('admin.advisory-boards.regulatory-framework.establishments.store', ['item' => $item, 'establishment' => $item->establishment]) }}"
                   method="post">
                 @csrf
 

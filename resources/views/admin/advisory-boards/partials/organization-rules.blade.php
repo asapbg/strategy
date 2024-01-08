@@ -1,12 +1,14 @@
-<div class="row justify-content-between align-items-center">
+<div class="row justify-content-between align-items-center mt-3">
     <div class="col-auto">
-        <h4>{{ __('custom.rules_internal_organization') }}</h4>
+        <hr class="mb-1">
+        <h4 class="pr-5"><i class="fas fa-grip-lines-vertical text-primary mr-2"></i> {{ __('custom.rules_internal_organization') }}</h4>
+        <hr class="mt-1">
     </div>
 
     <div class="col-auto">
         @if(!$view_mode)
             <button type="button" class="btn btn-success" onclick="ADVISORY_BOARD_ORGANIZATION_RULES.submit();">
-                {{ __('custom.save') }}
+                {{ __('custom.save_organization_rules_btn') }}
             </button>
         @else
             <a href="{{ route('admin.advisory-boards.edit', $item) . '#regulatory' }}"
