@@ -49,7 +49,7 @@
         <hr>
         <div class="mb-3">
             <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}"
-                 class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
+                 class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
             >
             {!! $publication->translation->content !!}
 

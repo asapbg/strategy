@@ -6338,7 +6338,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
 @media (max-width:576px) {
     .adv-board-heading {
-        font-size: 22px !important;
+        font-size: 20px !important;
     }
 
     .adv-board-slide {
@@ -6622,6 +6622,13 @@ html #slider-range .ui-button.ui-state-disabled:active {
     padding-top: 7px;
 }
 
+/*Adv board header img*/
 .adv-board-slide{
     max-height: 600px;
+}
+
+/*Publication main img*/
+.publication-main-img {
+    max-height: 415px;
+    width: auto;
 }

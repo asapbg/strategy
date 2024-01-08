@@ -2740,6 +2740,13 @@ html #slider-range .ui-button.ui-state-disabled:active {
     padding-top: 7px;
 }
 
+/*Adv board header img*/
 .adv-board-slide{
     max-height: 600px;
+}
+
+/*Publication main img*/
+.publication-main-img {
+    max-height: 415px;
+    width: auto;
 }
