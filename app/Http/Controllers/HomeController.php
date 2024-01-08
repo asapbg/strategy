@@ -28,7 +28,7 @@ class HomeController extends Controller
             ->with(['translation','mainImg','category.translation'])
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
-            ->whereType(PublicationTypesEnum::TYPE_NEWS)
+            //->whereType(PublicationTypesEnum::TYPE_NEWS)
             ->whereDate('created_at', '<=', date('Y-m-d'))
             ->orderBy('created_at', 'DESC')
             ->paginate(3);
