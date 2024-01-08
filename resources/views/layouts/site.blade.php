@@ -45,11 +45,11 @@
             <div id="carouselExampleSlidesOnly" class="carousel slide  bgr-main " data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active" style="margin-top:115px;">
-                        <img class="d-block w-100" src="@if(isset($slider) && isset($slider['img'])){{ $slider['img'] }}@endif" alt="First slide">
+                        <img class="d-block w-100 adv-board-slide" src="@if(isset($slider) && isset($slider['img'])){{ $slider['img'] }}@endif" alt="First slide">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="centered-heading w-100 text-center px-3">
-                                    <h1 class="text-light" style="background: unset !important;">
+                                    <h1 class="text-light adv-board-heading" style="background: unset !important;" >
                                         {{ $pageTitle }}
                                     </h1>
                                 </div>

@@ -2455,6 +2455,14 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
 
 @media (max-width:576px) {
+    .adv-board-heading {
+        font-size: 20px !important;
+    }
+
+    .adv-board-slide {
+        min-height: 400px !important;
+    }
+
    .pagination .page-link {
         font-size: 14px !important;
         padding: 8px !important;
@@ -2730,4 +2738,8 @@ html #slider-range .ui-button.ui-state-disabled:active {
     font-weight: normal;
     font-style: italic;
     padding-top: 7px;
+}
+
+.adv-board-slide{
+    max-height: 600px;
 }

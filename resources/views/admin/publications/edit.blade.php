@@ -113,7 +113,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-md-6 col-12 d-none">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="slug">
                                                 {{ __('validation.attributes.slug') }}
