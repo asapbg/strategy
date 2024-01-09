@@ -15,10 +15,29 @@
                             <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general" role="tab"
                                aria-controls="general" aria-selected="true">{{ __('custom.general_info') }}</a>
                         </li>
+                        @php($memberTypeStr = strtolower(\App\Enums\AdvisoryTypeEnum::MEMBER->name))
+                        @php($chairmanTypeStr = strtolower(\App\Enums\AdvisoryTypeEnum::CHAIRMAN->name))
+                        @php($viceChairmanTypeStr = strtolower(\App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->name))
+                        @php($secretaryTypeStr = strtolower(\App\Enums\AdvisoryTypeEnum::SECRETARY->name))
                         <li class="nav-item">
-                            <a class="nav-link" id="members-tab" data-toggle="pill" href="#members" role="tab"
-                               aria-controls="members"
+                            <a class="nav-link" id="{{ $memberTypeStr }}-tab" data-toggle="pill" href="#{{ $memberTypeStr }}" role="tab"
+                               aria-controls="{{ $memberTypeStr }}"
                                aria-selected="false">{{ trans_choice('custom.member', 2) }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="{{ $chairmanTypeStr }}-tab" data-toggle="pill" href="#{{ $chairmanTypeStr }}" role="tab"
+                               aria-controls="{{ $chairmanTypeStr }}"
+                               aria-selected="false">{{ __('custom.chairman') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="{{ $viceChairmanTypeStr }}-tab" data-toggle="pill" href="#{{ $viceChairmanTypeStr }}" role="tab"
+                               aria-controls="{{ $viceChairmanTypeStr }}"
+                               aria-selected="false">{{ __('custom.vice_chairman') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="{{ $secretaryTypeStr }}-tab" data-toggle="pill" href="#{{ $secretaryTypeStr }}" role="tab"
+                               aria-controls="{{ $secretaryTypeStr }}"
+                               aria-selected="false">{{ trans_choice('custom.secretary', 1) }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="secretariat-tab" data-toggle="pill" href="#secretariat" role="tab"
@@ -65,9 +84,19 @@
                             @include('admin.advisory-boards.tabs.general')
                         </div>
 
-                        <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
-                            @include('admin.advisory-boards.tabs.members')
+                        <div class="tab-pane fade" id="{{ $memberTypeStr }}" role="tabpanel" aria-labelledby="{{ $memberTypeStr }}-tab">
+                            @include('admin.advisory-boards.tabs.members', ['type' => \App\Enums\AdvisoryTypeEnum::MEMBER->value])
                         </div>
+                        <div class="tab-pane fade" id="{{ $chairmanTypeStr }}" role="tabpanel" aria-labelledby="{{ $chairmanTypeStr }}-tab">
+                            @include('admin.advisory-boards.tabs.members', ['type' => \App\Enums\AdvisoryTypeEnum::CHAIRMAN->value])
+                        </div>
+                        <div class="tab-pane fade" id="{{ $viceChairmanTypeStr }}" role="tabpanel" aria-labelledby="{{ $viceChairmanTypeStr }}-tab">
+                            @include('admin.advisory-boards.tabs.members', ['type' => \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value])
+                        </div>
+                        <div class="tab-pane fade" id="{{ $secretaryTypeStr }}" role="tabpanel" aria-labelledby="{{ $secretaryTypeStr }}-tab">
+                            @include('admin.advisory-boards.tabs.members', ['type' => \App\Enums\AdvisoryTypeEnum::SECRETARY->value])
+                        </div>
+
 
                         <div class="tab-pane fade" id="secretariat" role="tabpanel" aria-labelledby="secretariat-tab">
                             @include('admin.advisory-boards.tabs.secretariat')

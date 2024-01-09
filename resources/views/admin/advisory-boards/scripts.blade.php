@@ -164,6 +164,13 @@
         }
 
         function loadMemberData(url) {
+            let memberNames = {
+                <?php echo \App\Enums\AdvisoryTypeEnum::MEMBER->value; ?> : "<?php echo trans_choice('custom.adv_members.'.\App\Enums\AdvisoryTypeEnum::MEMBER->value, 1) ;?>",
+                <?php echo \App\Enums\AdvisoryTypeEnum::CHAIRMAN->value; ?> : "<?php echo trans_choice('custom.adv_members.'.\App\Enums\AdvisoryTypeEnum::CHAIRMAN->value, 1) ;?>",
+                <?php echo \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value; ?> : "<?php echo trans_choice('custom.adv_members.'.\App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value, 1) ;?>",
+                <?php echo \App\Enums\AdvisoryTypeEnum::SECRETARY->value; ?> : "<?php echo trans_choice('custom.adv_members.'.\App\Enums\AdvisoryTypeEnum::SECRETARY->value, 1) ;?>",
+            };
+
             const form = document.querySelector('form[name=MEMBER_FORM_EDIT]');
 
             $.ajax({
@@ -171,6 +178,9 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
+                    $('#modal-edit-member #member-title').html(memberNames[data.advisory_type_id]);
+                    $('#modal-edit-member #advisory_type_id').val(data.advisory_type_id);
+
                     form.querySelector('input[name=advisory_board_member_id]').value = data.id;
                     form.querySelector('#member_name_bg').value = data.translations[0].member_name;
                     form.querySelector('#member_name_en').value = data.translations[1].member_name;

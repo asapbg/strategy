@@ -126,25 +126,27 @@
                         <ul class="list-group list-group-flush">
                             @if(isset($item->members) && $item->members->count() > 0)
                                 @foreach($item->members as $member)
-                                    <li class="list-group-item">
-                                        @php
-                                            $name = '';
+                                    @if($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::MEMBER->value)
+                                        <li class="list-group-item">
+                                            @php
+                                                $name = '';
 
-                                            if (!empty($member->member_name)) {
-                                                $name .= $member->member_name;
-                                            }
+                                                if (!empty($member->member_name)) {
+                                                    $name .= $member->member_name;
+                                                }
 
-                                            if (!empty($member->member_job)) {
-                                                $name .= ', ' . $member->member_job;
-                                            }
+                                                if (!empty($member->member_job)) {
+                                                    $name .= ', ' . $member->member_job;
+                                                }
 
-                                            if (!empty($member->institution)) {
-                                                $name .= ', ' . '<a href="#" class="text-decoration-none">' . $member->institution->name . '</a>';
-                                            }
-                                        @endphp
+                                                if (!empty($member->institution)) {
+                                                    $name .= ', ' . '<a href="#" class="text-decoration-none">' . $member->institution->name . '</a>';
+                                                }
+                                            @endphp
 
-                                        {!! $name !!}
-                                    </li>
+                                            {!! $name !!}
+                                        </li>
+                                    @endif
                                 @endforeach
                             @endif
                         </ul>

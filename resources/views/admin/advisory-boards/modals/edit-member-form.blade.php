@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    {{ __('custom.edit_of') . ' ' . Str::lower(trans_choice('custom.chairmen', 1)) }}
+                    {{ __('custom.edit_of') . ' '}} <span id="member-title">{{ trans_choice('custom.chairmen', 1) }}</span>
                 </h4>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,6 +14,7 @@
                 <form method="POST" name="MEMBER_FORM_EDIT" class="pull-left">
                     @csrf
 
+                    <input type="hidden" name="advisory_type_id" id="advisory_type_id" value="0"/>
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>
                     <input type="hidden" name="advisory_board_member_id" value=""/>
 
@@ -53,76 +54,76 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-12 control-label"
-                               for="member_name_en">{{ __('custom.type') }}</label>
+{{--                    <div class="row mb-3">--}}
+{{--                        <label class="col-sm-12 control-label"--}}
+{{--                               for="member_name_en">{{ __('custom.type') }}</label>--}}
 
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-auto">
-                                    <div class="form-check pl-4">
-                                        <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"
-                                               name="advisory_type_id"
-                                               id="edit_advisory_type_member"/>
-                                        <label class="form-check-label" id="" for="edit_advisory_type_member">
-                                            {{ trans_choice('custom.member', 1) }}
-                                        </label>
-                                    </div>
-                                </div>
+{{--                        <div class="col-12">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-auto">--}}
+{{--                                    <div class="form-check pl-4">--}}
+{{--                                        <input class="form-check-input" type="radio"--}}
+{{--                                               value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"--}}
+{{--                                               name="advisory_type_id"--}}
+{{--                                               id="edit_advisory_type_member"/>--}}
+{{--                                        <label class="form-check-label" id="" for="edit_advisory_type_member">--}}
+{{--                                            {{ trans_choice('custom.member', 1) }}--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                <div class="col-auto">
-                                    <div class="form-check pl-4">
-                                        <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN->value }}"
-                                               name="advisory_type_id"
-                                               id="edit_advisory_type_chairman"/>
-                                        <label class="form-check-label" id="" for="edit_advisory_type_chairman">
-                                            {{ __('custom.chairman') }}
-                                        </label>
-                                    </div>
-                                </div>
+{{--                                <div class="col-auto">--}}
+{{--                                    <div class="form-check pl-4">--}}
+{{--                                        <input class="form-check-input" type="radio"--}}
+{{--                                               value="{{ \App\Enums\AdvisoryTypeEnum::CHAIRMAN->value }}"--}}
+{{--                                               name="advisory_type_id"--}}
+{{--                                               id="edit_advisory_type_chairman"/>--}}
+{{--                                        <label class="form-check-label" id="" for="edit_advisory_type_chairman">--}}
+{{--                                            {{ __('custom.chairman') }}--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                <div class="col-auto">
-                                    <div class="form-check pl-4">
-                                        <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value }}"
-                                               name="advisory_type_id"
-                                               id="edit_advisory_type_vice_chairman"/>
-                                        <label class="form-check-label" id="" for="edit_advisory_type_vice_chairman">
-                                            {{ __('validation.attributes.vice_chairman') }}
-                                        </label>
-                                    </div>
-                                </div>
+{{--                                <div class="col-auto">--}}
+{{--                                    <div class="form-check pl-4">--}}
+{{--                                        <input class="form-check-input" type="radio"--}}
+{{--                                               value="{{ \App\Enums\AdvisoryTypeEnum::VICE_CHAIRMAN->value }}"--}}
+{{--                                               name="advisory_type_id"--}}
+{{--                                               id="edit_advisory_type_vice_chairman"/>--}}
+{{--                                        <label class="form-check-label" id="" for="edit_advisory_type_vice_chairman">--}}
+{{--                                            {{ __('validation.attributes.vice_chairman') }}--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                <div class="col-auto">
-                                    <div class="form-check pl-4">
-                                        <input class="form-check-input" type="radio"
-                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY->value }}"
-                                               name="advisory_type_id"
-                                               id="edit_advisory_type_secretary"/>
-                                        <label class="form-check-label" id="" for="edit_advisory_type_secretary">
-                                            {{ trans_choice('custom.secretary', 1) }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{{--                                <div class="col-auto">--}}
+{{--                                    <div class="form-check pl-4">--}}
+{{--                                        <input class="form-check-input" type="radio"--}}
+{{--                                               value="{{ \App\Enums\AdvisoryTypeEnum::SECRETARY->value }}"--}}
+{{--                                               name="advisory_type_id"--}}
+{{--                                               id="edit_advisory_type_secretary"/>--}}
+{{--                                        <label class="form-check-label" id="" for="edit_advisory_type_secretary">--}}
+{{--                                            {{ trans_choice('custom.secretary', 1) }}--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                    <div class="row" id="member-checkbox">
-                        <div class="col-12">
-                            <div class="form-check pl-4">
-                                <input class="form-check-input" type="checkbox"
-                                       value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"
-                                       name="is_member"
-                                />
-                                <label class="form-check-label" id="" for="is_member">
-                                    {{ trans_choice('custom.member', 1) }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="row" id="member-checkbox">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="form-check pl-4">--}}
+{{--                                <input class="form-check-input" type="checkbox"--}}
+{{--                                       value="{{ \App\Enums\AdvisoryTypeEnum::MEMBER->value }}"--}}
+{{--                                       name="is_member"--}}
+{{--                                />--}}
+{{--                                <label class="form-check-label" id="" for="is_member">--}}
+{{--                                    {{ trans_choice('custom.member', 1) }}--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="row">
                         <div class="col-12">
