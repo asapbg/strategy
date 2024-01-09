@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('page', function (Blueprint $table) {
             $table->tinyInteger('is_system')->default(0);
-            $table->string('system_name');
+            $table->string('system_name')->nullable();
         });
     }
 
