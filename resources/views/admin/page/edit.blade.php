@@ -108,29 +108,27 @@
                         </div>
                         @if($item->id)
                             <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
-                                <form class="row" action="{{ route('admin.upload.file', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
-                                    <div class="col-md-4">
-                                        <div class="form-group form-group-sm">
-                                            <label for="description" class="col-sm-12 control-label">{{ __('custom.public_name') }} <span class="required">*</span> </label>
-                                            <div class="col-12">
-                                                <input value="{{ old('description', '') }}" class="form-control form-control-sm @error('description') is-invalid @enderror" id="description" type="text" name="description">
-                                                @error('description')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+                                <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="formats" value="ALLOWED_FILE_PAGE">
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input value="{{ old('description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror" id="description_{{ $lang['code'] }}" type="text" name="description_{{ $lang['code'] }}">
+                                            @error('description_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group form-group-sm">
-                                            <label for="file" class="col-sm-12 control-label">{{ __('custom.select_file') }} <span class="required">*</span> </label>
-                                            <div class="col-12">
-                                                <input class="form-control form-control-sm @error('file') is-invalid @enderror" id="file" type="file" name="file">
-                                                @error('file')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+                                    @endforeach
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="file_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input class="form-control form-control-sm @error('file_'.$lang['code']) is-invalid @enderror" id="file_{{ $lang['code'] }}" type="file" name="file_{{ $lang['code'] }}">
+                                            @error('file_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                    </div>
+                                    @endforeach
                                     <div class="col-md-4">
                                         <br>
                                         <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
@@ -143,20 +141,25 @@
                                             <th>{{ __('custom.name') }}</th>
                                             <th></th>
                                         </tr>
-                                        @foreach($item->files as $f)
-                                            <tr>
-                                                <td>{{ ($f->description.'_'.app()->getLocale()) ?? $f->description.'_'.config('app.default_lang') }}</td>
-                                                <td>
-                                                    <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">
-                                                        <i class="fas fa-download me-1" role="button"
-                                                           data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
-                                                    </a>
-                                                    <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
-                                                        <i class="fas fa-trash me-1" role="button"
-                                                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                        @foreach(config('available_languages') as $lang)
+                                            @foreach($item->files as $f)
+                                                @php($code = $lang['code'])
+                                                @if($code == $f->locale)
+                                                    <tr>
+                                                        <td>{{ $f->{'description_'.$code} }}</td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-download me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
+                                                                <i class="fas fa-trash me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
                                         @endforeach
                                         </tbody>
                                     </table>

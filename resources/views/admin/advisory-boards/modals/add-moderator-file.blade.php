@@ -15,6 +15,7 @@
                     @csrf
 
                     <input type="hidden" name="object_id" value="{{ $item->moderatorInformation?->id }}">
+                    <input type="hidden" name="code_object" value="{{ \App\Models\File::CODE_OBJ_AB_MODERATOR }}"/>
                     <input type="hidden" name="doc_type_id" value="{{ \App\Enums\DocTypesEnum::AB_MODERATOR->value }}"/>
 
                     @include('admin.partial.file_fields', ['form' => 'MODERATOR_FILE'])

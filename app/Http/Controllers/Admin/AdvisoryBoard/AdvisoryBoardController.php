@@ -295,6 +295,7 @@ class AdvisoryBoardController extends AdminController
         $authorities = AuthorityAdvisoryBoard::with('translations')->orderBy('id')->get();
         $all_users = User::select(['id', 'username'])
             ->orderBy('username')
+            ->where('user_type', '=', 1)
             ->whereNotIn('id', function ($query) {
                 $query->select('user_id')->from((new AdvisoryBoardModerator())->getTable());
             })->get();

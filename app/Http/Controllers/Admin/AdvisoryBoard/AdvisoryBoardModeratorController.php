@@ -58,9 +58,9 @@ class AdvisoryBoardModeratorController extends AdminController
             $information->fill($fillable);
             $information->save();
 
-            foreach (config('available_languages') as $lang) {
-                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
-            }
+//            foreach (config('available_languages') as $lang) {
+//                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
+//            }
 
             $this->storeTranslateOrNew(AdvisoryBoardModeratorInformation::TRANSLATABLE_FIELDS, $information, $validated);
 

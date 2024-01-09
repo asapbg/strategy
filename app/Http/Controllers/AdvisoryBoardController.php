@@ -13,6 +13,7 @@ use App\Models\AuthorityAdvisoryBoard;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
+use App\Models\Page;
 use App\Models\Publication;
 use App\Models\Setting;
 use App\Models\User;
@@ -65,7 +66,8 @@ class AdvisoryBoardController extends Controller
             ->with(['translation'])
             ->orderBy('name')
             ->get();
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS . '_' . app()->getLocale())->first();
+//        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS . '_' . app()->getLocale())->first();
+        $pageTopContent = '';
         $status = request()->offsetGet('status');
 
         $is_search = $request->has('search');
@@ -337,11 +339,23 @@ class AdvisoryBoardController extends Controller
         dd('destroy');
     }
 
-    public function contacts(Request $request)
+    public function contacts(Request $request, $itemId = null)
     {
-        $pageTitle = $this->pageTitle;
-        $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
-        return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
+        if($itemId) {
+            $item = AdvisoryBoard::with(['translations', 'moderators'])->find($itemId);
+//            $item = AdvisoryBoard::with(['translations', 'moderators', 'moderators.user', 'moderatorInformation', 'moderatorInformation.translations', 'moderatorInformation.files'])->find($itemId);
+            if(!$item){
+                abort(404);
+            }
+            $pageTitle = $item->name;
+            $this->setSlider($item->name, $item->headerImg);
+            $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+            return $this->view('site.advisory-boards.contacts_inner', compact('pageTitle', 'item', 'customSections'));
+        } else{
+            $pageTitle = $this->pageTitle;
+            $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
+            return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
+        }
     }
 
     public function news(Request $request)
@@ -385,6 +399,32 @@ class AdvisoryBoardController extends Controller
         }
 
         return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+    }
+
+    public function documents()
+    {
+        $page = Page::with(['files' => function($q) {
+                $q->where('locale', '=', app()->getLocale());
+            }])
+            ->where('system_name', '=', Page::ADV_BOARD_DOCUMENTS)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = $page->name;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
+    }
+
+    public function info()
+    {
+        $content = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS.'_'.app()->getLocale())->first();
+        if(!$content){
+            abort(404);
+        }
+        $content = $content->value;
+        $pageTitle = __('site.base_info');
+        return $this->view('site.advisory-boards.base_info', compact('content', 'pageTitle'));
     }
 
     private function sorters()

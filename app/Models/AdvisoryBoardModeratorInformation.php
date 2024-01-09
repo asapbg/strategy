@@ -27,7 +27,14 @@ class AdvisoryBoardModeratorInformation extends ModelActivityExtend
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
-            ->where(['code_object' => File::CODE_AB, 'doc_type' => DocTypesEnum::AB_MODERATOR]);
+            ->where(['code_object' => File::CODE_OBJ_AB_MODERATOR, 'doc_type' => DocTypesEnum::AB_MODERATOR->value]);
+    }
+
+    public function filesByLocale(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where(['code_object' => File::CODE_OBJ_AB_MODERATOR, 'doc_type' => DocTypesEnum::AB_MODERATOR->value])
+            ->where('locale', '=', app()->getLocale());
     }
 
     /**

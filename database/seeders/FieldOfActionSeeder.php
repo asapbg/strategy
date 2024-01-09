@@ -32,7 +32,7 @@ class FieldOfActionSeeder extends Seeder
         $actions = json_decode($json, true);
 
         foreach ($actions as $action) {
-            $exist = FieldOfAction::find((int)$action['id']);
+            $exist = FieldOfAction::withTrashed()->find((int)$action['id']);
             if($exist) { continue; }
 
             $newItem = [

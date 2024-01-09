@@ -28,7 +28,7 @@ class PageController  extends AdminController
         if( !isset($requestFilter['active']) ) {
             $requestFilter['active'] = 1;
         }
-        $items = Page::with(['translation'])
+        $items = Page::with(['translations'])
             ->FilterBy($requestFilter)
             ->orderByTranslation('name')
             ->paginate($paginate);

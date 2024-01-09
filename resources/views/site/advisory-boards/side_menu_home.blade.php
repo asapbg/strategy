@@ -16,6 +16,16 @@
                                 </a>
                             </li>
                             <li class="mb-2">
+                                <a href="{{ route('advisory-boards.info') }}" class="@if(str_contains(url()->current(),'information')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ __('site.base_info') }}
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{ route('advisory-boards.documents') }}" class="@if(str_contains(url()->current(),'documents')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ trans_choice('custom.documents', 2) }}
+                                </a>
+                            </li>
+                            <li class="mb-2">
                                 <a href="{{ route('advisory-boards.news') }}" class="@if(str_contains(url()->current(),'news')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
                                     {{ trans_choice('custom.news', 2) }}
                                 </a>

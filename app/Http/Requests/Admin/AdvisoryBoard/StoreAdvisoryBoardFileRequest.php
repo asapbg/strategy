@@ -36,6 +36,7 @@ class   StoreAdvisoryBoardFileRequest extends FormRequest
         $rules = [
             'doc_type_id'                   => ['required', 'integer', Rule::in(DocTypesEnum::values())],
             'object_id'                     => ['required', 'integer'],
+            'code_object'                => ['nullable', 'integer'],
             'resolution_council_ministers'  => ['nullable', 'string'],
             'state_newspaper'               => ['nullable', 'string'],
             'effective_at'                  => ['nullable', 'date'],

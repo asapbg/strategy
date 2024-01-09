@@ -8,11 +8,11 @@
     @include('site.advisory-boards.side_menu_home')
 
     <div class="col-lg-10 right-side-content py-5">
-        @if(isset($pageTopContent) && !empty($pageTopContent->value))
-        <div class="col-12 mb-5">
-            {!! $pageTopContent->value !!}
-        </div>
-        @endif
+{{--        @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
+{{--        <div class="col-12 mb-5">--}}
+{{--            {!! $pageTopContent->value !!}--}}
+{{--        </div>--}}
+{{--        @endif--}}
 
         <form action="{{ url()->current() }}" id="search-form" METHOD="GET">
             <input type="hidden" name="search" value="true">

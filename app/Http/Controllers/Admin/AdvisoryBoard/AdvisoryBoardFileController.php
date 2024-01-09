@@ -47,6 +47,8 @@ class AdvisoryBoardFileController extends AdminController
                     $validated['resolution_council_ministers'],
                     $validated['state_newspaper'],
                     $validated['effective_at'],
+                    null,
+                    $validated['code_object'] ?? null
                 );
             }
 

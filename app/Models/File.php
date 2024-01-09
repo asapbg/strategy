@@ -31,6 +31,7 @@ class File extends ModelActivityExtend
 
     /** @var int Advisory Board */
     const CODE_AB = 7;
+    const CODE_OBJ_AB_MODERATOR = 8;
 
     const MAX_UPLOAD_FILE_SIZE = 30720;
 
@@ -53,6 +54,7 @@ class File extends ModelActivityExtend
     const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
+    const ALLOWED_FILE_PAGE = ['doc', 'docx', 'pdf', 'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];
 
     const CONTENT_TYPE_IMAGES = ['image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];
     protected $guarded = [];

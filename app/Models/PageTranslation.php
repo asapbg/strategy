@@ -19,4 +19,12 @@ class PageTranslation extends Model
             set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
+
+    protected function shortContent(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
+        );
+    }
 }

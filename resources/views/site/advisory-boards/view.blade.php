@@ -292,7 +292,7 @@
             @endif
 
             <!-- Инфорация за модератора „Консултативен съвет“ -->
-            @if(!empty($item->moderatorInformation))
+            @if($item->moderatorInformation && !empty($item->moderatorInformation->description) || $item->moderatorFiles->count())
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
@@ -302,8 +302,8 @@
                                 {!! $item->moderatorInformation->description !!}
                             </p>
 
-                            @if(!empty($item->moderatorFiles) && $item->moderatorFiles->count() > 0)
-                                @foreach($item->moderatorFiles as $file)
+                            @if($item->moderatorInformation->filesByLocale->count())
+                                @foreach($item->moderatorInformation->filesByLocale as $file)
                                     @includeIf('site.partial.file', ['file' => $file])
                                 @endforeach
                             @endif

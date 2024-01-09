@@ -297,6 +297,7 @@ class Controller extends BaseController
 
             // Upload File
             $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
                 File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
                 File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
                 default => '',
@@ -344,6 +345,7 @@ class Controller extends BaseController
 
             $route = match ((int)$typeObject) {
                 File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
+                File::CODE_OBJ_PAGE => route('admin.page.edit', ['item' => $objectId]) . '#ct-files',
                 default => '',
             };
             if ($redirect) {

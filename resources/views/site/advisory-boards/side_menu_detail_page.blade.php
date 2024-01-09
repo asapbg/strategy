@@ -18,6 +18,11 @@
                             <li class="mb-2">
                                 <a href="{{ route('advisory-boards.view', ['item' => $item]) }}" class="@if(request()->route()->getName() == 'advisory-boards.view') active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ __('custom.up_to_date_information') }}</a>
                             </li>
+                            <li class="mb-2">
+                                <a href="{{ route('advisory-boards.contacts', $item) }}" class="@if(str_contains(url()->current(),'contacts')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ trans_choice('custom.contacts', 2) }}
+                                </a>
+                            </li>
                             <li class="mb-2 @if(str_contains(url()->current(),'view/archive')) active-item-left text-white p-1 @endif">{{ __('custom.archive') }}</li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">

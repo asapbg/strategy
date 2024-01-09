@@ -24,6 +24,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
+                            <th>{{__('custom.is_system')}}</th>
                             <th>{{__('custom.active_m')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -34,6 +35,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>@if(!empty($item->system_name)) <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="{{ __('custom.pages.'.$item->system_name) }}"></i> @endif{{ $item->name }}</td>
+                                    <td><i class="fas @if($item->is_system) fa-check text-success @else fa-minus text-danger @endif" ></i></td>
                                     <td>
                                         @if(isset($toggleBooleanModel))
                                             @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => $toggleBooleanModel, 'disable_btn' => !empty($item->system_name)])

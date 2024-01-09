@@ -73,7 +73,8 @@ class AdvisoryBoardFileService
         ?string $resolution = null,
         ?string $state_newspaper = null,
         ?string $effective_at = null,
-        ?int $parent_id = null
+        ?int $parent_id = null,
+        ?int $code_object = null
     ): void
     {
         if (!$file) {
@@ -86,7 +87,7 @@ class AdvisoryBoardFileService
             $version = File::where('locale', '=', $language)
                 ->where('id_object', '=', $id_object)
                 ->where('doc_type', '=', $doc_type)
-                ->where('code_object', '=', File::CODE_AB)
+                ->where('code_object', '=', $code_object ?? File::CODE_AB)
                 ->count();
         }
 
@@ -110,7 +111,7 @@ class AdvisoryBoardFileService
 
         $newFile = new File([
             'id_object' => $id_object,
-            'code_object' => File::CODE_AB,
+            'code_object' => $code_object ?? File::CODE_AB,
             'filename' => $store_name,
             'doc_type' => $doc_type,
             'content_type' => $file->getClientMimeType(),

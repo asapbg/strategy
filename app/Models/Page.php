@@ -14,6 +14,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = 'custom.page';
+    const ADV_BOARD_DOCUMENTS = 'adv_board_docs';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
@@ -23,7 +24,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "page";
 
-    protected $fillable = ['active', 'in_footer', 'slug', 'order_idx', 'system_name'];
+    protected $fillable = ['active', 'in_footer', 'slug', 'order_idx', 'system_name', 'is_system'];
 
     public function scopeIsActive($query)
     {

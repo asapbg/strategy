@@ -85,9 +85,14 @@ return [
     'calc.criteria' => 'Критерий',
     'home_page' => 'Начална страница',
     'advisory_boards.contacts.title' => 'Контакти на служители от дирекция „Координация на политики и концесии"',
+    'advisory_boards.moderators_contacts.title' => 'Контакти на модератори към консултативния съвет',
+    'advisory_boards.moderators' => 'Модератори',
+    'advisory_boards.moderators_information' => 'Инфорация за модератора „Консултативен съвет“',
+    'advisory_boards.no_moderators_contacts' => 'Все още не е въведена информация за контакти',
     'read_more' => 'Прочети още',
     'seo_title' => 'Портал за обществени консултации',
     'seo_description' => 'Министерски съвет',
     'seo_keywords' => 'министерски съвет;обществени консултации',
+    'base_info' => 'Обща информация',
 
 ];
