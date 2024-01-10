@@ -112,13 +112,15 @@
                         </ul>
                     </li>
                 @endcanany
-                <li class="nav-item">
-                    <a href="{{ route('admin.impact_assessment.index') }}"
-                       class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
-                        <i class="fas fa-chart-line"></i>
-                        <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
-                    </a>
-                </li>
+                @canany(['manage.*', 'manage.advisory'])
+                    <li class="nav-item">
+                        <a href="{{ route('admin.impact_assessment.index') }}"
+                           class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
+                            <i class="fas fa-chart-line"></i>
+                            <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
+                        </a>
+                    </li>
+                @endcanany
                 @canany(['manage.*', 'manage.executors'])
                 <li class="nav-item">
                     <a href="{{ route('admin.executors.index') }}"
@@ -287,7 +289,7 @@
                                 <a href="{{ route('admin.advisory-boards.archive.index') }}"
                                    class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ __('custom.archive') }}</p>
+                                    <p>{{ __('custom.inactive_adv_board') }}</p>
                                 </a>
                             </li>
                         </ul>

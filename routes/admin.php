@@ -525,7 +525,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('order',                'order')        ->name('advisory-boards.sections.order');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/archive')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardArchiveController::class)->prefix('/advisory-boards/inactive')->group(function () {
         Route::get('', 'index')->name('advisory-boards.archive.index');
     });
 
