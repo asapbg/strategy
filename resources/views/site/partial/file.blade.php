@@ -71,7 +71,7 @@
                         @continue
                     @endif
 
-                    <a href="#"
+                    <a href="{{ route('download.file', $file) }}"
                        class="text-decoration-none">{{ __('custom.version') . ' ' . $file->version }} - {{ \Carbon\Carbon::parse($file->created_at)->format('d.m.Y') }}</a>
 
                     @if(++$key !== $total_versions)

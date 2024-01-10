@@ -72,13 +72,13 @@
                 </div>
             </div>
 
-            <!-- Председатели -->
-            <div class="row mb-4 ks-row">
-                <div class="col-md-12">
-                    <div class="custom-card p-3">
-                        <h3 class="mb-2 fs-4">{{ __('custom.chairman_site') }}</h3>
-                        <ul class="list-group list-group-flush">
-                            @if(isset($item->chairmen) && $item->chairmen->count() > 0)
+            @if(isset($item->chairmen) && $item->chairmen->count() > 0)
+                <!-- Председатели -->
+                <div class="row mb-4 ks-row">
+                    <div class="col-md-12">
+                        <div class="custom-card p-3">
+                            <h3 class="mb-2 fs-4">{{ __('custom.chairman_site') }}</h3>
+                            <ul class="list-group list-group-flush">
                                 @foreach($item->chairmen as $chairman)
                                     <li class="list-group-item">
                                         @if(!empty($chairman->member_job))
@@ -88,14 +88,14 @@
                                         @endif
                                     </li>
                                 @endforeach
-                            @endif
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Заместник председатели -->
-            @if(isset($item->viceChairmen) && $item->viceChairmen->count() > 0)
+            @if($item->viceChairmen && $item->viceChairmen->count() > 0)
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
