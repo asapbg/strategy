@@ -29,7 +29,7 @@
                     <div class="input-group">
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="keywords"
-                                   class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
+                                   class="form-label">{{ __('custom.name') }}</label>
                             <input id="keywords" value="{{ request()->get('keywords') }}"
                                    class="form-control form-control-sm"
                                    type="text" name="keywords">
@@ -42,7 +42,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="filter_field_of_action"
                                 class="form-label">{{ trans_choice('custom.field_of_actions', 1) }}</label>
-                            <select class="form-select select2" multiple name="filter_field_of_action"
+                            <select class="form-select select2" multiple name="filter_field_of_action[]"
                                 id="filter_field_of_action">
                                 <option value="">{{ __('custom.all') }}</option>
 
@@ -59,7 +59,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="filter_authority"
                                 class="form-label">{{ __('custom.type_of_governing') }}</label>
-                            <select class="form-select select2" multiple name="filter_authority" id="filter_authority">
+                            <select class="form-select select2" multiple name="filter_authority[]" id="filter_authority">
                                 <option value="">{{ __('custom.all') }}</option>
 
                                 @foreach($authority_advisory_boards as $authority)
@@ -75,7 +75,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="filter_act_of_creation"
                                 class="form-label">{{ __('validation.attributes.act_of_creation') }}</label>
-                            <select class="form-select select2" multiple name="filter_act_of_creation"
+                            <select class="form-select select2" multiple name="filter_act_of_creation[]"
                                 id="filter_act_of_creation">
                                 <option value="">{{ __('custom.all') }}</option>
 
@@ -92,7 +92,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="filter_chairman_type"
                                 class="form-label">{{ trans_choice('custom.advisory_chairman_type', 1) }}</label>
-                            <select class="form-select select2" multiple name="filter_chairman_type"
+                            <select class="form-select select2" multiple name="filter_chairman_type[]"
                                 id="filter_chairman_type">
                                 <option value="">{{ __('custom.all') }}</option>
 
@@ -109,7 +109,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="exampleFormControlInput1"
                                 class="form-label">{{ __('custom.presence_npo_representative') }}</label>
-                            <select class="form-select select2" multiple aria-label="Default select example">
+                            <select class="form-select select2" aria-label="Default select example" name="npo">
                                 <option value="">{{ __('custom.all') }}</option>
                                 <option value="1">{{ __('custom.yes') }}</option>
                                 <option value="0">{{ __('custom.no') }}</option>
@@ -122,7 +122,7 @@
                     <div class="input-group ">
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="exampleFormControlInput1" class="form-label">{{ __('custom.status') }}</label>
-                            <select class="form-select select2" multiple aria-label="Default select example" name="status">
+                            <select class="form-select select2" aria-label="Default select example" name="status">
                                 <option value="">{{ __('custom.all') }}</option>
                                 <option value="1" selected>{{ __('custom.active') }}</option>
                                 <option value="0">{{ __('custom.inactive') }}</option>

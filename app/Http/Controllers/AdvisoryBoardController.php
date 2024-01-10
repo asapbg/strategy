@@ -74,8 +74,10 @@ class AdvisoryBoardController extends Controller
         $filter_field_of_action = $request->get('filter_field_of_action');
         $filter_authority = $request->get('filter_authority');
         $filter_act_of_creation = $request->get('filter_act_of_creation');
+
         $filter_chairman_type = $request->get('filter_chairman_type');
         $keywords = $request->get('keywords');
+        $npo= $request->get('npo');
 
         $sort = ($request->offsetGet('sort'))
             ? $request->offsetGet('sort')
@@ -92,30 +94,28 @@ class AdvisoryBoardController extends Controller
             ->whereLocale(app()->getLocale())
             ->joinTranslation(AdvisoryBoard::class)
             ->with(['policyArea', 'translations', 'moderators'])
-            ->where(function ($query) use ($keywords) {
-                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
-                    $query->where('id', $keywords);
-                })
-                    ->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
-                        $query->whereHas('translations', function ($query) use ($keywords) {
-                            $query->where('name', 'ilike', '%' . $keywords . '%');
-                        });
-                    });
+            ->when($keywords, function ($query) use ($keywords) {
+                $query->whereHas('translations', function ($query) use ($keywords) {
+                    $query->where('name', 'ilike', '%' . $keywords . '%');
+                });
             })
             ->when($filter_field_of_action, function ($query) use ($filter_field_of_action) {
-                $query->where('policy_area_id', $filter_field_of_action);
+                $query->whereIn('policy_area_id', array_map('intval', $filter_field_of_action));
             })
             ->when($filter_authority, function ($query) use ($filter_authority) {
-                $query->where('authority_id', $filter_authority);
+                $query->whereIn('authority_id', array_map('intval', $filter_authority));
             })
             ->when($filter_act_of_creation, function ($query) use ($filter_act_of_creation) {
-                $query->where('advisory_act_type_id', $filter_act_of_creation);
+                $query->whereIn('advisory_act_type_id', array_map('intval', $filter_act_of_creation));
             })
             ->when($filter_chairman_type, function ($query) use ($filter_chairman_type) {
-                $query->where('advisory_chairman_type_id', $filter_chairman_type);
+                $query->whereIn('advisory_chairman_type_id', array_map('intval', $filter_chairman_type));
             })
             ->when(!is_null($status), function ($query) use ($status) {
                 $query->where('active', (bool)$status);
+            })
+            ->when(!is_null($npo), function ($query) use ($npo) {
+                $query->where('has_npo_presence', (bool)$npo);
             })
             ->where('public', true)
             ->orderBy('active', 'desc')
