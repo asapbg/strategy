@@ -294,7 +294,7 @@
             @endif
 
             <!-- Инфорация за модератора „Консултативен съвет“ -->
-            @if($item->moderatorInformation && !empty($item->moderatorInformation->description) || $item->moderatorFiles->count())
+            @if(($item->moderatorInformation && !empty($item->moderatorInformation->description)) || ($item->moderatorFiles && $item->moderatorFiles->count()))
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
