@@ -114,7 +114,7 @@ class AdvisoryBoardController extends Controller
             ->when($filter_chairman_type, function ($query) use ($filter_chairman_type) {
                 $query->where('advisory_chairman_type_id', $filter_chairman_type);
             })
-            ->when($status != '', function ($query) use ($status) {
+            ->when(!is_null($status), function ($query) use ($status) {
                 $query->where('active', (bool)$status);
             })
             ->where('public', true)

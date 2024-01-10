@@ -122,10 +122,10 @@
                     <div class="input-group ">
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="exampleFormControlInput1" class="form-label">{{ __('custom.status') }}</label>
-                            <select class="form-select select2" multiple aria-label="Default select example">
+                            <select class="form-select select2" multiple aria-label="Default select example" name="status">
                                 <option value="">{{ __('custom.all') }}</option>
                                 <option value="1" selected>{{ __('custom.active') }}</option>
-                                <option value="2">{{ __('custom.inactive') }}</option>
+                                <option value="0">{{ __('custom.inactive') }}</option>
                             </select>
                         </div>
                     </div>
