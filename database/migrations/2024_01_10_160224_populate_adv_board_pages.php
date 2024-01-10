@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        if(!\App\Models\Page::get()->count()) {
+        if(!(\App\Models\Page::get()->count())) {
             \Illuminate\Support\Facades\Artisan::call('db:seed PageSeeder');
         }
     }
