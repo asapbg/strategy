@@ -233,7 +233,7 @@ class AdvisoryBoardController extends Controller
         $filter = $this->archiveFilters($request);
         $pageTitle = $this->pageTitle;
         $this->setSlider($item->name, $item->headerImg);
-        $items = AdvisoryBoardMeeting::with(['translations', 'siteFiles', 'siteFiles.versions'])
+        $items = AdvisoryBoardMeeting::with(['translations'])
             ->where('advisory_board_id', $item->id)
             ->FilterBy($requestFilter)
             ->paginate($paginate);
