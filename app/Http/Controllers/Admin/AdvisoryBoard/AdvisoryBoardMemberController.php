@@ -7,11 +7,13 @@ use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardMemberRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardMemberRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardMemberRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMemberRequest;
+use App\Http\Requests\StoreAdvBoardMembersOrderRequest;
+use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
-use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdvisoryBoardMemberController extends AdminController
 {
@@ -139,5 +141,32 @@ class AdvisoryBoardMemberController extends AdminController
             Log::error($e);
             return redirect()->to($route)->with('danger', __('messages.system_error'));
         }
+    }
+
+    public function setOrder(StoreAdvBoardMembersOrderRequest $request)
+    {
+        $validated = $request->validated();
+        $item = AdvisoryBoard::find($validated['id']);
+
+        if(!$item) {
+            abort(404);
+        }
+
+        $this->authorize('update', $item);
+
+        DB::beginTransaction();
+        try {
+            foreach ($validated['member'] as $key => $member) {
+                AdvisoryBoardMember::where('id', '=', $member)->update(['ord' => $validated['member_ord'][$key]]);
+            }
+            DB::commit();
+            return redirect(route('admin.advisory-boards.edit', $item).'#member')->with('success', 'Промените бяха записани успешно');
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error('Update Adv board Members order: '.$e);
+            return back()->withInput()->with('error', __('messages.system_error'));
+        }
+
+
     }
 }

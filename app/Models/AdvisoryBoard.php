@@ -104,19 +104,21 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function members(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMember::class);
+        return $this->hasMany(AdvisoryBoardMember::class)->orderBy('ord', 'asc')->orderBy('id', 'asc');
     }
 
     public function viceChairmen(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class)
-            ->where('advisory_type_id', AdvisoryTypeEnum::VICE_CHAIRMAN->value);
+            ->where('advisory_type_id', AdvisoryTypeEnum::VICE_CHAIRMAN->value)
+            ->orderBy('ord', 'asc')->orderBy('id', 'asc');
     }
 
     public function chairmen(): HasMany
     {
         return $this->hasMany(AdvisoryBoardMember::class)
-            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value);
+            ->where('advisory_type_id', AdvisoryTypeEnum::CHAIRMAN->value)
+            ->orderBy('ord', 'asc')->orderBy('id', 'asc');
     }
 
     public function establishment(): HasOne
@@ -183,7 +185,9 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function secretaryCouncil(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMember::class)->where('advisory_type_id', AdvisoryTypeEnum::SECRETARY->value);
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->where('advisory_type_id', AdvisoryTypeEnum::SECRETARY->value)
+            ->orderBy('ord', 'asc')->orderBy('id', 'asc');
     }
 
     public function authority(): BelongsTo
@@ -193,7 +197,8 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function allMembers(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardMember::class);
+        return $this->hasMany(AdvisoryBoardMember::class)
+            ->orderBy('ord', 'asc')->orderBy('id', 'asc');
     }
 
     public function advisoryActType(): BelongsTo

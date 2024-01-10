@@ -467,6 +467,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.members.update');
         Route::post('{member}/delete',  'destroy')      ->name('advisory-boards.members.delete');
         Route::post('{member}/restore', 'restore')      ->name('advisory-boards.members.restore')->withTrashed();
+        Route::post('{member}/restore', 'restore')      ->name('advisory-boards.members.restore')->withTrashed();
+        Route::post('order',   'setOrder')  ->name('advisory-boards.members.order');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardFunctionController::class)->prefix('/advisory-boards/{item}/function')->group(function () {

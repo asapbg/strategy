@@ -14,10 +14,13 @@
         </div>
 
         <div class="row mt-3">
-            <div class="col-12">
+            <form class="col-12" method="post" action="{{ route('admin.advisory-boards.members.order') }}">
+                @csrf
+                <input type="hidden" name="id" value="{{ $item->id }}"/>
                 <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                     <thead>
                     <tr>
+                        <th style="max-width: 30px;">{{ __('custom.order') }}</th>
                         <th>ID</th>
                         <th>{{ __('custom.first_name') }}</th>
                         <th>{{ __('custom.type') }}</th>
@@ -27,9 +30,21 @@
                     </thead>
                     <tbody>
                     @if(isset($item->members) && $item->members->count() > 0)
-                        @foreach($item->members as $member)
+                        @php($inx = 0)
+                        @foreach($item->members as $key => $member)
                             @if($member->advisory_type_id == ((int)$type ?? 0))
                                 <tr>
+                                    <td style="max-width: 30px;">
+                                        <input type="hidden" name="member[]" value="{{ $member->id }}">
+                                        <div class="form-group">
+                                            <input type="number" step="1" class="form-control form-control-sm @error('member_ord.'.$inx) is-invalid @enderror"
+                                                   name="member_ord[]"
+                                                   value="{{ old('member_ord.'.$inx, $member->ord) }}">
+                                            @error('member_ord.'.$inx)
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </td>
                                     <td>{{ $member->id }}</td>
                                     <td>{{ $member->member_name }}</td>
                                     <td>{{ trans_choice('custom.' . Str::lower(\App\Enums\AdvisoryTypeEnum::tryFrom($member->advisory_type_id)->name), 1) }}</td>
@@ -76,12 +91,20 @@
                                         @endcan
                                     </td>
                                 </tr>
+                                @php($inx += 1)
                             @endif
                         @endforeach
                     @endif
                     </tbody>
+                    @if(isset($item->members) && $item->members->count() > 0)
+                        <tfoot>
+                            <th colspan="6">
+                                <button class="btn btn-success" type="submit"><i class="fas fa-sort-amount-up-alt mr-3"></i>Запази поредността</button>
+                            </th>
+                        </tfoot>
+                    @endif
                 </table>
-            </div>
+            </form>
         </div>
     </div>
 </div>
