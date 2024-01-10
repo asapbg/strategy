@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
 use App\Traits\FailedAuthorization;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -33,7 +34,7 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'working_year' => 'nullable|date_format:Y'
+            'working_year' => 'nullable|date_format:Y|gt:'.Carbon::now()->format('Y')
         ];
 
         foreach (config('available_languages') as $lang) {

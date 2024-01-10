@@ -650,6 +650,22 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.datepicker-from-this-year').length) {
+        $('.datepicker-from-this-year').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'yyyy',
+            viewMode: "years",
+            minViewMode: "years",
+            yearRange: new Date().getFullYear() + ':' + new Date().getFullYear(),
+            orientation: "bottom left",
+            startDate: new Date(new Date().getFullYear(), 0, 1),
+            autoclose: true,
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
+            }
+        });
+    }
+
     if($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
