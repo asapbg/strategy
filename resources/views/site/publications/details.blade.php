@@ -20,11 +20,15 @@
                         <i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>{{ displayDate($publication->published_at) }} г.
                     </span>
                 </a>
-                <a href="{{ route("library.$current_type") }}?categories[]={{ $publication->publication_category_id }}" class="text-decoration-none">
-                    <span class="obj-icon-info me-2">
-                        <i class="fas fa-sitemap me-1 dark-blue" title="{{ $publication->category?->name }}"></i>{{ $publication->category?->name }}
-                    </span>
-                </a>
+                @if($publication->category)
+                    <a href="{{ route("library.$current_type") }}?categories[]={{ $publication->publication_category_id }}" class="text-decoration-none">
+                        <span class="obj-icon-info me-2">
+                            <i class="fas fa-sitemap me-1 dark-blue" title="{{ $publication->category?->name }}"></i>{{ $publication->category?->name }}
+                        </span>
+                    </a>
+                @else
+                    <span class="dark-blue"><i class="fas fa-sitemap me-1" title="{{ $publication->advCategory }}"></i> {{ $publication->advCategory }}</span>
+                @endif
             </div>
             <div class="col-md-4 text-end">
                 @can('update', $publication)

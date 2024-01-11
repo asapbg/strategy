@@ -28,7 +28,7 @@
                     <h3 class="post-title">{{ $item->title }}</h3>
                     <div class="row mb-2">
                         <div class="col-md-8">
-                            <span class="blog-category">{{ $item->advCategory }}</span>
+                            <span class="blog-category"><i class="fas fa-sitemap me-1" title="{{ $item->advCategory }}"></i> {{ $item->advCategory }}</span>
                         </div>
                         <div class="col-md-4">
                             <div class="consult-item-header-edit">
