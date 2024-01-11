@@ -50,13 +50,14 @@
             <strong> {{ __('custom.date_published') }}:</strong>
             <span>{{ \Carbon\Carbon::parse($file_up_to_date->created_at)->format('d.m.Y') . __('custom.year_short') }}</span>
         </div>
-
-        <div class="doc-info-item">
-            <strong> {{ trans_choice('custom.kinds', 1) }}:</strong>
-            @php $class = $file_up_to_date->active ? 'text-success' : 'text-danger'; @endphp
-            <span
-                class="{{ $class }}">{{ $file_up_to_date->active ? __('custom.active_document') : __('custom.inactive_document') }}</span>
-        </div>
+        @if(!isset($no_second_active_status) || !$no_second_active_status)
+            <div class="doc-info-item">
+                <strong> {{ trans_choice('custom.kinds', 1) }}:</strong>
+                @php $class = $file_up_to_date->active ? 'text-success' : 'text-danger'; @endphp
+                <span
+                    class="{{ $class }}">{{ $file_up_to_date->active ? __('custom.active_document') : __('custom.inactive_document') }}</span>
+            </div>
+        @endif
     </div>
 
     @if(!empty($file->versions) && $file->versions->count() > 1)

@@ -26,7 +26,7 @@
                         </p>
                         @if($program->siteFiles->count())
                             @foreach($program->siteFiles as $file)
-                                @includeIf('site.partial.file', ['file' => $file])
+                                @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                             @endforeach
                         @endif
                     @endforeach

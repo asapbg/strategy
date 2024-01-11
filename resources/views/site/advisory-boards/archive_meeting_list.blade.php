@@ -32,7 +32,7 @@
                         </p>
                         @if($meeting->siteFiles->count())
                             @foreach($meeting->siteFiles as $file)
-                                @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
+                                @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
                             @endforeach
                         @endif
                         @if(!$loop->last)

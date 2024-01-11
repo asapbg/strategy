@@ -192,7 +192,7 @@
 
                             @if(!empty($item->secretariat?->siteFiles) && $item->secretariat->siteFiles->count() > 0)
                                 @foreach($item->secretariat->siteFiles as $file)
-                                    @includeIf('site.partial.file', ['file' => $file])
+                                    @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach
                             @endif
                         </div>
@@ -210,7 +210,7 @@
                             {!! $item->establishment->description !!}
 
                             @foreach($item->establishment->siteFiles as $file)
-                                @includeIf('site.partial.file', ['file' => $file])
+                                @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                             @endforeach
                         </div>
                     </div>
@@ -227,7 +227,7 @@
                             {!! $item->organizationRule->description !!}
 
                             @foreach($item->organizationRule->siteFiles as $file)
-                                @includeIf('site.partial.file', ['file' => $file])
+                                @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                             @endforeach
                         </div>
                     </div>
@@ -247,7 +247,7 @@
 
                             @if(!empty($item->workingProgram->siteFiles) && $item->workingProgram->siteFiles->count() > 0)
                                 @foreach($item->workingProgram->siteFiles as $file)
-                                    @includeIf('site.partial.file', ['file' => $file])
+                                    @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach
                             @endif
                         </div>
@@ -268,7 +268,7 @@
                                 </p>
                                 @if(isset($nextMeeting->siteFiles) && $nextMeeting->siteFiles->count() > 0)
                                     @foreach($nextMeeting->siteFiles as $file)
-                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
+                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
                                     @endforeach
                                 @endif
                                 <hr>
@@ -281,7 +281,7 @@
                                 </p>
                                 @if(isset($meeting->siteFiles) && $meeting->siteFiles->count() > 0)
                                     @foreach($meeting->siteFiles as $file)
-                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true])
+                                        @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
                                     @endforeach
                                 @endif
                                 @if(!$loop->last)
@@ -306,7 +306,7 @@
 
                             @if($item->moderatorInformation->filesByLocale->count())
                                 @foreach($item->moderatorInformation->filesByLocale as $file)
-                                    @includeIf('site.partial.file', ['file' => $file])
+                                    @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach
                             @endif
                         </div>
