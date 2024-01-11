@@ -441,13 +441,13 @@ class AdvisoryBoardController extends Controller
                 'type' => 'datepicker',
                 'value' => $request->input('from'),
                 'label' => __('custom.from_date'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-12'
             ),
             'to' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('to'),
                 'label' => __('custom.to_date'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-12'
             ),
             'paginate' => array(
                 'type' => 'select',

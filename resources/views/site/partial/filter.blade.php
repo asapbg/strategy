@@ -1,6 +1,6 @@
 @if(isset($filter) && count($filter))
 {{--    <div class="card @if(isset($filterClass)){{ $filterClass }}@endif">--}}
-<form method="GET">
+<form method="GET" class="@if(isset($class)){{ $class }}@endif">
     @if(count($filter) > 1 || !isset($filter['paginate']))
         <div class="row filter-results mb-2">
         <h2 class="mb-4">

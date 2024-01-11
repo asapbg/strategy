@@ -1,9 +1,13 @@
-@include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer'])
-
 <div class="row">
-    <div id="calendar"></div>
+    <div class="col-md-6">
+        <div id="calendar"></div>
+    </div>
+    @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'class' => 'col-md-6'])
 </div>
-<div class="row mb-2">
+
+
+
+<div class="row mb-2 mt-4">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
             <p class="fw-600">
