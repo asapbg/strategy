@@ -122,7 +122,7 @@
             </label>
 
             <input type="text" id="effective_at" name="effective_at"
-                   class="datepicker form-control form-control-sm @error('effective_at'){{ 'is-invalid' }}@enderror"/>
+                   class="datepicker form-control form-control-sm @error('effective_at'){{ 'is-invalid' }}@enderror" value=""/>
 
             <div class="text-danger mt-1 error_effective_at"></div>
         </div>

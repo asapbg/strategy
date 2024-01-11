@@ -139,7 +139,7 @@
                                             {!! $section->body!!}
                                         </div>
 
-                                        @if(isset($section->files) && $section->files->count() > 0)
+{{--                                        @if(isset($section->files) && $section->files->count() > 0)--}}
                                             <div class="row">
                                                 <div class="col-12">
                                                     <hr/>
@@ -181,14 +181,15 @@
                                                         @endif
                                                     </div>
                                                 </div>
-
-                                                <div class="row mt-3">
-                                                    <div class="col-12">
-                                                        @include('admin.partial.files_table', ['files' => $section->files, 'item' => $item, 'view_mode' => $view_mode])
+                                                @if(isset($section->files) && $section->files->count() > 0)
+                                                    <div class="row mt-3">
+                                                        <div class="col-12">
+                                                            @include('admin.partial.files_table', ['files' => $section->files, 'item' => $item, 'view_mode' => $view_mode])
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                             </div>
-                                        @endif
+{{--                                        @endif--}}
                                     </div>
                                 </div>
                             </div>

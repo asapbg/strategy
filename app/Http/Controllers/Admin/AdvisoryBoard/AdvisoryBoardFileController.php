@@ -92,11 +92,16 @@ class AdvisoryBoardFileController extends AdminController
         DB::beginTransaction();
         try {
             if (!isset($validated['file'])) {
+                $file = File::find($validated['file_id']);
+                if (isset($validated['effective_at'])) {
+                    $file->effective_at = isset($validated['effective_at']) && !empty($validated['effective_at']) ? Carbon::parse($validated['effective_at'])->format('Y-m-d H:i:s') : null;
+                    $file->resolution_council_ministers = isset($validated['resolution_council_ministers']) && !empty($validated['resolution_council_ministers']) ? $validated['resolution_council_ministers'] : null;
+                    $file->state_newspaper = isset($validated['state_newspaper']) && !empty($validated['state_newspaper']) ? $validated['state_newspaper'] : null;
+                }
+
                 foreach (config('available_languages') as $lang) {
                     if (isset($validated['file_name_' . $lang['code']])) {
-                        File::find($validated['file_id'])->update(['custom_name' => $validated['file_name_' . $lang['code']], 'description_bg' => $validated['file_description_' . $lang['code']]]);
-
-                        break;
+                        $file->update(['custom_name' => $validated['file_name_' . $lang['code']], 'description_bg' => $validated['file_description_' . $lang['code']]]);
                     }
                 }
 

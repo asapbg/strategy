@@ -120,7 +120,7 @@
                                 </label>
 
                                 <input type="text" id="effective_at" name="effective_at"
-                                       class="datepicker form-control form-control-sm"/>
+                                       class="datepicker form-control form-control-sm" value=""/>
 
                                 <div class="text-danger mt-1 error_effective_at"></div>
                             </div>
@@ -148,7 +148,7 @@
             changeButtonState(element);
 
             // Get the form element
-            const form = document.querySelector('form[name=FILE_UPDATE]');
+            const form = document.querySelector('form[name="FILE_UPDATE"]');
             const formData = new FormData(form);
 
             // Get all file input elements with an ID that starts with "file"
