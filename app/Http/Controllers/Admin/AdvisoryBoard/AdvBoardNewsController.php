@@ -113,6 +113,10 @@ class AdvBoardNewsController extends AdminController
             $itemImg = $validated['file'] ?? null;
             unset($validated['file']);
 
+            if(isset($validated['published_at'])) {
+                $validated['published_at'] = databaseDate($validated['published_at']);
+            }
+
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->advisory_boards_id = $validated['adv_board'] ?? null;
