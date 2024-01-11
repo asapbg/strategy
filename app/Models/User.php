@@ -157,6 +157,11 @@ class User extends Authenticatable
         return $this->hasMany(UserPoll::class, 'user_id', 'id');
     }
 
+    public function advisoryBoards(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(AdvisoryBoard::class, AdvisoryBoardMember::class, 'advisory_board_id', 'user_id');
+    }
+
 
     /**
      * Return the user's full name if not empty

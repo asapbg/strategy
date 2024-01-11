@@ -429,7 +429,7 @@ return [
     'settings.advisory_boards_text_bg'                     => 'Начален текст в рздела (BG)',
     'settings.advisory_boards_text_en'                     => 'Начален текст в рздела (EN)',
     //public sections
-    'public_sections'                           => 'Публична секция|Публични секции',
+    'public_sections'                           => 'Библиотека|Библиотека',
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
     'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
     'public_sections.types.TYPE_NEWS'           => 'Новина|Новини',
@@ -735,4 +735,6 @@ return [
     'adv_members.3' => 'Заместник-председател|Заместник-председатели',
     'adv_members.4' => 'Секретар|Секретари',
     'inactive_adv_board' => 'Неактивни съвети',
+    'the_record' => 'Записът',
+    'adv_board_news' => 'Новини',
 ];

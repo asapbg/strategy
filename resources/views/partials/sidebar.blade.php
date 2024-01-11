@@ -278,8 +278,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.publications.index') .'?source=adv_board&type='.\App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value }}"
-                                   class="nav-link">
+                                <a href="{{ route('admin.advisory-boards.news.index') }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'advisory-boards/news')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.news', 2) }}</p>
                                 </a>

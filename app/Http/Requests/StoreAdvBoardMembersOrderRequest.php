@@ -25,6 +25,7 @@ class StoreAdvBoardMembersOrderRequest extends FormRequest
     {
         return [
             'id' => ['required', 'numeric', 'exists:advisory_boards'],
+            'type' => ['required', 'numeric'],
             'member' => ['required', 'array'],
             'member.*' => ['required', 'numeric'],
             'member_ord' => ['required', 'array'],

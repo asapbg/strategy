@@ -48,10 +48,10 @@
         </div>
         <hr>
         <div class="mb-3">
-            <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}"
+            <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->title }}"
                  class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
             >
-            {!! $publication->translation->content !!}
+            {!! $publication->content !!}
 
             <a href=""></a>
         </div>
@@ -77,7 +77,11 @@
             </div>
         @endif
 
-        <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">Обратно към списъка с новини</a>
+        @if($publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+            <a class="btn btn-primary mt-4 mb-5" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
+        @else
+            <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">{{ __('site.back_to_news') }}</a>
+        @endif
     </div>
 
 </div>

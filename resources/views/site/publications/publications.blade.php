@@ -4,7 +4,7 @@
             <div class="consul-wrapper">
                 <div class="single-library d-flex">
                     <div class="library-img-holder">
-                        <img class="img-fluid" src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->translation?->title }}">
+                        <img class="img-fluid" src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->title }}">
                     </div>
                     <div class="consult-body">
                         <div class="consul-item">
@@ -12,9 +12,9 @@
                                 <div class="consult-item-header-link">
                                     <h3>
                                         <a href="{{ route('library.details', [$publication->type, $publication->id]) }}"
-                                           class="text-decoration-none" title="{{ $publication->translation?->title }}"
+                                           class="text-decoration-none" title="{{ $publication->title }}"
                                         >
-                                            {{ $publication->translation?->title }}
+                                            {{ $publication->title }}
                                         </a>
                                     </h3>
                                 </div>
@@ -44,13 +44,13 @@
                                 {{ $publication->category?->name }}
                             </a>
                             <div class="anotation text-secondary mb-2 mt-2">
-                                {!! strip_tags($publication->translation?->short_content) ? strip_tags(Str::limit($publication->translation?->short_content, 200)) : "" !!}
+                                {!! strip_tags($publication->short_content) ? strip_tags(Str::limit($publication->short_content, 200)) : "" !!}
                             </div>
                             <div class="meta-consul">
                                 <span class="text-secondary">
                                     <i class="far fa-calendar text-secondary" title="Публикувано"></i> {{ displayDate($publication->published_at) }} г.
                                 </span>
-                                <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" title="{{ $publication->translation?->title }}">
+                                <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" title="{{ $publication->title }}">
                                     <i class="fas fa-arrow-right read-more"></i>
                                 </a>
                             </div>

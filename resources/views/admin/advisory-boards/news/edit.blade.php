@@ -48,8 +48,8 @@
                                                 <div class="d-inline">
                                                     <select id="type" name="type" onchange="changePublicationType(this)" class="form-control select2 form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
                                                         @foreach(optionsPublicationTypes() as $row)
-                                                            @if($row['value'] == ($type ?? 0))
-                                                                <option value="{{ $row['value'] }}" @if($type == $row['value'] || ($item && $item->id && $item->type == $row['value']) || (old('type', 1) == $row['value'])) selected @endif>{{ $row['name'] }}</option>
+                                                            @if($row['value'] == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+                                                                <option value="{{ $row['value'] }}" selected>{{ $row['name'] }}</option>
                                                             @endif
                                                         @endforeach
                                                     </select>
@@ -61,31 +61,32 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-12" id="adv_board_section">
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="control-label" for="publication_category_id">
-                                                    {{ trans_choice('custom.categories', 1) }}:
+                                                <label class="control-label" for="adv_board">
+                                                    {{ trans_choice('custom.advisory_boards', 2) }}
                                                 </label>
-                                                @php
-                                                    $category_id = old('publication_category_id') ?? $item->publication_category_id;
-                                                @endphp
                                                 <div class="d-inline">
-                                                    <select id="publication_category_id" name="publication_category_id"
-                                                            class="form-control select2 form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
+                                                    @php
+                                                        $oldAdvBoard = old('adv_board', $item->id ? $item->advisory_boards_id : 0) ? \App\Models\AdvisoryBoard::with(['translation'])->where('id', old('adv_board', $item->id ? $item->advisory_boards_id : 0))->first() : null
+                                                    @endphp
+                                                    <select id="adv_board" name="adv_board"
+                                                            class="form-control form-control-sm select2-autocomplete-ajax @error('adv_board'){{ 'is-invalid' }}@enderror"
+                                                            data-types2ajax="adv_board" data-urls2="{{ route('admin.select2.ajax', 'adv_board') }}"
                                                     >
-                                                        @foreach($publicationCategories as $category)
-                                                            <option value="{{ $category->id }}" @if($category_id == $category->id) selected @endif>
-                                                                {{ $category->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('publication_category_id')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                    @enderror
+                                                            @if($oldAdvBoard)
+                                                                <option value="{{ $oldAdvBoard->id }}" selected >{{ $oldAdvBoard->name }}</option>
+                                                            @endif
+                                                        </select>
+                                                        @error('adv_board')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
                                     <div class="col-md-6 col-12 d-none">
                                         <div class="form-group">
@@ -257,7 +258,7 @@
                                 <div class="col-md-6 col-md-offset-3">
                                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                                     <button id="stay" type="submit" name="stay" class="btn btn-success" value="1">{{ __('custom.save_and_stay') }}</button>
-                                    <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                    <a href="{{ route($listRouteName, ['type' => \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                 </div>
                             </div>
                         </form>
@@ -267,34 +268,4 @@
             </div>
         </div>
     </section>
-
-{{--    @push('scripts')--}}
-{{--        <script type="application/javascript">--}}
-            {{--const field_of_action_categories = @json($fieldOfActionCategories);--}}
-            {{--const categories_select = document.querySelector('#publication_category_id');--}}
-            {{--const is_field_of_action_category_selected = @json(old('type', 1) == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value || !empty($item->type));--}}
-            {{--const preselected_field_of_action = @json(old('publication_category_id', $item->publication_category_id));--}}
-
-            {{--if (is_field_of_action_category_selected) {--}}
-            {{--    populateCategoriesWithFieldOfActions(preselected_field_of_action);--}}
-            {{--}--}}
-
-            {{--function changePublicationType(select) {--}}
-            {{--    // Консултативни съвети--}}
-            {{--    if (select.value == 4) {--}}
-            {{--        populateCategoriesWithFieldOfActions();--}}
-            {{--    }--}}
-            {{--}--}}
-
-            {{--function populateCategoriesWithFieldOfActions(preselected = null) {--}}
-            {{--    for (let category of field_of_action_categories) {--}}
-            {{--        const option = document.createElement("option");--}}
-            {{--        option.value = category.id;--}}
-            {{--        option.text = category.name;--}}
-            {{--        option.selected = preselected == option.value;--}}
-            {{--        categories_select.appendChild(option);--}}
-            {{--    }--}}
-            {{--}--}}
-{{--        </script>--}}
-{{--    @endpush--}}
 @endsection

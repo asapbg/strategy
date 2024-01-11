@@ -3,13 +3,13 @@
         <div class="post-box">
             <div class="post-img">
                 <img class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img" src="{{ asset($news_row->mainImg?->path ?? $default_img) }}"
-                     alt="{{ $news_row->translation?->title }}"
+                     alt="{{ $news_row->title }}"
                 >
             </div>
             <span class="post-date text-secondary">{{ displayDate($news_row->published_at) }} г.</span>
             <h3 class="post-title">
-                <a href="{{ route('library.details', [$news_row->type, $news_row->id]) }}" class="text-decoration-none" title="{{ $news_row->translation?->title }}">
-                    {{ $news_row->translation?->title }}
+                <a href="{{ route('library.details', [$news_row->type, $news_row->id]) }}" class="text-decoration-none" title="{{ $news_row->title }}">
+                    {{ $news_row->title }}
                 </a>
             </h3>
             <div class="row mb-2">
@@ -42,10 +42,10 @@
                 </div>
             </div>
             <p class="short-decription text-secondary">
-                {!! strip_tags($news_row->translation?->short_content) ? strip_tags(Str::limit($news_row->translation?->short_content, 200)) : "" !!}
+                {!! strip_tags($news_row->short_content) ? strip_tags(Str::limit($news_row->short_content, 200)) : "" !!}
             </p>
             <a href="{{ route('library.details', [$news_row->type, $news_row->id]) }}" class="readmore mt-1"
-               title="{{ $news_row->translation?->title }}"
+               title="{{ $news_row->title }}"
             >
                 Прочетете още <i class="fas fa-long-arrow-right"></i>
             </a>

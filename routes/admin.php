@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardNewsController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
+use App\Http\Controllers\Admin\ExecutorController;
 use App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\Nomenclature\ActTypeController;
@@ -36,7 +38,6 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StrategicDocuments\InstitutionController;
 use App\Http\Controllers\Admin\StrategicDocumentsController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Admin\ExecutorController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Admin\NewsController;
@@ -55,9 +56,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Publications
     Route::controller(PublicationController::class)->group(function () {
-        Route::get('/publications', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/publications/edit/{type}/{item?}', 'edit')->name('publications.edit');
+        Route::get('/library', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/library/edit/{type}/{item?}', 'edit')->name('publications.edit');
         Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
+        Route::post('/library/{item}/delete', 'destroy')->name('publications.delete');
     });
 
     // Consultations
@@ -223,14 +225,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/poll/question/delete/{id}', 'questionDelete')->where('id', '([1-9]+[0-9]*)')->name('polls.question.delete');
         Route::post('/poll/question/delete', 'questionConfirmDelete')->name('polls.question.delete.confirm');
     });
-
-//    // News
-//    Route::controller(NewsController::class)->group(function () {
-//        Route::get('/news', 'index')->name('news.index')->middleware('can:viewAny,App\Models\Publication');
-//        Route::get('/news/edit/{item?}', 'edit')->name('news.edit');
-//        Route::match(['post', 'put'], '/news/store/{item?}', 'store')->name('news.store');
-//    });
-
 
     Route::controller(InstitutionController::class)->group(function () {
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
@@ -449,6 +443,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
         Route::get('{item}/publish',    'publish')  ->name('advisory-boards.publish');
         Route::get('{item}/draft',      'draft')    ->name('advisory-boards.draft');
+    });
+
+    // Publications
+    Route::controller(AdvBoardNewsController::class)->prefix('/advisory-boards/news')->group(function () {
+        Route::get('/', 'index')->name('advisory-boards.news.index')->middleware('can:viewAnyAdvBoard,App\Models\Publication');
+        Route::get('/edit/{item?}', 'edit')->name('advisory-boards.news.edit');
+        Route::match(['post', 'put'], '/store/{item?}', 'store')->name('advisory-boards.news.store');
+        Route::post('/{item}/delete', 'destroy')->name('advisory-boards.news.delete');
     });
 
     Route::controller(ExecutorController::class)->prefix('/executors')->as('executors.')->group(function () {

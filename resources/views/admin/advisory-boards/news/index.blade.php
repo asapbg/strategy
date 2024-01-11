@@ -11,7 +11,7 @@
 
                     <div class="mb-3">
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PublicationController@index'])
-                        <a href="{{ route($editRouteName, ['type' => $type, 0]) }}" class="btn btn-sm btn-success">
+                        <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>
                     </div>
@@ -33,10 +33,10 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>@if($item->category){{ $item->category->name }}@endif</td>
+                                    <td>{{ $item->advCategory }}</td>
                                     <td>{{ displayDate($item->published_at) }}</td>
                                     <td>
-                                        @can('update', $item)
+                                        @can('updateAdvBoard', $item)
                                             @if(isset($toggleBooleanModel))
                                                 @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => $toggleBooleanModel])
                                             @endif
@@ -45,21 +45,21 @@
                                         @endcan
                                     </td>
                                     <td class="text-center">
-                                        @can('update', $item)
-                                            <a href="{{ route( $editRouteName , ['type' => $type, $item->id]) }}"
+                                        @can('updateAdvBoard', $item)
+                                            <a href="{{ route( $editRouteName , $item) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endcan
-                                        @can('delete', $item)
+                                        @can('deleteAdvBoard', $item)
                                             <a href="javascript:;"
                                                class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
                                                data-target="#modal-delete-resource"
                                                data-resource-id="{{ $item->id }}"
                                                data-resource-name="{{ "$item->title" }}"
-                                               data-resource-delete-url="{{route('admin.publications.delete',$item->id)}}"
+                                               data-resource-delete-url="{{route('admin.advisory-boards.news.delete',$item->id)}}"
                                                data-toggle="tooltip"
                                                title="{{__('custom.deletion')}}">
                                                 <i class="fa fa-trash"></i>

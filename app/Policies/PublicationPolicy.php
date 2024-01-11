@@ -20,7 +20,7 @@ class PublicationPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS]);
+        return $user->canAny(['manage.*','manage.library']);
     }
 
     /**
@@ -43,14 +43,9 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE];
-
-        if (!empty($user->getModerateFieldOfActionIds())) {
-            $roles[] = CustomRole::MODERATOR_ADVISORY_BOARD;
-        }
-
-        return $user->hasRole($roles);
+        return $user->canAny(['manage.*','manage.library']);
     }
+
 
     /**
      * Determine whether the user can update the model.
@@ -61,18 +56,9 @@ class PublicationPolicy
      */
     public function update(User $user, Publication $publication)
     {
-        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE];
-
-        if (
-            $publication->type === PublicationTypesEnum::TYPE_ADVISORY_BOARD->value &&
-            (in_array($publication->publication_category_id, $user->getModerateFieldOfActionIds())) ||
-            empty($publication->id)
-        ) {
-            $roles[] = CustomRole::MODERATOR_ADVISORY_BOARD;
-        }
-
-        return $user->hasRole($roles);
+        return $user->canAny(['manage.*','manage.library']) && $publication->type != PublicationTypesEnum::TYPE_ADVISORY_BOARD->value;
     }
+
 
     /**
      * Determine whether the user can delete the model.
@@ -83,7 +69,7 @@ class PublicationPolicy
      */
     public function delete(User $user, Publication $publication)
     {
-        return false;
+        return $user->canAny(['manage.*','manage.library']) && $publication->type != PublicationTypesEnum::TYPE_ADVISORY_BOARD->value;
     }
 
     /**
@@ -106,6 +92,97 @@ class PublicationPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, Publication $publication)
+    {
+        return false;
+    }
+
+
+//    ===========================
+//    Консултативни съвети
+//     ==========================
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+
+    public function viewAnyAdvBoard(User $user)
+    {
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS]);
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function createAdvBoard(User $user)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD];
+        return $user->hasRole($roles);
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function updateAdvBoard(User $user, Publication $publication)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS];
+
+        return $user->hasRole($roles)
+            || (
+            $publication->type = PublicationTypesEnum::TYPE_ADVISORY_BOARD
+                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD])
+                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('id')->toArray() : [])
+            );
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function deleteAdvBoard(User $user, Publication $publication)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS];
+
+        return $user->hasRole($roles)
+            || (
+            $publication->type = PublicationTypesEnum::TYPE_ADVISORY_BOARD
+                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD])
+                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('id')->toArray() : [])
+            );
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restoreAdvBoard(User $user, Publication $publication)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDeleteAdvBoard(User $user, Publication $publication)
     {
         return false;
     }

@@ -23,9 +23,7 @@
                                 <h3 class="post-title">{{ $nItem->title }}</h3>
                                 <div class="row mb-2">
                                     <div class="col-md-8">
-                                        @if($nItem->category)
-                                            <span class="blog-category">{{ $nItem->category->name }}</span>
-                                        @endif
+                                        <span class="blog-category">{{ $nItem->advCategory }}</span>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="consult-item-header-edit">

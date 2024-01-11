@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
+use App\Enums\AdvisoryTypeEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\DeleteAdvisoryBoardMemberRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\RestoreAdvisoryBoardMemberRequest;
@@ -160,7 +161,8 @@ class AdvisoryBoardMemberController extends AdminController
                 AdvisoryBoardMember::where('id', '=', $member)->update(['ord' => $validated['member_ord'][$key]]);
             }
             DB::commit();
-            return redirect(route('admin.advisory-boards.edit', $item).'#member')->with('success', 'Промените бяха записани успешно');
+            $hash = AdvisoryTypeEnum::nameByValue($validated['type']);
+            return redirect(route('admin.advisory-boards.edit', $item).'#'.$hash)->with('success', 'Промените бяха записани успешно');
         } catch (\Exception $e){
             DB::rollBack();
             Log::error('Update Adv board Members order: '.$e);

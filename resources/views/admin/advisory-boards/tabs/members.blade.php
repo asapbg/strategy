@@ -17,6 +17,7 @@
             <form class="col-12" method="post" action="{{ route('admin.advisory-boards.members.order') }}">
                 @csrf
                 <input type="hidden" name="id" value="{{ $item->id }}"/>
+                <input type="hidden" name="type" value="{{ $type }}"/>
                 <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                     <thead>
                     <tr>
@@ -34,7 +35,7 @@
                         @foreach($item->members as $key => $member)
                             @if($member->advisory_type_id == ((int)$type ?? 0))
                                 <tr>
-                                    <td style="max-width: 30px;">
+                                    <td style="width: 70px;">
                                         <input type="hidden" name="member[]" value="{{ $member->id }}">
                                         <div class="form-group">
                                             <input type="number" step="1" class="form-control form-control-sm @error('member_ord.'.$inx) is-invalid @enderror"

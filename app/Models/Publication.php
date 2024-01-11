@@ -7,6 +7,7 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -39,6 +40,22 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     public function scopeActivePublic($query){
         $query->where('publication.active', true)
             ->where('publication.published_at', '<=', Carbon::now()->format('Y-m-d'));
+    }
+
+    public function scopeAdvBoard($query){
+        $query->where('publication.type', '=', PublicationTypesEnum::TYPE_ADVISORY_BOARD);
+    }
+
+    /**
+     * Content
+     */
+    protected function advCategory(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->type == PublicationTypesEnum::TYPE_ADVISORY_BOARD->value ?
+                ($this->advisory_boards_id ? $this->advBoard->name : trans_choice('custom.advisory_boards', 1))
+                : '',
+        );
     }
 
     public static function translationFieldsProperties(): array
@@ -83,12 +100,20 @@ class Publication extends ModelActivityExtend implements TranslatableContract
         };
     }
 
+//    /**
+//     * @return BelongsTo
+//     */
+//    public function category(): BelongsTo
+//    {
+//        return $this->belongsTo(PublicationCategory::class, 'publication_category_id');
+//    }
+
     /**
-     * @return BelongsTo
+     * @return HasOne
      */
-    public function category(): BelongsTo
+    public function category(): HasOne
     {
-        return $this->belongsTo($this->getRelatedClass(), 'publication_category_id');
+        return $this->hasOne(PublicationCategory::class, 'id', 'publication_category_id');
     }
 
     /**

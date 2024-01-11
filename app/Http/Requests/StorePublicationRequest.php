@@ -32,7 +32,6 @@ class StorePublicationRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('publication', 'slug')->ignore((int)request()->input('id'))],
             'type' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
-            'source' => ['nullable', 'string'],
             'publication_category_id' => ['nullable', 'numeric'],
             'published_at' => ['required'],
             'active' => ['required', 'numeric', 'in:0,1'],

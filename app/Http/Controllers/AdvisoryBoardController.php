@@ -95,9 +95,7 @@ class AdvisoryBoardController extends Controller
             ->joinTranslation(AdvisoryBoard::class)
             ->with(['policyArea', 'translations', 'moderators'])
             ->when($keywords, function ($query) use ($keywords) {
-                $query->whereHas('translations', function ($query) use ($keywords) {
-                    $query->where('name', 'ilike', '%' . $keywords . '%');
-                });
+                $query->where('name', 'ilike', '%' . $keywords . '%');
             })
             ->when($filter_field_of_action, function ($query) use ($filter_field_of_action) {
                 $query->whereIn('policy_area_id', array_map('intval', $filter_field_of_action));
@@ -385,11 +383,11 @@ class AdvisoryBoardController extends Controller
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
-            //->where('publication.type', PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
-            ->where(function ($q){
-                $q->whereNotNull('publication.advisory_boards_id')
-                    ->orWhere('is_adv_board_user', 1);
-            })
+            ->where('publication.type', PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+//            ->where(function ($q){
+//                $q->whereNotNull('publication.advisory_boards_id')
+//                    ->orWhere('is_adv_board_user', 1);
+//            })
             ->SortedBy($sort,$sortOrd)
             ->GroupBy('publication.id', 'publication_translations.id', 'field_of_action_translations.id')
             ->paginate($paginate);

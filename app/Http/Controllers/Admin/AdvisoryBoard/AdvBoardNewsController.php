@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Enums\PublicationTypesEnum;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StorePublicationRequest;
-use App\Models\AdvisoryBoard;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
@@ -19,13 +20,13 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
-class PublicationController extends AdminController
+class AdvBoardNewsController extends AdminController
 {
-    const LIST_ROUTE = 'admin.publications.index';
-    const EDIT_ROUTE = 'admin.publications.edit';
-    const STORE_ROUTE = 'admin.publications.store';
-    const LIST_VIEW = 'admin.publications.index';
-    const EDIT_VIEW = 'admin.publications.edit';
+    const LIST_ROUTE = 'admin.advisory-boards.news.index';
+    const EDIT_ROUTE = 'admin.advisory-boards.news.edit';
+    const STORE_ROUTE = 'admin.advisory-boards.news.store';
+    const LIST_VIEW = 'admin.advisory-boards.news.index';
+    const EDIT_VIEW = 'admin.advisory-boards.news.edit';
     const MODEL_NAME = 'custom.publications';
 
     /**
@@ -45,17 +46,13 @@ class PublicationController extends AdminController
         }
 
         $items = Publication::with(['translation', 'mainImg'])
-            ->where('type', $type)
+            ->AdvBoard()
             ->FilterBy($requestFilter)
             ->orderBy('id', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
         $editRouteName = static::EDIT_ROUTE;
         $listRouteName = static::LIST_ROUTE;
-
-        if($type == PublicationTypesEnum::TYPE_NEWS->value) {
-            $this->setTitleSingular(trans_choice('custom.news', 2));
-        }
         return $this->view(static::LIST_VIEW,
             compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'type')
         );
@@ -66,32 +63,21 @@ class PublicationController extends AdminController
      * @param Publication $item
      * @return View
      */
-    public function edit(Request $request, $type = 0, $item = null)
+    public function edit(Request $request, $item = null)
     {
         $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'translations']);
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Publication::class) ) {
+        if( ($item && $request->user()->cannot('updateAdvBoard', $item)) || $request->user()->cannot('createAdvBoard', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-//        $type = $request->route('type') ?? $request->offsetGet('type');
+
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
-        $publicationCategories = PublicationCategory::optionsList(true);
-//        $fieldOfActionCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
-
-//        if (auth()->user()->hasExactRoles([CustomRole::MODERATOR_ADVISORY_BOARD])) {
-//            $fieldOfActionCategories = $fieldOfActionCategories->whereIn('id', auth()->user()->getModerateFieldOfActionIds());
-//            $fieldOfActionCategories = $fieldOfActionCategories->values();
-//        }
-
         return $this->view(static::EDIT_VIEW, compact(
             'item',
-            'type',
             'storeRouteName',
             'listRouteName',
             'translatableFields',
-            'publicationCategories',
-//            'fieldOfActionCategories',
         ));
     }
 
@@ -113,8 +99,8 @@ class PublicationController extends AdminController
             }
         }
 
-        if( ($item->id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', Publication::class) ) {
+        if( ($item->id && $request->user()->cannot('updateAdvBoard', $item))
+            || $request->user()->cannot('createAdvBoard', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -129,8 +115,13 @@ class PublicationController extends AdminController
 
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+            $item->advisory_boards_id = $validated['adv_board'] ?? null;
             if(!$id){
                 $item->users_id = auth()->user()->id;
+                //cache for search adv board publication by users role
+                if($request->user()->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
+                    $item->is_adv_board_user = 1;
+                }
             }
             $item->save();
 
@@ -169,7 +160,7 @@ class PublicationController extends AdminController
                 $route = route(static::LIST_ROUTE).'?type='.$validated['type'];
             }
             return redirect($route)
-                ->with('success', __('custom.the_record')." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+                ->with('success', trans_choice('custom.news', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -186,13 +177,6 @@ class PublicationController extends AdminController
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
                 'col' => 'col-md-3'
-            ),
-            'category' => array(
-                'type' => 'select',
-                'placeholder' => trans_choice('custom.categories', 1),
-                'value' => $request->input('category'),
-                'options' => PublicationCategory::optionsList(true, $type)->pluck('name','id')->toArray(),
-                'col' => 'col-md-4'
             )
         );
     }
@@ -205,13 +189,13 @@ class PublicationController extends AdminController
      */
     public function destroy(Request $request, Publication $item)
     {
-        if($request->user()->cannot('delete', $item)) {
+        if($request->user()->cannot('deleteAdvBoard', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         try {
             $item->delete();
             return redirect(url()->previous())
-                ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+                ->with('success', __('custom.news')." ".__('messages.deleted_successfully_m'));
         }
         catch (\Exception $e) {
             Log::error($e);

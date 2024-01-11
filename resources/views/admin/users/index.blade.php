@@ -120,7 +120,9 @@
                                     <td>{!! implode('<br>',$user->roles->pluck('display_name')->toArray()) !!}</td>
                                     <td>@if($user->institution){{ $user->institution->name }}@else{{ '---' }}@endif</td>
                                     <td>
-                                        @includeIf('partials.toggle-boolean', ['object' => $user, 'model' => 'User'])
+                                        @if(!$user->hasRole([\App\Models\CustomRole::SUPER_USER_ROLE]))
+                                            @includeIf('partials.toggle-boolean', ['object' => $user, 'model' => 'User'])
+                                        @endif
                                     </td>
                                     <td class="text-center">
                                         <a href="{{route('admin.users.edit',$user->id)}}"
@@ -129,18 +131,18 @@
                                            title="{{__('custom.edit')}}">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        @if(true)
-                                        <a href="javascript:;"
-                                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
-                                           data-target="#modal-delete-resource"
-                                           data-resource-id="{{ $user->id }}"
-                                           data-resource-name="{{ "$user->first_name $user->last_name" }}"
-                                           data-resource-delete-url="{{route('admin.users.delete',$user->id)}}"
-                                           data-toggle="tooltip"
-                                           title="{{__('custom.deletion')}}">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                        @endif
+                                        @can('delete', $user)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $user->id }}"
+                                               data-resource-name="{{ "$user->first_name $user->last_name" }}"
+                                               data-resource-delete-url="{{route('admin.users.delete',$user->id)}}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.deletion')}}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
