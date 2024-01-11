@@ -129,7 +129,7 @@
                                                 {{ __('validation.attributes.published_at') }}
                                             </label>
                                             <div class="col-12">
-                                                <input type="text" name="published_at" value="{{ old('published_at', $item->id ? $item->published_at : '') }}" class="datepicker form-control form-control-sm @error('published_at'){{ 'is-invalid' }}@enderror">
+                                                <input type="text" name="published_at" value="{{ old('published_at', $item->id ? displayDate($item->published_at) : '') }}" class="datepicker form-control form-control-sm @error('published_at'){{ 'is-invalid' }}@enderror">
                                                 @error('published_at')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                                 @enderror
