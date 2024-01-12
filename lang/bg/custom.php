@@ -737,4 +737,6 @@ return [
     'inactive_adv_board' => 'Неактивни съвети',
     'the_record' => 'Записът',
     'adv_board_news' => 'Новини',
+    'adv_board_pages' => 'Страница|Страници',
+    'page' => 'Страница|Страници',
 ];

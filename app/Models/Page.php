@@ -15,6 +15,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const TRANSLATABLE_FIELDS = ['name', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = 'custom.page';
     const ADV_BOARD_DOCUMENTS = 'adv_board_docs';
+    const ADV_BOARD_INFO = 'advisory-board-info';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
@@ -29,6 +30,11 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     public function scopeIsActive($query)
     {
         $query->where('page.active', 1);
+    }
+
+    public function scopeBySysName($query, $name)
+    {
+        $query->where('page.system_name', '=', $name);
     }
 
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany

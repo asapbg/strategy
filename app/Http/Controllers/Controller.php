@@ -293,13 +293,16 @@ class Controller extends BaseController
      */
     public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
         try {
+            $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
             $validated = $request->all();
 
             // Upload File
             $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_AB_PAGE => File::PAGE_UPLOAD_DIR,
                 File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
                 File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
                 File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
+
                 default => '',
             };
 
@@ -325,7 +328,7 @@ class Controller extends BaseController
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new File([
                     'id_object' => $objectId,
-                    'code_object' => $typeObject,
+                    'code_object' => $typeObjectToSave,
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
@@ -346,6 +349,7 @@ class Controller extends BaseController
             $route = match ((int)$typeObject) {
                 File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
                 File::CODE_OBJ_PAGE => route('admin.page.edit', ['item' => $objectId]) . '#ct-files',
+                File::CODE_OBJ_AB_PAGE => url()->previous().'#ct-files',
                 default => '',
             };
             if ($redirect) {

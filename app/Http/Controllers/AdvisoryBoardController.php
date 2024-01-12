@@ -416,13 +416,17 @@ class AdvisoryBoardController extends Controller
 
     public function info()
     {
-        $content = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS.'_'.app()->getLocale())->first();
-        if(!$content){
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::ADV_BOARD_INFO)
+            ->first();
+        if(!$page){
             abort(404);
         }
-        $content = $content->value;
-        $pageTitle = __('site.base_info');
-        return $this->view('site.advisory-boards.base_info', compact('content', 'pageTitle'));
+        $pageTitle = $page->name;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
     }
 
     private function sorters()

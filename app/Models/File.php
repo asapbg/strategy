@@ -33,6 +33,8 @@ class File extends ModelActivityExtend
     const CODE_AB = 7;
     const CODE_OBJ_AB_MODERATOR = 8;
 
+    const CODE_OBJ_AB_PAGE = 9;
+
     const MAX_UPLOAD_FILE_SIZE = 30720;
 
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;

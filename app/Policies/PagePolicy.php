@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\CustomRole;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -53,7 +54,11 @@ class PagePolicy
      */
     public function update(User $user, Page $page)
     {
-        return $user->canAny(['manage.*', 'manage.page']);
+        return $user->canAny(['manage.*', 'manage.page'])
+            || (
+                in_array($page->system_name, [Page::ADV_BOARD_DOCUMENTS, Page::ADV_BOARD_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARDS])
+            ) ;
     }
 
     /**

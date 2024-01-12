@@ -54,7 +54,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item @if(strstr(url()->current(), '/page')) menu-open @endif">
+                    <li class="nav-item @if(strstr(url()->current(), 'admin/page')) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-book"></i>
                             <p>{{ trans_choice('custom.static_pages', 2) }}<i class="fas fa-angle-left right"></i></p>
@@ -282,6 +282,22 @@
                                    class="nav-link @if(str_contains(url()->current(), 'advisory-boards/news')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.news', 2) }}</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.advisory-boards.page.info') }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/information')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.general_info') }}</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.advisory-boards.page.documents') }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/documents')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.documents', 2) }}</p>
                                 </a>
                             </li>
 

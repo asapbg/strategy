@@ -29,6 +29,15 @@ class PageSeeder extends Seeder
                 'content_en' => '',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'advisory-board-info',
+                'system_name' => Page::ADV_BOARD_INFO,
+                'name_bg' => 'Обща информация',
+                'name_en' => 'Information',
+                'content_bg' => 'Съдържание в Обща информация',
+                'content_en' => 'Content in Information',
+                'is_system' => 1
+            ],
         ];
 
         foreach ($data as $page) {
