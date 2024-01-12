@@ -123,7 +123,7 @@ class AdvBoardNewsController extends AdminController
             if(!$id){
                 $item->users_id = auth()->user()->id;
                 //cache for search adv board publication by users role
-                if($request->user()->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
+                if($request->user()->hasAnyRole([CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
                     $item->is_adv_board_user = 1;
                 }
             }

@@ -110,7 +110,7 @@ class PublicationPolicy
 
     public function viewAnyAdvBoard(User $user)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS]);
+        return $user->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARD, CustomRole::MODERATOR_ADVISORY_BOARDS]);
     }
 
     /**
@@ -122,7 +122,7 @@ class PublicationPolicy
     public function createAdvBoard(User $user)
     {
         $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD];
-        return $user->hasRole($roles);
+        return $user->hasAnyRole($roles);
     }
 
     /**
@@ -136,11 +136,11 @@ class PublicationPolicy
     {
         $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS];
 
-        return $user->hasRole($roles)
+        return $user->hasAnyRole($roles)
             || (
             $publication->type = PublicationTypesEnum::TYPE_ADVISORY_BOARD
-                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD])
-                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('id')->toArray() : [])
+                && $user->hasAnyRole([CustomRole::MODERATOR_ADVISORY_BOARD])
+                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('advisory_board_id')->toArray() : [])
             );
     }
 
@@ -155,11 +155,11 @@ class PublicationPolicy
     {
         $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS];
 
-        return $user->hasRole($roles)
+        return $user->hasAnyRole($roles)
             || (
             $publication->type = PublicationTypesEnum::TYPE_ADVISORY_BOARD
-                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD])
-                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('id')->toArray() : [])
+                && $user->hasAnyRole([CustomRole::MODERATOR_ADVISORY_BOARD])
+                && in_array($publication->advisory_boards_id, $user->advisoryBoards ? $user->advisoryBoards->pluck('advisory_board_id')->toArray() : [])
             );
     }
 

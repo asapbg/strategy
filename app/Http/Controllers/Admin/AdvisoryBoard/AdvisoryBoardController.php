@@ -50,10 +50,10 @@ class AdvisoryBoardController extends AdminController
 
         $items = AdvisoryBoard::withTrashed();
 
-        if (!auth()->user()->hasRole(CustomRole::ADMIN_USER_ROLE) && !auth()->user()->hasRole(CustomRole::MODERATOR_ADVISORY_BOARDS)) {
-            $items = $items->moderatorListing();
+        $limitItems = false;
+        if (!(auth()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE,CustomRole::MODERATOR_ADVISORY_BOARDS]))) {
+            $limitItems = true;
         }
-
         $items = $items->with(['policyArea', 'translations'])
             ->where(function ($query) use ($keywords) {
                 $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
@@ -67,6 +67,11 @@ class AdvisoryBoardController extends AdminController
             })
             ->when($status != '', function ($query) use ($status) {
                 $query->where('active', $status == '0' ? 'false' : 'true');
+            })
+            ->when($limitItems, function ($query) use ($status) {
+                $query->whereHas('moderators', function ($query) {
+                    $query->where('user_id', '=', auth()->user()->id);
+                });
             })
             ->orderBy('id', 'desc')
             ->paginate(10);

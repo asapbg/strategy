@@ -93,7 +93,7 @@ class AdvisoryBoardPolicy
      */
     public function delete(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory-boards']);
+        return $this->generalCheckAndModerator($user, $advisoryBoard);
     }
 
     /**
@@ -106,7 +106,7 @@ class AdvisoryBoardPolicy
      */
     public function restore(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory-boards']);
+        return $this->generalCheckAndModerator($user, $advisoryBoard);
     }
 
     /**

@@ -45,7 +45,7 @@ class AdvisoryBoardMemberPolicy
      */
     public function create(User $user): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
     }
 
     /**
@@ -58,7 +58,7 @@ class AdvisoryBoardMemberPolicy
      */
     public function update(User $user, AdvisoryBoardMember $member): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
     }
 
     /**
@@ -71,7 +71,7 @@ class AdvisoryBoardMemberPolicy
      */
     public function delete(User $user, AdvisoryBoardMember $member): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
     }
 
     /**
@@ -84,7 +84,7 @@ class AdvisoryBoardMemberPolicy
      */
     public function restore(User $user, AdvisoryBoardMember $advisoryBoardMember): bool
     {
-        return $user->canAny('manage.*', 'manage.advisory-boards');
+        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
     }
 
     /**
