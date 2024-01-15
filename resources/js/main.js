@@ -551,7 +551,9 @@ $(document).ready(function (e) {
                 ['para', ['ul', 'ol']],
                 ['view', ['fullscreen']],
                 ['insert', ['link']]
-            ]
+            ],
+            dialogsInBody: true,
+            lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
         });
     }
 

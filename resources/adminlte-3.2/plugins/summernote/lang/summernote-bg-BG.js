@@ -73,7 +73,8 @@ var __webpack_exports__ = {};
         edit: 'Промени',
         textToDisplay: 'Текст за показване',
         url: 'URL адрес',
-        openInNewWindow: 'Отвори в нов прозорец'
+        openInNewWindow: 'Отвори в нов прозорец',
+        useProtocol: 'Използвайте протокол по подразбиране' 
       },
       table: {
         table: 'Таблица',
