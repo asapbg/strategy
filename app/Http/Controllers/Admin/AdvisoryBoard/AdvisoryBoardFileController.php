@@ -101,7 +101,7 @@ class AdvisoryBoardFileController extends AdminController
 
 //                foreach (config('available_languages') as $lang) {
 //                    if (isset($validated['file_name_' . $lang['code']])) {
-                        $file->update(['custom_name' => $validated['file_name_' . $file->locale], 'description_bg' => $validated['file_description_' . $file->locale]]);
+                        $file->update(['custom_name' => $validated['file_name_' . $file->locale], 'description_'.$file->locale => $validated['file_description_' . $file->locale]]);
 //                    }
 //                }
 
