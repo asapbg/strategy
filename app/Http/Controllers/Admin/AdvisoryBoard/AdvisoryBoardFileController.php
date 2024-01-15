@@ -99,11 +99,11 @@ class AdvisoryBoardFileController extends AdminController
                     $file->state_newspaper = isset($validated['state_newspaper']) && !empty($validated['state_newspaper']) ? $validated['state_newspaper'] : null;
                 }
 
-                foreach (config('available_languages') as $lang) {
-                    if (isset($validated['file_name_' . $lang['code']])) {
-                        $file->update(['custom_name' => $validated['file_name_' . $lang['code']], 'description_bg' => $validated['file_description_' . $lang['code']]]);
-                    }
-                }
+//                foreach (config('available_languages') as $lang) {
+//                    if (isset($validated['file_name_' . $lang['code']])) {
+                        $file->update(['custom_name' => $validated['file_name_' . $file->locale], 'description_bg' => $validated['file_description_' . $file->locale]]);
+//                    }
+//                }
 
                 DB::commit();
                 return response()->json(['status' => 'success']);

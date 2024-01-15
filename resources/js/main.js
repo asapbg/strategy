@@ -646,7 +646,7 @@ $(document).ready(function (e) {
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
             todayHighlight: true,
-            orientation: "bottom left",
+            orientation: "auto",
             autoclose: true,
             weekStart: 1
         });

@@ -120,7 +120,7 @@
                                 </label>
 
                                 <input type="text" id="effective_at" name="effective_at"
-                                       class="datepicker form-control form-control-sm" value=""/>
+                                       data-dpp="top" class="datepicker form-control form-control-sm" value=""/>
 
                                 <div class="text-danger mt-1 error_effective_at"></div>
                             </div>
