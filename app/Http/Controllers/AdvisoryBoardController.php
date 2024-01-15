@@ -233,6 +233,8 @@ class AdvisoryBoardController extends Controller
         $this->setSlider($item->name, $item->headerImg);
         $items = AdvisoryBoardMeeting::with(['translations'])
             ->where('advisory_board_id', $item->id)
+            ->where('next_meeting', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
+            ->orderBy('next_meeting', 'desc')
             ->FilterBy($requestFilter)
             ->paginate($paginate);
 
@@ -258,7 +260,9 @@ class AdvisoryBoardController extends Controller
         $items = AdvisoryBoardFunction::with(['translations', 'siteFiles', 'siteFiles.versions'])
             ->where('advisory_board_id', $item->id)
             ->with(['translations', 'siteFiles'])
+            ->where('working_year', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
             ->FilterBy($requestFilter)
+            ->orderBy('working_year', 'desc')
             ->paginate($paginate);
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
 

@@ -20,36 +20,63 @@
 
 <div class="row">
     @if(isset($items) && $items->count() > 0)
-        <div class="row mb-4 ks-row">
-            <div class="col-md-12">
-                <div class="custom-card p-3">
-                    <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
-
-                    @foreach($items as $meeting)
-                        <p class="fw-bold mt-3">Дата: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
-                        <p>
-                            {!! $meeting->description !!}
-                        </p>
-                        @if($meeting->siteFiles->count())
-                            @foreach($meeting->siteFiles as $file)
-                                @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
-                            @endforeach
-                        @endif
-                        @if(!$loop->last)
-                            <hr>
-                        @endif
-                    @endforeach
+        @php($year = null)
+        @php($newYear = false)
+        @foreach($items as $meeting)
+            @php($newYear = ($loop->first || \Carbon\Carbon::parse($meeting->next_meeting)->format('Y') != $year) ? true : false)
+            @php($year = ($loop->first || \Carbon\Carbon::parse($meeting->next_meeting)->format('Y') != $year) ? \Carbon\Carbon::parse($meeting->next_meeting)->format('Y') : $year)
+            @if($newYear && !$loop->first)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            @endif
+
+            @if($newYear)
+                    <div class="row p-1">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card custom-card">
+                                <div class="card-header" id="heading{{ $year }}">
+                                    <h2 class="mb-0">
+                                        <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $year}}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $year }}">
+                                            <i class="me-1 bi bi-calendar fs-18"></i>  {{ __('custom.meetings_and_decisions') }} - {{ $year }} {{ __('custom.year_short') }}
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div id="collapse{{ $year }}" class="collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $year }}" data-parent="#accordionExample">
+                                    <div class="card-body">
+            @endif
+
+            <p class="fw-bold mt-3">{{ __('custom.date') }}: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
+            <p>
+                {!! $meeting->description !!}
+            </p>
+            @if($meeting->siteFiles->count())
+                @foreach($meeting->siteFiles as $file)
+                    @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
+                @endforeach
+            @endif
+            @if(!$loop->last)
+                <hr>
+            @endif
+
+            @if($loop->last)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            @endif
+        @endforeach
     @endif
 </div>
 
-<div class="row">
-    @if(isset($items) && $items->count() > 0)
-        {{ $items->onEachSide(0)->appends(request()->query())->links() }}
-    @endif
-</div>
+{{--<div class="row">--}}
+{{--    @if(isset($items) && $items->count() > 0)--}}
+{{--        {{ $items->onEachSide(0)->appends(request()->query())->links() }}--}}
+{{--    @endif--}}
+{{--</div>--}}
 
 @push('scripts')
     <script type="text/javascript">
