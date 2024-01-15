@@ -275,8 +275,9 @@ class AdvisoryBoardController extends AdminController
             $query->with(['files', 'translations']);
         }, 'meetings' => function ($query) {
             $query->when(request()->get('show_deleted_meetings', 0) == 1, function ($query) {
-                $query->withTrashed()->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
-            })->whereYear('next_meeting', '>=', now()->year);
+                $query->withTrashed()->where('next_meeting', '>=', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))->orderBy('next_meeting', 'desc')->paginate(AdvisoryBoardMeeting::PAGINATE);
+            })->where('next_meeting', '>=', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
+                ->orderBy('next_meeting', 'desc');
         }, 'customSections' => function ($query) {
             $query->with(['files' => function ($query) {
                 $query->when(request()->get('show_deleted_custom_files', 0) == 1, function ($query) {

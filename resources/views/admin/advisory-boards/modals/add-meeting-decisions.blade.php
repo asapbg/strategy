@@ -22,7 +22,7 @@
                                 <label class="col-sm-12 control-label" for="date_of_meeting">
                                     {{ __('validation.attributes.date_of_meeting') }}:
                                     <span class="required">*</span></label>
-                                <input type="text" data-provide="datepicker" class="form-control form-control-sm"
+                                <input type="text" class="form-control form-control-sm datepicker"
                                        value="" id="date_of_meeting" name="date_of_meeting">
                             </div>
 

@@ -56,7 +56,7 @@
                                             <div class="col-10">
                                                 <a data-toggle="collapse" href="#collapse{{$key}}"
                                                    aria-expanded="true">
-                                                    {{ __('validation.attributes.next_meeting') . ' ' . \Carbon\Carbon::parse($meeting->next_meeting)->format('d.m.Y') . __('custom.year_short') }}
+                                                    {{ trans_choice('custom.meetings', 1) . ' ' . \Carbon\Carbon::parse($meeting->next_meeting)->format('d.m.Y') . __('custom.year_short') }}
                                                 </a>
                                             </div>
 

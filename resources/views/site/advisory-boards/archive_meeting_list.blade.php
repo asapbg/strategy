@@ -52,6 +52,47 @@
             <p>
                 {!! $meeting->description !!}
             </p>
+
+             @if(isset($meeting->decisions) && $meeting->decisions->count() > 0)
+                @foreach($meeting->decisions as $information)
+                    <div class="col-12">
+                        <p>
+                            {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <p>
+                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <p>
+                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <p>
+                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <p>
+                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <p>
+                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
+                        </p>
+                    </div>
+                @endforeach
+            @endif
+
             @if($meeting->siteFiles->count())
                 @foreach($meeting->siteFiles as $file)
                     @includeIf('site.partial.file', ['file' => $file, 'debug' => true, 'no_second_active_status' => true])
