@@ -113,7 +113,8 @@ class AdvisoryBoardMemberController extends AdminController
      */
     public function destroy(DeleteAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
-        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#members';
+        $hash = AdvisoryTypeEnum::nameByValue($member->advisory_type_id);
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#'.$hash;
 
         try {
             $member->delete();
@@ -131,7 +132,8 @@ class AdvisoryBoardMemberController extends AdminController
      */
     public function restore(RestoreAdvisoryBoardMemberRequest $request, AdvisoryBoardMember $member)
     {
-        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#members';
+        $hash = AdvisoryTypeEnum::nameByValue($member->advisory_type_id);
+        $route = route('admin.advisory-boards.edit', $member->advisory_board_id) . '#'.$hash;
 
         try {
             $member->restore();
@@ -157,8 +159,11 @@ class AdvisoryBoardMemberController extends AdminController
 
         DB::beginTransaction();
         try {
+
             foreach ($validated['member'] as $key => $member) {
-                AdvisoryBoardMember::where('id', '=', $member)->update(['ord' => $validated['member_ord'][$key]]);
+                $itemMember = AdvisoryBoardMember::withTrashed()->find((int)$member);
+                $itemMember->ord = $validated['member_ord'][$key];
+                $itemMember->save();
             }
             DB::commit();
             $hash = AdvisoryTypeEnum::nameByValue($validated['type']);
