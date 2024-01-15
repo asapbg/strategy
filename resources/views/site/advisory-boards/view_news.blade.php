@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="consult-item-header-edit">
-                                            @can('delete', $nItem)
+                                            @can('deleteAdvBoard', $nItem)
                                                 <a href="javascript:;"
                                                    class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
                                                    data-target="#modal-delete-resource"
@@ -38,7 +38,7 @@
                                                    title="{{ __('custom.delete') }}"><span class="d-none"></span>
                                                 </a>
                                             @endcan
-                                            @can('update', $nItem)
+                                            @can('updateAdvBoard', $nItem)
                                                 <a href="{{ route('admin.advisory-boards.edit', ['type' => $nItem->type, 'item' => $nItem->id]) }}" target="_blank">
                                                     <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
                                                     </i>
@@ -50,7 +50,7 @@
                                 <p class="short-decription text-secondary">
                                     {!! strip_tags($item->short_content) ? strip_tags(Str::limit($nItem->short_content, 200)) : "" !!}
                                 </p>
-                                <a href="{{ route('library.details', [$nItem->type, $nItem->id]) }}" class="readmore stretched-link mt-1" target="_blank" title="{{ $nItem->title }}">{{ __('site.read_more') }} <i class="fas fa-long-arrow-right"></i></a>
+                                <a href="{{ route('advisory-boards.view.news.details', [$item, $nItem]) }}" class="readmore stretched-link mt-1" target="_blank" title="{{ $nItem->title }}">{{ __('site.read_more') }} <i class="fas fa-long-arrow-right"></i></a>
                             </div>
                         </div>
                     @endforeach

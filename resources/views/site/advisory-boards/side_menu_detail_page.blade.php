@@ -37,7 +37,7 @@
                                 </ul>
                             </ul>
                             <li class="mb-2">
-                                <a href="{{ route('advisory-boards.view.news', ['item' => $item]) }}" class="@if(request()->route()->getName() == 'advisory-boards.view.news')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                <a href="{{ route('advisory-boards.view.news', ['item' => $item]) }}" class="@if(in_array(request()->route()->getName(), ['advisory-boards.view.news', 'advisory-boards.view.news.details']) )) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
                                     {{ trans_choice('custom.news', 2) }}
                                 </a>
                             </li>

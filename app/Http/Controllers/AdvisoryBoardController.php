@@ -297,6 +297,15 @@ class AdvisoryBoardController extends Controller
         return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'customSections'));
     }
 
+    public function itemNewsDetails(Request $request, AdvisoryBoard $item, Publication $news){
+        $pageTitle = $news->title;
+        $this->setSeo($news->meta_title, $news->meta_description, $news->meta_keyword);
+        $publication = $news;
+        $this->setSlider($item->name, $item->headerImg);
+        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+        return $this->view('site.advisory-boards.view_news_details', compact('item', 'publication', 'pageTitle', 'customSections'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -397,6 +406,13 @@ class AdvisoryBoardController extends Controller
         }
 
         return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+    }
+
+    public function newsDetails(Request $request, Publication $item){
+        $pageTitle = $item->title;
+        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
+        $publication = $item;
+        return $this->view('site.advisory-boards.main_news_details', compact('publication', 'pageTitle'));
     }
 
     public function documents()
