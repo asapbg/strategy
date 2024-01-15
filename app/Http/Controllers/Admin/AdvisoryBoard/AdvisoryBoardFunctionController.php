@@ -59,7 +59,7 @@ class AdvisoryBoardFunctionController extends AdminController
     public function ajaxUpdate(UpdateAdvisoryBoardFunctionRequest $request, AdvisoryBoard $item)
     {
         $validated = $request->validated();
-
+        $this->authorize('update', $item);
         DB::beginTransaction();
         try {
             $working_program = AdvisoryBoardFunction::find($validated['function_id']);

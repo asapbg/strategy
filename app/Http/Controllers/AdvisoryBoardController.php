@@ -182,7 +182,10 @@ class AdvisoryBoardController extends Controller
                 $query->with(['translations', 'siteFiles']);
         }])->first();
 
-        $nextMeeting = AdvisoryBoardMeeting::where('next_meeting' ,'>', Carbon::now())->orderBy('next_meeting', 'asc')->get()->first();
+        $nextMeeting = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
+            ->where('next_meeting' ,'>', Carbon::now())
+            ->orderBy('next_meeting', 'asc')
+            ->get()->first();
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;

@@ -22,7 +22,8 @@ class UpdateAdvisoryBoardFunctionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoard::class);
+        return true;
+        //return $this->user()->can('create', AdvisoryBoard::class);
     }
 
     /**
