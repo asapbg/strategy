@@ -292,14 +292,15 @@
                                     <p>{{ __('custom.general_info') }}</p>
                                 </a>
                             </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('admin.advisory-boards.page.documents') }}"
-                                   class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/documents')) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.documents', 2) }}</p>
-                                </a>
-                            </li>
+                            @canany(['manage.*', 'manage.advisory-boards'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.advisory-boards.page.documents') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/documents')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.documents', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcan
 
                             <li class="nav-item">
                                 <a href="{{ route('admin.advisory-boards.archive.index') }}"
