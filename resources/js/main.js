@@ -951,6 +951,11 @@ $(document).ready(function (e) {
                             exclude: $(this).data('current'),
                             search: params.term
                         }
+                    }else if($(this).data('types2ajax') == 'adv_board') {
+                        var query = {
+                            byModerator: typeof $(this).data('bymoderator') != 'undefined' ? $(this).data('bymoderator') : false,
+                            search: params.term
+                        }
                     } else {
                         var query = {
                             search: params.term

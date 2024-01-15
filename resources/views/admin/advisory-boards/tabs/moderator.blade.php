@@ -190,7 +190,7 @@
                             @foreach($moderators as $moderator)
                                 <tr>
                                     <td>{{ $moderator->id }}</td>
-                                    <td>{{ $moderator->user->username }}</td>
+                                    <td>{{ $moderator->user->fullName() }}</td>
                                     <td>{{ $moderator->created_at }}</td>
                                     <td>
                                         @can('update', $item)

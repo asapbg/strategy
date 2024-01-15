@@ -244,6 +244,11 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public static function select2AjaxOptions($filters)
     {
+        $userAdvBoards = request()->user()->hasAnyRole(
+            [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS]) ?
+            null
+            : (request()->user()->advisoryBoards->count() ? request()->user()->advisoryBoards->pluck('advisory_board_id')->toArray() : [0]);
+
         $q = DB::table('advisory_boards')
             ->select(['advisory_boards.id', DB::raw('advisory_board_translations.name')])
             ->join('advisory_board_translations', function ($j){
@@ -255,7 +260,10 @@ class AdvisoryBoard extends ModelActivityExtend
             $q->where('advisory_board_translations.name', 'ilike', '%'.$filters['search'].'%');
         }
 
-        $q->whereNull('advisory_boards.deleted_at');
+        $q->whereNull('advisory_boards.deleted_at')
+            ->when($userAdvBoards, function ($q) use ($userAdvBoards){
+                $q->whereIn('advisory_boards.id', $userAdvBoards);
+            });
 
         return $q->get();
     }

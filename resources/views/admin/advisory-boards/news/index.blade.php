@@ -11,9 +11,11 @@
 
                     <div class="mb-3">
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PublicationController@index'])
-                        <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
-                        </a>
+                        @can('createAdvBoard', \App\Models\Publication::class)
+                            <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
+                            </a>
+                        @endcan
                     </div>
 
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">

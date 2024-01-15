@@ -48,9 +48,17 @@ class AdvBoardNewsController extends AdminController
             $requestFilter['active'] = 1;
         }
 
+        $userAdvBoards = $request->user()->hasAnyRole(
+            [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS]) ?
+            null
+            : ($request->user()->advisoryBoards->count() ? $request->user()->advisoryBoards->pluck('advisory_board_id')->toArray() : [0]);
+
         $items = Publication::with(['translation', 'mainImg'])
             ->AdvBoard()
             ->FilterBy($requestFilter)
+            ->when($userAdvBoards, function ($q) use ($userAdvBoards){
+                $q->whereIn('advisory_boards_id', $userAdvBoards);
+            })
             ->orderBy('id', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
@@ -69,7 +77,7 @@ class AdvBoardNewsController extends AdminController
     public function edit(Request $request, $item = null)
     {
         $item = $this->getRecord($item, ['mainImg', 'files', 'category', 'translations']);
-        if( ($item && $request->user()->cannot('updateAdvBoard', $item)) || $request->user()->cannot('createAdvBoard', Publication::class) ) {
+        if( ($item && $item->id && $request->user()->cannot('updateAdvBoard', $item)) || $request->user()->cannot('createAdvBoard', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 

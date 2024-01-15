@@ -74,7 +74,7 @@
                                                 @endphp
                                                 <select id="adv_board" name="adv_board"
                                                         class="form-control form-control-sm select2-autocomplete-ajax @error('adv_board'){{ 'is-invalid' }}@enderror"
-                                                        data-types2ajax="adv_board" data-urls2="{{ route('admin.select2.ajax', 'adv_board') }}"
+                                                        data-bymoderator="true" data-types2ajax="adv_board" data-urls2="{{ route('admin.select2.ajax', 'adv_board') }}"
                                                 >
                                                         @if($oldAdvBoard)
                                                             <option value="{{ $oldAdvBoard->id }}" selected >{{ $oldAdvBoard->name }}</option>

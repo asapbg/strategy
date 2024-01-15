@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\AdvisoryBoardCustom;
+use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\Publication;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,6 +38,10 @@ class StorePublicationRequest extends FormRequest
             'active' => ['required', 'numeric', 'in:0,1'],
             'adv_board' => ['nullable', 'numeric']
         ];
+
+        if(!request()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
+            $rules['adv_board'] = ['required', 'numeric'];
+        }
         foreach (config('available_languages') as $lang) {
             foreach (Publication::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
