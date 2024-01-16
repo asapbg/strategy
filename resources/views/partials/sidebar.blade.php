@@ -284,15 +284,15 @@
                                     <p>{{ trans_choice('custom.news', 2) }}</p>
                                 </a>
                             </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('admin.advisory-boards.page.info') }}"
-                                   class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/information')) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ __('custom.general_info') }}</p>
-                                </a>
-                            </li>
                             @canany(['manage.*', 'manage.advisory-boards'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.advisory-boards.page.info') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/base-information')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.base_information') }}</p>
+                                    </a>
+                                </li>
+
                                 <li class="nav-item">
                                     <a href="{{ route('admin.advisory-boards.page.documents') }}"
                                        class="nav-link @if(str_contains(url()->current(), 'advisory-boards/page/documents')) active @endif">

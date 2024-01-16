@@ -567,6 +567,7 @@ return [
     'keyword' => 'Ключова дума|Ключови думи',
     'edit_information' => 'Редактиране на документ',
     'information' => 'Информация',
+    'base_information' => 'Обща информация',
     'export' => 'Експорт',
     'rss_subscribe'      => 'RSS',
     'subscribe'      => 'Абониране',

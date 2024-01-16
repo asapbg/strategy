@@ -216,13 +216,12 @@ class CommonController extends Controller
         }
 
         $route = match ((int)$file->code_object) {
-//            File::CODE_OBJ_PUBLICATION => route('admin.publications.edit', Publication::find($file->id_object)) . '#ct-files',
-            File::CODE_OBJ_PUBLICATION => url()->previous().'#ct-files',
-            File::CODE_OBJ_PAGE => route('admin.page.edit', Page::find($file->id_object)) . '#ct-files',
-            default => '',
+//            File::CODE_OBJ_PUBLICATION => url()->previous().'#ct-files',
+//            File::CODE_OBJ_PAGE => url()->previous().'#ct-files',
+            default => url()->previous().'#ct-files',
         };
         $file->delete();
-        if(!File::where('path', '=', $file->path)->count()){
+        if(!File::where('id', '<>', $file->id)->where('path', '=', $file->path)->count()){
             if (Storage::disk($disk)->has($file->path)) {
                 Storage::disk($disk)->delete($file->path, $file->filename);
             }

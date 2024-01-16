@@ -455,7 +455,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Pages
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardPageController::class)->prefix('/advisory-boards/page')->group(function () {
-        Route::match(['get', 'put'], '/information', 'info')->name('advisory-boards.page.info');
+        Route::match(['get', 'put'], '/base-information', 'info')->name('advisory-boards.page.info');
         Route::match(['get', 'put'],'/documents', 'documents')->name('advisory-boards.page.documents');
     });
 
