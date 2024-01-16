@@ -130,7 +130,7 @@ class PublicationController extends AdminController
             if(isset($validated['published_at'])) {
                 $validated['published_at'] = databaseDate($validated['published_at']);
             }
-            
+
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             if(!$id){
@@ -149,7 +149,7 @@ class PublicationController extends AdminController
                     'code_object' => File::CODE_OBJ_PUBLICATION,
                     'filename' => $fileNameToStore,
                     'content_type' => $itemImg->getClientMimeType(),
-                    'path' => 'files'.DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'path' => File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
                     'sys_user' => $request->user()->id,
                 ]);
                 $file->save();
@@ -169,6 +169,8 @@ class PublicationController extends AdminController
 
             if(isset($validated['stay']) && $validated['stay']) {
                 $route = route(static::EDIT_ROUTE, ['type' => $validated['type'], 'item' => $item]);
+            } elseif(isset($validated['stay_in_files']) && $validated['stay_in_files']) {
+                $route = route(static::EDIT_ROUTE, ['type' => $validated['type'], 'item' => $item]).'#ct-files';
             } else{
                 $route = route(static::LIST_ROUTE).'?type='.$validated['type'];
             }

@@ -295,7 +295,6 @@ class Controller extends BaseController
         try {
             $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
             $validated = $request->all();
-
             // Upload File
             $pDir = match ((int)$typeObject) {
                 File::CODE_OBJ_AB_PAGE => File::PAGE_UPLOAD_DIR,

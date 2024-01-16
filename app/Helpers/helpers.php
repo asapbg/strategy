@@ -498,6 +498,11 @@ if (!function_exists('fileHtmlContent')) {
     function fileHtmlContent($file)
     {
         $content = '';
+
+        if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES)){
+            return $file->preview;
+        }
+
         switch ($file->content_type) {
             case 'application/pdf':
                 $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;

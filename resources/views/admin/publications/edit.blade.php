@@ -24,153 +24,153 @@
                     $storeRoute = route($storeRouteName, ['item' => $item]);
                 @endphp
                 <div class="card-body">
-                    <div class="tab-content" id="custom-tabsContent">
+                    <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                        <div class="tab-content" id="custom-tabsContent">
                             <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
-                                <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
-                                    @csrf
-                                    @if($item->id)
-                                        @method('PUT')
-                                        <input type="hidden" name="type" value="{{ $item->type ?? 0 }}">
-                                    @endif
-                                    <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
-                                    <div class="row mb-4">
-                                        <div class="col-12">
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="type">
-                                                        {{ __('validation.attributes.type') }}:
-                                                        @if($item->id)
-                                                            <span>
-                                                                {{ trans_choice('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type), 1) }}
-                                                            </span>
-                                                        @endif
-                                                    </label>
-                                                    <div class="d-inline">
-                                                        <select id="type" name="type" onchange="changePublicationType(this)" class="form-control select2 form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
-                                                            @foreach(optionsPublicationTypes() as $row)
-                                                                @if($row['value'] == ($type ?? 0))
-                                                                    <option value="{{ $row['value'] }}" @if($type == $row['value'] || ($item && $item->id && $item->type == $row['value']) || (old('type', 1) == $row['value'])) selected @endif>{{ $row['name'] }}</option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                        @error('type')
-                                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="publication_category_id">
-                                                        {{ trans_choice('custom.categories', 1) }}:
-                                                    </label>
-                                                    @php
-                                                        $category_id = old('publication_category_id') ?? $item->publication_category_id;
-                                                    @endphp
-                                                    <div class="d-inline">
-                                                        <select id="publication_category_id" name="publication_category_id"
-                                                                class="form-control select2 form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
-                                                        >
-                                                            @foreach($publicationCategories as $category)
-                                                                <option value="{{ $category->id }}" @if($category_id == $category->id) selected @endif>
-                                                                    {{ $category->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('publication_category_id')
-                                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        <div class="col-md-6 col-12 d-none">
+                                @csrf
+                                @if($item->id)
+                                    @method('PUT')
+                                    <input type="hidden" name="type" value="{{ $item->type ?? 0 }}">
+                                @endif
+                                <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="slug">
-                                                    {{ __('validation.attributes.slug') }}
+                                                <label class="control-label" for="type">
+                                                    {{ __('validation.attributes.type') }}:
+                                                    @if($item->id)
+                                                        <span>
+                                                            {{ trans_choice('custom.public_sections.types.'.\App\Enums\PublicationTypesEnum::keyByValue($item->type), 1) }}
+                                                        </span>
+                                                    @endif
                                                 </label>
-                                                <div class="col-12">
-                                                    <input name="slug" value="{{ old('slug', $item->id ? $item->slug : '') }}" class="form-control form-control-sm @error('slug'){{ 'is-invalid' }}@enderror">
-                                                    @error('slug')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12"></div>
-
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'title', 'required' => true])
-                                        </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'short_content', 'required' => false])
-                                        </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
-                                        </div>
-                                        <div class="col-12 mb-md-3"></div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'meta_title', 'required' => false])
-                                        </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
-                                        </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
-                                        </div>
-
-                                        <div class="col-md-3 col-12">
-                                            <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="published_at">
-                                                    {{ __('validation.attributes.published_at') }} <span class="required">*</span>
-                                                </label>
-                                                <div class="col-12">
-                                                    <input type="text" name="published_at" value="{{ old('published_at', $item->id ? $item->published_at : displayDate(date('Y-m-d'))) }}" class="datepicker form-control form-control-sm @error('published_at'){{ 'is-invalid' }}@enderror">
-                                                    @error('published_at')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2 col-12">
-                                            <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="active">
-                                                    {{ __('validation.attributes.status') }}
-                                                </label>
-                                                <div class="col-12">
-                                                    <select id="active" name="active"  class="form-control form-control-sm @error('active'){{ 'is-invalid' }}@enderror">
-                                                        @foreach(optionsStatuses() as $val => $name)
-                                                            <option value="{{ $val }}" @if(old('active', ($item->id ? $item->active : 1)) == $val) selected @endif>{{ $name }}</option>
+                                                <div class="d-inline">
+                                                    <select id="type" name="type" onchange="changePublicationType(this)" class="form-control select2 form-control-sm @error('type'){{ 'is-invalid' }}@enderror">
+                                                        @foreach(optionsPublicationTypes() as $row)
+                                                            @if($row['value'] == ($type ?? 0))
+                                                                <option value="{{ $row['value'] }}" @if($type == $row['value'] || ($item && $item->id && $item->type == $row['value']) || (old('type', 1) == $row['value'])) selected @endif>{{ $row['name'] }}</option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
-                                                    @error('active')
+                                                    @error('type')
                                                     <div class="text-danger mt-1">{{ $message }}</div>
                                                     @enderror
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12"></div>
+                                    </div>
 
-                                        <div class="col-md-6">
+                                    <div class="col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="active">
-                                                    {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                                                <label class="control-label" for="publication_category_id">
+                                                    {{ trans_choice('custom.categories', 1) }}:
                                                 </label>
-                                                @if($item->id && $item->mainImg)
-                                                    <img src="{{ asset($item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
-                                                @endif
-                                                <div class="col-12">
-                                                    <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">
-                                                    @error('file')
+                                                @php
+                                                    $category_id = old('publication_category_id') ?? $item->publication_category_id;
+                                                @endphp
+                                                <div class="d-inline">
+                                                    <select id="publication_category_id" name="publication_category_id"
+                                                            class="form-control select2 form-control-sm @error('category_id'){{ 'is-invalid' }}@enderror"
+                                                    >
+                                                        @foreach($publicationCategories as $category)
+                                                            <option value="{{ $category->id }}" @if($category_id == $category->id) selected @endif>
+                                                                {{ $category->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('publication_category_id')
                                                     <div class="text-danger mt-1">{{ $message }}</div>
                                                     @enderror
                                                 </div>
                                             </div>
                                         </div>
+
+                                    <div class="col-md-6 col-12 d-none">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="slug">
+                                                {{ __('validation.attributes.slug') }}
+                                            </label>
+                                            <div class="col-12">
+                                                <input name="slug" value="{{ old('slug', $item->id ? $item->slug : '') }}" class="form-control form-control-sm @error('slug'){{ 'is-invalid' }}@enderror">
+                                                @error('slug')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12"></div>
+
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'title', 'required' => true])
+                                    </div>
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'short_content', 'required' => false])
+                                    </div>
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
+                                    </div>
+                                    <div class="col-12 mb-md-3"></div>
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'meta_title', 'required' => false])
+                                    </div>
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
+                                    </div>
+                                    <div class="row mb-4">
+                                        @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
+                                    </div>
+
+                                    <div class="col-md-3 col-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="published_at">
+                                                {{ __('validation.attributes.published_at') }} <span class="required">*</span>
+                                            </label>
+                                            <div class="col-12">
+                                                <input type="text" name="published_at" value="{{ old('published_at', $item->id ? $item->published_at : displayDate(date('Y-m-d'))) }}" class="datepicker form-control form-control-sm @error('published_at'){{ 'is-invalid' }}@enderror">
+                                                @error('published_at')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="active">
+                                                {{ __('validation.attributes.status') }}
+                                            </label>
+                                            <div class="col-12">
+                                                <select id="active" name="active"  class="form-control form-control-sm @error('active'){{ 'is-invalid' }}@enderror">
+                                                    @foreach(optionsStatuses() as $val => $name)
+                                                        <option value="{{ $val }}" @if(old('active', ($item->id ? $item->active : 1)) == $val) selected @endif>{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('active')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12"></div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label" for="active">
+                                                {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                                            </label>
+                                            @if($item->id && $item->mainImg)
+                                                <img src="{{ asset($item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
+                                            @endif
+                                            <div class="col-12">
+                                                <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">
+                                                @error('file')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     </div>
                                 </div>
@@ -181,7 +181,6 @@
                                             <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                         </div>
                                     </div>
-                                </form>
                             </div>
                             @if($item->id)
                                 <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
@@ -218,17 +217,23 @@
                                         <table class="table table-sm table-hover table-bordered mt-4">
                                             <tbody>
                                             <tr>
-                                                <th>Преглед</th>
+                                                <th>Изображение</th>
                                                 <th>Име</th>
                                                 <th></th>
                                             </tr>
                                             @foreach($item->files as $f)
                                                 <tr>
                                                     @if(in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
-                                                        @continue
                                                         <td>{!! $f->preview !!}</td>
-                                                        <td>{{ $f->description }} @if($f->id == $item->file_id)({{ __('validation.attributes.main_img') }})@endif</td>
+                                                        <td>{!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                            - {{ __('custom.'.$f->locale) }}
+                                                            | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }} @if($f->id == $item->file_id)({{ __('validation.attributes.main_img') }})@endif</td>
                                                         <td>
+                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
+                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                            >
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
                                                             <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
                                                                 <i class="fas fa-download me-1" role="button"
                                                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
@@ -240,18 +245,27 @@
                                                         </td>
                                                     @else
                                                         <td>
+                                                            <i class="fas fa-minus text-danger"></i>
+                                                        </td>
+                                                        <td>
                                                             {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
-                                                            - {{ __('custom.'.$f->locale) }} | {{ __('custom.version_short').' '.$f->version }}
+                                                            - {{ __('custom.'.$f->locale) }}
                                                             | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
                                                         </td>
-                                                        <td>{{ $f->description }}</td>
                                                         <td>
-
-                                                            <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $f->id }}"
+                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
                                                                     data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
                                                             >
-                                                                {{ __('custom.preview') }}
+                                                                <i class="fas fa-eye"></i>
                                                             </button>
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-download me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-trash me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            </a>
                                                         </td>
                                                     @endif
                                                 </tr>
@@ -261,13 +275,15 @@
                                     @endif
                                     <div class="form-group row">
                                         <div class="col-md-6 col-md-offset-3">
+                                            <button type="submit" name="save_files" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
+                                            <button type="submit" name="stay_in_files" class="btn btn-success" value="1">{{ __('custom.save_and_stay') }}</button>
                                             <a href="{{ route($listRouteName, ['type' => $type]) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                         </div>
                                     </div>
                                 </div>
                             @endif
                     </div>
-
+                    </form>
                 </div>
             </div>
         </div>

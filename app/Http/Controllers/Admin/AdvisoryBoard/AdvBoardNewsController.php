@@ -80,7 +80,6 @@ class AdvBoardNewsController extends AdminController
         if( ($item && $item->id && $request->user()->cannot('updateAdvBoard', $item)) || $request->user()->cannot('createAdvBoard', Publication::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-
         $storeRouteName = static::STORE_ROUTE;
         $listRouteName = static::LIST_ROUTE;
         $translatableFields = Publication::translationFieldsProperties();
@@ -139,7 +138,6 @@ class AdvBoardNewsController extends AdminController
                 }
             }
             $item->save();
-
             // Upload File
             if( $item && $itemImg ) {
                 $file_name = Str::limit($validated['slug'], 70);
@@ -151,7 +149,7 @@ class AdvBoardNewsController extends AdminController
                     'code_object' => File::CODE_OBJ_PUBLICATION,
                     'filename' => $fileNameToStore,
                     'content_type' => $itemImg->getClientMimeType(),
-                    'path' => 'files'.DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'path' => File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
                     'sys_user' => $request->user()->id,
                 ]);
                 $file->save();
@@ -168,12 +166,15 @@ class AdvBoardNewsController extends AdminController
             $this->storeTranslateOrNew(Publication::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
 
-
             if(isset($validated['stay']) && $validated['stay']) {
                 $route = route(static::EDIT_ROUTE, ['type' => $validated['type'], 'item' => $item]);
+            } elseif(isset($validated['stay_in_files']) && $validated['stay_in_files']) {
+                $route = route(static::EDIT_ROUTE, ['type' => $validated['type'], 'item' => $item]).'#ct-files';
             } else{
                 $route = route(static::LIST_ROUTE).'?type='.$validated['type'];
             }
+
+
             return redirect($route)
                 ->with('success', trans_choice('custom.news', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
