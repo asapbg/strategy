@@ -3,7 +3,17 @@
 :root {
     --primary_btn: #21659e;
     --primary_icon: #21659e;
+    --primary_border: #21659e;
     --secondary_color: #6c757d;
+}
+
+.standard-list{
+    list-style: none;
+}
+
+.custom-left-border {
+    border-left: 3px solid var(--primary_border) !important;
+    padding-left: 10px !important;
 }
 
 .text-secondary {

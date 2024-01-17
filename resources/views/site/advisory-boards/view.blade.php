@@ -79,12 +79,19 @@
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.chairman_site') }}</h3>
                             <ul class="list-group list-group-flush">
-                                @foreach($item->chairmen as $chairman)
+                                @foreach($item->chairmen as $chairmen)
+                                    @php($dataChairmen = [])
+                                    @foreach(['member_name', 'member_job', 'institution'] as $n)
+                                        @if(!empty($chairmen->{$n}))
+                                            @php($dataChairmen[] = $n != 'institution' ? $chairmen->{$n} : $chairmen->institution->name)
+                                        @endif
+                                    @endforeach
                                     <li class="list-group-item">
-                                        @if(!empty($chairman->member_job))
-                                            {{ $chairman->member_name . ', ' .$chairman->member_job }}
-                                        @else
-                                            {{ $chairman->member_name }}
+                                        @if(sizeof($dataChairmen))
+                                            <span class="d-block mb-2">{{ implode(', ', $dataChairmen) }}</span>
+                                        @endif
+                                        @if(!empty($chairmen->member_notes))
+                                            {!! $chairmen->member_notes !!}
                                         @endif
                                     </li>
                                 @endforeach
@@ -102,13 +109,19 @@
                             <h3 class="mb-2 fs-4">{{ __('custom.vice_chairman_site') }}</h3>
 
                             <ul class="list-group list-group-flush">
-
-                                @foreach($item->viceChairmen as $chairman)
+                                @foreach($item->viceChairmen as $viceChairmen)
+                                    @php($dataViceChairmen = [])
+                                    @foreach(['member_name', 'member_job', 'institution'] as $n)
+                                        @if(!empty($viceChairmen->{$n}))
+                                            @php($dataViceChairmen[] = $n != 'institution' ? $viceChairmen->{$n} : $viceChairmen->institution->name)
+                                        @endif
+                                    @endforeach
                                     <li class="list-group-item">
-                                        @if(!empty($chairman->member_job))
-                                            {{ $chairman->member_name . ', ' .$chairman->member_job }}
-                                        @else
-                                            {{ $chairman->member_name }}
+                                        @if(sizeof($dataViceChairmen))
+                                            <span class="d-block mb-2">{{ implode(', ', $dataViceChairmen) }}</span>
+                                        @endif
+                                        @if(!empty($viceChairmen->member_notes))
+                                            {!! $viceChairmen->member_notes !!}
                                         @endif
                                     </li>
                                 @endforeach
@@ -128,23 +141,20 @@
                                 @foreach($item->members as $member)
                                     @if($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::MEMBER->value)
                                         <li class="list-group-item">
-                                            @php
-                                                $name = '';
-
-                                                if (!empty($member->member_name)) {
-                                                    $name .= $member->member_name;
-                                                }
-
-                                                if (!empty($member->member_job)) {
-                                                    $name .= ', ' . $member->member_job;
-                                                }
-
-                                                if (!empty($member->institution)) {
-                                                    $name .= ', ' . '<a href="#" class="text-decoration-none">' . $member->institution->name . '</a>';
-                                                }
-                                            @endphp
-
-                                            {!! $name !!}
+                                            <span class="d-block mb-2">
+                                                @if(!empty($member->member_name))
+                                                    {{ $member->member_name }}
+                                                @endif
+                                                @if(!empty($member->member_job))
+                                                    {{ ', ' .$member->member_job }}
+                                                @endif
+                                                @if(!empty($member->institution))
+                                                    {{ ', ' .$member->institution->name }}
+                                                @endif
+                                            </span>
+                                            @if(!empty($member->member_notes))
+                                                {!! $member->member_notes !!}
+                                            @endif
                                         </li>
                                     @endif
                                 @endforeach
@@ -163,13 +173,18 @@
                             <ul class="list-group list-group-flush">
 
                                 @foreach($item->secretaryCouncil as $secretary)
+                                    @php($dataSecretary = [])
+                                    @foreach(['member_name', 'member_job', 'institution'] as $n)
+                                        @if(!empty($secretary->{$n}))
+                                            @php($dataSecretary[] = $n != 'institution' ? $secretary->{$n} : $secretary->institution->name)
+                                        @endif
+                                    @endforeach
                                     <li class="list-group-item">
-                                        @if(!empty($secretary->member_name) && !empty($secretary->job) && !empty($secretary->notes))
-                                            {{ $secretary->member_name . ', ' . $secretary->job . ', '}} {!! $secretary->notes !!}
-                                        @elseif(!empty($secretary->member_name) && !empty($secretary->job))
-                                            {{ $secretary->member_name . ', ' . $secretary->job }}
-                                        @else
-                                            {{ $secretary->member_name }}
+                                        @if(sizeof($dataSecretary))
+                                            <span class="d-block mb-2">{{ implode(', ', $dataSecretary) }}</span>
+                                        @endif
+                                        @if(!empty($secretary->member_notes))
+                                            {!! $secretary->member_notes !!}
                                         @endif
                                     </li>
                                 @endforeach
