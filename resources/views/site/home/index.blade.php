@@ -366,6 +366,7 @@
 
             <div class="row">
                 @foreach($publications as $publication)
+                    @php($isAdvBoardNews = $publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
                     <div class="col-lg-4 mb-4">
                         <div class="post-box">
                             <div class="post-img">
@@ -377,11 +378,11 @@
                             <h3 class="post-title">{{ $publication->translation->title }}</h3>
                             <div class="row mb-2">
                                 <div class="col-md-8">
-                                    <span class="blog-category">{{ $publication->category?->name }}</span>
+                                    <span class="blog-category">{{ $isAdvBoardNews ? $publication->advCategory : $publication->category?->name }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="consult-item-header-edit">
-                                        @can('delete', $publication)
+                                        @can(($isAdvBoardNews ? 'deleteAdvBoard' : 'delete'), $publication)
                                             <a href="javascript:;"
                                                data-target="#modal-delete-resource"
                                                data-resource-id="{{ $publication->id }}"
@@ -392,7 +393,7 @@
                                                 <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
                                             </a>
                                         @endcan
-                                        @can('update', $publication)
+                                        @can(($isAdvBoardNews ? 'updateAdvBoard' : 'update'), $publication)
                                             <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
                                                 <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
                                             </a>
@@ -404,9 +405,15 @@
                             <p class="short-decription text-secondary">
                                 {!! strip_tags($publication->translation?->short_content) ? strip_tags(Str::limit($publication->translation?->short_content, 200)) : "" !!}
                             </p>
-                            <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
-                                Прочетете още <i class="fas fa-long-arrow-right"></i>
-                            </a>
+                            @if($isAdvBoardNews)
+                                <a href="{{ $publication->advisory_boards_id ? route('advisory-boards.view.news.details', [$publication->advisory_boards_id, $publication]) : route('advisory-boards.news.details', $publication) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
+                                    Прочетете още <i class="fas fa-long-arrow-right"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
+                                    Прочетете още <i class="fas fa-long-arrow-right"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 @endforeach
