@@ -354,6 +354,18 @@
         }
 
         /**
+         * Clear all errors from previous ajax.
+         * By default it will clear all elements with class ajax-error
+         *
+         * @param className
+         */
+        function clearErrorMessages(className = 'ajax-error') {
+            document.querySelectorAll('.' + className).forEach(function(el) {
+                el.innerHTML = '';
+            });
+        }
+
+        /**
          * Display the name of the file next to the input element.
          *
          * @param input
@@ -372,6 +384,7 @@
         function submitAjax(element, url) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = element.closest('.modal-content').querySelector('form');
@@ -388,11 +401,19 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            form.querySelector(search_class).textContent = errors[i][1][0];
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');
-
                     // Handle error response
                     if (xhr.status === 422) {
                         const errors = xhr.responseJSON.errors;

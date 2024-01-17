@@ -10,7 +10,7 @@
 
     @php
         $current_type = ($type == App\Enums\PublicationTypesEnum::TYPE_NEWS->value) ? "news" : "publications";
-    @endphpж
+    @endphp
 
     <div class="col-lg-10 py-5 right-side-content">
         <div class="row">

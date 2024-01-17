@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AdvisoryBoardFunctionController extends AdminController
@@ -19,14 +21,20 @@ class AdvisoryBoardFunctionController extends AdminController
     /**
      * Store or update sections.
      *
-     * @param StoreAdvisoryBoardFunctionRequest $request
+     * @param Request $request
      * @param AdvisoryBoard                     $item
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardFunctionRequest $request, AdvisoryBoard $item): JsonResponse
+    public function ajaxStore(Request $request, AdvisoryBoard $item): JsonResponse
     {
-        $validated = $request->validated();
+        $req = new StoreAdvisoryBoardFunctionRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {

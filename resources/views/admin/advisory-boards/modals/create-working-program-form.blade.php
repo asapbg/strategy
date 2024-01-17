@@ -20,11 +20,11 @@
                                 <label class="col-sm-12 control-label" for="working_year">
                                     {{ __('validation.attributes.year') }}:
                                 </label>
-                                <input type="text" data-provide="datepicker" class="form-control form-control-sm datepicker-from-this-year"
+                                <input type="text" data-provide="datepicker" class="form-control form-control-sm datepicker-year"
                                        value="{{ old('working_year', date('Y')) }}" id="working_year" name="working_year" data-date-format="yyyy">
                             </div>
 
-                            <div class="text-danger mt-1 error_working_year"></div>
+                            <div class="ajax-error text-danger mt-1 error_working_year"></div>
                         </div>
                     </div>
 
@@ -42,7 +42,7 @@
                                           name="description_{{ $lang['code'] }}"
                                           id="description_{{ $lang['code'] }}"></textarea>
 
-                                <div class="text-danger mt-1 error_body_{{ $lang['code'] }}"></div>
+                                <div class="ajax-error text-danger mt-1 error_description_{{ $lang['code'] }}"></div>
                             </div>
                         @endforeach
                     </div>
@@ -60,16 +60,16 @@
         </div>
     </div>
 </div>
-@push('scripts')
-    <script type="text/javascript">
-        $(document).ready(function (){
-            let currYear = <?php echo date('Y');?>;
-            $('#working_year').on('change keyup input', function (){
-                let val = $(this).val();
-                if(val.length == 4 && parseInt(val) < parseInt(currYear)) {
-                    $(this).val(currYear);
-                }
-            });
-        });
-    </script>
-@endpush
+{{--@push('scripts')--}}
+{{--    <script type="text/javascript">--}}
+{{--        $(document).ready(function (){--}}
+{{--            let currYear = <?php echo date('Y');?>;--}}
+{{--            $('#working_year').on('change keyup input', function (){--}}
+{{--                let val = $(this).val();--}}
+{{--                if(val.length == 4 && parseInt(val) < parseInt(currYear)) {--}}
+{{--                    $(this).val(currYear);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
+{{--@endpush--}}

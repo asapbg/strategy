@@ -34,7 +34,7 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'working_year' => 'nullable|date_format:Y'
+            'working_year' => 'required|date_format:Y'
         ];
 
         foreach (config('available_languages') as $lang) {
