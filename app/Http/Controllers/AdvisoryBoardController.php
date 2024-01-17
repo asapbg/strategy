@@ -305,7 +305,7 @@ class AdvisoryBoardController extends Controller
     }
 
     public function itemNewsDetails(Request $request, AdvisoryBoard $item, Publication $news){
-        $pageTitle = $news->title;
+        $pageTitle = $item->name;
         $this->setSeo($news->meta_title, $news->meta_description, $news->meta_keyword);
         $publication = $news;
         $this->setSlider($item->name, $item->headerImg);
