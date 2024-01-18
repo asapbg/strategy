@@ -192,7 +192,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function authority(): BelongsTo
     {
-        return $this->belongsTo(AuthorityAdvisoryBoard::class);
+        return $this->belongsTo(AuthorityAdvisoryBoard::class)->withTrashed();
     }
 
     public function allMembers(): HasMany
@@ -203,7 +203,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function advisoryActType(): BelongsTo
     {
-        return $this->belongsTo(AdvisoryActType::class);
+        return $this->belongsTo(AdvisoryActType::class)->withTrashed();
     }
 
     public function advisoryChairmanType(): BelongsTo
@@ -213,7 +213,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function policyArea(): BelongsTo
     {
-        return $this->belongsTo(FieldOfAction::class);
+        return $this->belongsTo(FieldOfAction::class)->withTrashed();
     }
 
     /**
