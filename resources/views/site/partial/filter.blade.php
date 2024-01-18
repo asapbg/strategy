@@ -46,7 +46,6 @@
                             <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
-                                    <option value=""></option>
                                     {{-- select with groups--}}
                                     @if(isset($field['group']) && $field['group'])
                                     @foreach($field['options'] as $group_name => $group)
