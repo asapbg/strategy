@@ -299,7 +299,7 @@ class AdvisoryBoardController extends AdminController
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $secretariat = $item->secretariat;
         $authorities = AuthorityAdvisoryBoard::with('translations')->orderBy('id')->get();
-        $all_users = User::select(['id', 'username'])
+        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email'])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->whereNotIn('id', function ($query) {

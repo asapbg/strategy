@@ -129,7 +129,7 @@
             </div>
 
             <div class="row mt-3 justify-content-between align-items-center">
-                <div class="col-auto">
+                <div class="col-md-2">
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <h3>{{ trans_choice('custom.moderators', 2) }}</h3>
@@ -137,19 +137,19 @@
                     </div>
                 </div>
 
-                <div class="col-auto">
+                <div class="col-md-10">
                     <form method="POST" name="ADVISORY_BOARD_ADD_MODERATOR"
                           action="{{ route('admin.advisory-boards.moderator.store', ['item' => $item]) }}">
                         @csrf
 
                         <div class="row align-items-center">
-                            <div class="col-auto">
+                            <div class="col-md-5">
                                 <select name="user_id" class="select2 form-control form-control-sm">
                                     <option value="">{{ __('custom.username') }}</option>
 
                                     @if(isset($all_users) && $all_users->count() > 0)
                                         @foreach($all_users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->username }}</option>
+                                            <option value="{{ $user->id }}">{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }}({{ $user->email }})</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -162,7 +162,7 @@
                                 </button>
                             </div>
 
-                            <div class="col-auto">
+                            <div class="col-md-4">
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#modal-register-advisory-moderator">
                                     <i class="fa fa-plus mr-3"></i>
