@@ -15,6 +15,7 @@
                     @csrf
 
                     <input type="hidden" name="function_id" value=""/>
+                    <input type="hidden" name="adv_board_id" value="{{ $item->id }}"/>
 
                     <div class="row mb-2">
                         <div class="col-6">
@@ -26,7 +27,7 @@
                                        value="" id="working_year" name="working_year" data-date-format="yyyy">
                             </div>
 
-                            <div class="text-danger mt-1 error_working_year"></div>
+                            <div class="text-danger ajax-error mt-1 error_working_year"></div>
                         </div>
                     </div>
 
@@ -44,7 +45,7 @@
                                           name="description_{{ $lang['code'] }}"
                                           id="description_{{ $lang['code'] }}"></textarea>
 
-                                <div class="text-danger mt-1 error_body_{{ $lang['code'] }}"></div>
+                                <div class="text-danger ajax-error mt-1 error_description_{{ $lang['code'] }}"></div>
                             </div>
                         @endforeach
                     </div>

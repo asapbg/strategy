@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <form method="POST" name="WORKING_PROGRAM_FORM">
                     @csrf
-
+                    <input type="hidden" name="adv_board_id" value="{{ $item->id }}"/>
                     <div class="row mb-2">
                         <div class="col-6">
                             <div class="form-group">

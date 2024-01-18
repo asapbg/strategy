@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
+use App\Rules\UniqueYearWorkProgram;
 use App\Traits\FailedAuthorization;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -34,7 +35,8 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'working_year' => 'required|date_format:Y'
+            'adv_board_id' => 'required|integer|exists:advisory_boards,id',
+            'working_year' => ['required','date_format:Y', new UniqueYearWorkProgram(request()->input('adv_board_id'))]
         ];
 
         foreach (config('available_languages') as $lang) {

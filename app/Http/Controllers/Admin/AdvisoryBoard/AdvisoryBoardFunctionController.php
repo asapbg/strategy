@@ -64,9 +64,15 @@ class AdvisoryBoardFunctionController extends AdminController
         return response()->json($working_program);
     }
 
-    public function ajaxUpdate(UpdateAdvisoryBoardFunctionRequest $request, AdvisoryBoard $item)
+    public function ajaxUpdate(Request $request, AdvisoryBoard $item)
     {
-        $validated = $request->validated();
+        $req = new UpdateAdvisoryBoardFunctionRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+        $validated = $validator->validated();
+
         $this->authorize('update', $item);
         DB::beginTransaction();
         try {

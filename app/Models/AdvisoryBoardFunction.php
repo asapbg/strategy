@@ -81,7 +81,7 @@ class AdvisoryBoardFunction extends ModelActivityExtend
         return [
             'description' => [
                 'type' => 'string',
-                'rules' => ['required'],
+                'rules' => ['required', 'string'],
             ],
         ];
     }
