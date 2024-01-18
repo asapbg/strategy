@@ -319,8 +319,8 @@ class AdvisoryBoardController extends AdminController
         if ($archive_category == '2') {
             $archive = AdvisoryBoardFunction::with('files')
                 ->where('advisory_board_id', $item->id)
-                ->whereYear('working_year', '<', now()->year)
-                ->orderBy('created_at', 'desc')->paginate(10);
+                ->whereYear('working_year', '<', Carbon::now()->year)
+                ->orderBy('working_year', 'desc')->paginate(10);
         }
 
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;

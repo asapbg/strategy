@@ -491,7 +491,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/ajax-store',      'ajaxStore')    ->name('advisory-boards.file.store');
         Route::get('{file}/edit',       'ajaxEdit')     ->name('advisory-boards.file.edit');
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.file.update');
-        Route::post('{file}/delete',    'destroy')      ->name('advisory-boards.file.delete');
+        Route::post('{file}/delete/{tab?}',    'destroy')      ->name('advisory-boards.file.delete');
         Route::post('{file}/restore',   'restore')      ->name('advisory-boards.file.restore')->withTrashed();
     });
 

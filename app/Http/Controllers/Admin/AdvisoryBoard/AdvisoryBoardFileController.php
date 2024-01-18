@@ -145,15 +145,15 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @param AdvisoryBoard $item
      * @param File          $file
+     * @param string|null          $tab
      *
      * @return RedirectResponse
      */
-    public function destroy(AdvisoryBoard $item, File $file)
+    public function destroy(AdvisoryBoard $item, File $file, $tab = null)
     {
         $this->authorize('delete', [AdvisoryBoard::class, $item]);
 
-        $route = redirect()->back()->getTargetUrl() . $file->advisoryBoardTab;
-
+        $route = url()->previous() . (!empty($tab) ? '#'.$tab : $file->advisoryBoardTab);
         try {
             $file_name = $file->custom_name ?? $file->filename;
 
@@ -172,15 +172,16 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @param AdvisoryBoard $item
      * @param File          $file
+     * @param string|null $tab
      *
      * @return RedirectResponse
      */
-    public function restore(AdvisoryBoard $item, File $file)
+    public function restore(AdvisoryBoard $item, File $file, $tab = null)
     {
         $this->authorize('restore', [AdvisoryBoard::class, $item]);
 
-        $route = redirect()->back()->getTargetUrl() . $file->advisoryBoardTab;
-
+        //$route = redirect()->back()->getTargetUrl() . !empty($tab) ? '#'.$tab : $file->advisoryBoardTab;
+        $route = url()->previous() . (!empty($tab) ? '#'.$tab : $file->advisoryBoardTab);
         try {
             $file_name = $file->custom_name ?? $file->filename;
 

@@ -133,7 +133,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function advisoryFunctions(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardFunction::class);
+        return $this->hasMany(AdvisoryBoardFunction::class)->orderBy('working_year', 'desc');
     }
 
     public function workingProgram(): HasOne

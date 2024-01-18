@@ -85,7 +85,7 @@
                                            class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                                            data-target="#modal-delete-file"
                                            data-resource-id="{{ $file->id }}"
-                                           data-resource-delete-url="{{ route('admin.advisory-boards.file.delete', ['item' => $item, 'file' => $file]) }}"
+                                           data-resource-delete-url="{{ route('admin.advisory-boards.file.delete', isset($delete_tab) ? ['item' => $item, 'file' => $file, 'tab' => $delete_tab] : ['item' => $item, 'file' => $file]) }}"
                                            data-toggle="tooltip"
                                            title="{{__('custom.delete')}}">
                                             <i class="fa fa-trash"></i>
@@ -99,7 +99,7 @@
                                            class="btn btn-sm btn-success js-toggle-restore-resource-modal"
                                            data-target="#modal-restore-resource"
                                            data-resource-id="{{ $item->id }}"
-                                           data-resource-restore-url="{{ route('admin.advisory-boards.file.restore', ['item' => $item, 'file' => $file]) }}"
+                                           data-resource-restore-url="{{ route('admin.advisory-boards.file.restore', isset($delete_tab) ? ['item' => $item, 'file' => $file, 'tab' => $delete_tab] : ['item' => $item, 'file' => $file]) }}"
                                            data-toggle="tooltip"
                                            title="{{__('custom.restore')}}">
                                             <i class="fa fa-plus"></i>
