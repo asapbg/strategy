@@ -71,7 +71,7 @@
                                     @foreach($field['options'] as $option)
                                     <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
                                         in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
-                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']== old($key, $field['value'] ?? $field['default']))) selected @endif>{{ $option['name'] }}</option>
+                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']== old($key, ($option['value'] == '' ? $field['value'] : ($field['value'] ?? $field['default']))))) selected @endif>{{ $option['name'] }}</option>
                                     @endforeach
                                 @endif
                             </select>

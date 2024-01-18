@@ -45,22 +45,31 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->boardFilters($request);
-
+        if( !$request->ajax() ) {
+            $filter['status']['value'] = 1;
+            $requestFilter['status'] = 1;
+        }
         //Sorter
         $sorter = $this->boardSorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         $paginate = $requestFilter['paginate'] ?? AdvisoryBoard::PAGINATE;
 
-        if(!isset($requestFilter['status'])){
-            $requestFilter['status'] = 1;
-        }
+        $orderByName = !isset($requestFilter['status']) || $requestFilter['status'] == '';
+//        if(!isset($requestFilter['status'])){
+//            $requestFilter['status'] = 1;
+//        }
+
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
-
+        
         $pageTitle = $this->pageTitle;
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'translations', 'moderators'])
+            ->leftJoin('advisory_board_translations', function ($j){
+                $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
+                    ->where('advisory_board_translations.locale', '=', app()->getLocale());
+            })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
             ->leftJoin('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
@@ -83,6 +92,9 @@ class AdvisoryBoardController extends Controller
             })
             ->where('public', true)
             ->FilterBy($requestFilter)
+            ->when($orderByName, function ($query) {
+                return $query->orderBy('advisory_board_translations.name');
+            })
             ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
@@ -92,19 +104,6 @@ class AdvisoryBoardController extends Controller
         }
 
         return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection'));
-//        if ($is_search) {
-//            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards'));
-//        }
-
-//        return $this->view('site.advisory-boards.index', compact(
-//            'pageTitle',
-//            'field_of_actions',
-//            'authority_advisory_boards',
-//            'advisory_act_types',
-//            'advisory_chairman_types',
-//            'pageTopContent',
-//            'advisory_boards',
-//        ));
     }
 
     /**
