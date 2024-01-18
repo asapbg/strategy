@@ -7,9 +7,12 @@
 @endphp
 
 <div class="document-wrapper-ks mt-3">
-    <a href="{{ route('download.file', $file_up_to_date) }}" class="main-color text-decoration-none fs-18">
-        {!! fileIcon($file_up_to_date->content_type) !!}
-        {{ $file_up_to_date->name }}
+{{--    <a href="{{ route('download.file', $file_up_to_date) }}" class="main-color text-decoration-none fs-18">--}}
+{{--        {!! fileIcon($file_up_to_date->content_type) !!}--}}
+{{--        {{ $file_up_to_date->name }}--}}
+{{--    </a>--}}
+    <a class="main-color text-decoration-none preview-file-modal fs-18" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $file_up_to_date->id }}" data-url="{{ route('modal.file_preview', ['id' => $file_up_to_date->id]) }}">
+        {!! fileIcon($file_up_to_date->content_type) !!} {{ $file_up_to_date->name }}
     </a>
     @if(isset($file->description) && !empty($file->description))
         <div class="document-info-field">{!! $file->description !!}</div>
