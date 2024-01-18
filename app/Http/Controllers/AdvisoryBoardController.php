@@ -41,98 +41,70 @@ class AdvisoryBoardController extends Controller
      */
     public function index(Request $request)
     {
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        //Filter
+        $filter = $this->boardFilters($request);
+
+        //Sorter
+        $sorter = $this->boardSorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        $paginate = $requestFilter['paginate'] ?? AdvisoryBoard::PAGINATE;
+
+        if(!isset($requestFilter['status'])){
+            $requestFilter['status'] = 1;
+        }
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
         $pageTitle = $this->pageTitle;
-        $field_of_actions = FieldOfAction::advisoryBoard()->select('field_of_actions.*')
-            ->whereLocale(app()->getLocale())
-            ->joinTranslation(FieldOfAction::class)
-            ->with(['translation'])
-            ->orderBy('name')
-            ->get();
-        $authority_advisory_boards = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
-            ->whereLocale(app()->getLocale())
-            ->joinTranslation(AuthorityAdvisoryBoard::class)
-            ->with(['translation'])
-            ->orderBy('name')
-            ->get();
-        $advisory_act_types = AdvisoryActType::select('advisory_act_type.*')
-            ->whereLocale(app()->getLocale())
-            ->joinTranslation(AdvisoryActType::class)
-            ->with(['translation'])
-            ->orderBy('name')
-            ->get();
-        $advisory_chairman_types = AdvisoryChairmanType::select('advisory_chairman_type.*')
-            ->whereLocale(app()->getLocale())
-            ->joinTranslation(AdvisoryChairmanType::class)
-            ->with(['translation'])
-            ->orderBy('name')
-            ->get();
-//        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_ADVISORY_BOARDS . '_' . app()->getLocale())->first();
-        $pageTopContent = '';
-        $status = request()->offsetGet('status');
-
-        $is_search = $request->has('search');
-        $filter_field_of_action = $request->get('filter_field_of_action');
-        $filter_authority = $request->get('filter_authority');
-        $filter_act_of_creation = $request->get('filter_act_of_creation');
-
-        $filter_chairman_type = $request->get('filter_chairman_type');
-        $keywords = $request->get('keywords');
-        $npo= $request->get('npo');
-
-        $sort = ($request->offsetGet('sort'))
-            ? $request->offsetGet('sort')
-            : "DESC";
-        $order_by = ($request->offsetGet('order_by'))
-            ? $request->offsetGet('order_by')
-            : "name";
-        $sort_table = (in_array($order_by, AdvisoryBoard::TRANSLATABLE_FIELDS))
-            ? "advisory_board_translations"
-            : "advisory_boards";
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : 50;
-
-        $advisory_boards = AdvisoryBoard::select('advisory_boards.*')
-            ->whereLocale(app()->getLocale())
-            ->joinTranslation(AdvisoryBoard::class)
+        $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'translations', 'moderators'])
-            ->when($keywords, function ($query) use ($keywords) {
-                $query->where('name', 'ilike', '%' . $keywords . '%');
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
-            ->when($filter_field_of_action, function ($query) use ($filter_field_of_action) {
-                $query->whereIn('policy_area_id', array_map('intval', $filter_field_of_action));
+            ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
+            ->leftJoin('authority_advisory_board_translations', function ($j){
+                $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
+                    ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
             })
-            ->when($filter_authority, function ($query) use ($filter_authority) {
-                $query->whereIn('authority_id', array_map('intval', $filter_authority));
+            ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
+            ->leftJoin('advisory_act_type_translations', function ($j){
+                $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
+                    ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
             })
-            ->when($filter_act_of_creation, function ($query) use ($filter_act_of_creation) {
-                $query->whereIn('advisory_act_type_id', array_map('intval', $filter_act_of_creation));
-            })
-            ->when($filter_chairman_type, function ($query) use ($filter_chairman_type) {
-                $query->whereIn('advisory_chairman_type_id', array_map('intval', $filter_chairman_type));
-            })
-            ->when(!is_null($status), function ($query) use ($status) {
-                $query->where('active', (bool)$status);
-            })
-            ->when(!is_null($npo), function ($query) use ($npo) {
-                $query->where('has_npo_presence', (bool)$npo);
+            ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
+            ->leftJoin('advisory_chairman_type_translations', function ($j){
+                $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
+                    ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
             })
             ->where('public', true)
-            ->orderBy('active', 'desc')
-            ->orderBy("$sort_table.$order_by", $sort)
+            ->FilterBy($requestFilter)
+            ->orderBy('advisory_boards.active', 'desc')
+            ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
 
-        if ($is_search) {
-            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards'));
+        if( $request->ajax() ) {
+            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf'));
         }
 
-        return $this->view('site.advisory-boards.index', compact(
-            'pageTitle',
-            'field_of_actions',
-            'authority_advisory_boards',
-            'advisory_act_types',
-            'advisory_chairman_types',
-            'pageTopContent',
-            'advisory_boards',
-        ));
+        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection'));
+//        if ($is_search) {
+//            return $this->view('site.advisory-boards.ajax-results', compact('advisory_boards'));
+//        }
+
+//        return $this->view('site.advisory-boards.index', compact(
+//            'pageTitle',
+//            'field_of_actions',
+//            'authority_advisory_boards',
+//            'advisory_act_types',
+//            'advisory_chairman_types',
+//            'pageTopContent',
+//            'advisory_boards',
+//        ));
     }
 
     /**
@@ -516,6 +488,122 @@ class AdvisoryBoardController extends Controller
                 'label' => __('custom.filter_pagination'),
                 'value' => $request->input('paginate') ?? Publication::PAGINATE,
                 'col' => 'col-md-3'
+            ),
+        );
+    }
+
+    private function boardSorters()
+    {
+        return array(
+            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'authority' => ['class' => 'col-md-2', 'label' => __('custom.type_of_governing')],
+            'actOfCreation' => ['class' => 'col-md-2', 'label' => __('validation.attributes.act_of_creation')],
+            'chairmanType' => ['class' => 'col-md-2', 'label' => __('validation.attributes.advisory_chairman_type_id')],
+            'npo' => ['class' => 'col-md-2', 'label' => __('custom.npo')],
+        );
+    }
+
+    private function boardFilters($request)
+    {
+        $fields = FieldOfAction::select('field_of_actions.*')
+            ->with('translations')
+            ->joinTranslation(FieldOfAction::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('field_of_action_translations.name', 'asc')
+            ->get();
+
+        $authority = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
+            ->with(['translation'])
+            ->joinTranslation(AuthorityAdvisoryBoard::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('authority_advisory_board_translations.name', 'asc')
+            ->get();
+
+        $act_of_creation = AdvisoryActType::select('advisory_act_type.*')
+            ->with(['translation'])
+            ->joinTranslation(AdvisoryActType::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('advisory_act_type_translations.name', 'asc')
+            ->get();
+
+        $chairman_types = AdvisoryChairmanType::select('advisory_chairman_type.*')
+            ->with(['translation'])
+            ->joinTranslation(AdvisoryChairmanType::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('advisory_chairman_type_translations.name', 'asc')
+            ->get();
+
+        return array(
+            'keywords' => array(
+                'type' => 'text',
+                'label' => __('validation.attributes.name'),
+                'value' => $request->input('keywords'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($fields),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 1),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-6'
+            ),
+            'authoritys' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($authority),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('custom.type_of_governing'),
+                'value' => $request->input('authority'),
+                'col' => 'col-md-6'
+            ),
+            'actOfCreations' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($act_of_creation),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('validation.attributes.act_of_creation'),
+                'value' => $request->input('actOfCreation'),
+                'col' => 'col-md-6'
+            ),
+            'chairmanTypes' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($chairman_types),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.advisory_chairman_type', 1),
+                'value' => $request->input('chairmanTypes'),
+                'col' => 'col-md-6'
+            ),
+            'npo' => array(
+                'type' => 'select',
+                'options' => array(
+                    ['value' => 1, 'name' => __('custom.yes')],
+                    ['value' => 0, 'name' => __('custom.no')],
+                    ['value' => '', 'name' => __('custom.any')],
+                ),
+                'default' => '',
+                'label' => __('custom.presence_npo_representative'),
+                'value' => $request->input('npo'),
+                'col' => 'col-md-6'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'options' => optionsStatusesFilter(true, '', __('custom.any')),
+                'default' => 1,
+                'label' => __('custom.status'),
+                'value' => $request->input('status'),
+                'col' => 'col-md-6'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? AdvisoryBoard::PAGINATE,
+                'col' => 'col-md-s4'
             ),
         );
     }
