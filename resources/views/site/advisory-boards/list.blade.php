@@ -12,9 +12,49 @@
     </div>
     @include('site.partial.paginate_filter', ['ajaxContainer' => '#listContainer'])
 </div>
-
+<div class="row mb-2">
+    <div class="col-md-6 mt-2">
+        <div class="col-md-6 mb-2 text-start col-sm-12 d-flex align-items-center justify-content-start flex-direction-row">
+            <label for="groupBy" class="form-label fw-bold mb-0 me-3 no-wrap group-by-label">Групиране по:</label>
+            @php($fRequest = $rf ?? request()->all())
+            <select class="form-select w-100" id="groupByAjax" name="groupBy" data-container="#listContainer">
+                @foreach($groupOptions as $group)
+                    @php($fRequest['groupBy'] = $group['value'])
+                    <option value="{{ $group['value'] }}" data-url="{{ url()->current(). '?' . http_build_query($fRequest) }}" @if((request()->input('groupBy') ?? '') == $group['value']) selected @endif>{{ $group['name'] }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</div>
+@php($groupByField = request()->get('groupBy'))
+@if(!empty($groupByField))
+    @php($currentGroupValue = '')
+@endif
 @if($items->count())
     @foreach($items as $item)
+        @if(!empty($groupByField))
+            @if($groupByField == 'fieldOfAction')
+                @php($compareValue = $item->policyArea->name)
+            @elseif($groupByField == 'authority')
+                @php($compareValue = $item->authority->name)
+            @elseif($groupByField == 'chairmanType')
+                @php($compareValue = $item->advisoryChairmanType->name)
+            @elseif($groupByField == 'npo')
+                @php($compareValue = $item->has_npo_presence ? 'С представител на НПО в състава на съвета' : 'Без представител на НПО в състава на съвета')
+            @elseif($groupByField == 'actOfCreation')
+                @php($compareValue = $item->advisoryActType->name)
+            @endif
+
+            @if($currentGroupValue != $compareValue)
+                @php($currentGroupValue = $compareValue)
+                <div class="row @if($loop->first) mt-3 @else mt-5 @endif mb-2">
+                    <div class="col-md-12">
+                        <div class="custom-left-border fs-18 fw-bold">{{ $currentGroupValue }}</div>
+                        <hr class="my-2">
+                    </div>
+                </div>
+            @endif
+        @endif
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="consul-wrapper">

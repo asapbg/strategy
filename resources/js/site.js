@@ -254,6 +254,13 @@ function initInputs()
 }
 
 function ajaxList(domElement) {
+    $(document).on('change', domElement + ' #groupByAjax', function (){
+        $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
+            //$('.select2').select2(select2Options);
+            initInputs();
+            ajaxList($(this).data('container'));
+        });
+    });
     $(document).on('change', domElement + ' #list-paginate', function (){
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
             //$('.select2').select2(select2Options);
