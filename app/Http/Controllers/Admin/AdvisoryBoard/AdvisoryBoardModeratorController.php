@@ -10,6 +10,7 @@ use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryBoardModeratorInformation;
 use App\Models\CustomRole;
 use App\Models\User;
+use App\Notifications\AdvBoardAssignedModerator;
 use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
@@ -92,6 +93,8 @@ class AdvisoryBoardModeratorController extends AdminController
     {
         $validated = $request->validated();
 
+        $oldModerators = $item->moderators->pluck('user_id')->toArray();
+
         $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderator';
 
         DB::beginTransaction();
@@ -104,6 +107,10 @@ class AdvisoryBoardModeratorController extends AdminController
             $moderator->user->assignRole(CustomRole::MODERATOR_ADVISORY_BOARD);
 
             DB::commit();
+
+            if(!in_array($moderator->id, $oldModerators)) {
+                $moderator->user->notify(new AdvBoardAssignedModerator($item));
+            }
 
             return redirect($route)->with('success', trans_choice('custom.moderators', 1) . " " . __('messages.added_successfully_m'));
         } catch (\Exception $e) {

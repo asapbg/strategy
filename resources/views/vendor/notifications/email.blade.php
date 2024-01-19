@@ -43,6 +43,7 @@
 {{ __('site.seo_title') }}
 @endif
 
+{!! __('notifications_msg.no_replay') !!}
 {{-- Subcopy --}}
 @isset($actionText)
 <x-slot:subcopy>
