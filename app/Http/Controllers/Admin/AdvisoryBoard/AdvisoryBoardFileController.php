@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardFileRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\File;
 use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -53,6 +54,10 @@ class AdvisoryBoardFileController extends AdminController
             }
 
             DB::commit();
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
+
             return response()->json(['status' => 'success']);
         } catch (Exception $e) {
             DB::rollBack();
@@ -106,6 +111,11 @@ class AdvisoryBoardFileController extends AdminController
 //                }
 
                 DB::commit();
+
+                //alert adb board modeRATOR
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user());
+
                 return response()->json(['status' => 'success']);
             }
 

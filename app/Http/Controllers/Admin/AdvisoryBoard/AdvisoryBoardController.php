@@ -25,6 +25,7 @@ use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use App\Services\AdvisoryBoard\AdvisoryBoardNpoService;
 use App\Services\AdvisoryBoard\AdvisoryBoardService;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -415,6 +416,12 @@ class AdvisoryBoardController extends AdminController
                 $item->has_npo_presence = false;
                 $item->save();
             }
+
+            DB::commit();
+
+            //TODO alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.edit', $item)

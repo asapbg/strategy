@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMemberRequest;
 use App\Http\Requests\StoreAdvBoardMembersOrderRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
+use App\Services\Notifications;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,11 @@ class AdvisoryBoardMemberController extends AdminController
 //                $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $member, $validated);
 //            }
             DB::commit();
+
+            //alert adb board modeRATOR
+            $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
+            $notifyService = new Notifications();
+            $notifyService->advChanges($advBoard, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -94,6 +100,11 @@ class AdvisoryBoardMemberController extends AdminController
 
             $this->storeTranslateOrNew(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
+
+            //alert adb board modeRATOR
+            $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
+            $notifyService = new Notifications();
+            $notifyService->advChanges($advBoard, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

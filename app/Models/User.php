@@ -27,6 +27,7 @@ class User extends Authenticatable
     use CausesActivity;
     use Notifiable;
     use HasRoles;
+    use Notifiable;
 
     protected string $logName = "users";
 

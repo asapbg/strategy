@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardCustomRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
 use App\Services\AdvisoryBoard\AdvisoryBoardFileService;
+use App\Services\Notifications;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -72,6 +73,10 @@ class AdvisoryBoardCustomController extends AdminController
 
             DB::commit();
 
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
+
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -117,6 +122,10 @@ class AdvisoryBoardCustomController extends AdminController
 
             DB::commit();
 
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
+
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -148,6 +157,10 @@ class AdvisoryBoardCustomController extends AdminController
             foreach ($order as $position => $id) {
                 AdvisoryBoardCustom::where(['id' => $id, 'advisory_board_id' => $item->id])->update(['order' => $position + 1]);
             }
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return redirect($route)->with('success', __('messages.sections_order_successfully'));
         } catch (\Exception $e) {

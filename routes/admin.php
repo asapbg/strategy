@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\NomenclatureController;
+use App\Http\Controllers\Admin\NotificationsController;
 use App\Http\Controllers\Admin\Ogp\Areas;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
@@ -44,6 +45,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function () {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
+    Route::controller(NotificationsController::class)->group(function () {
+        Route::get('/notifications',                'index')->name('user.notifications');
+        Route::get('/notifications/view/{id}',      'show')->name('user.notification_show');
+    });
 
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
         Route::get('/download/{file}', 'downloadFile')->name('download.file');

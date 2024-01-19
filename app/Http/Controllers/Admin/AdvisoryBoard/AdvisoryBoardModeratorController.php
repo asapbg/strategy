@@ -10,6 +10,7 @@ use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryBoardModeratorInformation;
 use App\Models\CustomRole;
 use App\Models\User;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -65,6 +66,10 @@ class AdvisoryBoardModeratorController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardModeratorInformation::TRANSLATABLE_FIELDS, $information, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
@@ -140,6 +145,10 @@ class AdvisoryBoardModeratorController extends AdminController
             $user->assignRole(CustomRole::MODERATOR_ADVISORY_BOARD);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

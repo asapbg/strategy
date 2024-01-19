@@ -34,6 +34,14 @@
     </div>
 
     <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.user.notifications') }}" aria-expanded="false">
+                <i class="fas fa-bell"></i>
+                @if($user && !is_null($user->unreadNotifications) && $user->unreadNotifications->count())
+                    <span class="badge badge-danger navbar-badge">{{ $user->unreadNotifications->count() }}</span>
+                @endif
+            </a>
+        </li>
         <!-- User Account: style can be found in dropdown.less -->
         <li class="nav-item dropdown">
             @php

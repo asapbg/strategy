@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardFunctionRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardFunctionRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +50,10 @@ class AdvisoryBoardFunctionController extends AdminController
 
             DB::commit();
 
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
+
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -85,6 +90,10 @@ class AdvisoryBoardFunctionController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $working_program, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

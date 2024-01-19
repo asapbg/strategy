@@ -40,7 +40,7 @@
             @elseif($groupByField == 'chairmanType')
                 @php($compareValue = $item->advisoryChairmanType->name)
             @elseif($groupByField == 'npo')
-                @php($compareValue = $item->has_npo_presence ? 'С представител на НПО в състава на съвета' : 'Без представител на НПО в състава на съвета')
+                @php($compareValue = $item->has_npo_presence ? __('site.with_npo') : __('site.without_npo'))
             @elseif($groupByField == 'actOfCreation')
                 @php($compareValue = $item->advisoryActType->name)
             @endif

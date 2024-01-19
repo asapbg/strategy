@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardSecretariat;
+use App\Services\Notifications;
 use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,6 +60,10 @@ class AdvisoryBoardSecretariatController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardSecretariat::TRANSLATABLE_FIELDS, $secretariat, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {

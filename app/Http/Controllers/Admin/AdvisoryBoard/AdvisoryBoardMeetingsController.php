@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardMeetingsRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMeetingsRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -39,6 +40,10 @@ class AdvisoryBoardMeetingsController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -84,6 +89,10 @@ class AdvisoryBoardMeetingsController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

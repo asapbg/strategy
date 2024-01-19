@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardMeetingDecisionReque
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMeetingDecisionRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeetingDecision;
+use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -61,6 +62,10 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoardMeetingDecision::TRANSLATABLE_FIELDS, $decision, $validated);
 
             DB::commit();
+
+            //alert adb board modeRATOR
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user());
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
