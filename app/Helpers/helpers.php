@@ -519,6 +519,8 @@ if (!function_exists('fileHtmlContent')) {
                 $html = new \PhpOffice\PhpWord\Writer\HTML($content);
                 $content = $html->getContent();
                 break;
+            default:
+                return '<p>Документът не може да бъде визуализиран</p>';
         }
 
         return $content;
