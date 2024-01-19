@@ -69,7 +69,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
 
     public static function optionsList($withDefault = true)
     {
-        $q =  DB::table('institution')
+        return DB::table('institution')
             ->select(['institution.id', 'institution_translations.name'])
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
             ->where('institution_translations.locale', '=', app()->getLocale())

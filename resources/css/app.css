@@ -991,6 +991,7 @@ a.box-link span {
     border-radius: 12px;
     font-size: 14px;
     text-transform: uppercase;
+    display:inline-block;
 }
 
 #blog {

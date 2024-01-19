@@ -5,7 +5,7 @@
         transition: 0.4s;
     }
 </style>
-
+@php($user = auth()->user())
 @section('content')
     <div class="row">
         <!-- Left side menu -->
@@ -22,30 +22,32 @@
                                 <span class="post-date text-secondary">{{ displayDate($nItem->published_at) }}</span>
                                 <h3 class="post-title">{{ $nItem->title }}</h3>
                                 <div class="row mb-2">
-                                    <div class="col-md-8">
+                                    <div class="@if($user) col-md-9 @else col-md-12 @endif">
                                         <span class="blog-category"><i class="fas fa-sitemap me-1" title="{{ $nItem->advCategory }}"></i> {{ $nItem->advCategory }}</span>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="consult-item-header-edit">
-                                            @can('deleteAdvBoard', $nItem)
-                                                <a href="javascript:;"
-                                                   class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
-                                                   data-target="#modal-delete-resource"
-                                                   data-resource-id="{{ $nItem->id }}"
-                                                   data-resource-name="{{ $nItem->title }}"
-                                                   data-resource-delete-url="{{ route('admin.advisory-boards.delete', $nItem) }}"
-                                                   data-toggle="tooltip"
-                                                   title="{{ __('custom.delete') }}"><span class="d-none"></span>
-                                                </a>
-                                            @endcan
-                                            @can('updateAdvBoard', $nItem)
-                                                <a href="{{ route('admin.advisory-boards.edit', ['type' => $nItem->type, 'item' => $nItem->id]) }}" target="_blank">
-                                                    <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
-                                                    </i>
-                                                </a>
-                                            @endcan
+                                    @if($user)
+                                        <div class="col-md-3">
+                                            <div class="consult-item-header-edit">
+                                                @can('deleteAdvBoard', $nItem)
+                                                    <a href="javascript:;"
+                                                       class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden"
+                                                       data-target="#modal-delete-resource"
+                                                       data-resource-id="{{ $nItem->id }}"
+                                                       data-resource-name="{{ $nItem->title }}"
+                                                       data-resource-delete-url="{{ route('admin.advisory-boards.delete', $nItem) }}"
+                                                       data-toggle="tooltip"
+                                                       title="{{ __('custom.delete') }}"><span class="d-none"></span>
+                                                    </a>
+                                                @endcan
+                                                @can('updateAdvBoard', $nItem)
+                                                    <a href="{{ route('admin.advisory-boards.edit', ['type' => $nItem->type, 'item' => $nItem->id]) }}" target="_blank">
+                                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}">
+                                                        </i>
+                                                    </a>
+                                                @endcan
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                                 <p class="short-decription text-secondary">
                                     {!! strip_tags($item->short_content) ? strip_tags(Str::limit($nItem->short_content, 200)) : "" !!}
