@@ -508,17 +508,19 @@ if (!function_exists('fileHtmlContent')) {
                 $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
                 $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
                 break;
-            case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            case 'application/msword': //doc
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
+            case 'application/vnd.ms-excel': //xls
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
                 $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
                 break;
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
-                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-                $content->setDefaultFontName('Fira Sans BGR');
-                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-                $content = $html->getContent();
-                break;
+//            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
+//                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
+//                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
+//                $content->setDefaultFontName('Fira Sans BGR');
+//                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
+//                $content = $html->getContent();
+//                break;
             default:
                 return '<p>Документът не може да бъде визуализиран</p>';
         }
