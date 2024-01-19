@@ -19,4 +19,9 @@ class AdvisoryBoardModerator extends ModelActivityExtend
     {
         return $this->belongsTo(User::class);
     }
+
+    public function board()
+    {
+        return $this->hasOne(AdvisoryBoard::class, 'id', 'advisory_board_id');
+    }
 }

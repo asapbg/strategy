@@ -16,13 +16,14 @@ class NotificationsController extends Controller
 
         return $this->view('admin.notifications.index', compact('user', 'notifications'));
     }
+
     public function show(Request $request, $id): \Illuminate\View\View
     {
         $user = $request->user();
         $notification = $user->notifications()->findOrFail($id);
         $notification->markAsRead();
         $item = $itemUrl = null;
-        if(class_exists($notification->data['model'])) {
+        if(isset($notification->data['model']) && class_exists($notification->data['model'])) {
             $model = new $notification->data['model'];
             if($model instanceof AdvisoryBoard) {
                 $item = $notification->data['model']::find($notification->data['id']);

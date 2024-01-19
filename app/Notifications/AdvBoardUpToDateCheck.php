@@ -11,14 +11,15 @@ class AdvBoardUpToDateCheck extends Notification
 {
     use Queueable;
 
+    protected $items;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $items)
     {
-        //
+        $this->items = $items;
     }
 
     /**
@@ -29,7 +30,7 @@ class AdvBoardUpToDateCheck extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -40,10 +41,16 @@ class AdvBoardUpToDateCheck extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $msg = (new MailMessage)->subject(__('notifications_msg.adv_board_up_to_date'))
+            ->line(__('notifications_msg.adv_board_up_to_date.extra_info'));
+
+        if(sizeof($this->items)) {
+            foreach ($this->items as $item){
+                $msg->action($item->name, route('admin.advisory-boards.edit', $item));
+            }
+        }
+
+        return $msg;
     }
 
     /**
@@ -54,8 +61,18 @@ class AdvBoardUpToDateCheck extends Notification
      */
     public function toArray($notifiable)
     {
+        $list = '';
+        if(sizeof($this->items)) {
+            foreach ($this->items as $item) {
+                $list .= '<br><a href="' . route('admin.advisory-boards.edit', $item) . '">' . $item->name . '</a>';
+            }
+        }
+
         return [
-            //
+            //'model' => get_class($this->item),
+            //'id' => $this->item->id,
+            'subject' => __('notifications_msg.adv_board_up_to_date'),
+            'message' => __('notifications_msg.adv_board_up_to_date.extra_info').$list
         ];
     }
 }
