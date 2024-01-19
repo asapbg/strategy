@@ -5,28 +5,28 @@
     <div class="container-fluid">
         <div class="card">
             <form method="GET">
-                <div class="card-header with-border">
-                    <div class="card-tools pull-right">
-                        <label>{{ trans_choice('custom.results', 2) }}: </label>
-                        <select name="paginate" class="form-control d-inline w-auto">
-                            @foreach(range(1,3) as $multiplier)
-                                @php
-                                    $paginate = $multiplier * App\Models\User::PAGINATE;
-                                @endphp
-                                <option value="{{ $paginate }}"
-                                        @if (request()->get('paginate') == $paginate) selected="selected" @endif
-                                >{{ $paginate }}</option>
-                            @endforeach
-                        </select>
-                        <button type="button" class="btn btn-box-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <h3 class="card-title">{{ __('custom.search') }}</h3>
-                </div>
+{{--                <div class="card-header with-border">--}}
+{{--                    <div class="card-tools pull-right">--}}
+{{--                        <label>{{ trans_choice('custom.results', 2) }}: </label>--}}
+{{--                        <select name="paginate" class="form-control d-inline w-auto">--}}
+{{--                            @foreach(range(1,3) as $multiplier)--}}
+{{--                                @php--}}
+{{--                                    $paginate = $multiplier * App\Models\User::PAGINATE;--}}
+{{--                                @endphp--}}
+{{--                                <option value="{{ $paginate }}"--}}
+{{--                                        @if (request()->get('paginate') == $paginate) selected="selected" @endif--}}
+{{--                                >{{ $paginate }}</option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                        <button type="button" class="btn btn-box-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">--}}
+{{--                            <i class="fas fa-minus"></i>--}}
+{{--                        </button>--}}
+{{--                        <button type="button" class="btn btn-box-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">--}}
+{{--                            <i class="fas fa-times"></i>--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
+{{--                    <h3 class="card-title">{{ __('custom.search') }}</h3>--}}
+{{--                </div>--}}
                 <div class="card-body">
                     <table class="table table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
