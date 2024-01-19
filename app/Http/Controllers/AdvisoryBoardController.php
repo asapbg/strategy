@@ -373,7 +373,7 @@ class AdvisoryBoardController extends Controller
         $filter = $this->newsFilters($request);
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'published_at';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'publishDate';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
         $paginate = $requestFilter['paginate'] ?? Publication::PAGINATE;
