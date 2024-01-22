@@ -457,6 +457,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put( '/settings/store', 'store')->name('advisory-boards.settings.store');
     });
 
+    // Messages
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {
+        Route::get( '/messages', 'index')->name('advisory-boards.messages');
+        Route::get( '/messages/view/{item}', 'show')->name('advisory-boards.messages.view');
+        Route::match(['get', 'post'], '/messages/create', 'send')->name('advisory-boards.messages.send');
+    });
+
     // Publications
     Route::controller(AdvBoardNewsController::class)->prefix('/advisory-boards/news')->group(function () {
         Route::get('/', 'index')->name('advisory-boards.news.index')->middleware('can:viewAnyAdvBoard,App\Models\Publication');

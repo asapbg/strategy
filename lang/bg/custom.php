@@ -110,6 +110,7 @@ return [
     'giving'                           => 'Предаване',
     'abbreviation'                     => 'Абревиатура',
     'settings'                         => 'Настройки',
+    'messages'                         => 'Съобщения',
     'year'                             => 'Година',
     'year_short'                       => 'г.',
     'there_is_no'                      => 'Няма',
@@ -752,4 +753,6 @@ return [
     'read' => 'Прочетено',
     'main_img' => 'Основна картинка',
     'advisory_board_settings' => 'Консултативни съвети',
+    'advisory_board_messages' => 'Съобщение|Съобщения',
+    'send_to' => 'Изпрати до',
 ];
