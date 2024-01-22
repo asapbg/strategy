@@ -371,7 +371,8 @@ if (!function_exists('fileIcon')) {
      */
     function fileIcon($fileType): string
     {
-        $icon = '<i class="fas fa-file-download text-secondary me-1"></i>';
+//        $icon = '<i class="fas fa-file-download text-secondary me-1"></i>';
+        $icon = '<i class="fas fa-file text-secondary me-1"></i>';
         switch ($fileType) {
             case 'application/pdf':
             case 'pdf':

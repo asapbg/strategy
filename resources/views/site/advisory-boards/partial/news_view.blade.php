@@ -29,7 +29,7 @@
 </div>
 <hr>
 <div class="mb-3">
-    <img src="{{ asset($publication->mainImg ? 'files'.DIRECTORY_SEPARATOR.str_replace('files/', '', $publication->mainImg->path) : $default_img) }}" alt="{{ $publication->title }}"
+    <img src="{{ asset($publication->mainImg ? 'files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path) : $default_img) }}" alt="{{ $publication->title }}"
          class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
     >
     {!! $publication->content !!}
@@ -39,7 +39,7 @@
 
 @php
     $files = $publication->files()
-        ->whereNotIn('content_type', App\Models\File::CONTENT_TYPE_IMAGES)
+//        ->whereNotIn('content_type', App\Models\File::CONTENT_TYPE_IMAGES)
         ->whereLocale(currentLocale())
         ->get();
 @endphp
@@ -47,13 +47,18 @@
     <div class="mb-3">
         <h5>{{ __('custom.files') }}</h5>
         @foreach($files as $f)
-            <p>
-                @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
-                    <a href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                        {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+            @if($f->id != $publication->file_id)
+                <p>
+                    <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
+                        {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
+                    </a> |
+                    {{--                        @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))--}}
+                    <a class="text-decoration-none" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                        {{ __('custom.download') }}
                     </a>
-                @endif
-            </p>
+                    {{--                        @endif--}}
+                </p>
+            @endif
         @endforeach
     </div>
 @endif
