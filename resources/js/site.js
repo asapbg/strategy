@@ -393,6 +393,8 @@ $(document).ready(function () {
         event.relatedTarget // previous active tab
     })
 
+    $('[data-bs-toggle="tooltip"]').tooltip()
+
     if ($('.summernote').length) {
         $('.summernote').summernote({
             toolbar: [

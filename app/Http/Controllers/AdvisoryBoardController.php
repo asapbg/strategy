@@ -578,7 +578,7 @@ class AdvisoryBoardController extends Controller
                 'multiple' => true,
                 'default' => '',
                 'label' => __('custom.type_of_governing'),
-                'value' => $request->input('authority'),
+                'value' => $request->input('authoritys'),
                 'col' => 'col-md-6'
             ),
             'actOfCreations' => array(

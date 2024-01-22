@@ -26,7 +26,7 @@
                         <h3 class="mb-2 fs-4">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <a href="{{ route('advisory-boards.index') }}"
+                                <a href="{{ route('advisory-boards.index').($item->policyArea ? '?fieldOfActions[]='.$item->policyArea->id : '') }}"
                                    class="main-color text-decoration-none fs-5">
                                     <i class="fa-solid fa-hospital me-1 main-color"
                                        title="{{ $item->policyArea?->name }}"></i>
@@ -61,7 +61,7 @@
                         <h3 class="mb-2 fs-4">{{ trans_choice('custom.authority_advisory_board', 1) }}</h3>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <a href="#" class="main-color text-decoration-none">
+                                <a href="{{ route('advisory-boards.index').($item->authority ? '?authoritys[]='.$item->authority->id : '') }}" class="main-color text-decoration-none">
                                     <i class="fa-solid fa-right-to-bracket me-1 main-color"
                                        title="{{ $item->authority?->name }}"></i>
                                     {{ $item->authority?->name }}
