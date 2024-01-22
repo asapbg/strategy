@@ -163,7 +163,7 @@
                                         {{ __('validation.attributes.main_img') }} <span class="required">*</span>
                                     </label>
                                     @if($item->id && $item->mainImg)
-                                        <img src="{{ asset('files'.DIRECTORY_SEPARATOR.$item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
+                                        <img src="{{ asset('files'.DIRECTORY_SEPARATOR.str_replace('files/', '', $item->mainImg->path)) }}" class="img-thumbnail mt-2 mb-4">
                                     @endif
                                     <div class="col-12">
                                         <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">

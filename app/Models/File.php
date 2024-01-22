@@ -84,7 +84,7 @@ class File extends ModelActivityExtend
     protected function preview(): Attribute
     {
         return Attribute::make(
-            get: fn() => str_contains($this->content_type, 'image') ? '<img src="' . asset('files/'.$this->path) . '" class="img-thumbnail sm-thumbnail">'
+            get: fn() => str_contains($this->content_type, 'image') ? '<img src="' . asset('files/'.str_replace('files/', '', $this->path)) . '" class="img-thumbnail sm-thumbnail">'
                 : (str_contains($this->content_type, 'pdf') ? '<img src="' . asset('img/default_pdf.png') . '" class="img-thumbnail sm-thumbnail">' : '')
         );
     }
