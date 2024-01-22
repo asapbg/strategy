@@ -163,7 +163,7 @@
                                         {{ __('validation.attributes.main_img') }} <span class="required">*</span>
                                     </label>
                                     @if($item->id && $item->mainImg)
-                                        <img src="{{ asset($item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
+                                        <img src="{{ asset('files'.DIRECTORY_SEPARATOR.$item->mainImg->path) }}" class="img-thumbnail mt-2 mb-4">
                                     @endif
                                     <div class="col-12">
                                         <input type="file" name="file" class="form-control form-control-sm @error('file'){{ 'is-invalid' }}@enderror">
@@ -238,7 +238,9 @@
                                                 </td>
                                                 <td>{!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
                                                     - {{ __('custom.'.$f->locale) }}
-                                                    | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}</td>
+                                                    | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                    @if($f->id == $item->file_id) <i><strong>({{ __('validation.attributes.main_img') }})</strong></i> @endif
+                                                </td>
                                                 <td>
 
                                                     <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"

@@ -140,23 +140,36 @@ class AdvBoardNewsController extends AdminController
             $item->save();
             // Upload File
             if( $item && $itemImg ) {
-                $file_name = Str::limit($validated['slug'], 70);
-                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
+//                $file_name = Str::limit($validated['slug'], 70);
+//                $fileNameToStore = $file_name.'.'.->getClientOriginalExtension();
+                $fileNameToStore = str_replace('.', '', microtime(true)) . '.' . $itemImg->getClientOriginalExtension();
                 // Upload File
                 $itemImg->storeAs(File::PUBLICATION_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
-                $file = new File([
-                    'id_object' => $item->id,
-                    'code_object' => File::CODE_OBJ_PUBLICATION,
-                    'filename' => $fileNameToStore,
-                    'content_type' => $itemImg->getClientMimeType(),
-                    'path' => File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
-                    'sys_user' => $request->user()->id,
-                ]);
-                $file->save();
 
-                if( $file ) {
-                    $item->file_id = $file->id;
-                    $item->save();
+                if($item->file_id) {
+                    $file = File::find((int)$item->file_id);
+                    if($file) {
+                        $file->filename = $fileNameToStore;
+                        $file->path = File::PUBLICATION_UPLOAD_DIR.$fileNameToStore;
+                        $file->content_type = $itemImg->getClientMimeType();
+                        $file->sys_user = $request->user()->id;
+                        $file->save();
+                    }
+                } else{
+                    $file = new File([
+                        'id_object' => $item->id,
+                        'code_object' => File::CODE_OBJ_PUBLICATION,
+                        'filename' => $fileNameToStore,
+                        'content_type' => $itemImg->getClientMimeType(),
+                        'path' => File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                        'sys_user' => $request->user()->id,
+                    ]);
+
+                    $file->save();
+                    if( $file ) {
+                        $item->file_id = $file->id;
+                        $item->save();
+                    }
                 }
             }
 

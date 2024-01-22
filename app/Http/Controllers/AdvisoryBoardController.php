@@ -255,9 +255,9 @@ class AdvisoryBoardController extends Controller
         $filter = $this->archiveFilters($request);
         $pageTitle = $this->pageTitle;
         $this->setSlider($item->name, $item->headerImg);
-        $items = AdvisoryBoardFunction::with(['translations', 'siteFiles', 'siteFiles.versions'])
+        $items = AdvisoryBoardFunction::with(['translations'])
             ->where('advisory_board_id', $item->id)
-            ->with(['translations', 'siteFiles'])
+//            ->with(['translations', 'siteFiles', 'siteFiles.versions'])
             ->where('working_year', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
             ->FilterBy($requestFilter)
             ->orderBy('working_year', 'desc')

@@ -53,7 +53,7 @@
                                 <div class="card-header">
                                     <h4 class="card-title w-100">
                                         <div class="row justify-content-between align-items-center">
-                                            <div class="col-10">
+                                            <div class="col-md-7">
                                                 <a data-toggle="collapse" href="#collapse{{$key}}"
                                                    aria-expanded="true">
                                                     {{ trans_choice('custom.meetings', 1) . ' ' . \Carbon\Carbon::parse($meeting->next_meeting)->format('d.m.Y') . __('custom.year_short') }}
@@ -71,7 +71,8 @@
                                                                         data-target="#modal-add-meeting-decisions"
                                                                         title="{{ __('custom.add') . ' ' . __('custom.information') }}"
                                                                         onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM)">
-                                                                    <i class="fa fa-handshake"></i>
+{{--                                                                    <i class="fa fa-handshake"></i>--}}
+                                                                    {{ __('custom.protocols_and_decisions') }}
                                                                 </button>
                                                             @endcan
                                                         </div>

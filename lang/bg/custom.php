@@ -632,6 +632,7 @@ return [
     'regulatory_framework' => 'Нормативна рамка',
     'regulatory_framework_act_and_riles' => 'Акт за създаване и правилник за дейността',
     'meetings_and_decisions' => 'Заседания и решения',
+    'protocols_and_decisions' => 'Протоколи и решения',
     'work_programs' => 'Работни програми и отчети на програми',
     'meetings' => 'Заседание|Заседания',
     'op_project_timeline_label'              => 'Проектът на акт в Оперативната програма',
@@ -748,4 +749,5 @@ return [
     'notifications' => 'Известие|Известия',
     'unread' => 'Непрочетено',
     'read' => 'Прочетено',
+    'main_img' => 'Основна картинка',
 ];

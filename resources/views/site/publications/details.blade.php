@@ -52,7 +52,7 @@
         </div>
         <hr>
         <div class="mb-3">
-            <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" alt="{{ $publication->title }}"
+            <img src="{{ asset($publication->mainImg ? 'files'.DIRECTORY_SEPARATOR.$publication->mainImg->path : $default_img) }}" alt="{{ $publication->title }}"
                  class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
             >
             {!! $publication->content !!}
