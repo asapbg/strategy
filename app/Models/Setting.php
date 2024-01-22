@@ -20,6 +20,11 @@ class Setting extends ModelActivityExtend
     const PAGE_CONTENT_STRATEGY_DOC = 'strategy_doc_text';
     const PAGE_CONTENT_ADVISORY_BOARDS = 'advisory_boards_text';
 
+
+    const ADVISORY_BOARDS_SECTION = 'system_advisory_boards';
+
+    const AB_REVIEW_PERIOD_NOTIFY = 'review_period_notify';
+
     //activity
     protected string $logName = "settings";
 

@@ -428,6 +428,7 @@ return [
     'settings.strategy_doc_text_en'                     => 'Начален текст в рздела (EN)',
     'settings.advisory_boards_text_bg'                     => 'Начален текст в рздела (BG)',
     'settings.advisory_boards_text_en'                     => 'Начален текст в рздела (EN)',
+    'settings.review_period_notify'                     => 'Период на известяване за необходимост от проверка на актуалност на данните (в месеци). При \'0\', съобщенията се деактивират.',
     //public sections
     'public_sections'                           => 'Библиотека|Библиотека',
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
@@ -750,4 +751,5 @@ return [
     'unread' => 'Непрочетено',
     'read' => 'Прочетено',
     'main_img' => 'Основна картинка',
+    'advisory_board_settings' => 'Консултативни съвети',
 ];

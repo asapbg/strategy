@@ -451,6 +451,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('{item}/draft',      'draft')    ->name('advisory-boards.draft');
     });
 
+    // Settings
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSettingsController::class)->prefix('/advisory-boards')->group(function () {
+        Route::get( '/settings/{section?}', 'edit')->name('advisory-boards.settings');
+        Route::put( '/settings/store', 'store')->name('advisory-boards.settings.store');
+    });
+
     // Publications
     Route::controller(AdvBoardNewsController::class)->prefix('/advisory-boards/news')->group(function () {
         Route::get('/', 'index')->name('advisory-boards.news.index')->middleware('can:viewAnyAdvBoard,App\Models\Publication');

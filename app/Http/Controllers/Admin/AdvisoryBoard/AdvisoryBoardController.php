@@ -69,7 +69,7 @@ class AdvisoryBoardController extends AdminController
             ->when($status != '', function ($query) use ($status) {
                 $query->where('active', $status == '0' ? 'false' : 'true');
             })
-            ->when($limitItems, function ($query) use ($status) {
+            ->when($limitItems, function ($query){
                 $query->whereHas('moderators', function ($query) {
                     $query->where('user_id', '=', auth()->user()->id);
                 });

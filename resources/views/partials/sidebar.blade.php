@@ -309,6 +309,15 @@
                                     <p>{{ __('custom.inactive_adv_board') }}</p>
                                 </a>
                             </li>
+                            @canany(['manage.*', 'manage.advisory-boards'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.advisory-boards.settings') }}"
+                                       class="nav-link @if(request()->route()->getName() == 'admin.advisory-boards.settings') active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.settings') }}</p>
+                                    </a>
+                                </li>
+                            @endcanany
                         </ul>
                     </li>
                 @endcan

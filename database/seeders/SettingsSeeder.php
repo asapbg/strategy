@@ -114,17 +114,10 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'section' => 'system_advisory_boards',
-                'name' => 'advisory_boards_text_bg',
-                'type' => 'summernote',
+                'name' => 'review_period_notify',
+                'type' => 'text',
                 'editable' => 1,
-                'is_required' => 0
-            ],
-            [
-                'section' => 'system_advisory_boards',
-                'name' => 'advisory_boards_text_en',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
+                'is_required' => 1
             ],
         );
 
