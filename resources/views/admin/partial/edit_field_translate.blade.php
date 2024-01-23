@@ -30,6 +30,7 @@
                     @error($fieldName)
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
+                    <div class="text-danger mt-1 error_{{ $fieldName }}"></div>
                 </div>
             </div>
         </div>

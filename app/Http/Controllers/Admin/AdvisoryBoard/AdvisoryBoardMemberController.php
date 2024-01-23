@@ -14,8 +14,10 @@ use App\Models\AdvisoryBoardMember;
 use App\Services\Notifications;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AdvisoryBoardMemberController extends AdminController
 {
@@ -23,13 +25,21 @@ class AdvisoryBoardMemberController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvisoryBoardMemberRequest $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardMemberRequest $request): JsonResponse
+    public function ajaxStore(Request $request): JsonResponse
     {
-        $validated = $request->validated();
+//        $validated = $request->validated();
+
+        $req = new StoreAdvisoryBoardMemberRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {
@@ -81,13 +91,19 @@ class AdvisoryBoardMemberController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateAdvisoryBoardMemberRequest $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function ajaxUpdate(UpdateAdvisoryBoardMemberRequest $request)
+    public function ajaxUpdate(Request $request)
     {
-        $validated = $request->validated();
+        $req = new UpdateAdvisoryBoardMemberRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {

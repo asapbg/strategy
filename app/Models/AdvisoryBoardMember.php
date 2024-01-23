@@ -64,16 +64,19 @@ class AdvisoryBoardMember extends Model
     {
         return [
             'member_name' => [
-                'type' => 'string',
-                'rules' => ['required'],
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'member_job' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
+                'type' => 'text',
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'member_notes' => [
-                'type' => 'string',
-                'rules' => ['nullable']
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
         ];
     }

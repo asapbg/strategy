@@ -19,40 +19,43 @@
                     <input type="hidden" name="advisory_board_id" value="{{ $item->id }}"/>
 
                     <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label"
-                                       for="member_name_bg">{{ __('custom.first_name') }} (BG) <span
-                                            class="required">*</span></label>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input type="text" id="member_name_bg" name="member_name_bg"
-                                               class="form-control form-control-sm"
-                                               value="" autocomplete="off"/>
-
-                                        <div class="text-danger mt-1 error_member_name_bg"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label"
-                                       for="member_name_en">{{ __('custom.first_name') }} (EN) <span
-                                            class="required">*</span></label>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input type="text" id="member_name_en" name="member_name_en"
-                                               class="form-control form-control-sm"
-                                               value="" autocomplete="off"/>
-
-                                        <div class="text-danger mt-1 error_member_name_en"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMember::translationFieldsProperties(), 'field' => 'member_name', 'required' => true])
                     </div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-md-6 col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label class="col-sm-12 control-label"--}}
+{{--                                       for="member_name_bg">{{ __('custom.first_name') }} (BG) <span--}}
+{{--                                            class="required">*</span></label>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-12">--}}
+{{--                                        <input type="text" id="member_name_bg" name="member_name_bg"--}}
+{{--                                               class="form-control form-control-sm"--}}
+{{--                                               value="" autocomplete="off"/>--}}
+
+{{--                                        <div class="text-danger mt-1 error_member_name_bg"></div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+{{--                        <div class="col-md-6 col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label class="col-sm-12 control-label"--}}
+{{--                                       for="member_name_en">{{ __('custom.first_name') }} (EN) <span--}}
+{{--                                            class="required">*</span></label>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-12">--}}
+{{--                                        <input type="text" id="member_name_en" name="member_name_en"--}}
+{{--                                               class="form-control form-control-sm"--}}
+{{--                                               value="" autocomplete="off"/>--}}
+
+{{--                                        <div class="text-danger mt-1 error_member_name_en"></div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
 {{--                    <div class="row mb-3">--}}
 {{--                        <label class="col-sm-12 control-label"--}}
@@ -125,6 +128,7 @@
                         </div>
                     </div>
 
+
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
@@ -144,6 +148,7 @@
                                                 @endforeach
                                             @endif
                                         </select>
+                                        <div class="text-danger mt-1 error_institution_id"></div>
                                     </div>
                                 </div>
                             </div>
@@ -151,63 +156,69 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="member_job_bg">
-                                            {{ __('forms.job') }} (BG)
-                                        </label>
-
-                                        <input type="text" id="member_job_bg"
-                                               name="member_job_bg"
-                                               class="form-control form-control-sm"/>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="member_job_en">
-                                            {{ __('forms.job') }} (EN)
-                                        </label>
-
-                                        <input type="text" id="member_job_en"
-                                               name="member_job_en"
-                                               class="form-control form-control-sm"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMember::translationFieldsProperties(), 'field' => 'member_job'])
                     </div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-md-6 col-12">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label class="control-label" for="member_job_bg">--}}
+{{--                                            {{ __('forms.job') }} (BG)--}}
+{{--                                        </label>--}}
 
-                    <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <label for="member_notes_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.member_notes') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                </label>
+{{--                                        <input type="text" id="member_job_bg"--}}
+{{--                                               name="member_job_bg"--}}
+{{--                                               class="form-control form-control-sm"/>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="member_notes_{{ $lang['code'] }}"
-                                          id="member_notes_{{ $lang['code'] }}"></textarea>
-                            </div>
-                        @endforeach
-                    </div>
+{{--                                <div class="col-md-6 col-12">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label class="control-label" for="member_job_en">--}}
+{{--                                            {{ __('forms.job') }} (EN)--}}
+{{--                                        </label>--}}
+
+{{--                                        <input type="text" id="member_job_en"--}}
+{{--                                               name="member_job_en"--}}
+{{--                                               class="form-control form-control-sm"/>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label" for="email">
-                                    {{ trans_choice('custom.email', 1) }}
-                                </label>
-
-                                <input type="email" id="email"
-                                       name="email"
-                                       class="form-control form-control-sm"/>
-                            </div>
-                        </div>
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMember::translationFieldsProperties(), 'field' => 'member_notes'])
                     </div>
+{{--                    <div class="row mb-2">--}}
+{{--                        @foreach(config('available_languages') as $lang)--}}
+{{--                            <div class="col-6">--}}
+{{--                                <label for="member_notes_{{ $lang['code'] }}">--}}
+{{--                                    {{ __('validation.attributes.member_notes') }}--}}
+{{--                                    ({{ Str::upper($lang['code']) }})--}}
+{{--                                </label>--}}
+
+{{--                                <textarea class="form-control form-control-sm summernote"--}}
+{{--                                          name="member_notes_{{ $lang['code'] }}"--}}
+{{--                                          id="member_notes_{{ $lang['code'] }}"></textarea>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+{{--                    </div>--}}
+
+{{--                    <div class="row">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label class="control-label" for="email">--}}
+{{--                                    {{ trans_choice('custom.email', 1) }}--}}
+{{--                                </label>--}}
+
+{{--                                <input type="email" id="email"--}}
+{{--                                       name="email"--}}
+{{--                                       class="form-control form-control-sm"/>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </form>
             </div>
 
@@ -237,9 +248,44 @@
             $('#modal-create-member #advisory_type_id').val($(event.relatedTarget).data('type'));
         });
 
+        /**
+         * Change button state for ajax forms.
+         * State can be either 'loading' or 'finished'.
+         *
+         * @param element
+         * @param state
+         */
+        function changeButtonState(element, state = 'loading') {
+            const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
+            const loader = element.querySelector('.spinner-grow');
+
+            element.querySelector('.text').innerHTML = button_text_translation;
+            element.disabled = state === 'loading';
+
+            if (state === 'loading') {
+                loader.classList.remove('d-none');
+                return;
+            }
+
+            loader.classList.add('d-none');
+        }
+
+        /**
+         * Clear all errors from previous ajax.
+         * By default it will clear all elements with class ajax-error
+         *
+         * @param className
+         */
+        function clearErrorMessages(className = 'ajax-error') {
+            document.querySelectorAll('.' + className).forEach(function(el) {
+                el.innerHTML = '';
+            });
+        }
+
         function submitMemberAjax(element) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = document.querySelector('form[name=MEMBER_FORM]');
@@ -257,12 +303,23 @@
                 contentType: false,
                 success: function (result) {
                     // Get a reference to the modal
-                    const modal = new bootstrap.Modal(document.getElementById('modal-create-member'));
+                    // const modal = new bootstrap.Modal(document.getElementById('modal-create-member'));
 
                     // Hide the modal
-                    modal.hide();
+                    // modal.hide();
+                    //
+                    // window.location.reload();
 
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            form.querySelector(search_class).textContent = errors[i][1][0];
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');

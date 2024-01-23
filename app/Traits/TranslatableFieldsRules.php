@@ -15,18 +15,25 @@ trait TranslatableFieldsRules
         $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $lang) {
             foreach ($translatableProperties as $field => $properties) {
+                $fieldName = $field . '_' . $lang['code'];
                 $mainLang = $lang['code'] == $defaultLang;
                 $fieldRules = $properties['rules'];
                 if(isset($properties['required_all_lang']) && !$properties['required_all_lang'] && !$mainLang) {
                     if (($key = array_search('required', $fieldRules)) !== false) {
-                        unset($fieldRules[$key]);
+                        if(empty(request()->input($fieldName))){
+                            $fieldRules = [];
+                        } else{
+                            unset($fieldRules[$key]);
+                        }
                     }
                 }
+
                 if(sizeof($fieldRules)) {
-                    $rules[$field . '_' . $lang['code']] = $fieldRules;
+                    $rules[$fieldName] = $fieldRules;
                 }
             }
         }
+
         return $rules;
     }
 }

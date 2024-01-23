@@ -6,12 +6,13 @@ use App\Enums\AdvisoryTypeEnum;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMember;
 use App\Traits\FailedAuthorization;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAdvisoryBoardMemberRequest extends FormRequest
 {
 
-    use FailedAuthorization;
+    use FailedAuthorization, TranslatableFieldsRules;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -39,12 +40,12 @@ class UpdateAdvisoryBoardMemberRequest extends FormRequest
             'is_member' => 'nullable|numeric'
         ];
 
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardMember::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
+//        foreach (config('available_languages') as $lang) {
+//            foreach (AdvisoryBoardMember::translationFieldsProperties() as $field => $properties) {
+//                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+//            }
+//        }
 
-        return $rules;
+        return $this->getRules($rules, AdvisoryBoardMember::translationFieldsProperties());
     }
 }
