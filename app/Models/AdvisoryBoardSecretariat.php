@@ -71,8 +71,9 @@ class AdvisoryBoardSecretariat extends ModelActivityExtend
     {
         return [
             'description' => [
-                'type' => 'string',
-                'rules' => ['required'],
+                'type' => 'summernote',
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardSecretariatRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardSecretariat;
 use App\Services\Notifications;
@@ -18,33 +19,21 @@ class AdvisoryBoardSecretariatController extends AdminController
     /**
      * Store or update a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreAdvisoryBoardSecretariatRequest $request
      * @param AdvisoryBoard            $item
      * @param AdvisoryBoardSecretariat $secretariat
      *
      * @return RedirectResponse
      */
-    public function store(Request $request, AdvisoryBoard $item, AdvisoryBoardSecretariat $secretariat)
+    public function store(StoreAdvisoryBoardSecretariatRequest $request, AdvisoryBoard $item, AdvisoryBoardSecretariat $secretariat)
     {
-        $this->authorize('update', $item);
+        if( ($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', AdvisoryBoard::class)) ) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
 
         $route = route('admin.advisory-boards.edit', $item->id) . '#secretariat';
 
-        $rules = [];
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardSecretariat::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()) {
-            return redirect($route)
-                ->withInput()
-                ->withErrors($validator);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         DB::beginTransaction();
         try {
@@ -52,10 +41,6 @@ class AdvisoryBoardSecretariatController extends AdminController
             $fillable = $this->getFillableValidated($validated, $secretariat);
             $secretariat->fill($fillable);
             $secretariat->save();
-
-            foreach (config('available_languages') as $lang) {
-                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
-            }
 
             $this->storeTranslateOrNew(AdvisoryBoardSecretariat::TRANSLATABLE_FIELDS, $secretariat, $validated);
 
