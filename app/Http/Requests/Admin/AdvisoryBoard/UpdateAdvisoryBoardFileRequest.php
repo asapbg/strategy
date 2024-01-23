@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
+use App\Models\File;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -41,8 +42,9 @@ class UpdateAdvisoryBoardFileRequest extends FormRequest
             'effective_at'                  => ['nullable', 'date'],
         ];
 
+        $file = File::find((int)request()->input('file_id'));
         foreach (config('available_languages') as $lang) {
-            if ($this->request->has('file_name_' . $lang['code'])) {
+            if ($this->request->has('file_name_' . $lang['code']) || $file->locale == $lang['code']) {
                 $rules['file_name_' . $lang['code']] = 'required|string';
                 $rules['file_description_' . $lang['code']] = 'nullable|string';
             }

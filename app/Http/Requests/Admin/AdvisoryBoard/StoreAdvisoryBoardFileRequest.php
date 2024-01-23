@@ -42,12 +42,14 @@ class   StoreAdvisoryBoardFileRequest extends FormRequest
             'effective_at'                  => ['nullable', 'date'],
         ];
 
+
+        $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $lang) {
-            $rules['file_' . $lang['code']] = 'required|file|mimes:pdf,doc,docx,xlsx';
-            $rules['file_name_' . $lang['code']] = 'required|string';
+            $rules['file_' . $lang['code']] = ($defaultLang == $lang['code'] ? 'required|' : 'nullable|' ) .'file|mimes:pdf,doc,docx,xlsx';
+            $rules['file_name_' . $lang['code']] = ($defaultLang == $lang['code'] ? 'required|' : 'nullable|' ) .'string';
             $rules['file_description_' . $lang['code']] = 'nullable|string';
         }
-
+        
         return $rules;
     }
 }

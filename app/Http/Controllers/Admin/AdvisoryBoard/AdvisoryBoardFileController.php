@@ -15,6 +15,8 @@ use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AdvisoryBoardFileController extends AdminController
@@ -29,22 +31,36 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardFileRequest $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
+    public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
     {
-        $validated = $request->validated();
+//        $validated = $request->validated();
+
+        $req = new StoreAdvisoryBoardFileRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {
+            $defaultLang = config('app.default_lang');
             foreach (config('available_languages') as $lang) {
+                $isMainLang = $defaultLang == $lang['code'];
+                $langCode = $lang['code'];
+                if(!$isMainLang && empty($validated['file_' . $lang['code']])) {
+                    $langCode = $defaultLang;
+                }
                 $file_service->upload(
-                    $validated['file_' . $lang['code']],
+                    $validated['file_' . $langCode],
                     $lang['code'],
                     $validated['object_id'],
                     $item->id,
                     $validated['doc_type_id'],
                     false,
                     $validated['file_description_' . $lang['code']],
-                    $validated['file_name_' . $lang['code']],
+                    $validated['file_name_' . $langCode],
                     $validated['resolution_council_ministers'],
                     $validated['state_newspaper'],
                     $validated['effective_at'],
@@ -90,9 +106,17 @@ class AdvisoryBoardFileController extends AdminController
      *
      * @return JsonResponse
      */
-    public function ajaxUpdate(UpdateAdvisoryBoardFileRequest $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
+    public function ajaxUpdate(Request $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
     {
-        $validated = $request->validated();
+//        $validated = $request->validated();
+
+        $req = new UpdateAdvisoryBoardFileRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {

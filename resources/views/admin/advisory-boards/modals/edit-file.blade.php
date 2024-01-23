@@ -35,7 +35,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="text-danger mt-1 error_file"></div>
+                                    <div class="ajax-error text-danger mt-1 error_file"></div>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
 
-                                <div class="text-danger mt-1 error_file_name"></div>
+                                <div class="ajax-error text-danger mt-1 error_file_name"></div>
                             </div>
                         </div>
 
@@ -74,6 +74,7 @@
                                                name="file_description">
                                     </div>
                                 </div>
+                                <div class="ajax-error text-danger mt-1 error_file_description"></div>
                             </div>
                         </div>
 
@@ -91,7 +92,7 @@
                                     </div>
                                 </div>
 
-                                <div class="text-danger mt-1 error_resolution_council_ministers"></div>
+                                <div class="ajax-error text-danger mt-1 error_resolution_council_ministers"></div>
                             </div>
                         </div>
 
@@ -109,7 +110,7 @@
                                     </div>
                                 </div>
 
-                                <div class="text-danger mt-1 error_state_newspaper"></div>
+                                <div class="ajax-error text-danger mt-1 error_state_newspaper"></div>
                             </div>
                         </div>
 
@@ -122,7 +123,7 @@
                                 <input type="text" id="effective_at" name="effective_at"
                                        data-dpp="top" class="datepicker form-control form-control-sm" value=""/>
 
-                                <div class="text-danger mt-1 error_effective_at"></div>
+                                <div class="ajax-error text-danger mt-1 error_effective_at"></div>
                             </div>
                         </div>
                     </div>
@@ -146,6 +147,7 @@
         function updateFileAjax(element) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = document.querySelector('form[name="FILE_UPDATE"]');
@@ -171,7 +173,21 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            if($('#modal-edit-function-file ' + search_class).length) {
+                                form.querySelector(search_class).textContent = errors[i][1][0];
+                            } else{
+                                form.querySelector(search_class.replace(/_bg|_en/gi, '')).textContent = errors[i][1][0];
+                            }
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
+                    // window.location.reload();
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');

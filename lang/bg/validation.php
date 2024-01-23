@@ -694,5 +694,7 @@ return [
         'member_job_en' => 'Длъжност (EN)',
         'member_notes_bg' => 'Бележки и кратка информация (EN)',
         'member_notes_en' => 'Бележки и кратка информация (EN)',
+        'file_name_bg' => 'Наименование (BG)',
+        'file_name_en' => 'Наименование (EN)',
     ],
 ];

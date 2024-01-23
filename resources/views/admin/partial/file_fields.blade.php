@@ -3,13 +3,16 @@
 @endphp
 
 <div class="row">
+    @php($mainLang = config('app.default_lang'))
     @foreach(config('available_languages') as $lang)
         <div class="col-md-6 col-12">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
                        for="file_{{ $lang['code'] }}">{{ __('custom.file') }}
                     ({{ Str::upper($lang['code']) }})
-                    <span class="required">*</span>
+                    @if($mainLang == $lang['code'])
+                        <span class="required">*</span>
+                    @endif
                 </label>
 
                 <div class="row">
@@ -22,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="text-danger mt-1 error_file_{{ $lang['code'] }}"></div>
+                <div class="ajax-error text-danger mt-1 error_file_{{ $lang['code'] }}"></div>
             </div>
         </div>
     @endforeach
@@ -35,7 +38,9 @@
                 <label class="col-sm-12 control-label"
                        for="file_name_{{ $lang['code'] }}">{{ __('custom.name') }}
                     ({{ Str::upper($lang['code']) }})
-                    <span class="required">*</span>
+                    @if($mainLang == $lang['code'])
+                        <span class="required">*</span>
+                    @endif
                 </label>
 
                 <div class="row">
@@ -46,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="text-danger mt-1 error_file_name_{{ $lang['code'] }}"></div>
+                <div class="ajax-error text-danger mt-1 error_file_name_{{ $lang['code'] }}"></div>
             </div>
         </div>
     @endforeach
@@ -69,6 +74,7 @@
                                name="file_description_{{ $lang['code'] }}">
                     </div>
                 </div>
+                <div class="ajax-error text-danger mt-1 error_file_description_{{ $lang['code'] }}"></div>
             </div>
         </div>
     @endforeach
@@ -89,7 +95,7 @@
                 </div>
             </div>
 
-            <div class="text-danger mt-1 error_resolution_council_ministers"></div>
+            <div class="ajax-error text-danger mt-1 error_resolution_council_ministers"></div>
         </div>
     </div>
 </div>
@@ -109,7 +115,7 @@
                 </div>
             </div>
 
-            <div class="text-danger mt-1 error_state_newspaper"></div>
+            <div class="ajax-error text-danger mt-1 error_state_newspaper"></div>
         </div>
     </div>
 </div>
@@ -124,7 +130,7 @@
             <input type="text" id="effective_at" name="effective_at"
                    class="datepicker form-control form-control-sm @error('effective_at'){{ 'is-invalid' }}@enderror" value=""/>
 
-            <div class="text-danger mt-1 error_effective_at"></div>
+            <div class="ajax-error text-danger mt-1 error_effective_at"></div>
         </div>
     </div>
 </div>

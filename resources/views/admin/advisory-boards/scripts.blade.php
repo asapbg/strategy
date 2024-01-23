@@ -440,6 +440,7 @@
         function submitFileAjax(element, url) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = element.closest('.modal-content').querySelector('form');
@@ -465,7 +466,17 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            form.querySelector(search_class).textContent = errors[i][1][0];
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
+                    // window.location.reload();
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');
