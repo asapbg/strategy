@@ -41,6 +41,7 @@ class Controller extends BaseController
     private ?string $route_name;
 
     protected array $slider = [];
+    protected array $customBreadcrumb = [];
 
     /**
      * Set pages titles in singular and plural according to controller / model
@@ -101,11 +102,22 @@ class Controller extends BaseController
         return back()->withInput(request()->all())->with($error_type, $error_msg);
     }
 
+
+    protected function composedBreadcrumbs(){
+        $breadcrumbs['links'] = $this->customBreadcrumb;
+        $breadcrumbs['links_count'] = sizeof($this->customBreadcrumb);
+        $breadcrumbs['heading'] = $this->customBreadcrumb[sizeof($this->customBreadcrumb) - 1]['name'];
+        return $breadcrumbs;
+    }
+
     /**
      * Generate the breadcrumbs
      */
     protected function breadcrumbs()
     {
+        if(!empty($this->customBreadcrumb)){
+            return $this->composedBreadcrumbs();
+        }
         $breadcrumbs = [];
 
         $exclude_routes = [
@@ -381,5 +393,11 @@ class Controller extends BaseController
         seo()->title(!empty($title) ? $title : __('site.seo_title'));
         seo()->meta('keywords', !empty($description) ? $description : __('site.seo_description'));
         seo()->meta('description', !empty($keywords) ? $keywords : __('site.seo_keywords'));
+    }
+
+
+    protected function setBreadcrumbsFull(array $segments)
+    {
+        $this->customBreadcrumb = $segments;
     }
 }
