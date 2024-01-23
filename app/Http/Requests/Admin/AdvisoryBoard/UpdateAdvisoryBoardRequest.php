@@ -44,11 +44,21 @@ class UpdateAdvisoryBoardRequest extends FormRequest
             'file'                    => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
         ];
 
+        $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $lang) {
             $rules['npo_' . $lang['code']] = ['nullable'];
 
             foreach (AdvisoryBoard::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
+                $mainLang = $lang['code'] == $defaultLang;
+                $fieldRules = $properties['rules'];
+                if(isset($properties['required_all_lang']) && !$properties['required_all_lang'] && !$mainLang) {
+                    if (($key = array_search('required', $fieldRules)) !== false) {
+                        unset($fieldRules[$key]);
+                    }
+                }
+                if(sizeof($fieldRules)) {
+                    $rules[$field . '_' . $lang['code']] = $fieldRules;
+                }
             }
         }
 

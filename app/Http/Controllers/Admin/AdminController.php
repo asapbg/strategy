@@ -39,18 +39,23 @@ class AdminController extends Controller
     }
 
     /**
-     * @param $fields  //example $item->getFillable();
+     * @param $fields  //example model::TRANSLATABLE_FIELDS;
      * @param $item   //model;
      * @param $validated //request validated
      */
     public function storeTranslateOrNew($fields, $item, $validated)
     {
+        $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $locale) {
+            $mainLang = $locale['code'] == $defaultLang;
             foreach ($fields as $field) {
                 $fieldName = $field."_".$locale['code'];
+                $fieldNameDefault = $field."_".$defaultLang;
 //                dd($fields, $field, $fieldName, $validated);
                 if(array_key_exists($fieldName, $validated)) {
                     $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldName];
+                } else if(!$mainLang && array_key_exists($fieldNameDefault, $validated)){
+                    $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldNameDefault];
                 }
             }
         }

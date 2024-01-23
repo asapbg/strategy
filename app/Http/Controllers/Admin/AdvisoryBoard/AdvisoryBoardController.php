@@ -95,10 +95,10 @@ class AdvisoryBoardController extends AdminController
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
-
+        $translatableFields = AdvisoryBoard::translationFieldsProperties();
         return $this->view(
             'admin.advisory-boards.create',
-            compact('item', 'field_of_actions', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions')
+            compact('item', 'field_of_actions', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions', 'translatableFields')
         );
     }
 
@@ -329,7 +329,7 @@ class AdvisoryBoardController extends AdminController
 
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
-
+        $translatableFields = AdvisoryBoard::translationFieldsProperties();
         return $this->view(
             'admin.advisory-boards.edit',
             compact(
@@ -346,6 +346,7 @@ class AdvisoryBoardController extends AdminController
                 'archive',
                 'all_users',
                 'moderators',
+                'translatableFields'
             )
         );
     }

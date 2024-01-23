@@ -40,20 +40,23 @@
 
                         <!-- Име на съвет -->
                         <div class="row mb-4">
-                            @foreach(config('available_languages') as $lang)
-                                <div class="col-6">
-                                    <label for="name_{{ $lang['code'] }}">
-                                        {{ __('validation.attributes.advisory_name') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                        <span class="required">*</span>
-                                    </label>
-
-                                    <input type="text" id="name_{{ $lang['code'] }}" name="name_{{ $lang['code']}}"
-                                           class="form-control form-control-sm @error('name_' . $lang['code']){{ 'is-invalid' }}@enderror"
-                                           value="{{ old('name_' . $lang['code'], '') }}" autocomplete="off">
-                                </div>
-                            @endforeach
+                            @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                         </div>
+{{--                        <div class="row mb-4">--}}
+{{--                            @foreach(config('available_languages') as $lang)--}}
+{{--                                <div class="col-6">--}}
+{{--                                    <label for="name_{{ $lang['code'] }}">--}}
+{{--                                        {{ __('validation.attributes.advisory_name') }}--}}
+{{--                                        ({{ Str::upper($lang['code']) }})--}}
+{{--                                        <span class="required">*</span>--}}
+{{--                                    </label>--}}
+
+{{--                                    <input type="text" id="name_{{ $lang['code'] }}" name="name_{{ $lang['code']}}"--}}
+{{--                                           class="form-control form-control-sm @error('name_' . $lang['code']){{ 'is-invalid' }}@enderror"--}}
+{{--                                           value="{{ old('name_' . $lang['code'], '') }}" autocomplete="off">--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
 
                         <div class="row mb-4">
                             <div class="col-auto">

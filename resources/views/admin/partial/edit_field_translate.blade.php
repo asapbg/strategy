@@ -2,11 +2,14 @@
 
 @if(sizeof($fieldProperties))
     @foreach(config('available_languages') as $language)
+        @php($mainLang = $language['code'] == config('app.default_lang'))
         @php($fieldName = $field.'_'.$language['code'])
         @php($value = $value ?? null)
         <div class="col-md-{{ $col ?? 6 }} col-12">
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="{{ $fieldName }}">@if(isset($tooltip) && !empty($tooltip)) <i class="fas fa-info-circle text-info mr-1" title="{{ $tooltip }}"></i>@endif{{ __('validation.attributes.'.$fieldName) }} @if(isset($required) && $required)<span class="required">*</span>@endif</label>
+                <label class="col-sm-12 control-label" for="{{ $fieldName }}">@if(isset($tooltip) && !empty($tooltip)) <i class="fas fa-info-circle text-info mr-1" title="{{ $tooltip }}"></i>@endif{{ __('validation.attributes.'.$fieldName) }}
+                    @if(isset($required) && $required && ((isset($fieldProperties) && isset($fieldProperties['required_all_lang']) && $fieldProperties['required_all_lang']) || $mainLang))<span class="required">*</span>@endif
+                </label>
                 <div class="col-12">
                     @switch($fieldProperties['type'])
                         @case('textarea')

@@ -37,25 +37,26 @@
             <!-- Име на съвет -->
             <div class="row mb-4">
                 @if($can_foreach_translations)
-                    @foreach($item->translations as $translation)
-                        <div class="col-md-6 col-12">
-                            <div class="form-group">
-                                <label class="control-label"
-                                       for="name_{{ $translation->locale }}">{{ __('validation.attributes.advisory_name') }}
-                                    ({{ Str::upper($translation->locale) }}) <span
-                                        class="required">*</span></label>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input type="text" id="name_{{ $translation->locale }}"
-                                               name="name_{{ $translation->locale }}"
-                                               class="form-control form-control-sm @error('name_' . $translation->locale){{ 'is-invalid' }}@enderror"
-                                               value="{{ old('name_' . $translation->locale, $translation->name ?? '') }}"
-                                               autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                    @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
+{{--                    @foreach($item->translations as $translation)--}}
+{{--                        <div class="col-md-6 col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label class="control-label"--}}
+{{--                                       for="name_{{ $translation->locale }}">{{ __('validation.attributes.advisory_name') }}--}}
+{{--                                    ({{ Str::upper($translation->locale) }}) <span--}}
+{{--                                        class="required">*</span></label>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-12">--}}
+{{--                                        <input type="text" id="name_{{ $translation->locale }}"--}}
+{{--                                               name="name_{{ $translation->locale }}"--}}
+{{--                                               class="form-control form-control-sm @error('name_' . $translation->locale){{ 'is-invalid' }}@enderror"--}}
+{{--                                               value="{{ old('name_' . $translation->locale, $translation->name ?? '') }}"--}}
+{{--                                               autocomplete="off">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
                 @endif
             </div>
 
