@@ -25,30 +25,33 @@
                   method="post">
                 @csrf
 
-                <div class="row mb-3">
-                    @foreach(config('available_languages') as $lang)
-                        <div class="col-6">
-                            <label for="establishment_description_{{ $lang['code'] }}">{{ __('custom.description') }}
-                                ({{ Str::upper($lang['code']) }})</label>
-
-                            @php
-                                $description = $item->establishment?->translations->count() === 2 ?
-                                    $item->establishment->translations->first(fn($row) => $row->locale == $lang['code'])->description :
-                                    old('establishment_description_' . $lang['code'], '');
-                            @endphp
-
-                            <textarea class="form-control form-control-sm summernote"
-                                      name="establishment_description_{{ $lang['code'] }}"
-                                      id="establishment_description_{{ $lang['code'] }}">
-                                    {{ $description }}
-                                </textarea>
-
-                            @error('establishment_description_' . $lang['code'])
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    @endforeach
+                <div class="row">
+                    @include('admin.partial.edit_field_translate', ['item' => $item->establishment,'translatableFields' => \App\Models\AdvisoryBoardEstablishment::translationFieldsProperties(), 'field' => 'description'])
                 </div>
+{{--                <div class="row mb-3">--}}
+{{--                    @foreach(config('available_languages') as $lang)--}}
+{{--                        <div class="col-6">--}}
+{{--                            <label for="establishment_description_{{ $lang['code'] }}">{{ __('custom.description') }}--}}
+{{--                                ({{ Str::upper($lang['code']) }})</label>--}}
+
+{{--                            @php--}}
+{{--                                $description = $item->establishment?->translations->count() === 2 ?--}}
+{{--                                    $item->establishment->translations->first(fn($row) => $row->locale == $lang['code'])->description :--}}
+{{--                                    old('establishment_description_' . $lang['code'], '');--}}
+{{--                            @endphp--}}
+
+{{--                            <textarea class="form-control form-control-sm summernote"--}}
+{{--                                      name="establishment_description_{{ $lang['code'] }}"--}}
+{{--                                      id="establishment_description_{{ $lang['code'] }}">--}}
+{{--                                    {{ $description }}--}}
+{{--                                </textarea>--}}
+
+{{--                            @error('establishment_description_' . $lang['code'])--}}
+{{--                            <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                            @enderror--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
             </form>
         @else
             @foreach(config('available_languages') as $lang)
@@ -56,14 +59,8 @@
                     <div class="col-12">
                         <label for="establishment_description_{{ $lang['code'] }}">{{ __('custom.description') }}
                             ({{ Str::upper($lang['code']) }})</label>
-
-                        @php
-                            $description = $item->establishment?->translations->count() === 2 ?
-                                $item->establishment->translations->first(fn($row) => $row->locale == $lang['code'])->description : '';
-                        @endphp
-
                         <div class="row">
-                            {!! $description !!}
+                            {!! $item->establishment->tarnslate($lang['code'])->description !!}
                         </div>
                     </div>
                 </div>

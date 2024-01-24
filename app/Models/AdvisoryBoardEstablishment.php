@@ -55,7 +55,7 @@ class AdvisoryBoardEstablishment extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'establishment_description' => [
+            'description' => [
                 'type' => 'summernote',
                 'rules' => ['required', 'string'],
                 'required_all_lang' => false

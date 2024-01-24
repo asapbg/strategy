@@ -703,5 +703,7 @@ return [
         'other_bg' => 'Други (BG)',
         'other_en' => 'Други (EN)',
         'recipient' => 'Изпрати до',
+        'establishment_description_bg' => 'Описание (BG)',
+        'establishment_description_en' => 'Описание (EN)',
     ],
 ];

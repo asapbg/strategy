@@ -55,7 +55,7 @@ class AdvisoryBoardOrganizationRule extends ModelActivityExtend
     public static function translationFieldsProperties(): array
     {
         return [
-            'rules_description' => [
+            'description' => [
                 'type' => 'summernote',
                 'rules' => ['required', 'string'],
                 'required_all_lang' => false

@@ -25,30 +25,33 @@
                   method="post">
                 @csrf
 
-                <div class="row mb-3">
-                    @foreach(config('available_languages') as $lang)
-                        <div class="col-6">
-                            <label for="rules_description_{{ $lang['code'] }}">{{ __('custom.description') }}
-                                ({{ Str::upper($lang['code']) }})</label>
-
-                            @php
-                                $description = $item->organizationRule?->translations->count() === 2 ?
-                                    $item->organizationRule->translations->first(fn($row) => $row->locale == $lang['code'])->description :
-                                    old('rules_description_' . $lang['code'], '');
-                            @endphp
-
-                            <textarea class="form-control form-control-sm summernote"
-                                      name="rules_description_{{ $lang['code'] }}"
-                                      id="rules_description_{{ $lang['code'] }}">
-                                    {{ $description }}
-                                </textarea>
-
-                            @error('rules_description_' . $lang['code'])
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    @endforeach
+                <div class="row">
+                    @include('admin.partial.edit_field_translate', ['item' => $item->organizationRule, 'translatableFields' => \App\Models\AdvisoryBoardOrganizationRule::translationFieldsProperties(), 'field' => 'description'])
                 </div>
+{{--                <div class="row mb-3">--}}
+{{--                    @foreach(config('available_languages') as $lang)--}}
+{{--                        <div class="col-6">--}}
+{{--                            <label for="rules_description_{{ $lang['code'] }}">{{ __('custom.description') }}--}}
+{{--                                ({{ Str::upper($lang['code']) }})</label>--}}
+
+{{--                            @php--}}
+{{--                                $description = $item->organizationRule?->translations->count() === 2 ?--}}
+{{--                                    $item->organizationRule->translations->first(fn($row) => $row->locale == $lang['code'])->description :--}}
+{{--                                    old('rules_description_' . $lang['code'], '');--}}
+{{--                            @endphp--}}
+
+{{--                            <textarea class="form-control form-control-sm summernote"--}}
+{{--                                      name="rules_description_{{ $lang['code'] }}"--}}
+{{--                                      id="rules_description_{{ $lang['code'] }}">--}}
+{{--                                    {{ $description }}--}}
+{{--                                </textarea>--}}
+
+{{--                            @error('rules_description_' . $lang['code'])--}}
+{{--                            <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                            @enderror--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
             </form>
         @else
             @foreach(config('available_languages') as $lang)
@@ -56,14 +59,8 @@
                     <div class="col-12">
                         <label for="rules_description_{{ $lang['code'] }}">{{ __('custom.description') }}
                             ({{ Str::upper($lang['code']) }})</label>
-
-                        @php
-                            $description = $item->organizationRule?->translations->count() === 2 ?
-                                $item->organizationRule->translations->first(fn($row) => $row->locale == $lang['code'])->description : '';
-                        @endphp
-
                         <div class="row">
-                            {!! $description !!}
+                            {!! $item->organizationRule->tarnslate($lang['code'])->description !!}
                         </div>
                     </div>
                 </div>
