@@ -31,24 +31,27 @@
                         </div>
                     </div>
 
-                    <!-- Описание -->
-                    <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <label for="description_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.description') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                    <span class="required">*</span>
-                                </label>
-
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="description_{{ $lang['code'] }}"
-                                          id="description_{{ $lang['code'] }}"></textarea>
-
-                                <div class="text-danger ajax-error mt-1 error_description_{{ $lang['code'] }}"></div>
-                            </div>
-                        @endforeach
+                    <div class="row">
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardFunction::translationFieldsProperties(), 'field' => 'description', 'required' => true])
                     </div>
+{{--                    <!-- Описание -->--}}
+{{--                    <div class="row mb-2">--}}
+{{--                        @foreach(config('available_languages') as $lang)--}}
+{{--                            <div class="col-6">--}}
+{{--                                <label for="description_{{ $lang['code'] }}">--}}
+{{--                                    {{ __('validation.attributes.description') }}--}}
+{{--                                    ({{ Str::upper($lang['code']) }})--}}
+{{--                                    <span class="required">*</span>--}}
+{{--                                </label>--}}
+
+{{--                                <textarea class="form-control form-control-sm summernote"--}}
+{{--                                          name="description_{{ $lang['code'] }}"--}}
+{{--                                          id="description_{{ $lang['code'] }}"></textarea>--}}
+
+{{--                                <div class="text-danger ajax-error mt-1 error_description_{{ $lang['code'] }}"></div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+{{--                    </div>--}}
                 </form>
             </div>
 

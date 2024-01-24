@@ -33,7 +33,6 @@ trait TranslatableFieldsRules
                 }
             }
         }
-
         return $rules;
     }
 }

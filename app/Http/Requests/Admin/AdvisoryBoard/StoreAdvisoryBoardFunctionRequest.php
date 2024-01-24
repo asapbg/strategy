@@ -6,6 +6,7 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardFunction;
 use App\Rules\UniqueYearWorkProgram;
 use App\Traits\FailedAuthorization;
+use App\Traits\TranslatableFieldsRules;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +16,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreAdvisoryBoardFunctionRequest extends FormRequest
 {
 
-    use FailedAuthorization;
+    use FailedAuthorization, TranslatableFieldsRules;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,7 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', AdvisoryBoard::class);
+        return $this->user()->can('update', $this->item);
     }
 
     /**
@@ -39,12 +40,6 @@ class StoreAdvisoryBoardFunctionRequest extends FormRequest
             'working_year' => ['required','date_format:Y', new UniqueYearWorkProgram(request()->input('adv_board_id'))]
         ];
 
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardFunction::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-
-        return $rules;
+        return $this->getRules($rules, AdvisoryBoardFunction::translationFieldsProperties());
     }
 }

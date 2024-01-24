@@ -33,8 +33,6 @@ class AdvisoryBoardFileController extends AdminController
      */
     public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardFileService $file_service): JsonResponse
     {
-//        $validated = $request->validated();
-
         $req = new StoreAdvisoryBoardFileRequest();
         $validator = Validator::make($request->all(), $req->rules());
         if($validator->fails()) {
@@ -49,18 +47,15 @@ class AdvisoryBoardFileController extends AdminController
             foreach (config('available_languages') as $lang) {
                 $isMainLang = $defaultLang == $lang['code'];
                 $langCode = $lang['code'];
-                if(!$isMainLang && empty($validated['file_' . $lang['code']])) {
-                    $langCode = $defaultLang;
-                }
                 $file_service->upload(
-                    $validated['file_' . $langCode],
+                    empty($validated['file_' . $lang['code']]) ? $validated['file_' . $defaultLang] : $validated['file_' . $lang['code']],
                     $lang['code'],
                     $validated['object_id'],
                     $item->id,
                     $validated['doc_type_id'],
                     false,
-                    $validated['file_description_' . $lang['code']],
-                    $validated['file_name_' . $langCode],
+                    empty($validated['file_description_' . $lang['code']]) ? $validated['file_description_' . $defaultLang] : $validated['file_description_' . $lang['code']],
+                    empty($validated['file_name_' . $langCode]) ? $validated['file_name_' . $defaultLang] : $validated['file_name_' . $langCode],
                     $validated['resolution_council_ministers'],
                     $validated['state_newspaper'],
                     $validated['effective_at'],
