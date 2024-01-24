@@ -370,7 +370,7 @@
                     <div class="col-lg-4 mb-4">
                         <div class="post-box">
                             <div class="post-img">
-                                <img src="{{ asset($publication->mainImg?->path ?? $default_img) }}" class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
+                                <img src="{{ $publication->mainImg ? $publication->mainImgAsset : $publication->defaultImg }}" class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
                                      alt="{{ $publication->translation->title }}"
                                 >
                             </div>

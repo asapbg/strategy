@@ -2,7 +2,7 @@
     <div class="col-lg-4 mb-4">
         <div class="post-box">
             <div class="post-img">
-                <img class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img" src="{{ $news_row->mainImg ? $news_row->mainImgAsset :  $default_img }}"
+                <img class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img" src="{{ $news_row->mainImg ? $news_row->mainImgAsset :  $news_row->defaultImg }}"
                      alt="{{ $news_row->title }}"
                 >
             </div>

@@ -19,6 +19,10 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     const TRANSLATABLE_FIELDS = ['title', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = ('custom.publications');
 
+    const DEFAULT_IMG_LIBRARY = 'img'.DIRECTORY_SEPARATOR.'library.jpg';
+    const DEFAULT_IMG_NEWS = 'img'.DIRECTORY_SEPARATOR.'news-2.jpg';
+    const DEFAULT_IMG_ADV = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
+
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -76,6 +80,14 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     {
         return Attribute::make(
             get: fn () => asset('img'.DIRECTORY_SEPARATOR.'news-2.jpg'),
+        );
+    }
+
+    protected function defaultImg(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->type == PublicationTypesEnum::TYPE_ADVISORY_BOARD->value ? asset(self::DEFAULT_IMG_ADV)
+                : ($this->type == PublicationTypesEnum::TYPE_NEWS->value ? asset(self::DEFAULT_IMG_NEWS) : asset(self::DEFAULT_IMG_LIBRARY) ),
         );
     }
 

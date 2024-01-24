@@ -17,8 +17,6 @@ class LibraryController extends Controller
      * @var string
      */
     protected $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
-    protected $default_img_library = 'img'.DIRECTORY_SEPARATOR.'library.jpg';
-    protected $default_img_news = 'img'.DIRECTORY_SEPARATOR.'news-2.jpg';
 
     /**
      * @var int
@@ -42,7 +40,7 @@ class LibraryController extends Controller
 
         $publications = $this->getPublications($request, $type);
 
-        $default_img = asset($this->default_img_library);
+        $default_img = asset(Publication::DEFAULT_IMG_LIBRARY);
         if ($is_search) {
             return $this->view('site.publications.publications', compact('publications', 'default_img'));
         }
@@ -72,7 +70,7 @@ class LibraryController extends Controller
 
         $news = $this->getPublications($request, $type);
 
-        $default_img = asset($this->default_img_news);
+        $default_img = asset(Publication::DEFAULT_IMG_NEWS);
         if ($is_search) {
             return $this->view('site.publications.news', compact('news', 'default_img'));
         }

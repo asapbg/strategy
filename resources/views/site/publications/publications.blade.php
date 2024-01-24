@@ -4,7 +4,7 @@
             <div class="consul-wrapper">
                 <div class="single-library d-flex">
                     <div class="library-img-holder">
-                        <img class="img-fluid" src="{{ $publication->mainImg ? $publication->mainImgAsset :  $default_img }}" alt="{{ $publication->title }}">
+                        <img class="img-fluid" src="{{ $publication->mainImg ? $publication->mainImgAsset :  $publication->defaultImg }}" alt="{{ $publication->title }}">
                     </div>
                     <div class="consult-body">
                         <div class="consul-item">
