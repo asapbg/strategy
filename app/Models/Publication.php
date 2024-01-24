@@ -58,6 +58,34 @@ class Publication extends ModelActivityExtend implements TranslatableContract
         );
     }
 
+    protected function advDefaultImg(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => asset('images'.DIRECTORY_SEPARATOR.'ms-2023.jpg'),
+        );
+    }
+
+    protected function libraryDefaultImg(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => asset('img'.DIRECTORY_SEPARATOR.'library.jpg'),
+        );
+    }
+
+    protected function newsDefaultImg(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => asset('img'.DIRECTORY_SEPARATOR.'news-2.jpg'),
+        );
+    }
+
+    protected function mainImgAsset(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $this->mainImg->path)),
+        );
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(

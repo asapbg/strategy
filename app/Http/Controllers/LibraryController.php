@@ -17,6 +17,8 @@ class LibraryController extends Controller
      * @var string
      */
     protected $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
+    protected $default_img_library = 'img'.DIRECTORY_SEPARATOR.'library.jpg';
+    protected $default_img_news = 'img'.DIRECTORY_SEPARATOR.'news-2.jpg';
 
     /**
      * @var int
@@ -40,7 +42,7 @@ class LibraryController extends Controller
 
         $publications = $this->getPublications($request, $type);
 
-        $default_img = $this->default_img;
+        $default_img = asset($this->default_img_library);
         if ($is_search) {
             return $this->view('site.publications.publications', compact('publications', 'default_img'));
         }
@@ -70,7 +72,7 @@ class LibraryController extends Controller
 
         $news = $this->getPublications($request, $type);
 
-        $default_img = $this->default_img;
+        $default_img = asset($this->default_img_news);
         if ($is_search) {
             return $this->view('site.publications.news', compact('news', 'default_img'));
         }
@@ -96,7 +98,7 @@ class LibraryController extends Controller
             ->whereLocale(currentLocale())
             ->find($id);
         $pageTitle = $publication->translation?->title;
-        $default_img = $this->default_img;
+        $default_img = $publication->type == PublicationTypesEnum::TYPE_NEWS->value ? $publication->newsDefaultImg : $publication->libraryDefaultImg;
         $this->setBreadcrumbsTitle($pageTitle);
         $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword);
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));

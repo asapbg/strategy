@@ -30,9 +30,11 @@
 <hr>
 
 <div class="mb-3 row">
-    <img src="{{ asset($publication->mainImg ? 'files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path) : $default_img) }}" alt="{{ $publication->title }}"
-         class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
-    >
+    @if($publication->mainImg)
+        <img src="{{ $publication->mainImgAsset }}" alt="{{ $publication->title }}"
+             class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
+        >
+    @endif
     {!! $publication->content !!}
 
     <a href=""></a>
@@ -68,5 +70,5 @@
     </div>
 @endif
 <div class="row">
-    <a class="btn btn-primary mt-4 mb-5" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
+    <a class="btn btn-primary mt-4 mb-5 col-auto" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
 </div>

@@ -220,7 +220,19 @@ class CommonController extends Controller
 //            File::CODE_OBJ_PAGE => url()->previous().'#ct-files',
             default => url()->previous().'#ct-files',
         };
+
+        if( $file->code_object == File::CODE_OBJ_PUBLICATION ){
+            $publication = Publication::where('file_id', '=', $file->id)
+                ->where('id', '=', $file->id_object)
+                ->first();
+            if($publication) {
+                $publication->file_id = null;
+                $publication->save();
+            }
+        }
+
         $file->delete();
+
         if(!File::where('id', '<>', $file->id)->where('path', '=', $file->path)->count()){
             if (Storage::disk($disk)->has($file->path)) {
                 Storage::disk($disk)->delete($file->path, $file->filename);
