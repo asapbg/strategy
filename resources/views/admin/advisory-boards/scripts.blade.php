@@ -212,10 +212,10 @@
                     form.querySelector('#next_meeting').value = new Date(data.next_meeting).toLocaleDateString();
                     for(let i = 0; i < data.translations.length; i++){
                         if(data.translations[i].locale == 'bg'){
-                            $(form.querySelector('#description_bg')).summernote("code", data.translations[0].description);
+                            $(form.querySelector('#description_bg')).summernote("code", data.translations[i].description);
                         }
                         if(data.translations[i].locale == 'en'){
-                            $(form.querySelector('#description_en')).summernote("code", data.translations[1].description);
+                            $(form.querySelector('#description_en')).summernote("code", data.translations[i].description);
                         }
                     }
                 },
