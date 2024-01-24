@@ -46,7 +46,7 @@ class AdvisoryBoardMessagesController extends Controller
             }
 
             if( !$request->user()->canAny(['manage.*', 'manage.advisory-boards']) ) {
-                return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
+                return back()->withInput()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
 
             $validated = $validator->validated();
