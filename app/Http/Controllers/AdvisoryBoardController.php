@@ -538,12 +538,13 @@ class AdvisoryBoardController extends Controller
     private function boardFilters($request)
     {
         $fields = FieldOfAction::select('field_of_actions.*')
+            ->advisoryBoard()
             ->with('translations')
             ->joinTranslation(FieldOfAction::class)
             ->whereLocale(app()->getLocale())
             ->orderBy('field_of_action_translations.name', 'asc')
             ->get();
-
+        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderBy('id')->get();
         $authority = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
             ->with(['translation'])
             ->joinTranslation(AuthorityAdvisoryBoard::class)
