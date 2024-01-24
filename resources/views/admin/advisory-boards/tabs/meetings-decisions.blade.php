@@ -129,7 +129,17 @@
                                 @php $show = $key === 0 ? 'show' : '' @endphp
                                 <div id="collapse{{ $key }}" class="collapse {{ $show }}" data-parent="#accordion">
                                     <div class="card-body">
-                                        {!! $meeting->description !!}
+                                        <div class="row">
+                                            <div class="col-6 border-right">
+                                                <p>Описание (BG):</p>
+                                                {!! $meeting->translate('bg')->description !!}
+                                            </div>
+                                            <div class="col-6 border-right">
+                                                <p>Описание (EN):</p>
+                                                {!! $meeting->translate('en')->description !!}
+                                            </div>
+                                        </div>
+{{--                                        {!! $meeting->description !!}--}}
                                     </div>
 
 {{--                                    <div class="row">--}}

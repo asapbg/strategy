@@ -164,19 +164,26 @@
                      data-parent="#accordion">
                     <div class="card-body">
                         <div class="row">
-                            @if(!empty($archiveItem->translations[0]?->description))
-                                <div class="col-6 border-right">
-                                    <p>(BG)</p>
-                                    {!! $archiveItem->translations[0]->description !!}
-                                </div>
-                            @endif
-
-                            @if($archiveItem->translations->count() > 1 && !empty($archiveItem->translations[1]?->description))
-                                <div class="col-6">
-                                    <p>(EN)</p>
-                                    {!! $archiveItem->translations[1]->description !!}
-                                </div>
-                            @endif
+                            <div class="col-6 border-right">
+                                <p>Описание (BG):</p>
+                                {!! $archiveItem->translate('bg')->description !!}
+                            </div>
+                            <div class="col-6 border-right">
+                                <p>Описание (EN):</p>
+                                {!! $archiveItem->translate('en')->description !!}
+                            </div>
+{{--                            @if(!empty($archiveItem->translate('bg')->description))--}}
+{{--                                <div class="col-6 border-right">--}}
+{{--                                    <p>(BG)</p>--}}
+{{--                                    {!! $archiveItem->translate('bg')->description !!}--}}
+{{--                                </div>--}}
+{{--                            @endif--}}
+{{--                            @if($archiveItem->translations->count() > 1 && !empty($archiveItem->translations[1]?->description))--}}
+{{--                                <div class="col-6">--}}
+{{--                                    <p>(EN)</p>--}}
+{{--                                    {!! $archiveItem->translations[1]->description !!}--}}
+{{--                                </div>--}}
+{{--                            @endif--}}
                         </div>
                     </div>
 
