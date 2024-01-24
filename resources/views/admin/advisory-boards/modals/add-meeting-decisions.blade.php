@@ -61,65 +61,14 @@
                     <div class="row">
                         @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeetingDecision::translationFieldsProperties(), 'field' => 'decisions'])
                     </div>
-{{--                    <!-- Решения -->--}}
-{{--                    <div class="row mb-2">--}}
-{{--                        @foreach(config('available_languages') as $lang)--}}
-{{--                            <div class="col-12">--}}
-{{--                                <label for="decisions_{{ $lang['code'] }}">--}}
-{{--                                    {{ __('validation.attributes.decisions') }}--}}
-{{--                                    ({{ Str::upper($lang['code']) }})--}}
-{{--                                </label>--}}
-
-{{--                                <textarea class="form-control form-control-sm summernote"--}}
-{{--                                          name="decisions_{{ $lang['code'] }}"--}}
-{{--                                          id="decisions_{{ $lang['code'] }}"></textarea>--}}
-{{--                            </div>--}}
-
-{{--                            <div class="text-danger mt-1 error_decisions_{{ $lang['code'] }}"></div>--}}
-{{--                        @endforeach--}}
-{{--                    </div>--}}
 
                     <div class="row">
                         @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeetingDecision::translationFieldsProperties(), 'field' => 'suggestions'])
                     </div>
-{{--                    <!-- Получени предложения -->--}}
-{{--                    <div class="row mb-2">--}}
-{{--                        @foreach(config('available_languages') as $lang)--}}
-{{--                            <div class="col-12">--}}
-{{--                                <label for="suggestions_{{ $lang['code'] }}">--}}
-{{--                                    {{ __('validation.attributes.suggestions') }}--}}
-{{--                                    ({{ Str::upper($lang['code']) }})--}}
-{{--                                </label>--}}
-
-{{--                                <textarea class="form-control form-control-sm summernote"--}}
-{{--                                          name="suggestions_{{ $lang['code'] }}"--}}
-{{--                                          id="suggestions_{{ $lang['code'] }}"></textarea>--}}
-{{--                            </div>--}}
-
-{{--                            <div class="text-danger mt-1 error_suggestions_{{ $lang['code'] }}"></div>--}}
-{{--                        @endforeach--}}
-{{--                    </div>--}}
 
                     <div class="row">
                         @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeetingDecision::translationFieldsProperties(), 'field' => 'other'])
                     </div>
-{{--                    <!-- Други -->--}}
-{{--                    <div class="row mb-2">--}}
-{{--                        @foreach(config('available_languages') as $lang)--}}
-{{--                            <div class="col-12">--}}
-{{--                                <label for="other_{{ $lang['code'] }}">--}}
-{{--                                    {{ __('validation.attributes.other') }}--}}
-{{--                                    ({{ Str::upper($lang['code']) }})--}}
-{{--                                </label>--}}
-
-{{--                                <textarea class="form-control form-control-sm summernote"--}}
-{{--                                          name="other_{{ $lang['code'] }}"--}}
-{{--                                          id="other_{{ $lang['code'] }}"></textarea>--}}
-{{--                            </div>--}}
-
-{{--                            <div class="text-danger mt-1 error_other_{{ $lang['code'] }}"></div>--}}
-{{--                        @endforeach--}}
-{{--                    </div>--}}
                 </form>
             </div>
 

@@ -31,6 +31,9 @@
                         data-target="#modal-create-working-program">
                     {{ __('custom.add') . ' ' . trans_choice('custom.function', 1) }}
                 </button>
+                <button onclick="goToArchive(2)" role="tab"
+                        aria-controls="archive" class="btn btn-warning"
+                        aria-selected="false">{{ __('custom.belongs_to') . ' ' . __('custom.archive') }}</button>
             </div>
         </div>
 

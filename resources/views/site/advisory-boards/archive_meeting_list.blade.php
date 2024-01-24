@@ -53,50 +53,50 @@
                 {!! $meeting->description !!}
             </p>
 
-             @if(isset($meeting->decisions) && $meeting->decisions->count() > 0)
-                @foreach($meeting->decisions as $information)
-                    <div class="col-12">
-                        <p>
-                            {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}
-                        </p>
-                    </div>
-                    @if(!empty($information->agenda))
-                    <div class="col-12">
-                        <p>
-                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
-                        </p>
-                    </div>
-                    @endif
-                    @if(!empty($information->proto))
-                    <div class="col-12">
-                        <p>
-                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
-                        </p>
-                    </div>
-                    @endif
-                    @if(!empty($information->decisions))
-                    <div class="col-12">
-                        <p>
-                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
-                        </p>
-                    </div>
-                    @endif
-                    @if(!empty($information->suggestionss))
-                    <div class="col-12">
-                        <p>
-                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
-                        </p>
-                    </div>
-                    @endif
-                    @if(!empty($information->other))
-                    <div class="col-12">
-                        <p>
-                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
-                        </p>
-                    </div>
-                    @endif
-                @endforeach
-            @endif
+{{--             @if(isset($meeting->decisions) && $meeting->decisions->count() > 0)--}}
+{{--                @foreach($meeting->decisions as $information)--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @if(!empty($information->agenda))--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @endif--}}
+{{--                    @if(!empty($information->proto))--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @endif--}}
+{{--                    @if(!empty($information->decisions))--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @endif--}}
+{{--                    @if(!empty($information->suggestionss))--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @endif--}}
+{{--                    @if(!empty($information->other))--}}
+{{--                    <div class="col-12">--}}
+{{--                        <p>--}}
+{{--                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @endif--}}
+{{--                @endforeach--}}
+{{--            @endif--}}
 
             @if($meeting->siteFiles->count())
                 @foreach($meeting->siteFiles as $file)

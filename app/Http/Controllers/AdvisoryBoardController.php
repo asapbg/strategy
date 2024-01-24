@@ -170,7 +170,7 @@ class AdvisoryBoardController extends Controller
                 $query->with(['translations', 'institution']);
             }, 'meetings' => function($query) {
                 $query->where('next_meeting', '>=', Carbon::now()->startOfYear())
-                    ->with(['translations', 'siteFiles'])->orderBy('next_meeting', 'asc');
+                    ->with(['translations', 'siteFiles'])->orderBy('next_meeting', 'desc');
             }, 'secretariat' => function($query) {
                 $query->with(['translations', 'siteFiles']);
             }, 'workingProgram' => function($query) {

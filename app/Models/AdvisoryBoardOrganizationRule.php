@@ -56,8 +56,9 @@ class AdvisoryBoardOrganizationRule extends ModelActivityExtend
     {
         return [
             'rules_description' => [
-                'type' => 'string',
-                'rules' => ['required'],
+                'type' => 'summernote',
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
         ];
     }

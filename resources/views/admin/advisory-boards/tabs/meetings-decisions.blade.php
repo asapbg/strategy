@@ -63,19 +63,19 @@
                                             @if(!$view_mode)
                                                 <div class="col-auto">
                                                     <div class="row">
-                                                        <div class="col-auto">
-                                                            @can('update', $item)
-                                                                <button type="button"
-                                                                        class="btn btn-sm btn-success mr-2"
-                                                                        data-toggle="modal"
-                                                                        data-target="#modal-add-meeting-decisions"
-                                                                        title="{{ __('custom.add') . ' ' . __('custom.information') }}"
-                                                                        onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM)">
+{{--                                                        <div class="col-auto">--}}
+{{--                                                            @can('update', $item)--}}
+{{--                                                                <button type="button"--}}
+{{--                                                                        class="btn btn-sm btn-success mr-2"--}}
+{{--                                                                        data-toggle="modal"--}}
+{{--                                                                        data-target="#modal-add-meeting-decisions"--}}
+{{--                                                                        title="{{ __('custom.add') . ' ' . __('custom.information') }}"--}}
+{{--                                                                        onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM)">--}}
 {{--                                                                    <i class="fa fa-handshake"></i>--}}
-                                                                    {{ __('custom.protocols_and_decisions') }}
-                                                                </button>
-                                                            @endcan
-                                                        </div>
+{{--                                                                    {{ __('custom.protocols_and_decisions') }}--}}
+{{--                                                                </button>--}}
+{{--                                                            @endcan--}}
+{{--                                                        </div>--}}
 
                                                         <div class="col-auto">
                                                             @can('update', $item)
@@ -132,59 +132,59 @@
                                         {!! $meeting->description !!}
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <hr/>
-                                        </div>
-                                    </div>
+{{--                                    <div class="row">--}}
+{{--                                        <div class="col-12">--}}
+{{--                                            <hr/>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
-                                    <div class="p-3">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h4>{{ __('custom.information') }}</h4>
-                                            </div>
+{{--                                    <div class="p-3">--}}
+{{--                                        <div class="row">--}}
+{{--                                            <div class="col-12">--}}
+{{--                                                <h4>{{ __('custom.information') }}</h4>--}}
+{{--                                            </div>--}}
 
-                                            @if(isset($meeting->decisions) && $meeting->decisions->count() > 0)
-                                                @foreach($meeting->decisions as $information)
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}
-                                                        </p>
-                                                    </div>
+{{--                                            @if(isset($meeting->decisions) && $meeting->decisions->count() > 0)--}}
+{{--                                                @foreach($meeting->decisions as $information)--}}
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
-                                                        </p>
-                                                    </div>
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
-                                                        </p>
-                                                    </div>
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
-                                                        </p>
-                                                    </div>
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
-                                                        </p>
-                                                    </div>
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
-                                                        </p>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <p>--}}
+{{--                                                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}--}}
+{{--                                                        </p>--}}
+{{--                                                    </div>--}}
+{{--                                                @endforeach--}}
+{{--                                            @endif--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
                                     <div class="row">
                                         <div class="col-12">
