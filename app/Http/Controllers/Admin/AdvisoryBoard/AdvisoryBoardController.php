@@ -452,7 +452,8 @@ class AdvisoryBoardController extends AdminController
             $item->save();
             $item->delete();
 
-            return redirect()->route('admin.advisory-boards.index')
+            //->route('admin.advisory-boards.index')
+            return redirect(url()->previous())
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.deleted_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
@@ -467,8 +468,8 @@ class AdvisoryBoardController extends AdminController
     {
         try {
             $item->restore();
-
-            return redirect()->route('admin.advisory-boards.index')
+            //->route('admin.advisory-boards.index')
+            return redirect(url()->previous())
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.restored_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
@@ -485,7 +486,8 @@ class AdvisoryBoardController extends AdminController
             $item->public = true;
             $item->save();
 
-            return redirect()->route('admin.advisory-boards.index')
+            //->route('admin.advisory-boards.index')
+            return redirect(url()->previous())
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
@@ -502,7 +504,8 @@ class AdvisoryBoardController extends AdminController
             $item->public = false;
             $item->save();
 
-            return redirect()->route('admin.advisory-boards.index')
+            //->route('admin.advisory-boards.index')
+            return redirect(url()->previous())
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

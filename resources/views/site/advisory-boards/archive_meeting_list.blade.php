@@ -48,7 +48,7 @@
                                     <div class="card-body">
             @endif
 
-            <p class="fw-bold mt-3">{{ __('custom.date') }}: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }}</span></p>
+            <p class="fw-bold mt-3 custom-left-border" style="font-size: 20px;">{{ __('custom.meeting_at') }}: <span class="fw-normal">{{ displayDate($meeting->next_meeting) }} {{ __('custom.year_short') }}</span></p>
             <p>
                 {!! $meeting->description !!}
             </p>
@@ -60,36 +60,41 @@
                             {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}
                         </p>
                     </div>
-
+                    @if(!empty($information->agenda))
                     <div class="col-12">
                         <p>
                             {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
                         </p>
                     </div>
-
+                    @endif
+                    @if(!empty($information->proto))
                     <div class="col-12">
                         <p>
                             {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
                         </p>
                     </div>
-
+                    @endif
+                    @if(!empty($information->decisions))
                     <div class="col-12">
                         <p>
                             {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
                         </p>
                     </div>
-
+                    @endif
+                    @if(!empty($information->suggestionss))
                     <div class="col-12">
                         <p>
                             {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
                         </p>
                     </div>
-
+                    @endif
+                    @if(!empty($information->other))
                     <div class="col-12">
                         <p>
                             {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
                         </p>
                     </div>
+                    @endif
                 @endforeach
             @endif
 

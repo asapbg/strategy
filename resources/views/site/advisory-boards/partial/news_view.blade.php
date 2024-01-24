@@ -28,7 +28,8 @@
     </div>
 </div>
 <hr>
-<div class="mb-3">
+
+<div class="mb-3 row">
     <img src="{{ asset($publication->mainImg ? 'files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path) : $default_img) }}" alt="{{ $publication->title }}"
          class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
     >
@@ -44,10 +45,13 @@
         ->get();
 @endphp
 @if($files->count() > 0)
-    <div class="mb-3">
-        <h5>{{ __('custom.files') }}</h5>
+    @php($fileFound = false)
+    <div class="mb-3 row">
         @foreach($files as $f)
             @if($f->id != $publication->file_id)
+                @if(!$fileFound)
+                    <h5>{{ __('custom.files') }}</h5>
+                @endif
                 <p>
                     <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
                         {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
@@ -58,9 +62,11 @@
                     </a>
                     {{--                        @endif--}}
                 </p>
+                @php($fileFound = true)
             @endif
         @endforeach
     </div>
 @endif
-
-<a class="btn btn-primary mt-4 mb-5" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
+<div class="row">
+    <a class="btn btn-primary mt-4 mb-5" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
+</div>

@@ -237,7 +237,7 @@ class AdvisoryBoard extends ModelActivityExtend
         return [
             'name' => [
                 'type' => 'string',
-                'rules' => ['required', 'name', 'max:255'],
+                'rules' => ['required', 'string', 'max:255'],
                 'required_all_lang' => false
             ],
         ];

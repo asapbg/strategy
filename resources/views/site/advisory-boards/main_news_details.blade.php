@@ -6,6 +6,7 @@
     @include('site.advisory-boards.side_menu_home')
 
     <div class="col-lg-10 right-side-content py-5" >
+        <h2 class="mb-5">{{ $publication->title }}</h2>
         @include('site.advisory-boards.partial.news_view')
     </div>
 

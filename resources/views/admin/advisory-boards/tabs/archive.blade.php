@@ -8,7 +8,7 @@
             {{ __('custom.meetings_and_decisions') }}
         </button>
         <button type="submit" class="btn btn-sm @if(request()->get('archive_category', '') == 2) btn-secondary @else btn-primary @endif  col-6" name="archive_category" value="2" @if(request()->get('archive_category', '') == 2) disabled @endif>
-            {{ __('custom.function') }}
+            {{ __('custom.work_programs_and_report') }}
         </button>
     </div>
 </form>

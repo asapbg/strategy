@@ -636,6 +636,7 @@ return [
     'meetings_and_decisions' => 'Заседания и решения',
     'protocols_and_decisions' => 'Протоколи и решения',
     'work_programs' => 'Работни програми и отчети на програми',
+    'work_programs_and_report' => 'Работни програми и отчети',
     'meetings' => 'Заседание|Заседания',
     'op_project_timeline_label'              => 'Проектът на акт в Оперативната програма',
     'lp_project_timeline_label'              => 'Проектът на акт в Законодателната програма',
@@ -755,4 +756,5 @@ return [
     'advisory_board_settings' => 'Консултативни съвети',
     'advisory_board_messages' => 'Съобщение|Съобщения',
     'send_to' => 'Изпрати до',
+    'meeting_at' => 'Заседание на',
 ];

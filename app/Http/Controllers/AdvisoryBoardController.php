@@ -228,7 +228,7 @@ class AdvisoryBoardController extends Controller
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
         $filter = $this->archiveFilters($request);
-        $pageTitle = $this->pageTitle;
+        $pageTitle = $item->name;
         $this->setSlider($item->name, $item->headerImg);
         $items = AdvisoryBoardMeeting::with(['translations'])
             ->where('advisory_board_id', $item->id)
@@ -255,7 +255,7 @@ class AdvisoryBoardController extends Controller
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
         $filter = $this->archiveFilters($request);
-        $pageTitle = $this->pageTitle;
+        $pageTitle = $item->name;
         $this->setSlider($item->name, $item->headerImg);
         $items = AdvisoryBoardFunction::with(['translations'])
             ->where('advisory_board_id', $item->id)
@@ -419,9 +419,10 @@ class AdvisoryBoardController extends Controller
     }
 
     public function newsDetails(Request $request, Publication $item){
-        $pageTitle = $item->title;
+        $pageTitle = trans_choice('custom.advisory_boards', 2);
         $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
         $publication = $item;
+//        $this->setSlider(trans_choice('custom.advisory_boards', 2), $item->headerImg);
         return $this->view('site.advisory-boards.main_news_details', compact('publication', 'pageTitle'));
     }
 
