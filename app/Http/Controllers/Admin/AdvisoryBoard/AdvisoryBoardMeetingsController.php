@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AdvisoryBoardMeetingsController extends AdminController
@@ -20,23 +22,28 @@ class AdvisoryBoardMeetingsController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvisoryBoardMeetingsRequest $request
+     * @param Request $request
      * @param AdvisoryBoard                     $item
      * @param AdvisoryBoardMeeting              $meeting
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardMeetingsRequest $request, AdvisoryBoard $item, AdvisoryBoardMeeting $meeting)
+    public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardMeeting $meeting)
     {
-        $validated = $request->validated();
+        $req = new StoreAdvisoryBoardMeetingsRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+        $validated = $validator->validated();
 
+        $this->authorize('update', $item);
         DB::beginTransaction();
         try {
             $meeting->fill(['advisory_board_id' => $item->id, 'next_meeting' => Carbon::parse($validated['next_meeting'])]);
             $meeting->save();
 
             $validated['advisory_board_meeting_id'] = $meeting->id;
-
             $this->storeTranslateOrNew(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated);
 
             DB::commit();

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
-use App\Traits\FailedAuthorization;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreAdvisoryBoardMeetingsRequest extends FormRequest
 {
 
-    use FailedAuthorization;
+    use TranslatableFieldsRules;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class StoreAdvisoryBoardMeetingsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', [AdvisoryBoard::class, $this->item]);
+        return true;
     }
 
     /**
@@ -36,12 +36,6 @@ class StoreAdvisoryBoardMeetingsRequest extends FormRequest
             'next_meeting' => 'required|date',
         ];
 
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardMeeting::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-
-        return $rules;
+        return $this->getRules($rules, AdvisoryBoardMeeting::translationFieldsProperties());
     }
 }

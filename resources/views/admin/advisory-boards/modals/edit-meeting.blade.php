@@ -26,26 +26,12 @@
                                        value="" id="next_meeting" name="next_meeting">
                             </div>
 
-                            <div class="text-danger mt-1 error_next_meeting"></div>
+                            <div class="ajax-error text-danger mt-1 error_next_meeting"></div>
                         </div>
                     </div>
 
-                    <!-- Описание -->
-                    <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-12">
-                                <label for="description_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.description') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                </label>
-
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="description_{{ $lang['code'] }}"
-                                          id="description_{{ $lang['code'] }}"></textarea>
-                            </div>
-
-                            <div class="text-danger mt-1 error_description_{{ $lang['code'] }}"></div>
-                        @endforeach
+                    <div class="row">
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeeting::translationFieldsProperties(), 'field' => 'description'])
                     </div>
                 </form>
             </div>
@@ -55,7 +41,7 @@
                 <button type="button" class="btn btn-success"
                         onclick="updateAjax(this, '{{ route('admin.advisory-boards.meetings.update', ['item' => $item]) }}')">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
-                    <span class="text">{{ __('custom.add') }}</span>
+                    <span class="text">{{ __('custom.save') }}</span>
                 </button>
             </div>
         </div>

@@ -67,8 +67,9 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
     {
         return [
             'description' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
         ];
     }

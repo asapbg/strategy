@@ -696,5 +696,11 @@ return [
         'member_notes_en' => 'Бележки и кратка информация (EN)',
         'file_name_bg' => 'Наименование (BG)',
         'file_name_en' => 'Наименование (EN)',
+        'decisions_bg' => 'Решения (BG)',
+        'decisions_en' => 'Решения (EN)',
+        'suggestions_bg' => 'Предложения (BG)',
+        'suggestions_en' => 'Предложения (EN)',
+        'other_bg' => 'Други (BG)',
+        'other_en' => 'Други (EN)',
     ],
 ];

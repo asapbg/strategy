@@ -27,24 +27,28 @@
                                 <input type="text" data-provide="datepicker" class="form-control form-control-sm datepicker"
                                        value="" id="next_meeting" name="next_meeting">
                             </div>
+                            <div class="ajax-error text-danger mt-1 error_next_meeting"></div>
                         </div>
                     </div>
 
-                    <!-- Описание -->
-                    <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <label for="description_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.description') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                </label>
-
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="description_{{ $lang['code'] }}"
-                                          id="description_{{ $lang['code'] }}"></textarea>
-                            </div>
-                        @endforeach
+                    <div class="row">
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeeting::translationFieldsProperties(), 'field' => 'description'])
                     </div>
+{{--                    <!-- Описание -->--}}
+{{--                    <div class="row mb-2">--}}
+{{--                        @foreach(config('available_languages') as $lang)--}}
+{{--                            <div class="col-6">--}}
+{{--                                <label for="description_{{ $lang['code'] }}">--}}
+{{--                                    {{ __('validation.attributes.description') }}--}}
+{{--                                    ({{ Str::upper($lang['code']) }})--}}
+{{--                                </label>--}}
+
+{{--                                <textarea class="form-control form-control-sm summernote"--}}
+{{--                                          name="description_{{ $lang['code'] }}"--}}
+{{--                                          id="description_{{ $lang['code'] }}"></textarea>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+{{--                    </div>--}}
                 </form>
             </div>
 
@@ -65,6 +69,7 @@
         function submitMeetingAjax(element) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = document.querySelector('form[name=MEETING_FORM]');
@@ -81,13 +86,16 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    // Get a reference to the modal
-                    const modal = new bootstrap.Modal(document.getElementById('modal-create-meeting'));
-
-                    // Hide the modal
-                    modal.hide();
-
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            form.querySelector(search_class).textContent = errors[i][1][0];
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');

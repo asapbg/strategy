@@ -37,16 +37,19 @@ class AdvisoryBoardMeetingDecision extends Model
     {
         return [
             'decisions' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
             'suggestions' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
             'other' => [
-                'type' => 'string',
-                'rules' => ['nullable'],
+                'type' => 'summernote',
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
         ];
     }

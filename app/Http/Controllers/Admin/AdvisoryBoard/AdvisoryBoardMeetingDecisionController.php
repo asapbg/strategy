@@ -11,6 +11,8 @@ use App\Services\Notifications;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AdvisoryBoardMeetingDecisionController extends AdminController
@@ -38,15 +40,22 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvisoryBoardMeetingDecisionRequest $request
+     * @param Request $request
      * @param AdvisoryBoard                            $item
      * @param AdvisoryBoardMeetingDecision             $decision
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardMeetingDecisionRequest $request, AdvisoryBoard $item, AdvisoryBoardMeetingDecision $decision)
+    public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardMeetingDecision $decision)
     {
-        $validated = $request->validated();
+        $req = new StoreAdvisoryBoardMeetingDecisionRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+        $validated = $validator->validated();
+
+        $this->authorize('update', $item);
 
         DB::beginTransaction();
         try {
