@@ -70,7 +70,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
-                                <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                <button id="save" type="submit" class="btn btn-success">{{ __('custom.send_2') }}</button>
                                 <a href="{{ route('admin.advisory-boards.messages') }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                             </div>
                         </div>
