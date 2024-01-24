@@ -23,7 +23,7 @@
                                         {{ __('custom.send_to') }}: <span class="requred">*</span>
                                     </label>
                                     <div class="d-inline">
-                                        <select name="recipient[]" class="form-control select2 form-control-sm @error('recipient'){{ 'is-invalid' }}@enderror" multiple>
+                                        <select id="members" name="recipient[]" class="form-control select2 form-control-sm @error('recipient'){{ 'is-invalid' }}@enderror" multiple>
 {{--                                            <option value="" @if(empty(old('recipient'))) selected @endif></option>--}}
                                             @if(isset($moderators) && $moderators->count())
                                                 @foreach($moderators as $row)
@@ -34,6 +34,18 @@
                                         @error('recipient')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cl-12 mb-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="send_to_all" name="send_to_all" class="form-check-input" value="1" @if(old('send_to_all', 0)) checked="" @endif>
+                                        <label class="form-check-label" for="date_valid_indefinite_main">
+                                            {{ __('custom.send_to_all') }}
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -80,3 +92,25 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            let membersSelect = $('#members');
+
+            function controlMemberSelect(){
+                if($('#send_to_all').is(':checked')){
+                    membersSelect.val('').trigger('change');
+                    membersSelect.prop('disabled', true);
+                } else{
+                    membersSelect.prop('disabled', false);
+                }
+            }
+
+            $('#send_to_all').on('change', function (){
+                controlMemberSelect();
+            });
+
+            controlMemberSelect();
+        });
+    </script>
+@endpush

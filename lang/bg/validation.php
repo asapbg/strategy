@@ -702,5 +702,6 @@ return [
         'suggestions_en' => 'Предложения (EN)',
         'other_bg' => 'Други (BG)',
         'other_en' => 'Други (EN)',
+        'recipient' => 'Изпрати до',
     ],
 ];

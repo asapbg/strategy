@@ -757,5 +757,6 @@ return [
     'advisory_board_settings' => 'Консултативни съвети',
     'advisory_board_messages' => 'Съобщение|Съобщения',
     'send_to' => 'Изпрати до',
+    'send_to_all' => 'Изпрати до всички',
     'meeting_at' => 'Заседание на',
 ];

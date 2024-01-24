@@ -50,18 +50,33 @@ class AdvisoryBoardMessagesController extends Controller
             }
 
             $validated = $validator->validated();
-            foreach ($validated['recipient'] as $userId){
-                $user = User::find($userId);
-                if($user){
-                    $user->notify(new AdvBoardsMsgToModerator($validated));
-                    $lastMsg = $user->notifications()->latest()->limit(1)->get();
 
-                    if($lastMsg->count() == 1){
-                        $user->notify(new AdvBoardsEmailMsgToModerator($lastMsg[0]));
+            if(isset($validated['send_to_all'])) {
+
+                $users = User::whereHas('roles', function($q){
+                    $q->where("name", CustomRole::MODERATOR_ADVISORY_BOARD);
+                })->get();
+
+                if($users->count()){
+                    foreach ($users as $user){
+                        $this->sendMsg($user, $validated);
+                    }
+                } else{
+                    return back()->withInput()->with('warning', 'Не са открити потребители до които да бъде изпратено съобщението');
+                }
+
+            } else{
+
+                if(isset($validated['recipient']) && sizeof($validated['recipient'])) {
+                    foreach ($validated['recipient'] as $userId){
+                        $user = User::find($userId);
+                        if($user){
+                            $this->sendMsg($user, $validated);
+                        }
                     }
                 }
-            }
 
+            }
             return redirect(route('admin.advisory-boards.messages'))->with('success', 'Съобщението е изпратено успешно');
         }
 
@@ -70,5 +85,19 @@ class AdvisoryBoardMessagesController extends Controller
             $q->where("name", CustomRole::MODERATOR_ADVISORY_BOARD);
         })->get();
         return $this->view('admin.advisory-boards.messages.edit', compact('moderators'));
+    }
+
+    /**
+     * @param User $user
+     * @param $messageData
+     * @return void
+     */
+    private function sendMsg(User $user, $messageData){
+        $user->notify(new AdvBoardsMsgToModerator($messageData));
+        $lastMsg = $user->notifications()->latest()->limit(1)->get();
+
+        if($lastMsg->count() == 1){
+            $user->notify(new AdvBoardsEmailMsgToModerator($lastMsg[0]));
+        }
     }
 }

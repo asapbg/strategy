@@ -24,10 +24,11 @@ class AdvBoardStoreMessage extends FormRequest
     public function rules()
     {
         return [
-            'recipient' => ['required', 'array'],
-            'recipient.*' => ['required', 'numeric', 'exists:users,id'],
+            'recipient' => ['required_without:send_to_all', 'array'],
+            'recipient.*' => ['required_without:send_to_all', 'numeric', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
+            'send_to_all' => ['nullable', 'numeric'],
         ];
     }
 }
