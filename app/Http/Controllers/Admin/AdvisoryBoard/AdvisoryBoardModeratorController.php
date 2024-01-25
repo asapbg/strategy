@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
+use App\Http\Requests\StoreAdvisoryBoardModeratorInformationRequest;
 use App\Http\Requests\StoreAdvisoryBoardModeratorRequest;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardModerator;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Log;
 
@@ -25,33 +27,24 @@ class AdvisoryBoardModeratorController extends AdminController
     /**
      * Store or update global moderator's information.
      *
-     * @param AdvisoryBoard                     $item
+     * @param Request $request
+     * @param AdvisoryBoard $item
      * @param AdvisoryBoardModeratorInformation $information
      *
      * @return RedirectResponse
      */
-    public function storeInformation(AdvisoryBoard $item, AdvisoryBoardModeratorInformation $information)
+    public function storeInformation(Request $request, AdvisoryBoard $item, AdvisoryBoardModeratorInformation $information)
     {
-        $this->authorize('update', $item);
-
         $route = route('admin.advisory-boards.edit', $item->id) . '#moderator';
-
-        $rules = [];
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardModeratorInformation::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-
-        $validator = Validator::make(request()->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect($route)
-                ->withInput()
-                ->withErrors($validator);
+        $req = new StoreAdvisoryBoardModeratorInformationRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return redirect($route)->withInput()->withErrors($validator->errors());
         }
 
         $validated = $validator->validated();
+        $this->authorize('update', $item);
+
 
         DB::beginTransaction();
         try {
@@ -59,10 +52,6 @@ class AdvisoryBoardModeratorController extends AdminController
             $fillable = $this->getFillableValidated($validated, $information);
             $information->fill($fillable);
             $information->save();
-
-//            foreach (config('available_languages') as $lang) {
-//                $validated['description_' . $lang['code']] = htmlspecialchars_decode($validated['description_' . $lang['code']]);
-//            }
 
             $this->storeTranslateOrNew(AdvisoryBoardModeratorInformation::TRANSLATABLE_FIELDS, $information, $validated);
 

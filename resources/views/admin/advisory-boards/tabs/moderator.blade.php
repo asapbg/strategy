@@ -29,30 +29,33 @@
                           method="post">
                         @csrf
 
-                        @foreach(config('available_languages') as $lang)
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <label for="description_{{ $lang['code'] }}">{{ __('custom.description') }}
-                                        ({{ Str::upper($lang['code']) }})</label>
+                        <div class="row mb-3">
+                            @include('admin.partial.edit_field_translate', ['item' => $item->moderatorInformation, 'translatableFields' => \App\Models\AdvisoryBoardModeratorInformation::translationFieldsProperties(), 'field' => 'description', 'required' => true])
+                        </div>
+{{--                        @foreach(config('available_languages') as $lang)--}}
+{{--                            <div class="row mb-3">--}}
+{{--                                <div class="col-12">--}}
+{{--                                    <label for="description_{{ $lang['code'] }}">{{ __('custom.description') }}--}}
+{{--                                        ({{ Str::upper($lang['code']) }})</label>--}}
 
-                                    @php
-                                        $description = $item->moderatorInformation?->translations->count() === 2 ?
-                                            $item->moderatorInformation?->translations->first(fn($row) => $row->locale == $lang['code'])->description :
-                                            old('description_' . $lang['code'], '');
-                                    @endphp
+{{--                                    @php--}}
+{{--                                        $description = $item->moderatorInformation?->translations->count() === 2 ?--}}
+{{--                                            $item->moderatorInformation?->translations->first(fn($row) => $row->locale == $lang['code'])->description :--}}
+{{--                                            old('description_' . $lang['code'], '');--}}
+{{--                                    @endphp--}}
 
-                                    <textarea class="form-control form-control-sm summernote"
-                                              name="description_{{ $lang['code'] }}"
-                                              id="description_{{ $lang['code'] }}">
-                                    {{ $description }}
-                                </textarea>
+{{--                                    <textarea class="form-control form-control-sm summernote"--}}
+{{--                                              name="description_{{ $lang['code'] }}"--}}
+{{--                                              id="description_{{ $lang['code'] }}">--}}
+{{--                                    {{ $description }}--}}
+{{--                                </textarea>--}}
 
-                                    @error('description_' . $lang['code'])
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        @endforeach
+{{--                                    @error('description_' . $lang['code'])--}}
+{{--                                    <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                    @enderror--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
                     </form>
                 @else
                     @foreach(config('available_languages') as $lang)
@@ -138,13 +141,13 @@
                 </div>
 
                 <div class="col-md-10">
-                    <form method="POST" name="ADVISORY_BOARD_ADD_MODERATOR"
+                    <form method="POST" name="ADVISORY_BOARD_ADD_MODERATOR" id="submit_moderator"
                           action="{{ route('admin.advisory-boards.moderator.store', ['item' => $item]) }}">
                         @csrf
 
                         <div class="row align-items-center">
                             <div class="col-md-5">
-                                <select name="user_id" class="select2 form-control form-control-sm">
+                                <select name="user_id" class="select2 form-control form-control-sm" id="user_id">
                                     <option value="">{{ __('custom.username') }}</option>
 
                                     @if(isset($all_users) && $all_users->count() > 0)
@@ -156,7 +159,7 @@
                             </div>
 
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-success" id="add_moderator">
                                     <i class="fa fa-plus mr-3"></i>
                                     {{ __('custom.add') . ' ' . trans_choice('custom.moderators', 1) }}
                                 </button>
@@ -215,3 +218,20 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('#submit_moderator').submit(function (e){
+                if(!(parseInt($('#user_id').val()) > 0)){
+                    new MyModal({
+                        title: '{{ __('custom.error') }}',
+                        body: '<p>{{ __('custom.select_moderator_user') }}</p>',
+                        footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="{{ __('custom.close') }}">{{ __('custom.close') }}</button>',
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+@endpush

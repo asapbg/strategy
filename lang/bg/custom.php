@@ -759,4 +759,5 @@ return [
     'send_to' => 'Изпрати до',
     'send_to_all' => 'Изпрати до всички',
     'meeting_at' => 'Заседание на',
+    'select_moderator_user' => 'Изберете Потребителско име',
 ];
