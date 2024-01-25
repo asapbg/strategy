@@ -38,7 +38,7 @@ class LibraryController extends Controller
             ? $request->get('paginate')
             : $this->paginate;
 
-        $publications = $this->getPublications($request, $type);
+        $publications = $this->getPublications($request, $type->value);
 
         $default_img = asset(Publication::DEFAULT_IMG_LIBRARY);
         if ($is_search) {

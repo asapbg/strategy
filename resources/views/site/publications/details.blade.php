@@ -51,7 +51,7 @@
             </div>
         </div>
         <hr>
-        <div class="mb-3">
+        <div class="mb-3 row">
             @if($publication->mainImg)
                 <img src="{{ asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path)) }}" alt="{{ $publication->title }}"
                      class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
@@ -69,7 +69,7 @@
                 ->get();
         @endphp
         @if($files->count() > 0)
-            <div class="mb-3">
+            <div class="row mb-3">
                 <h5>Файлове</h5>
                 @foreach($files as $f)
                     @if($f->id != $publication->file_id)
@@ -88,11 +88,13 @@
             </div>
         @endif
 
-        @if($publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
-            <a class="btn btn-primary mt-4 mb-5" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
-        @else
-            <a class="btn btn-primary mt-4 mb-5" href="{{ route("library.$current_type") }}">{{ __('site.back_to_news') }}</a>
-        @endif
+        <div class="row">
+            @if($publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+                <a class="btn btn-primary mt-4 mb-5 col-auto" href="{{ url()->previous() }}">{{ __('site.back_to_news') }}</a>
+            @else
+                <a class="btn btn-primary mt-4 mb-5 col-auto" href="{{ route("library.$current_type") }}">{{ __('site.back_to_'.$current_type) }}</a>
+            @endif
+        </div>
     </div>
 
 </div>

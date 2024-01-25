@@ -766,4 +766,8 @@ return [
     'general_info_lp'  => 'Информация (ЗП)',
     'general_info_op'  => 'Информация (ОП)',
     'info'  => 'Информация',
+    'search_in_title_content'  => 'Търсене в заглавие/съдържание',
+    'published_after_f'  => 'Публикувана след',
+    'published_before_f'  => 'Публикувана преди',
+    'published_at_f'  => 'Публикувана на',
 ];
