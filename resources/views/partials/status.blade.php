@@ -5,7 +5,7 @@
         : array_merge(['active' => true], $q_arr);
     $url_inactive = (isset($type))
         ? array_merge(['type' => $type, 'active' => false], $q_arr)
-        : array_merge(['active' => true], $q_arr);
+        : array_merge(['active' => false], $q_arr);
 @endphp
 <div class="btn-group float-right">
     <a class="btn btn-sm {{ !request()->has('active') || request()->offsetGet('active') == 1 ? 'btn-success' : 'btn-default' }}"
