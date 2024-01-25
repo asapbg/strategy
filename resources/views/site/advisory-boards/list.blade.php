@@ -1,18 +1,7 @@
 @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\AdvisoryBoard::class))
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.advisory-boards.create')])
-@include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => '<p class="mb-1"><strong>Област на политика</strong> - сортира записите област на политика в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Вид орган</strong> - сортира записите по вид орган в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Акт на създаване</strong> - сортира записите по акт на създаване в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Вид председател</strong> - сортира записите по вид председател в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Представител НПО</strong> - сортира записите в ред със или без представител на НПО в състава на съвета, в зависимост от избраната опция)</p>'])
+@include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_adv_board')])
 
-<div class="row mb-2 fs-14" style="font-style: italic;">
-    <p class="mb-1"><strong>Област на политика</strong> - сортира записите област на политика в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Вид орган</strong> - сортира записите по вид орган в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Акт на създаване</strong> - сортира записите по акт на създаване в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Вид председател</strong> - сортира записите по вид председател в азбучен ред (низходящо и възходящо)</p>
-    <p class="mb-1"><strong>Представител НПО</strong> - сортира записите в ред със или без представител на НПО в състава на съвета, в зависимост от избраната опция)</p>
-</div>
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
