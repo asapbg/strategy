@@ -160,7 +160,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="active">
-                                        {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                                        {{ __('validation.attributes.main_img') }}
                                     </label>
                                     @if($item->id && $item->mainImg)
                                         <img src="{{ asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $item->mainImg->path)) }}" class="img-thumbnail mt-2 mb-4">

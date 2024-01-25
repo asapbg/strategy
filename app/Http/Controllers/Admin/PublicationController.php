@@ -105,13 +105,13 @@ class PublicationController extends AdminController
         $id = $item->id;
         $validated = $request->validated();
 
-        foreach ($this->languages as $lang) {
-            foreach (Publication::translationFieldsProperties() as $field => $properties) {
-                if (empty($validated['short_content_'.$lang['code']])) {
-                    $validated['short_content_'.$lang['code']] = Str::limit(strip_tags($validated['content_'.$lang['code']]), 1000);
-                }
-            }
-        }
+//        foreach ($this->languages as $lang) {
+//            foreach (Publication::translationFieldsProperties() as $field => $properties) {
+//                if (empty($validated['short_content_'.$lang['code']])) {
+//                    $validated['short_content_'.$lang['code']] = Str::limit(strip_tags($validated['content_'.$lang['code']]), 1000);
+//                }
+//            }
+//        }
 
         if( ($item->id && $request->user()->cannot('update', $item))
             || $request->user()->cannot('create', Publication::class) ) {

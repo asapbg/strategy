@@ -23,16 +23,21 @@ class AdvisoryBoardCustomController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvisoryBoardCustomRequest $request
+     * @param Request $request
      * @param AdvisoryBoard                   $item
      * @param AdvisoryBoardCustom             $section
      *
      * @return JsonResponse
      */
-    public function ajaxStore(StoreAdvisoryBoardCustomRequest $request, AdvisoryBoard $item, AdvisoryBoardCustom $section)
+    public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardCustom $section)
     {
-        $validated = $request->validated();
+        $req = new StoreAdvisoryBoardCustomRequest();
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
 
+        $validated = $validator->validated();
         DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $section);
@@ -42,33 +47,41 @@ class AdvisoryBoardCustomController extends AdminController
             $section->fill($fillable);
             $section->save();
 
-            $validated['advisory_board_custom_id'] = $section->id;
-
-            foreach (config('available_languages') as $lang) {
-                $validated['body_' . $lang['code']] = htmlspecialchars_decode($validated['body_' . $lang['code']]);
-            }
-
             $this->storeTranslateOrNew(AdvisoryBoardCustom::TRANSLATABLE_FIELDS, $section, $validated);
+            $defaultLang = config('app.default_lang');
+            $file_service = app(AdvisoryBoardFileService::class);
+            $defaultFiles = $validated['file_' . $defaultLang] ?? [];
+            foreach ($defaultFiles as $dKey => $dFile) {
+                $file_service->upload(
+                    $dFile,
+                    $defaultLang,
+                    $section->id,
+                    $item->id,
+                    DocTypesEnum::AB_CUSTOM_SECTION->value,
+                    false,
+                    $validated['file_description_' . $defaultLang][$dKey] ?? null,
+                    $validated['file_name_' . $defaultLang][$dKey] ?? null
+                );
 
-            foreach (config('available_languages') as $language) {
-                if (isset($validated['file_' . $language['code']])) {
-                    foreach ($validated['file_' . $language['code']] as $key => $file) {
-                        $name_key = 'file_name_' . $language['code'];
-                        $description_key = 'file_description_' . $language['code'];
-
-                        $file_service = app(AdvisoryBoardFileService::class);
+                foreach (config('available_languages') as $lang) {
+                    if($lang['code'] != $defaultLang) {
+                        $files = $validated['file_' . $lang['code']] ?? [];
+                        $lFile = sizeof($files) && isset($files[$dKey]) ? $files[$dKey] : $defaultFiles[$dKey];
+                        $lDescription = sizeof($validated['file_description_' . $lang['code']]) && isset($validated['file_description_' . $lang['code']][$dKey]) ? $validated['file_description_' . $lang['code']][$dKey] : $validated['file_description_' . $defaultLang][$dKey];
+                        $lname = sizeof($validated['file_name_' . $lang['code']]) && isset($validated['file_name_' . $lang['code']][$dKey]) ? $validated['file_name_' . $lang['code']][$dKey] : $validated['file_name_' . $defaultLang][$dKey];
                         $file_service->upload(
-                            $file,
-                            $language['code'],
+                            $lFile,
+                            $lang['code'],
                             $section->id,
                             $item->id,
                             DocTypesEnum::AB_CUSTOM_SECTION->value,
                             false,
-                            $validated[$description_key][$key] ?? '',
-                            $validated[$name_key][$key] ?? null
+                            $lDescription,
+                            $lname,
                         );
                     }
                 }
+
             }
 
             DB::commit();
@@ -108,7 +121,13 @@ class AdvisoryBoardCustomController extends AdminController
      */
     public function ajaxUpdate(UpdateAdvisoryBoardCustomRequest $request, AdvisoryBoard $item)
     {
-        $validated = $request->validated();
+        $req = new UpdateAdvisoryBoardCustomRequest();
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {

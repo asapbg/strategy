@@ -6,11 +6,13 @@ use App\Models\AdvisoryBoardCustom;
 use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\Publication;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StorePublicationRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -44,23 +46,23 @@ class StorePublicationRequest extends FormRequest
         if(!request()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS])) {
             $rules['adv_board'] = ['required', 'numeric'];
         }
-        foreach (config('available_languages') as $lang) {
-            foreach (Publication::translationFieldsProperties() as $field => $properties) {
-                $rules[$field.'_'.$lang['code']] = $properties['rules'];
-            }
-        }
+
+        $rules = $this->getRules($rules, Publication::translationFieldsProperties());
+
+        $rules['file'] = ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
 
         if(request()->isMethod('put')) {
             $rules['id'] = ['required', 'numeric', 'exists:publication,id'];
-            $rules['file'] = ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
+//            $rules['file'] = ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
 
             foreach (config('available_languages') as $lang) {
                 $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
                 $rules['description_' . $lang['code']] = ['nullable', 'string'];
             }
-        } else {
-            $rules['file'] = ['required', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
         }
+//        else {
+//            $rules['file'] = ['required', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)];
+//        }
 
         return $rules;
     }

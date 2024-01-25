@@ -3,11 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Models\Page;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class PageStoreRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -36,13 +38,7 @@ class PageStoreRequest extends FormRequest
         if( request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:page'];
         }
-        
-        foreach (config('available_languages') as $lang) {
-            foreach (Page::translationFieldsProperties() as $field => $properties) {
-                $rules[$field.'_'.$lang['code']] = $properties['rules'];
-            }
-        }
 
-        return $rules;
+        return $this->getRules($rules, Page::translationFieldsProperties());
     }
 }

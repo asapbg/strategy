@@ -17,39 +17,11 @@
                     <input type="hidden" name="section_id" value=""/>
 
                     <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="control-label"
-                                           for="title_{{ $lang['code'] }}">{{ __('validation.attributes.title') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                        :
-                                        <span class="required">*</span>
-                                    </label>
-                                    <input type="text" class="form-control form-control-sm"
-                                           id="title_{{ $lang['code'] }}" name="title_{{ $lang['code'] }}"/>
-                                </div>
-                            </div>
-                        @endforeach
+                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                     </div>
 
-                    <!-- Описание -->
                     <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <label for="body_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.description') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                    <span class="required">*</span>
-                                </label>
-
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="body_{{ $lang['code'] }}"
-                                          id="body_{{ $lang['code'] }}"></textarea>
-
-                                <div class="text-danger mt-1 error_body_{{ $lang['code'] }}"></div>
-                            </div>
-                        @endforeach
+                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'body', 'required' => false])
                     </div>
                 </form>
             </div>

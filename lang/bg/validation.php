@@ -705,5 +705,7 @@ return [
         'recipient' => 'Изпрати до',
         'establishment_description_bg' => 'Описание (BG)',
         'establishment_description_en' => 'Описание (EN)',
+        'body_bg' => 'Съдържание (BG)',
+        'body_en' => 'Съдържание (E)',
     ],
 ];

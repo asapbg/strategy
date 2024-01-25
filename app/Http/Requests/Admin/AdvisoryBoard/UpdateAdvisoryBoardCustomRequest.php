@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardCustom;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateAdvisoryBoardCustomRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,16 +31,9 @@ class UpdateAdvisoryBoardCustomRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'section_id'    => 'required|integer|exists:advisory_board_customs,id',
-            'title'         => 'nullable|string',
+            'section_id'    => 'required|integer|exists:advisory_board_customs,id'
         ];
 
-        foreach (config('available_languages') as $lang) {
-            foreach (AdvisoryBoardCustom::translationFieldsProperties() as $field => $properties) {
-                $rules[$field . '_' . $lang['code']] = $properties['rules'];
-            }
-        }
-
-        return $rules;
+        return $this->getRules($rules, AdvisoryBoardCustom::translationFieldsProperties());
     }
 }

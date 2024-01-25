@@ -17,39 +17,11 @@
                     @csrf
 
                     <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="control-label"
-                                           for="title_{{ $lang['code'] }}">{{ __('validation.attributes.title') }}
-                                        ({{ Str::upper($lang['code']) }})
-                                        :
-                                        <span class="required">*</span>
-                                    </label>
-                                    <input type="text" class="form-control form-control-sm"
-                                           id="title_{{ $lang['code'] }}" name="title_{{ $lang['code'] }}"/>
-                                </div>
-                            </div>
-                        @endforeach
+                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                     </div>
 
-                    <!-- Описание -->
                     <div class="row mb-2">
-                        @foreach(config('available_languages') as $lang)
-                            <div class="col-6">
-                                <label for="body_{{ $lang['code'] }}">
-                                    {{ __('validation.attributes.description') }}
-                                    ({{ Str::upper($lang['code']) }})
-                                    <span class="required">*</span>
-                                </label>
-
-                                <textarea class="form-control form-control-sm summernote"
-                                          name="body_{{ $lang['code'] }}"
-                                          id="body_{{ $lang['code'] }}"></textarea>
-
-                                <div class="text-danger mt-1 error_body_{{ $lang['code'] }}"></div>
-                            </div>
-                        @endforeach
+                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'body', 'required' => false])
                     </div>
 
                     <div class="row justify-content-end">
@@ -96,6 +68,7 @@
         function submitSectionAjax(element, url) {
             // change button state
             changeButtonState(element);
+            clearErrorMessages();
 
             // Get the form element
             const form = document.querySelector('form[name=SECTION_FORM]');
@@ -112,13 +85,18 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    // Get a reference to the modal
-                    const modal = new bootstrap.Modal(document.getElementById('modal-create-section'));
-
-                    // Hide the modal
-                    modal.hide();
-
-                    window.location.reload();
+                    if(typeof result.errors != 'undefined') {
+                        let errors = Object.entries(result.errors);
+                        for (let i = 0; i < errors.length; i++) {
+                            const search_class = '.error_' + errors[i][0];
+                            if($('#modal-create-section ' + search_class).length) {
+                                form.querySelector(search_class).textContent = errors[i][1][0];
+                            }
+                        }
+                        changeButtonState(element, 'finished');
+                    } else{
+                        window.location.reload();
+                    }
                 },
                 error: function (xhr) {
                     changeButtonState(element, 'finished');

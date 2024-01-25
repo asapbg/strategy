@@ -103,31 +103,38 @@ class Publication extends ModelActivityExtend implements TranslatableContract
         return array(
             'title' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:2000']
+                'rules' => ['required', 'string', 'max:2000'],
+                'required_all_lang' => false
             ],
             'short_content' => [
                 'type' => 'textarea',
-                'rules' => ['nullable', 'string']
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
             'content' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'meta_title' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'meta_keyword' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'meta_description' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'file' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ]
         );
     }

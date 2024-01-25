@@ -80,7 +80,9 @@
             required_label.classList.add('required', 'ml-1')
             required_label.textContent = '*';
 
-            file_label.appendChild(required_label);
+            if(language == 'bg'){
+                file_label.appendChild(required_label);
+            }
 
             const file_button = document.createElement('label');
             file_button.classList.add('col-12', 'btn', 'btn-outline-secondary');
@@ -154,8 +156,14 @@
                         });
                     }
 
-                    $(form.querySelector('#description_bg')).summernote("code", data.translations[0].description);
-                    $(form.querySelector('#description_en')).summernote("code", data.translations[1].description);
+                    for(let i = 0; i < data.translations.length; i++){
+                        if(data.translations[i].locale == 'bg'){
+                            $(form.querySelector('#description_bg')).summernote("code", data.translations[i].description);
+                        }
+                        if(data.translations[i].locale == 'en'){
+                            $(form.querySelector('#description_en')).summernote("code", data.translations[i].description);
+                        }
+                    }
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);
@@ -182,13 +190,22 @@
                     $('#modal-edit-member #advisory_type_id').val(data.advisory_type_id);
 
                     form.querySelector('input[name=advisory_board_member_id]').value = data.id;
-                    form.querySelector('#member_name_bg').value = data.translations[0].member_name;
-                    form.querySelector('#member_name_en').value = data.translations[1].member_name;
                     form.querySelectorAll('input[name=advisory_type_id]').forEach(input => input.value === data.advisory_type_id ? input.checked = true : null);
-                    form.querySelector('#member_job_bg').value = data.translations[0].member_job;
-                    form.querySelector('#member_job_en').value = data.translations[1].member_job;
-                    $(form.querySelector('#member_notes_bg')).summernote("code", data.translations[0].member_notes);
-                    $(form.querySelector('#member_notes_en')).summernote("code", data.translations[1].member_notes);
+                    for(let i = 0; i < data.translations.length; i++){
+                        if(data.translations[i].locale == 'bg'){
+                            form.querySelector('#member_name_bg').value = data.translations[i].member_name;
+                            form.querySelector('#member_job_bg').value = data.translations[i].member_job;
+                            $(form.querySelector('#member_notes_bg')).summernote("code", data.translations[i].member_notes);
+
+                        }
+                        if(data.translations[i].locale == 'en'){
+                            iform.querySelector('#member_name_en').value = data.translations[i].member_name;
+                            form.querySelector('#member_job_en').value = data.translations[i].member_job;
+                            $(form.querySelector('#member_notes_en')).summernote("code", data.translations[i].member_notes);
+
+                        }
+                    }
+
                     form.querySelector('#email').value = data.email;
                     $('#consultation_level_id_change').trigger('change');
                     form.querySelector('#member_institution').value = data.institution_id;
@@ -234,9 +251,6 @@
                 dataType: 'json',
                 success: function (data) {
                     form.querySelector('input[name=section_id]').value = data.id;
-                    form.querySelector('input[name=title_bg]').value = data.translations[0].title;
-                    form.querySelector('input[name=title_en]').value = data.translations[1].title;
-
                     if(form.querySelector('#order')) {
                         form.querySelector('#order').value = data.order !== 1 ? data.order : 9999;
                         if (form.querySelector('#order').options.length - 1 === data.order) {
@@ -245,9 +259,17 @@
 
                         $(form.querySelector('#order')).trigger('change');
                     }
-                    $(form.querySelector('#body_bg')).summernote("code", data.translations[0].body);
-                    $(form.querySelector('#body_en')).summernote("code", data.translations[1].body);
 
+                    for(let i = 0; i < data.translations.length; i++){
+                        if(data.translations[i].locale == 'bg'){
+                            form.querySelector('input[name=title_bg]').value = data.translations[i].title;
+                            $(form.querySelector('#body_bg')).summernote("code", data.translations[i].body);
+                        }
+                        if(data.translations[i].locale == 'en'){
+                            form.querySelector('input[name=title_en]').value = data.translations[i].title;
+                            $(form.querySelector('#body_en')).summernote("code", data.translations[i].body);
+                        }
+                    }
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

@@ -54,27 +54,33 @@ class Page  extends ModelActivityExtend implements TranslatableContract
         return array(
             'name' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255']
+                'rules' => ['required', 'string', 'max:255'],
+                'required_all_lang' => true
             ],
             'short_content' => [
                 'type' => 'textarea',
-                'rules' => ['nullable', 'string', 'max:500']
+                'rules' => ['nullable', 'string', 'max:500'],
+                'required_all_lang' => false
             ],
             'content' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'meta_title' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'meta_keyword' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'meta_description' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ]
         );
     }

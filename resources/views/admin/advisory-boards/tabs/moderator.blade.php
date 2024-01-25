@@ -32,30 +32,6 @@
                         <div class="row mb-3">
                             @include('admin.partial.edit_field_translate', ['item' => $item->moderatorInformation, 'translatableFields' => \App\Models\AdvisoryBoardModeratorInformation::translationFieldsProperties(), 'field' => 'description', 'required' => true])
                         </div>
-{{--                        @foreach(config('available_languages') as $lang)--}}
-{{--                            <div class="row mb-3">--}}
-{{--                                <div class="col-12">--}}
-{{--                                    <label for="description_{{ $lang['code'] }}">{{ __('custom.description') }}--}}
-{{--                                        ({{ Str::upper($lang['code']) }})</label>--}}
-
-{{--                                    @php--}}
-{{--                                        $description = $item->moderatorInformation?->translations->count() === 2 ?--}}
-{{--                                            $item->moderatorInformation?->translations->first(fn($row) => $row->locale == $lang['code'])->description :--}}
-{{--                                            old('description_' . $lang['code'], '');--}}
-{{--                                    @endphp--}}
-
-{{--                                    <textarea class="form-control form-control-sm summernote"--}}
-{{--                                              name="description_{{ $lang['code'] }}"--}}
-{{--                                              id="description_{{ $lang['code'] }}">--}}
-{{--                                    {{ $description }}--}}
-{{--                                </textarea>--}}
-
-{{--                                    @error('description_' . $lang['code'])--}}
-{{--                                    <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
                     </form>
                 @else
                     @foreach(config('available_languages') as $lang)
