@@ -64,7 +64,7 @@
                                     @php $checked = old('has_npo_presence', '') === 'on' ? 'checked' : '' @endphp
                                     <input type="checkbox" name="has_npo_presence" class="form-check-input"
                                            id="npo_presence" {{ $checked }}
-                                           onchange="document.querySelector('.npo-container').classList.toggle('d-none'); resetNpoContainer();">
+                                           onchange="resetNpoContainer($(this));">
                                     <label class="form-check-label font-weight-semibold" for="npo_presence">
                                         {{ __('custom.presence_npo_representative') }}
                                     </label>
@@ -73,7 +73,7 @@
                         </div>
 
                         <!-- Наличие на представител на НПО в състава на съвета -->
-                        <div class="npo-container d-none">
+                        <div class="npo-container @if(!old('has_npo_presence', 0)) d-none @endif" id="npo-container">
                             <div class="npo-children">
                                 <div class="row">
                                     @foreach(config('available_languages') as $lang)
@@ -321,7 +321,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="active">
-                                        {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                                        {{ __('validation.attributes.main_img') }}
                                         <br><span class="text-primary"><i>Препоръчителен размер 1900px x 400px</i></span>
                                     </label>
                                     @if($item->id && $item->mainImg)
@@ -367,8 +367,12 @@
                 document.querySelector('#member_information').classList.toggle('d-none');
             });
 
-            function resetNpoContainer() {
-                document.querySelectorAll('.npo-custom-children').forEach(child => child.remove());
+            function resetNpoContainer(el) {
+                if(el.is(':checked')){
+                    $('#npo-container').removeClass('d-none');
+                } else{
+                    document.querySelectorAll('.npo-custom-children').forEach(child => child.remove());
+                }
             }
 
             function addNpo() {

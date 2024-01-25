@@ -66,8 +66,8 @@
                     <div class="form-check pl-4">
                         @php $checked = old('has_npo_presence', $item->has_npo_presence) ? 'checked' : '' @endphp
                         <input type="checkbox" name="has_npo_presence" class="form-check-input"
-                               id="npo_presence" {{ $checked }}
-                               onchange="resetNpoContainer();">
+                               id="npo_presence" @if(old('has_npo_presence', $item->has_npo_presence)) checked @endif
+                               onchange="resetNpoContainer($(this));">
                         <label class="form-check-label font-weight-semibold" for="npo_presence">
                             {{ __('custom.presence_npo_representative') }}
                         </label>
@@ -76,9 +76,9 @@
             </div>
 
             <!-- Наличие на представител на НПО в състава на съвета -->
-            @php $class = isset($item->npos) && $item->npos->count() > 0 ? '' : 'd-none' @endphp
+{{--            @php $class = isset($item->npos) && $item->npos->count() > 0 ? '' : 'd-none' @endphp--}}
 
-            <div class="npo-container {{ $class }}">
+            <div class="npo-container @if(!old('has_npo_presence', $item->has_npo_presence)) d-none @endif" id="npo-container">
                 <div class="npo-children">
                     @if(isset($item->npos) && $item->npos->count() > 0)
                         @foreach($item->npos as $npo_key => $npo)
@@ -277,7 +277,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="col-sm-12 control-label" for="active">
-                            {{ __('validation.attributes.main_img') }} <span class="required">*</span>
+                            {{ __('validation.attributes.main_img') }}
                             <br><span class="text-primary"><i>Препоръчителен размер 1900px x 400px</i></span>
                         </label>
                         @if($item->id && $item->mainImg)
@@ -322,10 +322,17 @@
     <script type="application/javascript">
         const label_text = @json(__('validation.attributes.npo_presenter'));
 
-        function resetNpoContainer() {
-            document.querySelector('.npo-container').classList.toggle('d-none');
-            document.querySelectorAll('.npo-custom-child    ').forEach(child => child.remove());
-            document.querySelectorAll('.npo-children .row:first-child input').forEach(input => input.value = null);
+        function resetNpoContainer(el) {
+            if(el.is(':checked')){
+                $('#npo-container').removeClass('d-none');
+            } else{
+                $('#npo-container').addClass('d-none');
+                document.querySelectorAll('.npo-custom-child').forEach(child => child.remove());
+                document.querySelectorAll('.npo-children .row:first-child input').forEach(input => input.value = null);
+            }
+            // document.querySelector('.npo-container').classList.toggle('d-none');
+            // document.querySelectorAll('.npo-custom-child').forEach(child => child.remove());
+            // document.querySelectorAll('.npo-children .row:first-child input').forEach(input => input.value = null);
         }
 
         function addNpo() {

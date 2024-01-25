@@ -43,7 +43,7 @@
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
-                            <h3 class="mb-2 fs-4">{{ __('custom.presence_npo_representative') }}</h3>
+                            <h3 class="mb-2 fs-4">{{ __('site.presence_npo_representative') }}</h3>
                             <ul class="list-group list-group-flush">
                                 @foreach($item->npos as $npo)
                                     <li class="list-group-item">{{ $npo->name }};</li>
