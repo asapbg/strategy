@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\LegalActType;
+use App\Models\Page;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
@@ -16,7 +17,10 @@ class LegislativeProgramController extends Controller
     {
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
         $items = LegislativeProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
+
+        $infoPage = Page::where('system_name', '=', Page::LP_INFO)->first();
+        $pageTopContent = $infoPage ? $infoPage->content : null;
+
         $pageTitle = __('site.menu.lp');
 
         $menuCategories = [];
@@ -48,7 +52,7 @@ class LegislativeProgramController extends Controller
         $data = $item->getTableData();
         $months = $item->id ? extractMonths($item->from_date,$item->to_date, false) : [];
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
-        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle', 'pageTopContent'));
+        //$pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
+        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle'));
     }
 }

@@ -28,34 +28,34 @@ class SettingsSeeder extends Seeder
                 'editable' => 1,
                 'is_required' => 1
             ],
-            [
-                'section' => 'system_lp',
-                'name' => 'lp_text_bg',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
-            [
-                'section' => 'system_lp',
-                'name' => 'lp_text_en',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
-            [
-                'section' => 'system_op',
-                'name' => 'op_text_bg',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
-            [
-                'section' => 'system_op',
-                'name' => 'op_text_en',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
+//            [
+//                'section' => 'system_lp',
+//                'name' => 'lp_text_bg',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
+//            [
+//                'section' => 'system_lp',
+//                'name' => 'lp_text_en',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
+//            [
+//                'section' => 'system_op',
+//                'name' => 'op_text_bg',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
+//            [
+//                'section' => 'system_op',
+//                'name' => 'op_text_en',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
             [
                 'section' => 'system_pc',
                 'name' => 'pc_text_bg',

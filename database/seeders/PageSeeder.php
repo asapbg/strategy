@@ -38,6 +38,24 @@ class PageSeeder extends Seeder
                 'content_en' => 'Content in Information',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'legislative-programs-info',
+                'system_name' => Page::LP_INFO,
+                'name_bg' => 'Информация (ЗП)',
+                'name_en' => 'Information (LP)',
+                'content_bg' => 'Съдържание в информация ЗП',
+                'content_en' => 'Content in Information LP',
+                'is_system' => 1
+            ],
+            [
+                'slug' => 'operational-programs-info',
+                'system_name' => Page::OP_INFO,
+                'name_bg' => 'Информация (ОП)',
+                'name_en' => 'Information (OP)',
+                'content_bg' => 'Съдържание в информация OП',
+                'content_en' => 'Content in Information OP',
+                'is_system' => 1
+            ],
         ];
 
         foreach ($data as $page) {

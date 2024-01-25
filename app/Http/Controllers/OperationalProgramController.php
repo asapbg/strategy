@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consultations\OperationalProgram;
 use App\Models\LegalActType;
+use App\Models\Page;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
@@ -16,7 +17,9 @@ class OperationalProgramController extends Controller
     {
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
         $items = OperationalProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
+        $infoPage = Page::where('system_name', '=', Page::OP_INFO)->first();
+        $pageTopContent = $infoPage ? $infoPage->content : null;
+
         $pageTitle = __('site.menu.op');
 
         $menuCategories = [];
@@ -47,7 +50,7 @@ class OperationalProgramController extends Controller
         $data = $item->getTableData();
         $months = $item->id ? extractMonths($item->from_date,$item->to_date, false) : [];
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
-        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle', 'pageTopContent'));
+        //$pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
+        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle'));
     }
 }

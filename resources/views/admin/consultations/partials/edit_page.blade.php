@@ -136,40 +136,29 @@
                                     <table class="table table-sm table-hover table-bordered mt-4">
                                         <tbody>
                                         <tr>
-                                            <th>Изображение</th>
-                                            <th>Име</th>
+                                            <th>{{ __('custom.name') }}</th>
                                             <th></th>
                                         </tr>
+                                        @foreach(config('available_languages') as $lang)
                                             @foreach($item->files as $f)
-                                                <tr>
-                                                    <td>
-                                                        @if(in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
-                                                            {!! $f->preview !!}
-                                                        @else
-                                                            <i class="fas fa-minus text-danger"></i>
-                                                        @endif
-                                                    </td>
-                                                    <td>{!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
-                                                        - {{ __('custom.'.$f->locale) }}
-                                                        | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}</td>
-                                                    <td>
-
-                                                        <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
-                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
-                                                        >
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-                                                        <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                                                            <i class="fas fa-download me-1" role="button"
-                                                               data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
-                                                        </a>
-                                                        <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
-                                                            <i class="fas fa-trash me-1" role="button"
-                                                               data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                @php($code = $lang['code'])
+                                                @if($code == $f->locale)
+                                                    <tr>
+                                                        <td>{{ $f->{'description_'.$code} }}</td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">
+                                                                <i class="fas fa-download me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
+                                                                <i class="fas fa-trash me-1" role="button"
+                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 @endif

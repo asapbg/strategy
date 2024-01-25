@@ -91,6 +91,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
         Route::post('/consultations/operational-programs/{item}/delete', 'destroy')->name('consultations.operational_programs.delete');
     });
+
+    Route::controller(\App\Http\Controllers\Admin\Consultations\ConsultationsPageController::class)->group(function () {
+        Route::match(['get', 'put'], '/consultations/operational-programs/info', 'opInfo')->name('consultations.operational_programs.info');
+        Route::match(['get', 'put'], '/consultations/legislative-programs/info', 'lpInfo')->name('consultations.legislative_programs.info');
+    });
     Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
         Route::get('/consultations/public-consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');

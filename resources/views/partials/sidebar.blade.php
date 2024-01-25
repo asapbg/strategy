@@ -85,6 +85,16 @@
                                         <p>{{ trans_choice('custom.legislative_programs', 2) }}</p>
                                     </a>
                                 </li>
+                                @canany(['manage.*'])
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.consultations.legislative_programs.info') }}"
+                                           class="nav-link @if(str_contains(url()->current(), 'legislative-programs/info')) active @endif">
+                                            <i class="fas fa-circle nav-item-sub-icon"></i>
+                                            <p>{{ __('custom.general_info_lp') }}</p>
+                                        </a>
+                                    </li>
+                                @endcan
+
                                 <li class="nav-item">
                                     <a href="{{ route('admin.consultations.operational_programs.index') }}"
                                        class="nav-link @if(strstr(url()->current(), 'operational-programs')) active @endif">
@@ -92,6 +102,16 @@
                                         <p>{{ trans_choice('custom.operational_programs', 2) }}</p>
                                     </a>
                                 </li>
+
+                                @canany(['manage.*'])
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.consultations.operational_programs.info') }}"
+                                           class="nav-link @if(str_contains(url()->current(), 'operational-programs/info')) active @endif">
+                                            <i class="fas fa-circle nav-item-sub-icon"></i>
+                                            <p>{{ __('custom.general_info_op') }}</p>
+                                        </a>
+                                    </li>
+                                @endcan
                             @endcanany
                             @canany(['manage.*', 'manage.advisory'])
                                 <li class="nav-item">
