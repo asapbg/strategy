@@ -37,6 +37,7 @@ return [
     'pris.about' => 'Относно',
     'impact_assessment.forms_and_templates' => 'Образци и форми',
     'impact_assessment.tools' => 'Инструменти',
+    'impact_assessment.methods' => 'Методи за анализ на въздействията',
     'successful_send_comment' => 'Коментарът е записан успешно',
     'to_administration' => 'Към Администрация',
     'pris.archive' => 'Актове на МС (архив)',
@@ -107,5 +108,5 @@ return [
     'sort_info_library' => '<p class="mb-1"><strong>Категория</strong> - сортира записите по категория в азбучен ред (низходящо и възходящо)</p>
     <p class="mb-1"><strong>Заглавие</strong> - сортира записите по заглавие в азбучен ред (низходящо и възходящо)</p>
     <p class="mb-1"><strong>Публикувана на </strong> - сортира записите по дата на публикуване в низходящо и възходящо ред</p>',
-
+    'impact_assessments_forms_and_docs' => 'Образци и форми',
 ];

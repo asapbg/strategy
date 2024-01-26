@@ -13,13 +13,19 @@ class ImpactAssessmentCalculatorsController extends Controller
 {
     public function tools()
     {
-        $pageTitle = __('site.impact_assessment.tools');
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => __('site.impact_assessment.methods'), 'url' => '']));
         return $this->view('impact_assessment.tools', compact('pageTitle'));
     }
 
     public function calc(Request $request, $type)
     {
-        $pageTitle = __('site.calc.'.$type.'.title');
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(
+            ['name' => __('site.impact_assessment.methods'), 'url' => route('impact_assessment.tools')],
+            ['name' => __('site.calc.'.$type.'.title'), 'url' => '']
+        ));
+
         if($request->isMethod('get')){
             return $this->view('impact_assessment.calc', compact('pageTitle', 'type'));
         }
@@ -226,5 +232,22 @@ class ImpactAssessmentCalculatorsController extends Controller
         );
 
         return isset($rules[$type]) ? ($rules[$type][$step] ?? []) : [];
+    }
+
+    /**
+     * @param $item
+     * @param $extraItems
+     * @return void
+     */
+    private function composeBreadcrumbs($extraItems = []){
+        $customBreadcrumbs = array(
+            ['name' => trans_choice('custom.impact_assessment', 1), 'url' => route('impact_assessment.index')]
+        );
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }

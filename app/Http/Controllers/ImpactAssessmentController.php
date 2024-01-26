@@ -43,7 +43,8 @@ class ImpactAssessmentController extends Controller
 
     public function forms()
     {
-        $pageTitle = __('site.impact_assessment.forms_and_templates');
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => __('site.impact_assessment.forms_and_templates'), 'url' => '']));
         return $this->view('impact_assessment.forms', compact('pageTitle'));
     }
 
@@ -53,8 +54,10 @@ class ImpactAssessmentController extends Controller
         $step = $request->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = $request->input('inputId', 0);
-        $pageTitle = $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 1);
+        //$pageTitle = $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 1);
         //dd(session()->all());
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => __("forms.$formName"), 'url' => '']));
         return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId'));
     }
 
@@ -146,7 +149,9 @@ class ImpactAssessmentController extends Controller
         $state = $this->getState($formName, $inputId);
         $steps = $this->getSteps($formName);
         $readOnly = true;
-        $pageTitle = __("forms.$formName");
+        //$pageTitle = __("forms.$formName");
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => __("forms.$formName"), 'url' => '']));
         return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle'));
     }
 
@@ -257,7 +262,10 @@ class ImpactAssessmentController extends Controller
             ->orderBy('name')
             ->get();
 
-        $pageTitle = __('List of individuals and legal entities');
+//        $pageTitle = __('List of individuals and legal entities');
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => __('List of individuals and legal entities'), 'url' => '']));
+
         return $this->view('impact_assessment.executors',
             compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions'));
     }
