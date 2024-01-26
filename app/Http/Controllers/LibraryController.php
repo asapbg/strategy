@@ -95,12 +95,16 @@ class LibraryController extends Controller
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->find($id);
-        $pageTitle = $publication->translation?->title;
+//        $pageTitle = $publication->translation?->title;
         $default_img = $publication->type == PublicationTypesEnum::TYPE_NEWS->value ? $publication->newsDefaultImg : $publication->libraryDefaultImg;
-        $this->setBreadcrumbsTitle($pageTitle);
+
+        $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
+        $this->setBreadcrumbsTitle($publication->title);
         $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword);
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
+
+
 
     /**
      * @param Request $request

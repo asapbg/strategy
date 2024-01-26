@@ -20,6 +20,7 @@
                         <i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>{{ displayDate($publication->published_at) }} г.
                     </span>
                 </a>
+                @dd($publication->category?->name)
                 @if($publication->category)
                     <a href="{{ route("library.$current_type") }}?categories[]={{ $publication->publication_category_id }}" class="text-decoration-none">
                         <span class="obj-icon-info me-2">
@@ -52,6 +53,7 @@
         </div>
         <hr>
         <div class="mb-3 row">
+            <h2 class="mb-5">{{ $publication->title }}</h2>
             @if($publication->mainImg)
                 <img src="{{ asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path)) }}" alt="{{ $publication->title }}"
                      class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
