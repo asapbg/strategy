@@ -18,6 +18,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const ADV_BOARD_INFO = 'advisory-board-info';
     const LP_INFO = 'legislative-programs-info';
     const OP_INFO = 'operational-programs-info';
+    const IA_INFO = 'impact-assessments-info';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

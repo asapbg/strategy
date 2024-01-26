@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Executor;
 use App\Models\FormInput;
+use App\Models\Page;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 
@@ -14,10 +15,29 @@ use PDF;
 
 class ImpactAssessmentController extends Controller
 {
+
+    public function info()
+    {
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::IA_INFO)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
+
+        return $this->view('impact_assessment.page', compact('page', 'pageTitle'));
+    }
+
     public function index()
     {
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
+
         return $this->view('impact_assessment.index', compact('pageTitle'));
     }
 

@@ -96,6 +96,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['get', 'put'], '/consultations/operational-programs/info', 'opInfo')->name('consultations.operational_programs.info');
         Route::match(['get', 'put'], '/consultations/legislative-programs/info', 'lpInfo')->name('consultations.legislative_programs.info');
     });
+
     Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public-consultations', 'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
         Route::get('/consultations/public-consultations/edit/{item?}', 'edit')->name('consultations.public_consultations.edit');
@@ -169,6 +170,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     //Impact assessments
     Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentController::class)->group(function () {
         Route::get('/impact-assessments', 'index')->name('impact_assessment.index');
+    });
+    //Impact assessments custom pages
+    Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentPageController::class)->group(function () {
+        Route::match(['get', 'put'], '/impact-assessments/info', 'info')->name('impact_assessment.info');
+    });
+
+    Route::controller(ExecutorController::class)->prefix('/impact-assessments/executors')->as('executors.')->group(function () {
+        Route::get('',                      'index')->name('index');
+        Route::get('/create',               'create')->name('create');
+        Route::post('/store',               'store')->name('store');
+        Route::get('{executor}/view',       'show')->name('view');
+        Route::get('{executor}/edit',       'edit')->name('edit');
+        Route::post('{executor}/update',    'update')->name('update');
+        Route::post('{executor}/delete',    'destroy')->name('destroy');
     });
 
     //Profile
@@ -481,16 +496,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardPageController::class)->prefix('/advisory-boards/page')->group(function () {
         Route::match(['get', 'put'], '/base-information', 'info')->name('advisory-boards.page.info');
         Route::match(['get', 'put'],'/documents', 'documents')->name('advisory-boards.page.documents');
-    });
-
-    Route::controller(ExecutorController::class)->prefix('/executors')->as('executors.')->group(function () {
-        Route::get('',                      'index')->name('index');
-        Route::get('/create',               'create')->name('create');
-        Route::post('/store',               'store')->name('store');
-        Route::get('{executor}/view',       'show')->name('view');
-        Route::get('{executor}/edit',       'edit')->name('edit');
-        Route::post('{executor}/update',    'update')->name('update');
-        Route::post('{executor}/delete',    'destroy')->name('destroy');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {

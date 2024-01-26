@@ -111,7 +111,7 @@ Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentCalculatorsControl
 });
 
 Route::controller(ImpactAssessmentController::class)->group(function () {
-    Route::get('/impact_assessments', 'index')->name('impact_assessment.index');
+    Route::get('/impact_assessments', 'info')->name('impact_assessment.index');
     Route::get('/impact_assessments/executors', 'executors')->name('impact_assessment.executors');
     Route::get('/impact_assessments/forms', 'forms')->name('impact_assessment.forms');
     Route::get('/impact_assessments/{form}', 'form')->name('impact_assessment.form');

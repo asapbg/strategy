@@ -56,6 +56,15 @@ class PageSeeder extends Seeder
                 'content_en' => 'Content in Information OP',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'impact-assessments-info',
+                'system_name' => Page::IA_INFO,
+                'name_bg' => 'Обща информация',
+                'name_en' => 'Обща информация',
+                'content_bg' => 'Съдържание в обща информация  Оценка на въздействие',
+                'content_en' => 'Content in information impact assessments',
+                'is_system' => 1
+            ],
         ];
 
         foreach ($data as $page) {

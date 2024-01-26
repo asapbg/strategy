@@ -10,7 +10,12 @@
                     <hr class="custom-hr">
                     <div class="collapse show mt-3" id="home-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-                            <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.index') active-item-left p-1 @endif"><a href="{{ route('impact_assessment.index') }}" class="link-dark text-decoration-none">Оценки</a></li>
+                            <li class="mb-2">
+                                <a href="{{ route('impact_assessment.index') }}" class="@if(request()->route()->getName() == 'impact_assessment.index') active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ __('custom.base_information') }}
+                                </a>
+                            </li>
+{{--                            <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.index') active-item-left p-1 @endif"><a href="{{ route('impact_assessment.index') }}" class="link-dark text-decoration-none">Оценки</a></li>--}}
                             <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.tools' || str_contains(url()->current(), 'impact_assessments/tools')) active-item-left p-1 @endif"><a href="{{ route('impact_assessment.tools') }}" class="link-dark text-decoration-none">{{ __('site.impact_assessment.tools') }}</a></li>
 {{--                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">--}}
 {{--                                <ul class="list-unstyled ps-3">--}}

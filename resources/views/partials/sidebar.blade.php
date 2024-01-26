@@ -132,24 +132,44 @@
                         </ul>
                     </li>
                 @endcanany
-                @canany(['manage.*', 'manage.advisory'])
-                    <li class="nav-item">
-                        <a href="{{ route('admin.impact_assessment.index') }}"
-                           class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
+
+                @canany(['manage.*', 'manage.advisory', 'manage.executors'])
+                    <li class="nav-item @if(strstr(url()->current(), 'impact-assessments')) menu-open @endif">
+                        <a href="#" class="nav-link">
                             <i class="fas fa-chart-line"></i>
-                            <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
+                            <p>{{ trans_choice('custom.impact_assessment', 2) }}<i class="fas fa-angle-left right"></i></p>
                         </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            @canany(['manage.*'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.impact_assessment.info') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'impact-assessments/info')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.base_information') }}</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @canany(['manage.*', 'manage.advisory'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.impact_assessment.index') }}"
+                                       class="nav-link @if(Str::endsWith(url()->current(), 'impact-assessments')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.impact_assessments', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcanany
+                            @canany(['manage.*', 'manage.executors'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.executors.index') }}"
+                                       class="nav-link @if(strstr(url()->current(), 'impact-assessments/executors')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('List of the preparers of evaluations under the ZNA') }}</p>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
                     </li>
                 @endcanany
-                @canany(['manage.*', 'manage.executors'])
-                <li class="nav-item">
-                    <a href="{{ route('admin.executors.index') }}"
-                       class="nav-link @if(strstr(url()->current(), '/executors')) active @endif">
-                        <i class="far fa-list-alt"></i>
-                        <p>{{ __('List of the preparers of evaluations under the ZNA') }}</p>
-                    </a>
-                </li>
-                @endcan
                 <!-- Admin -->
 {{--                <li class="nav-item">--}}
 {{--                    <a href="#" class="nav-link @if(strstr(url()->current(), 'content')) active @endif">--}}
