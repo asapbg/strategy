@@ -72,10 +72,6 @@ class PrisController extends Controller
             return view('site.pris.list', compact('filter','sorter', 'items', 'rf'));
         }
 
-
-
-        $pageTitle = __('site.pris.page_title');
-
         $menuCategories = [];
         $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
@@ -90,6 +86,16 @@ class PrisController extends Controller
             }
         }
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+
+        $pageTitle = __('site.pris.page_title');
+        $extraBreadCrumbs = [];
+        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+            $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
+            if($actType) {
+                $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
+            }
+        }
+        $this->composeBreadcrumbs($extraBreadCrumbs);
         return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection'));
     }
 
@@ -121,7 +127,6 @@ class PrisController extends Controller
             ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)->paginate($paginate);
-        $pageTitle = __('site.pris.archive');
 
         $menuCategories = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
@@ -137,6 +142,9 @@ class PrisController extends Controller
             }
         }
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+
+        $pageTitle = __('site.menu.pris');
+        $this->composeBreadcrumbs(array(['name' => __('site.pris.archive'), 'url' => '']));
         return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
     }
 
@@ -150,8 +158,8 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        $pageTitle = $item->mcDisplayName;
-        $this->setBreadcrumbsTitle($pageTitle);
+//        $pageTitle = $item->mcDisplayName;
+//        $this->setBreadcrumbsTitle($pageTitle);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
 
         $menuCategories = [];
@@ -167,6 +175,13 @@ class PrisController extends Controller
                 ];
             }
         }
+
+        $pageTitle = __('site.pris.page_title');
+        $extraBreadCrumbs = [];
+        if($item->actType) {
+            $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
+        }
+        $this->composeBreadcrumbs($extraBreadCrumbs, $item);
         return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories'));
     }
 
@@ -254,5 +269,26 @@ class PrisController extends Controller
             ),
 
         );
+    }
+
+    /**
+     * @param array $extraItems
+     * @param $item
+     * @return void
+     */
+    private function composeBreadcrumbs(array $extraItems = [], $item = null){
+        $customBreadcrumbs = array(
+            ['name' => __('site.menu.pris'), 'url' => route('pris.index')]
+        );
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+
+        if($item){
+            $customBreadcrumbs[] = ['name' => $item->mcDisplayName, 'url' => ''];
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }

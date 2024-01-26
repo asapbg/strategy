@@ -21,7 +21,7 @@ class LegislativeProgramController extends Controller
         $infoPage = Page::where('system_name', '=', Page::LP_INFO)->first();
         $pageTopContent = $infoPage ? $infoPage->content : null;
 
-        $pageTitle = __('site.menu.lp');
+        //$pageTitle = __('site.menu.lp');
 
         $menuCategories = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
@@ -37,6 +37,8 @@ class LegislativeProgramController extends Controller
             }
         }
 
+        $pageTitle = __('site.pris.page_title');
+        $this->composeBreadcrumbs();
         return $this->view('site.lp.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories'));
     }
 
@@ -47,12 +49,37 @@ class LegislativeProgramController extends Controller
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
-        $pageTitle = $item->name;
-        $this->setBreadcrumbsTitle($pageTitle);
+        //$pageTitle = $item->name;
+        //$this->setBreadcrumbsTitle($pageTitle);
         $data = $item->getTableData();
         $months = $item->id ? extractMonths($item->from_date,$item->to_date, false) : [];
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
         //$pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LP.'_'.app()->getLocale())->first();
+
+        $pageTitle = __('site.pris.page_title');
+        $this->composeBreadcrumbs([], $item);
         return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle'));
+    }
+
+    /**
+     * @param array $extraItems
+     * @param $item
+     * @return void
+     */
+    private function composeBreadcrumbs(array $extraItems = [], $item = null){
+        $customBreadcrumbs = array(
+            ['name' => __('site.menu.pris'), 'url' => route('pris.index')],
+            ['name' => trans_choice('custom.legislative_program',1), 'url' => route('lp.index')]
+        );
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+
+        if($item){
+            $customBreadcrumbs[] = ['name' => $item->name, 'url' => ''];
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }
