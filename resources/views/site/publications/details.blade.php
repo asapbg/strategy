@@ -20,7 +20,6 @@
                         <i class="far fa-calendar me-1 dark-blue" title="Дата на публикуване"></i>{{ displayDate($publication->published_at) }} г.
                     </span>
                 </a>
-                @dd($publication->category?->name)
                 @if($publication->category)
                     <a href="{{ route("library.$current_type") }}?categories[]={{ $publication->publication_category_id }}" class="text-decoration-none">
                         <span class="obj-icon-info me-2">

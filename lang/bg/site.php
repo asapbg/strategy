@@ -16,7 +16,7 @@ return [
     'year_short' => 'г.',
     'history' => 'История',
     'menu.public_consultation' => 'Обществени консултации',
-    'menu.pris' => 'Актове на МС',
+    'menu.pris' => 'Актове на Министерския съвет',
     'menu.op' => 'Оперативни програми',
     'menu.lp' => 'Законодателни програми',
     'public_consultation.form_to' => 'Откриване / Приключване',
