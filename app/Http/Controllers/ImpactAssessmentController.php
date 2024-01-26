@@ -16,7 +16,8 @@ class ImpactAssessmentController extends Controller
 {
     public function index()
     {
-        $pageTitle = trans_choice('custom.impact_assessment', 2);
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
         return $this->view('impact_assessment.index', compact('pageTitle'));
     }
 
@@ -32,7 +33,7 @@ class ImpactAssessmentController extends Controller
         $step = $request->input('step', 1);
         $steps = $this->getSteps($formName);
         $inputId = $request->input('inputId', 0);
-        $pageTitle = $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 2);
+        $pageTitle = $formName ? __("forms.$formName") : trans_choice('custom.impact_assessment', 1);
         //dd(session()->all());
         return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId'));
     }
@@ -239,5 +240,22 @@ class ImpactAssessmentController extends Controller
         $pageTitle = __('List of individuals and legal entities');
         return $this->view('impact_assessment.executors',
             compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions'));
+    }
+
+    /**
+     * @param $item
+     * @param $extraItems
+     * @return void
+     */
+    private function composeBreadcrumbs($extraItems = []){
+        $customBreadcrumbs = array(
+            ['name' => trans_choice('custom.impact_assessment', 1), 'url' => route('impact_assessment.index')]
+        );
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }

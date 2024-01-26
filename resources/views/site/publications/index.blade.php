@@ -100,26 +100,29 @@
                     </div>
                 </div>
 
-{{--                <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">--}}
-{{--                    <div class="col-md-3">--}}
-{{--                        <p class="mb-0 cursor-pointer sort_search">--}}
-{{--                            <input type="hidden" disabled class="order_by" name="order_by" value="publication_category_id">--}}
-{{--                            <i class="fa-solid fa-sort me-2"></i> {{ trans_choice('custom.categories', 1) }}--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-3 cursor-pointer sort_search">--}}
-{{--                        <input type="hidden" disabled class="order_by" name="order_by" value="title">--}}
-{{--                        <p class="mb-0">--}}
-{{--                            <i class="fa-solid fa-sort me-2"></i>{{ __('custom.title_content') }}--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-3">--}}
-{{--                        <p class="mb-0 cursor-pointer sort_search">--}}
-{{--                            <input type="hidden" disabled class="order_by" name="order_by" value="published_at">--}}
-{{--                            <i class="fa-solid fa-sort me-2"></i>{{ __('custom.published_at_f') }}--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
+                    <div class="text-start col-md-1">
+                        <i class="fas fa-info-circle text-primary " style="font-size: 20px" title="{{ __('site.sort_info_library') }}" data-html="true" data-bs-placement="top" data-bs-toggle="tooltip"><span class="d-none">.</span></i>
+                    </div>
+                    <div class="text-start col-md-3">
+                        <p class="mb-0 cursor-pointer sort_search">
+                            <input type="hidden" disabled class="order_by" name="order_by" value="publication_category_id">
+                            <i class="fa-solid fa-sort me-2"></i> {{ trans_choice('custom.categories', 1) }}
+                        </p>
+                    </div>
+                    <div class="text-start col-md-3 cursor-pointer sort_search">
+                        <input type="hidden" disabled class="order_by" name="order_by" value="title">
+                        <p class="mb-0">
+                            <i class="fa-solid fa-sort me-2"></i>{{ __('custom.title') }}
+                        </p>
+                    </div>
+                    <div class="text-start col-md-3">
+                        <p class="mb-0 cursor-pointer sort_search">
+                            <input type="hidden" disabled class="order_by" name="order_by" value="published_at">
+                            <i class="fa-solid fa-sort me-2"></i>{{ __('custom.published_at_f') }}
+                        </p>
+                    </div>
+                </div>
 
                 @includeIf('partials.results-select', ['per_page_array' => [10,50,100,150,200]])
 

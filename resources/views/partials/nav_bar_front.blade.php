@@ -16,7 +16,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('impact_assessment.index') }}" type="button">Оценки на въздействието</a>
+                    <a class="nav-link" href="{{ route('impact_assessment.index') }}" type="button">{{ trans_choice('custom.impact_assessment', 1) }}</a>
                 </li>
 
                 <li class="nav-item">
