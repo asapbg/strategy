@@ -775,4 +775,6 @@ return [
     'published_after_f'  => 'Публикувана след',
     'published_before_f'  => 'Публикувана преди',
     'published_at_f'  => 'Публикувана на',
+    'page.module.MODULE_IMPACT_ASSESSMENT' => 'Оценка на въздействието',
+    'modules' => 'Модул|Модули'
 ];

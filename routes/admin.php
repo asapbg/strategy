@@ -140,6 +140,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/page', 'index')->name('page')->middleware('can:viewAny,App\Models\Page');
         Route::get('/page/edit/{item?}', 'edit')->name('page.edit');
         Route::match(['post', 'put'], '/page/store', 'store')->name('page.store');
+
+        Route::get('/impact-assessments/library/{module?}', 'index')->name('impact_assessments.library')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/impact-assessments/library/edit/{item?}/{module?}', 'edit')->name('impact_assessments.library.edit');
+        Route::match(['post', 'put'], '/impact-assessments/library/store/{module?}', 'store')->name('impact_assessments.page.store');
     });
 
     // Settings

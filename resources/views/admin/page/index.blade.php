@@ -5,8 +5,11 @@
     <section class="content">
         <div class="container-fluid">
 
-            @include('admin.partial.filter_form')
-
+            @if(isset($customListRouteName) && !empty($customListRouteName))
+                @include('admin.partial.filter_form', ['customListRoute' => route($customListRouteName, ['module' => $module])])
+            @else
+                @include('admin.partial.filter_form')
+            @endif
             <div class="card">
                 <div class="card-body table-responsive">
 
@@ -14,7 +17,7 @@
 
                         @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PageController@index'])
 
-                        <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
+                        <a href="{{ isset($customEditRouteName) && !empty($customEditRouteName) ? route($customEditRouteName, ['item' => 0, 'module' => $module]) : route($editRouteName) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>
                     </div>
@@ -50,7 +53,7 @@
                                     </td>
                                     <td class="text-center">
                                         @can('update', $item)
-                                            <a href="{{ route( $editRouteName , [$item->id]) }}"
+                                            <a href="{{ isset($customEditRouteName) && !empty($customEditRouteName) ? route($customEditRouteName, ['item' => $item->id, 'module' => $module]) : route( $editRouteName , [$item->id]) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.edit') }}">

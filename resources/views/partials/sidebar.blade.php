@@ -158,6 +158,15 @@
                                     </a>
                                 </li>
                             @endcanany
+                            @canany(['manage.*'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.impact_assessments.library', ['module' => \App\Enums\PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value]) }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'impact-assessments/library')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.library') }}</p>
+                                    </a>
+                                </li>
+                            @endcan
                             @canany(['manage.*', 'manage.executors'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.executors.index') }}"

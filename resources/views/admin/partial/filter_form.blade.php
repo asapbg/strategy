@@ -108,7 +108,7 @@
                                     <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
                                 </a>
                             @else
-                                <a href="{{ route($listRouteName) }}" class="btn btn-sm btn-default">
+                                <a href="{{ isset($customListRoute) && !empty($customListRoute) ? $customListRoute : route($listRouteName) }}" class="btn btn-sm btn-default">
                                     <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
                                 </a>
                             @endif

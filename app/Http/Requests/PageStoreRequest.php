@@ -32,8 +32,14 @@ class PageStoreRequest extends FormRequest
             'active' => ['required', 'numeric', 'gt:0'],
             'order_idx' => ['required', 'numeric', 'gte:0'],
             'in_footer' => ['nullable', 'numeric'],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('page', 'slug')->ignore((int)request()->input('id'))],
+            'slug' => ['nullable', 'string', 'max:255'],
         ];
+
+        if( request()->input('id') ) {
+            $rules['email'][] = Rule::unique('page', 'slug')->ignore((int)request()->input('id'));
+        } else {
+            $rules['email'][] = 'unique:page,slug';
+        }
 
         if( request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:page'];

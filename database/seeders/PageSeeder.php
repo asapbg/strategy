@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PageModulesEnum;
 use App\Models\Page;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -65,6 +66,60 @@ class PageSeeder extends Seeder
                 'content_en' => 'Content in information impact assessments',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'regulatory-framework',
+                'name_bg' => 'Нормативна рамка',
+                'name_en' => 'Regulatory framework',
+                'content_bg' => 'Съдържание в страница Нормативна рамка',
+                'content_en' => 'Content in Regulatory framework page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
+            [
+                'slug' => 'methodological-framework',
+                'name_bg' => 'Методологична рамка',
+                'name_en' => 'Methodological framework',
+                'content_bg' => 'Съдържание в страница Методологична рамка',
+                'content_en' => 'Content in Methodological framework page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
+            [
+                'slug' => 'methodological-framework',
+                'name_bg' => 'Цялостни предварителни ОВ',
+                'name_en' => 'Full preliminary impact assessment',
+                'content_bg' => 'Съдържание в страница Цялостни предварителни ОВ',
+                'content_en' => 'Content in Full preliminary impact assessment page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
+            [
+                'slug' => 'subsequent-impact-assessment',
+                'name_bg' => 'Последващи ОВ',
+                'name_en' => 'Subsequent impact assessment',
+                'content_bg' => 'Съдържание в страница Последващи ОВ',
+                'content_en' => 'Content in Subsequent impact assessment page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
+            [
+                'slug' => 'good-practices-ek',
+                'name_bg' => 'Добри практики – ЕК',
+                'name_en' => 'Good practices – ЕК',
+                'content_bg' => 'Съдържание в страница Добри практики – ЕК',
+                'content_en' => 'Content in Good practices – ЕК page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
+            [
+                'slug' => 'good-practices-oisr',
+                'name_bg' => 'Добри практики – ОИСР',
+                'name_en' => 'Good practices – ОИСР',
+                'content_bg' => 'Съдържание в страница Добри практики – ОИСР',
+                'content_en' => 'Content in Good practices – ОИСР page',
+                'is_system' => 0,
+                'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+            ],
         ];
 
         foreach ($data as $page) {
@@ -74,8 +129,9 @@ class PageSeeder extends Seeder
                 if(!$dbPage){
                     $item = Page::create([
                         'slug' => $page['slug'],
-                        'system_name' => $page['system_name'],
-                        'is_system' => $page['is_system']
+                        'system_name' => $page['system_name'] ?? null,
+                        'is_system' => $page['is_system'] ?? 0,
+                        'module_enum' => $page['module_enum'] ?? null
                     ]);
 
                     if( $item ) {
