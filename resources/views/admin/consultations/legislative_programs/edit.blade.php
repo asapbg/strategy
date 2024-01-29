@@ -41,6 +41,104 @@
                                     @enderror
                             </div>
                         </div>
+
+{{--                        START Files section--}}
+                        @if($item->id)
+                            <div class="col-12">
+                                <h3 class="border-bottom border-4 border-primary">Файлове</h3>
+                            </div>
+
+                            @foreach($languages as $lang)
+                                @php
+                                    $default = $lang['default'];
+                                    $code = $lang['code'];
+                                    $code_upper = mb_strtoupper($code);
+                                @endphp
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="description_{{ $code }}" class="form-label">
+                                            Публично име ({{ $code_upper }})
+                                        </label>
+                                        <input value="{{ old("description_$code", '') }}" class="form-control form-control-sm @error("description_$code") is-invalid @enderror"
+                                               id="description_{{ $code }}" type="text" name="description_{{ $code }}"
+                                        >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="file_{{ $code }}" class="form-label">
+                                            Изберете файл ({{ $code_upper }})
+                                        </label>
+                                        <input class="form-control form-control-sm @error("file_$code") is-invalid @enderror"
+                                               id="file_{{ $code }}" type="file" name="file_{{ $code }}"
+                                        >
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            @if($item->files)
+                                <div class="col-12">
+                                    <table class="table table-sm table-hover table-bordered mt-4">
+                                        <tbody>
+                                        <tr>
+                                            <th>Изображение</th>
+                                            <th>Име</th>
+                                            <th></th>
+                                        </tr>
+                                        @foreach($item->files as $f)
+                                            <tr>
+                                                @if(in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
+                                                    <td>{!! $f->preview !!}</td>
+                                                    <td>{!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                        - {{ __('custom.'.$f->locale) }}
+                                                        | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }} @if($f->id == $item->file_id) <i><strong>({{ __('validation.attributes.main_img') }})</strong></i> @endif</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
+                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                        >
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                            <i class="fas fa-download me-1" role="button"
+                                                               data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                            <i class="fas fa-trash me-1" role="button"
+                                                               data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                        </a>
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <i class="fas fa-minus text-danger"></i>
+                                                    </td>
+                                                    <td>
+                                                        {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                        - {{ __('custom.'.$f->locale) }}
+                                                        | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
+                                                                data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                        >
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                            <i class="fas fa-download me-1" role="button"
+                                                               data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                            <i class="fas fa-trash me-1" role="button"
+                                                               data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                        </a>
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        @endif
+                        {{-- END Files section--}}
+
                         @if($item->id && isset($columns) && $columns)
                             @can('update', $item)
                                 <div class="card card-secondary p-0 mt-4">
