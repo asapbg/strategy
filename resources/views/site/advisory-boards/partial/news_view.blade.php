@@ -29,15 +29,13 @@
 </div>
 <hr>
 
-<div class="mb-3 row">
+<div class="mb-3">
     @if($publication->mainImg)
         <img src="{{ $publication->mainImgAsset }}" alt="{{ $publication->title }}"
              class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
         >
     @endif
     {!! $publication->content !!}
-
-    <a href=""></a>
 </div>
 
 @php
@@ -48,7 +46,7 @@
 @endphp
 @if($files->count() > 0)
     @php($fileFound = false)
-    <div class="mb-3 row">
+    <div class="mb-3 row w-100">
         @foreach($files as $f)
             @if($f->id != $publication->file_id)
                 @if(!$fileFound)

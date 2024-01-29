@@ -51,7 +51,7 @@
             </div>
         </div>
         <hr>
-        <div class="mb-3 row">
+        <div class="mb-3">
             <h2 class="mb-5">{{ $publication->title }}</h2>
             @if($publication->mainImg)
                 <img src="{{ asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $publication->mainImg->path)) }}" alt="{{ $publication->title }}"
@@ -59,8 +59,6 @@
                 >
             @endif
             {!! $publication->content !!}
-
-            <a href=""></a>
         </div>
 
         @php
@@ -70,10 +68,13 @@
                 ->get();
         @endphp
         @if($files->count() > 0)
-            <div class="row mb-3">
-                <h5>Файлове</h5>
+            @php($fileFound = false)
+            <div class="row mb-3 w-100">
                 @foreach($files as $f)
                     @if($f->id != $publication->file_id)
+                        @if(!$fileFound)
+                            <h5>{{ __('custom.files') }}</h5>
+                        @endif
                         <p>
                             <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
                                 {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
