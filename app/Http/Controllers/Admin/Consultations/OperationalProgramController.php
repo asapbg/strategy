@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StoreOperationalProgramRequest;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\OperationalProgramRow;
@@ -227,6 +228,12 @@ class OperationalProgramController extends AdminController
                         }
                     }
                 }
+            }
+
+            //Upload files
+            if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
+                $langReq = LanguageFileUploadRequest::createFrom($request);
+                $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL, false);
             }
 
             DB::commit();

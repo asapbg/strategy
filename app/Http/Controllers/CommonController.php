@@ -175,6 +175,8 @@ class CommonController extends Controller
                 File::CODE_OBJ_PRIS,
                 File::CODE_OBJ_PUBLIC_CONSULTATION,
                 File::CODE_AB,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
@@ -217,7 +219,8 @@ class CommonController extends Controller
 
         $route = match ((int)$file->code_object) {
 //            File::CODE_OBJ_PUBLICATION => url()->previous().'#ct-files',
-//            File::CODE_OBJ_PAGE => url()->previous().'#ct-files',
+            File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => url()->previous(),
+            File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => url()->previous(),
             default => url()->previous().'#ct-files',
         };
 

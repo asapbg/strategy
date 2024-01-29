@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Consultations;
 use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StoreLegislativeProgramRequest;
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\LegislativeProgramRow;
@@ -226,6 +227,12 @@ class LegislativeProgramController extends AdminController
                         }
                     }
                 }
+            }
+
+            //Upload files
+            if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
+                $langReq = LanguageFileUploadRequest::createFrom($request);
+                $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL, false);
             }
 
             DB::commit();

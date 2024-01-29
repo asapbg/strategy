@@ -20,6 +20,44 @@
                             </div>
                         </div>
 
+                        @if($item->files)
+                            <div class="col-12">
+                                <table class="table table-sm table-hover table-bordered mt-4">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2"><strong>Файлове</strong></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>Име</th>
+                                        <th>Действие</th>
+                                    </tr>
+                                    @foreach($item->files as $f)
+                                        <tr>
+                                            <td>
+                                                {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                - {{ __('custom.'.$f->locale) }}
+                                                | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
+                                                        data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                >
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                    <i class="fas fa-download me-1" role="button"
+                                                       data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
                         @if(isset($months) && sizeof($months) && isset($data) && $data)
                             <div class="accordion mt-4" id="accordionExample">
                                 @foreach($months as $month)

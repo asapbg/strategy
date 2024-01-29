@@ -29,11 +29,29 @@
                 @include('site.pris.side_menu')
 
                 <div class="col-lg-10  right-side-content py-5">
-                    @if(isset($pageTopContent) && !empty($pageTopContent->value))
-                        <div class="col-12 mb-5">
-                            {!! $pageTopContent->value !!}
+{{--                    @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
+{{--                        <div class="col-12 mb-5">--}}
+{{--                            {!! $pageTopContent->value !!}--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
+
+                    @if($item->filesLocale->count())
+                        <div class="col-12 mb-4">
+                            <div class="custom-card p-3">
+                                <h3 class="mb-2 fs-4">{{ __('custom.files') }}</h3>
+                                <ul class="list-group list-group-flush">
+                                    @foreach($item->filesLocale as $f)
+                                        <li class="list-group-item">
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
+                                                {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename }} | {{ displayDate($f->created_at) }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                     @endif
+                    
                     <ul class="tab nav nav-tabs mb-3" id="myTab" role="tablist">
                         @if(isset($months) && sizeof($months))
                             @foreach($months as $m)

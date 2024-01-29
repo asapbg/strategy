@@ -313,6 +313,8 @@ class Controller extends BaseController
                 File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
                 File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
                 File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => File::OP_GENERAL_UPLOAD_DIR,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => File::LP_GENERAL_UPLOAD_DIR,
 
                 default => '',
             };

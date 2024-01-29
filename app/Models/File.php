@@ -22,9 +22,12 @@ class File extends ModelActivityExtend
 
     public $timestamps = true;
 
+//    Code objects
     const CODE_OBJ_PUBLICATION = 1;
     const CODE_OBJ_LEGISLATIVE_PROGRAM = 2;
+    const CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL = 20;
     const CODE_OBJ_OPERATIONAL_PROGRAM = 3;
+    const CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL = 30;
     const CODE_OBJ_PAGE = 4;
     const CODE_OBJ_PRIS = 5;
     const CODE_OBJ_PUBLIC_CONSULTATION = 6;
@@ -35,8 +38,7 @@ class File extends ModelActivityExtend
 
     const CODE_OBJ_AB_PAGE = 9;
 
-    const MAX_UPLOAD_FILE_SIZE = 30720;
-
+    //Directories objects
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_DIR = 'pages' . DIRECTORY_SEPARATOR;
     const PAGE_UPLOAD_PRIS = 'pris' . DIRECTORY_SEPARATOR;
@@ -52,7 +54,10 @@ class File extends ModelActivityExtend
     const ADVISORY_BOARD_MEETINGS_AND_DECISIONS_UPLOAD_DIR = 'meetings-and-decisions';
     const ADVISORY_BOARD_MODERATOR_UPLOAD_DIR = 'moderator';
     const ADVISORY_BOARD_CUSTOM_SECTION_UPLOAD_DIR = 'custom-sections';
+    const OP_GENERAL_UPLOAD_DIR = 'op'. DIRECTORY_SEPARATOR;
+    const LP_GENERAL_UPLOAD_DIR = 'lp'. DIRECTORY_SEPARATOR;
 
+    const MAX_UPLOAD_FILE_SIZE = 30720;
     const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];

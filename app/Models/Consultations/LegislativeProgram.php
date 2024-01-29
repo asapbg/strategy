@@ -10,6 +10,7 @@ use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -96,6 +97,19 @@ class LegislativeProgram extends ModelActivityExtend
     public function records(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LegislativeProgramRow::class, 'legislative_program_id', 'id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL);
+    }
+
+    public function filesLocale(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object')
+            ->where('code_object', File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL)
+            ->where('locale', '=', app()->getLocale());
     }
 
     public function rowFiles()

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Consultations\OperationalProgram;
+use App\Models\File;
 use App\Rules\DateCrossProgram;
 use App\Rules\ProgramValidPeriod;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,10 +27,13 @@ class StoreOperationalProgramRequest extends FormRequest
      */
     public function rules()
     {
+        $defaultLang = config('app.default_lang');
         $rules = [
             'id' => ['required', 'numeric'],
             'new_row' => ['nullable', 'numeric'],
             'save' => ['nullable', 'numeric'],
+            'save_files' => ['nullable', 'numeric'],
+            'stay_in_files' => ['nullable', 'numeric'],
         ];
 
         if( request()->input('save') ) {
@@ -75,6 +79,13 @@ class StoreOperationalProgramRequest extends FormRequest
                 } else{
                     $rules['new_val.'.$key] = ['nullable', 'string'];
                 }
+            }
+        }
+
+        if( request()->input('save_files') || request()->input('stay_in_files')) {
+            foreach (config('available_languages') as $lang) {
+                $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+                $rules['description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
             }
         }
 
