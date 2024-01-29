@@ -28,7 +28,7 @@ class UpdateUsersRequest extends FormRequest
         $this->offsetSet('must_change_password', false);
 
         return array_merge($storeRules->rules($this), [
-            'username'              => ['required', 'string', 'max:255'],
+//            'username'              => ['required', 'string', 'max:255'],
             'password'              => ['nullable', 'confirmed', Password::min(6)->numbers()],
             'password_confirmation' => ['nullable','same:password']
         ]);

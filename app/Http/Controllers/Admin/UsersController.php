@@ -37,7 +37,7 @@ class  UsersController extends Controller
     public function index(Request $request)
     {
         $name = ($request->filled('name')) ? $request->get('name') : null;
-        $username = ($request->filled('username')) ? $request->get('username') : null;
+//        $username = ($request->filled('username')) ? $request->get('username') : null;
         $email = ($request->filled('email')) ? $request->get('email') : null;
         $role_id = ($request->filled('role_id')) ? $request->get('role_id') : null;
         $active = $request->filled('active') ? $request->get('active') : 1;
@@ -57,9 +57,9 @@ class  UsersController extends Controller
             ->when($name, function ($query, $name) {
                 return $query->where('first_name', 'ILIKE', "%$name%")->orWhere('last_name', 'ILIKE', "%$name%");
             })
-            ->when($username, function ($query, $username) {
-                return $query->where('username', 'ILIKE', "%$username%");
-            })
+//            ->when($username, function ($query, $username) {
+//                return $query->where('username', 'ILIKE', "%$username%");
+//            })
             ->when($email, function ($query, $email) {
                 return $query->where('email', 'ILIKE', "%$email%");
             })
@@ -71,7 +71,7 @@ class  UsersController extends Controller
 
 
         return $this->view('admin.users.index',
-            compact('users', 'roles', 'username', 'email')
+            compact('users', 'roles', 'email')
         );
     }
 
@@ -80,12 +80,27 @@ class  UsersController extends Controller
      *
      * @return Excel file
      */
-    public function export()
+    public function export(Request $request)
     {
         if(auth()->user()->cannot('export', User::class)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
-        $users = User::with('roles')->get();
+
+        $name = ($request->filled('name')) ? $request->get('name') : null;
+        $email = ($request->filled('email')) ? $request->get('email') : null;
+        $role_id = ($request->filled('role_id')) ? $request->get('role_id') : null;
+        $users = User::with('roles')
+            ->when($role_id, function ($query, $role_id) {
+            return $query->whereHas('roles', function ($q) use ($role_id) {
+                $q->where('id', $role_id);
+            });
+        })
+        ->when($name, function ($query, $name) {
+            return $query->where('first_name', 'ILIKE', "%$name%")->orWhere('last_name', 'ILIKE', "%$name%");
+        })
+        ->when($email, function ($query, $email) {
+            return $query->where('email', 'ILIKE', "%$email%");
+        })->get();
 
         try {
             return Excel::download(new UsersExport($users), 'users.xlsx');
@@ -141,10 +156,10 @@ class  UsersController extends Controller
 
             $user = User::make($data);
             if ($must_change_password) {
-                $message = trans_choice('custom.users', 1)." {$data['username']} ".__('messages.created_successfully_m').". ".__('messages.email_send');
+                $message = trans_choice('custom.users', 1)." {$data['email']} ".__('messages.created_successfully_m').". ".__('messages.email_send');
                 Mail::to($data['email'])->send(new UsersChangePassword($user));
             } else {
-                $message = trans_choice('custom.users', 1)." {$data['username']} ".__('messages.created_successfully_m');
+                $message = trans_choice('custom.users', 1)." {$data['email']} ".__('messages.created_successfully_m');
                 $user->password = bcrypt($data['password']);
                 $user->email_verified_at = Carbon::now();
                 $user->password_changed_at = Carbon::now();
@@ -208,7 +223,7 @@ class  UsersController extends Controller
 
         try {
 
-            $user->username = mb_strtoupper($data['username']);
+//            $user->username = mb_strtoupper($data['username']);
             $user->first_name = $data['first_name'];
             $user->middle_name = $data['middle_name'];
             $user->last_name = $data['last_name'];

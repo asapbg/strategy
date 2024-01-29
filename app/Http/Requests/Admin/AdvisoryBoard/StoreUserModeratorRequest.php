@@ -29,11 +29,11 @@ class StoreUserModeratorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'unique:users', 'string', 'max:255'],
+//            'username' => ['required', 'unique:users', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed',
                 Password::min(6)->numbers()->letters()->symbols()],
             'password_confirmation' => ['required', 'same:password'],

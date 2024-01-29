@@ -21,17 +21,17 @@
                                         <option value="{{ \App\Models\User::USER_TYPE_INTERNAL }}">{{ trans_choice('custom.internal_users', 1) }}</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-12 control-label" for="username">
-                                        {{ __('validation.attributes.username') }}<span class="required">*</span>
-                                    </label>
-                                    <div class="col-12">
-                                        <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}">
-                                        @error('username')
-                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label class="col-sm-12 control-label" for="username">--}}
+{{--                                        {{ __('validation.attributes.username') }}<span class="required">*</span>--}}
+{{--                                    </label>--}}
+{{--                                    <div class="col-12">--}}
+{{--                                        <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}">--}}
+{{--                                        @error('username')--}}
+{{--                                        <div class="alert alert-danger mt-1">{{ $message }}</div>--}}
+{{--                                        @enderror--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="first_name">
@@ -71,7 +71,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="email">
-                                        {{ __('validation.attributes.email') }}
+                                        {{ __('validation.attributes.email') }} <span class="required">*</span>
                                     </label>
                                     <div class="col-12">
                                         <input type="email" id="email" name="email" class="form-control"

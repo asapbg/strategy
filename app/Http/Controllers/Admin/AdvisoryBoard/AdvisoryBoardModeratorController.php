@@ -118,9 +118,14 @@ class AdvisoryBoardModeratorController extends AdminController
      *
      * @return JsonResponse
      */
-    public function ajaxRegister(StoreUserModeratorRequest $request, AdvisoryBoard $item, AdvisoryBoardModerator $moderator)
+    public function ajaxRegister(Request $request, AdvisoryBoard $item, AdvisoryBoardModerator $moderator)
     {
-        $validated = $request->validated();
+        $req = new StoreUserModeratorRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+        $validated = $validator->validated();
 
         DB::beginTransaction();
         try {

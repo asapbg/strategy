@@ -11,15 +11,15 @@
                     @csrf
 
                     <input type="hidden" name="roles[]" value="{{ $user->roles()->first()->id }}">
-                    <div class="form-group">
-                        <div class="col-12 pt-2">
-                            <label class="control-label" for="username">
-                                {{ __('validation.attributes.username') }}:
-                            </label>
-                            <b>{{ $user->username }}</b>
-                            <input type="hidden" name="username" value="{{ $user->username}}">
-                        </div>
-                    </div>
+{{--                    <div class="form-group">--}}
+{{--                        <div class="col-12 pt-2">--}}
+{{--                            <label class="control-label" for="username">--}}
+{{--                                {{ __('validation.attributes.username') }}:--}}
+{{--                            </label>--}}
+{{--                            <b>{{ $user->username }}</b>--}}
+{{--                            <input type="hidden" name="username" value="{{ $user->username}}">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="form-group">
                         <label class="col-sm-12 control-label" for="first_name">

@@ -15,19 +15,19 @@
                       action="{{ route('admin.advisory-boards.members.store') }}">
                     @csrf
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label" for="username">
-                                    {{ __('validation.attributes.username') }}<span class="required">*</span>
-                                </label>
-                                <div class="col-12">
-                                    <input type="text" id="username" name="username" class="form-control"/>
-                                    <div class="text-danger mt-1 error_username"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label class="col-sm-12 control-label" for="username">--}}
+{{--                                    {{ __('validation.attributes.username') }}<span class="required">*</span>--}}
+{{--                                </label>--}}
+{{--                                <div class="col-12">--}}
+{{--                                    <input type="text" id="username" name="username" class="form-control"/>--}}
+{{--                                    <div class="text-danger mt-1 error_username"></div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="row">
                         <div class="col-12">
@@ -37,7 +37,7 @@
                                 </label>
                                 <div class="col-12">
                                     <input type="text" id="first_name" name="first_name" class="form-control"/>
-                                    <div class="text-danger mt-1 error_first_name"></div>
+                                    <div class="ajax-error text-danger mt-1 error_first_name"></div>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                 </label>
                                 <div class="col-12">
                                     <input type="text" id="middle_name" name="middle_name" class="form-control"/>
-                                    <div class="text-danger mt-1 error_middle_name"></div>
+                                    <div class="ajax-error text-danger mt-1 error_middle_name"></div>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 </label>
                                 <div class="col-12">
                                     <input type="text" id="last_name" name="last_name" class="form-control"/>
-                                    <div class="text-danger mt-1 error_last_name"></div>
+                                    <div class="ajax-error text-danger mt-1 error_last_name"></div>
                                 </div>
                             </div>
                         </div>
@@ -75,11 +75,11 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="email">
-                                    {{ __('validation.attributes.email') }}
+                                    {{ __('validation.attributes.email') }} <span class="required">*</span>
                                 </label>
                                 <div class="col-12">
                                     <input type="email" id="email" name="email" class="form-control"/>
-                                    <div class="text-danger mt-1 error_email"></div>
+                                    <div class="ajax-error text-danger mt-1 error_email"></div>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
 
                                     <i>{{ __('auth.password_format') }}</i>
 
-                                    <div class="text-danger mt-1 error_password"></div>
+                                    <div class="ajax-error text-danger mt-1 error_password"></div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                                     <input type="password" id="password_confirmation" name="password_confirmation"
                                            class="form-control passwords"
                                            autocomplete="new-password">
-                                    <div class="text-danger mt-1 error_password_confirmation"></div>
+                                    <div class="ajax-error text-danger mt-1 error_password_confirmation"></div>
                                 </div>
                             </div>
                         </div>

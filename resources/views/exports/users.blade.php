@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>{{__('validation.attributes.username')}}</th>
+{{--        <th>{{__('validation.attributes.username')}}</th>--}}
         <th>{{__('validation.attributes.first_name')}}</th>
         <th>Презиме</th>
         <th>Фамилия</th>
@@ -28,7 +28,7 @@
         @foreach($users as $user)
             <tr>
                 <td>{{$user->id}}</td>
-                <td>{{$user->username}}</td>
+{{--                <td>{{$user->username}}</td>--}}
                 <td>{{$user->first_name}}</td>
                 <td>{{$user->middle_name}}</td>
                 <td>{{$user->last_name}}</td>

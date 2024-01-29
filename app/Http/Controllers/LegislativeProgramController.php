@@ -69,6 +69,7 @@ class LegislativeProgramController extends Controller
     private function composeBreadcrumbs(array $extraItems = [], $item = null){
         $customBreadcrumbs = array(
             ['name' => __('site.menu.pris'), 'url' => route('pris.index')],
+            ['name' => __('site.planning'), 'url' => ''],
             ['name' => trans_choice('custom.legislative_program',1), 'url' => route('lp.index')]
         );
         if(!empty($extraItems)){

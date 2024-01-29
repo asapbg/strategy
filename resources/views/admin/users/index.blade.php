@@ -43,11 +43,11 @@
                                        value="{{request()->get('name')}}">
                             </div>
 
-                            <div class="col-xs-12 col-md-3 mb-2 d-none">
-                                <input type="text" name="username" placeholder="{{__('validation.attributes.username')}}"
-                                       class="form-control"
-                                       value="{{request()->get('username')}}">
-                            </div>
+{{--                            <div class="col-xs-12 col-md-3 mb-2 d-none">--}}
+{{--                                <input type="text" name="username" placeholder="{{__('validation.attributes.username')}}"--}}
+{{--                                       class="form-control"--}}
+{{--                                       value="{{request()->get('username')}}">--}}
+{{--                            </div>--}}
 
                             <div class="col-xs-12 col-md-3 mb-2">
                                 <input type="text" name="email" placeholder="{{__('validation.attributes.email')}}"
@@ -89,7 +89,7 @@
                         <a href="{{ route('admin.users.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{__('custom.add')}} {{$title_singular}}
                         </a>
-                        <a href="{{ route('admin.users.export') }}" class="btn btn-sm  btn-success">
+                        <a href="{{ route('admin.users.export').(!empty(request()->getQueryString()) ? '?'.request()->getQueryString() : '') }}" class="btn btn-sm  btn-success">
                             <i class="fas fa-file-excel"></i> Експортирай
                         </a>
                     </div>
@@ -99,7 +99,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.first_name')}}</th>
-                            <th>{{__('validation.attributes.username')}}</th>
+{{--                            <th>{{__('validation.attributes.username')}}</th>--}}
                             <th>{{__('validation.attributes.email')}}</th>
                             <th class="d-none">{{__('validation.attributes.email')}}</th>
                             <th>{{__('validation.attributes.role')}}</th>
@@ -114,7 +114,7 @@
                                 <tr>
                                     <td>{{$user->id}}</td>
                                     <td>{{$user->fullname()}}</td>
-                                    <td>{{$user->username}}</td>
+{{--                                    <td>{{$user->username}}</td>--}}
                                     <td>{{$user->email}}</td>
                                     <td class="d-none">{{$user->email}}</td>
                                     <td>{!! implode('<br>',$user->roles->pluck('display_name')->toArray()) !!}</td>
