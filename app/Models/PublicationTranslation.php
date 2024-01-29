@@ -14,6 +14,16 @@ class PublicationTranslation extends Model
     /**
      * Content
      */
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value
+        );
+    }
+
+    /**
+     * Content
+     */
     protected function content(): Attribute
     {
         return Attribute::make(
