@@ -76,7 +76,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="middle_name">
-                                        {{ __('validation.attributes.middle_name') }}<span class="required">*</span>
+                                        {{ __('validation.attributes.middle_name') }}
                                     </label>
                                     <div class="col-12">
                                         <input type="text" id="middle_name" name="middle_name" class="form-control"

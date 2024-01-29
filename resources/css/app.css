@@ -2758,7 +2758,7 @@ html #slider-range .ui-button.ui-state-disabled:active {
 
 /*Publication main img*/
 .publication-main-img {
-    height: auto;
-    max-width: 630px;
+    width: auto;
+    max-height: 300px;
 }
 
