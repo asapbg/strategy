@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
+use App\Models\Page;
 use App\Models\User;
 use App\Services\FileOcr;
 use Exception;
@@ -359,12 +361,25 @@ class Controller extends BaseController
             File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
             File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
 
-            $route = match ((int)$typeObject) {
-                File::CODE_OBJ_PRIS => route('admin.pris.edit', ['item' => $objectId]) . '#ct-files',
-                File::CODE_OBJ_PAGE => route('admin.page.edit', ['item' => $objectId]) . '#ct-files',
-                File::CODE_OBJ_AB_PAGE => url()->previous().'#ct-files',
-                default => '',
-            };
+
+            switch ((int)$typeObject) {
+                case File::CODE_OBJ_PRIS:
+                    $route = route('admin.pris.edit', ['item' => $objectId]) . '#ct-files';
+                    break;
+                case File::CODE_OBJ_PAGE:
+                    $page = Page::find($objectId);
+                    if($page && $page->module_enum && $page->module_enum == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value){
+                        $route = route('admin.impact_assessments.library.edit', ['item' => $objectId, 'module' => $page->module_enum]) . '#ct-files';
+                    } else{
+                        $route = route('admin.page.edit', ['item' => $objectId]) . '#ct-files';
+                    }
+                    break;
+                case File::CODE_OBJ_AB_PAGE:
+                    $route = url()->previous().'#ct-files';
+                    break;
+                default:
+                    $route = '';
+            }
             if ($redirect) {
                 return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
             }

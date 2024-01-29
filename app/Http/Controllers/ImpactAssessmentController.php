@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PageModulesEnum;
 use App\Models\Executor;
 use App\Models\FormInput;
 use App\Models\Page;
@@ -30,7 +31,11 @@ class ImpactAssessmentController extends Controller
         $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
 
-        return $this->view('impact_assessment.page', compact('page', 'pageTitle'));
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'library'));
     }
 
     public function index()
@@ -38,14 +43,23 @@ class ImpactAssessmentController extends Controller
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
 
-        return $this->view('impact_assessment.index', compact('pageTitle'));
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return $this->view('impact_assessment.index', compact('pageTitle', 'library'));
     }
 
     public function forms()
     {
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('site.impact_assessment.forms_and_templates'), 'url' => '']));
-        return $this->view('impact_assessment.forms', compact('pageTitle'));
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+
+        return $this->view('impact_assessment.forms', compact('pageTitle', 'library'));
     }
 
     public function form($formName, Request $request)
@@ -61,7 +75,12 @@ class ImpactAssessmentController extends Controller
             ['name' => __('site.impact_assessment.forms_and_templates'), 'url' => route('impact_assessment.forms')],
             ['name' => __("forms.$formName"), 'url' => '']
         ));
-        return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId'));
+
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId', 'library'));
     }
 
     public function store($formName, Request $request)
@@ -155,7 +174,12 @@ class ImpactAssessmentController extends Controller
         //$pageTitle = __("forms.$formName");
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __("forms.$formName"), 'url' => '']));
-        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle'));
+
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle', 'library'));
     }
 
     public function pdf($formName, $inputId)
@@ -269,8 +293,37 @@ class ImpactAssessmentController extends Controller
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('List of individuals and legal entities'), 'url' => '']));
 
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+
         return $this->view('impact_assessment.executors',
-            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions'));
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions','library'));
+    }
+
+    public function libraryView(Request $request, $slug = ''){
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+        ->where('slug', '=', $slug)
+        ->first();
+
+        if(!$page){
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+        $pageTitle = trans_choice('custom.impact_assessment', 1);
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(array(
+            ['name' => __('custom.library'), 'url' => ''],
+            ['name' => $page->name, 'url' => '']
+        ));
+
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'library'));
     }
 
     /**

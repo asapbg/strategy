@@ -108,7 +108,7 @@
                         </div>
                         @if($item && $item->id)
                             <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
-                                <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item && $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                                <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item && $item->id ? $item->id : 0, 'object_type' => \App\Models\File::CODE_OBJ_PAGE]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="formats" value="ALLOWED_FILE_PAGE">
                                     @foreach(config('available_languages') as $lang)
