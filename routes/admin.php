@@ -70,26 +70,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Consultations
     Route::controller(LegislativeProgramController::class)->group(function () {
-        Route::get('/consultations/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
-        Route::get('/consultations/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::get('/consultations/legislative-programs/{item}/view', 'show')->name('consultations.legislative_programs.view');
-        Route::get('/consultations/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
-        Route::match(['post', 'put'], '/consultations/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
-        Route::get('/consultations/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
-        Route::get('/consultations/legislative-programs/unpublish/{item}', 'unPublish')->name('consultations.legislative_programs.unpublish');
-        Route::get('/consultations/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.legislative_programs.delete.file');
-        Route::post('/consultations/legislative-programs/{item}/delete', 'destroy')->name('consultations.legislative_programs.delete');
+        Route::get('/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
+        Route::get('/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
+        Route::get('/legislative-programs/{item}/view', 'show')->name('consultations.legislative_programs.view');
+        Route::get('/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
+        Route::match(['post', 'put'], '/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
+        Route::get('/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
+        Route::get('/legislative-programs/unpublish/{item}', 'unPublish')->name('consultations.legislative_programs.unpublish');
+        Route::get('/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.legislative_programs.delete.file');
+        Route::post('/legislative-programs/{item}/delete', 'destroy')->name('consultations.legislative_programs.delete');
     });
     Route::controller(OperationalProgramController::class)->group(function () {
-        Route::get('/consultations/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
-        Route::get('/consultations/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
-        Route::get('/consultations/operational-programs/{item}/view', 'show')->name('consultations.operational_programs.view');
-        Route::get('/consultations/operational-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
-        Route::match(['post', 'put'], '/consultations/operational-programs/store', 'store')->name('consultations.operational_programs.store');
-        Route::get('/consultations/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
-        Route::get('/consultations/operational-programs/unpublish/{item}', 'unPublish')->name('consultations.operational_programs.unpublish');
-        Route::get('/consultations/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
-        Route::post('/consultations/operational-programs/{item}/delete', 'destroy')->name('consultations.operational_programs.delete');
+        Route::get('/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
+        Route::get('/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
+        Route::get('/operational-programs/{item}/view', 'show')->name('consultations.operational_programs.view');
+        Route::get('/operational-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.operational_programs.remove_row');
+        Route::match(['post', 'put'], '/operational-programs/store', 'store')->name('consultations.operational_programs.store');
+        Route::get('/operational-programs/publish/{item}', 'publish')->name('consultations.operational_programs.publish');
+        Route::get('/operational-programs/unpublish/{item}', 'unPublish')->name('consultations.operational_programs.unpublish');
+        Route::get('/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
+        Route::post('/operational-programs/{item}/delete', 'destroy')->name('consultations.operational_programs.delete');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Consultations\ConsultationsPageController::class)->group(function () {

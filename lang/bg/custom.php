@@ -779,4 +779,5 @@ return [
     'modules' => 'Модул|Модули',
     'in_footer' => 'Включена в "footer" меню',
     'footer_menu' => '"Footer" меню',
+    'lp_op_programs' => 'Законодателни и оперативни програми ',
 ];

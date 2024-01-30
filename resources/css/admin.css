@@ -13,6 +13,17 @@ font-family: "Fira Sans BGR";
 overflow-x: hidden;
 }
 
+/*If need to add more widt to sidebar */
+/*.main-sidebar,.main-sidebar::before {*/
+/*    transition: margin-left .3s ease-in-out,width .3s ease-in-out;*/
+/*    width: 500px;*/
+/*}*/
+
+/*.sidebar-mini .main-sidebar .nav-link, .sidebar-mini-md .main-sidebar .nav-link, .sidebar-mini-xs .main-sidebar .nav-link {*/
+/*    width: calc(500px - 0.5rem * 2);*/
+/*    transition: width ease-in-out .3s;*/
+/*}*/
+
 .fs-12 {
     font-size: 12px;
 }
