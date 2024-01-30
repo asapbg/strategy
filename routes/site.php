@@ -14,6 +14,10 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
 });
 
+Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
+    Route::get('/page/{slug}', 'show')->name('page.view');
+});
+
 Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
     Route::get('', 'index')->name('advisory-boards.index');
     Route::get('/news', 'news')->name('advisory-boards.news');

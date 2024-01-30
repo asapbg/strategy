@@ -20,15 +20,15 @@
                                        value="{{ old($key, $field['value']) }}" >
                                 @break('datepicker')
                                 @case('checkbox')
-                                    <label>
+                                    <label class="@if(isset($field['class'])){{ $field['class'] }}@endif">
                                         <input type="checkbox" name="{{ $key }}" @if($field['checked']) checked @endif
                                         value="{{ $field['value'] }}" >
-                                        {{ $field['label'] }}
+                                        {{ $field['placeholder'] }}
                                     </label>
 
                                 @break('checkbox')
                                 @case('select')
-                                    <select class="form-control form-control-sm select2 @if(isset($field['class'])){{$field['class'] }}@endif"
+                                    <select class="form-control form-control-sm select2 @if(isset($field['class'])){{ $field['class'] }}@endif"
                                             @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
                                      @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                         {{-- select with groups--}}

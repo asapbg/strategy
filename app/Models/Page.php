@@ -20,6 +20,8 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const OP_INFO = 'operational-programs-info';
     const IA_INFO = 'impact-assessments-info';
 
+    const CACHE_FOOTER_PAGES_KEY = 'footer_pages';
+
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;
@@ -33,6 +35,11 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     public function scopeIsActive($query)
     {
         $query->where('page.active', 1);
+    }
+
+    public function scopeInFooter($query)
+    {
+        $query->where('page.in_footer', 1);
     }
 
     public function scopeBySysName($query, $name)

@@ -84,7 +84,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 col-12 @if(isset($module)) d-none @endif">
+                                        <div class="col-md-2 col-12">
                                             <div class="form-group">
                                                 <br>
                                                 <label class="col-sm-12 control-label" for="in_footer">

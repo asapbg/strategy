@@ -27,6 +27,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
+                            <th>{{__('custom.footer_menu')}}</th>
                             <th>{{__('custom.is_system')}}</th>
                             <th>{{__('custom.active_m')}}</th>
                             <th>{{__('custom.actions')}}</th>
@@ -45,6 +46,7 @@
                                             <span class="d-block text-primary fs-14"><i>({{ __('custom.pages.'.$item->system_name) }})</i></span>
                                         @endif
                                     </td>
+                                    <td><i class="fas @if($item->in_footer) fa-check text-success @else fa-minus text-danger @endif" ></i></td>
                                     <td><i class="fas @if($item->is_system) fa-check text-success @else fa-minus text-danger @endif" ></i></td>
                                     <td>
                                         @if(isset($toggleBooleanModel))

@@ -99,6 +99,7 @@ class PageController  extends AdminController
 
     public function store(PageStoreRequest $request, int $module = 0)
     {
+        //TODO delete cache pages
         $validated = $request->validated();
         $id = $validated['id'];
         $item = $id ? Page::find($id) : new Page();
@@ -112,6 +113,10 @@ class PageController  extends AdminController
         try {
             if( empty($validated['slug']) ) {
                 $validated['slug'] = Str::slug($validated['name_bg']);
+            }
+
+            if($item->in_footer != (int)isset($validated['in_footer'])){
+                Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
             }
 
             $fillable = $this->getFillableValidated($validated, $item);
@@ -170,6 +175,14 @@ class PageController  extends AdminController
                 'options' => enumToSelectOptions(PageModulesEnum::options(), 'page.module', true),
                 'value' => $request->input('module'),
                 'col' => 'col-md-4'
+            ),
+            'inFooter' => array(
+                'type' => 'checkbox',
+                'checked' => $request->input('inFooter'),
+                'placeholder' => __('custom.in_footer'),
+                'value' => 1,
+                'col' => 'col-md-4',
+                'class' => 'fw-normal'
             )
         );
     }

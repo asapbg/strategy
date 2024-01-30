@@ -2,6 +2,8 @@
 
 namespace App\View\Composers;
 
+use App\Enums\PageModulesEnum;
+use App\Models\Page;
 use App\Models\Sector;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
@@ -53,6 +55,43 @@ class ViewServiceProvider extends ServiceProvider
                 Cache::put($currentMenuKey, $contactMail, 3600);
             }
             $view->with('contactMail', $contactMail);
+
+            $footerPagesCacheKey = Page::CACHE_FOOTER_PAGES_KEY;
+            $footerPages = Cache::get($footerPagesCacheKey);
+            if( is_null($footerPages) ) {
+//            if( true ) {
+                $footerPages = [];
+                $footerPagesQ = Page::with(['translations'])->InFooter()->get();
+                if($footerPagesQ->count()){
+                    foreach ($footerPagesQ as $page){
+                        //case in module
+                        if($page->module_enum && !$page->is_system){
+                            switch ($page->module_enum){
+                                case PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value:
+                                    $footerPages[] = ['name' => $page->name, 'url' => route('impact_assessment.library.view', ['slug' => $page->slug])];
+                                    break;
+                            }
+                        } elseif ($page->is_system){
+                            //case by system name
+                            switch ($page->system_name){
+                                case Page::ADV_BOARD_DOCUMENTS:
+                                    $footerPages[] = ['name' => $page->name, 'url' => route('advisory-boards.documents')];
+                                    break;
+                                case Page::ADV_BOARD_INFO:
+                                    $footerPages[] = ['name' => $page->name, 'url' => route('advisory-boards.info')];
+                                    break;
+                                case Page::IA_INFO:
+                                    $footerPages[] = ['name' => $page->name, 'url' => route('impact_assessment.index')];
+                                    break;
+                            }
+                        } else{
+                            $footerPages[] = ['name' => $page->name, 'url' => route('page.view', ['slug' => $page->slug])];
+                        }
+                    }
+                }
+                Cache::put($footerPagesCacheKey, $footerPages, 3600);
+            }
+            $view->with('footerPages', $footerPages);
         });
     }
 }
