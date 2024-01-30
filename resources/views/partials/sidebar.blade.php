@@ -171,23 +171,23 @@
                     </li>
                 @endcan
 
-                @canany(['manage.*','manage.partnership'])
-                    <li class="nav-item @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) menu-open @endif">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-handshake"></i>
-                            <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.ogp.plan_elements.index') }}"
-                                   class="nav-link @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) active @endif">
-                                    <i class="fas fa-circle nav-item-sub-icon"></i>
-                                    <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
+{{--                @canany(['manage.*','manage.partnership'])--}}
+{{--                    <li class="nav-item @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) menu-open @endif">--}}
+{{--                        <a href="#" class="nav-link">--}}
+{{--                            <i class="fas fa-handshake"></i>--}}
+{{--                            <p>{{ trans_choice('custom.ogp', 2) }}<i class="fas fa-angle-left right"></i></p>--}}
+{{--                        </a>--}}
+{{--                        <ul class="nav nav-treeview" style="display: none;">--}}
+{{--                            <li class="nav-item">--}}
+{{--                                <a href="{{ route('admin.ogp.plan_elements.index') }}"--}}
+{{--                                   class="nav-link @if(strstr(url()->current(), 'plan_elements') || strstr(url()->current(), 'estimations')) active @endif">--}}
+{{--                                    <i class="fas fa-circle nav-item-sub-icon"></i>--}}
+{{--                                    <p>{{ trans_choice('custom.ogp.plan_elements', 2) }}</p>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
+{{--                @endcan--}}
 
                 @canany(['manage.*', 'manage.partnership'])
                     <li class="nav-item @if(strstr(url()->current(), 'areas') || strstr(url()->current(), 'plans') ) menu-open @endif">
