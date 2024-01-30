@@ -256,6 +256,7 @@ function initInputs()
 function ajaxList(domElement) {
     $(document).on('change', domElement + ' #groupByAjax', function (){
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
+            ShowLoadingSpinner();
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
@@ -263,6 +264,7 @@ function ajaxList(domElement) {
     });
     $(document).on('change', domElement + ' #list-paginate', function (){
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
+            ShowLoadingSpinner();
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
@@ -271,6 +273,7 @@ function ajaxList(domElement) {
     $(document).on('click', domElement + ' .ajaxSort', function (e){
         e.preventDefault();
         $($(this).data('container')).load($(this).data('url'), function (){
+            ShowLoadingSpinner();
             initInputs();
             ajaxList($(this).data('container'));
         });
@@ -293,6 +296,7 @@ function ajaxList(domElement) {
         });
         let url = $(this).data('url');
         $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
+            ShowLoadingSpinner();
             initInputs();
             ajaxList($(this).data('container'));
         });
@@ -588,8 +592,9 @@ $(document).ready(function () {
         $("#searchBtn").trigger('click');
     });
 
-    $(document).on('change', '#search-form #results-per-page', function (e) {
+    $(document).on('change', '#results-per-page', function (e) {
         $(".current_page").val(1);
+        $("#searchBtn").trigger('click');
     });
 
     $("#search-form .search-btn").click(function (e) {
@@ -600,7 +605,6 @@ $(document).ready(function () {
             clearSearchForm();
         }
         let model_type = $("#model_type").val();
-console.log(model_type);
         $.ajax({
             type: 'GET',
             url: $("#search-form").attr('action'),

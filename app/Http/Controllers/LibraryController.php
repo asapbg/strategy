@@ -42,7 +42,7 @@ class LibraryController extends Controller
 
         $default_img = asset(Publication::DEFAULT_IMG_LIBRARY);
         if ($is_search) {
-            return $this->view('site.publications.publications', compact('publications', 'default_img'));
+            return $this->view('site.publications.publications', compact('publications', 'default_img', 'type'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true, $type);
@@ -72,7 +72,7 @@ class LibraryController extends Controller
 
         $default_img = asset(Publication::DEFAULT_IMG_NEWS);
         if ($is_search) {
-            return $this->view('site.publications.news', compact('news', 'default_img'));
+            return $this->view('site.publications.news', compact('news', 'default_img', 'type'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true);
