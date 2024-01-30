@@ -39,7 +39,10 @@
                         @foreach($old['variants'] as $x => $xName)
                             <th>
                                 <i class="remove-variant fas fa-times-circle text-danger me-2" data-v="{{ $x }}" role="button"></i>
-                                <input type="text" name="variants[]" class="form-control form-control-sm" value="{{ $xName }}">
+                                <input type="text" name="variants[]" class="form-control form-control-sm @error('variants.'.$x) is-invalid @enderror" value="{{ $xName }}">
+                                @error('variants.'.$x)
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </th>
                         @endforeach
                     @endif
@@ -65,8 +68,8 @@
                             @if(isset($old) && isset($old['variants']) && sizeof($old['variants']))
                                 @foreach($old['variants'] as $x => $xName)
                                     <td class="variants" data-v="{{ $x }}">
-                                        <input type="number" name="evaluation[{{ $y }}][{{ $x }}]" step="1" min="{{ (0 - (int)$old['step']) }}" max="{{ (int)$old['step'] }}" class="form-control form-control-sm evaluation-val" value="{{ $old['evaluation'][$y][$x] ?? 0 }}">
-                                        @if(isset($old['evaluation']))
+                                        <input type="number" name="evaluation[{{ $y }}][{{ $x }}]" step="1" class="form-control form-control-sm evaluation-val @if(isset($old['evaluation']) && isset($old['evaluation'][$y])) @error('evaluation.'.$y.'.'.$x) is-invalid @enderror @endif" value="{{ $old['evaluation'][$y][$x] ?? 0 }}">
+                                        @if(isset($old['evaluation']) && isset($old['evaluation'][$y]))
                                             @error('evaluation.'.$y.'.'.$x)
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -77,11 +80,11 @@
                         </tr>
                     @endforeach
                 @endif
-                @if(isset($old) && sizeof($old) && isset($old['results']) && sizeof($old['results']))
+                @if(isset($old) && sizeof($old) && isset($old['results']) && isset($old['results']['variants']) && sizeof($old['results']['variants']))
                     <tr class="total">
                         <th colspan="2">Общо:</th>
-                        @foreach($old['results'] as $r)
-                            <th>{{ $r }}</th>
+                        @foreach($old['results']['variants'] as $r)
+                            <th class="@if((int)$r == (int)$old['results']['best_result']) bg-success text-white @endif">@if((int)$r == (int)$old['results']['best_result']) <i class="fas fa-info-circle fs-18 me-1" data-bs-placement="top" data-bs-toggle="tooltip" title="{{ __('site.calc_method_best_result') }}"></i> @endif {{ $r }}</th>
                         @endforeach
                     </tr>
                 @endif
@@ -155,9 +158,10 @@
             @endif
 
             $('#add-criteria').on('click', function (){
-                addCriteria($('#new-criteria-name').val());
+                addCriteria($('#new-criteria-name').val(), $('#variants .variants').length);
                 $('#new-criteria-name').val('');
             });
+
             $('#add-variant').on('click', function (){
                 addVariant($('#new-variant-name').val());
                 $('#new-variant-name').val('');
@@ -196,6 +200,16 @@
                 });
             });
 
+            $(document).on('change keyup paste', '.evaluation-val', function (e){
+                let currentEvaluationInput = e.currentTarget;
+                let min = 0 - parseInt(stepDom.val());
+                let max = parseInt(stepDom.val());
+
+                if($(currentEvaluationInput).val() < min || $(currentEvaluationInput).val() > max){
+                    $(currentEvaluationInput).val(0);
+                }
+            });
+
             $(document).on('change keyup paste', '.weight-val', function (e){
                 let currentWeightInput = e.currentTarget;
                 let fullWeight = 0;
@@ -203,11 +217,13 @@
                     fullWeight = fullWeight + parseFloat($(this).val() > 0 ? $(this).val() : 0);
                 });
                 if(fullWeight > 100) {
-                    $(currentWeightInput).val(0);
+                    $(currentWeightInput).val(0).trigger('change');
                 } else{
                     $('#weight-total').html(fullWeight);
                 }
             });
+
+            $('#step').trigger('change');
         });
     </script>
 @endpush

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Enums\CalcTypesEnum;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -157,14 +156,20 @@ class ImpactAssessmentCalculatorsController extends Controller
                 break;
             case CalcTypesEnum::MULTICRITERIA->value:
                 foreach ($data['variants'] as $v => $vName){
-                    $results[$v] = 0;
-                    Log::error('Вариант '.$vName.'('.$v.'):'.PHP_EOL);
+                    $results['variants'][$v] = 0;
                     foreach ($data['criteria'] as $k => $kName){
-                        Log::error('Variant evals:' .json_encode($data['evaluation'][$k]));
                         foreach ($data['evaluation'][$k] as $e => $eval){
                             if(isset($data['evaluation'][$k][$v]) && $e == $v){
-                                Log::error('Add eval:' .$data['evaluation'][$k][$v].' | weight: '.$data['weight'][$k]);
-                                $results[$v] += ($data['weight'][$k] * $data['evaluation'][$k][$v]);
+                                $results['variants'][$v] += ($data['weight'][$k] * $data['evaluation'][$k][$v]);
+                            }
+                        }
+                    }
+
+                    $results['best_result'] = 0;
+                    if(sizeof($results['variants'])){
+                        foreach ($results['variants'] as $key => $r){
+                            if($key == 0 || $results['best_result'] < $r){
+                                $results['best_result'] = $r;
                             }
                         }
                     }
@@ -226,7 +231,7 @@ class ImpactAssessmentCalculatorsController extends Controller
                     'weight.*' => ['required', 'numeric', 'gt:0'],
                     'evaluation' => ['required', 'array'],
                     'evaluation.*' => ['required', 'array'],
-                    'evaluation.*.*' => ['required', 'numeric'],
+                    'evaluation.*.*' => ['required', 'numeric', 'gte:'. (0 - request()->input('step')), 'lte:'. request()->input('step')],
                 ]
             )
         );

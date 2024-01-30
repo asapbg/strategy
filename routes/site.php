@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\DevelopNewActionPlan;
-use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\OpenGovernmentPartnership;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -107,7 +107,7 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
 
 });
 
-Route::controller(\App\Http\Controllers\Admin\ImpactAssessmentCalculatorsController::class)->group(function () {
+Route::controller(\App\Http\Controllers\ImpactAssessmentCalculatorsController::class)->group(function () {
     Route::get('/impact_assessments/tools', 'tools')->name('impact_assessment.tools');
     Route::match(['get', 'post'],'/impact_assessments/tools/{calc}', 'calc')->name('impact_assessment.tools.calc');
     Route::get('/impact_assessments/tools/calc/get-blade/{type}', 'templates')->name('impact_assessment.tools.templates');
