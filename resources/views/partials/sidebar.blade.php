@@ -135,7 +135,7 @@
                                     <a href="{{ route('admin.executors.index') }}"
                                        class="nav-link @if(strstr(url()->current(), 'impact-assessments/executors')) active @endif">
                                         <i class="fas fa-circle nav-item-sub-icon"></i>
-                                        <p>{{ __('List of the preparers of evaluations under the ZNA') }}</p>
+                                        <p>{{ __('custom.zna_list') }}</p>
                                     </a>
                                 </li>
                             @endcan
