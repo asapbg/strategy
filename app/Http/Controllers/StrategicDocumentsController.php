@@ -720,11 +720,11 @@ class StrategicDocumentsController extends Controller
             $customBreadcrumbs[] = ['name' => $item->documentLevel->name, 'url' => route('strategy-documents.index').'?document-level='.$item->documentLevel->id];
         }
 
-        if($item && $item->ekatteArea){
+        if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_AREA && $item->ekatteArea){
             $customBreadcrumbs[] = ['name' => $item->ekatteArea->ime, 'url' => route('strategy-documents.index').'?ekate-area='.$item->ekatteArea->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->ekatteManiputlicity){
+        } else if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_MUNICIPALITY && $item->ekatteManiputlicity){
             $customBreadcrumbs[] = ['name' => $item->ekatteManiputlicity->ime, 'url' => route('strategy-documents.index').'?ekate-municipality='.$item->ekatteManiputlicity->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->policyArea){
+        } else if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_CENTRAL && $item->policyArea){
             $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?policy-area='.$item->policyArea->id];
         }
 
