@@ -95,9 +95,10 @@ class StrategicDocumentsController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = StrategicDocument::translationFieldsProperties();
 
-        $strategicDocumentTypes = StrategicDocumentType::with('translations')->get();
-        $strategicActTypes = StrategicActType::with('translations')->get();
-        $policyAreas = PolicyArea::with('translations')->get();
+        $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
+        $strategicActTypes = StrategicActType::with('translations')->orderByTranslation('name')->get();
+        $policyAreas = PolicyArea::with('translations')->orderByTranslation('name')->get();
+        //TODO optimize this by ajax search
         $prisActs = Pris::with('translations')->get();
         //$strategicDocumentFiles = StrategicDocumentFile::with('translations')->where('strategic_document_id', $item->id)->get();
         $strategicDocumentFilesBg = StrategicDocumentFile::with(['parentFile', 'translations', 'versions.translations', 'parentFile.versions.translations', 'documentType.translations', 'documentType.translations', 'parentFile.versions.documentType.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
@@ -119,13 +120,14 @@ class StrategicDocumentsController extends AdminController
         //$strategicDocuments = collect();
         //$ekateAreas = EkatteArea::with('translations')->where('locale', $currentLocale)->get();
         //
-
-        $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
-            $query->where('locale', $currentLocale);
-        })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
-        $ekateMunicipalities = EkatteMunicipality::select('ekatte_municipality.*')->with('translations', function($query) use ($currentLocale) {
-            $query->where('locale', $currentLocale);
-        })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
+        $ekateAreas = EkatteArea::with(['translations'])->orderByTranslation('ime');
+//        $ekateAreas = EkatteArea::select('ekatte_area.*')->with('translations', function($query) use ($currentLocale) {
+//            $query->where('locale', $currentLocale);
+//        })->joinTranslation(EkatteArea::class)->where('locale', $currentLocale);
+        $ekateMunicipalities = EkatteMunicipality::with(['translations'])->orderByTranslation('ime');
+//        $ekateMunicipalities = EkatteMunicipality::select('ekatte_municipality.*')->with('translations', function($query) use ($currentLocale) {
+//            $query->where('locale', $currentLocale);
+//        })->joinTranslation(EkatteMunicipality::class)->where('locale', $currentLocale);
 
         $user = auth()->user();
         $adminUser = $user->hasRole('service_user') || $user->hasRole('super-admin');
