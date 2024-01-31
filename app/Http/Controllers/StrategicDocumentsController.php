@@ -11,6 +11,7 @@ use App\Models\Pris;
 use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
+use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
 use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
@@ -71,18 +72,23 @@ class StrategicDocumentsController extends Controller
         }
 
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
-        $ekateAreas = EkatteArea::with('translations')->get();
-        $ekateMunicipalities = EkatteMunicipality::with('translations')->get();
+        $ekateAreas = EkatteArea::with('translations')->orderByTranslation('ime')->get();
+        $ekateMunicipalities = EkatteMunicipality::with('translations')->orderByTranslation('ime')->get();
         //$prisActs = Pris::with('translations')->get();
         $pageTitle = trans('custom.strategy_documents_plural');
         $title_text = trans('custom.are_you_sure_to_delete');
         $continue_btn_text = trans('custom.delete');
         $cancel_btn_text = trans('custom.cancel');
         $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
+        $docLevels = StrategicDocumentLevel::with(['translations'])->get();
 
-        return $this->view('site.strategic_documents.ajax_index', compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt', 'policyAreas', 'editRouteName', 'deleteRouteName'));
+        $this->composeBreadcrumbs();
+        return $this->view('site.strategic_documents.ajax_index',
+            compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities',
+                'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt',
+                'policyAreas', 'editRouteName', 'deleteRouteName', 'docLevels'));
 
-        return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
+        //return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
     }
 
     public function listStrategicDocuments(Request $request)
@@ -612,6 +618,7 @@ class StrategicDocumentsController extends Controller
         $pageTitle = $strategicDocument->title;
         $this->setBreadcrumbsTitle($pageTitle);
 
+        $this->composeBreadcrumbs($strategicDocument);
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs', 'pageTitle', 'pageTopContent'));
     }
 
@@ -697,5 +704,39 @@ class StrategicDocumentsController extends Controller
             }),
             'more' => $prictActs->hasMorePages()
         ]);
+    }
+
+    /**
+     * @param $item
+     * @param $extraItems
+     * @return void
+     */
+    private function composeBreadcrumbs($item = null, $extraItems = []){
+        $customBreadcrumbs = array(
+            ['name' => trans_choice('custom.strategic_documents', 1), 'url' => route('strategy-documents.index')]
+        );
+
+        if($item && $item->documentLevel){
+            $customBreadcrumbs[] = ['name' => $item->documentLevel->name, 'url' => route('strategy-documents.index').'?document-level='.$item->documentLevel->id];
+        }
+
+        if($item && $item->ekatteArea){
+            $customBreadcrumbs[] = ['name' => $item->ekatteArea->ime, 'url' => route('strategy-documents.index').'?ekate-area='.$item->ekatteArea->id.'&document-level='.$item->strategic_document_level_id];
+        } else if($item && $item->ekatteManiputlicity){
+            $customBreadcrumbs[] = ['name' => $item->ekatteManiputlicity->ime, 'url' => route('strategy-documents.index').'?ekate-municipality='.$item->ekatteManiputlicity->id.'&document-level='.$item->strategic_document_level_id];
+        } else if($item && $item->policyArea){
+            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?policy-area='.$item->policyArea->id];
+        }
+
+        if($item){
+             $customBreadcrumbs[] = ['name' => $item->title, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
+        }
+
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }

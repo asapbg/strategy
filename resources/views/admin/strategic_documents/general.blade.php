@@ -90,9 +90,11 @@
                                         @endif
                                         @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
                                             @foreach($strategicDocumentTypes as $row)
+                                                @if($row->active || ($item && $item->strategic_document_type_id == $row->id))
                                                 <option value="{{ $row->id }}"
                                                         @if(old('strategic_document_type_id', ($item->id ? $item->strategic_document_type_id : 0)) == $row->id) selected
                                                         @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                                @endif
                                             @endforeach
                                         @endif
                                     </select>
@@ -265,7 +267,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
-                                           for="pris_act_id">{{ trans_choice('custom.acts_pris', 1) }}</label>
+                                           for="pris_act_id">Акт за приемане от раздел „Актове на МС“</label>
                                     <select id="pris_act_id" name="pris_act_id"
                                             class="form-control form-control-sm select2 @error('pris_act_id'){{ 'is-invalid' }}@enderror">
                                         <option value="{{ $item->pris?->id }}"

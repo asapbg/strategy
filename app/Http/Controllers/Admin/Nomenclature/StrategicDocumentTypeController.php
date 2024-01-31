@@ -23,8 +23,13 @@ class StrategicDocumentTypeController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? StrategicDocumentType::PAGINATE;
 
+        if( !isset($requestFilter['active']) ) {
+            $requestFilter['active'] = 1;
+        }
+
         $items = StrategicDocumentType::with(['translation'])
             ->FilterBy($requestFilter)
+            ->orderByTranslation('name')
             ->paginate($paginate);
         $toggleBooleanModel = 'StrategicDocumentType';
         $editRouteName = self::EDIT_ROUTE;

@@ -1,7 +1,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
+            console.log($('#ekate_areas_id').val());
+            let centralLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_CENTRAL; ?>';
+            let areaLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_AREA; ?>';
+            let municipalityLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_MUNICIPALITY; ?>';
             setTimeout(function() {
                 const url = buildUrl();
                 loadStrategyDocuments(1, url);
@@ -19,9 +22,25 @@
             const ekateAreasId = $('#ekate_areas_id');
             const ekateMunicipalitiesId = $('#ekate_municipalities_id');
             const processOfConsultationDiv = $('#processOfConsultationDiv');
-            documentLevelSelect.add(ekateAreasId).add(ekateMunicipalitiesId).select2({
-                multiple: true
-            });
+            const policySelect = $('#policySelect');
+
+            // documentLevelSelect.select2({
+            //     multiple: true,
+            //     placeholder: "-- Select --"
+            // });
+            // ekateAreasId.select2({
+            //     multiple: true,
+            //     placeholder: "-- Select --"
+            // });
+            // ekateMunicipalitiesId.select2({
+            //     multiple: true,
+            //     placeholder: "-- Select --"
+            // });
+
+            // documentLevelSelect.add(ekateAreasId).add(ekateMunicipalitiesId).select2({
+            //     multiple: true,
+            //     placeholder: "-- Select --"
+            // });
 
             processOfConsultation.select2();
             processOfConsultationDiv.hide();
@@ -84,25 +103,39 @@
 
             ekateMunicipalitiesId.val('').trigger('change');
             documentLevelSelect.on('change', function () {
+                const policySelectDiv = $('#policy_div_id');
+                const policySelectDom = $('#policy_div_id select');
                 const selectedDocuments = $(this).val();
-                ekateAreasId.val('').trigger('change');
-                ekateMunicipalitiesId.val('').trigger('change');
 
-                if (selectedDocuments.includes('2')) {
+                const showArea = !(selectedDocuments.includes(areaLevel)) && !(selectedDocuments.includes(municipalityLevel)) && !(selectedDocuments.includes(centralLevel));
+
+                if(showArea) {
                     ekateAreasDivId.show();
-                } else {
-                    ekateAreasDivId.hide();
+                    ekateMunicipalitiesDivId.show();
+                    policySelectDiv.show();
+                } else{
+                    if (selectedDocuments.includes(areaLevel)) {
+                        ekateAreasDivId.show();
+                    } else {
+                        ekateAreasDivId.hide();
+                        ekateAreasId.val('').trigger('change');
+                    }
+
+                    if (selectedDocuments.includes(municipalityLevel)) {
+                        ekateMunicipalitiesDivId.show();
+                    } else {
+                        ekateMunicipalitiesDivId.hide();
+                        ekateMunicipalitiesId.val('').trigger('change');
+                    }
+
+                    if (selectedDocuments.includes(centralLevel)) {
+                        policySelectDiv.show();
+                    } else {
+                        policySelectDiv.hide();
+                        policySelectDom.val('').trigger('change');
+                    }
                 }
 
-                if (selectedDocuments.includes('3')) {
-                    ekateMunicipalitiesDivId.show();
-                } else {
-                    ekateMunicipalitiesDivId.hide();
-                }
-                if (!selectedDocuments.includes('2') && !selectedDocuments.includes('3')) {
-                    ekateAreasDivId.hide();
-                    ekateMunicipalitiesDivId.hide();
-                }
                 // AJAX request
                 /*
                 if (selectedDocuments.length > 0) {
@@ -189,7 +222,7 @@
                     loadStrategyDocuments(1, buildUrl())
                 }
             });
-            const policySelect = $('#policySelect');
+
             const preparedInstitutionSelect = $('#preparedInstitutionSelect');
             const searchInTitle = $('#searchInTitle');
             const paginationResults = $('#paginationResults');
@@ -406,7 +439,7 @@
 
                 const paginationSelectedResult = paginationResults.val();
                 const params = getUrlParameters();
-                console.log(params);
+                // console.log(params);
                 const theOrderBy = params['order_by'];
                 const theDirection = params['direction'];
                 const documentType = params['document-type'] ?? null;
@@ -481,6 +514,8 @@
                     }
                 });
             }
+
+            documentLevelSelect.trigger('change');
         });
 
     </script>
