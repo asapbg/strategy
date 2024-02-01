@@ -45,7 +45,7 @@ class LegislativeProgramController extends Controller
     public function show(Request $request, int $id = 0)
     {
 //        return $this->view('templates.zp');
-        $item = LegislativeProgram::Published()->with(['rowFiles'])->find($id);
+        $item = LegislativeProgram::Published()->with(['rowFilesLocale'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }

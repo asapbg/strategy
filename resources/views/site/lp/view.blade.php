@@ -69,6 +69,7 @@
                                         @if(isset($data) && sizeof($data))
                                             @foreach($data as $row)
                                                 @if(str_contains($row->month, $m))
+                                                    @php($actionPlan = false)
                                                     @php($rowData = json_decode($row->columns))
                                                     @php(usort($rowData, function ($a, $b) { return $a->ord > $b->ord; }))
                                                     @if($rowData)
@@ -86,46 +87,51 @@
                                                                     <div class="custom-card p-3 mb-5">
 {{--                                                                        @php($cnt = 1)--}}
                                                                         @foreach($rowData as $r)
+                                                                            @if($r->dsc_id == config('lp_op_programs.lp_ds_col_include_in_action_plan_id') && $r->value)
+                                                                                @php($actionPlan = true)
+                                                                            @endif
 {{--                                                                            @if($cnt == 1)--}}
 {{--                                                                                <div class="row mb-3 mt-1 ">--}}
 {{--                                                                            @endif--}}
-                                                                            <div class="row mb-3 mt-1 ">
-                                                                                <div class="col-md-6">
-                                                                                    <p class="fw-bold fs-18 mb-1">{{ $r->label }}</p>
-                                                                                    @if($r->dsc_id == config('lp_op_programs.lp_ds_col_institution_id'))
-                                                                                        @if(!empty($row->name_institutions))
-                                                                                            @php($nameInstitutions = json_decode($row->name_institutions))
-                                                                                            @if(sizeof($nameInstitutions))
-                                                                                                <p>
-                                                                                                    @foreach($nameInstitutions as $name)
-                                                                                                        @if(!$loop->first){{ ',' }}<br>@endif{{ $name }}
-                                                                                                    @endforeach
-                                                                                                </p>
+                                                                                @if(!($r->dsc_id == config('lp_op_programs.lp_ds_col_include_action_plan_number_id')) || $actionPlan)
+                                                                                    <div class="row mb-3 mt-1 ">
+                                                                                        <div class="col-md-6">
+                                                                                            <p class="fw-bold fs-18 mb-1">{{ $r->label }}</p>
+                                                                                            @if($r->dsc_id == config('lp_op_programs.lp_ds_col_institution_id'))
+                                                                                                @if(!empty($row->name_institutions))
+                                                                                                    @php($nameInstitutions = json_decode($row->name_institutions))
+                                                                                                    @if(sizeof($nameInstitutions))
+                                                                                                        <p>
+                                                                                                            @foreach($nameInstitutions as $name)
+                                                                                                                @if(!$loop->first){{ ',' }}<br>@endif{{ $name }}
+                                                                                                            @endforeach
+                                                                                                        </p>
+                                                                                                    @else
+                                                                                                        {{ '---' }}
+                                                                                                    @endif
+                                                                                                @else
+                                                                                                    {{ '---' }}
+                                                                                                @endif
+                                                                                            @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
+                                                                                                {!! html_entity_decode($r->value) !!}
+                                                                                            @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
+                                                                                                <p>{{ $r->value ? __('custom.yes') : __('custom.no') }}</p>
                                                                                             @else
-                                                                                                {{ '---' }}
+                                                                                                <p>{{ $r->value }}</p>
                                                                                             @endif
-                                                                                        @else
-                                                                                            {{ '---' }}
-                                                                                        @endif
-                                                                                    @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
-                                                                                        {!! html_entity_decode($r->value) !!}
-                                                                                    @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
-                                                                                        <p>{{ $r->value ? __('custom.yes') : __('custom.no') }}</p>
-                                                                                    @else
-                                                                                        <p>{{ $r->value }}</p>
-                                                                                    @endif
-                                                                                </div>
-{{--                                                                            @if($cnt == 2 || $loop->last)--}}
-{{--                                                                                    <hr class="custom-hr">--}}
-{{--                                                                                </div>--}}
-{{--                                                                            @endif--}}
-                                                                                <hr class="custom-hr">
-                                                                            </div>
+                                                                                        </div>
+        {{--                                                                            @if($cnt == 2 || $loop->last)--}}
+        {{--                                                                                    <hr class="custom-hr">--}}
+        {{--                                                                                </div>--}}
+        {{--                                                                            @endif--}}
+                                                                                        <hr class="custom-hr">
+                                                                                    </div>
+                                                                                @endif
                                                                             @if($loop->last)
                                                                                 <div class="row mb-3">
-                                                                                    @if($item->rowFiles->count())
+                                                                                    @if($item->rowFilesLocale->count())
                                                                                         @foreach([\App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION->value, \App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value] as $doc)
-                                                                                            @foreach($item->rowFiles as $f)
+                                                                                            @foreach($item->rowFilesLocale as $f)
                                                                                                 @if($f->pivot->row_num == $row->row_num && $f->pivot->row_month == $row->month && $f->doc_type == $doc)
                                                                                                     <div class="col-md-6 mb-2">
                                                                                                         <p class="fw-bold fs-18 mb-1">{{ __('custom.public_consultation.doc_type.'.$doc) }}</p>

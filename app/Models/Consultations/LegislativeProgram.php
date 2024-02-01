@@ -90,7 +90,7 @@ class LegislativeProgram extends ModelActivityExtend
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => __('custom.legislative_program_title', ['monthFrom' => __('site.'.(int)date('m', strtotime($this->from_date))), 'monthTo' => __('site.'.(int)date('m', strtotime($this->to_date))), 'year' => date('Y', strtotime($this->to_date))])
+            get: fn () => __('custom.legislative_program_title', ['monthFrom' => mb_strtolower(__('site.'.(int)date('m', strtotime($this->from_date)))), 'monthTo' => mb_strtolower(__('site.'.(int)date('m', strtotime($this->to_date)))), 'year' => date('Y', strtotime($this->to_date))])
         );
     }
 
@@ -116,6 +116,15 @@ class LegislativeProgram extends ModelActivityExtend
     {
         return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
             ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
+            ->withPivot('row_num')
+            ->withPivot('row_month');
+    }
+
+    public function rowFilesLocale()
+    {
+        return $this->belongsToMany(File::class, 'legislative_program_row_file', 'legislative_program_id', 'file_id')
+            ->where('code_object', '=', File::CODE_OBJ_LEGISLATIVE_PROGRAM)
+            ->where('locale', '=', app()->getLocale())
             ->withPivot('row_num')
             ->withPivot('row_month');
     }
