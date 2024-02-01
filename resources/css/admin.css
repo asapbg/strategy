@@ -13,6 +13,11 @@ font-family: "Fira Sans BGR";
 overflow-x: hidden;
 }
 
+.custom-left-border {
+    border-left: 3px solid var(--primary-color) !important;
+    padding-left: 10px !important;
+}
+
 /*If need to add more widt to sidebar */
 /*.main-sidebar,.main-sidebar::before {*/
 /*    transition: margin-left .3s ease-in-out,width .3s ease-in-out;*/

@@ -150,12 +150,12 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '<li class="parent_li">';
         $treeViewHtml .= '<span>';
         $treeViewHtml .= '<span class="glyphicon"></span>';
-        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">';
-        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="Национални"></i>';
-        $treeViewHtml .= trans_choice('custom.national', 1);
+        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600 collapsed" data-toggle="collapse" role="button" aria-expanded="true" data-target="#multiCollapseExample1">';
+        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="'.__('custom.strategic_documents_national').'"></i>';
+        $treeViewHtml .= __('custom.strategic_documents_national');
         $treeViewHtml .= '</a>';
         $treeViewHtml .= '</span>';
-        $treeViewHtml .= '<ul>';
+        $treeViewHtml .= '<ul class="collapse" id="multiCollapseExample1">';
 
         $displayedIds = [];
         foreach ($categoriesData['national'] as $categoryName => $documents) {
@@ -165,13 +165,13 @@ class StrategicDocumentsController extends Controller
 
                 $treeViewHtml .= '<li class="parent_li">';
                 $treeViewHtml .= '<span>';
-                $treeViewHtml .= '<a href="#" class="main-color fs-18" data-toggle="collapse" data-target="#' . $categoryId . '">';
+                $treeViewHtml .= '<a href="#" class="main-color fs-18 collapsed" data-toggle="collapse" data-target="#' . $categoryId . '" aria-expanded="false">';
                 $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
                 $treeViewHtml .= $categoryName;
                 $treeViewHtml .= '</a>';
                 $treeViewHtml .= '</span>';
 
-                $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '">';
+                $treeViewHtml .= '<ul class="collapse" id="' . $categoryId . '">';
 
                 foreach ($documents as $document) {
                     if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
@@ -217,25 +217,25 @@ class StrategicDocumentsController extends Controller
         $treeViewHtml .= '<li class="parent_li">';
         $treeViewHtml .= '<span>';
         $treeViewHtml .= '<span class="glyphicon"></span>';
-        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">';
-        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="Национални"></i>';
-        $treeViewHtml .= trans_choice('custom.regional', 1);
+        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600 collapsed" data-toggle="collapse" role="button" aria-expanded="false" data-target="#multiCollapseExample2">';
+        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="'.__('custom.strategic_documents_regional').'"></i>';
+        $treeViewHtml .= __('custom.strategic_documents_regional');
         $treeViewHtml .= '</a>';
         $treeViewHtml .= '</span>';
-        $treeViewHtml .= '<ul>';
+        $treeViewHtml .= '<ul class="collapse" id="multiCollapseExample2">';
 
 
         foreach ($categoriesData['regional'] as $key => $documents) {
-            $categoryName = $key == 'district-level' ? trans_choice('custom.area_level', 1) : trans_choice('custom.nomenclature_level.MUNICIPAL', 1);
+            $categoryName = $key == 'district-level' ? __('custom.strategic_documents_area') : __('custom.strategic_documents_municipal');
 
             $treeViewHtml .= '<li class="parent_li">';
             $treeViewHtml .= '<span>';
-            $treeViewHtml .= '<a href="#" class="main-color fs-18" data-toggle="collapse" data-target="#' . $key . '">';
+            $treeViewHtml .= '<a href="#" class="main-color fs-18 collapsed" data-toggle="collapse" data-target="#' . $key . '" aria-expanded="false">';
             $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
             $treeViewHtml .= $categoryName;
             $treeViewHtml .= '</a>';
             $treeViewHtml .= '</span>';
-            $treeViewHtml .= '<ul class="collapse show" id="' . $key . '">';
+            $treeViewHtml .= '<ul class="collapse" id="' . $key . '">';
 
             if (isset($documents)) {
                 foreach ($documents as $document) {

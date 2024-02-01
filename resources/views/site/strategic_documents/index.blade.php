@@ -82,8 +82,8 @@
                                         {{ $document->category }}
 
                                         <a href="{{ route( 'strategy-document.view' , [$document->id]) }}"
-                                            title="Образование" class="text-decoration-none mb-2">
-                                            <i class="bi bi-mortarboard-fill me-1" title="Образование"></i>
+                                            title="{{ $document->policyArea->name }}" class="text-decoration-none mb-2">
+                                            <i class="bi bi-mortarboard-fill me-1" title="{{ $document->policyArea->name }}"></i>
                                             {{ $document->policyArea->name }}
                                         </a>
 

@@ -112,8 +112,7 @@
 {{--                    <option value="all">{{ trans_choice('custom.all', 1) }}</option>--}}
                     <option value="active">{{ trans_choice('custom.effective', 1) }}</option>
                     <option value="expired">{{ trans_choice('custom.expired', 1) }}</option>
-                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}
-                    </option>
+                    <option value="public_consultation">{{ trans_choice('custom.in_process_of_consultation', 1) }}</option>
                 </select>
             </div>
         </div>

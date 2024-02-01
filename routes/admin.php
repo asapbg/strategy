@@ -260,6 +260,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
         Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
         Route::post('/nomenclature/institutions/add/link', 'addLink')->name('strategic_documents.institutions.link.add');
+        Route::post('/nomenclature/institutions/policy', 'storePolicy')->name('strategic_documents.institutions.policy.store');
+        Route::get('/nomenclature/institutions/policy/{item}/delete/{policy}', 'deletePolicy')->name('strategic_documents.institutions.policy.delete');
         Route::get('/nomenclature/institutions/remove/link', 'removeLink')->name('strategic_documents.institutions.link.remove');
         Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
     });

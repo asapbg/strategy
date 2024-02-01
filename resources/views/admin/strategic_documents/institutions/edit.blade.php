@@ -14,6 +14,11 @@
                                 <a class="nav-link" id="ct-links-tab" data-toggle="pill" href="#ct-links" role="tab" aria-controls="ct-links" aria-selected="false">{{ __('custom.useful_links') }}</a>
                             </li>
                         @endif
+                        @if($item->id)
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-policy-tab" data-toggle="pill" href="#ct-policy" role="tab" aria-controls="ct-policy" aria-selected="false">{{ trans_choice('custom.field_of_actions', 2) }}</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-body">
@@ -94,6 +99,68 @@
                                         <p>Няма записи</p>
                                     @endif
                                 </div>
+                                <div class="row">
+                                    <div class="form-group row mt-5">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <a href="{{ route('admin.strategic_documents.institutions.index') }}"
+                                               class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($item->id)
+                            <div class="tab-pane fade" id="ct-policy" role="tabpanel" aria-labelledby="ct-policy-tab">
+                                <form class="row" action="{{ route('admin.strategic_documents.institutions.policy.store') }}" method="post" name="form-policy" id="form-policy">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label" for="fieldOfAction">{{ trans_choice('custom.field_of_actions', 1) }} <span class="required">*</span> </label>
+                                                <select class="form-control form-control-sm select2 @error('fieldOfAction') is-invalid @enderror" name="fieldOfAction">
+                                                    <option value="" @if(old('fieldOfAction', '') == '') selected @endif></option>
+                                                    @if(isset($fieldOfActions) && $fieldOfActions->count())
+                                                        @php($itemFields = $item->fieldsOfAction->count() ? $item->fieldsOfAction->pluck('id')->toArray() : [])
+                                                        @foreach($fieldOfActions as $f)
+                                                            @if(!sizeof($itemFields) || !in_array($f->id, $itemFields))
+                                                                <option value="{{ $f->id }}" @if(old('fieldOfAction', '') == $f->id) selected @endif>{{ $f->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
+                                                @error('fieldOfAction')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <button id="save" type="submit" class="btn btn-success">{{ __('custom.add') }}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                @if($item->fieldsOfAction->count())
+                                    <div class="row">
+                                        @foreach($item->fieldsOfAction as $cf)
+                                            <div class="col-md-3 col-10"><span class="custom-left-border">{{ $cf->name }}</span></div>
+                                                @can('update', $item)
+                                                    <div class="col-2">
+                                                        <a href="{{ route( 'admin.strategic_documents.institutions.policy.delete' , [$item, $cf]) }}"
+                                                           class="btn btn-sm btn-danger"
+                                                           data-toggle="tooltip"
+                                                           title="{{ __('custom.delete') }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                @endcan
+                                            <div class="col-12 mb-2"></div>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 <div class="row">
                                     <div class="form-group row mt-5">
                                         <div class="col-md-6 col-md-offset-3">

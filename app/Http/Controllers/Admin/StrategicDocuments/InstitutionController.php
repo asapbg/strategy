@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin\StrategicDocuments;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreInstitutionLink;
 use App\Http\Requests\StoreInstitutionRequest;
+use App\Models\FieldOfAction;
 use App\Models\InstitutionLink;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\ConsultationLevel;
@@ -50,7 +52,8 @@ class InstitutionController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Institution::translationFieldsProperties();
         $consultationLevels = ConsultationLevel::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels'));
+        $fieldOfActions = FieldOfAction::with(['translations'])->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))->get();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions'));
     }
 
     public function store(StoreInstitutionRequest $request, $item = null)
@@ -126,6 +129,34 @@ class InstitutionController extends AdminController
             Log::error('Remove institution link error: '. $e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
+    }
+
+    public function storePolicy(Request $request){
+        if(!$request->filled('fieldOfAction')){
+            return back()->withInput()->with('danger', 'не сте избрали Област на политика');
+        }
+
+        $item = Institution::find((int)$request->input('id'));
+        if(!$item){
+            abort(404);
+        }
+
+        if($request->user()->cannot('update', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        $item->fieldsOfAction()->attach((int)$request->input('fieldOfAction'));
+
+        return redirect(route('admin.strategic_documents.institutions.edit', [$item]).'#ct-policy');
+    }
+
+    public function deletePolicy(Request $request, Institution $item, FieldOfAction $policy){
+        if($request->user()->cannot('update', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        $item->fieldsOfAction()->detach((int)$policy->id);
+
+        return redirect(route('admin.strategic_documents.institutions.edit', [$item]).'#ct-policy');
     }
 
     private function filters($request)

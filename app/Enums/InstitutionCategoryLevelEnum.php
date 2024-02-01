@@ -39,4 +39,15 @@ enum InstitutionCategoryLevelEnum: int
             self::MUNICIPAL->value => __('custom.nomenclature_level.'.self::MUNICIPAL->name)
         ];
     }
+
+    public static function fieldOfActionCategory($value): int
+    {
+        $categories = [
+            self::CENTRAL->value => 1,
+            self::CENTRAL_OTHER->value => 1,
+            self::AREA->value => 2,
+            self::MUNICIPAL->value => 3
+        ];
+        return $categories[$value] ?? -1;
+    }
 }

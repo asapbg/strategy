@@ -533,4 +533,8 @@ return [
     'are_you_sure_public_advisory' => 'Are you sure you want to publish this advisory board',
     'are_you_sure_unpublic_advisory' => 'Are you sure you want to save this advisory board as draft',
     'unidentified' => 'Unidentified',
+    'strategic_documents_national' => 'Стратегически документи на национално ниво',
+    'strategic_documents_regional' => 'Стратегически документи на областно и общинско ниво',
+    'strategic_documents_area' => 'Стратегически документи на областно ниво',
+    'strategic_documents_municipal' => 'Стратегически документи на общинско ниво',
 ];

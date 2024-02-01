@@ -1,7 +1,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            console.log($('#ekate_areas_id').val());
+            var firstRender = true;
             let centralLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_CENTRAL; ?>';
             let areaLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_AREA; ?>';
             let municipalityLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_MUNICIPALITY; ?>';
@@ -297,7 +297,12 @@
             }
 
 
+            console.log(valuesToUpdate);
             $.each(valuesToUpdate, function (element, value) {
+                if(element == 'categorySelect' && firstRender) {
+                    value = 'active';
+                    firstRender = false;
+                }
                 setAndTrigger(window[element], value);
             });
 
