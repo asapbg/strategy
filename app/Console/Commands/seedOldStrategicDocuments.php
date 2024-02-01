@@ -137,7 +137,7 @@ class seedOldStrategicDocuments extends Command
 
                 foreach ($locales as $locale) {
                     $strategicDoc->translateOrNew($locale['code'])->title = $title;
-                    $strategicDoc->translateOrNew($locale['code'])->description = $description;
+                    $strategicDoc->translateOrNew($locale['code'])->description = html_entity_decode($description);
                 }
 
                 $strategicDoc->save();
