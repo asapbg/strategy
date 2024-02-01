@@ -22,8 +22,6 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
 
     const MODULE_NAME = ('custom.tags');
 
-    const PAGINATION = 20;
-
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     protected $table = 'field_of_actions';

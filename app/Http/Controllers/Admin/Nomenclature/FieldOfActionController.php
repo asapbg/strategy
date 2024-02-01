@@ -7,6 +7,7 @@ use App\Http\Requests\StoreFieldOfActionRequest;
 use App\Http\Requests\UpdateFieldOfActionRequest;
 use App\Models\FieldOfAction;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -19,11 +20,17 @@ class FieldOfActionController extends AdminController
      *
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $actions = FieldOfAction::orderBy('id')->paginate(FieldOfAction::PAGINATION);
-
-        return $this->view('admin.nomenclatures.field_of_actions.index', compact('actions'));
+        $requestFilter = $request->all();
+        $filter = $this->filters($request);
+        $paginate = $filter['paginate'] ?? FieldOfAction::PAGINATE;
+        $actions = FieldOfAction::orderBy('parentid')
+            ->orderByTranslation('name')
+            ->FilterBy($requestFilter)
+            ->paginate($paginate);
+        $toggleBooleanModel = 'FieldOfAction';
+        return $this->view('admin.nomenclatures.field_of_actions.index', compact('actions', 'filter', 'toggleBooleanModel'));
     }
 
     /**
@@ -127,5 +134,17 @@ class FieldOfActionController extends AdminController
             return to_route('admin.work_regime')->with('danger', __('messages.system_error'));
 
         }
+    }
+
+    private function filters($request)
+    {
+        return array(
+            'name' => array(
+                'type' => 'text',
+                'placeholder' => __('validation.attributes.name'),
+                'value' => $request->input('name'),
+                'col' => 'col-md-4'
+            )
+        );
     }
 }

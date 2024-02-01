@@ -2,17 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\AuthorityAcceptingStrategic;
-use App\Models\EkatteArea;
-use App\Models\EkatteMunicipality;
-use App\Models\PolicyArea;
+use App\Models\FieldOfAction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Models\InstitutionLevel;
 use App\Models\StrategicDocument;
-use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
-use Exception;
 
 class seedOldStrategicDocuments extends Command
 {
@@ -67,42 +63,18 @@ class seedOldStrategicDocuments extends Command
             WHERE sd.languageid = 1"
         );
 
-        $policyAreas = PolicyArea::with('translations')->get();
-        $ekatteMuncipalities = EkatteMunicipality::with('translations')->get();
-        $ekatteAreas = EkatteArea::with('translations')->get();
+        $policyAreasDB = FieldOfAction::withTrashed()->with('translations', function ($q){
+            $q->withTrashed();
+        })->get();
+        $policyAreas = array();
+        if($policyAreasDB->count()){
+            foreach ($policyAreasDB as $p){
+                $policyAreas[$p->translate('bg')->name] = $p->id;
+            }
+        }
+
         $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
         $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
-
-        //Create default institution
-        $diEmail = 'magdalena.mitkova+egov@asap.bg';
-        $dInstitution = Institution::where('email', '=', $diEmail)->withTrashed()->first();
-        if (!$dInstitution) {
-            $insLevel = InstitutionLevel::create([
-                'system_name' => 'default'
-            ]);
-            if (!$insLevel) {
-                $this->error('Cant create default institution');
-            }
-            if ($insLevel) {
-                foreach ($locales as $locale) {
-                    $insLevel->translateOrNew($locale['code'])->name = 'Default Level';
-                }
-                $insLevel->save();
-            }
-
-            $dInstitution = Institution::create([
-                'email' => $diEmail,
-                'institution_level_id' => $insLevel->id
-            ]);
-
-            if (!$dInstitution) {
-                $this->error('Cant create default institution');
-            }
-            foreach ($locales as $locale) {
-                $dInstitution->translateOrNew($locale['code'])->name = 'Default';
-            }
-            $dInstitution->save();
-        }
 
         try {
             DB::beginTransaction();
@@ -112,8 +84,6 @@ class seedOldStrategicDocuments extends Command
                     $oldDocument->category_id,
                     $oldCategories,
                     $policyAreas,
-                    $ekatteAreas,
-                    $ekatteMuncipalities
                 );
 
                 $data = array_merge(
@@ -182,73 +152,29 @@ class seedOldStrategicDocuments extends Command
     }
 
     /**
-     * Returns data for the fields "strategic_document_level_id, policy_area_id, ekatte_muncipality_id, ekatte_area_id" based on the parent id of the category of the document
+     * Returns data for the fields strategic_document_level_id, policy_area_id
      */
     public function mapForeignKeysByCategory(
         $oldStrategicDocCategoryId,
         \Illuminate\Support\Collection $oldCategories,
-        \Illuminate\Support\Collection $policyAreas,
-        \Illuminate\Support\Collection $ekatteAreas,
-        \Illuminate\Support\Collection $ekatteMuncipalities
+        array $policyAreas
     ) {
+        $oldCategory = $oldCategories->where('id', $oldStrategicDocCategoryId)->first();
         try {
-            $oldCategory = $oldCategories->where('id', $oldStrategicDocCategoryId)->first();
-
-            $strategicDocumentLevelId = $oldCategory->parentid;
-
-            $policyAreaId = NULL;
-            $ekatteMuncipalityId = NULL;
-            $ekatteAreaId = NULL;
-
-            if (isset($oldCategory)) {
-                switch ($oldCategory->parentid) {
-                    case 1:
-                        $policyAreaId = $policyAreas->where('name', $oldCategory->categoryname)->first()->id ?? null;
-                        break;
-                    case 2:
-                        if ($oldCategory->categoryname === 'Софийска') {
-                            $oldCategory->categoryname = 'София';
-                        }
-
-                        $ekatteAreaId = $ekatteAreas->where('ime', $oldCategory->categoryname)->first()->id;
-                        break;
-                    case 3:
-                        if ($oldCategory->categoryname === 'Добричка') {
-                            $oldCategory->categoryname = 'Добрич-селска';
-                        }
-
-                        if ($oldCategory->categoryname === 'Генерал-Тошево') {
-                            $oldCategory->categoryname = 'Генерал Тошево';
-                        }
-
-                        if ($oldCategory->categoryname === 'Столична община') {
-                            $oldCategory->categoryname = 'Столична';
-                        }
-
-                        $ekatteMuncipalityId = $ekatteMuncipalities->where('ime', $oldCategory->categoryname)->first()->id ?? null;
-
-                        $oldArea = $oldCategories->where('id', $oldCategory->sectionid)->first();
-
-                        if ($oldArea->categoryname === 'Софийска') {
-                            $oldArea->categoryname = 'София';
-                        }
-
-                        $ekatteAreaId = $ekatteAreas->where('ime', $oldArea->categoryname)->first()->id;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
+            $levelMapping = array(
+                1 => InstitutionCategoryLevelEnum::CENTRAL->value,
+                2 => InstitutionCategoryLevelEnum::AREA->value,
+                3 => InstitutionCategoryLevelEnum::MUNICIPAL->value,
+            );
 
             return [
-                'strategic_document_level_id' => $strategicDocumentLevelId,
-                'policy_area_id' => $policyAreaId,
-                'ekatte_municipality_id' => $ekatteMuncipalityId,
-                'ekatte_area_id' => $ekatteAreaId,
+                'strategic_document_level_id' => $levelMapping[(int)$oldCategory->parentid] ?? null,
+                'policy_area_id' => $oldCategory ? ($policyAreas[$oldCategory->categoryname] ?? null) : null,
+                'ekatte_municipality_id' => null,
+                'ekatte_area_id' => null,
             ];
         } catch (\Throwable $th) {
-            $this->info($oldCategory->categoryname . ' ' . $oldCategory->id);
+            $this->info($oldCategory?->categoryname . ' ' . $oldCategory?->id);
             throw $th;
         }
     }
