@@ -70,10 +70,11 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')->orderBy('ord');
     }
 
-//    public function documentLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
-//    {
-//        return $this->hasOne(StrategicDocumentLevel::class, 'id', 'strategic_document_level_id');
-//    }
+    //!!! TODO remove after level and field of actions changes
+    public function documentLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicDocumentLevel::class, 'id', 'strategic_document_level_id');
+    }
 
     public function acceptActInstitution(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -186,13 +187,14 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         return $this->belongsTo(User::class);
     }
 
-//    public function ekatteArea()
-//    {
-//        return $this->belongsTo(EkatteArea::class, 'ekatte_area_id');
-//    }
-//
-//    public function ekatteManiputlicity()
-//    {
-//        return $this->belongsTo(EkatteArea::class, 'ekatte_municipality_id');
-//    }
+    //!!! TODO remove after level and field of actions changes
+    public function ekatteArea()
+    {
+        return $this->belongsTo(EkatteArea::class, 'ekatte_area_id');
+    }
+//!!! TODO remove after level and field of actions changes
+    public function ekatteManiputlicity()
+    {
+        return $this->belongsTo(EkatteArea::class, 'ekatte_municipality_id');
+    }
 }
