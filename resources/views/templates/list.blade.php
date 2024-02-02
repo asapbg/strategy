@@ -1,4 +1,6 @@
 <h4>Публична част</h4>
+<br><a href="{{ route('templates.view', ['slug' => 'strategicheski-dokumenti-inner-new']) }}">Стратегически документи (вътрешна)</a>
+
 <a href="{{ route('templates.view', ['slug' => 'public_consultations_view']) }}">Обществена консултация - Преглед</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_10_public']) }}">Списък на физическите и юридическите лица, на които е възложено от държавата или общините да изработят проекти на нормативни актове, оценки на въздействието - Преглед)</a>
 <br><a href="{{ route('templates.view', ['slug' => '8_2_1_1_2_public_legal_information']) }}">Правна информация на Министерски съвет. Търсене</a>
