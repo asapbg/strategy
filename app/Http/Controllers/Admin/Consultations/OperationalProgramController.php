@@ -87,7 +87,7 @@ class OperationalProgramController extends AdminController
         }
         $data = $item->getTableData();
         $columns = $item->id ?
-            DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('id')->get()
+            DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord', 'asc')->get()
             : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::OPERATIONAL_PROGRAM->value)->where('active', '=', 1)->first()->columns;
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
