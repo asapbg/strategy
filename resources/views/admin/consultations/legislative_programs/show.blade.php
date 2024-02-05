@@ -108,7 +108,7 @@
                                                                                 @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
                                                                                     {!! html_entity_decode($col['value']) !!}
                                                                                 @else
-                                                                                    {{ $col['value'] }}
+                                                                                    {{ html_entity_decode($col['value']) }}
                                                                                 @endif
                                                                             </div>
                                                                         </div>

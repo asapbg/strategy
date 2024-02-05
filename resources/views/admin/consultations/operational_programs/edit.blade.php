@@ -272,7 +272,7 @@
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXTAREA->value)
                                                                                         <textarea class="form-control form-control-sm summernote @error($errorField) is-invalid @enderror" name="{{ $fieldName }}">{!! old($errorField, $col['value']) !!}</textarea>
                                                                                     @elseif($col['type'] == \App\Enums\DynamicStructureColumnTypesEnum::TEXT->value)
-                                                                                        <input class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, $col['value']) }}">
+                                                                                        <input class="form-control form-control-sm @error($errorField) is-invalid @enderror" name="{{ $fieldName }}" value="{{ old($errorField, html_entity_decode($col['value'])) }}">
                                                                                     @else
                                                                                         <input type="{{ $col['type'] }}" class="form-control form-control-sm @error($errorField) is-invalid @enderror" value="{{ old($errorField, $col['value']) }}" name="{{ $fieldName }}">
                                                                                     @endif

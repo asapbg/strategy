@@ -117,7 +117,7 @@
                                                                                             @elseif($r->type == \App\Enums\DynamicStructureColumnTypesEnum::BOOLEAN->value)
                                                                                                 <p>{{ $r->value ? __('custom.yes') : __('custom.no') }}</p>
                                                                                             @else
-                                                                                                <p>{{ $r->value }}</p>
+                                                                                                <p>{{ html_entity_decode($r->value) }}</p>
                                                                                             @endif
                                                                                         </div>
         {{--                                                                            @if($cnt == 2 || $loop->last)--}}
