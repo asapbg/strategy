@@ -55,7 +55,7 @@ class LegislativeProgramController extends AdminController
         }
 
         $data = $item->getTableData();
-        $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->get();
+        $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord', 'asc')->get();
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
         $assessmentsFiles = $opinionsFiles = [];
