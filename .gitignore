@@ -20,6 +20,8 @@ yarn-error.log
 /public/files/strategic_doc
 /public/files/publications
 /public/files/advisory-boards
+/public/files/lp
+/public/files/op
 app/Http/Controllers/Test.php
 /document_library
 /oldfiles
