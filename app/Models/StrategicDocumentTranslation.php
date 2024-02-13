@@ -17,4 +17,14 @@ class StrategicDocumentTranslation extends Model
             set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
+
+    /**
+     * Content
+     */
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value
+        );
+    }
 }

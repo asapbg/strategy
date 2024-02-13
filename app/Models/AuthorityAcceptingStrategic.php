@@ -23,6 +23,8 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
     //activity
     protected string $logName = "authority_accepting_strategic";
 
+    protected $fillable = ['nomenclature_level_id'];
+
     const COUNCIL_MINISTERS = 1;
 
     /**

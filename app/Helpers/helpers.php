@@ -419,6 +419,12 @@ if (!function_exists('optionsFromModel')) {
             $options[] = ['value' => $anyValue, 'name' => $anyName];
         }
         foreach ($dbOptions as $option) {
+            $data = ['value' => $option->id, 'name' => $option->name];
+            foreach ($option as $key => $value){
+                if(!in_array($key, ['id', 'name'])){
+                    $data['data-'.$key] = $value;
+                }
+            }
             $options[] = ['value' => $option->id, 'name' => $option->name];
         }
         return $options;
@@ -606,7 +612,7 @@ if (!function_exists('enumToSelectOptions')) {
      *
      * @return array
      */
-    function enumToSelectOptions(array $enums, string $translationBase = '', bool $any = false): array
+    function enumToSelectOptions(array $enums, string $translationBase = '', bool $any = false, $excludeValues = []): array
     {
         $options = [];
         if ($any) {
@@ -614,7 +620,9 @@ if (!function_exists('enumToSelectOptions')) {
         }
         if (sizeof($enums)) {
             foreach ($enums as $name => $val) {
-                $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
+                if(empty($excludeValues) || !in_array($val, $excludeValues)){
+                    $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
+                }
             }
         }
         return $options;

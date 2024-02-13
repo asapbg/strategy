@@ -7,11 +7,11 @@
             <div class="card">
                 <div class="card-body table-responsive">
 
-                    <div class="mb-3">
-                        <a href="{{ route('admin.strategic_documents.institutions.edit') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.institutions', 1) }}
-                        </a>
-                    </div>
+{{--                    <div class="mb-3">--}}
+{{--                        <a href="{{ route('admin.strategic_documents.institutions.edit') }}" class="btn btn-sm btn-success">--}}
+{{--                            <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ trans_choice('custom.institutions', 1) }}--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
 
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>

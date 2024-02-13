@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
+use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\PolicyArea;
 use App\Models\Pris;
@@ -42,53 +44,153 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
-        ini_set('memory_limit', '1024M');
-        $institutions = Institution::with('translations')->withoutTrashed()->get();
-        $strategicDocuments = $this->prepareResults($request);
-        $policyAreas = PolicyArea::with('translations')->get();
-        //$preparedInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
-        $strategicDocumentsCommonService = app(CommonService::class);
-        if ($request->input('export')) {
-            $exportService = app(ExportService::class);
-            if ($request->input('export') == 'pdf') {
-                $exportData = $strategicDocumentsCommonService->prepareExportData($strategicDocuments->get());
-                return $exportService->export(null, $exportData, 'strategic_documents_export', 'pdf', 'pdf.default');
-            }
-            if ($request->input('export') == 'xlsx' || $request->input('export') == 'csv') {
-                return $exportService->export('App\Exports\StrategicDocumentsExport', $strategicDocuments->get(), 'strategic_documents_export', $request->input('export'));
-            }
-        }
-        if ($request->input('document-report') == 'download') {
-            $currentLocale = app()->getLocale();
-            $strategicDocs = $strategicDocuments->with(['translations', 'files.translations' => function ($query) use ($currentLocale) {
-                $query->where('locale', $currentLocale);
-            }])
-                ->whereHas('files.translations', function ($query) use ($currentLocale) {
-                    $query->where('locale', $currentLocale)->where('visible_in_report', 1);
-                })->get();
-            return $strategicDocumentsCommonService->preparePdfReportData($strategicDocs);
+        //Filter
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        $filter = $this->filters($request);
+
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'title';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $items = StrategicDocument::select('strategic_document.*')
+            ->Active()
+            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->join('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->join('strategic_document_translations', function ($j){
+                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
+            //->GroupBy('strategic_document.id')
+            ->paginate($paginate);
+
+
+        if( $request->ajax() ) {
+            return view('site.strategic_documents.list', compact('filter','sorter', 'items', 'rf', 'editRouteName', 'deleteRouteName'));
         }
 
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
-        $ekateAreas = EkatteArea::with('translations')->orderByTranslation('ime')->get();
-        $ekateMunicipalities = EkatteMunicipality::with('translations')->orderByTranslation('ime')->get();
-        //$prisActs = Pris::with('translations')->get();
         $pageTitle = trans('custom.strategy_documents_plural');
-        $title_text = trans('custom.are_you_sure_to_delete');
-        $continue_btn_text = trans('custom.delete');
-        $cancel_btn_text = trans('custom.cancel');
-        $file_change_warning_txt = trans('custom.are_you_sure_to_delete');
-        $docLevels = StrategicDocumentLevel::with(['translations'])->get();
-
         $this->composeBreadcrumbs();
-        return $this->view('site.strategic_documents.ajax_index',
-            compact('institutions','pageTopContent', 'ekateAreas', 'ekateMunicipalities',
-                'pageTitle', 'title_text', 'continue_btn_text', 'cancel_btn_text', 'file_change_warning_txt',
-                'policyAreas', 'editRouteName', 'deleteRouteName', 'docLevels'));
 
-        //return view('site.strategic_documents.index', compact('strategicDocuments', 'policyAreas', 'preparedInstitutions', 'resultCount', 'editRouteName', 'deleteRouteName', 'categoriesData', 'pageTitle', 'pageTopContent', 'ekateAreas', 'ekateMunicipalities', 'prisActs'));
+        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName'));
+    }
+
+    public function tree(Request $request)
+    {
+        $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
+        $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
+        //Filter
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        $filter = $this->filters($request);
+
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $items = StrategicDocument::select('strategic_document.*')
+            ->Active()
+            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->join('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
+            ->GroupBy('strategic_document.id')
+            ->paginate($paginate);
+
+
+        if( $request->ajax() ) {
+            return view('site.strategic_documents.list', compact('filter','sorter', 'items', 'rf', 'editRouteName', 'deleteRouteName'));
+        }
+
+        $pageTitle = trans('custom.strategy_documents_plural');
+        $this->composeBreadcrumbs();
+
+        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName'));
+    }
+
+    private function filters($request)
+    {
+        return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('site.strategic_document.level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true), true),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 1),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-12'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'label' => __('site.strategic_document.categories_based_on_livecycle'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
+                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+                ),
+                'value' => request()->input('status'),
+                'default' => 'active',
+                'col' => 'col-md-6'
+            ),
+            'title' => array(
+                'type' => 'text',
+                'label' => __('site.strategic_document.search_in_title_content'),
+                'value' => $request->input('title'),
+                'col' => 'col-md-6'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? Pris::PAGINATE,
+                'col' => 'col-md-3'
+            ),
+
+        );
+    }
+
+    private function sorters()
+    {
+        return array(
+            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'title' => ['class' => 'col-md-3', 'label' => __('custom.title')],
+            'validFrom' => ['class' => 'col-md-3', 'label' => __('custom.valid_from')],
+            'validTo' => ['class' => 'col-md-3', 'label' => __('custom.valid_to')],
+        );
     }
 
     public function listStrategicDocuments(Request $request)
@@ -596,7 +698,6 @@ class StrategicDocumentsController extends Controller
     public function show(int $id): View
     {
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
-        $strategicDocumentFileService = app(FileService::class);
         $locale = app()->getLocale();
 
         $strategicDocumentFiles = StrategicDocumentFile::with('translations')
@@ -607,9 +708,7 @@ class StrategicDocumentsController extends Controller
                     ->orWhere('name', 'like', '%Доклади%');
             })
             ->get();
-        $mainDocument = $strategicDocumentFiles->where('is_main', 1)->where('locale', $locale)->first();
-        $fileData = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
-        $strategicDocumentFiles = $strategicDocumentFileService->prepareFileData($strategicDocumentFiles, false);
+
         $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
         $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
@@ -619,7 +718,7 @@ class StrategicDocumentsController extends Controller
         $this->setBreadcrumbsTitle($pageTitle);
 
         $this->composeBreadcrumbs($strategicDocument);
-        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'fileData', 'actNumber', 'mainDocument', 'reportsAndDocs', 'pageTitle', 'pageTopContent'));
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent'));
     }
 
     public function previewModalFile(Request $request, $id = 0)
@@ -720,11 +819,11 @@ class StrategicDocumentsController extends Controller
             $customBreadcrumbs[] = ['name' => $item->documentLevel->name, 'url' => route('strategy-documents.index').'?document-level='.$item->documentLevel->id];
         }
 
-        if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_AREA && $item->ekatteArea){
+        if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::AREA->value && $item->ekatteArea){
             $customBreadcrumbs[] = ['name' => $item->ekatteArea->ime, 'url' => route('strategy-documents.index').'?ekate-area='.$item->ekatteArea->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_MUNICIPALITY && $item->ekatteManiputlicity){
+        } else if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value && $item->ekatteManiputlicity){
             $customBreadcrumbs[] = ['name' => $item->ekatteManiputlicity->ime, 'url' => route('strategy-documents.index').'?ekate-municipality='.$item->ekatteManiputlicity->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->strategic_document_level_id == StrategicDocumentLevel::LEVEL_CENTRAL && $item->policyArea){
+        } else if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::CENTRAL->value && $item->policyArea){
             $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?policy-area='.$item->policyArea->id];
         }
 

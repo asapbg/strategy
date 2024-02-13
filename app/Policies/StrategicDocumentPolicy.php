@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\CustomRole;
 use App\Models\StrategicDocument;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -53,9 +54,10 @@ class StrategicDocumentPolicy
      */
     public function update(User $user, StrategicDocument $strategicDocument)
     {
-        //TODO add more scopes
-        return $user->canAny(['manage.*', 'manage.strategic']);
+        return $user->canAny(['manage.*', 'manage.strategic']) && $this->inUserFieldOfAction($user, $strategicDocument);
     }
+
+
 
     /**
      * Determine whether the user can delete the model.
@@ -66,7 +68,7 @@ class StrategicDocumentPolicy
      */
     public function delete(User $user, StrategicDocument $strategicDocument)
     {
-        return $user->canAny(['manage.*', 'manage.strategic']);
+        return $user->canAny(['manage.*', 'manage.strategic']) && $this->inUserFieldOfAction($user, $strategicDocument);
     }
 
     /**
@@ -91,5 +93,21 @@ class StrategicDocumentPolicy
     public function forceDelete(User $user, StrategicDocument $strategicDocument)
     {
         return false;
+    }
+
+    private function inUserFieldOfAction($user, $item){
+        if(!$user){
+            return false;
+        }
+
+        if (!$user->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
+            $userPolicyAreas = $user->institution ?
+                ($user->institution->fieldsOfAction->count() ?
+                    $user->institution->fieldsOfAction->pluck('id')->toArray() : [0])
+                : [0];
+            return in_array($item->policy_area_id, $userPolicyAreas);
+        }
+
+        return true;
     }
 }

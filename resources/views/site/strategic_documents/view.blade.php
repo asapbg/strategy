@@ -187,95 +187,24 @@
 
 
             @if ($strategicDocument->files->count())
-                <div class="row mb-0 mt-5">
-                    <div class="mb-2">
-                        <h2 class="mb-1">{{ __('custom.files') }}</h2>
+                <div class="row mb-4 mt-4">
+                    {{--                        <h3 class="mb-3">{{ trans_choice('custom.files', 2) }}</h3>--}}
+                    <div class="row table-light">
+                        <div class="col-12 mb-2">
+                            <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
+                            <ul class="list-group list-group-flush">
+                                @foreach ($strategicDocument->files as $f)
+                                    @dd($f)
+                                    <li class="list-group-item">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
+                                            {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }} - {{ displayDate($f->created_at) }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
-
-                @php
-                $locale = app()->getLocale();
-                $iconMapping = [
-                    'application/pdf' => 'fa-regular fa-file-pdf main-color',
-                    'application/msword' => 'fa-regular fa-file-word main-color',
-                    'application/vnd.ms-excel' => 'fa-regular fa-file-excel main-color',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-regular fa-file-excel main-color',
-                ];
-                @endphp
-
-                @foreach ($strategicDocument->files as $f)
-                    @if ($f->locale == $locale)
-                        <div class="row p-1">
-                            <div class="accordion" id="accordionExample">
-
-                                @php
-                                    $fileExtension = $mainDocument->content_type;
-                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-                                @endphp
-
-                                <div class="card custom-card">
-                                    <div class="card-header" id="heading{{ $f->id }}">
-                                        <h2 class="mb-0">
-                                            <button
-                                                class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start @if (!$loop->first) collapsed @endif"
-                                                type="button" data-toggle="collapse"
-                                                data-target="#collapse{{ $f->id }}"
-                                                aria-expanded="@if ($loop->first) {{ 'true' }}@else{{ 'false' }} @endif"
-                                                aria-controls="collapse{{ $f->id }}">
-                                                <i class="me-1 {{ $iconClass }} fs-18"></i>
-                                                {{ $f->display_name }}
-                                            </button>
-                                        </h2>
-                                    </div>
-
-                                    <div id="collapse{{ $f->id }}"
-                                        class="collapse @if ($loop->first) show @endif"
-                                        aria-labelledby="heading{{ $f->id }}" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col-md-6">
-                                                    <div class="text-start">
-                                                        <span class="text-start me-3">
-                                                            <strong>{{ __('custom.date_created') }}:</strong>
-                                                            {{ displayDate($f->created_at) }}
-                                                            {{ __('custom.year_short') }}.
-                                                        </span>
-                                                        {{--                                                            <span class="text-end"> --}}
-                                                        {{--                                                                <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г. --}}
-                                                        {{--                                                            </span> --}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 text-end">
-                                                    <a href="{{ route('strategy-document.download-file', $f) }}"
-                                                        class="btn btn-primary">{{ __('custom.download') }}</a>
-                                                </div>
-                                            </div>
-                                            {!! strategicFileHtmlContent($f) !!}
-                                            <div class="row mt-2">
-                                                <div class="col-md-6">
-                                                    <div class="text-start">
-                                                        <span class="text-start me-3">
-                                                            <strong>{{ __('custom.date_created') }}:</strong>
-                                                            {{ displayDate($f->created_at) }}
-                                                            {{ __('custom.year_short') }}.
-                                                        </span>
-                                                        {{--                                                            <span class="text-end"> --}}
-                                                        {{--                                                                <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г. --}}
-                                                        {{--                                                            </span> --}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 text-end">
-                                                    <a href="{{ route('strategy-document.download-file', $f) }}"
-                                                        class="btn btn-primary">{{ __('custom.download') }}</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
             @endif
 
             {{-- <div class="row mb-4 mt-4">
@@ -500,160 +429,74 @@
     </div>
     </section>
 @endsection
-
-@push('styles')
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
-    <style>
-        .strategicDocumentClass .modal-dialog {
-            width: 80%;
-            max-width: 80% !important;
-        }
-
-        #fileTree,
-        #fileTreeEn .jstree-node {
-            padding-left: 30px;
-            padding-top: 7px;
-        }
-
-        #fileTree,
-        #fileTreeEn .jstree-themeicon {
-            font-size: 20px;
-            /* Adjust the size according to your preference */
-        }
-
-        #fileTree,
-        #fileTreeEn .jstree-anchor {
-            font-size: 20px;
-            /* Adjust the size according to your preference */
-        }
-    </style>
-@endpush
 @push('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            const policyArea = $('#policyArea');
-            policyArea.on('click', function() {
-                const clickedValue = $(this).data('policy-area-id');
-                if (clickedValue) {
-                    window.location.href = '/strategy-documents?policy-area=' + clickedValue;
-                }
-            });
+{{--    <script type="text/javascript">--}}
+{{--        $(document).ready(function() {--}}
+{{--            const policyArea = $('#policyArea');--}}
+{{--            policyArea.on('click', function() {--}}
+{{--                const clickedValue = $(this).data('policy-area-id');--}}
+{{--                if (clickedValue) {--}}
+{{--                    window.location.href = '/strategy-documents?policy-area=' + clickedValue;--}}
+{{--                }--}}
+{{--            });--}}
 
-            const strategicDocumentType = $('#strategicDocumentType');
-            strategicDocumentType.on('click', function() {
-                const clickedValue = $(this).data('document-type-id');
-                if (clickedValue) {
-                    window.location.href = '/strategy-documents?document-type=' + clickedValue;
-                }
-            });
-            const strategicDocumentLevel = $('#strategicDocumentLevel');
-            strategicDocumentLevel.on('click', function() {
-                const clickedValue = $(this).data('document-level-id');
-                if (clickedValue) {
-                    window.location.href = '/strategy-documents?document-level=' + clickedValue;
-                }
+{{--            const strategicDocumentType = $('#strategicDocumentType');--}}
+{{--            strategicDocumentType.on('click', function() {--}}
+{{--                const clickedValue = $(this).data('document-type-id');--}}
+{{--                if (clickedValue) {--}}
+{{--                    window.location.href = '/strategy-documents?document-type=' + clickedValue;--}}
+{{--                }--}}
+{{--            });--}}
+{{--            const strategicDocumentLevel = $('#strategicDocumentLevel');--}}
+{{--            strategicDocumentLevel.on('click', function() {--}}
+{{--                const clickedValue = $(this).data('document-level-id');--}}
+{{--                if (clickedValue) {--}}
+{{--                    window.location.href = '/strategy-documents?document-level=' + clickedValue;--}}
+{{--                }--}}
 
-            });
+{{--            });--}}
 
-            const dateAccepted = $('#dateAccepted');
-            dateAccepted.on('click', function() {
-                const clickedValue = $(this).data('documentDateAccepted');
-                if (clickedValue) {
-                    window.location.href = '/strategy-documents?valid-from=' + clickedValue;
-                }
-            });
-            const dateExpiring = $('#dateExpiring');
-            dateExpiring.on('click', function() {
-                const clickedValue = $(this).data('documentDateExpiring');
-                if (clickedValue == true) {
-                    window.location.href = '/strategy-documents?date-infinite=' + clickedValue;
-                } else {
-                    window.location.href = '/strategy-documents?valid-to=' + clickedValue;
-                }
-            });
+{{--            const dateAccepted = $('#dateAccepted');--}}
+{{--            dateAccepted.on('click', function() {--}}
+{{--                const clickedValue = $(this).data('documentDateAccepted');--}}
+{{--                if (clickedValue) {--}}
+{{--                    window.location.href = '/strategy-documents?valid-from=' + clickedValue;--}}
+{{--                }--}}
+{{--            });--}}
+{{--            const dateExpiring = $('#dateExpiring');--}}
+{{--            dateExpiring.on('click', function() {--}}
+{{--                const clickedValue = $(this).data('documentDateExpiring');--}}
+{{--                if (clickedValue == true) {--}}
+{{--                    window.location.href = '/strategy-documents?date-infinite=' + clickedValue;--}}
+{{--                } else {--}}
+{{--                    window.location.href = '/strategy-documents?valid-to=' + clickedValue;--}}
+{{--                }--}}
+{{--            });--}}
 
-            $('#myTab a').on('click', function(e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-            $('.preview-file-modal2').on('click', function(e) {
-                let fileId = $(this).data('file');
-                let previewUrl = $(this).data('url');
-                let titleTxt = '';
-                let continueTxt = 'Изтегляне';
-                let cancelBtnTxt = 'Отказ';
-                const buttonId = id = "strategicFileId_" + fileId;
-                new MyModal({
-                    title: titleTxt,
-                    footer: '<button id="strategicFileId_' + fileId + '" class="btn btn-primary">' +
-                        continueTxt + '</button>' +
-                        '<button id="stategicFieldCancelButton' + buttonId +
-                        '" class="btn btn-danger" data-dismiss="modal" aria-label="' +
-                        cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
-                    body: `<embed src="${previewUrl}" type="application/pdf" width="100%" height="800px" />`,
-                    customClass: 'strategicDocumentClass',
-                });
-            });
-        });
+{{--            $('#myTab a').on('click', function(e) {--}}
+{{--                e.preventDefault();--}}
+{{--                $(this).tab('show');--}}
+{{--            });--}}
+{{--            $('.preview-file-modal2').on('click', function(e) {--}}
+{{--                let fileId = $(this).data('file');--}}
+{{--                let previewUrl = $(this).data('url');--}}
+{{--                let titleTxt = '';--}}
+{{--                let continueTxt = 'Изтегляне';--}}
+{{--                let cancelBtnTxt = 'Отказ';--}}
+{{--                const buttonId = id = "strategicFileId_" + fileId;--}}
+{{--                new MyModal({--}}
+{{--                    title: titleTxt,--}}
+{{--                    footer: '<button id="strategicFileId_' + fileId + '" class="btn btn-primary">' +--}}
+{{--                        continueTxt + '</button>' +--}}
+{{--                        '<button id="stategicFieldCancelButton' + buttonId +--}}
+{{--                        '" class="btn btn-danger" data-dismiss="modal" aria-label="' +--}}
+{{--                        cancelBtnTxt + '">' + cancelBtnTxt + '</button>',--}}
+{{--                    body: `<embed src="${previewUrl}" type="application/pdf" width="100%" height="800px" />`,--}}
+{{--                    customClass: 'strategicDocumentClass',--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
 
-        $('body').on('click', '[id^="strategicFileId_"]', function(event) {
-            event.preventDefault();
-            const fileId = this.id.replace('strategicFileId_', '');
-            window.location.href = `/strategy-document/download-file/${fileId}`;
-        });
-
-        $('body').on('click', '#stategicFieldCancelButton', function(event) {
-            event.stopPropagation();
-        });
-
-        $('body').on('click', 'span[data-target], a[data-toggle="collapse"]', function(event) {
-            const clickedElement = $(event.target);
-            if (clickedElement.hasClass('fa-download') || clickedElement.hasClass('fa-eye')) {
-                return;
-            }
-            event.preventDefault();
-
-            const targetId = $(this).data('target');
-            console.log(targetId);
-            if (!targetId.startsWith('#')) {
-                return;
-            }
-            const isOpen = $(targetId).hasClass('show');
-
-            if (isOpen) {
-                $(targetId).collapse('hide');
-            } else {
-                $('.accordion').find('.collapse.show').collapse('hide');
-                $(targetId).collapse('show');
-            }
-        });
-
-        $(document).ready(function() {
-            const mainDocumentId = $('#mainDocument');
-            fileData = {!! json_encode($fileData) !!};
-            const fileTree = $("#fileTree");
-            fileTree.jstree({
-                "plugins": ["themes"],
-                'core': {
-                    'check_callback': true,
-                    'data': fileData,
-                    'themes': {
-                        'dots': true,
-                        'responsive': true
-                    }
-                },
-                "types": {
-                    "default": {
-                        "icon": "glyphicon glyphicon-flash"
-                    },
-                    "demo": {
-                        "icon": "glyphicon glyphicon-ok"
-                    }
-                },
-            }).on('ready.jstree', function() {
-                fileTree.jstree('open_all');
-            })
-        });
-    </script>
+{{--        --}}
+{{--    </script>--}}
 @endpush

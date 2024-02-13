@@ -205,6 +205,18 @@ function createCookie(name,value,hours) {
     document.cookie = name+"="+value+expires+"; path=/";
 }
 
+function formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}
+
 function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
@@ -264,6 +276,42 @@ $.fn.appendAttr = function(attrName, suffix) {
     });
     return this;
 };
+
+function submitNewSdChild(lForm){
+    if( canAjax ) {
+        canAjax = false;
+        $('#main_error').html('');
+        $('.ajax-error').html('');
+        let formData = $('#new_sd_child_form').serialize();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            url: '/admin/ajax/strategic-documents/documents/create',
+            data: formData,
+            success: function (result) {
+                if(typeof result.errors != 'undefined'){
+                    let errors = Object.entries(result.errors);
+                    for (let i = 0; i < errors.length; i++) {
+                        const search_class = '.error_' + errors[i][0];
+                        $('#new_sd_child_form ' + search_class).html(errors[i][1][0]);
+                    }
+                    canAjax = true;
+                } else if(typeof result.main_error != 'undefined'){
+                    $('#main_error').html(result.main_error);
+                    canAjax = true;
+                } else{
+                    window.location = result.redirect_url;
+                }
+
+            },
+            error: function (result) {
+                canAjax = true;
+            }
+        });
+    }
+}
 
 $(document).on("select2:open", () => {
     document.querySelector(".select2-container--open .select2-search__field").focus()
@@ -438,6 +486,13 @@ MyModal.prototype.loadModalBody = function (_myModal) {
 //==========================
 
 $(document).ready(function (e) {
+
+    //Custom file jquery inline validation for dynamical added files
+    if($.validator) {
+        $.validator.addMethod('myfilesize', function(value, element, param) {
+            return this.optional(element) || (element.files[0].size <= param)
+        }, '');
+    }
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
@@ -821,7 +876,6 @@ $(document).ready(function (e) {
         $(this).prop('disabled', true);
         $.post(url, data)
             .then(res => {
-                console.log(res);
                 if (res.success) {
                     toastr.success('Ролята е променена', 'Правата върху ролята са успешно променени');
                 } else if (res.error) {
@@ -922,7 +976,12 @@ $(document).ready(function (e) {
                 data: function (params) {
                     if($(this).data('types2ajax') == 'pris_doc') {
                         var query = {
-                            actType: typeof $(this).data('legalacttype') != 'undefined' ? parseInt($(this).data('legalacttype')) : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
+                            actType: typeof $(this).data('legalacttype') != 'undefined' ?
+                                parseInt($(this).data('legalacttype'))
+                                : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
+                            consultationId: typeof $(this).data('consultationid') != 'undefined' ?
+                                parseInt($(this).data('consultationid'))
+                                : (typeof $('#public_consultation_id') != 'undefined' ? $('#public_consultation_id').val() : null),
                             search: params.term
                         }
                     }else if($(this).data('types2ajax') == 'lp_record') {
@@ -950,12 +1009,23 @@ $(document).ready(function (e) {
                     }else if($(this).data('types2ajax') == 'pc') {
                         var query = {
                             connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
+                            pris: $('#pris_act_id') != 'undefined' ? $('#pris_act_id').val() : 0,
                             exclude: $(this).data('current'),
                             search: params.term
                         }
                     }else if($(this).data('types2ajax') == 'adv_board') {
                         var query = {
                             byModerator: typeof $(this).data('bymoderator') != 'undefined' ? $(this).data('bymoderator') : false,
+                            search: params.term
+                        }
+                    }
+                    else if($(this).data('types2ajax') == 'sd_parent_documents') {
+                        var query = {
+                            level: $('#strategic_document_level_id') != 'undefined' ? $('#strategic_document_level_id').val() : 0,
+                            policy: $('#policy_area_id') != 'undefined' ? $('#policy_area_id').val() : null,
+                            areaPolicy: $('#ekatte_area_id') != 'undefined' ? $('#ekatte_area_id').val() : null,
+                            municipalityPolicy: $('#ekatte_municipality_id') != 'undefined' ? $('#ekatte_municipality_id').val() : null,
+                            document: typeof $(this).data('documentid') != 'undefined' ? $(this).data('documentid') : false,
                             search: params.term
                         }
                     } else {
@@ -1017,5 +1087,130 @@ $(document).ready(function (e) {
             $(this).parent().parent().find('.full-length').removeClass('d-none');
         });
     }
+
+    if($('.add_sd_document').length){
+        $('.add_sd_document').each(function (index, el){
+            $(el).on('click', function (){
+                let url = $(this).data('url');
+
+                let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
+                let saveBtnTxt = GlobalLang == 'bg' ? 'Добави' : 'Add';
+                let titleTxt = GlobalLang == 'bg' ? 'Добавяне на дъщерен документ' : 'Add document';
+                if( canAjax ) {
+                    canAjax = false;
+                    new MyModal({
+                        title: titleTxt,
+                        footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild();">'+ saveBtnTxt +'</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                        bodyLoadUrl: url
+                    });
+                    canAjax = true;
+                }
+            });
+        });
+    }
+
+    if($('.edit-sd-document').length){
+        $('.edit-sd-document').on('click', function (){
+            if( canAjax ) {
+                canAjax = false;
+                let lForm = $(this).closest('form');
+                let lUrl = $(lForm).data('url');
+                let lMainError = $(lForm).find('.main-error')[0];
+                let lMainSuccess = $(lForm).find('.main-success')[0];
+                $(lMainError).html('');
+                $(lMainSuccess).html('');
+                $('.ajax-error').html('');
+
+                let formData = $(lForm).serialize();
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    url: lUrl,
+                    data: formData,
+                    success: function (result) {
+                        if(typeof result.errors != 'undefined'){
+                            let errors = Object.entries(result.errors);
+                            for (let i = 0; i < errors.length; i++) {
+                                const search_class = '.error_' + errors[i][0];
+                                let errDiv = $(lForm).find(search_class);
+                                $(errDiv[0]).html(errors[i][1][0]);
+                            }
+                            canAjax = true;
+                        } else if(typeof result.main_error != 'undefined'){
+                            $(lMainError).html(result.main_error);
+                            canAjax = true;
+                        } else{
+                            $(lMainSuccess).html(result.success_message);
+                        }
+
+                    },
+                    error: function (result) {
+                        canAjax = true;
+                    }
+                });
+            }
+        });
+    }
+
+    if($('.sd-submit-files').length){
+        $('.sd-submit-files').on('click', function (){
+            let lForm = $(this).closest('form')[0];
+            let allowed_file_extensions = $(lForm).data('extensions');
+            let max_upload_file_size = $(lForm).data('size');
+            let bgRequired = $($(lForm).find('input[name="file_bg"]')[0]).val() ? true : false;
+            let bgFileRequired = $($(lForm).find('input[name="description_bg"]')[0]).val().length != 0 || !$($(lForm).find('input[name="description_en"]')[0]).val();
+            let enRequired = $($(lForm).find('input[name="file_en"]')[0]).val() ? true : false;
+            let enFileRequired = $($(lForm).find('input[name="description_en"]')[0]).val().length != 0;
+            $(lForm).submit();
+            // $(lForm).validate({
+            //     rules: {
+            //         file_bg: {
+            //             required: bgFileRequired,
+            //             extension: allowed_file_extensions,
+            //             myfilesize: max_upload_file_size
+            //         },
+            //         file_en: {
+            //             required: enFileRequired,
+            //             extension: allowed_file_extensions,
+            //             myfilesize: max_upload_file_size
+            //         },
+            //         description_bg: {
+            //             required: bgRequired,
+            //         },
+            //         description_en: {
+            //             required: enRequired,
+            //         },
+            //     },
+            //     messages: {
+            //         file_bg: {
+            //             myextension: "Разрешените файлови формати са " +allowed_file_extensions,
+            //             myfilesize: "Максималният размер на файла трябва да е по-малък от " + ((max_upload_file_size / 1024) / 1024) + " MB"
+            //         },
+            //         file_en: {
+            //             myextension: "Разрешените файлови формати са " +allowed_file_extensions,
+            //             myfilesize: "Максималният размер на файла трябва да е " + ((max_upload_file_size / 1024) / 1024) + " MB"
+            //         },
+            //     },
+            //     errorElement: 'span',
+            //     errorPlacement: function (error, element) {
+            //         error.addClass('error');
+            //         element.closest('.div').append(error);
+            //     },
+            //     highlight: function (element, errorClass, validClass) {
+            //         $(element).addClass('is-invalid');
+            //     },
+            //     unhighlight: function (element, errorClass, validClass) {
+            //         $(element).removeClass('is-invalid');
+            //     }
+            // });
+            //
+            // if ($(lForm).valid()) {
+            //     $(lForm).submit();
+            // }
+        });
+    }
+
 })
 

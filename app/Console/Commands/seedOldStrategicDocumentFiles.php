@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\DocTypesEnum;
+use App\Models\File;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
 use App\Models\User;
@@ -31,6 +33,7 @@ class seedOldStrategicDocumentFiles extends Command
     protected $ourUsers;
     protected $directory;
     protected $inserted;
+    protected $ourDocuments;
     protected $formatTimestamp;
 
     /**
@@ -41,7 +44,7 @@ class seedOldStrategicDocumentFiles extends Command
     public function handle()
     {
         $this->formatTimestamp = 'Y-m-d H:i:s';
-
+        $this->ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
         $ourFiles = StrategicDocumentFile::withTrashed()->get()->whereNotNull('old_file_id')->pluck('id', 'old_file_id')->toArray();
         $this->ourDocs = StrategicDocument::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
         $this->ourUsers = User::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
@@ -49,6 +52,7 @@ class seedOldStrategicDocumentFiles extends Command
         $oldDbFiles = DB::connection('old_strategy_app')
             ->select("
         SELECT
+            sd.id as sd_old_id,
             uf.fileid as file_old_id,
             uf.recordid as id,
             f.\"name\" as name,
@@ -79,12 +83,11 @@ class seedOldStrategicDocumentFiles extends Command
         $this->directory = StrategicDocumentFile::DIR_PATH;
         $this->inserted = [];
 
+        DB::beginTransaction();
         try {
 
             foreach ($oldDbFiles as $oldDbFile) {
-                DB::beginTransaction();
-
-                $this->info('Beginning the import of file with ID: ' . $oldDbFile->id);
+                $this->info('Beginning the import of file with old ID: ' . $oldDbFile->file_old_id.' to SD with old ID: '.$oldDbFile->sd_old_id);
 
                 $info = pathinfo($oldDbFile->name);
                 if (isset($info['extension'])) {
@@ -98,7 +101,6 @@ class seedOldStrategicDocumentFiles extends Command
 
                 if (!file_exists($copy_from)) {
                     $this->comment('File ' . $copy_from . 'do not exist!');
-                    DB::rollBack();
                     continue;
                 }
 
@@ -108,10 +110,11 @@ class seedOldStrategicDocumentFiles extends Command
                     $this->createNewFiles($copy_from, $to, $newName, $oldDbFile);
                 }
             }
-        } catch (\Throwable $th) {
-            DB::rollBack();
 
-            throw $th;
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Import SD file error: '.$e);
         }
     }
 
@@ -136,13 +139,11 @@ class seedOldStrategicDocumentFiles extends Command
 
         $contentType = Storage::disk('public_uploads')->mimeType($this->directory . $newName);
 
-        $checkIsMain = $this->ourDocs[$oldDbFile->id] . $file->locale;
-
         if ($copied_file) {
             $file->update([
-                'strategic_document_id' => $this->ourDocs[$oldDbFile->id],
+                'strategic_document_id' => isset($this->ourDocuments[$oldDbFile->sd_old_id]) ? (int)$this->ourDocuments[$oldDbFile->sd_old_id] : null,
                 'old_file_id' =>  $oldDbFile->file_old_id,
-                'strategic_document_type_id' => 1,
+                'strategic_document_type_id' => File::CODE_OBJ_STRATEGIC_DOCUMENT,
                 'sys_user' => $this->ourUsers[(int)$oldDbFile->old_user_id] ?? null,
                 'path' => $this->directory . $newName,
                 'filename' => $newName,
@@ -150,9 +151,11 @@ class seedOldStrategicDocumentFiles extends Command
                 'content_type' => $contentType,
                 'created_at' => Carbon::parse($oldDbFile->created_at)->format($this->formatTimestamp),
                 'updated_at' => Carbon::parse($oldDbFile->updated_at)->format($this->formatTimestamp),
-                'is_main' => !in_array($checkIsMain, $this->inserted),
-                'visible_in_report' => $oldDbFile->isreportvisible
+                'visible_in_report' => $oldDbFile->isreportvisible,
+                'description' => $oldDbFile->description
             ]);
+
+            $file->save();
 
             $this->info('Updated file with ID: ' . $file->id);
         }
@@ -163,43 +166,29 @@ class seedOldStrategicDocumentFiles extends Command
         $to,
         $newName,
         $oldDbFile
-    ) {
+    )
+    {
         $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
+        $contentType = Storage::disk('public_uploads')->mimeType($this->directory . $newName);
 
-        if ($copied_file) {
-            $contentType = Storage::disk('public_uploads')->mimeType($this->directory . $newName);
-
-            foreach (['bg', 'en'] as $code) {
-                $checkIsMain = $this->ourDocs[$oldDbFile->id] . $code;
-
-                $doc = StrategicDocumentFile::create([
-                    'strategic_document_id' => $this->ourDocs[$oldDbFile->id],
-                    'old_file_id' =>  $oldDbFile->file_old_id,
-                    'strategic_document_type_id' => 1,
-                    'locale' => $code,
-                    'sys_user' => $this->ourUsers[(int)$oldDbFile->old_user_id] ?? null,
-                    'path' => $this->directory . $newName,
-                    'filename' => $newName,
-                    'version' => '1.0',
-                    'content_type' => $contentType,
-                    'created_at' => Carbon::parse($oldDbFile->created_at)->format($this->formatTimestamp),
-                    'updated_at' => Carbon::parse($oldDbFile->updated_at)->format($this->formatTimestamp),
-                    'is_main' => !in_array($checkIsMain, $this->inserted),
-                    'visible_in_report' => $oldDbFile->isreportvisible
-                ]);
-
-                $doc->translateOrNew($code)->display_name = $oldDbFile->description;
-
-                $doc->save();
-
-                $this->inserted[] = $checkIsMain;
-
-                $this->info('Saved file with ID: ' . $doc->id);
-                DB::commit();
-            }
-        } else {
-            DB::rollBack();
-            $this->info('Can\'t copy file!');
+        foreach (['bg'] as $code) {
+            $doc = StrategicDocumentFile::create([
+                'strategic_document_id' => isset($this->ourDocuments[$oldDbFile->sd_old_id]) ? (int)$this->ourDocuments[$oldDbFile->sd_old_id] : null,
+                'old_file_id' => $oldDbFile->file_old_id,
+                'strategic_document_type_id' => File::CODE_OBJ_STRATEGIC_DOCUMENT,
+                'locale' => $code,
+                'sys_user' => $this->ourUsers[(int)$oldDbFile->old_user_id] ?? null,
+                'path' => $this->directory . $newName,
+                'filename' => $newName,
+                'version' => '1.0',
+                'content_type' => $contentType,
+                'created_at' => Carbon::parse($oldDbFile->created_at)->format($this->formatTimestamp),
+                'updated_at' => Carbon::parse($oldDbFile->updated_at)->format($this->formatTimestamp),
+                //'is_main' => !in_array($checkIsMain, $this->inserted),
+                'visible_in_report' => $oldDbFile->isreportvisible,
+                'description' => $oldDbFile->description
+            ]);
+            $this->info('Saved file with ID: ' . $doc->id);
         }
     }
 }

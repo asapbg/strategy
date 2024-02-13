@@ -49,28 +49,41 @@
                                     {{-- select with groups--}}
                                     @if(isset($field['group']) && $field['group'])
                                     @foreach($field['options'] as $group_name => $group)
-                                        @if(isset($group['any']))
-                                        <option value="{{ $group['value'] }}" @if($group['value']==old($key, $field['value'])) selected
-                                            @elseif(is_null(old($key, $field['value'])) && isset($field['default']) &&
-                                            $group['value']==$field['default']) selected @endif>{{ $group['name'] }}</option>
-                                        @else
-                                        <optgroup label="{{ $group_name }}">
-                                            @if(sizeof($group) > 0)
-                                                @foreach($group as $option)
-                                                <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple']
-                                                    && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
-                                                    ((!isset($field['multiple']) || !$field['multiple']) && $option['value']==old($key,
-                                                    $field['value']))) selected @endif>{{ $option['name'] }}</option>
-                                                @endforeach
+                                        @php($optionDataAttributes = '')
+                                        @foreach($group as $k => $v)
+                                            @if(str_contains($k, 'data-'))
+                                                @php($optionDataAttributes .= $v.' ')
                                             @endif
-                                        </optgroup>
+                                        @endforeach
+
+                                        @if(isset($group['any']))
+                                            <option value="{{ $group['value'] }}" @if($group['value'] == old($key, $field['value'])) selected
+                                                @elseif(is_null(old($key, $field['value'])) && isset($field['default']) &&
+                                                $group['value'] == $field['default']) selected @endif {{ $optionDataAttributes }}>{{ $group['name'] }}</option>
+                                        @else
+                                            <optgroup label="{{ $group_name }}">
+                                                @if(sizeof($group) > 0)
+                                                    @foreach($group as $option)
+                                                    <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple']
+                                                        && in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
+                                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']==old($key,
+                                                        $field['value']))) selected @endif>{{ $option['name'] }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </optgroup>
                                         @endif
                                     @endforeach
                                 @else
                                     {{-- regular select --}}
                                     @foreach($field['options'] as $option)
-                                    <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
-                                        in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
+                                        @php($optionDataAttributes = '')
+                                        @foreach($option as $k => $v)
+                                            @if(str_contains($k, 'data-'))
+                                                @php($optionDataAttributes .= $v.' ')
+                                            @endif
+                                        @endforeach
+                                    <option {{ $optionDataAttributes }} value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
+                                        in_array($option['value'], old($key.'[]', $field['value'] ?? [])) ) ||
                                         ((!isset($field['multiple']) || !$field['multiple']) && $option['value']== old($key, ($option['value'] == '' ? $field['value'] : ($field['value'] ?? $field['default']))))) selected @endif>{{ $option['name'] }}</option>
                                     @endforeach
                                 @endif

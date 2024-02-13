@@ -11,10 +11,6 @@ class StrategicDocumentLevel extends ModelActivityExtend implements Translatable
 {
     use FilterSort, Translatable;
 
-    const LEVEL_CENTRAL = 1;
-    const LEVEL_AREA = 2;
-    const LEVEL_MUNICIPALITY = 3;
-
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name'];
     const MODULE_NAME = ('custom.nomenclatures.strategic_document_level');

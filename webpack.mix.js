@@ -67,6 +67,9 @@ mix.scripts([
     'resources/adminlte-3.2/plugins/moment/moment.min.js',
     'resources/adminlte-3.2/plugins/daterangepicker/daterangepicker.js',
     'resources/adminlte-3.2/dist/js/adminlte.min.js',
+    'resources/adminlte-3.2/plugins/jquery-validation/jquery.validate.min.js',
+    'resources/adminlte-3.2/plugins/jquery-validation/additional-methods.min.js',
+    'resources/adminlte-3.2/plugins/jquery-validation/localization/messages_bg.min.js',
     'resources/js/main.js'
 ], 'public/js/admin.js');
 

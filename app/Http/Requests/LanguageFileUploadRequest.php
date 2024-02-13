@@ -31,8 +31,9 @@ class LanguageFileUploadRequest extends FormRequest
         return [
             'description_bg' => ['nullable', 'string', 'max:255'],
             'description_en' => ['nullable', 'string', 'max:255'],
+            'is_visible' => ['nullable', 'numeric'],
             'formats' => ['required', 'string'],
-            'file_bg' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)],
+            'file_bg' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)],
             'file_en' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)]
         ];
     }

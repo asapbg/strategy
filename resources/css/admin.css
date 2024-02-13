@@ -164,3 +164,7 @@ select.form-control-sm ~ .select2-container--default{
 .sn-checkbox-use-protocol input,.sn-checkbox-open-in-new-window input{
     margin-right: 5px !important;
 }
+
+form.sd-form-files .error{
+    color: red;
+}

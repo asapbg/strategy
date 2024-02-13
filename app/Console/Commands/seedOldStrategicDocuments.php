@@ -33,6 +33,11 @@ class seedOldStrategicDocuments extends Command
      */
     public function handle()
     {
+        $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')
+            ->orderBy('id', 'asc')
+            ->get()
+            ->pluck('id', 'name')
+            ->toArray();
         $locales = config('available_languages');
 
         $ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
@@ -73,7 +78,8 @@ class seedOldStrategicDocuments extends Command
             }
         }
 
-        $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')->get();
+        //$acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')->get()->pluck('id', 'name')->toArray();
+        //dd($acceptingInstitutions);
         $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         try {
@@ -98,9 +104,9 @@ class seedOldStrategicDocuments extends Command
                 if (isset($data['institution_type_name'])) {
                     $institutionName = trim($data['institution_type_name']);
 
-                    $acceptingInstitution = $acceptingInstitutions->where('name', $institutionName)->first();
+                    //$acceptingInstitution = $acceptingInstitutions->where('name', $institutionName)->first();
 
-                    if (!isset($acceptingInstitution)) {
+                    if (!isset($acceptingInstitutions[$institutionName])) {
                         $acceptingInstitution = new AuthorityAcceptingStrategic();
 
                         foreach ($locales as $locale) {
@@ -108,9 +114,11 @@ class seedOldStrategicDocuments extends Command
                         }
 
                         $acceptingInstitution->save();
+                        $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+                        $acceptingInstitutions[$institutionName] = $acceptingInstitution->id;
+                    } else{
+                        $data['accept_act_institution_type_id'] = (int)$acceptingInstitutions[$institutionName];
                     }
-
-                    $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
                 }
                 //
 

@@ -37,6 +37,8 @@ class File extends ModelActivityExtend
     const CODE_OBJ_AB_MODERATOR = 8;
 
     const CODE_OBJ_AB_PAGE = 9;
+    const CODE_OBJ_STRATEGIC_DOCUMENT = 10;
+    const CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN = 11;
 
     //Directories objects
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
@@ -61,6 +63,7 @@ class File extends ModelActivityExtend
     const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
+    const ALLOWED_FILE_STRATEGIC_DOC = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_PAGE = ['doc', 'docx', 'pdf', 'xsl', 'xlsx', 'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];
 
     const CONTENT_TYPE_IMAGES = ['image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];

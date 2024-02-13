@@ -31,78 +31,8 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 
     protected $fillable = ['strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id',
         'strategic_act_type_id', 'strategic_act_number', 'strategic_act_link', 'accept_act_institution_type_id',
-        'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat', 'document_date_accepted', 'document_date_expiring', 'parent_document_id', 'ekatte_area_id', 'ekatte_municipality_id'];
-
-    /**
-     * Dates
-     */
-    protected function documentDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string|null $value) => !empty($value) ? displayDate($value) : '',
-            set: fn (string|null $value) => !empty($value) ?  databaseDate($value) : null
-        );
-    }
-
-    /**
-     * Get the model name
-     */
-    public function getModelName() {
-        return $this->title;
-    }
-
-    public static function translationFieldsProperties(): array
-    {
-        return array(
-            'title' => [
-                'type' => 'text',
-                'rules' => ['required', 'string']
-            ],
-            'description' => [
-                'type' => 'summernote',
-                'rules' => ['required', 'string']
-            ],
-        );
-    }
-
-    public function files()
-    {
-        return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')->orderBy('ord');
-    }
-
-    //!!! TODO remove after level and field of actions changes
-    public function documentLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(StrategicDocumentLevel::class, 'id', 'strategic_document_level_id');
-    }
-
-    public function acceptActInstitution(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(AuthorityAcceptingStrategic::class, 'id', 'accept_act_institution_type_id');
-    }
-
-    public function documentType(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
-    }
-
-    public function strategicActType(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(StrategicActType::class, 'id', 'strategic_act_type_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function policyArea(): BelongsTo
-    {
-        return $this->belongsTo(PolicyArea::class);
-    }
-
-    public function pris(): BelongsTo
-    {
-        return $this->belongsTo(Pris::class, 'pris_act_id');
-    }
+        'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat',
+        'document_date_accepted', 'document_date_expiring', 'parent_document_id', 'ekatte_area_id', 'ekatte_municipality_id'];
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -110,7 +40,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
      */
     public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->where('active', true);
+        return $query->where('strategic_document.active', true);
     }
 
     /**
@@ -125,20 +55,16 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         });
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function publicConsultation(): BelongsTo
-    {
-        return $this->belongsTo(PublicConsultation::class, 'public_consultation_id');
-    }
 
     /**
-     * @return BelongsTo
+     * Dates
      */
-    public function parentDocument(): BelongsTo
+    protected function documentDate(): Attribute
     {
-        return $this->belongsTo(StrategicDocument::class, 'parent_document_id');
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? displayDate($value) : '',
+            set: fn (string|null $value) => !empty($value) ?  databaseDate($value) : null
+        );
     }
 
     /**
@@ -180,6 +106,72 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     }
 
     /**
+     * Get the model name
+     */
+    public function getModelName() {
+        return $this->title;
+    }
+
+    public static function translationFieldsProperties(): array
+    {
+        return array(
+            'title' => [
+                'type' => 'text',
+                'rules' => ['required', 'string']
+            ],
+            'description' => [
+                'type' => 'summernote',
+                'rules' => ['required', 'string']
+            ],
+        );
+    }
+
+    public function files()
+    {
+        return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')->orderBy('ord');
+    }
+
+    public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StrategicDocumentChildren::class, 'strategic_document_id', 'id')->whereNull('parent_id')->orderBy('id');
+    }
+
+    //!!! TODO remove after level and field of actions changes
+//    public function documentLevel(): \Illuminate\Database\Eloquent\Relations\HasOne
+//    {
+//        return $this->hasOne(StrategicDocumentLevel::class, 'id', 'strategic_document_level_id');
+//    }
+
+    public function acceptActInstitution(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(AuthorityAcceptingStrategic::class, 'id', 'accept_act_institution_type_id');
+    }
+
+    public function documentType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicDocumentType::class, 'id', 'strategic_document_type_id');
+    }
+
+    public function strategicActType(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicActType::class, 'id', 'strategic_act_type_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function policyArea(): BelongsTo
+    {
+        return $this->belongsTo(FieldOfAction::class);
+    }
+
+    public function pris(): BelongsTo
+    {
+        return $this->belongsTo(Pris::class, 'pris_act_id');
+    }
+
+
+    /**
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -196,5 +188,60 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public function ekatteManiputlicity()
     {
         return $this->belongsTo(EkatteArea::class, 'ekatte_municipality_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function publicConsultation(): BelongsTo
+    {
+        return $this->belongsTo(PublicConsultation::class, 'public_consultation_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function parentDocument(): BelongsTo
+    {
+        return $this->belongsTo(StrategicDocument::class, 'parent_document_id');
+    }
+
+    public static function select2AjaxOptions($filters)
+    {
+        $q = DB::table('strategic_document')
+            ->select(['strategic_document.id', DB::raw('strategic_document_translations.title as name')])
+            ->join('strategic_document_translations', function ($j){
+                $j->on('strategic_document.id', '=', 'strategic_document_translations.strategic_document_id')
+                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->leftJoin('strategic_document as child', 'strategic_document.id', '=', 'strategic_document.parent_document_id');
+
+        if(isset($filters['sd_document_id'])){
+            $q->where('child.id', '=', $filters['sd_document_id']);
+            if((isset($filters['field_of_action_id']) && $filters['field_of_action_id'] > 0) || (isset($filters['search']))) {
+                $q->orWhere(function ($q) use($filters){
+                    if(isset($filters['field_of_action_id']) && $filters['field_of_action_id'] > 0) {
+                        $q->where('field_of_actions.id', '=', $filters['field_of_action_id']);
+                    }
+                    if(isset($filters['search'])) {
+                        $q->where('strategic_document_translations.title', 'ilike', '%'.$filters['search'].'%');
+                    }
+                });
+            }
+        } else {
+            if(isset($filters['field_of_action_id']) && $filters['field_of_action_id'] > 0) {
+                $q->where('field_of_actions.id', '=', $filters['field_of_action_id']);
+            }
+
+            if(isset($filters['search'])) {
+                $q->where('strategic_document_translations.title', 'ilike', '%'.$filters['search'].'%');
+            }
+        }
+
+        $q->orderBy('strategic_document_translations.title', 'asc');
+        $q->groupBy('strategic_document.id', 'strategic_document_translations.title');
+
+        return $q->get();
     }
 }

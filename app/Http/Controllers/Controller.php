@@ -7,6 +7,7 @@ use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
 use App\Models\Page;
+use App\Models\StrategicDocumentFile;
 use App\Models\User;
 use App\Services\FileOcr;
 use Exception;
@@ -317,26 +318,27 @@ class Controller extends BaseController
                 File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
                 File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => File::OP_GENERAL_UPLOAD_DIR,
                 File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => File::LP_GENERAL_UPLOAD_DIR,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN => StrategicDocumentFile::DIR_PATH,
 
                 default => '',
             };
 
             $fileIds = [];
-
             foreach ($this->languages as $lang) {
 
                 $default = $lang['default'];
                 $code = $lang['code'];
 
-                if ($default && !isset($validated['file_'.$code])) {
-                    return;
+                if (!isset($validated['file_'.$code])) {
+                    continue;
                 }
+
                 if (!isset($validated['file_'.$code])) {
                     $file = $validated['file_bg'];
                     $desc = $validated['description_bg'] ?? null;
                 } else {
                     $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
-                    $desc = $validated['description_'.$code] ?? ($validated['description_'.config('app.default_lang')] ?? null);
+                    $desc = isset($validated['description_'.$code]) && !empty($validated['description_'.$code]) ? $validated['description_'.$code] : ($validated['description_'.config('app.default_lang')] ?? null);
                 }
                 $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
                 $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
@@ -350,7 +352,8 @@ class Controller extends BaseController
                     'description_'.$code => $desc,
                     'sys_user' => $request->user()->id,
                     'locale' => $code,
-                    'version' => ($version + 1).'.0'
+                    'version' => ($version + 1).'.0',
+                    'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
                 ]);
                 $newFile->save();
                 $fileIds[] = $newFile->id;
@@ -358,8 +361,8 @@ class Controller extends BaseController
                 $ocr->extractText();
             }
 
-            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+//            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+//            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
 
 
             switch ((int)$typeObject) {
@@ -375,6 +378,7 @@ class Controller extends BaseController
                     }
                     break;
                 case File::CODE_OBJ_AB_PAGE:
+                case File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN:
                     $route = url()->previous().'#ct-files';
                     break;
                 default:

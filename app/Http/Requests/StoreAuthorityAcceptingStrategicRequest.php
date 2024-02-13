@@ -25,6 +25,8 @@ class StoreAuthorityAcceptingStrategicRequest extends FormRequest
      */
     public function rules()
     {
+        $rules['nomenclature_level_id'] = ['required', 'numeric'];
+
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:authority_accepting_strategic'];
         }

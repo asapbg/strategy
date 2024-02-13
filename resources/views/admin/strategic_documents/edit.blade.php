@@ -8,31 +8,40 @@
 
                     <div class="card-header p-0 pt-1 border-bottom-0">
                         <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general"
-                                   role="tab" aria-controls="general" aria-selected="true">Основна информация</a>
-                            </li>
+                            @foreach(\App\Http\Controllers\Admin\StrategicDocumentsController::SECTIONS as $s)
+                                @if($item->id || $s != \App\Http\Controllers\Admin\StrategicDocumentsController::SECTION_FILES )
+                                    <li class="nav-item">
+                                        <a class="nav-link @if($section == $s) active @endif" id="{{ $s }}-tab" href="{{ route('admin.strategic_documents.edit', [$item, $s]) }}">{{ __('custom.strategic_documents.sections.'.$s) }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
                             @if($item->id)
                                 <li class="nav-item">
-                                    <a class="nav-link" id="files-tab" data-toggle="pill" href="#files" role="tab"
-                                       aria-controls="files" aria-selected="false">Приложени Файлове</a>
+                                    <button class="nav-link add_sd_document bg-success" data-url="{{ route('admin.strategic_documents.document.popup', ['sd' => $item]) }}">+ {{ trans_choice('custom.strategic_documents.documents', 1) }}</button>
                                 </li>
+                            @endif
+                            @if($item->documents->count())
+                                @foreach($item->documents as $d)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.strategic_documents.document.edit', [$d]) }}">{{ $d->title }}</a>
+                                    </li>
+                                @endforeach
                             @endif
                         </ul>
                     </div>
-                   
+
                     <div class="card-body p-0">
                         <div class="tab-content" id="custom-tabsContent">
-                            <div class="tab-pane fade active show pt-0" id="general" role="tabpanel"
+                            <div class="tab-pane fade active show pt-3" id="general" role="tabpanel"
                                  aria-labelledby="general-tab">
-                                @include('admin.strategic_documents.general')
+                                @include('admin.strategic_documents.'.$section)
                             </div>
 
-                            @if($item->id)
-                                <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
-                                    @include('admin.strategic_documents.files')
-                                </div>
-                            @endif
+{{--                            @if($item->id)--}}
+{{--                                <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">--}}
+{{--                                    @include('admin.strategic_documents.files')--}}
+{{--                                </div>--}}
+{{--                            @endif--}}
                         </div>
                     </div>
                 </div>

@@ -34,7 +34,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ $item->documentType?->name }}</td>
-                                    <td>{{ $item->documentLevel?->name }}</td>
+                                    <td>{{ __('custom.nomenclature_level.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->strategic_document_level_id)) }}</td>
                                     <td>{{ $item->acceptActInstitution?->name }}</td>
                                     <td>@if($item->active) <i class="fas fa-check text-success"></i> @else <i class="fas fa-minus text-danger"></i> @endif</td>
                                     <td class="text-center" style="width: 50px; white-space: nowrap;">

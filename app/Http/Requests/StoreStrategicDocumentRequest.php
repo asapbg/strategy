@@ -29,14 +29,14 @@ class StoreStrategicDocumentRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'stay' => ['nullable'],
+            'stay' => ['nullable', 'numeric'],
             'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
-            'policy_area_id' => ['required', 'numeric', 'exists:policy_area,id'],
+            'policy_area_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
-            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+//            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
-            'public_consultation_id' => ['required', 'numeric'],
+//            'public_consultation_id' => ['required', 'numeric'],
             'active' => ['required', 'numeric', 'in:0,1'],
             //'valid_at_main' => ['required', 'date'],
             'valid_at_main' => ['required_if:date_valid_indefinite_main,0', 'date', 'nullable'],
@@ -49,8 +49,8 @@ class StoreStrategicDocumentRequest extends FormRequest
             'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
-            'ekatte_area_id' => 'nullable|sometimes|integer',
-            'ekatte_municipality_id' => 'nullable|sometimes|integer',
+            'ekatte_area_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
+            'ekatte_municipality_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
             'visible_in_report_main' => ['nullable', 'numeric'],
         ];
 
@@ -69,29 +69,29 @@ class StoreStrategicDocumentRequest extends FormRequest
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:strategic_document'];
         }
-        if (request()->isMethod('put') ) {
-            foreach (config('available_languages') as $lang) {
-                $rules['file_strategic_documents_' .$lang['code'] . '_main'] = StrategicDocumentFileEnum::validationRules($lang['code']);
-            }
-        } else {
-            foreach (config('available_languages') as $lang) {
-                $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);
-            }
-        }
+//        if (request()->isMethod('put') ) {
+//            foreach (config('available_languages') as $lang) {
+//                $rules['file_strategic_documents_' .$lang['code'] . '_main'] = StrategicDocumentFileEnum::validationRules($lang['code']);
+//            }
+//        } else {
+//            foreach (config('available_languages') as $lang) {
+//                $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);
+//            }
+//        }
 
         //dd($rules, request()->file('file_strategic_documents_bg_main'));
-        foreach (config('available_languages') as $lang) {
-            foreach (StrategicDocumentFile::translationFieldsPropertiesMain() as $field => $properties) {
-                $rules[$field .'_'. $lang['code']] = $properties['rules'];
-            }
-        }
+//        foreach (config('available_languages') as $lang) {
+//            foreach (StrategicDocumentFile::translationFieldsPropertiesMain() as $field => $properties) {
+//                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+//            }
+//        }
         foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
         }
-        if (request()->has('main_fileId_bg')) {
-            $rules['file_strategic_documents_bg'][] = 'sometimes';
-            $rules['file_strategic_documents_bg_main'][] = 'sometimes';
-        }
+//        if (request()->has('main_fileId_bg')) {
+//            $rules['file_strategic_documents_bg'][] = 'sometimes';
+//            $rules['file_strategic_documents_bg_main'][] = 'sometimes';
+//        }
 
         if (request()->get('date_expiring_indefinite') == 1) {
             $rules['document_date_expiring'][] = 'sometimes';

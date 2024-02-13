@@ -116,23 +116,33 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic-documents/edit/{id?}', 'edit')->name('strategic_documents.edit');
-        Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
-        Route::post('/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
-        Route::put('/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
-        Route::get('/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
-        Route::any('/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
+        Route::get('/strategic-documents/edit/{id?}/{section?}', 'edit')->name('strategic_documents.edit');
         Route::post('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
-        Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
+        Route::post('/strategic-documents/{object_id}/{object_type}', 'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
+        Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
+//        Route::post('/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
+//        Route::put('/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
+//        Route::get('/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
+//        Route::any('/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
+
+//        Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
         Route::get('strategic-documents/pris-option/{id?}', 'prisActOptions')->name('strategic_documents.pris.options');
-        Route::get('strategic-documents/pris-details/{id?}', 'prisDetails')->name('strategic_documents.pris.date');
-        Route::get('strategic-documents/public-consultation-details/{id?}', 'publicConsultationDetails')->name('strategic_documents.public_consultation_details');
-        Route::get('strategic-documents/same-policy-area/{id?}', 'strategicDocumentsFromSamePolicyArea')->name('strategic_documents.same-policy-area');
+//        Route::get('strategic-documents/pris-details/{id?}', 'prisDetails')->name('strategic_documents.pris.date');
+//        Route::get('strategic-documents/public-consultation-details/{id?}', 'publicConsultationDetails')->name('strategic_documents.public_consultation_details');
+//        Route::get('strategic-documents/same-policy-area/{id?}', 'strategicDocumentsFromSamePolicyArea')->name('strategic_documents.same-policy-area');
         Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
         Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
         Route::get('strategic-documents/accept-act-institution-options/{id?}', 'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
-        Route::get('strategic-documents/load-pris-acts', 'loadPrisActs')->name('strategic_documents.load-pris-acts');
-        Route::get('strategic-documents/load-parents', 'loadParentStrategicDocuments')->name('strategic_documents.load-parents');
+//        Route::get('strategic-documents/load-pris-acts', 'loadPrisActs')->name('strategic_documents.load-pris-acts');
+//        Route::get('strategic-documents/load-parents', 'loadParentStrategicDocuments')->name('strategic_documents.load-parents');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\StrategicDocumentChildController::class)->group(function () {
+        Route::get('/strategic-documents/documents/popup-form/{sd}/{doc?}', 'popupForm')->name('strategic_documents.document.popup');
+        Route::post('/ajax/strategic-documents/documents/create', 'create')->name('strategic_documents.document.create');
+        Route::get('/strategic-documents/documents/{item}/edit', 'edit')->name('strategic_documents.document.edit');
+        Route::post('/ajax/strategic-documents/documents/update', 'update')->name('strategic_documents.document.update');
+        Route::post('/strategic-documents/documents/delete/{id}', 'delete')->name('strategic_documents.document.delete');
     });
 
     // Static pages

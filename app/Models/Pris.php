@@ -200,6 +200,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract
                 $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
             }
 
+            if(isset($filters['consultationId']) && $filters['consultationId'] > 0) {
+                $q->where('public_consultation_id', (int)$filters['consultationId']);
+            }
+
             $q->whereNull('pris.deleted_at');
 
             $q->orderBy('legal_act_type_translations.name', 'asc')

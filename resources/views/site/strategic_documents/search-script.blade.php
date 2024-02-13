@@ -2,9 +2,9 @@
     <script>
         $(document).ready(function() {
             var firstRender = true;
-            let centralLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_CENTRAL; ?>';
-            let areaLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_AREA; ?>';
-            let municipalityLevel = '<?php echo \App\Models\StrategicDocumentLevel::LEVEL_MUNICIPALITY; ?>';
+            let centralLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
+            let areaLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::AREA->value; ?>';
+            let municipalityLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value; ?>';
             setTimeout(function() {
                 const url = buildUrl();
                 loadStrategyDocuments(1, url);

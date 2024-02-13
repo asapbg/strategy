@@ -3,6 +3,7 @@
 namespace App\Enums;
 
 use App\Models\ActType;
+use App\Models\FieldOfAction;
 use ArchTech\Enums\Names;
 use ArchTech\Enums\Options;
 use ArchTech\Enums\Values;
@@ -43,10 +44,10 @@ enum InstitutionCategoryLevelEnum: int
     public static function fieldOfActionCategory($value): int
     {
         $categories = [
-            self::CENTRAL->value => 1,
-            self::CENTRAL_OTHER->value => 1,
-            self::AREA->value => 2,
-            self::MUNICIPAL->value => 3
+            self::CENTRAL->value => FieldOfAction::CATEGORY_NATIONAL,
+            self::CENTRAL_OTHER->value => FieldOfAction::CATEGORY_NATIONAL,
+            self::AREA->value => FieldOfAction::CATEGORY_AREA,
+            self::MUNICIPAL->value => FieldOfAction::CATEGORY_MUNICIPAL
         ];
         return $categories[$value] ?? -1;
     }

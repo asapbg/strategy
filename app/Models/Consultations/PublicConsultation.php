@@ -394,6 +394,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         if(isset($filters['reg_num'])) {
             $q->where('public_consultation.reg_num', 'ilike', '%'.$filters['reg_num'].'%');
         }
+        if(isset($filters['pris'])) {
+            $q->where('public_consultation.pris_id', '=', (int)$filters['pris']);
+        }
 
         $q->whereNull('public_consultation.deleted_at');
 

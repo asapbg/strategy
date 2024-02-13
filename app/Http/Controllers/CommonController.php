@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PageFileUploadRequest;
 use App\Models\AdvisoryBoard;
@@ -12,6 +13,7 @@ use App\Models\File;
 use App\Models\Page;
 use App\Models\Pris;
 use App\Models\Publication;
+use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
@@ -177,6 +179,7 @@ class CommonController extends Controller
                 File::CODE_AB,
                 File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
                 File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
@@ -206,13 +209,17 @@ class CommonController extends Controller
     /**
      * Delete public file
      * @param Request $request
-     * @param File $file
+     * @param $file
      * @return bool|RedirectResponse
      * @throws FilesystemException
      */
-    public function deleteFile(Request $request, File $file, $disk = 'public_uploads')
+    public function deleteFile(Request $request, $file, $disk = 'public_uploads')
     {
+        $sdFile = $request->get('is_sd_file') ?? 0;
         $user = $request->user();
+
+        $file = $sdFile ? StrategicDocumentFile::find((int)$file) : File::find((int)$file);
+
         if( !$user->can('delete', $file) ) {
             abort(Response::HTTP_UNAUTHORIZED);
         }
@@ -303,6 +310,24 @@ class CommonController extends Controller
                 $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
                 $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
                 $data = PublicConsultation::select2AjaxOptions($requestData);
+                break;
+            case 'sd_parent_documents':
+                $filter = array();
+                $filter['search'] = $requestData['search'] ?? null;
+                $filter['sd_document_id'] = $requestData['document'];
+                if(isset($requestData['level'])) {
+                    if((int)$requestData['level'] == InstitutionCategoryLevelEnum::CENTRAL->value && isset($requestData['policy'])){
+                        $filter['field_of_action_id'] = (int)$requestData['policy'];
+                    } else if((int)$requestData['level'] == InstitutionCategoryLevelEnum::AREA->value && isset($requestData['areaPolicy'])){
+                        $filter['field_of_action_id'] = (int)$requestData['areaPolicy'];
+                    } else if((int)$requestData['level'] == InstitutionCategoryLevelEnum::MUNICIPAL->value && isset($requestData['municipalityPolicy'])){
+                        $filter['field_of_action_id'] = (int)$requestData['municipalityPolicy'];
+                    } else{
+                        $filter['field_of_action_id'] = 0;
+                    }
+                }
+
+                $data = StrategicDocument::select2AjaxOptions($filter);
                 break;
             case 'tag':
                 $data = Tag::select2AjaxOptions($requestData);

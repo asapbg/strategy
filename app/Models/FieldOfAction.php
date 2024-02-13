@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -26,6 +27,11 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
 
     protected $table = 'field_of_actions';
     protected $fillable = ['icon_class'];
+
+    const CATEGORY_NATIONAL = 1;
+    const CATEGORY_AREA = 2;
+    const CATEGORY_MUNICIPAL = 3;
+
 
     //activity
     protected string $logName = "field_of_actions";
@@ -55,6 +61,18 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         $query->where('field_of_actions.active', 1);
     }
 
+    public function scopeCentral($query){
+        $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::CENTRAL->value));
+    }
+
+    public function scopeArea($query){
+        $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value));
+    }
+
+    public function scopeMunicipal($query){
+        $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value));
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
@@ -68,7 +86,7 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
     public static function optionsList($active = false)
     {
         $q = DB::table('field_of_actions')
-            ->select(['field_of_actions.id', 'field_of_action_translations.name'])
+            ->select(['field_of_actions.id', 'field_of_action_translations.name', 'field_of_actions.parentid'])
             ->join('field_of_action_translations', 'field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
             ->where('field_of_action_translations.locale', '=', app()->getLocale());
 
