@@ -407,6 +407,20 @@ function addSubDays(currentDate, days = 0, addDays = true, returnObj = false){
 
 }
 
+function select2OptionFilter(option) {
+    if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
+        return false
+    }
+    return option.text;
+}
+
+var select2Options = {
+    allowClear: true,
+    placeholder: true,
+    templateResult: select2OptionFilter,
+    language: "bg"
+};
+
 //===============================
 // START MyModal
 // Create modal and show it with option for load body from url or pass direct content
@@ -483,6 +497,102 @@ MyModal.prototype.loadModalBody = function (_myModal) {
 
 //==========================
 // End MyModal
+//==========================
+
+//===============================
+// START Select2 Ajax Autoload
+// available params:
+//
+//===============================
+function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
+    selectDom.select2({
+        allowClear: true,
+        templateResult: select2OptionFilter,
+        language: "bg",
+        placeholder: selectPlaceholder,
+        ajax: {
+            url: selectUrl,
+            data: function (params) {
+                if($(this).data('types2ajax') == 'pris_doc') {
+                    var query = {
+                        actType: typeof $(this).data('legalacttype') != 'undefined' ?
+                            parseInt($(this).data('legalacttype'))
+                            : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
+                        consultationId: typeof $(this).data('consultationid') != 'undefined' ?
+                            parseInt($(this).data('consultationid'))
+                            : (typeof $('#public_consultation_id') != 'undefined' ? $('#public_consultation_id').val() : null),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'lp_record') {
+                    var query = {
+                        programId: $('#legislative_program_id').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'lp_record_pc') {
+                    var query = {
+                        institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
+                        programId: $('#legislative_program_id select').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'op_record') {
+                    var query = {
+                        programId: $('#operational_program_id').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'op_record_pc') {
+                    var query = {
+                        institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
+                        programId: $('#operational_program_id select').val(),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'pc') {
+                    var query = {
+                        connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
+                        pris: $('#pris_act_id') != 'undefined' ? $('#pris_act_id').val() : 0,
+                        exclude: $(this).data('current'),
+                        search: params.term
+                    }
+                }else if($(this).data('types2ajax') == 'adv_board') {
+                    var query = {
+                        byModerator: typeof $(this).data('bymoderator') != 'undefined' ? $(this).data('bymoderator') : false,
+                        search: params.term
+                    }
+                }
+                else if($(this).data('types2ajax') == 'sd_parent_documents') {
+                    var query = {
+                        level: $('#strategic_document_level_id') != 'undefined' ? $('#strategic_document_level_id').val() : 0,
+                        policy: $('#policy_area_id') != 'undefined' ? $('#policy_area_id').val() : null,
+                        areaPolicy: $('#ekatte_area_id') != 'undefined' ? $('#ekatte_area_id').val() : null,
+                        municipalityPolicy: $('#ekatte_municipality_id') != 'undefined' ? $('#ekatte_municipality_id').val() : null,
+                        document: typeof $(this).data('documentid') != 'undefined' ? $(this).data('documentid') : false,
+                        search: params.term
+                    }
+                } else {
+                    var query = {
+                        search: params.term
+                    }
+                }
+                return query;
+            },
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results:  $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        }
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+}
+
+//==========================
+// End Select2 Ajax Autoload
 //==========================
 
 $(document).ready(function (e) {
@@ -658,19 +768,19 @@ $(document).ready(function (e) {
     //Select2
     //===============================
 
-    function select2OptionFilter(option) {
-        if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
-            return false
-        }
-        return option.text;
-    }
-
-    var select2Options = {
-        allowClear: true,
-        placeholder: true,
-        templateResult: select2OptionFilter,
-        language: "bg"
-    };
+    // function select2OptionFilter(option) {
+    //     if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
+    //         return false
+    //     }
+    //     return option.text;
+    // }
+    //
+    // var select2Options = {
+    //     allowClear: true,
+    //     placeholder: true,
+    //     templateResult: select2OptionFilter,
+    //     language: "bg"
+    // };
 
     if($('.select2').length) {
         $('.select2').select2(select2Options);
@@ -960,102 +1070,6 @@ $(document).ready(function (e) {
         });
     }
 
-    //===============================
-    // START Select2 Ajax Autoload
-    // available params:
-    //
-    //===============================
-    function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
-        selectDom.select2({
-            allowClear: true,
-            templateResult: select2OptionFilter,
-            language: "bg",
-            placeholder: selectPlaceholder,
-            ajax: {
-                url: selectUrl,
-                data: function (params) {
-                    if($(this).data('types2ajax') == 'pris_doc') {
-                        var query = {
-                            actType: typeof $(this).data('legalacttype') != 'undefined' ?
-                                parseInt($(this).data('legalacttype'))
-                                : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
-                            consultationId: typeof $(this).data('consultationid') != 'undefined' ?
-                                parseInt($(this).data('consultationid'))
-                                : (typeof $('#public_consultation_id') != 'undefined' ? $('#public_consultation_id').val() : null),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'lp_record') {
-                        var query = {
-                            programId: $('#legislative_program_id').val(),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'lp_record_pc') {
-                        var query = {
-                            institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
-                            programId: $('#legislative_program_id select').val(),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'op_record') {
-                        var query = {
-                            programId: $('#operational_program_id').val(),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'op_record_pc') {
-                        var query = {
-                            institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
-                            programId: $('#operational_program_id select').val(),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'pc') {
-                        var query = {
-                            connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
-                            pris: $('#pris_act_id') != 'undefined' ? $('#pris_act_id').val() : 0,
-                            exclude: $(this).data('current'),
-                            search: params.term
-                        }
-                    }else if($(this).data('types2ajax') == 'adv_board') {
-                        var query = {
-                            byModerator: typeof $(this).data('bymoderator') != 'undefined' ? $(this).data('bymoderator') : false,
-                            search: params.term
-                        }
-                    }
-                    else if($(this).data('types2ajax') == 'sd_parent_documents') {
-                        var query = {
-                            level: $('#strategic_document_level_id') != 'undefined' ? $('#strategic_document_level_id').val() : 0,
-                            policy: $('#policy_area_id') != 'undefined' ? $('#policy_area_id').val() : null,
-                            areaPolicy: $('#ekatte_area_id') != 'undefined' ? $('#ekatte_area_id').val() : null,
-                            municipalityPolicy: $('#ekatte_municipality_id') != 'undefined' ? $('#ekatte_municipality_id').val() : null,
-                            document: typeof $(this).data('documentid') != 'undefined' ? $(this).data('documentid') : false,
-                            search: params.term
-                        }
-                    } else {
-                        var query = {
-                            search: params.term
-                        }
-                    }
-                    return query;
-                },
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-                    return {
-                        results:  $.map(data, function (item) {
-                            return {
-                                text: item.name,
-                                id: item.id
-                            }
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    }
-
-    //==========================
-    // End Select2 Ajax Autoload
-    //==========================
-
     //Approve modal
     if($('.approveModal').length) {
         $('.approveModal').on('click', function (event){
@@ -1101,7 +1115,8 @@ $(document).ready(function (e) {
                     new MyModal({
                         title: titleTxt,
                         footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild();">'+ saveBtnTxt +'</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
-                        bodyLoadUrl: url
+                        bodyLoadUrl: url,
+                        customClass: 'w-70p'
                     });
                     canAjax = true;
                 }

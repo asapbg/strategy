@@ -25,9 +25,18 @@ class StrategicDocumentChildStoreRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'id' => ['nullable', 'numeric'],
             'sd' => ['required', 'numeric', 'exists:strategic_document,id'],
             'doc' => ['nullable', 'numeric'],
-            'id' => ['nullable', 'numeric'],
+            'strategic_document_level_id' => ['required', 'numeric'],
+            'accept_act_institution_type_id' => ['required', 'numeric'],
+            'strategic_document_type_id' => ['required', 'numeric'],
+            'public_consultation_id' => ['nullable', 'numeric'],
+            'pris_act_id' => ['nullable', 'numeric'],
+            'date_expiring_indefinite' => ['nullable', 'numeric'],
+            'document_date_accepted' => 'required|date',
+            'document_date_expiring' => ['required_without:date_expiring_indefinite', 'date', 'nullable'],
+            'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
         ];
 
         $defaultLang = config('app.default_lang');
@@ -52,5 +61,15 @@ class StrategicDocumentChildStoreRequest extends FormRequest
             }
         }
         return $rules;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'document_date_expiring.required_without' => 'Полето е задължително, когато датата на изтичане не е неограничена.',
+        ];
     }
 }

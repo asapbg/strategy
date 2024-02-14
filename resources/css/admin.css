@@ -18,6 +18,10 @@ overflow-x: hidden;
     padding-left: 10px !important;
 }
 
+.modal.w-70p .modal-dialog{
+    max-width: 70%;
+}
+
 /*If need to add more widt to sidebar */
 /*.main-sidebar,.main-sidebar::before {*/
 /*    transition: margin-left .3s ease-in-out,width .3s ease-in-out;*/

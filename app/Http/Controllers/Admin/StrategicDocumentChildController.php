@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StrategicDocumentChildStoreRequest;
 use App\Models\File;
+use App\Models\LegalActType;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
+use App\Models\StrategicDocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +22,22 @@ class StrategicDocumentChildController extends AdminController
         if($doc){
             $doc = StrategicDocumentChildren::find((int)$doc);
         }
-        return $this->view('admin.strategic_documents.popup_form', compact('sd', 'doc'))->render();
+        $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
+        $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
+//        $policyAreas = null;
+//        switch ($sd->strategic_document_level_id){
+//            case InstitutionCategoryLevelEnum::CENTRAL->value:
+//                $policyAreas = \App\Models\FieldOfAction::Central()->with(['translations'])->orderByTranslation('name')->get();
+//                break;
+//            case InstitutionCategoryLevelEnum::AREA->value:
+//                $policyAreas = \App\Models\FieldOfAction::Area()->with(['translations'])->orderByTranslation('name')->get();
+//                break;
+//            case InstitutionCategoryLevelEnum::MUNICIPAL->value:
+//                $policyAreas = \App\Models\FieldOfAction::Municipal()->with(['translations'])->orderByTranslation('name')->get();
+//                break;
+//        }
+
+        return $this->view('admin.strategic_documents.popup_form', compact('sd', 'doc', 'strategicDocumentTypes', 'legalActTypes'))->render();
     }
 
     public function create(Request $request){
@@ -30,7 +48,6 @@ class StrategicDocumentChildController extends AdminController
         }
 
         $validated = $validator->validated();
-
         $sd = StrategicDocument::find((int)$validated['sd']);
         if(!$sd){
             return response()->json(['main_error' => __('messages.records_not_found')], 200);
@@ -68,7 +85,10 @@ class StrategicDocumentChildController extends AdminController
         $sdDocuments = $item->strategicDocument->documents;
         $documentTree = StrategicDocumentChildren::getTree($item->id);
         $canDeleteSd = $request->user()->can('delete', $item->strategicDocument);
-        return $this->view('admin.strategic_documents.documents.edit', compact('item', 'sdDocuments', 'documentTree', 'canDeleteSd'));
+        $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
+        $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
+        return $this->view('admin.strategic_documents.documents.edit', compact('item', 'sdDocuments', 'documentTree', 'canDeleteSd',
+            'strategicDocumentTypes', 'legalActTypes'));
     }
 
     public function update(Request $request){
