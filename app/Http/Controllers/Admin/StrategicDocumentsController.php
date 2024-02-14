@@ -121,7 +121,7 @@ class StrategicDocumentsController extends AdminController
             $adminUser = $user->hasAnyRole(['service_user','super-admin', 'moderator-strategics']);
             if ($adminUser) {
                 //$authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
-                $strategicDocumentLevels =  enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
+                $strategicDocumentLevels =  enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
 
                 //Field of actions split by parent categories
                 $ekateAreas = \App\Models\FieldOfAction::Area()->with(['translations'])->orderByTranslation('name')->get();
@@ -279,7 +279,6 @@ class StrategicDocumentsController extends AdminController
                 unset($validated['ekatte_municipality_id']);
             }
             //END Ugly fix for wrong fields and connections
-
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
                 $validated['strategic_act_link'] = null;
@@ -539,7 +538,7 @@ class StrategicDocumentsController extends AdminController
                 'type' => 'select',
                 'placeholder' => trans_choice('custom.nomenclature.strategic_document_level', 1),
                 'value' => $request->input('category'),
-                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level'),
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
                 'col' => 'col-md-4'
             ),
         );

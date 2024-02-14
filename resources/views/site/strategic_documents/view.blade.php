@@ -63,14 +63,14 @@
                 <div class="col-md-8 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.document_to', 1) }} </h3>
                     @if ($strategicDocument->parent_document_id)
-                        <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"
+                        <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"  target="_blank"
                             class="main-color text-decoration-none fs-18">
                             <span class="obj-icon-info me-2">
                                 <i class="fas fa-bezier-curve me-2 main-color fs-18"
                                     title="Тип консултация"></i>{{ $strategicDocument->parentDocument?->title }}</span>
                         </a>
                         @can('update', $strategicDocument)
-                            <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->parentDocument->id]) }}">
+                            <a href="{{ route('admin.strategic_documents.edit', [$strategicDocument->parentDocument->id]) }}"  target="_blank">
                                 <i class="fas fa-pen me-2 main-color"></i>
                             </a>
                         @endcan
@@ -123,45 +123,42 @@
                                 {{ $strategicDocument->strategic_act_number }}
                             </a>
                         @endif
-                        @isset($strategicDocument->acceptActInstitution)
-                            <span>{{ trans_choice('custom.for', 1) }}</span>
+                        @if($strategicDocument->acceptActInstitution)
+                            <span>{{ trans_choice('custom.of', 1) }}</span>
                             <a href="#" class="main-color text-decoration-none">
                                 {{ $strategicDocument->acceptActInstitution?->name }}
                             </a>
-                        @endisset
+                        @endif
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
-
-                    <a href="#" class="main-color text-decoration-none" id="strategicDocumentLevel"
-                        data-document-level-id="{{ $strategicDocument->documentLevel?->id }}">
-                        <span class="obj-icon-info">
-                            <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="Тип консултация"></i>
-                        </span>
-                        {{ $strategicDocument->documentLevel?->name }}
-                    </a>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
-                    @if ($strategicDocument->public_consultation_id)
-                        <a href="{{ route('public_consultation.view', [$strategicDocument->public_consultation_id]) }}"
-                            class="main-color text-decoration-none fs-18">
-                            <span class="obj-icon-info me-2">
-                                <i class="fas fa-link me-2 main-color fs-18"
-                                    title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->title }}</span>
+                @if($strategicDocument->policyArea)
+                    <div class="col-md-4 mb-4">
+                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
+                        @php
+                            $searchFieldPolicy = $strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities');
+                        @endphp
+                        <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$strategicDocument->policyArea->id }}" class="main-color text-decoration-none">
+                            <span class="obj-icon-info">
+                                <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="{{ trans_choice('custom.category', 1) }}"></i>
+                            </span>
+                            {{ $strategicDocument->policyArea->name }}
                         </a>
-                    @else
-                        <a href="#" class="main-color text-decoration-none fs-18">
-                            <span class="obj-icon-info me-2">
-                                <i class="fas fa-link me-2 main-color fs-18"
-                                    title="Тип консултация"></i>{{ trans_choice('custom.public_consultation_link_missing', 1) }}</span>
-                        </a>
-                    @endif
-                </div>
+                    </div>
+                @endif
+                @if($strategicDocument->public_consultation_id)
+                    <div class="col-md-4 mb-4">
+                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
+                            <a href="{{ route('public_consultation.view', [$strategicDocument->public_consultation_id]) }}"
+                                class="main-color text-decoration-none fs-18">
+                                <span class="obj-icon-info me-2">
+                                    <i class="fas fa-link me-2 main-color fs-18"
+                                        title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->title }}</span>
+                            </a>
+                    </div>
+                @endif
                 @isset($strategicDocument->link_to_monitorstat)
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
@@ -186,7 +183,7 @@
             </div>
 
 
-            @if ($strategicDocument->files->count())
+            @if($strategicDocument->files->count())
                 <div class="row mb-4 mt-4">
                     {{--                        <h3 class="mb-3">{{ trans_choice('custom.files', 2) }}</h3>--}}
                     <div class="row table-light">
@@ -205,297 +202,21 @@
                     </div>
                 </div>
             @endif
-
-            {{-- <div class="row mb-4 mt-4">
-                <!-- При клик върху основния документ, трябва да се визуализира в модал и да има изтегляне.
-                Пример: https://strategy.asapbg.com/templates/public_consultations_view от файловете Пакет основни документи -->
-                <h3 class="mb-3">{{ trans_choice('custom.main_document', 1) }}</h3>
-                <div class="col-md-12">
-                    @php
-                        $iconMapping = [
-                            'application/pdf' => 'fa-regular fa-file-pdf main-color me-2 fs-5',
-                            'application/msword' => 'fa-regular fa-file-word main-color me-2 fs-5',
-                            'application/vnd.ms-excel' => 'fa-regular fa-file-excel main-color me-2 fs-5',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-regular fa-file-excel main-color me-2 fs-5',
-                        ];
-                    @endphp
-                    <ul class="list-group list-group-flush">
-                        @if (!$mainDocument)
-                            <li class="list-group-item">
-                            </li>
-                        @else
-                            <li class="list-group-item">
-                                <!--
-                                <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $mainDocument->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $mainDocument->id]) }}">
-                                -->
-                                @php
-                                    $fileExtension = $mainDocument->content_type;
-                                    $iconClass = $iconMapping[$fileExtension] ?? 'fas fa-file';
-                                @endphp
-                                    <!--
-                                        <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $mainDocument->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $mainDocument->id]) }}"> {{ __('custom.preview') }}</button>
-                                    </a>
-                                     -->
-                                <div class="row p-1">
-                                    <div class="accordion p-0" id="accordionExample">
-                                        <div class="card custom-card">
-                                            <div class="card-header" id="heading60">
-                                                <h2 class="mb-0 d-flex align-items-center justify-content-between main-file-str-doc">
-                                                    <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start" type="button"
-                                                            data-toggle="collapse" data-target="#collapse60" aria-expanded="true"
-                                                            aria-controls="collapse60">
-                                                           <i class="{{ $iconClass }}"></i>
-                                                            {!!  $mainDocument->document_display_name !!}
-                                                    </button>
-                                                    <a href="#" data-toggle="collapse" data-target="#collapse60" aria-expanded="true" aria-controls="collapse60" class="p-2 ms-auto">
-                                                        <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color p-1"></i>
-                                                    </a>
-                                                </h2>
-                                            </div>
-
-                                            <div id="collapse60" class="collapse" aria-labelledby="heading60" data-parent="#accordionExample"
-                                                 style="">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="text-start">
-                                                                <span class="text-start me-3">
-                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $mainDocument->created_at->format('d.m.Y г.') }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 text-end">
-                                                            <a href="{{ route('strategy-document.download-file', ['id' => $mainDocument->id]) }}" title="Download" download class="btn btn-primary">
-                                                                {{ trans_choice('custom.download', 1) }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row file-content">
-                                                        <div class="col-md-12">
-                                                            @if ($mainDocument->content_type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
-                                                                    Your browser does not support iframes.
-                                                                </iframe>
-                                                            @elseif ($mainDocument->content_type === 'application/msword')
-                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $mainDocument->id) }}" width="100%" height="600px" frameborder="0">
-                                                                    Your browser does not support iframes.
-                                                                </iframe>
-                                                            @else
-                                                                {{ $mainDocument->file_text }}
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <div class="text-start">
-                                                                <span class="text-start me-3">
-                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $mainDocument->created_at->format('d.m.Y г.') }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <!--
-                                                        <div class="col-md-6 text-end">
-                                                            <a href="{{ route('strategy-document.download-file', ['id' => $mainDocument->id]) }}" title="Download" download class="btn btn-primary">
-                                                                {{ trans_choice('custom.download', 1) }}
-                                                            </a>
-                                                        </div>
-                                                        -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
-            </div> --}}
-
-            {{-- <div class="row mb-4 mt-4">
-                <h3 class="mb-3">{{ trans_choice('custom.documents', 1) }}</h3>
-                <div class="col-md-12">
-                    <ul class=" tab nav nav-tabs mb-3" id="myTab">
-                        <li class="nav-item pb-0">
-                            <a href="#table-view" class="nav-link tablinks active" data-toggle="tab">{{ trans_choice('custom.applied_documents', 1) }}</a>
-                        </li>
-                        <li class="nav-item pb-0">
-                            <a href="#tree-view" class="nav-link tablinks" data-toggle="tab">{{ trans_choice('custom.reports_and_docs', 1) }}</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="table-view">
-                            <ul class="list-group list-group-flush">
-                                @foreach ($strategicDocumentFiles as $strategicDocumentFile)
-                                    @if ($strategicDocumentFile['parent'] == '#')
-                                        @continue
-                                    @endif
-                                    <li class="list-group-item">
-                                        <div class="accordion p-0" id="accordionFile_{{ $strategicDocumentFile['id'] }}">
-                                            <span type="button" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}">
-                                                <i class="dark-text {{ $strategicDocumentFile['icon'] }}"></i> {!! $strategicDocumentFile['text'] !!}
-                                                <div class="preview-download d-inline">
-                                                    <i class="fas fa-eye ms-2 preview-file-modal2 main-color" data-file="{{ $strategicDocumentFile['id'] }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $strategicDocumentFile['id']]) }}" title="View"></i>
-                                                    <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="text-decoration-none">
-                                                        <i class="fas fa-download ms-2"></i>
-                                                    </a>
-                                                </div>
-                                                <a id="toggle_collapse_{{$strategicDocumentFile['id']}}" href="#" data-toggle="collapse" data-target="#collapse_{{ $strategicDocumentFile['id'] }}" aria-expanded="true" aria-controls="collapse_{{ $strategicDocumentFile['id'] }}" class="p-2">
-                                                    <i class="fas fa-regular fa-up-right-and-down-left-from-center me-2 fs-5 fs-18 main-color p-1"></i>
-                                                </a>
-                                            </span>
-                                            <div id="collapse_{{ $strategicDocumentFile['id'] }}" class="collapse" aria-labelledby="heading{{ $strategicDocumentFile['id'] }}" data-parent="#accordionFile_{{ $strategicDocumentFile['id'] }}">
-                                                <div class="card-body">
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="text-start">
-                                                                <span class="text-start me-3">
-                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $strategicDocumentFile['created_at'] }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 text-end">
-                                                            <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="btn btn-primary">
-                                                                {{ trans_choice('custom.download', 1) }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row file-content">
-                                                        <div class="col-md-12">
-                                                            @if ($strategicDocumentFile['content_type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
-                                                                    Your browser does not support iframes.
-                                                                </iframe>
-                                                            @elseif ($strategicDocumentFile['content_type'] === 'application/msword')
-                                                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url('/strategy-document/download-file/' . $strategicDocumentFile['id']) }}" width="100%" height="600px" frameborder="0">
-                                                                    Your browser does not support iframes.
-                                                                </iframe>
-                                                            @else
-                                                                {{ $strategicDocumentFile['file_text'] }}
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <div class="text-start">
-                                                                <span class="text-start me-3">
-                                                                    <strong>{{ trans_choice('custom.date_created', 1) }}:</strong> {{ $strategicDocumentFile['created_at'] }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 text-end">
-                                                            <a href="{{ route('strategy-document.download-file', ['id' => $strategicDocumentFile['id']]) }}" title="Download" download class="btn btn-primary">
-                                                                {{ trans_choice('custom.download', 1) }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div> <div class="tab-pane fade" id="tree-view">
-                            <ul class="list-group list-group-flush">
-                                @foreach ($reportsAndDocs as $document)
-                                    <li class="list-group-item">
-                                        <a href="#" class="main-color text-decoration-none preview-file-modal2" type="button" data-file="{{ $document->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $document->id]) }}">
-                                            <i class="fa-regular fa-file-pdf main-color me-2 fs-5"></i>
-                                            <!--
-                                            {!! $document->display_name !!}
-                                            <span class="fw-bold">&#123;</span>
-                                            <span class="valid-date fw-bold"> Публикувано: {{ $document->created_at->format('d.m.Y') }}</span>
-                                            <span> /</span>
-                                            <span class="valid-date fw-bold"> Валидност: {{ $document->valid_at ?: 'Няма валидност' }} </span>
-                                            <span> /</span>
-                                            <span class="str-doc-type fw-bold">{{ $document->documentType->name }}</span>
-                                            <span class="fw-bold">&#125;</span>
-                                            -->
-                                            {!! $document->documentDisplayName !!}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+            @if(isset($documents) && sizeof($documents))
+                <div class="row mb-0 mt-5">
+                    <div class="mb-2">
+                        <h2 class="mb-1">{{ trans_choice('custom.strategic_documents.documents', 2) }}</h2>
                     </div>
                 </div>
-            </div> --}}
+                <div class="row p-1 mb-2">
+                    <div class="accordion" id="accordionExample">
+                        @foreach($documents as $d)
+                            @include('site.strategic_documents.tree_element')
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
     </section>
 @endsection
-@push('scripts')
-{{--    <script type="text/javascript">--}}
-{{--        $(document).ready(function() {--}}
-{{--            const policyArea = $('#policyArea');--}}
-{{--            policyArea.on('click', function() {--}}
-{{--                const clickedValue = $(this).data('policy-area-id');--}}
-{{--                if (clickedValue) {--}}
-{{--                    window.location.href = '/strategy-documents?policy-area=' + clickedValue;--}}
-{{--                }--}}
-{{--            });--}}
-
-{{--            const strategicDocumentType = $('#strategicDocumentType');--}}
-{{--            strategicDocumentType.on('click', function() {--}}
-{{--                const clickedValue = $(this).data('document-type-id');--}}
-{{--                if (clickedValue) {--}}
-{{--                    window.location.href = '/strategy-documents?document-type=' + clickedValue;--}}
-{{--                }--}}
-{{--            });--}}
-{{--            const strategicDocumentLevel = $('#strategicDocumentLevel');--}}
-{{--            strategicDocumentLevel.on('click', function() {--}}
-{{--                const clickedValue = $(this).data('document-level-id');--}}
-{{--                if (clickedValue) {--}}
-{{--                    window.location.href = '/strategy-documents?document-level=' + clickedValue;--}}
-{{--                }--}}
-
-{{--            });--}}
-
-{{--            const dateAccepted = $('#dateAccepted');--}}
-{{--            dateAccepted.on('click', function() {--}}
-{{--                const clickedValue = $(this).data('documentDateAccepted');--}}
-{{--                if (clickedValue) {--}}
-{{--                    window.location.href = '/strategy-documents?valid-from=' + clickedValue;--}}
-{{--                }--}}
-{{--            });--}}
-{{--            const dateExpiring = $('#dateExpiring');--}}
-{{--            dateExpiring.on('click', function() {--}}
-{{--                const clickedValue = $(this).data('documentDateExpiring');--}}
-{{--                if (clickedValue == true) {--}}
-{{--                    window.location.href = '/strategy-documents?date-infinite=' + clickedValue;--}}
-{{--                } else {--}}
-{{--                    window.location.href = '/strategy-documents?valid-to=' + clickedValue;--}}
-{{--                }--}}
-{{--            });--}}
-
-{{--            $('#myTab a').on('click', function(e) {--}}
-{{--                e.preventDefault();--}}
-{{--                $(this).tab('show');--}}
-{{--            });--}}
-{{--            $('.preview-file-modal2').on('click', function(e) {--}}
-{{--                let fileId = $(this).data('file');--}}
-{{--                let previewUrl = $(this).data('url');--}}
-{{--                let titleTxt = '';--}}
-{{--                let continueTxt = 'Изтегляне';--}}
-{{--                let cancelBtnTxt = 'Отказ';--}}
-{{--                const buttonId = id = "strategicFileId_" + fileId;--}}
-{{--                new MyModal({--}}
-{{--                    title: titleTxt,--}}
-{{--                    footer: '<button id="strategicFileId_' + fileId + '" class="btn btn-primary">' +--}}
-{{--                        continueTxt + '</button>' +--}}
-{{--                        '<button id="stategicFieldCancelButton' + buttonId +--}}
-{{--                        '" class="btn btn-danger" data-dismiss="modal" aria-label="' +--}}
-{{--                        cancelBtnTxt + '">' + cancelBtnTxt + '</button>',--}}
-{{--                    body: `<embed src="${previewUrl}" type="application/pdf" width="100%" height="800px" />`,--}}
-{{--                    customClass: 'strategicDocumentClass',--}}
-{{--                });--}}
-{{--            });--}}
-{{--        });--}}
-
-{{--        --}}
-{{--    </script>--}}
-@endpush

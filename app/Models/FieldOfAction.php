@@ -83,12 +83,16 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public static function optionsList($active = false)
+    public static function optionsList($active = false, $parent = 0)
     {
         $q = DB::table('field_of_actions')
             ->select(['field_of_actions.id', 'field_of_action_translations.name', 'field_of_actions.parentid'])
             ->join('field_of_action_translations', 'field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
             ->where('field_of_action_translations.locale', '=', app()->getLocale());
+
+        if($parent){
+            $q->where('parentid', '=', $parent);
+        }
 
         if($active) {
             $q->where('active', '=', 1);

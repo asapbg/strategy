@@ -147,7 +147,7 @@ if($('.select2-autocomplete-ajax').length) {
 
 function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
     selectDom.select2({
-        allowClear: false,
+        allowClear: true,
         templateResult: select2OptionFilter,
         language: "bg",
         placeholder: selectPlaceholder,

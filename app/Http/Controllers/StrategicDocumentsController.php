@@ -12,6 +12,7 @@ use App\Models\PolicyArea;
 use App\Models\Pris;
 use App\Models\Setting;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
@@ -49,8 +50,10 @@ class StrategicDocumentsController extends Controller
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
-        $filter = $this->filters($request);
-
+        if(empty($rf)){
+            $requestFilter['status'] = 'active';
+        }
+        $filter = $this->filters($request, $rf);
         //Sorter
         $sorter = $this->sorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'title';
@@ -83,7 +86,7 @@ class StrategicDocumentsController extends Controller
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
-        $this->composeBreadcrumbs();
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
 
         return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName'));
     }
@@ -92,603 +95,32 @@ class StrategicDocumentsController extends Controller
     {
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
-        //Filter
-        $rf = $request->all();
-        $requestFilter = $request->all();
-        $filter = $this->filters($request);
-
-        //Sorter
-        $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
-        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
-
-        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
-        $defaultOrderBy = $sort;
-        $defaultDirection = $sortOrd;
-
-        $items = StrategicDocument::select('strategic_document.*')
-            ->Active()
-            ->with(['translations', 'policyArea', 'policyArea.translations'])
-            ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-            ->join('field_of_action_translations', function ($j){
-                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
-            })
-            ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
-            ->GroupBy('strategic_document.id')
-            ->paginate($paginate);
-
-
+        $categories = isset($rf['level']) ? $rf['level'] : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
+        $items = [];
+        foreach ($categories as $cat){
+            if(!isset($items[$cat])){
+                $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
+            }
+            $items[$cat]['items'] = StrategicDocument::select(['strategic_document.*', 'field_of_action_translations.name as policy'])
+                ->Active()
+                ->with(['translations', 'policyArea', 'policyArea.translations'])
+                ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+                ->join('field_of_action_translations', function ($j){
+                    $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                        ->where('field_of_action_translations.locale', '=', app()->getLocale());
+                })->where('strategic_document.strategic_document_level_id', '=', $cat)
+                ->orderBy('field_of_action_translations.name', 'asc')
+                ->GroupBy('strategic_document.id', 'field_of_action_translations.name')
+                ->get();
+        }
         if( $request->ajax() ) {
-            return view('site.strategic_documents.list', compact('filter','sorter', 'items', 'rf', 'editRouteName', 'deleteRouteName'));
+            return view('site.strategic_documents.list_tree', compact( 'items', 'editRouteName', 'deleteRouteName'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
-        $this->composeBreadcrumbs();
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.tree_view', 1), 'url' => '']));
 
-        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName'));
-    }
-
-    private function filters($request)
-    {
-        return array(
-            'level' => array(
-                'type' => 'select',
-                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
-                'multiple' => true,
-                'default' => '',
-                'label' => __('site.strategic_document.level'),
-                'value' => $request->input('level'),
-                'col' => 'col-md-12'
-            ),
-            'fieldOfActions' => array(
-                'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList(true), true),
-                'multiple' => true,
-                'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfActions'),
-                'col' => 'col-md-12'
-            ),
-            'status' => array(
-                'type' => 'select',
-                'label' => __('site.strategic_document.categories_based_on_livecycle'),
-                'multiple' => false,
-                'options' => array(
-                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
-                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
-                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
-                ),
-                'value' => request()->input('status'),
-                'default' => 'active',
-                'col' => 'col-md-6'
-            ),
-            'title' => array(
-                'type' => 'text',
-                'label' => __('site.strategic_document.search_in_title_content'),
-                'value' => $request->input('title'),
-                'col' => 'col-md-6'
-            ),
-            'paginate' => array(
-                'type' => 'select',
-                'options' => paginationSelect(),
-                'multiple' => false,
-                'default' => '',
-                'label' => __('custom.filter_pagination'),
-                'value' => $request->input('paginate') ?? Pris::PAGINATE,
-                'col' => 'col-md-3'
-            ),
-
-        );
-    }
-
-    private function sorters()
-    {
-        return array(
-            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
-            'title' => ['class' => 'col-md-3', 'label' => __('custom.title')],
-            'validFrom' => ['class' => 'col-md-3', 'label' => __('custom.valid_from')],
-            'validTo' => ['class' => 'col-md-3', 'label' => __('custom.valid_to')],
-        );
-    }
-
-    public function listStrategicDocuments(Request $request)
-    {
-        $searchUrl = $request->get('search');
-        $parsedUrl = parse_url($searchUrl);
-        parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
-        $paginatedResults = Arr::get($queryParams, 'pagination-results') ?? $request->get('pagination-results') ?? 10;
-        $strategicDocuments = $this->prepareResults($request);
-        $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
-        $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
-        $view = Arr::get($queryParams, 'view') ?? $request->get('view');
-
-        if ($view == 'tree-view') {
-            $categoriesData = $this->prepareCategoriesData($strategicDocuments);
-            $strategicDocumentsHtml = $this->prepareStrategicDocumentsTreeView($strategicDocuments->get(), $categoriesData);
-            $pagination = '';
-        } else {
-            $strategicDocuments = $strategicDocuments->paginate($paginatedResults);
-            $strategicDocumentsHtml = $this->prepareStrategicDocumentsHtml($strategicDocuments, $editRouteName, $deleteRouteName);
-            $pagination = $strategicDocuments->links()->toHtml();
-        }
-        return response()->json(['strategic_documents' => $strategicDocumentsHtml, 'pagination' => $pagination]);
-    }
-
-    /**
-     * @param string $documentLevelIds
-     * @return Application|ResponseFactory|Response
-     */
-    public function getInstitutions(string $documentLevelIds)
-    {
-        $documentLevelArray = explode(',', $documentLevelIds);
-        if (in_array('all', $documentLevelArray)) {
-            return response(['institutions' => Institution::with(['level', 'translations'])->get()]);
-        }
-        if (in_array(2, $documentLevelArray)) {
-            $index = array_search(2, $documentLevelArray);
-            $documentLevelArray[$index] = 3;
-        }
-        if (in_array(3, $documentLevelArray)) {
-            $index = array_search(3, $documentLevelArray);
-            $documentLevelArray[$index] = 4;
-        }
-        if (!empty($documentLevelArray)) {
-            $institutions = Institution::with(['level', 'translations'])->whereHas('level', function ($query) use ($documentLevelArray) {
-                $query->whereIn('nomenclature_level', $documentLevelArray);
-            })->get();
-        } else {
-            $institutions = collect();
-        }
-
-        return response(['institutions' => $institutions]);
-    }
-
-    private function prepareStrategicDocumentsTreeView($strategicDocuments, $categoriesData)
-    {
-        $treeViewHtml = '<div class="easy-tree">';
-        $treeViewHtml .= '<ul>';
-        $treeViewHtml .= '<li class="parent_li">';
-        $treeViewHtml .= '<span>';
-        $treeViewHtml .= '<span class="glyphicon"></span>';
-        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600 collapsed" data-toggle="collapse" role="button" aria-expanded="true" data-target="#multiCollapseExample1">';
-        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="'.__('custom.strategic_documents_national').'"></i>';
-        $treeViewHtml .= __('custom.strategic_documents_national');
-        $treeViewHtml .= '</a>';
-        $treeViewHtml .= '</span>';
-        $treeViewHtml .= '<ul class="collapse" id="multiCollapseExample1">';
-
-        $displayedIds = [];
-        foreach ($categoriesData['national'] as $categoryName => $documents) {
-
-            if (isset($documents)) {
-                $categoryId = preg_replace('/[^\p{L}a-zA-Z0-9]/u', '-', $categoryName);
-
-                $treeViewHtml .= '<li class="parent_li">';
-                $treeViewHtml .= '<span>';
-                $treeViewHtml .= '<a href="#" class="main-color fs-18 collapsed" data-toggle="collapse" data-target="#' . $categoryId . '" aria-expanded="false">';
-                $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
-                $treeViewHtml .= $categoryName;
-                $treeViewHtml .= '</a>';
-                $treeViewHtml .= '</span>';
-
-                $treeViewHtml .= '<ul class="collapse" id="' . $categoryId . '">';
-
-                foreach ($documents as $document) {
-                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
-                        continue;
-                    }
-                    if ($document->parentDocument) {
-                        $parent = $document->parentDocument;
-                        $treeViewHtml .= '<li class="active-node parent_li">';
-                        $treeViewHtml .= '<span>';
-                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $parent->id]) . '">';
-                        $treeViewHtml .= $parent->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
-                        $treeViewHtml .= '</a>';
-                        $treeViewHtml .= '</span>';
-
-                        $treeViewHtml .= '<ul class="collapse show" id="' . $categoryId . '-child">';
-                        $displayedIds[] = $parent->id;
-                    }
-                    //if (!in_array($document->id, $displayedIds)) {
-                        $treeViewHtml .= '<li class="active-node parent_li">';
-                        $treeViewHtml .= '<span>';
-                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
-                        $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
-                        $treeViewHtml .= '</a>';
-                        $treeViewHtml .= '</span>';
-                        $displayedIds[] = $document->id;
-                    //}
-
-                    if ($document->parentDocument) {
-                        $treeViewHtml .= '</ul>';
-                    }
-
-                    $treeViewHtml .= '</li>';
-
-                }
-
-            }
-            $treeViewHtml .= '</ul>';
-            $treeViewHtml .= '</li>';
-        }
-        $treeViewHtml .= '</ul>';
-        $treeViewHtml .= '</li>';
-
-        $treeViewHtml .= '<li class="parent_li">';
-        $treeViewHtml .= '<span>';
-        $treeViewHtml .= '<span class="glyphicon"></span>';
-        $treeViewHtml .= '<a href="#" class="main-color fs-18 fw-600 collapsed" data-toggle="collapse" role="button" aria-expanded="false" data-target="#multiCollapseExample2">';
-        $treeViewHtml .= '<i class="bi bi-pin-map-fill me-1 main-color" title="'.__('custom.strategic_documents_regional').'"></i>';
-        $treeViewHtml .= __('custom.strategic_documents_regional');
-        $treeViewHtml .= '</a>';
-        $treeViewHtml .= '</span>';
-        $treeViewHtml .= '<ul class="collapse" id="multiCollapseExample2">';
-
-
-        foreach ($categoriesData['regional'] as $key => $documents) {
-            $categoryName = $key == 'district-level' ? __('custom.strategic_documents_area') : __('custom.strategic_documents_municipal');
-
-            $treeViewHtml .= '<li class="parent_li">';
-            $treeViewHtml .= '<span>';
-            $treeViewHtml .= '<a href="#" class="main-color fs-18 collapsed" data-toggle="collapse" data-target="#' . $key . '" aria-expanded="false">';
-            $treeViewHtml .= '<i class="fa-solid fa-arrow-right-to-bracket me-1 main-color" title="' . $documents[0]->title . '"></i>';
-            $treeViewHtml .= $categoryName;
-            $treeViewHtml .= '</a>';
-            $treeViewHtml .= '</span>';
-            $treeViewHtml .= '<ul class="collapse" id="' . $key . '">';
-
-            if (isset($documents)) {
-                foreach ($documents as $document) {
-                    if (in_array($document->id, $displayedIds) || in_array($document->parentDocument?->id, $displayedIds)) {
-                        continue;
-                    }
-                    if ($document->parentDocument) {
-                        // Display the parent first
-                        $parent = $document->parentDocument;
-                        $treeViewHtml .= '<li class="active-node parent_li">';
-                        $treeViewHtml .= '<span>';
-                        $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $parent->id]) . '">';
-                        $treeViewHtml .= $parent->document_display_name;//$parent->title . ' ' . ($parent->document_date_accepted ? \Carbon\Carbon::parse($parent->document_date_accepted)->format('Y') : '') . ' - ' . ($parent->document_date_expiring ? \Carbon\Carbon::parse($parent->document_date_expiring)->format('Y') : 'Безсрочен');
-                        $treeViewHtml .= '</a>';
-                        $treeViewHtml .= '</span>';
-
-                        $treeViewHtml .= '<ul class="collapse show" id="' . $key . '-child">';
-                        $displayedIds[] = $parent->id;
-                    }
-                    $treeViewHtml .= '<li class="active-node parent_li">';
-                    $treeViewHtml .= '<span>';
-                    $treeViewHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '">';
-                    $treeViewHtml .= $document->document_display_name;//$document->title . ' ' . ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('Y') : '') . ' - ' . ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('Y') : 'Безсрочен');
-                    $treeViewHtml .= '</a>';
-                    $treeViewHtml .= '</span>';
-                    $displayedIds[] = $document->id;
-
-                    if ($document->parentDocument) {
-                        $treeViewHtml .= '</ul>';
-                    }
-
-                    $treeViewHtml .= '</li>';
-
-                }
-            }
-            $treeViewHtml .= '</ul>';
-            $treeViewHtml .= '</li>';
-        }
-
-        $treeViewHtml .= '</ul>';
-        $treeViewHtml .= '</li>';
-
-        $treeViewHtml .= '</ul>';
-        $treeViewHtml .= '</div>';
-
-        return $treeViewHtml;
-    }
-
-    private function prepareStrategicDocumentsHtml($strategicDocuments, $editRouteName, $deleteRouteName)
-    {
-        $strategicDocumentsHtml = '';
-        foreach ($strategicDocuments as $document) {
-            if (!$document->active) {
-                continue;
-            }
-
-            $strategicDocumentsHtml .= '<div class="row mb-4">';
-            $strategicDocumentsHtml .= '<div class="col-md-12">';
-            $strategicDocumentsHtml .= '<div class="consul-wrapper">';
-            $strategicDocumentsHtml .= '<div class="single-consultation d-flex">';
-            $strategicDocumentsHtml .= '<div class="consult-img-holder">';
-            $strategicDocumentsHtml .= '<i class="fa-solid fa-circle-nodes dark-blue"></i>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '<div class="consult-body">';
-            $strategicDocumentsHtml .= '<div class="consul-item">';
-            $strategicDocumentsHtml .= '<div class="consult-item-header d-flex justify-content-between">';
-            $strategicDocumentsHtml .= '<div class="consult-item-header-link">';
-            $strategicDocumentsHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '" class="text-decoration-none" title="' . $document->title . '">';
-            $strategicDocumentsHtml .= '<h3>' . $document->title . '</h3>';
-            $strategicDocumentsHtml .= '</a>';
-            $strategicDocumentsHtml .= '</div>';
-
-            $strategicDocumentsHtml .= '<div class="consult-item-header-edit">';
-
-
-            if (Gate::allows('delete', $document)) {
-                $strategicDocumentsHtml .= '<a href="#" class="open-delete-modal">';
-                $strategicDocumentsHtml .= '<i class="fas fa-regular fa-trash-can float-end text-danger fs-4 ms-2" role="button"></i>';
-                $strategicDocumentsHtml .= '</a>';
-                $strategicDocumentsHtml .= '<form class="d-none" method="GET" action="' . route($deleteRouteName, [$document->id]) . '" name="DELETE_ITEM_' . $document->id . '">';
-                $strategicDocumentsHtml .= method_field('GET');
-                $strategicDocumentsHtml .= csrf_field();
-                $strategicDocumentsHtml .= '</form>';
-            }
-            if (Auth::user()?->can('update', $document)) {
-                $strategicDocumentsHtml .= '<a href="' . route($editRouteName, [$document->id]) . '">';
-                $strategicDocumentsHtml .= '<i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>';
-                $strategicDocumentsHtml .= '</a>';
-            }
-            $strategicDocumentsHtml .= '</div>';
-
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '<a class="text-decoration-none mb-3" href="' . route('strategy-document.view', [$document->id]) . '">';
-            $strategicDocumentsHtml .= '<i class="bi bi-mortarboard-fill me-1" role="button" title="Образование">';
-            $strategicDocumentsHtml .= $document->policyArea?->name;
-            $strategicDocumentsHtml .= '</i>';
-            $strategicDocumentsHtml .= '</a>';
-
-            $strategicDocumentsHtml .= '<div class="meta-consul mt-2">';
-            $strategicDocumentsHtml .= '<span class="text-secondary">' .
-                ($document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '') .
-                ' - ' .
-                ($document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : 'Безсрочен') .
-                '</span>';
-            $strategicDocumentsHtml .= '<a href="' . route('strategy-document.view', ['id' => $document->id]) . '" title="' . $document->title . '">'
-                . '<i class="fas fa-arrow-right read-more"></i>'
-                . '</a>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-            $strategicDocumentsHtml .= '</div>';
-        }
-
-        return $strategicDocumentsHtml;
-    }
-
-    /**
-     * @param Request $request
-     * @return Builder
-     */
-    private function prepareResults(Request $request): Builder
-    {
-        $searchUrl = $request->get('search');
-
-        $parsedUrl = parse_url($searchUrl);
-        parse_str(Arr::get($parsedUrl, 'query'), $queryParams);
-        $strategicDocuments = StrategicDocument::with(['user.institution.translations', 'policyArea.translations', 'documentLevel.translations', 'translations', 'acceptActInstitution.translations', 'ekatteArea.translations', 'ekatteManiputlicity.translations'])->where('active', 1);
-
-        $policyArea = Arr::get($queryParams, 'policy-area') ?? $request->input('policy-area');
-        $categories = Arr::get($queryParams, 'category') ?? $request->input('category');
-        $categoriesLifeCycleSelect = Arr::get($queryParams, 'category-lifecycle') ?? $request->input('category-lifecycle');
-        $title = Arr::get($queryParams, 'title') ?? $request->input('title');
-        $orderBy = Arr::get($queryParams, 'order_by') ?? $request->input('order_by');
-        $direction = Arr::get($queryParams, 'direction') ?? $request->input('direction') ?? 'asc';
-        $currentLocale = app()->getLocale();
-        $documentType = Arr::get($queryParams, 'document-type') ?? $request->input('document-type');
-        $documentType = ($documentType === 'null') ? null : $documentType;
-        //dd($documentType);
-        $ekateArea = Arr::get($queryParams, 'ekate-area') ?? $request->input('ekate-area');
-        $ekateMunicipality = Arr::get($queryParams, 'ekate-municipality') ?? $request->input('ekate-municipality');
-        $prisActs = Arr::get($queryParams, 'pris-acts') ?? $request->input('pris-acts');
-        $preparedInstitutions = Arr::get($queryParams, 'prepared-institution') ?? $request->input('prepared-institution');
-
-        if ($title) {
-            $strategicDocuments->where(function ($query) use ($title, $currentLocale) {
-                $query->whereHas('translations', function($subQuery) use ($title, $currentLocale) {
-                    $subQuery->where('locale', $currentLocale)->where('title', 'ilike', '%' . $title . '%');
-                })
-                ->orWhereHas('files', function($subQuery) use ($currentLocale, $title) {
-                    $subQuery->where('locale', $currentLocale)->where('file_text', 'ilike', '%' . $title . '%');
-                });
-            });
-        }
-
-        if ($policyArea) {
-            $policyAreaArray = explode(',', $policyArea);
-            $strategicDocuments->when(in_array('all', $policyAreaArray), function ($query) {
-                return $query;
-            }, function ($query) use ($policyAreaArray) {
-                return $query->whereIn('policy_area_id', $policyAreaArray);
-            });
-        }
-
-        if ($categories || $categoriesLifeCycleSelect) {
-            if ($categories) {
-                $categories = explode(',', $categories);
-            }
-            if ($categoriesLifeCycleSelect) {
-                $categoriesLifeCycleSelect = explode(',', $categoriesLifeCycleSelect);
-                $categories = array_merge($categories ?? [], $categoriesLifeCycleSelect);
-            }
-
-            $strategicDocuments->when(in_array('all', $categories), function ($query) {
-                return $query;
-            }, function($query) use ($categories) {
-                $query->where(function ($subquery) use ($categories) {
-                    if (in_array('active', $categories) && in_array('expired', $categories)) {
-                        $subquery->where(function ($innerSubquery) {
-                            $innerSubquery->where('document_date_expiring', '>', now())
-                                ->orWhereNull('document_date_expiring');
-                        })->orWhere('document_date_expiring', '<=', now());
-                    } elseif (in_array('active', $categories)) {
-                        $subquery->where(function ($innerSubquery) {
-                            $innerSubquery->where('document_date_expiring', '>', now())
-                                ->orWhereNull('document_date_expiring');
-                        });
-                    } elseif (in_array('expired', $categories)) {
-                        $subquery->where('document_date_expiring', '<=', now());
-                    }
-                    if (in_array('public_consultation', $categories)) {
-                        $subquery->orWhereHas('publicConsultation', function ($innerSubquery) {
-                            $innerSubquery->where('active', '=', '1')
-                                ->where('open_to', '<=', now());
-                        });
-                    }
-                });
-            });
-        }
-
-        $documentLevel = Arr::get($queryParams, 'document-level') ?? $request->input('document-level');
-        $documentLevel = ($documentLevel === 'null') ? null : $documentLevel;
-
-        if ($documentLevel) {
-            $documentLevelArray = explode(',', $documentLevel);
-            $strategicDocuments->when(in_array('all', $documentLevelArray), function ($query) {
-                return $query;
-            }, function($query) use ($documentLevelArray) {
-                $query->whereIn('strategic_document_level_id', $documentLevelArray);
-            });
-        }
-
-
-        $documentDateFrom = Arr::get($queryParams, 'valid-from') ?? $request->input('valid-from');
-        $documentDateTo = Arr::get($queryParams, 'valid-to') ?? $request->input('valid-to');
-
-        $documentDateInfinite = Arr::get($queryParams, 'date-infinite') ?? $request->input('date-infinite');
-        $documentDateFrom = ($documentDateFrom === 'null') ? null : $documentDateFrom;
-        $documentDateTo = ($documentDateTo === 'null') ? null : $documentDateTo;
-
-        $documentDateInfinite = ($documentDateInfinite === 'null') ? null : $documentDateInfinite;
-
-
-        $strategicDocuments->when($documentDateFrom, function ($query) use ($documentDateFrom, $documentDateInfinite) {
-            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
-            return $query->where(function ($subquery) use ($documentDateFrom, $documentDateInfinite) {
-                $subquery->where('document_date_accepted', '>=', $documentDateFrom);
-
-                if ($documentDateInfinite == 'true') {
-                    $subquery->orWhereNull('document_date_expiring');
-                }
-            });
-        });
-        $strategicDocuments->when($documentDateFrom && $documentDateTo && $documentDateInfinite == 'false', function ($query) use ($documentDateFrom, $documentDateTo) {
-            $documentDateFrom = Carbon::createFromFormat('d.m.Y', $documentDateFrom);
-            $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
-
-            return $query->whereBetween('document_date_accepted', [$documentDateFrom, $documentDateTo]);
-        });
-        $strategicDocuments->when(!$documentDateFrom && $documentDateTo && $documentDateInfinite == null, function ($query) use ($documentDateTo) {
-            $documentDateTo = Carbon::createFromFormat('d.m.Y', $documentDateTo);
-            return $query->where('document_date_accepted', '<', $documentDateTo);
-        });
-
-        if ($orderBy == 'policy-area') {
-            $strategicDocuments
-                ->select('strategic_document.*')
-                ->addSelect([
-                    'policy_area_name' => function ($query) use ($currentLocale) {
-                        $query->select('name')
-                            ->from('policy_area_translations')
-                            ->whereColumn('policy_area_translations.policy_area_id', 'strategic_document.policy_area_id')
-                            ->where('locale', $currentLocale)
-                            ->limit(1);
-                    },
-                    'title' => function ($query) use ($currentLocale) {
-                        $query->select('title')
-                            ->from('strategic_document_translations')
-                            ->whereColumn('strategic_document_translations.strategic_document_id', 'strategic_document.id')
-                            ->where('locale', $currentLocale)
-                            ->limit(1);
-                    },
-                ])
-                ->orderBy('policy_area_name', $direction)
-                ->orderBy('title', $direction);
-        }
-
-        if ($orderBy == 'title') {
-            $strategicDocuments->join('strategic_document_translations', 'strategic_document.id', '=', 'strategic_document_translations.strategic_document_id')
-                ->where('strategic_document_translations.locale', $currentLocale)
-                ->orderBy('strategic_document_translations.title', $direction);
-        }
-
-        if ($orderBy == 'valid-from') {
-            $strategicDocuments->orderBy('document_date_accepted', $direction);
-        }
-
-        if ($orderBy == 'valid-to') {
-            $strategicDocuments->orderBy('document_date_expiring', $direction);
-        }
-
-        if ($ekateArea) {
-            $strategicDocuments->where(function($query) use ($ekateArea) {
-                $ekateAreaArray = explode(',', $ekateArea);
-                $query->when(in_array('all', $ekateAreaArray), function($query) {
-                    return $query;
-                }, function($query)  use ($ekateAreaArray) {
-                    $query->whereIn('ekatte_area_id', $ekateAreaArray);
-                });
-            });
-        }
-
-        if ($ekateMunicipality) {
-            $ekateMunicipalityArray = explode(',', $ekateMunicipality);
-            $strategicDocuments->where(function($query) use ($ekateMunicipalityArray) {
-                $query->when(in_array('all', $ekateMunicipalityArray), function($query) {
-                    return $query;
-                }, function($query)  use ($ekateMunicipalityArray) {
-                    $query->whereIn('ekatte_municipality_id', $ekateMunicipalityArray);
-                });
-            });
-        }
-
-        /*
-        if ($prisActs) {
-            $prisActsArray = explode(',', $prisActs);
-            $strategicDocuments->whereIn('pris_act_id', $prisActsArray);
-        }
-
-        if ($preparedInstitutions) {
-
-            $preparedInstitutionsArray = explode(',', $preparedInstitutions);
-            $strategicDocuments->where(function($query) use ($preparedInstitutionsArray) {
-                $query->when(in_array('all', $preparedInstitutionsArray), function($query) {
-                    return $query;
-                }, function($query) use ($preparedInstitutionsArray) {
-                    $query->whereHas('user', function ($userQuery) use ($preparedInstitutionsArray) {
-                        $userQuery->whereIn('institution_id', $preparedInstitutionsArray);
-                    });
-                });
-            });
-        }
-        */
-
-        if ($documentType != null) {
-            $strategicDocuments->where(function($query) use ($documentType) {
-                $query->where('strategic_document_type_id', $documentType);
-            });
-        }
-
-        $inProcessOfConsultation = Arr::get($queryParams, 'in-process-of-consultation') ?? $request->input('in-process-of-consultation');
-
-        if ($inProcessOfConsultation) {
-            $strategicDocuments = $strategicDocuments->where(function($query) use ($inProcessOfConsultation) {
-                $query->when($inProcessOfConsultation == 'expired', function($query) {
-                    $query->whereHas('publicConsultation', function($query) {
-                        $query->where('open_to', '<', Carbon::now());
-                    });
-                });
-                $query->when($inProcessOfConsultation == 'process-of-consultation', function ($query) {
-                    $query->whereHas('publicConsultation', function ($query) {
-                        $query->where('open_to', '>=', Carbon::now())
-                            ->where('open_from', '<=', Carbon::now());
-                    });
-                });
-            });
-        }
-
-        return $strategicDocuments;
+        return $this->view('site.strategic_documents.tree', compact('items', 'pageTitle', 'editRouteName', 'deleteRouteName'));
     }
 
     /**
@@ -718,7 +150,126 @@ class StrategicDocumentsController extends Controller
         $this->setBreadcrumbsTitle($pageTitle);
 
         $this->composeBreadcrumbs($strategicDocument);
-        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent'));
+
+        $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents'));
+    }
+
+    private function filters($request, $currentRequest)
+    {
+        return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', true, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('site.strategic_document.level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalities', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'label' => __('site.strategic_document.categories_based_on_livecycle'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => '', 'value' => ''],
+                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
+                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+                ),
+                'value' => request()->input('status'),
+                'default' => empty($currentRequest) ? 'active' :'',
+                'col' => 'col-md-6'
+            ),
+            'title' => array(
+                'type' => 'text',
+                'label' => __('site.strategic_document.search_in_title_content'),
+                'value' => $request->input('title'),
+                'col' => 'col-md-6'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? Pris::PAGINATE,
+                'col' => 'col-md-3'
+            ),
+
+        );
+    }
+
+    private function filtersTree($request, $currentRequest)
+    {
+        return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('site.strategic_document.level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'label' => __('site.strategic_document.categories_based_on_livecycle'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => '', 'value' => ''],
+                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
+                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+                ),
+                'value' => request()->input('status'),
+                'default' => empty($currentRequest) ? 'active' :'',
+                'col' => 'col-md-6'
+            ),
+            'title' => array(
+                'type' => 'text',
+                'label' => __('site.strategic_document.search_in_title_content'),
+                'value' => $request->input('title'),
+                'col' => 'col-md-6'
+            )
+        );
+    }
+
+    private function sorters()
+    {
+        return array(
+            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'title' => ['class' => 'col-md-3', 'label' => __('custom.title')],
+            'validFrom' => ['class' => 'col-md-3', 'label' => __('custom.valid_from')],
+            'validTo' => ['class' => 'col-md-3', 'label' => __('custom.valid_to')],
+        );
     }
 
     public function previewModalFile(Request $request, $id = 0)
@@ -745,62 +296,6 @@ class StrategicDocumentsController extends Controller
         } catch (\Throwable $throwable) {
             return "Could not download file";
         }
-    }
-
-    /**
-     * @return array|array[]
-     */
-    private function prepareCategoriesData($strategicDocuments): array
-    {
-        //$categories = StrategicDocument::with('documentLevel.translations')->get();
-        $categories = $strategicDocuments->get();
-        $categoriesData = ['national' => [], 'regional' => []];
-
-        foreach ($categories as $category) {
-            // Централно ниво
-            if ($category->documentLevel?->id == 1) {
-                //$categoriesData['national']['central-level'][] = $category;
-
-                /**
-                 * TODO: This is a bad fix but its temporary. In the future this function will most likely be rewritten.
-                 * If not, we have to check the name here because the area/municipality level documents lack a policy area
-                */
-                $policyAreaName = $category->policyArea->name ?? '';
-                $categoriesData['national'][$policyAreaName][] = $category;
-            } else {
-                if (!$category->documentLevel) {
-                    continue;
-                }
-                // Областно ниво
-                if ($category->documentLevel?->id == 2) {
-                    $categoriesData['regional']['district-level'][] = $category;
-                } else {
-                    $categoriesData['regional']['regional-level'][] = $category;
-                }
-            }
-        }
-
-        return $categoriesData;
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function loadPrisOptions(Request $request): JsonResponse
-    {
-        $strategicDocumentsCommonServce = app(CommonService::class);
-        $prictActs = $strategicDocumentsCommonServce->prisActSelect2Search($request);
-        $prictActs = $prictActs->paginate(20);
-        return response()->json([
-            'items' => $prictActs->map(function ($prictAct) {
-                return [
-                    'id' => $prictAct->id,
-                    'text' => $prictAct->displayName
-                ];
-            }),
-            'more' => $prictActs->hasMorePages()
-        ]);
     }
 
     /**

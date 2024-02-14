@@ -44,7 +44,7 @@
                         <div class="mb-3 d-flex flex-column  w-100">
                             <label for="exampleFormControlInput1" class="form-label">{{ $field['label'] }}:</label>
                             <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif"
-                                name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
+                                name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}"
                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                     {{-- select with groups--}}
                                     @if(isset($field['group']) && $field['group'])
@@ -84,7 +84,7 @@
                                         @endforeach
                                     <option {{ $optionDataAttributes }} value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
                                         in_array($option['value'], old($key.'[]', $field['value'] ?? [])) ) ||
-                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']== old($key, ($option['value'] == '' ? $field['value'] : ($field['value'] ?? $field['default']))))) selected @endif>{{ $option['name'] }}</option>
+                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']== old($key, ($field['value'] != '' && !is_null($field['value']) ? $field['value'] : ($field['default']))))) selected @endif>{{ $option['name'] }}</option>
                                     @endforeach
                                 @endif
                             </select>

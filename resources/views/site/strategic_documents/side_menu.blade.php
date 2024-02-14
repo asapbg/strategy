@@ -12,11 +12,11 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2">
                                 <a href="{{ route('strategy-documents.index') }}" class="@if(request()->route()->getName() == 'strategy-documents.index' || request()->route()->getName() == 'strategy-document.view') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
-                                   data-toggle="tab">{{ trans_choice('custom.table_view', 1) }}</a>
+                                   >{{ trans_choice('custom.table_view', 1) }}</a>
                             </li>
                             <li class="mb-2">
-                                <a href="{{ route('strategy-documents.index') }}" class="@if(request()->route()->getName() == 'strategy-documents.tree') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
-                                   data-toggle="tab">{{ trans_choice('custom.tree_view', 1) }}</a>
+                                <a href="{{ route('strategy-documents.tree') }}" class="@if(request()->route()->getName() == 'strategy-documents.tree') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
+                                   >{{ trans_choice('custom.tree_view', 1) }}</a>
                             </li>
                         </ul>
                     </div>

@@ -122,7 +122,7 @@ return [
     'calc_method_best_result' => 'Алтернативата с най-висока обща претеглена оценка',
     'strategic_document.level' => 'Административно ниво на органа, приел документа',
     'strategic_document.areas' => 'Административна област|Административни области',
-    'strategic_document.categories_based_on_livecycle' => 'Действащи/с изтекъл срок документи',
+    'strategic_document.categories_based_on_livecycle' => 'Статус на документа',
     'strategic_document.search_in_title_content' => 'Търсене в заглавие/съдържание по избраните филтри',
     'strategic_document.all_documents_report' => 'Справка с всички документи',
 ];

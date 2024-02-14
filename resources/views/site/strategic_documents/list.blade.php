@@ -97,3 +97,48 @@
             {{ $items->onEachSide(0)->appends(request()->query())->links() }}
         @endif
     </div>
+
+    @push('scripts')
+        <script type="text/javascript">
+            let centralLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
+            let areaLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::AREA->value; ?>';
+            let municipalityLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value; ?>';
+
+            let fieldOfActions = $('#fieldOfActions');
+            let areas = $('#areas');
+            let municipalities = $('#municipalities');
+
+            function categoriesControl(){
+                let level = $('#level');
+                let levelVals = level.val();
+                console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
+                if(levelVals.indexOf(centralLevel) != -1 || !levelVals.length){
+                    fieldOfActions.parent().removeClass('d-none');
+                } else{
+                    fieldOfActions.parent().addClass('d-none');
+                    fieldOfActions.val('');
+                }
+                console.log(level.val(), areaLevel, levelVals.indexOf(areaLevel) != -1 ||!levelVals.length);
+                if(levelVals.indexOf(areaLevel) != -1 ||!levelVals.length){
+                    areas.parent().removeClass('d-none');
+                } else{
+                    areas.parent().addClass('d-none');
+                    areas.val('');
+                }
+                console.log(level.val(), municipalityLevel, levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length);
+                if(levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length){
+                    municipalities.parent().removeClass('d-none');
+                } else{
+                    municipalities.parent().addClass('d-none');
+                    municipalities.val('');
+                }
+            }
+
+            $(document).ready(function (){
+                $('#level').on('change', function (){
+                    categoriesControl();
+                });
+                $('#level').trigger('change');
+            });
+        </script>
+    @endpush

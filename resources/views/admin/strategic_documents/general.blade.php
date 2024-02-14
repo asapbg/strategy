@@ -126,7 +126,7 @@
                                        for="ekatte_municipality_id">{{ trans_choice('custom.municipalities', 1) }}<span
                                         class="required"></span></label>
                                 <div class="col-12">
-                                    @if (isset($ekateMunicipalities))
+                                    @if(isset($ekateMunicipalities))
                                         <select id="ekatte_municipality_id" name="ekatte_municipality_id"
                                                 class="form-control form-control-sm select2 @error('ekatte_municipality_id'){{ 'is-invalid' }}@enderror">
                                                 <option value="" @if(old('ekatte_municipality_id', ($item->id ? $item->policy_area_id : '')) == '') selected @endif>---
@@ -141,35 +141,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- strategic act type.
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-12 control-label"
-                                       for="strategic_act_type_id">{{ trans_choice('custom.strategic_act_type', 1) }}<span
-                                        class="required">*</span></label>
-                                <div class="col-12">
-                                    <select id="strategic_act_type_id" name="strategic_act_type_id"
-                                            class="form-control form-control-sm select2 @error('strategic_act_type_id'){{ 'is-invalid' }}@enderror">
-                                        @if(!$item->id)
-                                            <option value="" @if(old('strategic_act_type_id', '') == '') selected @endif>---
-                                            </option>
-                                        @endif
-                                        @if(isset($strategicActTypes) && $strategicActTypes->count())
-                                            @foreach($strategicActTypes as $row)
-                                                <option value="{{ $row->id }}"
-                                                        @if(old('strategic_act_type_id', ($item->id ? $item->strategic_act_type_id : 0)) == $row->id) selected
-                                                        @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    @error('strategic_act_type_id')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        -->
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
@@ -178,11 +149,9 @@
                                 <div class="col-12">
                                     <select id="accept_act_institution_type_id" name="accept_act_institution_type_id"
                                             class="form-control form-control-sm select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
-{{--                                        @if(!$item->id)--}}
                                             <option value=""
                                                     @if(old('accept_act_institution_type_id', $item->id ? $item->accept_act_institution_type_id : '') == '') selected @endif>---
                                             </option>
-{{--                                        @endif--}}
                                         @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
                                             @foreach($authoritiesAcceptingStrategic as $row)
                                                 <option value="{{ $row->id }}"
@@ -212,20 +181,6 @@
                                                     {{ old('pris_act_id', ($item->publicConsultation? $item->publicConsultation->id : null)) == $item->id ? 'selected' : '' }}
                                                     data-id="{{ $item->publicConsultation->id }}"> {{ $item->publicConsultation->reg_num }} </option>
                                         @endif
-{{--                                        @if(!$item->id)--}}
-{{--                                            <option value="all" @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : '')) == '') selected @endif>--}}
-{{--                                                -----}}
-{{--                                            </option>--}}
-{{--                                        @endif--}}
-{{--                                        @if(isset($consultations) && $consultations->count())--}}
-{{--                                            @foreach($consultations as $consultation)--}}
-{{--                                                <option value="{{ $consultation->id }}"--}}
-{{--                                                        @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : 0)) == $consultation->id) selected--}}
-{{--                                                        @endif--}}
-{{--                                                        data-id="{{ $consultation->id }}"--}}
-{{--                                                >{{ $consultation->reg_num }}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
                                     </select>
                                     @error('public_consultation_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -318,15 +273,14 @@
                                     <div class="col-12">
                                         <select id="parent_document_id" name="parent_document_id" data-types2ajax="sd_parent_documents" data-urls2="{{ route('admin.select2.ajax', 'sd_parent_documents') }}"
                                                 @if($item->id) data-documentid="{{ $item->id }}" @endif class="form-control form-control-sm select2-autocomplete-ajax @error('parent_document_id'){{ 'is-invalid' }}@enderror">
-                                            @if(!$item->id && !$item->parentDocument)
-                                                <option value=""
-                                                        @if(old('parent_document_id', '') == '') selected @endif>
-                                                    ---
-                                                </option>
-                                            @elseif($item->id && $item->parentDocument)
-                                                <option value="{{ $item->parentDocumen->id }}"
-                                                        @if(old('parent_document_id', '') == $item->parentDocumen->id) selected @endif>
-                                                    {{ $item->parentDocumen->title }}
+                                            <option value=""
+                                                    @if(old('parent_document_id', '') == '') selected @endif>
+                                                ---
+                                            </option>
+                                            @if($item->id && $item->parentDocument)
+                                                <option value="{{ $item->parentDocument->id }}"
+                                                    {{ old('pris_act_id', $item->parentDocument->id) == $item->parentDocument->id ? 'selected' : '' }}>
+                                                    {{ $item->parentDocument->title }}
                                                 </option>
 
                                             @endif
@@ -338,36 +292,6 @@
                                     </div>
                                 </div>
                             </div>
-
-{{--                        <div class="col-md-12">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label class="col-sm-12 control-label"--}}
-{{--                                       for="active">{{ trans_choice('custom.public_consultations', 1) }}</label>--}}
-{{--                                <div class="col-12">--}}
-{{--                                    <select id="public_consultation_id" name="public_consultation_id"--}}
-{{--                                            class="form-control form-control-sm select2 @error('public_consultation_id'){{ 'is-invalid' }}@enderror">--}}
-{{--                                        @if(!$item->id)--}}
-{{--                                            <option value="" @if(old('public_consultation_id', '') == '') selected @endif>--}}
-{{--                                                -----}}
-{{--                                            </option>--}}
-{{--                                        @endif--}}
-{{--                                        @if(isset($consultations) && $consultations->count())--}}
-{{--                                            @foreach($consultations as $consultation)--}}
-{{--                                                <option value="{{ $consultation->id }}"--}}
-{{--                                                        @if(old('public_consultation_id', ($item->id ? $item->public_consultation_id : 0)) == $consultation->id) selected--}}
-{{--                                                        @endif--}}
-{{--                                                        data-id="{{ $consultation->id }}"--}}
-{{--                                                >{{ $consultation->reg_num }}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
-{{--                                    </select>--}}
-{{--                                    @error('public_consultation_id')--}}
-{{--                                    <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-
-{{--                        </div>--}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
@@ -402,7 +326,6 @@
                         </div>
 
                         <div class="row">
-                            <!--
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -419,7 +342,6 @@
                                 </div>
 
                             </div>
-                             -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -459,155 +381,13 @@
             </div>
         </div>
 
-        <!-- Files -->
-{{--        <div class="row">--}}
-{{--            <div class="card card-secondary p-0 px-2 mt-4">--}}
-{{--                <div class="card-body">--}}
-{{--                    <div class="row">--}}
-{{--                        <h3>{{ trans_choice('custom.main_file', 1) }}</h3>--}}
-{{--                    </div>--}}
-{{--                    <div class="row px-2">--}}
-{{--                        @include('admin.partial.edit_field_translate', [--}}
-{{--                            'item' => null,--}}
-{{--                            'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesMain(),--}}
-{{--                            'field' => 'display_name_main',--}}
-{{--                            'required' => true,--}}
-{{--                            'value' => isset($mainFile) ? $mainFile->display_name : ''--}}
-{{--                             ])--}}
-{{--                    </div>--}}
-
-{{--                 <div class="row">--}}
-{{--                        <div class="col-md-4">--}}
-{{--                            <div class="form-group form-group-sm">--}}
-{{--                                <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.valid_at') }} <span--}}
-{{--                                        class="required">*</span> </label>--}}
-{{--                                <div class="col-12">--}}
-{{--                                    <input id="valid_at_main" value="{{ old('valid_at_main', isset($mainFile) ? $mainFile->valid_at : '') }}"--}}
-{{--                                           class="form-control form-control-sm datepicker @error('valid_at_main') is-invalid @enderror"--}}
-{{--                                           type="text" name="valid_at_main">--}}
-{{--                                    @error('valid_at_main')--}}
-{{--                                    <span class="text-danger">{{ $message }}</span>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-3 text-center">--}}
-{{--                            <div class="form-group form-group-sm">--}}
-{{--                                <label for="valid_at" class="col-sm-12 control-label">{{ __('custom.date_expring_indefinite') }}--}}
-{{--                                    <span class="required">*</span> </label>--}}
-{{--                                <div class="form-check">--}}
-{{--                                    <input type="hidden" name="date_valid_indefinite_main" value="0">--}}
-{{--                                    <input type="checkbox" id="date_valid_indefinite_main" name="date_valid_indefinite_main"--}}
-{{--                                           class="form-check-input"--}}
-{{--                                           value="1" {{ !isset($mainFile) || empty($mainFile->valid_at) ? 'checked' : '' }}>--}}
-{{--                                    <label class="form-check-label" for="unlimited_date_expiring">--}}
-{{--                                        {{ __('custom.date_expring_indefinite') }}--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-5">--}}
-{{--                            <div class="form-group form-group-sm">--}}
-{{--                                <label class="col-sm-12 control-label"--}}
-{{--                                       for="strategic_document_type">{{ trans_choice('custom.strategic_document_type', 1) }}--}}
-{{--                                    <span--}}
-{{--                                        class="required">*</span></label>--}}
-{{--                                <div class="col-12">--}}
-{{--                                    <select id="strategic_document_type" name="strategic_document_type_file_main_id"--}}
-{{--                                            class="form-control form-control-sm select2 @error('strategic_document_type'){{ 'is-invalid' }}@enderror">--}}
-{{--                                        <!----}}
-{{--                                        <option value=""--}}
-{{--                                                @if(old('strategic_document_type_file_main_id', optional($mainFile)->strategic_document_type_id) == '') selected @endif>--}}
-{{--                                        </option>--}}
-{{--                                        -->--}}
-{{--                                        @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())--}}
-{{--                                            @foreach($strategicDocumentTypes as $row)--}}
-{{--                                                <option value="{{ $row->id }}"--}}
-{{--                                                     @if(old('strategic_document_type_id', optional($mainFile)->strategic_document_type_id) == $row->id) selected--}}
-{{--                                                        @endif data-id="{{ $row->id }}">{{ $row->name }}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
-{{--                                    </select>--}}
-
-{{--                                    @error('strategic_document_type_file_main_id')--}}
-{{--                                        <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <!----}}
-{{--                        <div class="row px-2">--}}
-{{--                            <div class="col-12"></div>--}}
-{{--                            @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsPropertiesMain(),'field' => 'file_info_main', 'required' => false])--}}
-{{--                            <div class="col-md-8">--}}
-{{--                                <div class="form-group form-group-sm">--}}
-{{--                                    <label class="col-sm-12 control-label" for="visible_in_report"><br>--}}
-{{--                                        <input type="checkbox" id="visible_in_report" name="visible_in_report"--}}
-{{--                                               class="checkbox"--}}
-{{--                                               value="1" @if (old('visible_in_report', optional($mainFile)->visible_in_report)) checked @endif>--}}
-{{--                                        {{ __('custom.visible_in_report') }}--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    -->--}}
-{{--                        <div class="row px-2">--}}
-{{--                            @foreach(config('available_languages') as $lang)--}}
-{{--                                @php($fieldName = 'file_strategic_documents_'.$lang['code'])--}}
-{{--                                @php(--}}
-{{--                                    $mainFileForLang = $mainFiles->first(function($file) use ($lang) {--}}
-{{--                                        return $file->locale === $lang['code'];--}}
-{{--                                    })--}}
-{{--                                )--}}
-{{--                                @php($validationRules = \App\Enums\StrategicDocumentFileEnum::validationRules($lang['code']))--}}
-{{--                                <div class="col-md-6 mb-3">--}}
-{{--                                    <div class="col-md-6 mb-3">--}}
-{{--                                        <label for="{{ $fieldName }}"--}}
-{{--                                               class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))--}}
-{{--                                                <span class="required">*</span>--}}
-{{--                                            @endif </label>--}}
-{{--                                        @if ($mainFileForLang)--}}
-{{--                                            {{ $mainFileForLang->display_name }}--}}
-{{--                                        @endif--}}
-{{--                                    </div>--}}
-{{--                                    @if ($mainFileForLang)--}}
-{{--                                        @php(--}}
-{{--                                            $fieldName = $fieldName. '_main'--}}
-{{--                                        )--}}
-{{--                                        <div>--}}
-{{--                                            <input class="form-control form-control-sm" type="file"--}}
-{{--                                                   name="{{ $fieldName }}">--}}
-{{--                                            <input type="hidden" name="main_fileId_{{ $lang['code'] }}"--}}
-{{--                                                   value="{{ $mainFileForLang->id }}">--}}
-{{--                                            @error($fieldName)--}}
-{{--                                            <span class="text-danger">{{ $message }}</span>--}}
-{{--                                            @enderror--}}
-{{--                                        </div>--}}
-{{--                                    @else--}}
-{{--                                        <div>--}}
-{{--                                            <input--}}
-{{--                                                class="form-control form-control-sm @error($fieldName) is-invalid @enderror"--}}
-{{--                                                type="file" name="{{ $fieldName }}">--}}
-{{--                                            @error($fieldName)--}}
-{{--                                            <span class="text-danger">{{ $message }}</span>--}}
-{{--                                            @enderror--}}
-{{--                                        </div>--}}
-{{--                                    @endif--}}
-{{--                                </div>--}}
-{{--                            @endforeach--}}
-{{--                        </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
         <div class="row">
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                     <button id="stayButton" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
 
-                    @if ($item->active)
+                    @if($item->active)
                         <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
                            class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
                     @else
@@ -621,7 +401,6 @@
             </div>
         </div>
     </form>
-{{--</div>--}}
 
 @push('styles')
     <style>
@@ -699,147 +478,9 @@
                 });
             }
 
-            // prisAct.select2({
-            //     placeholder: '--',
-            //     minimumInputLength: 1,
-            //     allowClear: true,
-            // });
-            // prisAct.prop('disabled', false);
-            // const loadPrisOptions = (filter = '', documentId) => {
-            //     $.ajax({
-            //         url: '/admin/strategic-documents/load-pris-acts',
-            //         dataType: 'json',
-            //         data: {
-            //             filter: filter,
-            //             documentId: documentId,
-            //         },
-            //         success: function(data) {
-            //             const isSingleResult = data.items.length === 1;
-            //             prisAct.prop('disabled', isSingleResult);
-            //
-            //             /**
-            //              * If we have a single result, insert an empty item at the beginning of the array.
-            //              * This way we force the user to make a change so we can set the values of the legal type and public consultation via the pris act on change event.
-            //             */
-            //             if (!isSingleResult && data.items.length) {
-            //                 data.items.unshift({
-            //                     id: '',
-            //                     text: '--'
-            //                 });
-            //             }
-            //
-            //             prisAct.select2({
-            //                 data: data.items,
-            //                 placeholder: '--',
-            //                 allowClear: true,
-            //                 //minimumInputLength: 1,
-            //                 ajax: {
-            //                     url: '/admin/strategic-documents/load-pris-acts',
-            //                     dataType: 'json',
-            //                     delay: 250,
-            //                     data: function (params) {
-            //
-            //                         return {
-            //                             filter: filter,
-            //                             documentId: documentId,
-            //                             term: params.term,
-            //                             page: params.page
-            //                         };
-            //                     },
-            //                     processResults: function (ajaxData) {
-            //                         const isSingleResult = data.items.length === 1;
-            //                         prisAct.prop('disabled', isSingleResult);
-            //
-            //                         return {
-            //                             results: ajaxData.items,
-            //                             pagination: {
-            //                                 more: ajaxData.more
-            //                             }
-            //                         };
-            //                     },
-            //                     cache: true
-            //                 }
-            //             });
-            //
-            //             setTimeout(function() {
-            //                 prisAct.trigger('query', {});
-            //             }, 200);
-            //         }
-            //     });
-            // }
-            //loadPrisOptions('', documentId);
-
-//             const parentDocumentSelect = $('#parent_document_id');
-            // parentDocumentSelect.select2({
-            //     placeholder: '--',
-            //     minimumInputLength: 1,
-            //     allowClear: true,
-            // });
-            // const loadParentStrategicDocumentOptions = (filter = '', documentId = 0) => {
-            //     //TODO why we set this id ???????????????????
-            //     // documentId = 46;
-            //     $.ajax({
-            //         url: '/admin/strategic-documents/load-parents',
-            //         dataType: 'json',
-            //         data: {
-            //             filter: filter,
-            //             documentId: documentId,
-            //         },
-            //         success: function(data) {
-            //             parentDocumentSelect.select2({
-            //                 data: data.items,
-            //                 placeholder: '--',
-            //                 allowClear: true,
-            //                 //minimumInputLength: 1,
-            //                 ajax: {
-            //                     url: '/admin/strategic-documents/load-parents',
-            //                     dataType: 'json',
-            //                     delay: 250,
-            //                     data: function (params) {
-            //                         return {
-            //                             filter: filter,
-            //                             documentId: documentId,
-            //                             term: params.term,
-            //                             page: params.page
-            //                         };
-            //                     },
-            //                     processResults: function (ajaxData) {
-            //                         return {
-            //                             results: ajaxData.items,
-            //                             pagination: {
-            //                                 more: ajaxData.more
-            //                             }
-            //                         };
-            //                     },
-            //                     cache: true
-            //                 }
-            //             });
-            //
-            //             setTimeout(function() {
-            //                 parentDocumentSelect.trigger('query', {});
-            //             }, 250);
-            //         }
-            //     });
-            // }
-            //First parent document init
-            // loadParentStrategicDocumentOptions(filter = '', docId);
-
-//            const prisOptions = $('#pris_options');
-//            prisOptions.select2();
-
-            // $('#legal_act_type_filter').on('change', function () {
-            //     let selectedValue = $(this).val();
-            //     const publicConsultationValue = $('#public_consultation_id').val();
-            //     if (selectedValue) {
-            //         const filter = 'legal-act-type-id=' + selectedValue + '&public-consultation-id=' + publicConsultationValue;
-            //         prisAct.empty().trigger('change');
-            //         loadPrisOptions(filter);
-            //     }
-            // });
-
             $('#accept_act_institution_type_id').on('change', function () {
                 let selectedValue = $(this).val();
-                if (selectedValue == parseInt(<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>)) {
+                if (selectedValue == parseInt('<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>')) {
                     $('#strategic_act_link').val('');
                     $('#document_date').val('');
                 } else {
@@ -848,112 +489,22 @@
                 }
             });
 
-            // prisAct.on('change', function () {
-            //     const selectedValue = $(this).val();
-            //     if (selectedValue && !!manualPrisActId) {
-            //         $.ajax({
-            //             url: `/admin/strategic-documents/pris-details/${selectedValue}`,
-            //             type: 'GET',
-            //             dataType: 'json',
-            //             success: function (data) {
-            //                 $('#document_date_accepted').val(data.date).trigger('change');
-            //                 const publicConsultationId = data.public_consultation_id;
-            //                 const legalActTypeId = data.legal_act_type_id;
-            //                 if (publicConsultationId) {
-            //                     manualChangeConsultationId = false;
-            //                     $('#public_consultation_id').val(publicConsultationId).trigger('change.select2');
-            //                     manualChangeConsultationId = true;
-            //                 }
-            //                 if (legalActTypeId) {
-            //                     $('#the_legal_act_type_filter').val(legalActTypeId).trigger('change.select2');
-            //                 }
-            //             },
-            //             error: function (xhr, status, error) {
-            //                 //console.error('AJAX Error:', status, error);
-            //             }
-            //         });
-            //     }
-            // });
-
-            // $('#public_consultation_id').on('change', function () {
-            //     const selectedValue = $(this).val();
-            //     const legalActTypeId = $('#the_legal_act_type_filter').val();
-            //     let filter = '';
-            //     if (selectedValue && !!manualChangeConsultationId) {
-            //         filter = 'public-consultation-id=' + selectedValue + '&legal-act-type-id=' + legalActTypeId;
-            //         prisAct.empty().trigger('change');
-            //     }
-            //     loadPrisOptions(filter);
-            // });
-
-            // $('#policy_area_id, #ekatte_municipality_id, #ekatte_area_id').on('change', function () {
-            //     const selectedValue = $(this).val();
-            //     if (selectedValue) {
-            //         const filter = 'policy-area-id=' + selectedValue;
-            //         parentDocumentSelect.empty().trigger('change');
-            //         loadParentStrategicDocumentOptions(filter);
-            //     }
-            // });
-
             const ekatteAreaDiv = $('#ekatte_area_div_id');
             const ekatteMunicipalityDiv = $('#ekatte_municipality_div_id');
             const policyAreaDiv = $('#policy_area_div');
             const strategicDocumentLevel = $('#strategic_document_level_id');
-            //ekatteAreaDiv.hide();
-            //ekatteMunicipalityDiv.hide();
-
-            //const initialStrategicDocumentLevel = strategicDocumentLevel.val();
 
             strategicDocumentLevel.on('change', function () {
-                //parentDocumentSelect.empty().trigger('change');
                 const selectedValue = $(this).val();
                 handleVisibility(selectedValue);
                 acceptActInstitutionByLevel();
-
-                // const acceptActInstitution = $('#accept_act_institution_type_id');
-                // //handleVisibility(selectedValue);
-                // /*
-                // if (selectedValue == 2) {
-                //     acceptActInstitution.val(3).trigger('change');
-                // } else if (selectedValue == 3) {
-                //     acceptActInstitution.val(4).trigger('change');
-                // } else {
-                //     acceptActInstitution.val(1).trigger('change');
-                // }
-                // */
-                // if (adminUser) {
-                //     $.ajax({
-                //         url: '/admin/strategic-documents/accept-act-institution-options/' + selectedValue,
-                //         type: 'GET',
-                //         contentType: 'application/json',
-                //         success: function(data) {
-                //             const acceptingInstitutionsTypeId = $('#accept_act_institution_type_id');
-                //             acceptingInstitutionsTypeId.empty();
-                //             console.log(data.documentsAcceptingInstitutionsOptions);
-                //
-                //             $.each(data.documentsAcceptingInstitutionsOptions, function(index, option) {
-                //                 acceptingInstitutionsTypeId.append($('<option>', {
-                //                     value: option.id,
-                //                     text: option.text
-                //                 }));
-                //             });
-                //             acceptingInstitutionsTypeId.val(data.documentsAcceptingInstitutionsOptions[0].id);
-                //             acceptingInstitutionsTypeId.trigger('change');
-                //         },
-                //         error: function(jqXHR, textStatus, errorThrown) {
-                //             // Handle errors here
-                //             console.error('AJAX request failed:', textStatus, errorThrown);
-                //         }
-                //     });
-                // }
-
             });
 
 
             function acceptActInstitutionByLevel(init = false){
                 let selectedLevel = strategicDocumentLevel.val();
                 let acceptActInstitution = $('#accept_act_institution_type_id');
-                $('#accept_act_institution_type_id').val('').change();
+                //$('#accept_act_institution_type_id').val('').change();
                 $('#accept_act_institution_type_id option').each(function (i){
                     if(typeof $(this).data('level') == 'undefined' || parseInt($(this).data('level')) == selectedLevel){
                         $(this).removeAttr('disabled');
