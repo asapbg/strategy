@@ -87,7 +87,14 @@
                                     @endcan
                                 @endif
                             </div>
-                            <div class="meta-consul">
+                            @if($item->policyArea)
+                                <a href="{{ route('strategy-documents.index').'?fieldOfActions[]='.$item->policyArea->id }}"
+                                   title="{{ $item->policyArea->name }}" class="text-decoration-none mb-2">
+                                    <i class="text-primary {{ $item->policyArea->icon_class }} me-1" title="{{ $item->policyArea->name }}"></i>
+                                    {{ $item->policyArea->name }}
+                                </a>
+                            @endif
+                            <div class="meta-consul mt-2">
                                 <span>{{ __('custom.status') }}:
                                     @php($class = $item->active ? 'active-ks' : 'inactive-ks')
                                     <span

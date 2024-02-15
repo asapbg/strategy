@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ModelActivityExtend;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StrategicDocumentFileTranslation extends ModelActivityExtend
+class StrategicDocumentFileTranslation extends ModelTranslatableActivityExtend
 {
     use SoftDeletes;
 

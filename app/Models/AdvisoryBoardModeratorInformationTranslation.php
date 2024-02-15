@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class AdvisoryBoardModeratorInformationTranslation extends ModelActivityExtend
+class AdvisoryBoardModeratorInformationTranslation extends ModelTranslatableActivityExtend
 {
 
     public $timestamps = false;

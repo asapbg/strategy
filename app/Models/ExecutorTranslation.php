@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class ExecutorTranslation extends ModelActivityExtend
+class ExecutorTranslation extends ModelTranslatableActivityExtend
 {
     const MODULE_NAME = ('custom.executor_translation');
 

@@ -57,7 +57,7 @@
                                             @endcan
                                         </div>
                                     </div>
-                                    {{ $document->category }}
+{{--                                    {{ $document->category }}--}}
                                     @if($document->policyArea)
                                         @php($searchFieldPolicy = $document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities'))
 

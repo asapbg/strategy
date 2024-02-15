@@ -7,7 +7,7 @@ namespace App\Models;
  * @property string $locale
  * @property string $name
  */
-class AdvisoryBoardTranslation extends ModelActivityExtend
+class AdvisoryBoardTranslation extends ModelTranslatableActivityExtend
 {
 
     public $timestamps = false;

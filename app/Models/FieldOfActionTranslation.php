@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 /**
  * @property string $locale
@@ -10,7 +12,7 @@ use Carbon\Carbon;
  * @property string $name
  * @property Carbon $deleted_at
  */
-class FieldOfActionTranslation extends ModelActivityExtend
+class FieldOfActionTranslation extends ModelTranslatableActivityExtend
 {
 
     public $timestamps = false;
