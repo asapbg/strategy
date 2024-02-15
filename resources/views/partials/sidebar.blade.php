@@ -234,11 +234,28 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.strategic_documents.index') }}"
-                                   class="nav-link @if(strstr(url()->current(), 'strategic-documents')) active @endif">
+                                   class="nav-link @if(strstr(url()->current(), 'strategic-documents') && !strstr(url()->current(), 'page')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.strategic_documents', 2) }}</p>
                                 </a>
                             </li>
+                            @if($user && ($user->can('manage.*') || $user->hasAnyRole(['moderator-strategics'])))
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.strategic_documents.page.info') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'strategic-documents/page/base-information')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.base_information') }}</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.strategic_documents.page.documents') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'strategic-documents/page/documents')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.documents', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endcan

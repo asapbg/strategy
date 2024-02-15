@@ -120,6 +120,24 @@ class PageSeeder extends Seeder
                 'is_system' => 0,
                 'module_enum' => PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
             ],
+            [
+                'slug' => 'documents',
+                'system_name' => Page::STRATEGIC_DOCUMENT_DOCUMENTS,
+                'name_bg' => 'Документи',
+                'name_en' => 'Documents',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1
+            ],
+            [
+                'slug' => 'info',
+                'system_name' => Page::STRATEGIC_DOCUMENT_INFO,
+                'name_bg' => 'Обща информация',
+                'name_en' => 'Information',
+                'content_bg' => 'Съдържание в Обща информация',
+                'content_en' => 'Content in Information',
+                'is_system' => 1
+            ],
         ];
 
         foreach ($data as $page) {

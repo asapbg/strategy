@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\AuthorityAcceptingStrategic;
+use App\Models\CustomRole;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\Page;
 use App\Models\PolicyArea;
 use App\Models\Pris;
 use App\Models\Setting;
@@ -16,6 +18,7 @@ use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\User;
 use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
@@ -39,6 +42,14 @@ use Illuminate\Support\Facades\Storage;
 
 class StrategicDocumentsController extends Controller
 {
+    private $pageTitle;
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->title_singular = trans_choice('custom.strategic_documents', 2);
+        $this->pageTitle = trans_choice('custom.strategic_documents', 2);
+    }
+
     /**
      * @param Request $request
      * @return View
@@ -153,6 +164,46 @@ class StrategicDocumentsController extends Controller
 
         $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents'));
+    }
+
+    public function contacts(Request $request, $itemId = null)
+    {
+        $pageTitle = $this->pageTitle;
+        $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])->get();
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
+        return $this->view('site.strategic_documents.contacts', compact('moderators', 'pageTitle'));
+    }
+
+    public function documents()
+    {
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::STRATEGIC_DOCUMENT_DOCUMENTS)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = $this->pageTitle;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
+        return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
+    }
+
+    public function info()
+    {
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::STRATEGIC_DOCUMENT_INFO)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = $this->pageTitle;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
+        return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
     }
 
     private function filters($request, $currentRequest)

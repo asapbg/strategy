@@ -58,6 +58,10 @@ class PagePolicy
             || (
                 in_array($page->system_name, [Page::ADV_BOARD_DOCUMENTS, Page::ADV_BOARD_INFO])
                 && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARDS])
+            )
+            || (
+                in_array($page->system_name, [Page::STRATEGIC_DOCUMENT_BOARD_INFO, Page::STRATEGIC_DOCUMENT_BOARD_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])
             ) ;
     }
 

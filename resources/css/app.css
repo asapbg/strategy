@@ -2293,8 +2293,16 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 /*=====================*/
 /*START ACT TYPE  CLASS*/
 
+.team-member-contact a {
+    text-wrap: none !important;
+}
 /*Responsive*/
 @media (min-width:992px) {
+    /*Module Contact pages*/
+    .member.d-flex{
+        min-height: 180px;
+    }
+
     .top-bar-left-side-mobile {
         display: none !important;
     }
@@ -2484,7 +2492,7 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
     }
 
     .team-member-contact{
-    flex-direction:column !important;
+        flex-direction:column !important;
     }
 
     .calendar-info {

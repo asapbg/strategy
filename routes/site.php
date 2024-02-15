@@ -105,7 +105,9 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
     Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
 //    Route::get('/strategy-document-institution/{documentLevelIds?}', 'getInstitutions')->name('strategy-document.institutions');
 //    Route::get('/strategy-document/load-pris-acts', 'loadPrisOptions')->name('strategy-document.load-pris-acts');
-
+    Route::get('/strategy-documents/information', 'info')->name('strategy-document.info');
+    Route::get('/strategy-documents/documents', 'documents')->name('strategy-document.documents');
+    Route::get('/strategy-documents/contacts/{item?}', 'contacts')->name('strategy-document.contacts');
 });
 
 Route::controller(\App\Http\Controllers\ImpactAssessmentCalculatorsController::class)->group(function () {

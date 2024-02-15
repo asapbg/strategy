@@ -20,6 +20,9 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const OP_INFO = 'operational-programs-info';
     const IA_INFO = 'impact-assessments-info';
 
+    const STRATEGIC_DOCUMENT_DOCUMENTS = 'documents';
+    const STRATEGIC_DOCUMENT_INFO = 'info';
+
     const CACHE_FOOTER_PAGES_KEY = 'footer_pages';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;

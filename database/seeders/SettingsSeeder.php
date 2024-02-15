@@ -98,20 +98,20 @@ class SettingsSeeder extends Seeder
                 'editable' => 1,
                 'is_required' => 0
             ],
-            [
-                'section' => 'system_strategy_doc',
-                'name' => 'strategy_doc_text_bg',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
-            [
-                'section' => 'system_strategy_doc',
-                'name' => 'strategy_doc_text_en',
-                'type' => 'summernote',
-                'editable' => 1,
-                'is_required' => 0
-            ],
+//            [
+//                'section' => 'system_strategy_doc',
+//                'name' => 'strategy_doc_text_bg',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
+//            [
+//                'section' => 'system_strategy_doc',
+//                'name' => 'strategy_doc_text_en',
+//                'type' => 'summernote',
+//                'editable' => 1,
+//                'is_required' => 0
+//            ],
             [
                 'section' => 'system_advisory_boards',
                 'name' => 'review_period_notify',

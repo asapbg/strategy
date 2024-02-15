@@ -113,6 +113,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/consultations/public-consultations/unpublish/{item}', 'unPublish')->name('consultations.public_consultations.unpublish');
     });
 
+    // Pages
+    Route::controller(\App\Http\Controllers\Admin\StrategicDocumentsPageController::class)->prefix('/strategic-documents/page')->group(function () {
+        Route::match(['get', 'put'], '/base-information', 'info')->name('strategic_documents.page.info');
+        Route::match(['get', 'put'],'/documents', 'documents')->name('strategic_documents.page.documents');
+    });
+
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');

@@ -12,11 +12,27 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2">
                                 <a href="{{ route('strategy-documents.index') }}" class="@if(request()->route()->getName() == 'strategy-documents.index' || request()->route()->getName() == 'strategy-document.view') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
-                                   >{{ trans_choice('custom.table_view', 1) }}</a>
+                                   >{{ __('custom.all_strategic_documents') }}</a>
                             </li>
                             <li class="mb-2">
                                 <a href="{{ route('strategy-documents.tree') }}" class="@if(request()->route()->getName() == 'strategy-documents.tree') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
-                                   >{{ trans_choice('custom.tree_view', 1) }}</a>
+                                   >{{ __('custom.all_strategic_documents_tree_view') }}</a>
+                            </li>
+
+                            <li class="mb-2">
+                                <a href="{{ route('strategy-document.info') }}" class="@if(str_contains(url()->current(), 'strategy-documents/'.\App\Models\Page::STRATEGIC_DOCUMENT_INFO)) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ __('site.base_info') }}
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{ route('strategy-document.documents') }}" class="@if(str_contains(url()->current(), 'strategy-documents/'.\App\Models\Page::STRATEGIC_DOCUMENT_DOCUMENTS)) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ trans_choice('custom.documents', 2) }}
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{ route('strategy-document.contacts') }}" class="@if(str_contains(url()->current(),'contacts')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                    {{ trans_choice('custom.contacts', 2) }}
+                                </a>
                             </li>
                         </ul>
                     </div>
