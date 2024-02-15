@@ -59,7 +59,9 @@
                                     </div>
                                     {{ $document->category }}
                                     @if($document->policyArea)
-                                        <a href="{{ route( 'strategy-document.view' , [$document->id]) }}"
+                                        @php($searchFieldPolicy = $document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities'))
+
+                                        <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$document->policyArea->id }}"
                                            title="{{ $document->policyArea->name }}" class="text-decoration-none mb-2">
                                             <i class="text-primary {{ $document->policyArea->icon_class }} me-1" title="{{ $document->policyArea->name }}"></i>
                                             {{ $document->policyArea->name }}

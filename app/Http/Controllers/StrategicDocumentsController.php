@@ -308,16 +308,19 @@ class StrategicDocumentsController extends Controller
             ['name' => trans_choice('custom.strategic_documents', 1), 'url' => route('strategy-documents.index')]
         );
 
-        if($item && $item->documentLevel){
-            $customBreadcrumbs[] = ['name' => $item->documentLevel->name, 'url' => route('strategy-documents.index').'?document-level='.$item->documentLevel->id];
+        if($item && $item->strategic_document_level_id){
+            $customBreadcrumbs[] = ['name' => __('custom.strategic_document.levels.'.InstitutionCategoryLevelEnum::keyByValue($item->strategic_document_level_id)), 'url' => route('strategy-documents.index').'?level[]='.$item->strategic_document_level_id];
         }
 
-        if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::AREA->value && $item->ekatteArea){
-            $customBreadcrumbs[] = ['name' => $item->ekatteArea->ime, 'url' => route('strategy-documents.index').'?ekate-area='.$item->ekatteArea->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value && $item->ekatteManiputlicity){
-            $customBreadcrumbs[] = ['name' => $item->ekatteManiputlicity->ime, 'url' => route('strategy-documents.index').'?ekate-municipality='.$item->ekatteManiputlicity->id.'&document-level='.$item->strategic_document_level_id];
-        } else if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::CENTRAL->value && $item->policyArea){
-            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?policy-area='.$item->policyArea->id];
+        if($item && $item->policyArea){
+            $field = 'fieldOfActions';
+            if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
+                $field = 'municipalities';
+            }
+            if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::AREA->value) {
+                $field = 'areas';
+            }
+            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?'.$field.'[]='.$item->policyArea->id.'&level[]='.$item->strategic_document_level_id];
         }
 
         if($item){
