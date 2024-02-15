@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StrategicDocumentChildStoreRequest;
 use App\Models\File;
 use App\Models\LegalActType;
+use App\Models\Pris;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -58,6 +60,7 @@ class StrategicDocumentChildController extends AdminController
         }
 
         try {
+            $validated['document_date_accepted'] = isset($validated['pris_act_id']) ? Pris::find($validated['pris_act_id'])->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
             $item = new StrategicDocumentChildren();
             $fillable = $this->getFillableValidated($validated, $item);
             $fillable['strategic_document_id'] = $sd->id;
@@ -99,6 +102,7 @@ class StrategicDocumentChildController extends AdminController
         }
 
         $validated = $validator->validated();
+        $validated['document_date_accepted'] = isset($validated['pris_act_id']) ? Pris::find($validated['pris_act_id'])->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
         $item = StrategicDocumentChildren::find((int)$validated['id']);
         if(!$item){
             return response()->json(['main_error' => __('messages.record_not_found')], 200);

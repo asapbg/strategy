@@ -34,7 +34,7 @@ class StrategicDocumentChildStoreRequest extends FormRequest
             'public_consultation_id' => ['nullable', 'numeric'],
             'pris_act_id' => ['nullable', 'numeric'],
             'date_expiring_indefinite' => ['nullable', 'numeric'],
-            'document_date_accepted' => 'required|date',
+            'document_date_accepted' => ['nullable', 'date'],
             'document_date_expiring' => ['required_without:date_expiring_indefinite', 'date', 'nullable'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
         ];

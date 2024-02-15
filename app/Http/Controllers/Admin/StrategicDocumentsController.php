@@ -285,7 +285,7 @@ class StrategicDocumentsController extends AdminController
                 $validated['document_date'] = null;
 
                 $prisActId = Arr::get($validated, 'pris_act_id');
-                $validated['document_date_accepted'] = $prisActId ? Pris::find($prisActId)->doc_date : null;
+                $validated['document_date_accepted'] = $prisActId ? Pris::find($prisActId)->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
                 $datesToBeParsedToCarbon = [
                     'document_date_accepted',
                     'document_date_expiring',

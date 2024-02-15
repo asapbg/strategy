@@ -45,7 +45,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'strategic_act_link' => ['nullable'],
             'document_date' => ['nullable', 'date'],
             'link_to_monitorstat' => ['nullable', 'string', 'max:1000', 'url', 'regex:/^(https?:\/\/)/'],
-            //'document_date_accepted' => 'required|date',
+            'document_date_accepted' => ['nullable', 'date'],
             'date_expiring_indefinite' => 'required_without:date_expiring|boolean',
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
