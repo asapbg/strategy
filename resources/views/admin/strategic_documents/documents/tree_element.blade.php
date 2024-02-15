@@ -1,6 +1,7 @@
 @php($dItem = \App\Models\StrategicDocumentChildren::find($doc->id))
 @php($translation = json_decode($doc->translations, true))
 @php($defaultTranslation = array_filter($translation, function ($el){ return $el['locale'] == config('app.default_lang'); }))
+@php($defaultTranslation = array_values($defaultTranslation))
 @php($docFiles = json_decode($doc->files, true))
 
 <div class="col-12" @if(isset($doc->level) && $doc->level) style="padding-left: {{ ($doc->level * 3).'0px' }};" @endif>

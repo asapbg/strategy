@@ -35,7 +35,15 @@
             </div>
             <div class="row">
                 <div class="col-md-12 d-flex align-items-center mb-4 policy-area-single">
-                    <h3 class="mb-2 fs-4 me-2">{{ trans_choice('custom.policy_area_single', 1) }} :</h3>
+                    <h3 class="mb-2 fs-4 me-2">
+                        @if($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value)
+                            {{ trans_choice('custom.field_of_actions', 1) }}:
+                        @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value)
+                            {{ trans_choice('site.strategic_document.areas', 1) }}:
+                        @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value)
+                            {{ trans_choice('custom.municipalities', 1) }}:
+                        @endif
+                    </h3>
                     <div class="fs-4">
                         <a href="#" class="main-color text-decoration-none" id="policyArea"
                             data-policy-area-id="{{ $strategicDocument->policyArea?->id }}">
@@ -48,6 +56,23 @@
             </div>
 
             <div class="row">
+                @if($strategicDocument->strategic_document_level_id)
+                    <div class="col-md-4 mb-4">
+                        <h3 class="mb-2 fs-18">
+                            {{ __('site.strategic_document.level') }}
+                        </h3>
+                        @php
+                            $searchFieldPolicy = $strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities');
+                        @endphp
+                        <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$strategicDocument->policyArea->id }}" class="main-color text-decoration-none">
+                            <span class="obj-icon-info">
+                                <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="{{ trans_choice('custom.category', 1) }}"></i>
+                            </span>
+                            {{ $strategicDocument->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($strategicDocument->strategic_document_level_id)) : '---' }}
+                        </a>
+                    </div>
+                @endif
+
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
 
@@ -60,7 +85,7 @@
                     </a>
                 </div>
 
-                <div class="col-md-8 mb-4">
+                <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ trans_choice('custom.document_to', 1) }} </h3>
                     @if ($strategicDocument->parent_document_id)
                         <a href="{{ route('strategy-document.view', [$strategicDocument->parent_document_id]) }}"  target="_blank"
@@ -134,20 +159,6 @@
             </div>
 
             <div class="row">
-                @if($strategicDocument->policyArea)
-                    <div class="col-md-4 mb-4">
-                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.category', 1) }}</h3>
-                        @php
-                            $searchFieldPolicy = $strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities');
-                        @endphp
-                        <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$strategicDocument->policyArea->id }}" class="main-color text-decoration-none">
-                            <span class="obj-icon-info">
-                                <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="{{ trans_choice('custom.category', 1) }}"></i>
-                            </span>
-                            {{ $strategicDocument->policyArea->name }}
-                        </a>
-                    </div>
-                @endif
                 @if($strategicDocument->public_consultation_id)
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
