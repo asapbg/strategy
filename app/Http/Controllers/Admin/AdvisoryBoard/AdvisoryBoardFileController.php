@@ -56,9 +56,9 @@ class AdvisoryBoardFileController extends AdminController
                     false,
                     empty($validated['file_description_' . $lang['code']]) ? $validated['file_description_' . $defaultLang] : $validated['file_description_' . $lang['code']],
                     empty($validated['file_name_' . $langCode]) ? $validated['file_name_' . $defaultLang] : $validated['file_name_' . $langCode],
-                    $validated['resolution_council_ministers'],
-                    $validated['state_newspaper'],
-                    $validated['effective_at'],
+                    $validated['resolution_council_ministers'] ?? null,
+                    $validated['state_newspaper'] ?? null,
+                    $validated['effective_at'] ?? null,
                     null,
                     $validated['code_object'] ?? null
                 );
@@ -150,9 +150,9 @@ class AdvisoryBoardFileController extends AdminController
                 true,
                 $validated['file_description_' . $file->locale],
                 $validated['file_name_' . $file->locale],
-                $validated['resolution_council_ministers'],
-                $validated['state_newspaper'],
-                $validated['effective_at'],
+                $validated['resolution_council_ministers'] ?? null,
+                $validated['state_newspaper'] ?? null,
+                $validated['effective_at'] ?? null,
                 $file->parent_id ?? $file->id
             );
 

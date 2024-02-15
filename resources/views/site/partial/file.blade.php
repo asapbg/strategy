@@ -18,36 +18,36 @@
         <div class="document-info-field">{!! $file->description !!}</div>
     @endif
     <div class="document-info-field d-flex mt-3 pb-2">
-        <div class="doc-info-item">
-            <strong> {{ __('custom.status') }}:</strong>
+{{--        <div class="doc-info-item">--}}
+{{--            <strong> {{ __('custom.status') }}:</strong>--}}
 
-            @php $class = $file_up_to_date->active ? 'active-li' : 'closed-li'; @endphp
+{{--            @php $class = $file_up_to_date->active ? 'active-li' : 'closed-li'; @endphp--}}
 
-            <span class="w-min-content {{ $class }}">
-                {{ $file_up_to_date->active ? __('custom.active_m') : __('custom.inactive_m') }}
-            </span>
-        </div>
+{{--            <span class="w-min-content {{ $class }}">--}}
+{{--                {{ $file_up_to_date->active ? __('custom.active_m') : __('custom.inactive_m') }}--}}
+{{--            </span>--}}
+{{--        </div>--}}
 
-        @if(!empty($file_up_to_date->resolution_council_ministers))
-            <div class="doc-info-item">
-                <strong>{{ __('custom.resolution_council_ministers_short') }}:</strong>
-                <span><a href="#" class="text-decoration-none">{{ $file_up_to_date->resolution_council_ministers }}</a></span>
-            </div>
-        @endif
+{{--        @if(!empty($file_up_to_date->resolution_council_ministers))--}}
+{{--            <div class="doc-info-item">--}}
+{{--                <strong>{{ __('custom.resolution_council_ministers_short') }}:</strong>--}}
+{{--                <span><a href="#" class="text-decoration-none">{{ $file_up_to_date->resolution_council_ministers }}</a></span>--}}
+{{--            </div>--}}
+{{--        @endif--}}
 
-        @if(!empty($file_up_to_date->state_newspaper))
-            <div class="doc-info-item">
-                <strong>{{ __('custom.state_papernew_short') }}:</strong>
-                <span><a href="#" class="text-decoration-none">{{ $file_up_to_date->state_newspaper }}</a></span>
-            </div>
-        @endif
+{{--        @if(!empty($file_up_to_date->state_newspaper))--}}
+{{--            <div class="doc-info-item">--}}
+{{--                <strong>{{ __('custom.state_papernew_short') }}:</strong>--}}
+{{--                <span><a href="#" class="text-decoration-none">{{ $file_up_to_date->state_newspaper }}</a></span>--}}
+{{--            </div>--}}
+{{--        @endif--}}
 
-        @if(!empty($file_up_to_date->effective_at))
-            <div class="doc-info-item">
-                <strong> {{ __('custom.effective_at') }}:</strong>
-                <span>{{ \Carbon\Carbon::parse($file_up_to_date->effective_at)->format('d.m.Y') . __('custom.year_short') }}</span>
-            </div>
-        @endif
+{{--        @if(!empty($file_up_to_date->effective_at))--}}
+{{--            <div class="doc-info-item">--}}
+{{--                <strong> {{ __('custom.effective_at') }}:</strong>--}}
+{{--                <span>{{ \Carbon\Carbon::parse($file_up_to_date->effective_at)->format('d.m.Y') . __('custom.year_short') }}</span>--}}
+{{--            </div>--}}
+{{--        @endif--}}
 
         <div class="doc-info-item">
             <strong> {{ __('custom.date_published') }}:</strong>
