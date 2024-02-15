@@ -10,7 +10,7 @@
     <div class="col-lg-10 right-side-content py-5">
         <div class="row mb-2">
             <h2 class="mb-4">
-                {{ __('site.advisory_boards.contacts.title') }}
+                {{ __('site.strategic_document.contacts.title') }}
             </h2>
 
             @if(isset($moderators) && $moderators->count())
