@@ -126,4 +126,5 @@ return [
     'strategic_document.search_in_title_content' => 'Търсене в заглавие/съдържание по избраните филтри',
     'strategic_document.all_documents_report' => 'Справка с всички документи',
     'strategic_document.contacts.title' => 'Контакти на служители от дирекция „Стратегически документи"',
+    'adv_board_all' => 'Всички съвети',
 ];

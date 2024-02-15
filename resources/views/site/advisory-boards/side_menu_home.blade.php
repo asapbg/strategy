@@ -12,7 +12,7 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2">
                                 <a href="{{ route('advisory-boards.index') }}" class="@if(request()->route()->getName() == 'advisory-boards.index') active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
-                                    {{ __('site.home_page') }}
+                                    {{ __('site.adv_board_all') }}
                                 </a>
                             </li>
                             <li class="mb-2">
