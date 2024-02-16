@@ -42,6 +42,7 @@ class FixStrategicFilesTranscription extends Command
                     ->first();
                 if($findTranslation) {
                     $f->description = $findTranslation->description;
+                    $f->save();
                 }
             }
             $this->comment("Records are updated");
