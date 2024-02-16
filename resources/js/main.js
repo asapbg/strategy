@@ -299,7 +299,7 @@ function submitNewSdChild(lForm){
                     }
                     canAjax = true;
                 } else if(typeof result.main_error != 'undefined'){
-                    $($(lForm).find('.main_error')[0]).html(result.main_error);
+                    $($(lForm).find('#main_error')[0]).html(result.main_error);
                     canAjax = true;
                 } else{
                     window.location = result.redirect_url;

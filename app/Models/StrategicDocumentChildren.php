@@ -55,15 +55,29 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
         );
     }
 
-    /**
-     * Dates
-     */
+
     protected function documentStatus(): Attribute
     {
         $currentDate = Carbon::now();
         return Attribute::make(
             get: fn (string|null $value) => $currentDate->between(Carbon::parse($this->document_date_accepted), Carbon::parse($this->document_date_expiring), true) ? trans('custom.strategic_document_active')
                 : ($currentDate->greaterThan(Carbon::parse($this->document_date_expiring)) ? trans('custom.strategic_document_expired') : trans('custom.pending')),
+        );
+    }
+
+    protected function documentDateAccepted(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => $this->document_date_accepted ? displayDate($this->document_date_accepted) : '',
+            set: fn (string|null $value) => $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null
+        );
+    }
+
+    protected function documentDateExpiring(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => $this->document_date_expiring ? displayDate($this->document_date_expiring) : '',
+            set: fn (string|null $value) => $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null
         );
     }
 

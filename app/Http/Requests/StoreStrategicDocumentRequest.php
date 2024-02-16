@@ -50,7 +50,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'document_date_expiring' => ['required_if:date_expiring_indefinite,0', 'date', 'nullable'],
             'parent_document_id' => 'sometimes|nullable',
             'ekatte_area_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
-            'ekatte_municipality_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
+            'ekatte_municipality_id' => ['nullable', 'numeric'],
             'visible_in_report_main' => ['nullable', 'numeric'],
         ];
 
