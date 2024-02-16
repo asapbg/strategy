@@ -68,7 +68,7 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
     protected function documentDateAccepted(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => $this->document_date_accepted ? displayDate($this->document_date_accepted) : '',
+            get: fn (string|null $value) => $value ? displayDate($value) : '',
             set: fn (string|null $value) => $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null
         );
     }
@@ -76,7 +76,7 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
     protected function documentDateExpiring(): Attribute
     {
         return Attribute::make(
-            get: fn (string|null $value) => $this->document_date_expiring ? displayDate($this->document_date_expiring) : '',
+            get: fn (string|null $value) => $value ? displayDate($value) : '',
             set: fn (string|null $value) => $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null
         );
     }
