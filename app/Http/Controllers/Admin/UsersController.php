@@ -155,6 +155,7 @@ class  UsersController extends Controller
         try {
 
             $user = User::make($data);
+            $user->user_type = $data['user_type'] ?? 2;
             if ($must_change_password) {
                 $message = trans_choice('custom.users', 1)." {$data['email']} ".__('messages.created_successfully_m').". ".__('messages.email_send');
                 Mail::to($data['email'])->send(new UsersChangePassword($user));
@@ -224,6 +225,7 @@ class  UsersController extends Controller
         try {
 
 //            $user->username = mb_strtoupper($data['username']);
+            $user->user_type = $data['user_type'] ?? 2;
             $user->first_name = $data['first_name'];
             $user->middle_name = $data['middle_name'];
             $user->last_name = $data['last_name'];
