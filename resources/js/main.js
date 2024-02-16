@@ -1169,6 +1169,12 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.included-file-form-submit').length){
+        $('.included-file-form').on('click', function (){
+
+        });
+    }
+
     if($('.sd-submit-files').length){
         $('.sd-submit-files').on('click', function (){
             let lForm = $(this).closest('form')[0];

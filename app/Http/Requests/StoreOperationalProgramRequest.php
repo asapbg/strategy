@@ -56,13 +56,13 @@ class StoreOperationalProgramRequest extends FormRequest
                 }
             }
 
-            foreach (request()->all() as $key => $field) {
-                //detect all row files //input name format {fiel_type}_{row_num}_{row_month}
-                //row_num and row_month are pivot columns in program row files relationship
-                if( str_contains($key,'file_assessment') || str_contains($key, 'file_opinion') ) {
-                    $rules[$key] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
-                }
-            }
+//            foreach (request()->all() as $key => $field) {
+//                //detect all row files //input name format {fiel_type}_{row_num}_{row_month}
+//                //row_num and row_month are pivot columns in program row files relationship
+//                if( str_contains($key,'file_assessment') || str_contains($key, 'file_opinion') ) {
+//                    $rules[$key] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
+//                }
+//            }
         }
 
         if( request()->input('new_row') ) {

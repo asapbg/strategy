@@ -197,37 +197,37 @@ class LegislativeProgramController extends AdminController
             }
 
             //update row files
-            if( isset($validated['save']) ) {
-                if( $item ) {
-                    // Upload File
-                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
-                    if( sizeof($months) ) {
-                        foreach ($months as $m) {
-                            foreach ($rowsNums as $rn) {
-                                foreach (['assessment', 'opinion'] as $typeFile) {
-                                    foreach (config('available_languages') as $lang){
-                                        $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m)).'_'.$lang['code'];
-                                        if( isset($validated[$searchKey]) ) {
-                                            $newFile = $validated[$searchKey];
-                                            $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->where('locale', $lang['code'])->first();
-                                            if( $currentFile ) {
-                                                //delete current file of this type
-                                                $item->rowFiles()->detach($currentFile->id);
-                                                $currentFile->delete();
-                                            }
-                                            //Add file and attach
-                                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-                                            $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, ($typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion')), $lang['code']);
-                                            $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            if( isset($validated['save']) ) {
+//                if( $item ) {
+//                    // Upload File
+//                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+//                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
+//                    if( sizeof($months) ) {
+//                        foreach ($months as $m) {
+//                            foreach ($rowsNums as $rn) {
+//                                foreach (['assessment', 'opinion'] as $typeFile) {
+//                                    foreach (config('available_languages') as $lang){
+//                                        $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m)).'_'.$lang['code'];
+//                                        if( isset($validated[$searchKey]) ) {
+//                                            $newFile = $validated[$searchKey];
+//                                            $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->where('locale', $lang['code'])->first();
+//                                            if( $currentFile ) {
+//                                                //delete current file of this type
+//                                                $item->rowFiles()->detach($currentFile->id);
+//                                                $currentFile->delete();
+//                                            }
+//                                            //Add file and attach
+//                                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+//                                            $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, ($typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion')), $lang['code']);
+//                                            $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
             //Upload files
             if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
