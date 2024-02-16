@@ -99,10 +99,7 @@ class StrategicDocumentsController extends AdminController
     public function edit(Request $request, $id = 0, string $section = 'general')
     {
         $user = auth()->user();
-        $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation',
-            //'files.parentFile.versions.translations', 'files.translations','files.documentType.translations',
-            //'files.parentFile.versions.user', 'documentType.translations', 'files.parentFile.versions.documentType.translations'
-        ]);
+        $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation']);
 
 
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
@@ -157,12 +154,9 @@ class StrategicDocumentsController extends AdminController
         }
 
 
-        //TODO optimize this by ajax search
         //$consultations = PublicConsultation::with('translations')->get();
-        //TODO optimize this by ajax search
         //$prisActs = Pris::with('translations')->get();
 
-        //TODO need to revise this
 //        $strategicDocumentFilesBg = StrategicDocumentFile::with(['parentFile', 'translations', 'versions.translations', 'parentFile.versions.translations', 'documentType.translations', 'documentType.translations', 'parentFile.versions.documentType.translations'])->where('strategic_document_id', $item->id)->where('locale', 'bg')->orderBy('ord')->get();
         //$strategicDocumentsFileService = app(FileService::class);
         //$fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
@@ -500,14 +494,14 @@ class StrategicDocumentsController extends AdminController
 //        }
 //    }
 
-//    public function downloadDocFile(StrategicDocumentFile $file)
-//    {
-//        if (Storage::disk('public_uploads')->has($file->path)) {
-//            return Storage::disk('public_uploads')->download($file->path, $file->filename);
-//        } else {
-//            return back()->with('warning', __('messages.record_not_found'));
-//        }
-//    }
+    public function downloadDocFile(StrategicDocumentFile $file)
+    {
+        if (Storage::disk('public_uploads')->has($file->path)) {
+            return Storage::disk('public_uploads')->download($file->path, $file->filename);
+        } else {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+    }
 
 //    public function deleteDocFile(Request $request, StrategicDocumentFile $file)
 //    {

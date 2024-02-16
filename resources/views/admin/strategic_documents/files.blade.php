@@ -57,10 +57,11 @@
         </tr>
         @foreach($item->files as $f)
                     <tr>
-                        <td>{{ $f->description.'_'.$f->locale }} ({{ strtoupper($f->locale) }})</td>
+                        <td>{{ $f->description }} ({{ strtoupper($f->locale) }})</td>
                         <td><i class="fas @if($f->visible_in_report)  fa-check text-success @else fa-minus text-danger @endif"></i></td>
                         <td>
-                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+{{--                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">--}}
+                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('strategy-document.download-file', ['id' => $f->id]) }}">
                                 <i class="fas fa-download me-1" role="button"
                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                             </a>
