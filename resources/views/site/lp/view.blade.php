@@ -95,7 +95,7 @@
 {{--                                                                            @endif--}}
                                                                                 @if(!($r->dsc_id == config('lp_op_programs.lp_ds_col_include_action_plan_number_id')) || $actionPlan)
                                                                                     <div class="row mb-3 mt-1 ">
-                                                                                        <div class="col-md-6">
+                                                                                        <div class="col-12">
                                                                                             <p class="fw-bold fs-18 mb-1">{{ $r->label }}</p>
                                                                                             @if($r->dsc_id == config('lp_op_programs.lp_ds_col_institution_id'))
                                                                                                 @if(!empty($row->name_institutions))
