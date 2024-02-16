@@ -58,7 +58,7 @@ class StrategicDocumentChildController extends AdminController
         if($request->user()->cannot('update', $sd)) {
             return response()->json(['main_error' => __('messages.unauthorized')], 200);
         }
-
+        DB::beginTransaction();
         try {
             $validated['document_date_accepted'] = isset($validated['pris_act_id']) ? Pris::find($validated['pris_act_id'])->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
             $item = new StrategicDocumentChildren();
@@ -68,6 +68,7 @@ class StrategicDocumentChildController extends AdminController
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(StrategicDocumentChildren::TRANSLATABLE_FIELDS, $item, $validated);
+            DB::commit();
             return response()->json(['redirect_url' => isset($validated['doc']) && $validated['doc'] ? url()->previous() : route('admin.strategic_documents.document.edit', $item)]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -111,12 +112,13 @@ class StrategicDocumentChildController extends AdminController
         if($request->user()->cannot('update', $item->strategicDocument)) {
             return response()->json(['main_error' => __('messages.unauthorized')], 200);
         }
-
+        DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(StrategicDocumentChildren::TRANSLATABLE_FIELDS, $item, $validated);
+            DB::commit();
             return response()->json(['success' => 1, 'success_message' => trans_choice('custom.strategic_documents.documents', 1).' '.$item->title.' '.__('messages.updated_successfully_m')]);
         } catch (\Exception $e) {
             DB::rollBack();
