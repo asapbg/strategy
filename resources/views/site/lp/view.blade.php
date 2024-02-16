@@ -67,7 +67,7 @@
                                 <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ 't'.$m }}" role="tabpanel" aria-labelledby="{{ 't'.$m }}-tab">
                                     <div class="accordion" id="accordion{{ $m }}">
                                         @if(isset($data) && sizeof($data))
-                                            @foreach($data as $row)
+                                            @foreach($data as $к => $row)
                                                 @if(str_contains($row->month, $m))
                                                     @php($actionPlan = false)
                                                     @php($rowData = json_decode($row->columns))
@@ -75,13 +75,13 @@
                                                     @if($rowData)
 {{--                                                        @dd($rowData)--}}
                                                         <div class="accordion-item">
-                                                            <h2 class="accordion-header" id="headingOne">
+                                                            <h2 class="accordion-header" id="heading{{ $m.'_'.$к }}">
                                                                 <button class="accordion-button text-dark fs-18 fw-600" type="button" data-toggle="collapse"
-                                                                        data-target="#collapseOne" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapseOne">
+                                                                        data-target="#collapse{{ $m.'_'.$к }}" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapse{{ $m.'_'.$к }}">
                                                                     @if(isset($rowData[1]) && $rowData[1]->dsc_id == (int)config('lp_op_programs.lp_ds_col_number_id')){{ __('custom.number_symbol').' '.$rowData[1]->value.' | ' }}@endif {{ html_entity_decode($rowData[0]->value) }}
                                                                 </button>
                                                             </h2>
-                                                            <div id="collapseOne" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="headingOne"
+                                                            <div id="collapse{{ $m.'_'.$к }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $m.'_'.$к }}"
                                                                  data-bs-parent="#accordion{{ $m }}">
                                                                 <div class="accordion-body">
                                                                     <div class="custom-card p-3 mb-5">
