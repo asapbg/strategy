@@ -282,7 +282,7 @@ function submitNewSdChild(lForm){
         canAjax = false;
         $('#main_error').html('');
         $('.ajax-error').html('');
-        let formData = $('#new_sd_child_form').serialize();
+        let formData = $(lForm).serialize();
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -295,11 +295,11 @@ function submitNewSdChild(lForm){
                     let errors = Object.entries(result.errors);
                     for (let i = 0; i < errors.length; i++) {
                         const search_class = '.error_' + errors[i][0];
-                        $('#new_sd_child_form ' + search_class).html(errors[i][1][0]);
+                        $($(lForm).find(search_class)[0]).html(errors[i][1][0]);
                     }
                     canAjax = true;
                 } else if(typeof result.main_error != 'undefined'){
-                    $('#main_error').html(result.main_error);
+                    $($(lForm).find('.main_error')[0]).html(result.main_error);
                     canAjax = true;
                 } else{
                     window.location = result.redirect_url;
@@ -1106,20 +1106,16 @@ $(document).ready(function (e) {
         $('.add_sd_document').each(function (index, el){
             $(el).on('click', function (){
                 let url = $(this).data('url');
-
                 let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
                 let saveBtnTxt = GlobalLang == 'bg' ? 'Добави' : 'Add';
                 let titleTxt = GlobalLang == 'bg' ? 'Добавяне на дъщерен документ' : 'Add document';
-                if( canAjax ) {
-                    canAjax = false;
-                    new MyModal({
-                        title: titleTxt,
-                        footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild();">'+ saveBtnTxt +'</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
-                        bodyLoadUrl: url,
-                        customClass: 'w-70p'
-                    });
-                    canAjax = true;
-                }
+                new MyModal({
+                    title: titleTxt,
+                    footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild($(\'#new_sd_child_form\'));">'+ saveBtnTxt +'</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    bodyLoadUrl: url,
+                    customClass: 'w-70p',
+                    destroyListener:true
+                });
             });
         });
     }
@@ -1132,8 +1128,8 @@ $(document).ready(function (e) {
                 let lUrl = $(lForm).data('url');
                 let lMainError = $(lForm).find('.main-error')[0];
                 let lMainSuccess = $(lForm).find('.main-success')[0];
-                $(lMainError).html('');
-                $(lMainSuccess).html('');
+                $('.main-success').html('');
+                $('.main-error').html('');
                 $('.ajax-error').html('');
 
                 let formData = $(lForm).serialize();
@@ -1158,6 +1154,7 @@ $(document).ready(function (e) {
                             canAjax = true;
                         } else{
                             $(lMainSuccess).html(result.success_message);
+                            canAjax = true;
                         }
 
                     },

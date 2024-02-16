@@ -61,7 +61,7 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label">{{ trans_choice('custom.authority_accepting_strategic', 1) }}</label>
                 <div class="col-12">
-                    {{ $sd->acceptActInstitution->name }}
+                    {{ $sd->acceptActInstitution ? $sd->acceptActInstitution->name : 'Основният документ няма избран \''.trans_choice('custom.authority_accepting_strategic', 1).'\''}}
                 </div>
             </div>
         </div>
