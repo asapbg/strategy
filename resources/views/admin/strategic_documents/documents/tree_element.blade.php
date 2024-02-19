@@ -232,7 +232,7 @@
 
             <div class="row mt-4">
                 <h3 class="custom-left-border col-12">Файлове</h3>
-                <form class="row sd-form-files" data-extension="{{ implode(',', \App\Models\File::ALLOWED_FILE_STRATEGIC_DOC) }}" data-size="{{ (config('filesystems.max_upload_file_size') * 1024) }}"  action="{{ route('admin.upload.file.languages', ['object_id' => $doc->id, 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                <form class="row sd-form-files" id="fileform_{{ $doc->id }}" data-extension="{{ implode(',', \App\Models\File::ALLOWED_FILE_STRATEGIC_DOC) }}" data-size="{{ (config('filesystems.max_upload_file_size') * 1024) }}"  action="{{ route('admin.upload.file.languages', ['object_id' => $doc->id, 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="formats" value="ALLOWED_FILE_STRATEGIC_DOC">
                     @php($defaultLang = config('app.default_lang'))
@@ -244,6 +244,7 @@
                             @error('description_'.$lang['code'])
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
+                            <div class="ajax-error text-danger mt-1 error_{{ 'description_'.$lang['code'] }}"></div>
                         </div>
                     @endforeach
                     @foreach(config('available_languages') as $lang)
@@ -254,6 +255,7 @@
                             @error('file_'.$lang['code'])
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
+                            <div class="ajax-error text-danger mt-1 error_{{ 'file_'.$lang['code'] }}"></div>
                         </div>
                     @endforeach
                     <div class="col-md-4">
