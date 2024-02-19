@@ -57,22 +57,21 @@ class OperationalProgramController extends AdminController
         $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord', 'asc')->get();
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-        $assessmentsFiles = $opinionsFiles = [];
-        $assessments = $item->assessments->count() ? $item->assessments : [];
-        if( !empty($assessments) ) {
-            foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
+
+        $rowFiles = [];
+        $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
+        if( !empty($rFiles) ) {
+            foreach ($rFiles as $f) {
+                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
+                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                }
+                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
             }
         }
-        $opinions = $item->opinions->count() ? $item->opinions : [];
-        if( !empty($opinions) ) {
-            foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
-            }
-        }
+
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
         return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'data', 'columns',
-            'months', 'assessmentsFiles', 'opinionsFiles', 'institutions'));
+            'months', 'institutions', 'rowFiles'));
     }
 
     /**
@@ -92,23 +91,21 @@ class OperationalProgramController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-        $assessmentsFiles = $opinionsFiles = [];
-        $assessments = $item->assessments->count() ? $item->assessments : [];
-        if( !empty($assessments) ) {
-            foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
-            }
-        }
-        $opinions = $item->opinions->count() ? $item->opinions : [];
-        if( !empty($opinions) ) {
-            foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
+
+        $rowFiles = [];
+        $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
+        if( !empty($rFiles) ) {
+            foreach ($rFiles as $f) {
+                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
+                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                }
+                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
             }
         }
 
         $institutions = optionsFromModel(Institution::simpleOptionsList());
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'data', 'columns',
-            'months', 'assessmentsFiles', 'opinionsFiles', 'institutions'));
+            'months', 'institutions', 'rowFiles'));
     }
 
     public function store(StoreOperationalProgramRequest $request, $item = null)
@@ -232,6 +229,12 @@ class OperationalProgramController extends AdminController
 
             //Upload files
             if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
+                foreach ($request->all() as $k => $v){
+                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en'])){
+                        $request->request->add([str_replace('a_', '', $k) => $v]);
+                        $request->offsetUnset($k);
+                    }
+                }
                 $langReq = LanguageFileUploadRequest::createFrom($request);
                 $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL, false);
             }

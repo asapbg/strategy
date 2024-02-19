@@ -18,11 +18,15 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use App\Services\FileOcr;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use League\Flysystem\FilesystemException;
 
 class CommonController extends Controller
@@ -347,5 +351,93 @@ class CommonController extends Controller
         }
 
         return view('templates.common-html');
+    }
+
+    /**
+     * @param Request $request
+     * @param $objectId
+     * @param $typeObject
+     * @param $rowNum
+     * @param $rowMonth
+     * @return JsonResponse
+     */
+    public function uploadFileLpOp(Request $request, $objectId, $typeObject, $rowNum, $rowMonth) {
+
+        $req = new LanguageFileUploadRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        //$validated = $validator->validated();
+        DB::beginTransaction();
+        try {
+            $typeObjectToSave = $typeObject;
+            $validated = $request->all();
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_OPERATIONAL_PROGRAM => File::OP_GENERAL_UPLOAD_DIR,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM => File::LP_GENERAL_UPLOAD_DIR,
+                default => '',
+            };
+
+            switch (((int)$typeObject)){
+                case File::CODE_OBJ_OPERATIONAL_PROGRAM:
+                    $item = OperationalProgram::find($objectId);
+                    $route = route('admin.consultations.operational_programs.edit', $item);
+                    break;
+                case File::CODE_OBJ_LEGISLATIVE_PROGRAM:
+                    $item = LegislativeProgram::find($objectId);
+                    $route = route('admin.consultations.legislative_programs.edit', $item);
+                    break;
+            }
+
+            $fileIds = [];
+            foreach ($this->languages as $lang) {
+                $code = $lang['code'];
+
+                if (!isset($validated['file_'.$code])) {
+                    continue;
+                }
+
+                if (!isset($validated['file_'.$code])) {
+                    $file = $validated['file_bg'];
+                    $desc = $validated['description_bg'] ?? null;
+                } else {
+                    $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
+                    $desc = isset($validated['description_'.$code]) && !empty($validated['description_'.$code]) ? $validated['description_'.$code] : ($validated['description_'.config('app.default_lang')] ?? null);
+                }
+
+                $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+
+                $newFile = new File([
+                    'id_object' => $objectId,
+                    'code_object' => $typeObjectToSave,
+                    'filename' => $fileNameToStore,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $pDir.$fileNameToStore,
+                    'description_'.$code => $desc,
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => ($version + 1).'.0',
+                    'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
+                ]);
+                $newFile->save();
+                $ocr = new FileOcr($newFile->refresh());
+                $ocr->extractText();
+                $item->rowFiles()->attach($newFile->id ,['row_month' => $rowMonth, 'row_num' => $rowNum]);
+                $item->save();
+            }
+
+            DB::commit();
+            return response()->json(['redirect_url' => $route ?? url()->previous()], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Upload file', $e->getMessage());
+            return response()->json(['main_error' => 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.'], 200);
+        }
     }
 }

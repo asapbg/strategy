@@ -82,8 +82,8 @@ class StoreLegislativeProgramRequest extends FormRequest
 
         if( request()->input('save_files') || request()->input('stay_in_files')) {
             foreach (config('available_languages') as $lang) {
-                $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
-                $rules['description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
+                $rules['a_file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+                $rules['a_description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
             }
         }
 

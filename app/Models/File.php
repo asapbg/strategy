@@ -64,6 +64,7 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_STRATEGIC_DOC = ['doc', 'docx', 'pdf'];
+    const ALLOWED_FILE_LP_OO = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_PAGE = ['doc', 'docx', 'pdf', 'xsl', 'xlsx', 'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];
 
     const CONTENT_TYPE_IMAGES = ['image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'];

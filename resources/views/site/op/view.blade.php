@@ -119,37 +119,27 @@
                                                                                                     <p>{{ html_entity_decode($r->value) }}</p>
                                                                                                 @endif
                                                                                         </div>
-        {{--                                                                            @if($cnt == 2 || $loop->last)--}}
-        {{--                                                                                    <hr class="custom-hr">--}}
-        {{--                                                                                </div>--}}
-        {{--                                                                            @endif--}}
                                                                                         <hr class="custom-hr">
                                                                                     </div>
                                                                                 @endif
                                                                             @if($loop->last)
                                                                                 <div class="row mb-3">
                                                                                     @if($item->rowFilesLocale->count())
-                                                                                        @foreach([\App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION->value, \App\Enums\DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value] as $doc)
-                                                                                            @foreach(config('available_languages') as $lang)
-                                                                                                @foreach($item->rowFilesLocale as $f)
-                                                                                                    @if($f->pivot->row_num == $row->row_num && $f->pivot->row_month == $row->month && $f->doc_type == $doc && $f->locale = $lang['code'])
-                                                                                                        <div class="col-md-12 mb-2">
-                                                                                                            <p class="fw-bold fs-18 mb-1">{{ __('custom.public_consultation.doc_type.'.$doc) }}</p>
-                                                                                                            <p class="mb-0">
-                                                                                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                                                                                                                    {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale}.' ('.strtoupper($f->locale).')' : $f->filename }} | {{ displayDate($f->created_at) }}
-                                                                                                                </a>
-                                                                                                                {{--                                                                                                            <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>--}}
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                    @endif
-                                                                                                @endforeach
-                                                                                            @endforeach
+                                                                                        @foreach($item->rowFilesLocale as $f)
+                                                                                            @if($f->pivot->row_num == $row->row_num && $f->pivot->row_month == $row->month)
+                                                                                                <div class="col-md-12 mb-2">
+                                                                                                    <p class="mb-0">
+                                                                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
+                                                                                                            {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename }} | {{ displayDate($f->created_at) }}
+                                                                                                        </a>
+                                                                                                        {{--                                                                                                            <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>--}}
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                            @endif
                                                                                         @endforeach
                                                                                     @endif
                                                                                 </div>
                                                                             @endif
-{{--                                                                            @php($cnt = $cnt == 2 ? 1 : $cnt + 1)--}}
                                                                         @endforeach
                                                                     </div>
                                                                 </div>

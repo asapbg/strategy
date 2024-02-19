@@ -13700,7 +13700,7 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 // START Custom File validation
 //==========================
 function myFileSize(lField){
-    let fieldErrorEl = $($(lField).closest('form')[0]).find('.error_' + lField.name)[0];
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(fieldErrorEl).removeClass('is-invalid');
 
@@ -13718,7 +13718,7 @@ function myFileSize(lField){
 }
 
 function myExtension(lField, allowed_file_extensions){
-    let fieldErrorEl = $($(lField).closest('form')[0]).find('.error_' + lField.name)[0];
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(lField).removeClass('is-invalid');
 
@@ -13728,7 +13728,6 @@ function myExtension(lField, allowed_file_extensions){
         let check = false;
         if (explode.length > 0) {
             $.each( explode, function( index, value ) {
-                console.log(allowed_file_extensions, explode, lField.name.match(new RegExp(".(" + value + ")$", "i")));
                 if ((lField.files[0].name).match(new RegExp(".(" + value + ")$", "i"))) {
                     check = true;
                 }
@@ -13746,7 +13745,7 @@ function myExtension(lField, allowed_file_extensions){
 }
 
 function fieldRequired(lField, isRequired){
-    let fieldErrorEl = $($(lField).closest('form')[0]).find('.error_' + lField.name)[0];
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(lField).removeClass('is-invalid');
 
@@ -14334,7 +14333,7 @@ $(document).ready(function (e) {
         });
     }
 
-    function validateFileForm(lForm){
+    function validateFileForm(lForm, submit = true){
         let bgDescField = $(lForm).find('input[name="description_bg"]')[0];
         let bgDesc = $(bgDescField).val().length;
         let enDescField = $(lForm).find('input[name="description_en"]')[0];
@@ -14369,18 +14368,86 @@ $(document).ready(function (e) {
             return false;
         }
 
-        if ($(lForm).valid()) {
+        if(submit) {
             $(lForm).submit();
+        } else{
+            return true;
         }
+
     }
 
     if($('.sd-submit-files').length){
         $('.sd-submit-files').on('click', function (){
             let lForm = $(this).closest('form')[0];
             validateFileForm(lForm);
-
         });
     }
+
+    if($('.included-file-form-submit').length){
+        $('.included-file-form-submit').on('click', function (){
+            let lForm = $(this).closest('div.sd-form-files')[0];
+
+            if(validateFileForm(lForm, false)){
+                var lData = new FormData();
+                if($($(lForm).find("input[name=description_bg]")[0]).val().length){
+                    lData.append('description_bg', $($(lForm).find("input[name=description_bg]")[0]).val());
+                }
+                if($($(lForm).find("input[name=description_en]")[0]).val().length){
+                    lData.append('description_en', $($(lForm).find("input[name=description_en]")[0]).val());
+                }
+                if($(lForm).find("input[name=file_bg]")[0].files.length){
+                    lData.append('file_bg', $(lForm).find("input[name=file_bg]")[0].files[0]);
+                }
+                if($(lForm).find("input[name=file_en]")[0].files.length){
+                    lData.append('file_en', $(lForm).find("input[name=file_en]")[0].files[0]);
+                }
+                lData.append('formats', $($(lForm).find("input[name=formats]")[0]).val());
+
+                if( canAjax ) {
+                    canAjax = false;
+                    let lUrl = $(lForm).data('url');
+                    let lMainError = $(lForm).find('.main-error')[0];
+                    let lMainSuccess = $(lForm).find('.main-success')[0];
+                    $(lMainError).html('');
+                    $(lMainSuccess).html('');
+                    $('.ajax-error').html('');
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        url: lUrl,
+                        data: lData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            if(typeof result.errors != 'undefined'){
+                                let errors = Object.entries(result.errors);
+                                for (let i = 0; i < errors.length; i++) {
+                                    const search_class = '.error_' + errors[i][0];
+                                    let errDiv = $(lForm).find(search_class);
+                                    $(errDiv[0]).html(errors[i][1][0]);
+                                }
+                                canAjax = true;
+                            } else if(typeof result.main_error != 'undefined'){
+                                $(lMainError).html(result.main_error);
+                                canAjax = true;
+                            } else{
+                                window.location = result.redirect_url;
+                            }
+
+                        },
+                        error: function (result) {
+                            canAjax = true;
+                        }
+                    });
+                }
+
+            }
+        });
+    }
+
 
 })
 

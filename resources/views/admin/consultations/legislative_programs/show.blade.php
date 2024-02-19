@@ -75,7 +75,7 @@
                                                             <h2 class="mb-0">
                                                                 @php(usort($rowColumns, function ($a, $b) { return strcmp($a['ord'], $b['ord']); }))
                                                                 <button class="btn btn-link btn-block text-left @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $accordionIndex }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $accordionIndex }}">
-                                                                    {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }}  {{ $rowColumns[0]['value'] }}
+                                                                    {{ trans_choice('custom.months', 1) }} {{ $month }} - #{{ $rIndex }}  {{ html_entity_decode($rowColumns[0]['value']) }}
                                                                 </button>
                                                             </h2>
                                                         </div>
@@ -114,19 +114,44 @@
                                                                         </div>
                                                                     @endforeach
                                                                 </div>
-                                                                <div class="row">
-                                                                    @foreach(config('available_languages') as $lang)
-                                                                        <div class="col-12">
-                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $assessmentsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                                <div class="row">
-                                                                    @foreach(config('available_languages') as $lang)
-                                                                        <div class="col-12">
-                                                                            @include('admin.partial.attached_documents_with_actions', ['attFile' => $opinionsFiles[$row->row_num.'_'.$row->month.'_'.$lang['code']] ?? null])
-                                                                        </div>
-                                                                    @endforeach
+
+                                                                <div class="row mt-3 included-file-form">
+                                                                    <div class="col-12">
+                                                                        <table class="table table-sm table-hover table-bordered mt-4">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <th>Име</th>
+                                                                                <th>Действие</th>
+                                                                            </tr>
+
+                                                                            @foreach(config('available_languages') as $lang)
+                                                                                @php($langFilesKey = $row->row_num.'_'.$row->month.'_'.$lang['code'])
+                                                                                @if(isset($rowFiles[$langFilesKey]) && sizeof($rowFiles[$langFilesKey]))
+                                                                                    @foreach($rowFiles[$langFilesKey] as $f)
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
+                                                                                                - {{ __('custom.'.$f->locale) }}
+                                                                                                | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
+                                                                                                        data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                                                                >
+                                                                                                    <i class="fas fa-eye"></i>
+                                                                                                </button>
+                                                                                                <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                                                                    <i class="fas fa-download me-1" role="button"
+                                                                                                       data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                                                                </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    @endforeach
+                                                                                @endif
+                                                                            @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
