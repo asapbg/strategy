@@ -169,7 +169,7 @@ class OperationalProgram extends ModelActivityExtend
                         operational_program_row.operational_program_id = '.(int)$this->id.'
                         and operational_program_row.deleted_at is null
                     group by operational_program_row.month, operational_program_row.row_num
-                    order by operational_program_row.month, record_num asc asc
+                    order by operational_program_row.month, record_num asc
                 ');
     }
 
