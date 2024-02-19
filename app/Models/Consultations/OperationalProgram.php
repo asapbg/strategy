@@ -156,7 +156,7 @@ class OperationalProgram extends ModelActivityExtend
             'select
                         operational_program_row.month,
                         operational_program_row.row_num,
-                        max(case when operational_program_row.dynamic_structures_column_id = '.config('lp_op_programs.op_ds_col_number_id').' then operational_program_row.value else \'0\' end) as record_num,
+                        max(case when operational_program_row.dynamic_structures_column_id = '.config('lp_op_programs.op_ds_col_number_id').' then operational_program_row.value::int else 0 end) as record_num,
                         json_agg(json_build_object(\'id\', operational_program_row.id, \'value\', operational_program_row.value, \'type\', dynamic_structure_column.type, \'dsc_id\', dynamic_structure_column.id, \'ord\', dynamic_structure_column.ord, \'label\', dynamic_structure_column_translations.label, \'institution_ids\', (select json_agg(operational_program_row_institution.institution_id) as institution_ids from operational_program_row_institution where operational_program_row_institution.operational_program_row_id = operational_program_row.id))) as columns,
                         json_agg(institution_translations.name) FILTER (where institution_translations.name is not null) as name_institutions
                     from operational_program_row

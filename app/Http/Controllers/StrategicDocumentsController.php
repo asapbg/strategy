@@ -112,6 +112,8 @@ class StrategicDocumentsController extends Controller
             if(!isset($items[$cat])){
                 $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
             }
+//            \DB::raw('case when field_of_actions.parentid = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value). ' then \''.trans_choice('custom.areas', 1).'\' || \' \' || field_of_action_translations.name
+//                else (case when  field_of_actions.parentid = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value).' then \''.trans_choice('custom.municipalities', 1).'\' || \' \' || field_of_action_translations.name else field_of_action_translations.name end) end as policy')])
             $items[$cat]['items'] = StrategicDocument::select(['strategic_document.*', 'field_of_action_translations.name as policy'])
                 ->Active()
                 ->with(['translations', 'policyArea', 'policyArea.translations'])

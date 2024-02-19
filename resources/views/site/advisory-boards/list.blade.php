@@ -88,7 +88,7 @@
                                 @endif
                             </div>
                             @if($item->policyArea)
-                                <a href="{{ route('strategy-documents.index').'?fieldOfActions[]='.$item->policyArea->id }}"
+                                <a href="{{ route('advisory-boards.index').'?fieldOfActions[]='.$item->policyArea->id }}"
                                    title="{{ $item->policyArea->name }}" class="text-decoration-none mb-2">
                                     <i class="text-primary {{ $item->policyArea->icon_class }} me-1" title="{{ $item->policyArea->name }}"></i>
                                     {{ $item->policyArea->name }}

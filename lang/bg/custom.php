@@ -795,7 +795,7 @@ return [
     'strategic_document_childs' => 'Дъщерен документ',
     'strategic_document.category.CENTRAL'        => 'Стратегически документи на национално ниво',
     'strategic_document.category.AREA'        => 'Стратегически документи на областно ниво',
-    'strategic_document.category.MUNICIPAL'        => 'Стратегически документи на областно и общинско ниво',
+    'strategic_document.category.MUNICIPAL'        => 'Стратегически документи на общинско ниво',
     'strategic_document.dropdown.CENTRAL'        => 'Национално',
     'strategic_document.dropdown.AREA'        => 'Областно',
     'strategic_document.dropdown.MUNICIPAL'        => 'Общинско',

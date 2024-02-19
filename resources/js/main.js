@@ -770,9 +770,10 @@ $(document).ready(function (e) {
         $('.summernote').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol']],
+                ['para', ['ul', 'ol']], //,'paragraph'
                 ['view', ['fullscreen']],
-                ['insert', ['link']]
+                ['insert', ['link']],
+                //['fontsize', ['fontsize']],
             ],
             dialogsInBody: true,
             lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
