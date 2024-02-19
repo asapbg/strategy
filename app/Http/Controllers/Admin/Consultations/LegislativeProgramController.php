@@ -13,9 +13,12 @@ use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
 use App\Models\File;
 use App\Models\StrategicDocuments\Institution;
+use App\Services\FileOcr;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -58,22 +61,21 @@ class LegislativeProgramController extends AdminController
         $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord', 'asc')->get();
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-        $assessmentsFiles = $opinionsFiles = [];
-        $assessments = $item->assessments->count() ? $item->assessments : [];
-        if( !empty($assessments) ) {
-            foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
+
+        $rowFiles = [];
+        $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
+        if( !empty($rFiles) ) {
+            foreach ($rFiles as $f) {
+                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
+                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                }
+                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
             }
         }
-        $opinions = $item->opinions->count() ? $item->opinions : [];
-        if( !empty($opinions) ) {
-            foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
-            }
-        }
+
         $institutions = Institution::simpleOptionsList()->pluck('name', 'id')->toArray();
         return $this->view(self::SHOW_VIEW, compact('item', 'listRouteName', 'columns', 'data',
-            'months', 'assessmentsFiles', 'opinionsFiles', 'institutions'));
+            'months', 'institutions', 'rowFiles'));
     }
 
     /**
@@ -94,22 +96,21 @@ class LegislativeProgramController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-        $assessmentsFiles = $opinionsFiles = [];
-        $assessments = $item->assessments->count() ? $item->assessments : [];
-        if( !empty($assessments) ) {
-            foreach ($assessments as $f) {
-                $assessmentsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
+
+        $rowFiles = [];
+        $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
+        if( !empty($rFiles) ) {
+            foreach ($rFiles as $f) {
+                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
+                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                }
+                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
             }
         }
-        $opinions = $item->opinions->count() ? $item->opinions : [];
-        if( !empty($opinions) ) {
-            foreach ($opinions as $f) {
-                $opinionsFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = $f;
-            }
-        }
+
         $institutions = optionsFromModel(Institution::simpleOptionsList());
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'columns', 'data', 'months',
-            'assessmentsFiles', 'opinionsFiles', 'institutions'));
+            'institutions', 'rowFiles'));
     }
 
     public function store(StoreLegislativeProgramRequest $request)
@@ -197,40 +198,46 @@ class LegislativeProgramController extends AdminController
             }
 
             //update row files
-            if( isset($validated['save']) ) {
-                if( $item ) {
-                    // Upload File
-                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
-                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
-                    if( sizeof($months) ) {
-                        foreach ($months as $m) {
-                            foreach ($rowsNums as $rn) {
-                                foreach (['assessment', 'opinion'] as $typeFile) {
-                                    foreach (config('available_languages') as $lang){
-                                        $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m)).'_'.$lang['code'];
-                                        if( isset($validated[$searchKey]) ) {
-                                            $newFile = $validated[$searchKey];
-                                            $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->where('locale', $lang['code'])->first();
-                                            if( $currentFile ) {
-                                                //delete current file of this type
-                                                $item->rowFiles()->detach($currentFile->id);
-                                                $currentFile->delete();
-                                            }
-                                            //Add file and attach
-                                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
-                                            $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, ($typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion')), $lang['code']);
-                                            $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            if( isset($validated['save']) ) {
+//                if( $item ) {
+//                    // Upload File
+//                    $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+//                    $rowsNums = $item->id ? $item->records->pluck('row_num')->unique()->toArray() : [];
+//                    if( sizeof($months) ) {
+//                        foreach ($months as $m) {
+//                            foreach ($rowsNums as $rn) {
+//                                foreach (['assessment', 'opinion'] as $typeFile) {
+//                                    foreach (config('available_languages') as $lang){
+//                                        $searchKey = 'file_'.$typeFile.'_'.$rn.'_'.(str_replace('.', '_',$m)).'_'.$lang['code'];
+//                                        if( isset($validated[$searchKey]) ) {
+//                                            $newFile = $validated[$searchKey];
+//                                            $currentFile = $item->{$typeFile.'s'}()->wherePivot('row_month', $m)->wherePivot('row_num', $rn)->where('locale', $lang['code'])->first();
+//                                            if( $currentFile ) {
+//                                                //delete current file of this type
+//                                                $item->rowFiles()->detach($currentFile->id);
+//                                                $currentFile->delete();
+//                                            }
+//                                            //Add file and attach
+//                                            $docType = $typeFile == 'assessment' ? DocTypesEnum::PC_IMPACT_EVALUATION : DocTypesEnum::PC_IMPACT_EVALUATION_OPINION;
+//                                            $file = $this->uploadFile($item, $newFile, File::CODE_OBJ_LEGISLATIVE_PROGRAM, $docType, ($typeFile == 'assessment' ? __('validation.attributes.assessment') : __('validation.attributes.opinion')), $lang['code']);
+//                                            $item->rowFiles()->attach($file->id ,['row_month' => $m, 'row_num' => $rn]);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
             //Upload files
             if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
+                foreach ($request->all() as $k => $v){
+                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en'])){
+                        $request->request->add([str_replace('a_', '', $k) => $v]);
+                        $request->offsetUnset($k);
+                    }
+                }
                 $langReq = LanguageFileUploadRequest::createFrom($request);
                 $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL, false);
             }

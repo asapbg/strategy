@@ -595,14 +595,71 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 // End Select2 Ajax Autoload
 //==========================
 
-$(document).ready(function (e) {
+// ===========================
+// START Custom File validation
+//==========================
+function myFileSize(lField){
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
+    $(fieldErrorEl).html('');
+    $(fieldErrorEl).removeClass('is-invalid');
 
-    //Custom file jquery inline validation for dynamical added files
-    if($.validator) {
-        $.validator.addMethod('myfilesize', function(value, element, param) {
-            return this.optional(element) || (element.files[0].size <= param)
-        }, '');
+    if(lField.files.length) {
+        if(lField.files.length && lField.files[0].size >= MaxUploadFileSize){
+            $(fieldErrorEl).html("Максималният размер на файла трябва да е по-малък от " + MaxUploadFileSize + " MB");
+            $(lField).addClass('is-invalid');
+            return false;
+        } else{
+            $(fieldErrorEl).html('');
+            $(lField).removeClass('is-invalid');
+        }
     }
+    return true;
+}
+
+function myExtension(lField, allowed_file_extensions){
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
+    $(fieldErrorEl).html('');
+    $(lField).removeClass('is-invalid');
+
+    if(lField.files.length) {
+        let explode = allowed_file_extensions.split(",");
+
+        let check = false;
+        if (explode.length > 0) {
+            $.each( explode, function( index, value ) {
+                if ((lField.files[0].name).match(new RegExp(".(" + value + ")$", "i"))) {
+                    check = true;
+                }
+            });
+        }
+
+        if (!check) {
+            $(fieldErrorEl).html("Разрешените файлови формати са " + allowed_file_extensions);
+            $(lField).addClass('is-invalid');
+        }
+        return check;
+    }
+
+    return true;
+}
+
+function fieldRequired(lField, isRequired){
+    let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
+    $(fieldErrorEl).html('');
+    $(lField).removeClass('is-invalid');
+
+    if(isRequired && !$(lField).val().length){
+        $(fieldErrorEl).html("Полето е задължително");
+        $(lField).addClass('is-invalid');
+        return false;
+    }
+    return true;
+}
+// ===========================
+// START Custom File validation
+//==========================
+
+$(document).ready(function (e) {
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
@@ -1166,63 +1223,127 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.included-file-form-submit').length){
+        $('.included-file-form').on('click', function (){
+
+        });
+    }
+
+    function validateFileForm(lForm, submit = true){
+        let bgDescField = $(lForm).find('input[name="description_bg"]')[0];
+        let bgDesc = $(bgDescField).val().length;
+        let enDescField = $(lForm).find('input[name="description_en"]')[0];
+        let enDesc = $(enDescField).val().length;
+        let bgFileField = $(lForm).find('input[name="file_bg"]')[0];
+        let bgFile = $(bgFileField).val().length;
+        let enFileField = $(lForm).find('input[name="file_en"]')[0];
+        let enFile = $(enFileField).val().length;
+
+        let bgRequired = bgFile || (!(enDesc > 0) && !(bgDesc > 0) && !enFile);
+        let bgFileRequired = bgDesc || (!(enDesc > 0) && !bgFile && !enFile);
+
+        let enRequired = enFile;
+        let enFileRequired = enDesc > 0;
+
+        let allowed_file_extensions = $(lForm).data('extension');
+        if(!fieldRequired(bgDescField, bgRequired)) {
+            return false;
+        } else if(!fieldRequired(enDescField, enRequired)) {
+            return false;
+        } else if(!fieldRequired(bgFileField, bgFileRequired)){
+            return false;
+        } else if(!fieldRequired(enFileField, enFileRequired)) {
+            return false;
+        } else if(!myExtension(bgFileField, allowed_file_extensions)) {
+            return false;
+        } else if(!myExtension(enFileField, allowed_file_extensions)) {
+            return false;
+        } else if(!myFileSize(bgFileField)) {
+            return false;
+        } else if(!myFileSize(enFileField)) {
+            return false;
+        }
+
+        if(submit) {
+            $(lForm).submit();
+        } else{
+            return true;
+        }
+
+    }
+
     if($('.sd-submit-files').length){
         $('.sd-submit-files').on('click', function (){
             let lForm = $(this).closest('form')[0];
-            let allowed_file_extensions = $(lForm).data('extensions');
-            let max_upload_file_size = $(lForm).data('size');
-            let bgRequired = $($(lForm).find('input[name="file_bg"]')[0]).val() ? true : false;
-            let bgFileRequired = $($(lForm).find('input[name="description_bg"]')[0]).val().length != 0 || !$($(lForm).find('input[name="description_en"]')[0]).val();
-            let enRequired = $($(lForm).find('input[name="file_en"]')[0]).val() ? true : false;
-            let enFileRequired = $($(lForm).find('input[name="description_en"]')[0]).val().length != 0;
-            $(lForm).submit();
-            // $(lForm).validate({
-            //     rules: {
-            //         file_bg: {
-            //             required: bgFileRequired,
-            //             extension: allowed_file_extensions,
-            //             myfilesize: max_upload_file_size
-            //         },
-            //         file_en: {
-            //             required: enFileRequired,
-            //             extension: allowed_file_extensions,
-            //             myfilesize: max_upload_file_size
-            //         },
-            //         description_bg: {
-            //             required: bgRequired,
-            //         },
-            //         description_en: {
-            //             required: enRequired,
-            //         },
-            //     },
-            //     messages: {
-            //         file_bg: {
-            //             myextension: "Разрешените файлови формати са " +allowed_file_extensions,
-            //             myfilesize: "Максималният размер на файла трябва да е по-малък от " + ((max_upload_file_size / 1024) / 1024) + " MB"
-            //         },
-            //         file_en: {
-            //             myextension: "Разрешените файлови формати са " +allowed_file_extensions,
-            //             myfilesize: "Максималният размер на файла трябва да е " + ((max_upload_file_size / 1024) / 1024) + " MB"
-            //         },
-            //     },
-            //     errorElement: 'span',
-            //     errorPlacement: function (error, element) {
-            //         error.addClass('error');
-            //         element.closest('.div').append(error);
-            //     },
-            //     highlight: function (element, errorClass, validClass) {
-            //         $(element).addClass('is-invalid');
-            //     },
-            //     unhighlight: function (element, errorClass, validClass) {
-            //         $(element).removeClass('is-invalid');
-            //     }
-            // });
-            //
-            // if ($(lForm).valid()) {
-            //     $(lForm).submit();
-            // }
+            validateFileForm(lForm);
         });
     }
+
+    if($('.included-file-form-submit').length){
+        $('.included-file-form-submit').on('click', function (){
+            let lForm = $(this).closest('div.sd-form-files')[0];
+
+            if(validateFileForm(lForm, false)){
+                var lData = new FormData();
+                if($($(lForm).find("input[name=description_bg]")[0]).val().length){
+                    lData.append('description_bg', $($(lForm).find("input[name=description_bg]")[0]).val());
+                }
+                if($($(lForm).find("input[name=description_en]")[0]).val().length){
+                    lData.append('description_en', $($(lForm).find("input[name=description_en]")[0]).val());
+                }
+                if($(lForm).find("input[name=file_bg]")[0].files.length){
+                    lData.append('file_bg', $(lForm).find("input[name=file_bg]")[0].files[0]);
+                }
+                if($(lForm).find("input[name=file_en]")[0].files.length){
+                    lData.append('file_en', $(lForm).find("input[name=file_en]")[0].files[0]);
+                }
+                lData.append('formats', $($(lForm).find("input[name=formats]")[0]).val());
+
+                if( canAjax ) {
+                    canAjax = false;
+                    let lUrl = $(lForm).data('url');
+                    let lMainError = $(lForm).find('.main-error')[0];
+                    let lMainSuccess = $(lForm).find('.main-success')[0];
+                    $(lMainError).html('');
+                    $(lMainSuccess).html('');
+                    $('.ajax-error').html('');
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        url: lUrl,
+                        data: lData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            if(typeof result.errors != 'undefined'){
+                                let errors = Object.entries(result.errors);
+                                for (let i = 0; i < errors.length; i++) {
+                                    const search_class = '.error_' + errors[i][0];
+                                    let errDiv = $(lForm).find(search_class);
+                                    $(errDiv[0]).html(errors[i][1][0]);
+                                }
+                                canAjax = true;
+                            } else if(typeof result.main_error != 'undefined'){
+                                $(lMainError).html(result.main_error);
+                                canAjax = true;
+                            } else{
+                                window.location = result.redirect_url;
+                            }
+
+                        },
+                        error: function (result) {
+                            canAjax = true;
+                        }
+                    });
+                }
+
+            }
+        });
+    }
+
 
 })
 

@@ -21,6 +21,7 @@
     <link rel="icon" href="{{ asset('/img/strategy-logo.svg') }}" sizes="16x16 32x32" type="image/png">
     <script type="text/javascript">
         var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
+        var MaxUploadFileSize = parseInt("{{ config('filesystems.max_upload_file_size') * 1024 }}");
     </script>
 </head>
 

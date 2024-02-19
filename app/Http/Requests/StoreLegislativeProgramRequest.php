@@ -55,13 +55,13 @@ class StoreLegislativeProgramRequest extends FormRequest
                 }
             }
 
-            foreach (request()->all() as $key => $field) {
-                //detect all row files //input name format {fiel_type}_{row_num}_{row_month}
-                //row_num and row_month are pivot columns in program row files relationship
-                if( str_contains($key,'file_assessment') || str_contains($key, 'file_opinion') ) {
-                    $rules[$key] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
-                }
-            }
+//            foreach (request()->all() as $key => $field) {
+//                //detect all row files //input name format {fiel_type}_{row_num}_{row_month}
+//                //row_num and row_month are pivot columns in program row files relationship
+//                if( str_contains($key,'file_assessment') || str_contains($key, 'file_opinion') ) {
+//                    $rules[$key] = [ 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', ['pdf'])];
+//                }
+//            }
         }
 
         if( request()->input('new_row') ) {
@@ -82,8 +82,8 @@ class StoreLegislativeProgramRequest extends FormRequest
 
         if( request()->input('save_files') || request()->input('stay_in_files')) {
             foreach (config('available_languages') as $lang) {
-                $rules['file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
-                $rules['description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
+                $rules['a_file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+                $rules['a_description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
             }
         }
 

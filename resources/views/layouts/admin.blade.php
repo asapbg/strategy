@@ -19,6 +19,7 @@
     <![endif]-->
     <script>
         var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
+        var MaxUploadFileSize = parseInt("{{ config('filesystems.max_upload_file_size') * 1024 }}");
     </script>
     <script src="{{ asset('vendor/ckeditor/ckeditor.min.js') }}"></script>
     <script src="{{ asset('vendor/ckeditor/translations/bg.min.js') }}"></script>
