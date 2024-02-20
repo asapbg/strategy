@@ -519,7 +519,8 @@ if (!function_exists('fileHtmlContent')) {
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
             case 'application/vnd.ms-excel': //xls
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
-                $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
+                $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
+                $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
                 break;
 //            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
 //                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
