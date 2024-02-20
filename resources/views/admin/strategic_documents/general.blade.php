@@ -98,7 +98,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12" id="ekatte_area_div_id">
                             <div class="form-group">
@@ -111,6 +110,7 @@
                                             <option value="" @if(old('ekatte_area_id', ($item->id ? $item->policy_area_id : '')) == '') selected @endif>
                                                 ---
                                             </option>
+
                                         @foreach ($ekateAreas as $ekateArea)
                                             <option value="{{ $ekateArea->id }}"
                                                     @if(old('ekatte_area_id', ($item->id ? $item->policy_area_id : 0)) == $ekateArea->id) selected @endif data-id="{{ $ekateArea->id }}">{{ $ekateArea->name }}</option>

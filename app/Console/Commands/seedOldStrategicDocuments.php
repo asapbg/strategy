@@ -3,12 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Http\Controllers\CommonController;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\FieldOfAction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Models\StrategicDocument;
 use App\Models\User;
+use Illuminate\Support\Facades\Schema;
 
 class seedOldStrategicDocuments extends Command
 {
@@ -31,8 +33,48 @@ class seedOldStrategicDocuments extends Command
      *
      * @return int
      */
+
+    private array $policyAreas;
+    private array $policyAreasArea;
+    private array $policyAreasMunicipal;
+    private array $languages;
+
+    public function __construct()
+    {
+        parent::__construct();
+//        DB::statement('delete from field_of_action_translations where field_of_action_id > 983');
+//        DB::statement('delete from field_of_actions where id > 983');
+//        DB::statement('update strategic_document set policy_area_id = null where policy_area_id > 983');
+
+        $this->languages = config('available_languages');
+        //Our policy area
+        $policyAreasDBCentral = FieldOfAction::Central()->withTrashed()->with('translations')->get();
+        $this->policyAreas = array();
+        if($policyAreasDBCentral->count()){
+            foreach ($policyAreasDBCentral as $p){
+                $this->policyAreas[$p->translate('bg')->name] = $p->id;
+            }
+        }
+        $policyAreasDBArea = FieldOfAction::Area()->withTrashed()->with('translations')->get();
+        $this->policyAreasArea = array();
+        if($policyAreasDBArea->count()){
+            foreach ($policyAreasDBArea as $p){
+                $this->policyAreasArea[$p->translate('bg')->name] = $p->id;
+            }
+        }
+        $policyAreasDBMunicipal = FieldOfAction::Municipal()->withTrashed()->with('translations')->get();
+        $this->policyAreasMunicipal = array();
+        if($policyAreasDBMunicipal->count()){
+            foreach ($policyAreasDBMunicipal as $p){
+                $this->policyAreasMunicipal[$p->translate('bg')->name] = $p->id;
+            }
+        }
+
+    }
+
     public function handle()
     {
+        CommonController::fixSequence('field_of_actions');
         $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')
             ->orderBy('id', 'asc')
             ->get()
@@ -42,6 +84,7 @@ class seedOldStrategicDocuments extends Command
 
         $ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
+        //Old app categories
         $oldCategories = collect(
             DB::connection('old_strategy_app')->select('SELECT id, parentid, sectionid, categoryname FROM dbo.categories WHERE languageid = 1')
         );
@@ -59,24 +102,20 @@ class seedOldStrategicDocuments extends Command
                 -- sd.documenttypeid AS pris_act_type_id -- TODO: IDK
                 sd_it.institutiontypename AS institution_type_name,
                 sd.documentdate AS document_date_accepted,
-                datecreated AS created_at,
-                datemodified AS updated_at,
+                sd.datecreated AS created_at,
+                sd.datemodified AS updated_at,
                 CASE WHEN sd.isactive = true THEN 1 ELSE 0 END AS active,
-                CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at
+                CASE WHEN sd.isdeleted = true THEN CURRENT_TIMESTAMP ELSE NULL END AS deleted_at,
+                cat.parentid as cat_parentid,
+                cat.sectionid as cat_sectionid,
+                cat.categoryname as cat_name
             FROM dbo.strategicdocuments AS sd
             LEFT JOIN dbo.institutiontypes AS sd_it ON sd.institutiontypeid = sd_it.id AND sd_it.languageid = 1
+            LEFT JOIN dbo.categories AS cat ON cat.id = sd.categoryid AND cat.languageid = 1
             WHERE sd.languageid = 1"
         );
 
-        $policyAreasDB = FieldOfAction::withTrashed()->with('translations', function ($q){
-            $q->withTrashed();
-        })->get();
-        $policyAreas = array();
-        if($policyAreasDB->count()){
-            foreach ($policyAreasDB as $p){
-                $policyAreas[$p->translate('bg')->name] = $p->id;
-            }
-        }
+
 
         //$acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')->get()->pluck('id', 'name')->toArray();
         //dd($acceptingInstitutions);
@@ -87,9 +126,8 @@ class seedOldStrategicDocuments extends Command
 
             foreach ($oldDocuments as $oldDocument) {
                 $mappedKeys = $this->mapForeignKeysByCategory(
-                    $oldDocument->category_id,
-                    $oldCategories,
-                    $policyAreas,
+                    $oldDocument,
+                    $oldCategories
                 );
 
                 $data = array_merge(
@@ -128,7 +166,10 @@ class seedOldStrategicDocuments extends Command
                     $data['title'],
                     $data['description'],
                     $data['category_id'],
-                    $data['institution_type_name']
+                    $data['institution_type_name'],
+                    $data['cat_parentid'],
+                    $data['cat_sectionid'],
+                    $data['cat_name']
                 );
 
                 if (isset($ourDocuments[$oldDocument->old_id])) {
@@ -163,27 +204,89 @@ class seedOldStrategicDocuments extends Command
      * Returns data for the fields strategic_document_level_id, policy_area_id
      */
     public function mapForeignKeysByCategory(
-        $oldStrategicDocCategoryId,
-        \Illuminate\Support\Collection $oldCategories,
-        array $policyAreas
+        $oldStrategicDoc,
+        \Illuminate\Support\Collection $oldCategories
     ) {
-        $oldCategory = $oldCategories->where('id', $oldStrategicDocCategoryId)->first();
+//        $oldCategory = $oldCategories->where('id', $oldStrategicDocCategoryId)->first();
         try {
             $levelMapping = array(
-                1 => InstitutionCategoryLevelEnum::CENTRAL->value,
-                2 => InstitutionCategoryLevelEnum::AREA->value,
-                3 => InstitutionCategoryLevelEnum::MUNICIPAL->value,
+                FieldOfAction::CATEGORY_NATIONAL => InstitutionCategoryLevelEnum::CENTRAL->value,
+                FieldOfAction::CATEGORY_AREA => InstitutionCategoryLevelEnum::AREA->value,
+                FieldOfAction::CATEGORY_MUNICIPAL => InstitutionCategoryLevelEnum::MUNICIPAL->value,
             );
 
+            $policy_area_id = null;
+            $strategic_document_level_id = InstitutionCategoryLevelEnum::CENTRAL_OTHER->value;
+
+            //Level
+            if((int)$oldStrategicDoc->cat_parentid > 0 && isset($levelMapping[(int)$oldStrategicDoc->cat_parentid])) {
+                $strategic_document_level_id = $levelMapping[(int)$oldStrategicDoc->cat_parentid];
+            }
+
+            //Policy Area
+            if(!empty($oldStrategicDoc->cat_name)){
+                if((int)$oldStrategicDoc->cat_parentid > 0){
+                    $strategic_document_level_id = $levelMapping[(int)$oldStrategicDoc->cat_parentid];
+                    if((int)$oldStrategicDoc->cat_parentid == FieldOfAction::CATEGORY_AREA){
+                        if(empty($this->policyAreasArea) || !isset($this->policyAreasArea[$oldStrategicDoc->cat_name])) {
+                            $this->createPolicy($oldStrategicDoc);
+                        }
+                        $policy_area_id = $this->policyAreasArea[$oldStrategicDoc->cat_name];
+                    } else if((int)$oldStrategicDoc->cat_parentid == FieldOfAction::CATEGORY_MUNICIPAL) {
+                        if(empty($this->policyAreasMunicipal) || !isset($this->policyAreasMunicipal[$oldStrategicDoc->cat_name])) {
+                            $this->createPolicy($oldStrategicDoc);
+                        }
+                        $policy_area_id = $this->policyAreasMunicipal[$oldStrategicDoc->cat_name];
+                    } else {
+                        //Central
+                        if(empty($this->policyAreas) || !isset($this->policyAreas[$oldStrategicDoc->cat_name])) {
+                            $this->createPolicy($oldStrategicDoc);
+                        }
+                        $policy_area_id = $this->policyAreas[$oldStrategicDoc->cat_name];
+                    }
+                } else{
+                    //Main category
+                    if(in_array((int)$oldStrategicDoc->category_id, [FieldOfAction::CATEGORY_NATIONAL,FieldOfAction::CATEGORY_AREA,FieldOfAction::CATEGORY_MUNICIPAL])){
+                        $policy_area_id = (int)$oldStrategicDoc->category_id;
+                        $strategic_document_level_id = $levelMapping[(int)$oldStrategicDoc->cat_parentid];
+                    }
+                }
+            }
+
             return [
-                'strategic_document_level_id' => $levelMapping[(int)$oldCategory->parentid] ?? null,
-                'policy_area_id' => $oldCategory ? ($policyAreas[$oldCategory->categoryname] ?? null) : null,
+                'strategic_document_level_id' => $strategic_document_level_id,
+                'policy_area_id' => $policy_area_id,
                 'ekatte_municipality_id' => null,
                 'ekatte_area_id' => null,
             ];
         } catch (\Throwable $th) {
-            $this->info($oldCategory?->categoryname . ' ' . $oldCategory?->id);
+            $this->info('Error mapping sd level and policy area: category name - '.$oldStrategicDoc->cat_name . ' | category parentid - ' . $oldStrategicDoc->cat_parentid);
             throw $th;
+        }
+    }
+
+    private function createPolicy($oldDoc){
+        $newPolicy = FieldOfAction::create([
+            'parentid' => $oldDoc->cat_parentid
+        ]);
+        foreach ($this->languages as $lang){
+            $newPolicy->translateOrNew($lang['code'])->name = $oldDoc->cat_name;
+        }
+        $newPolicy->save();
+
+        //Add new policy to array
+        if($newPolicy){
+            switch ($oldDoc->cat_parentid){
+                case FieldOfAction::CATEGORY_NATIONAL:
+                    $this->policyAreas[$oldDoc->cat_name] = $newPolicy->id;
+                    break;
+                case FieldOfAction::CATEGORY_AREA:
+                    $this->policyAreasArea[$oldDoc->cat_name] = $newPolicy->id;
+                    break;
+                case FieldOfAction::CATEGORY_MUNICIPAL:
+                    $this->policyAreasMunicipal[$oldDoc->cat_name] = $newPolicy->id;
+                    break;
+            }
         }
     }
 }
