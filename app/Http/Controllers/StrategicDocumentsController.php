@@ -319,7 +319,7 @@ class StrategicDocumentsController extends Controller
     {
         return array(
             'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
-            'title' => ['class' => 'col-md-3', 'label' => __('custom.title')],
+            'title' => ['class' => 'col-md-2', 'label' => __('custom.title')],
             'validFrom' => ['class' => 'col-md-3', 'label' => __('custom.valid_from')],
             'validTo' => ['class' => 'col-md-3', 'label' => __('custom.valid_to')],
         );
