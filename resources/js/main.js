@@ -510,6 +510,7 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
         templateResult: select2OptionFilter,
         language: "bg",
         placeholder: selectPlaceholder,
+        escapeMarkup: function (text) { return text; },
         ajax: {
             url: selectUrl,
             data: function (params) {
@@ -564,7 +565,7 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
                         policy: $('#policy_area_id') != 'undefined' ? $('#policy_area_id').val() : null,
                         areaPolicy: $('#ekatte_area_id') != 'undefined' ? $('#ekatte_area_id').val() : null,
                         municipalityPolicy: $('#ekatte_municipality_id') != 'undefined' ? $('#ekatte_municipality_id').val() : null,
-                        document: typeof $(this).data('documentid') != 'undefined' ? $(this).data('documentid') : false,
+                        document: typeof $(this).data('documentid') != 'undefined' ? $(this).data('documentid') : 0,
                         search: params.term
                     }
                 } else {

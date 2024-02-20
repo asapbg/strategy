@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StrategicDocumentChildStoreRequest;
+use App\Models\AuthorityAcceptingStrategic;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\Pris;
@@ -26,6 +27,8 @@ class StrategicDocumentChildController extends AdminController
         }
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
         $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
+        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')
+            ->where('nomenclature_level_id', '=', $sd->strategic_document_level_id)->get();
 //        $policyAreas = null;
 //        switch ($sd->strategic_document_level_id){
 //            case InstitutionCategoryLevelEnum::CENTRAL->value:
@@ -39,7 +42,7 @@ class StrategicDocumentChildController extends AdminController
 //                break;
 //        }
 
-        return $this->view('admin.strategic_documents.popup_form', compact('sd', 'doc', 'strategicDocumentTypes', 'legalActTypes'))->render();
+        return $this->view('admin.strategic_documents.popup_form', compact('sd', 'doc', 'strategicDocumentTypes', 'legalActTypes', 'authoritiesAcceptingStrategic'))->render();
     }
 
     public function create(Request $request){
@@ -91,8 +94,10 @@ class StrategicDocumentChildController extends AdminController
         $canDeleteSd = $request->user()->can('delete', $item->strategicDocument);
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
         $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
+        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')
+            ->where('nomenclature_level_id', '=', $item->strategic_document_level_id)->get();
         return $this->view('admin.strategic_documents.documents.edit', compact('item', 'sdDocuments', 'documentTree', 'canDeleteSd',
-            'strategicDocumentTypes', 'legalActTypes'));
+            'strategicDocumentTypes', 'legalActTypes', 'authoritiesAcceptingStrategic'));
     }
 
     public function update(Request $request){

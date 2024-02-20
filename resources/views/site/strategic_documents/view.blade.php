@@ -37,26 +37,32 @@
                             <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 d-flex align-items-center mb-4 policy-area-single">
-                        <h3 class="mb-2 fs-4 me-2">
-                            @if($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value)
-                                {{ trans_choice('custom.field_of_actions', 1) }}:
-                            @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value)
-                                {{ trans_choice('site.strategic_document.areas', 1) }}:
-                            @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value)
-                                {{ trans_choice('custom.municipalities', 1) }}:
-                            @endif
-                        </h3>
-                        <div class="fs-4">
-                            <a href="#" class="main-color text-decoration-none">
+                @if($strategicDocument->policyArea)
+                    <div class="row">
+                        <div class="col-md-12 d-flex align-items-center mb-4 policy-area-single">
+                            <h3 class="mb-2 fs-4 me-2">
+                                @if($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value)
+                                    {{ trans_choice('custom.field_of_actions', 1) }}:
+                                @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value)
+                                    {{ trans_choice('site.strategic_document.areas', 1) }}:
+                                @elseif($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value)
+                                    {{ trans_choice('custom.municipalities', 1) }}:
+                                @endif
+                            </h3>
+
+                            @php
+                                $searchFieldPolicy = $strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities');
+                            @endphp
+                            <div class="fs-4">
+                                <a target="_blank" href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$strategicDocument->policyArea->id }}" class="main-color text-decoration-none">
                             <span class="obj-icon-info me-2">
                                 <i class="bi bi-mortarboard-fill me-1 main-color" ></i>{{ $strategicDocument->policyArea?->name }} </span>
-                            </a>
+                                </a>
+                            </div>
+
                         </div>
                     </div>
-                </div>
-
+                @endif
                 <div class="row">
                     @if($strategicDocument->strategic_document_level_id)
                         <div class="col-md-4 mb-4">
@@ -66,7 +72,7 @@
                             @php
                                 $searchFieldPolicy = $strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($strategicDocument->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities');
                             @endphp
-                            <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$strategicDocument->policyArea->id }}" class="main-color text-decoration-none">
+                            <a target="_blank" href="{{ route('strategy-documents.index').'?level[]='.$strategicDocument->strategic_document_level_id }}" class="main-color text-decoration-none">
                                 <span class="obj-icon-info">
                                     <i class="fa-solid fa-arrow-right-to-bracket main-color me-2 fs-18" title="{{ trans_choice('custom.category', 1) }}"></i>
                                 </span>
@@ -111,7 +117,7 @@
 
                 <div class="row">
                     <div class="col-md-4 mb-4">
-                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.accepted_date', 1) }}</h3>
+                        <h3 class="mb-2 fs-18">{{ __('custom.effective_at') }}</h3>
                         <a href="#" class="main-color text-decoration-none fs-18" id="dateAccepted"
                            data-document-date-accepted="{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}">
                         <span class="obj-icon-info me-2">

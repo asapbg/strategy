@@ -117,11 +117,13 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         return array(
             'title' => [
                 'type' => 'text',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'description' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
         );
     }
@@ -217,7 +219,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
             ->leftJoin('strategic_document as child', 'strategic_document.id', '=', 'strategic_document.parent_document_id');
 
-        if(isset($filters['sd_document_id'])){
+        if(isset($filters['sd_document_id']) && $filters['sd_document_id']){
             $q->where('child.id', '=', $filters['sd_document_id']);
             if((isset($filters['field_of_action_id']) && $filters['field_of_action_id'] > 0) || (isset($filters['search']))) {
                 $q->orWhere(function ($q) use($filters){

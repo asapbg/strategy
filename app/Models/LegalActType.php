@@ -47,7 +47,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     }
     public function scopeStrategyCategories($query)
     {
-        return $query->whereIn('id', [self::TYPE_DECREES, self::TYPE_PROTOCOL_DECISION]);
+        return $query->whereIn('id', [self::TYPE_DECREES, self::TYPE_PROTOCOL_DECISION, self::TYPE_DECISION]);
     }
 
 

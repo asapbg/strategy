@@ -70,6 +70,9 @@ class StrategicDocumentsController extends AdminController
             'acceptActInstitution', 'acceptActInstitution.translation',
             'files', 'files.translation', 'files.documentType', 'files.documentType.translation'])
             ->leftJoin('field_of_actions', 'field_of_actions.id' ,'=', 'strategic_document.policy_area_id')
+            ->leftJoin('strategic_document_translations', function ($j){
+                $j->on('strategic_document_translations.strategic_document_id' ,'=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
             ->FilterBy($requestFilter);
 
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
@@ -247,6 +250,7 @@ class StrategicDocumentsController extends AdminController
     public function store(StoreStrategicDocumentRequest $request)
     {
         $validated = $request->validated();
+
         $id = $validated['id'];
         $stay = Arr::get($validated, 'stay') || null;
         $item = $id ? $this->getRecord($id) : new StrategicDocument();
@@ -302,29 +306,28 @@ class StrategicDocumentsController extends AdminController
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
-            try {
-                $fileService = app(FileService::class);
-                $validated = $fileService->prepareMainFileFields($validated);
-                $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
-                $enFile =  Arr::get($validated, 'file_strategic_documents_en');
-                if ($bgFile || $enFile) {
-                    $fileService->uploadFiles($validated, $item, null, true);
-                } else {
-                    $locale = app()->getLocale();
-                    $mainFile = $item->files->where('is_main', true)->where('locale', $locale)->first();
-                    if ($mainFile) {
-                        $validated = $fileService->prepareMainFileFields($validated);
-                        $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $mainFile, $validated);
-                        $mainFile->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file_main_id');
-                        $validAt = Arr::get($validated, 'valid_at_main');
-                        $mainFile->valid_at = $validAt ? Carbon::parse($validAt) : null;
-                        $mainFile->visible_in_report = Arr::get($validated, 'visible_in_report') ?? 0;
-                        $mainFile->save();
-                    }
-                }
-            } catch (\Throwable $throwable) {
-                return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
-            }
+
+
+//            $fileService = app(FileService::class);
+//            $validated = $fileService->prepareMainFileFields($validated);
+//            $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
+//            $enFile =  Arr::get($validated, 'file_strategic_documents_en');
+//            if ($bgFile || $enFile) {
+//                $fileService->uploadFiles($validated, $item, null, true);
+//            } else {
+//                $locale = app()->getLocale();
+//                $mainFile = $item->files->where('is_main', true)->where('locale', $locale)->first();
+//                if ($mainFile) {
+//                    $validated = $fileService->prepareMainFileFields($validated);
+//                    $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $mainFile, $validated);
+//                    $mainFile->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file_main_id');
+//                    $validAt = Arr::get($validated, 'valid_at_main');
+//                    $mainFile->valid_at = $validAt ? Carbon::parse($validAt) : null;
+//                    $mainFile->visible_in_report = Arr::get($validated, 'visible_in_report') ?? 0;
+//                    $mainFile->save();
+//                }
+//            }
+
 
             DB::commit();
             if( $stay ) {

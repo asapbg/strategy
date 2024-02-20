@@ -5,11 +5,13 @@ namespace App\Http\Requests;
 use App\Enums\StrategicDocumentFileEnum;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
 class StoreStrategicDocumentRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -85,9 +87,9 @@ class StoreStrategicDocumentRequest extends FormRequest
 //                $rules[$field .'_'. $lang['code']] = $properties['rules'];
 //            }
 //        }
-        foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
-        }
+//        foreach (StrategicDocument::translationFieldsProperties() as $field => $properties) {
+//            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+//        }
 //        if (request()->has('main_fileId_bg')) {
 //            $rules['file_strategic_documents_bg'][] = 'sometimes';
 //            $rules['file_strategic_documents_bg_main'][] = 'sometimes';
@@ -97,7 +99,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             $rules['document_date_expiring'][] = 'sometimes';
         }
 
-        return $rules;
+        return $this->getRules($rules, StrategicDocument::translationFieldsProperties());
     }
 
     /**

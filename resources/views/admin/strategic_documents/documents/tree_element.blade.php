@@ -29,7 +29,7 @@
                 <input type="hidden" name="id" value="{{ $doc->id }}">
                 <input type="hidden" name="sd" value="{{ $doc->sd_id }}">
                 <input type="hidden" id="strategic_document_level_id" name="strategic_document_level_id" value="{{ $doc->strategic_document_level_id }}">
-                <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $doc->accept_act_institution_type_id }}">
+{{--                <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $doc->accept_act_institution_type_id }}">--}}
                 @include('admin.partial.edit_field_translate', ['item' => $dItem, 'translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                 @include('admin.partial.edit_field_translate', ['item' => $dItem,'translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(),'field' => 'description', 'required' => true])
                 <div class="row mb-4">
@@ -74,12 +74,39 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-sm-12 control-label">{{ trans_choice('custom.authority_accepting_strategic', 1) }}</label>
+                            <label class="col-sm-12 control-label"
+                                   for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
+                                <span class="required">*</span></label>
                             <div class="col-12">
-                                {{ $doc->accept_act_institution_type_id ? $doc->accept_act_institution_name : '' }}
+                                <select name="accept_act_institution_type_id"
+                                        class="form-control form-control-sm accept_act_institution_type_id select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
+                                    <option value=""
+                                            @if(old('accept_act_institution_type_id', $doc->id ? $doc->accept_act_institution_type_id : '') == '') selected @endif>---
+                                    </option>
+                                    @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
+                                        @foreach($authoritiesAcceptingStrategic as $row)
+                                            <option value="{{ $row->id }}"
+                                                    @if(old('accept_act_institution_type_id', ($doc->id ? $doc->accept_act_institution_type_id : 0)) == $row->id) selected @endif
+                                                    data-id="{{ $row->id }}"
+                                                    data-level="{{ $row->nomenclature_level_id }}"
+                                            >{{ $row->name }} </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('accept_act_institution_type_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
+{{--                    <div class="col-md-6">--}}
+{{--                        <div class="form-group">--}}
+{{--                            <label class="col-sm-12 control-label">{{ trans_choice('custom.authority_accepting_strategic', 1) }}</label>--}}
+{{--                            <div class="col-12">--}}
+{{--                                {{ $doc->accept_act_institution_type_id ? $doc->accept_act_institution_name : '' }}--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
@@ -145,7 +172,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="col-sm-12 control-label"
-                                   for="document_date_accepted">{{ __('custom.date_accepted') }}
+                                   for="document_date_accepted">
+                                <i class="fas fa-info-circle text-info mr-2" data-toggle="tooltip" title="Когато документът е свързан с Акт за приемане от раздел „Актове на МС“, дата на приемане се взима автоматично от акта. Когато Дата на приемане остане празно, автоматично се взима днешна дата."></i>
+                                {{ __('custom.date_accepted') }}
                                 <span class="required">*</span></label>
                             <div class="col-12">
                                 <input type="text"  name="document_date_accepted"

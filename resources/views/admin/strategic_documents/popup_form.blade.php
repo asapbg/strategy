@@ -6,7 +6,7 @@
     {{--    @csrf--}}
     <input type="hidden" name="sd" value="{{ $sd->id }}">
     <input type="hidden" id="strategic_document_level_id" name="strategic_document_level_id" value="{{ $sd->strategic_document_level_id }}">
-    <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $sd->accept_act_institution_type_id }}">
+{{--    <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $sd->accept_act_institution_type_id }}">--}}
     @if(isset($doc) && $doc)
         <input type="hidden" name="doc" value="{{ $doc->id }}">
     @endif
@@ -59,12 +59,39 @@
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-sm-12 control-label">{{ trans_choice('custom.authority_accepting_strategic', 1) }}</label>
+                <label class="col-sm-12 control-label"
+                       for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
+                    <span class="required">*</span></label>
                 <div class="col-12">
-                    {{ $sd->acceptActInstitution ? $sd->acceptActInstitution->name : 'Основният документ няма избран \''.trans_choice('custom.authority_accepting_strategic', 1).'\''}}
+                    <select name="accept_act_institution_type_id" id="accept_act_institution_type_id"
+                            class="form-control form-control-sm select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
+                        <option value=""
+                                @if(old('accept_act_institution_type_id', $sd->id ? $sd->accept_act_institution_type_id : '') == '') selected @endif>---
+                        </option>
+                        @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
+                            @foreach($authoritiesAcceptingStrategic as $row)
+                                <option value="{{ $row->id }}"
+                                        @if(old('accept_act_institution_type_id', ($sd->id ? $sd->accept_act_institution_type_id : 0)) == $row->id) selected @endif
+                                        data-id="{{ $row->id }}"
+                                        data-level="{{ $row->nomenclature_level_id }}"
+                                >{{ $row->name }} </option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('accept_act_institution_type_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
         </div>
+{{--        <div class="col-md-6">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="col-sm-12 control-label">{{ trans_choice('custom.authority_accepting_strategic', 1) }}</label>--}}
+{{--                <div class="col-12">--}}
+{{--                    {{ $sd->acceptActInstitution ? $sd->acceptActInstitution->name : 'Основният документ няма избран \''.trans_choice('custom.authority_accepting_strategic', 1).'\''}}--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="col-md-6">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
@@ -82,7 +109,7 @@
         </div>
     </div>
     <div class="row mb-4 d-none" id="prisSection">
-        <div class="col-md-12 d-none" id="pris-act">
+        <div class="col-md-12" id="pris-act">
             <div class="col-12">
                 <div class="form-group">
                     <label class="col-sm-12 control-label">
@@ -124,7 +151,9 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="document_date_accepted">{{ __('custom.date_accepted') }}
+                       for="document_date_accepted">
+                    <i class="fas fa-info-circle text-info mr-2" data-toggle="tooltip" title="Когато документът е свързан с Акт за приемане от раздел „Актове на МС“, дата на приемане се взима автоматично от акта. Когато Дата на приемане остане празно, автоматично се взима днешна дата."></i>
+                    {{ __('custom.date_accepted') }}
                     <span class="required">*</span></label>
                 <div class="col-12">
                     <input type="text" id="document_date_accepted" name="document_date_accepted"
@@ -253,6 +282,26 @@
 
         $('#date_expiring_indefinite').on('change', function (){
             controlDateExpiration();
+        });
+
+        $('#accept_act_institution_type_id').on('change', function (){
+            controlPrisSection();
+        });
+
+        function clearStartDate(init = false){
+            if(parseInt($('#pris_act_id').val()) > 0){
+                $('#document_date_accepted').prop('disabled', true);
+                if(!init){
+                    //TODO get act date by data attribute from select2
+                    $('#document_date_accepted').val('');
+                }
+            } else{
+                $('#document_date_accepted').prop('disabled', false);
+            }
+        }
+
+        $('#pris_act_id').on('change', function (){
+            clearStartDate();
         });
 
         controlDateExpiration();

@@ -9,10 +9,7 @@
                 <div class="card-body">
                     <h3>{{ trans_choice('custom.main_information', 1) }}</h3>
                     <div class="row">
-                        @include('admin.partial.edit_field_translate', [
-                         'field' => 'title',
-                         'required' => true,
-                        ])
+                        @include('admin.partial.edit_field_translate', ['field' => 'title','required' => true])
                     </div>
 
                     <div class="row">
@@ -178,7 +175,7 @@
                                             class="form-control form-control-sm select2-autocomplete-ajax @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
                                         @if($item->publicConsultation)
                                             <option value="{{ $item->publicConsultation->id }}"
-                                                    {{ old('pris_act_id', ($item->publicConsultation? $item->publicConsultation->id : null)) == $item->id ? 'selected' : '' }}
+                                                    {{ old('public_consultation_id', ($item->publicConsultation? $item->publicConsultation->id : null)) == $item->id ? 'selected' : '' }}
                                                     data-id="{{ $item->publicConsultation->id }}"> {{ $item->publicConsultation->reg_num }} </option>
                                         @endif
                                     </select>
@@ -329,12 +326,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
-                                           for="document_date_accepted">{{ __('custom.date_accepted') }}
+                                           for="document_date_accepted">
+                                        <i class="fas fa-info-circle text-info mr-2" data-toggle="tooltip" title="Когато документът е свързан с Акт за приемане от раздел „Актове на МС“, дата на приемане се взима автоматично от акта. Когато Дата на приемане остане празно, автоматично се взима днешна дата."></i>{{ __('custom.date_accepted') }}
                                         <span class="required">*</span></label>
                                     <div class="col-12">
                                         <input type="text" id="document_date_accepted" name="document_date_accepted"
                                                class="form-control form-control-sm datepicker @error('document_date_accepted'){{ 'is-invalid' }}@enderror"
-                                               value="{{ old('document_date_accepted', ($item->id ? ($item->document_date_accepted ? \Carbon\Carbon::parse($item->document_date_accepted)->format('d.m.Y') : '') : '')) }}">
+                                               value="{{ old('document_date_accepted', ($item->id ? ($item->document_date_accepted ? \Carbon\Carbon::parse($item->document_date_accepted)->format('d.m.Y') : '') : displayDate(\Carbon\Carbon::now()))) }}">
                                         @error('document_date_accepted')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -438,6 +436,22 @@
             handleDateCheckbox(dateExpiring, dateExpiringCheckbox);
             handleDateCheckbox(dateValidAtFiles, dateInfiniteFilesCheckbox);
 
+            function clearStartDate(init = false){
+                if(parseInt(prisAct.val()) > 0){
+                    $('#document_date_accepted').prop('disabled', true);
+                    if(!init){
+                        //TODO get act date by data attribute from select2
+                        $('#document_date_accepted').val('');
+                    }
+                } else{
+                    $('#document_date_accepted').prop('disabled', false);
+                }
+            }
+
+            prisAct.on('change', function (){
+                clearStartDate();
+            });
+
             dateValidAtFileEdit.on('change', function () {
                 const checkboxId = '#date_valid_indefinite_files_edit_' + $(this).data('id');
                 const checkbox = $(checkboxId);
@@ -536,6 +550,7 @@
 
             handleVisibility(strategicDocumentLevel.val());
             acceptActInstitutionByLevel(true);
+            clearStartDate(true);
 
         });
     </script>
