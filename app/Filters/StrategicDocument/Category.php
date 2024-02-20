@@ -11,7 +11,11 @@ class Category extends QueryFilter implements FilterContract{
     public function handle($value): void
     {
         if( !empty($value) ){
-            $this->query->where('strategic_document_level_id', $value);
+            if(is_array($value)){
+                $this->query->whereIn('strategic_document_level_id', $value);
+            } else{
+                $this->query->where('strategic_document_level_id', $value);
+            }
         }
     }
 }
