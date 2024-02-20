@@ -311,8 +311,14 @@ class CommonController extends Controller
                 break;
             case 'pc':
                 $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
-                $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
-                $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
+                if(sizeof($explode) == 2){
+                    $requestData['reg_num'] = trim($explode[0]);
+                    $requestData['title'] = trim($explode[1]);
+                } elseif(sizeof($explode) == 1){
+                    $requestData['title'] = trim($requestData['search']);
+                }
+//                $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
+//                $requestData['title'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : $requestData['search'] ?? '';
                 $data = PublicConsultation::select2AjaxOptions($requestData);
                 break;
             case 'sd_parent_documents':

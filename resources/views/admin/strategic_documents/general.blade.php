@@ -195,7 +195,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label">
-                                        {{ trans_choice('custom.category', 1) }}
+                                        {{ trans_choice('custom.pris_categories', 1) }}
                                     </label>
 
                                     <span class="text-danger" id="connect-doc-error"></span>
