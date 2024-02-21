@@ -802,5 +802,6 @@ return [
     'strategic_document.levels.CENTRAL'        => 'Национално',
     'strategic_document.levels.AREA'        => 'Областно',
     'strategic_document.levels.MUNICIPAL'        => 'Общинско',
-    'pris_categories' => 'Вид на акт на МС|Видове на актове на МС'
+    'pris_categories' => 'Вид на акт на МС|Видове на актове на МС',
+    'help' => 'Помощна информация'
 ];

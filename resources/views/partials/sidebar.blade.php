@@ -532,6 +532,13 @@
                         </a>
                     </li>
                 @endcanany
+                <li class="nav-item">
+                    <a href="{{ route('admin.help') }}"
+                       class="nav-link @if(str_contains(url()->current(), 'help')) active @endif">
+                        <i class="fas fa-question"></i>
+                        <p>{{ trans_choice('custom.help', 2) }}</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

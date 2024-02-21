@@ -45,6 +45,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'administration']], function () {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+    Route::get('/help', [\App\Http\Controllers\Admin\HelpController::class, 'index'])->name('help');
+    Route::get('/help/{section}', [\App\Http\Controllers\Admin\HelpController::class, 'guide'])->name('help.guide');
 
     Route::controller(NotificationsController::class)->group(function () {
         Route::get('/notifications',                'index')->name('user.notifications');
