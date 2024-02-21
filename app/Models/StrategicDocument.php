@@ -67,6 +67,22 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         );
     }
 
+    protected function documentDateAccepted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d H:i:s') : null
+        );
+    }
+
+    protected function documentDateExpiring(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d H:i:s') : null
+        );
+    }
+
     /**
      * @return string
      */
