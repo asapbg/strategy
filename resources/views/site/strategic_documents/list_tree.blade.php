@@ -11,7 +11,7 @@
         <div class="row p-1 mb-2">
             <div class="accordion" id="accordionExample">
                 @foreach($items as $catId => $cat)
-                    @if(isset($cat['items']) && $cat['items']->count())
+                    @if(isset($cat['items']) && sizeof($cat['items']))
                         <div class="card custom-card mb-2">
                             <div class="card-header" id="headingcat{{ $catId }}">
                                 <h2 class="mb-0">
@@ -26,8 +26,9 @@
                                     <div class="row">
                                         <div class="col-12 mb-2">
                                             @php($policy = '')
+                                            @php($sdId = 0)
                                             @foreach($cat['items'] as $i)
-                                                @if(($policy != $i->policy && !$loop->first) || $loop->last)
+                                                @if(($policy != $i->sd_policy_title && !$loop->first) || $loop->last)
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -35,24 +36,50 @@
                                                     </div>
                                                 </div>
                                                 @endif
-                                                @if($policy != $i->policy)
-                                                    @php($policy = $i->policy)
-                                                    <div class="accordion" id="accordionpolicy{{ $i->policy_area_id }}">
+                                                @if($policy != $i->sd_policy_title)
+                                                    @php($policy = $i->sd_policy_title)
+                                                    <div class="accordion" id="accordionpolicy{{ $i->sd_policy_id }}">
                                                         <div class="card custom-card mb-2">
-                                                            <div class="card-header" id="headingpolicy{{ $i->policy_area_id }}">
+                                                            <div class="card-header" id="headingpolicy{{ $i->sd_policy_id }}">
                                                                 <h2 class="mb-0">
-                                                                    <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed" type="button" data-toggle="collapse" data-target="#collapsepolicy{{ $i->policy_area_id }}" aria-expanded="false" aria-controls="collapsepolicy{{ $i->policy_area_id }}">
+                                                                    <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed" type="button" data-toggle="collapse" data-target="#collapsepolicy{{ $i->sd_policy_id }}" aria-expanded="false" aria-controls="collapsepolicy{{ $i->sd_policy_id }}">
                                                                         <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
                                                                         {{ $policy }}
                                                                     </button>
                                                                 </h2>
                                                             </div>
-                                                            <div id="collapsepolicy{{ $i->policy_area_id }}" class="collapse" aria-labelledby="headingpolicy{{ $i->policy_area_id }}" data-parent="#accordionpolicy{{ $i->policy_area_id }}" style="">
+                                                            <div id="collapsepolicy{{ $i->sd_policy_id }}" class="collapse" aria-labelledby="headingpolicy{{ $i->sd_policy_id }}" data-parent="#accordionpolicy{{ $i->sd_policy_id }}" style="">
                                                                 <div class="card-body">
                                                                     <div class="row">
                                                                         <div class="col-12 mb-2">
                                                 @endif
-                                                @include('site.strategic_documents.list_tree_element', ['item' => $i])
+
+                                                @if($i->sd_id != $sdId)
+                                                    @php($sdId = $i->sd_id)
+                                                    <div class="card custom-card mb-2">
+                                                        <div class="card-header" id="heading{{ $i->sd_id }}">
+                                                            <h2 class="mb-0">
+                                                                <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
+                                                                    <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
+                                                                    {{ $i->sd_title }}
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if(!is_null($i->child_id))
+                                                    <div class="card custom-card mb-2" style="margin-left: {{ $i->child_depth * 30 }}px">
+                                                        <div class="card-header" id="heading{{ $i->sd_id }}">
+                                                            <h2 class="mb-0">
+                                                                <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
+                                                                    <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
+                                                                    {{ $i->child_title }}
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                @endif
+{{--                                                @include('site.strategic_documents.list_tree_element', ['item' => $i])--}}
                                             @endforeach
                                         </div>
                                     </div>

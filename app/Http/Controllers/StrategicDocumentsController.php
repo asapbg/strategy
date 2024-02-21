@@ -112,20 +112,85 @@ class StrategicDocumentsController extends Controller
             if(!isset($items[$cat])){
                 $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
             }
-            $items[$cat]['items'] = StrategicDocument::select(['strategic_document.*',
-                \DB::raw('case when max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value). ' then \''.trans_choice('custom.areas', 1).'\' || \' \' || field_of_action_translations.name
-                else (case when  max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value).' then \''.trans_choice('custom.municipalities', 1).'\' || \' \' || field_of_action_translations.name else field_of_action_translations.name end) end as policy')])
-                ->Active()
-                ->with(['translations', 'policyArea', 'policyArea.translations'])
-                ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-                ->join('field_of_action_translations', function ($j){
-                    $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-                        ->where('field_of_action_translations.locale', '=', app()->getLocale());
-                })->where('strategic_document.strategic_document_level_id', '=', $cat)
-                ->orderBy('field_of_action_translations.name', 'asc')
-                ->GroupBy('strategic_document.id', 'field_of_action_translations.name')
-                ->get();
+
+            $items[$cat]['items'] = \DB::select('
+                select
+                    strategic_document.id as sd_id
+                    ,max(strategic_document_translations.title) as sd_title
+                    ,field_of_action_translations.name as sd_policy_title
+                     ,field_of_actions.id as sd_policy_id
+                    , max(children.id) as child_id
+                    , max(children.strategic_document_id) as child_sd_id
+                    , max(children.parent_id) as child_parent_id
+                    , max(children.strategic_document_level_id) as child_doc_level
+                    , max(children.policy_area_id) as child_policy_area
+                    , max(children.title) as child_title
+                    , max(children.depth) as child_depth
+                    , max(children.path) as child_path
+                from strategic_document
+                join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \''.app()->getLocale().'\'
+                join field_of_actions on field_of_actions.id = strategic_document.policy_area_id
+                join field_of_action_translations on field_of_action_translations.field_of_action_id = field_of_actions.id and field_of_action_translations.locale = \''.app()->getLocale().'\'
+                left join (
+                    select * from (
+                        with recursive sd_child as (
+                        (
+                            select
+                                strategic_document_children.id,
+                                strategic_document_children.strategic_document_id,
+                                strategic_document_children.parent_id,
+                                strategic_document_children.strategic_document_level_id,
+                                strategic_document_children.policy_area_id,
+                                strategic_document_children_translations.title,
+                                0 as depth,
+                                array[(strategic_document_children.id || \'\')::varchar] as path
+                            from strategic_document_children
+                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \''.app()->getLocale().'\'
+                            where strategic_document_children.parent_id is null and strategic_document_children.deleted_at is null
+                        )
+                        union all
+                        (
+                            select
+                                strategic_document_children.id,
+                                strategic_document_children.strategic_document_id,
+                                strategic_document_children.parent_id,
+                                strategic_document_children.strategic_document_level_id,
+                                strategic_document_children.policy_area_id,
+                                strategic_document_children_translations.title,
+                                depth + 1 as depth,
+                                path || strategic_document_children.id::varchar
+                            from strategic_document_children
+                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \''.app()->getLocale().'\'
+                                inner join sd_child on sd_child.id = strategic_document_children.parent_id
+                                where strategic_document_children.deleted_at is null
+                            )
+                        )
+                        select * from sd_child
+                    ) children
+                ) children on children.strategic_document_id = strategic_document.id
+                where
+                    strategic_document.active = true
+                    and strategic_document.deleted_at is null
+                    and strategic_document.strategic_document_level_id = 1
+                group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
+                order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
+            ');
+
+//            $items[$cat]['items'] = StrategicDocument::select(['strategic_document.*',
+//                \DB::raw('case when max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value). ' then \''.trans_choice('custom.areas', 1).'\' || \' \' || field_of_action_translations.name
+//                else (case when  max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value).' then \''.trans_choice('custom.municipalities', 1).'\' || \' \' || field_of_action_translations.name else field_of_action_translations.name end) end as policy')])
+//                ->Active()
+//                ->with(['translations', 'policyArea', 'policyArea.translations'])
+//                ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+//                ->join('field_of_action_translations', function ($j){
+//                    $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+//                        ->where('field_of_action_translations.locale', '=', app()->getLocale());
+//                })->where('strategic_document.strategic_document_level_id', '=', $cat)
+//                ->orderBy('field_of_action_translations.name', 'asc')
+//                ->GroupBy('strategic_document.id', 'field_of_action_translations.name')
+//                ->get();
         }
+
         if( $request->ajax() ) {
             return view('site.strategic_documents.list_tree', compact( 'items', 'editRouteName', 'deleteRouteName'));
         }
