@@ -61,7 +61,7 @@
                                                             <h2 class="mb-0">
                                                                 <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
                                                                     <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
-                                                                    {{ $i->sd_title }}
+                                                                    {{ html_entity_decode($i->sd_title) }}
                                                                 </a>
                                                             </h2>
                                                         </div>
@@ -73,7 +73,7 @@
                                                             <h2 class="mb-0">
                                                                 <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
                                                                     <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
-                                                                    {{ $i->child_title }}
+                                                                    {{ html_entity_decode($i->child_title) }}
                                                                 </a>
                                                             </h2>
                                                         </div>
