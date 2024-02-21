@@ -33,7 +33,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'id' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
             'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
-            'policy_area_id' => ['nullable', 'numeric', 'exists:policy_area,id'],
+            'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
 //            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
