@@ -509,7 +509,7 @@
             const strategicDocumentLevel = $('#strategic_document_level_id');
 
             strategicDocumentLevel.on('change', function () {
-                const selectedValue = $(this).val();
+                let selectedValue = $(this).val();
                 handleVisibility(selectedValue);
                 acceptActInstitutionByLevel();
             });

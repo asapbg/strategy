@@ -105,7 +105,7 @@ class StrategicDocumentsController extends AdminController
         $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation']);
 
 
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
+        if( ($item && $item->id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
