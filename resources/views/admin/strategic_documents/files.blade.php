@@ -28,13 +28,13 @@
             @enderror
         </div>
     @endforeach
-    <div class="col-md-4">
+    <div class="col-md-4 d-none">
         <div class="form-group">
             <label for="textarea"><span class="d-none">*</span>
 {{--                <span class="required">*</span>--}}
             </label>
             <div class="form-check">
-                <input type="checkbox" name="is_visible_in_report" class="form-check-input" value="1" @if(old('is_visible_in_report', 0)) checked="" @endif>
+                <input type="checkbox" name="is_visible_in_report" class="form-check-input" value="1" checked="" >
                 <label class="form-check-label" for="is_visible_in_report">
                     Видим в репорти
                 </label>
@@ -52,13 +52,13 @@
         <tbody>
         <tr>
             <th>{{ __('custom.name') }}</th>
-            <th>Видим в репорти</th>
+{{--            <th>Видим в репорти</th>--}}
             <th></th>
         </tr>
         @foreach($item->files as $f)
                     <tr>
                         <td>{{ $f->description }} ({{ strtoupper($f->locale) }})</td>
-                        <td><i class="fas @if($f->visible_in_report)  fa-check text-success @else fa-minus text-danger @endif"></i></td>
+{{--                        <td><i class="fas @if($f->visible_in_report)  fa-check text-success @else fa-minus text-danger @endif"></i></td>--}}
                         <td>
 {{--                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">--}}
                             <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('strategy-document.download-file', ['id' => $f->id]) }}">

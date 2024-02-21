@@ -302,13 +302,13 @@
                                         <div class="ajax-error text-danger mt-1 error_{{ 'file_'.$lang['code'] }}"></div>
                                     </div>
                                 @endforeach
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-none">
                                     <div class="form-group">
                                         <label for="textarea"><span class="d-none">*</span>
                                             {{--                <span class="required">*</span>--}}
                                         </label>
                                         <div class="form-check">
-                                            <input type="checkbox" name="is_visible" class="form-check-input" value="1" @if(old('is_visible', 0)) checked="" @endif>
+                                            <input type="checkbox" name="is_visible" class="form-check-input" value="1" checked="">
                                             <label class="form-check-label" for="is_visible">
                                                 Видим в репорти
                                             </label>
@@ -326,13 +326,13 @@
                                     <tbody>
                                     <tr>
                                         <th>{{ __('custom.name') }}</th>
-                                        <th>Видим в репорти</th>
+{{--                                        <th>Видим в репорти</th>--}}
                                         <th></th>
                                     </tr>
                                     @foreach($item->files as $f)
                                         <tr>
                                             <td>{{ $f->{'description_'.$f->locale} }} ({{ strtoupper($f->locale) }})</td>
-                                            <td><i class="fas @if($f->is_visible) fa-check text-success @else fa-minus text-danger @endif"></i></td>
+{{--                                            <td><i class="fas @if($f->is_visible) fa-check text-success @else fa-minus text-danger @endif"></i></td>--}}
                                             <td>
                                                 <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
                                                     <i class="fas fa-download me-1" role="button"
