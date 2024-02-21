@@ -61,12 +61,12 @@ class AdvisoryBoardCustom extends ModelActivityExtend
             'title' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:255'],
-                'required_all_lang' => false
+                'required_all_lang' => true
             ],
             'body' => [
                 'type' => 'summernote',
-                'rules' => ['nullable', 'string'],
-                'required_all_lang' => false
+                'rules' => ['required', 'string'],
+                'required_all_lang' => true
             ],
         ];
     }

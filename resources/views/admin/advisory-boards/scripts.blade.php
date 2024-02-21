@@ -191,6 +191,7 @@
 
                     form.querySelector('input[name=advisory_board_member_id]').value = data.id;
                     form.querySelectorAll('input[name=advisory_type_id]').forEach(input => input.value === data.advisory_type_id ? input.checked = true : null);
+
                     for(let i = 0; i < data.translations.length; i++){
                         if(data.translations[i].locale == 'bg'){
                             form.querySelector('#member_name_bg').value = data.translations[i].member_name;
@@ -199,7 +200,7 @@
 
                         }
                         if(data.translations[i].locale == 'en'){
-                            iform.querySelector('#member_name_en').value = data.translations[i].member_name;
+                            form.querySelector('#member_name_en').value = data.translations[i].member_name;
                             form.querySelector('#member_job_en').value = data.translations[i].member_job;
                             $(form.querySelector('#member_notes_en')).summernote("code", data.translations[i].member_notes);
 

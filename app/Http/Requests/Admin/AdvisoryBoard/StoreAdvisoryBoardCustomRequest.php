@@ -39,7 +39,6 @@ class StoreAdvisoryBoardCustomRequest extends FormRequest
 //        return $rules;
 
         $rules = $this->getRules([], AdvisoryBoardCustom::translationFieldsProperties());
-
         $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $lang) {
 //                $rules['file_' . $lang['code']] = ($defaultLang == $lang['code'] ? 'required|' : 'nullable|' ). 'array';

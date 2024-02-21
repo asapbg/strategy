@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="row">
-                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeeting::translationFieldsProperties(), 'field' => 'description'])
+                        @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\AdvisoryBoardMeeting::translationFieldsProperties(), 'field' => 'description', 'required' => true])
                     </div>
 {{--                    <!-- Описание -->--}}
 {{--                    <div class="row mb-2">--}}

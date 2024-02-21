@@ -66,7 +66,7 @@ class AdvisoryBoardMember extends Model
             'member_name' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:255'],
-                'required_all_lang' => false
+                'required_all_lang' => true
             ],
             'member_job' => [
                 'type' => 'text',

@@ -703,7 +703,7 @@ return [
         'working_year' => 'Година',
         'member_job_bg' => 'Длъжност (BG)',
         'member_job_en' => 'Длъжност (EN)',
-        'member_notes_bg' => 'Бележки и кратка информация (EN)',
+        'member_notes_bg' => 'Бележки и кратка информация (BG)',
         'member_notes_en' => 'Бележки и кратка информация (EN)',
         'file_name_bg' => 'Наименование (BG)',
         'file_name_en' => 'Наименование (EN)',
@@ -717,6 +717,6 @@ return [
         'establishment_description_bg' => 'Описание (BG)',
         'establishment_description_en' => 'Описание (EN)',
         'body_bg' => 'Съдържание (BG)',
-        'body_en' => 'Съдържание (E)',
+        'body_en' => 'Съдържание (EN)',
     ],
 ];

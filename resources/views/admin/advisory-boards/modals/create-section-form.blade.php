@@ -21,7 +21,7 @@
                     </div>
 
                     <div class="row mb-2">
-                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'body', 'required' => false])
+                        @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'body', 'required' => true])
                     </div>
 
                     <div class="row justify-content-end">

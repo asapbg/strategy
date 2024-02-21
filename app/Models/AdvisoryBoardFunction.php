@@ -82,7 +82,7 @@ class AdvisoryBoardFunction extends ModelActivityExtend
             'description' => [
                 'type' => 'summernote',
                 'rules' => ['required', 'string'],
-                'required_all_lang' => false
+                'required_all_lang' => true
             ],
         ];
     }

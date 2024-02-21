@@ -38,9 +38,9 @@
                 <label class="col-sm-12 control-label"
                        for="file_name_{{ $lang['code'] }}">{{ __('custom.name') }}
                     ({{ Str::upper($lang['code']) }})
-                    @if($mainLang == $lang['code'])
+{{--                    @if($mainLang == $lang['code'])--}}
                         <span class="required">*</span>
-                    @endif
+{{--                    @endif--}}
                 </label>
 
                 <div class="row">
