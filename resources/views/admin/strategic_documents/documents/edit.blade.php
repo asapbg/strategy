@@ -38,7 +38,7 @@
                             </div>
                             <input type="hidden" name="id" value="{{ $item->id }}">
                             <input type="hidden" name="sd" value="{{ $item->strategicDocument->id }}">
-                            <input type="hidden" name="strategic_document_level_id" value="{{ $item->strategic_document_level_id }}">
+                            <input type="hidden" class="strategic_document_level_id" name="strategic_document_level_id" value="{{ $item->strategic_document_level_id }}">
 {{--                            <input type="hidden" name="accept_act_institution_type_id" value="{{ $item->accept_act_institution_type_id }}">--}}
                             @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                             @include('admin.partial.edit_field_translate', ['translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(),'field' => 'description', 'required' => true])
@@ -350,7 +350,6 @@
                             @endif
                         </div>
                     </div>
-
                     <div class="card-body p-0">
                         <div class="row my-4">
                             <h3 class="custom-left-border col-12">
@@ -414,12 +413,31 @@
                 }
             }
 
+            function acceptActInstitutionByLevel(init = false){
+                if($('.strategic_document_level_id').length){
+                    $('.strategic_document_level_id').each(function (){
+                        let selectedLevel = $(this).val();
+                        let lForm = $(this.closest('form'));
+                        let acceptActInstitution = $(lForm.find('.accept_act_institution_type_id')[0]);
+                        $(acceptActInstitution).find('option').each(function (i){
+                            if(typeof $(this).data('level') == 'undefined' || parseInt($(this).data('level')) == selectedLevel){
+                                $(this).removeAttr('disabled');
+                            } else{
+                                $(acceptActInstitution).trigger('change')
+                                $(this).attr('disabled', 'disabled');
+                            }
+                        });
+                    });
+                }
+            }
+
             $('.date_expiring_indefinite').on('change', function (){
                 controlDateExpiration();
             });
 
             controlDateExpiration();
             controlPrisSection();
+            acceptActInstitutionByLevel();
         });
     </script>
 @endpush

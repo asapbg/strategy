@@ -94,8 +94,8 @@ class StrategicDocumentChildController extends AdminController
         $canDeleteSd = $request->user()->can('delete', $item->strategicDocument);
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
         $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
-        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')
-            ->where('nomenclature_level_id', '=', $item->strategic_document_level_id)->get();
+        $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
+//            ->where('nomenclature_level_id', '=', $item->strategic_document_level_id)->get();
         return $this->view('admin.strategic_documents.documents.edit', compact('item', 'sdDocuments', 'documentTree', 'canDeleteSd',
             'strategicDocumentTypes', 'legalActTypes', 'authoritiesAcceptingStrategic'));
     }

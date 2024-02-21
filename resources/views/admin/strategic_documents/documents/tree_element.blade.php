@@ -28,7 +28,7 @@
                 </div>
                 <input type="hidden" name="id" value="{{ $doc->id }}">
                 <input type="hidden" name="sd" value="{{ $doc->sd_id }}">
-                <input type="hidden" id="strategic_document_level_id" name="strategic_document_level_id" value="{{ $doc->strategic_document_level_id }}">
+                <input type="hidden" class="strategic_document_level_id" name="strategic_document_level_id" value="{{ $doc->strategic_document_level_id }}">
 {{--                <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $doc->accept_act_institution_type_id }}">--}}
                 @include('admin.partial.edit_field_translate', ['item' => $dItem, 'translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                 @include('admin.partial.edit_field_translate', ['item' => $dItem,'translatableFields' => \App\Models\StrategicDocumentChildren::translationFieldsProperties(),'field' => 'description', 'required' => true])
@@ -85,11 +85,11 @@
                                     </option>
                                     @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
                                         @foreach($authoritiesAcceptingStrategic as $row)
-                                            <option value="{{ $row->id }}"
-                                                    @if(old('accept_act_institution_type_id', ($doc->id ? $doc->accept_act_institution_type_id : 0)) == $row->id) selected @endif
-                                                    data-id="{{ $row->id }}"
-                                                    data-level="{{ $row->nomenclature_level_id }}"
-                                            >{{ $row->name }} </option>
+                                                <option value="{{ $row->id }}"
+                                                        @if(old('accept_act_institution_type_id', ($doc->id ? $doc->accept_act_institution_type_id : 0)) == $row->id) selected @endif
+                                                        data-id="{{ $row->id }}"
+                                                        data-level="{{ $row->nomenclature_level_id }}"
+                                                >{{ $row->name }} </option>
                                         @endforeach
                                     @endif
                                 </select>
