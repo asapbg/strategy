@@ -171,7 +171,7 @@ class StrategicDocumentsController extends Controller
                 where
                     strategic_document.active = true
                     and strategic_document.deleted_at is null
-                    and strategic_document.strategic_document_level_id = 1
+                    and strategic_document.strategic_document_level_id = '.$cat.'
                 group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
                 order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
             ');
