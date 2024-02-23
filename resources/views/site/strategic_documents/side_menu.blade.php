@@ -18,6 +18,10 @@
                                 <a href="{{ route('strategy-documents.tree') }}" class="@if(request()->route()->getName() == 'strategy-documents.tree') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
                                    >{{ __('custom.all_strategic_documents_tree_view') }}</a>
                             </li>
+                            <li class="mb-2">
+                                <a href="{{ route('strategy-documents.reports') }}" class="@if(request()->route()->getName() == 'strategy-documents.reports') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
+                                   >{{ __('site.strategic_document.all_documents_report') }}</a>
+                            </li>
 
                             <li class="mb-2">
                                 <a href="{{ route('strategy-document.info') }}" class="@if(str_contains(url()->current(), 'strategy-documents/'.\App\Models\Page::STRATEGIC_DOCUMENT_INFO)) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">

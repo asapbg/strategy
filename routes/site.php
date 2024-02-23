@@ -99,6 +99,7 @@ Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->gr
     Route::get('/strategy-documents/{id}', 'show')->name('strategy-document.view')->where('id', '([1-9]+[0-9]*)');
     Route::get('/strategy-documents', 'index')->name('strategy-documents.index');
     Route::get('/strategy-documents/tree', 'tree')->name('strategy-documents.tree');
+    Route::get('/strategy-documents/reports', 'reports')->name('strategy-documents.reports');
 //    Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
 
     Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');

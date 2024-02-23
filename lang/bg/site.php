@@ -123,7 +123,7 @@ return [
     'strategic_document.areas' => 'Административна област|Административни области',
     'strategic_document.categories_based_on_livecycle' => 'Статус на документа',
     'strategic_document.search_in_title_content' => 'Търсене в заглавие/съдържание по избраните филтри',
-    'strategic_document.all_documents_report' => 'Справка с всички документи',
+    'strategic_document.all_documents_report' => 'Справки',
     'strategic_document.contacts.title' => 'Контакти на служители от дирекция „Стратегически документи"',
     'adv_board_all' => 'Всички съвети',
 ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Exports\StrategicDocumentsExport;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\CustomRole;
 use App\Models\EkatteArea;
@@ -23,6 +24,7 @@ use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -39,6 +41,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StrategicDocumentsController extends Controller
 {
@@ -273,6 +276,68 @@ class StrategicDocumentsController extends Controller
         return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
     }
 
+    public function reports(Request $request)
+    {
+        //Filter
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        if(empty($rf)){
+            $requestFilter['status'] = 'active';
+        }
+        $filter = $this->filtersReport($request, $rf);
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'title';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $q = StrategicDocument::select('strategic_document.*')
+            ->Active()
+            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('strategic_document_translations', function ($j){
+                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd);
+            //->GroupBy('strategic_document.id');
+
+        if($request->input('export_excel') || $request->input('export_pdf')){
+            $items = $q->get();
+            $exportData = [
+                'title' => __('custom.strategic_documents_report_title'),
+                'rows' => $items
+            ];
+
+            $fileName = 'sd_report_'.Carbon::now()->format('Y_m_d_H_i_s');
+            if($request->input('export_pdf')){
+                $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
+                return $pdf->download($fileName.'.pdf');
+            } else{
+                return Excel::download(new StrategicDocumentsExport($exportData), $fileName.'.xlsx');
+            }
+        } else{
+            $items = $q->paginate($paginate);
+        }
+
+        if( $request->ajax() ) {
+            return view('site.strategic_documents.list_report', compact('filter','sorter', 'items', 'rf'));
+        }
+
+        $pageTitle = trans('custom.strategy_documents_plural');
+        $this->composeBreadcrumbs(null, array(['name' => __('site.strategic_document.all_documents_report'), 'url' => '']));
+
+        return $this->view('site.strategic_documents.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection'));
+    }
+
     private function filters($request, $currentRequest)
     {
         return array(
@@ -330,6 +395,92 @@ class StrategicDocumentsController extends Controller
                 'type' => 'text',
                 'label' => __('site.strategic_document.search_in_title_content'),
                 'value' => $request->input('title'),
+                'col' => 'col-md-6'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? Pris::PAGINATE,
+                'col' => 'col-md-3'
+            ),
+
+        );
+    }
+
+    private function filtersReport($request, $currentRequest){
+        return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', true, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('site.strategic_document.level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-6'
+            ),
+            'acceptActInstitution' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(AuthorityAcceptingStrategic::optionsList(), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('validation.attributes.accept_act_institution_type_id'),
+                'value' => $request->input('acceptActInstitution'),
+                'col' => 'col-md-6'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalities', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
+            'validFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('validFrom'),
+                'label' => __('custom.valid_from'),
+                'col' => 'col-md-3'
+            ),
+            'validTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('validTo'),
+                'label' => __('custom.valid_to'),
+                'col' => 'col-md-3'
+            ),
+            'status' => array(
+                'type' => 'select',
+                'label' => __('site.strategic_document.categories_based_on_livecycle'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => '', 'value' => ''],
+                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
+                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+                ),
+                'value' => request()->input('status'),
+                'default' => empty($currentRequest) ? 'active' :'',
                 'col' => 'col-md-6'
             ),
             'paginate' => array(

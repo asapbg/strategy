@@ -144,10 +144,22 @@
                     <i class="fas fa-search main-color"></i>{{ __('custom.search') }}
                 </button>
             @endif
+            @if(isset($export_excel) && $export_excel)
+                    <button type="submit" class="btn btn-success" name="export_excel" value="1">
+                        <i class="fas fa-file-excel text-success me-2"></i>{{ __('custom.export') }}
+                    </button>
+            @endif
+            @if(isset($export_pdf) && $export_pdf)
+                    <button type="submit" class="btn btn-success" name="export_pdf" value="1">
+                        <i class="fas fa-file-pdf text-danger me-2"></i>{{ __('custom.export') }}
+                    </button>
+            @endif
         </div>
 
         <div class="col-md-6 text-end">
-            @includeIf('site.partial.subscribe-buttons')
+            @if(!isset($subscribe) || $subscribe)
+                @includeIf('site.partial.subscribe-buttons')
+            @endif
             @if(isset($btn_add) && $btn_add)
             <a class="btn btn-success text-success"
                 href="@if(isset($add_url) && $add_url){{ $add_url }}@else{{ '#' }}@endif" target="_blank"><i

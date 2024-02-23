@@ -46,11 +46,13 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
 
     public static function optionsList()
     {
-        return DB::table('authority_accepting_strategic')
+        $q = DB::table('authority_accepting_strategic')
             ->select(['authority_accepting_strategic.id', 'authority_accepting_strategic_translations.name'])
-            ->join('authority_accepting_strategic_translations', 'authority_accepting_strategic_translations.consultation_level_id', '=', 'authority_accepting_strategic.id')
-            ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale())
-            ->orderBy('authority_accepting_strategic_translations.name', 'asc')
+            ->join('authority_accepting_strategic_translations', 'authority_accepting_strategic_translations.authority_accepting_strategic_id', '=', 'authority_accepting_strategic.id')
+            ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale());
+
+
+        return $q->orderBy('authority_accepting_strategic_translations.name', 'asc')
             ->get();
     }
 }
