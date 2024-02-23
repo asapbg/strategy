@@ -68,7 +68,7 @@
                                                     </div>
                                                 @endif
                                                 @if(!is_null($i->child_id))
-                                                    <div class="card custom-card mb-2" style="margin-left: {{ $i->child_depth * 30 }}px">
+                                                    <div class="card custom-card mb-2" style="margin-left: {{ ($i->child_depth * 30 + 30) }}px">
                                                         <div class="card-header" id="heading{{ $i->sd_id }}">
                                                             <h2 class="mb-0">
                                                                 <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
