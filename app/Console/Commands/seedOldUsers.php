@@ -173,6 +173,8 @@ class seedOldUsers extends Command
         //start from this id in old database
         $currentStep = (int)(DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max) + 1;
 
+        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
@@ -214,67 +216,68 @@ class seedOldUsers extends Command
 
                 if (sizeof($oldDbResult)) {
                     foreach ($oldDbResult as $item) {
-                        DB::beginTransaction();
-                        try {
-                            $newUserRoles = [];
-                            $duplicated = User::where('email', '=', $item->email)->first();
-                            $prepareNewUser = [
-                                'old_id' => $item->old_id,
-                                'username' => $item->username,
-                                'is_org' => $item->is_org,
-                                'org_name' => $item->org_name,
-                                'first_name' => $item->first_name,
-                                'last_name' => $item->last_name,
-                                'user_type' => null,
-                                'email' => $duplicated ? 'duplicated-'.$item->email : $item->email,
-                                'phone' => $item->phone,
-                                'activity_status' => $item->activity_status,
-                                'email_verified_at' => null,
-                                'password' => Hash::make($item->password),
-                                'password_changed_at' => !empty($item->password_changed_at) ? Carbon::parse($item->password_changed_at)->format($formatTimestamp) : null,
-                                'last_login_at' => !empty($item->last_login_at) ? Carbon::parse($item->last_login_at)->format($formatTimestamp) : null,
-                                'active' => (bool)$item->active,
-                                'institution_id' => $institutions[$item->org_name] ?? null,
-                            ];
+                        if(!in_array($item->old_id, $ourUsers)){
+                            DB::beginTransaction();
+                            try {
+                                $newUserRoles = [];
+                                $duplicated = User::where('email', '=', $item->email)->first();
+                                $prepareNewUser = [
+                                    'old_id' => $item->old_id,
+                                    'username' => $item->username,
+                                    'is_org' => $item->is_org,
+                                    'org_name' => $item->org_name,
+                                    'first_name' => $item->first_name,
+                                    'last_name' => $item->last_name,
+                                    'user_type' => null,
+                                    'email' => $duplicated ? 'duplicated-'.$item->email : $item->email,
+                                    'phone' => $item->phone,
+                                    'activity_status' => $item->activity_status,
+                                    'email_verified_at' => null,
+                                    'password' => Hash::make($item->password),
+                                    'password_changed_at' => !empty($item->password_changed_at) ? Carbon::parse($item->password_changed_at)->format($formatTimestamp) : null,
+                                    'last_login_at' => !empty($item->last_login_at) ? Carbon::parse($item->last_login_at)->format($formatTimestamp) : null,
+                                    'active' => (bool)$item->active,
+                                    'institution_id' => $institutions[$item->org_name] ?? null,
+                                ];
 
-                            $roles = json_decode($item->roles, true);
+                                $roles = json_decode($item->roles, true);
 
-                            if (sizeof($roles)) {
-                                foreach ($roles as $r) {
-                                    if (isset($mappingRoles[$r['id']])) {
-                                        $newUserRoles[] = $mappingRoles[$r['id']];
-                                    } else {
-                                        echo 'Missing role: ' . $r['name'] . ' with ID ' . $r['id'] . PHP_EOL;
+                                if (sizeof($roles)) {
+                                    foreach ($roles as $r) {
+                                        if (isset($mappingRoles[$r['id']])) {
+                                            $newUserRoles[] = $mappingRoles[$r['id']];
+                                        } else {
+                                            echo 'Missing role: ' . $r['name'] . ' with ID ' . $r['id'] . PHP_EOL;
+                                        }
                                     }
-                                }
-                                //users in old system do not have external or internal flag.
-                                // We check roles and set this property depending on roles that we found for each user
+                                    //users in old system do not have external or internal flag.
+                                    // We check roles and set this property depending on roles that we found for each user
 
-                                if (sizeof($newUserRoles)) {
-                                    if (sizeof($newUserRoles) == 1 && $newUserRoles[0] == $externalRoleId) {
+                                    if (sizeof($newUserRoles)) {
+                                        if (sizeof($newUserRoles) == 1 && $newUserRoles[0] == $externalRoleId) {
+                                            $prepareNewUser['user_type'] = User::USER_TYPE_EXTERNAL;
+                                        } else {
+                                            $newUserRoles = array_filter($newUserRoles, fn($m) => $m != 0);
+                                            $prepareNewUser['user_type'] = User::USER_TYPE_INTERNAL;
+                                        }
+                                    } else {
+                                        //if no roles found save as external user
                                         $prepareNewUser['user_type'] = User::USER_TYPE_EXTERNAL;
-                                    } else {
-                                        $newUserRoles = array_filter($newUserRoles, fn($m) => $m != 0);
-                                        $prepareNewUser['user_type'] = User::USER_TYPE_INTERNAL;
                                     }
-                                } else {
-                                    //if no roles found save as external user
-                                    $prepareNewUser['user_type'] = User::USER_TYPE_EXTERNAL;
                                 }
-                            }
 
-                            $newUser = User::create($prepareNewUser);
-                            if ($newUser && sizeof($newUserRoles)) {
-                                $newUser->assignRole($newUserRoles);
-                                $newUser->save();
-                            }
+                                $newUser = User::create($prepareNewUser);
+                                if ($newUser && sizeof($newUserRoles)) {
+                                    $newUser->assignRole($newUserRoles);
+                                    $newUser->save();
+                                }
 
-                            $this->comment('User with old id (' . $newUser->old_id . ') is created');
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            Log::error('Migration old startegy users: ' . $e);
-                            DB::rollBack();
-                            dd($prepareNewUser, $roles);
+                                $this->comment('User with old id (' . $newUser->old_id . ') is created');
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                Log::error('Migration old startegy users: ' . $e);
+                                DB::rollBack();
+                            }
                         }
                     }
                 }
