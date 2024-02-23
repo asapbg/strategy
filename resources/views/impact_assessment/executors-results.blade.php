@@ -25,7 +25,7 @@
                 <div class="col-md-12 mb-2">
                     <p class="fs-18 fw-600 mb-1">{{ __('Name of contractor') }}</p>
                     <a href="#collapse_{{ $executor->id }}" class="main-color text-decoration-none d-block accordion-link" data-toggle="collapse">
-                        <span>{{ $executor->institution?->name ?? $translation?->contractor_name }}</span>
+                        <span>{{ $executor->institution?->name ?? $executor?->contractor_name }}</span>
                     </a>
                 </div>
                 <div id="collapse_{{ $executor->id }}" class="collapse" data-parent="#accordion">
@@ -36,7 +36,7 @@
                                 <a href="javascript:;" class="main-color text-decoration-none filter_link"
                                    data-filter="institutions" data-id="{{ $executor->institution?->id }}"
                                 >
-                                    {{ $executor->institution?->name ?? $translation?->contractor_name }}
+                                    {{ $executor->institution?->name ?? $executor?->contractor_name }}
                                 </a>
                             </p>
                         </div>

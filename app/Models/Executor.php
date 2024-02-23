@@ -13,6 +13,7 @@ class Executor extends ModelActivityExtend implements TranslatableContract
 
     const MODULE_NAME = ('custom.executors');
     const TRANSLATABLE_FIELDS = [
+        'contractor_name',
         'executor_name',
         'contract_subject',
         'services_description',

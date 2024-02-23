@@ -104,7 +104,7 @@
                         @foreach($executors as $executor)
                             <tr>
                                 <td>{{ $executor->id }}</td>
-                                <td>{{ $executor->institution?->name ?? $translation?->contractor_name }}</td>
+                                <td>{{ $executor->institution?->name ?? $executor?->contractor_name }}</td>
                                 <td>{{ $executor->executor_name }}</td>
                                 <td>{{ displayDate($executor->contract_date) }}</td>
                                 <td>
