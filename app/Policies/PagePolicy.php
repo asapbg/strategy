@@ -69,6 +69,10 @@ class PagePolicy
             || (
                 in_array($page->system_name, [Page::STRATEGIC_DOCUMENT_DOCUMENTS, Page::STRATEGIC_DOCUMENT_INFO])
                 && $user->hasRole([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])
+            )
+            || (
+                in_array($page->system_name, [Page::OGP_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_PARTNERSHIP])
             );
     }
 

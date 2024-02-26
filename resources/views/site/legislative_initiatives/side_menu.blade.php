@@ -16,6 +16,10 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
+                                    <li class="my-2 @if(str_contains(url()->current(),'ogp/information')) active-item-left p-1 @endif">
+                                        <a href="{{ route('ogp.info') }}" class="link-dark  text-decoration-none">{{ __('site.base_info') }}</a>
+                                    </li>
+                                    <hr class="custom-hr">
                                     <li class="my-2 @if(str_contains(url()->current(),'national-action-plans')) active-item-left p-1 @endif">
                                         <a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a>
                                     </li>

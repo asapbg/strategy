@@ -598,6 +598,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::get('common-html', [\App\Http\Controllers\CommonController::class, 'commonHtml'])->name('common-html');
 
 
+    // Pages
+    Route::controller(\App\Http\Controllers\Admin\Ogp\PageController::class)->prefix('/ogp/page')->group(function () {
+        Route::match(['get', 'put'], '/base-information', 'info')->name('ogp.page.info');
+    });
+
     Route::controller(Areas::class)->prefix('/ogp/areas')->group(function () {
         Route::get('', 'index')->name('ogp.area.index');
         Route::get('create', 'create')->name('ogp.area.create');

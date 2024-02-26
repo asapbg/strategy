@@ -138,6 +138,15 @@ class PageSeeder extends Seeder
                 'content_en' => 'Content in Information',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'ogp-info',
+                'system_name' => Page::OGP_INFO,
+                'name_bg' => 'Обща информация',
+                'name_en' => 'Information',
+                'content_bg' => 'Съдържание в Обща информация',
+                'content_en' => 'Content in Information',
+                'is_system' => 1
+            ],
         ];
 
         foreach ($data as $page) {

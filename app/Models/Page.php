@@ -21,6 +21,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const IA_INFO = 'impact-assessments-info';
     const STRATEGIC_DOCUMENT_DOCUMENTS = 'documents';
     const STRATEGIC_DOCUMENT_INFO = 'info';
+    const OGP_INFO = 'ogp-info';
 
     const CACHE_FOOTER_PAGES_KEY = 'footer_pages';
     const CACHE_MODULE_PAGES_OGP = 'ogp_library';

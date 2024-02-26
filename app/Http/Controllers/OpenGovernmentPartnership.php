@@ -30,6 +30,22 @@ class OpenGovernmentPartnership extends Controller
 
     }
 
+    public function info()
+    {
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::OGP_INFO)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = $this->pageTitle;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
+        return $this->view('site.ogp.page', compact('page', 'pageTitle'));
+    }
+
     public function contacts(Request $request, $itemId = null)
     {
         $pageTitle = $this->pageTitle;

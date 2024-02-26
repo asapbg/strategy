@@ -39,10 +39,11 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>
-                                        @if(!empty($item->system_name))
+                                        @if(!empty($item->system_name) && \Lang::has('custom.pages.'.$item->system_name))
                                             <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="{{ __('custom.pages.'.$item->system_name) }}"></i>
-                                        @endif{{ $item->name }}
-                                        @if(!empty($item->system_name))
+                                        @endif
+                                            {{ $item->name }}
+                                        @if(!empty($item->system_name) && \Lang::has('custom.pages.'.$item->system_name))
                                             <span class="d-block text-primary fs-14"><i>({{ __('custom.pages.'.$item->system_name) }})</i></span>
                                         @endif
                                     </td>
