@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="row">
-    @include('site.ogp.sidemenu')
+    @include('site.legislative_initiatives.side_menu')
     <div class="col-lg-10 py-5 right-side-content">
         @include('site.ogp.develop_new_action_plan.filter')
         @include('site.ogp.search_btn_actions')

@@ -1,10 +1,10 @@
 @extends('layouts.site', ['fullwidth' => true])
 
-@section('pageTitle', __('custom.open_government_partnership'))
+{{--@section('pageTitle', __('custom.open_government_partnership'))--}}
 
 @section('content')
 <div class="row">
-    @include('site.ogp.sidemenu')
+    @include('site.legislative_initiatives.side_menu')
 
     <div class="col-lg-10 py-5 right-side-content">
         @include('site.ogp.list.filter')

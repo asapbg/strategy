@@ -10,6 +10,14 @@ use Illuminate\View\View;
 
 class NationalActionPlans extends Controller
 {
+    private $pageTitle;
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->title_singular = __('custom.open_government_partnership');
+        $this->pageTitle = __('custom.open_government_partnership');
+    }
+
     /**
      * List of all otg_areas
      * @param Request $request
@@ -25,7 +33,9 @@ class NationalActionPlans extends Controller
 
         $route_view_name = 'ogp.national_action_plans.show';
 
-        return $this->view('site.ogp.plans', compact('items', 'route_view_name'));
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs();
+        return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name'));
     }
 
     /**
@@ -36,7 +46,9 @@ class NationalActionPlans extends Controller
     public function show(Request $request, $id): View
     {
         $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)->findOrFail($id);
-        return $this->view('site.ogp.plan_show', compact('plan'));
+        $pageTitle = $plan->name;
+        $this->composeBreadcrumbs($plan);
+        return $this->view('site.ogp.plan_show', compact('pageTitle', 'plan'));
     }
 
     /**
@@ -48,6 +60,28 @@ class NationalActionPlans extends Controller
     public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
     {
         return $this->view('site.ogp.plan_area_show', compact('plan', 'planArea'));
+    }
+
+    /**
+     * @param $item
+     * @param $extraItems
+     * @return void
+     */
+    private function composeBreadcrumbs($item = null, $extraItems = []){
+        $customBreadcrumbs = array(
+            ['name' => __('custom.open_government_partnership'), 'url' => route('ogp.list')],
+            ['name' => __('custom.national_action_plans'), 'url' => route('ogp.national_action_plans')]
+        );
+
+        if($item){
+            $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('ogp.national_action_plans.show', $item->id) : null];
+        }
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 
 }

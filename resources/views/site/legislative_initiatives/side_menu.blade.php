@@ -10,16 +10,17 @@
                     <hr class="custom-hr">
                     <div class="collapse show mt-3" id="home-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
-                            <li class="mb-2  active-item-left p-1"><a href="#" class="link-dark text-decoration-none">Законодателни инициативи</a></li>
-                            <li class="mb-2"><a href="{{ route('ogp.list') }}" class="link-dark text-decoration-none">{{ __('custom.open_government_partnership') }}</a></li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'legislative-initiatives')) active-item-left p-1 @endif"><a href="{{ route('legislative_initiatives.index') }}" class="link-dark text-decoration-none">Законодателни инициативи</a></li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'polls')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a></li>
+                            <li class="mb-2 @if(request()->route()->getName() == 'ogp.list') active-item-left p-1 @endif"><a href="{{ route('ogp.list') }}" class="link-dark text-decoration-none">{{ __('custom.open_government_partnership') }}</a></li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
+                                    <li class="my-2 @if(str_contains(url()->current(),'national-action-plans')) active-item-left p-1 @endif"><a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a></li>
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a></li>
+                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plans')) active-item-left p-1 @endif"><a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a></li>
                                     <hr class="custom-hr">
@@ -27,8 +28,6 @@
                                     <hr class="custom-hr">
                                 </ul>
                             </ul>
-                            <li class="mb-2 @if(str_contains(url()->current(),'polls')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a>
-                            </li>
                         </ul>
                     </div>
                 </li>

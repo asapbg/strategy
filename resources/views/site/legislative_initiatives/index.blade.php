@@ -1,10 +1,4 @@
 @extends('layouts.site', ['fullwidth' => true])
-<style>
-    .public-page {
-        padding: 0px 0px !important;
-    }
-
-</style>
 
 @section('pageTitle', 'Законодателна инициатива')
 
