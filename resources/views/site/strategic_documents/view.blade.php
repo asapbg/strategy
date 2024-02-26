@@ -30,11 +30,13 @@
                     <div class="col-md-12 text-start">
                         <button class="btn btn-primary  main-color">
                             <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>
-                        <button class="btn rss-sub main-color">
-                            <i
-                                class="fas fa-square-rss text-warning me-2"></i>{{ trans_choice('custom.rss_subscribe', 1) }}</button>
-                        <button class="btn rss-sub main-color">
-                            <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>
+                        <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
+                        <input type="hidden" id="subscribe_model_id" value="{{ $strategicDocument->id }}">
+                        @includeIf('site.partial.subscribe-buttons')
+{{--                        <button class="btn rss-sub main-color">--}}
+{{--                            <i class="fas fa-square-rss text-warning me-2"></i>{{ trans_choice('custom.rss_subscribe', 1) }}</button>--}}
+{{--                        <button class="btn rss-sub main-color">--}}
+{{--                            <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>--}}
                     </div>
                 </div>
                 @if($strategicDocument->policyArea)

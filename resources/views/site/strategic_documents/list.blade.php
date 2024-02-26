@@ -7,7 +7,7 @@
     @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\StrategicDocument::class))
     @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.strategic_documents.edit', ['item' => 0])])
     @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_strategic_documents')])
-
+    <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
     <div class="row mb-2">
         <div class="col-md-6 mt-2">
             <div class="info-consul text-start">
@@ -113,7 +113,6 @@
 
                 function categoriesControl(){
                     let level = $('#level');
-                    console.log(level);
                     let levelVals = level.val();
                     // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
                     if(levelVals.indexOf(centralLevel) != -1 || !levelVals.length){

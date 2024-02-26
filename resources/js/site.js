@@ -318,6 +318,14 @@ function isEmpty(arg){
     );
 }
 
+function showModalAlert(message,title = false) {
+    if (title) {
+        $("#modal-alert .modal-title").html(title);
+    }
+    $("#modal-alert .modal-body").html(message);
+    $("#modal-alert").modal('show');
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -482,6 +490,8 @@ $(document).ready(function () {
         let btn = $(this);
         let channel = $(btn).data('channel');
         let model = $("#subscribe_model").val();
+        let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
+        let model_filter = typeof btn.data('filter') != 'undefined' ? btn.data('filter') : null;
         let route_name = $("#subscribe_route_name").val();
         let text = $("#unsubscribe_text").val();
 
@@ -491,6 +501,8 @@ $(document).ready(function () {
             data: {
                 channel: channel,
                 model: model,
+                model_id: model_id,
+                model_filter: model_filter,
                 route_name: route_name,
                 is_subscribed: SUBSCRIBED
             },
@@ -516,6 +528,8 @@ $(document).ready(function () {
         let btn = $(this);
         let channel = $(btn).data('channel');
         let model = $("#subscribe_model").val();
+        let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
+        let model_filter = typeof btn.data('filter') != 'undefined' ? btn.data('filter') : null;
         let route_name = $("#subscribe_route_name").val();
         let text = $("#subscribe_text").val();
 
@@ -525,6 +539,8 @@ $(document).ready(function () {
             data: {
                 channel: channel,
                 model: model,
+                model_id: model_id,
+                model_filter: model_filter,
                 route_name: route_name,
                 is_subscribed: UNSUBSCRIBED
             },

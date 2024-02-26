@@ -86,7 +86,6 @@
 
                 function categoriesControl(){
                     let level = $('#level');
-                    console.log(level);
                     let levelVals = level.val();
                     // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
                     if(levelVals.indexOf(centralLevel) != -1 || !levelVals.length){

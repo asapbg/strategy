@@ -340,18 +340,19 @@ class  UsersController extends Controller
         $channel = $request->offsetGet('channel');
         $model = $request->offsetGet('model');
         $model_id = $request->offsetGet('model_id');
+        $model_filter = $request->offsetGet('model_filter');
         $route_name = $request->offsetGet('route_name');
         $is_subscribed = $request->offsetGet('is_subscribed');
 
         try {
-
             $userSubscribe = UserSubscribe::updateOrCreate([
                     'user_id' => $user->id,
                     'subscribable_type' => $model,
                     'subscribable_id' => $model_id,
                     'route_name' => $route_name,
                     'condition' => UserSubscribe::CONDITION_PUBLISHED,
-                    'channel' => $channel
+                    'channel' => $channel,
+                    'search_filters' => !empty($model_filter) ? json_encode($model_filter) : null
                 ],
                 [
                     'is_subscribed' => $is_subscribed
