@@ -190,7 +190,7 @@
 {{--                @endcan--}}
 
                 @canany(['manage.*', 'manage.partnership'])
-                    <li class="nav-item @if(strstr(url()->current(), 'areas') || strstr(url()->current(), 'plans') ) menu-open @endif">
+                    <li class="nav-item @if(str_contains(url()->current(), 'ogp/')) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-handshake"></i>
                             <p>{{ __('custom.open_government_partnership') }}<i class="fas fa-angle-left right"></i>
@@ -211,6 +211,15 @@
                                     <p>{{ trans_choice('custom.plans', 2) }}</p>
                                 </a>
                             </li>
+                            @canany(['manage.*'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.ogp.library', ['module' => \App\Enums\PageModulesEnum::MODULE_OGP->value]) }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'ogp/library')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ __('custom.library') }}</p>
+                                    </a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan

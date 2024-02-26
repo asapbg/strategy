@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PageModulesEnum;
+use App\Models\CustomRole;
+use App\Models\Page;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,6 +28,38 @@ class OpenGovernmentPartnership extends Controller
         $this->composeBreadcrumbs();
         return $this->view('site.ogp.index', compact('pageTitle'));
 
+    }
+
+    public function contacts(Request $request, $itemId = null)
+    {
+        $pageTitle = $this->pageTitle;
+        $moderators = User::role([CustomRole::MODERATOR_PARTNERSHIP])->get();
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
+        return $this->view('site.ogp.contacts', compact('moderators', 'pageTitle'));
+    }
+
+    public function libraryView(Request $request, $slug = ''){
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('slug', '=', $slug)
+            ->first();
+
+        if(!$page){
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+        $pageTitle = $this->pageTitle;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(
+            ['name' => __('custom.library'), 'url' => ''],
+            ['name' => $page->name, 'url' => '']
+        ));
+
+        $library = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_OGP->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+        return $this->view('site.ogp.page', compact('page', 'pageTitle', 'library'));
     }
 
     /**

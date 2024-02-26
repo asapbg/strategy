@@ -25,6 +25,8 @@ class CustomRole extends Role
     const MODERATOR_STRATEGIC_DOCUMENT = 'moderator-strategic';
     const MODERATOR_STRATEGIC_DOCUMENTS = 'moderator-strategics';
 
+    const MODERATOR_PARTNERSHIP = 'moderator-partnership';
+
     /**
      * The attributes that are mass assignable.
      *

@@ -11,6 +11,7 @@ enum PageModulesEnum: int
     use Names, Options, Values;
 
     case MODULE_IMPACT_ASSESSMENT = 1;
+    case MODULE_OGP = 2;
 
     // Return enum name by value
     public static function keyByValue($searchVal): string
@@ -33,6 +34,7 @@ enum PageModulesEnum: int
     {
         return [
             self::MODULE_IMPACT_ASSESSMENT->value           => 'custom.page.module.MODULE_IMPACT_ASSESSMENT',
+            self::MODULE_OGP->value           => 'custom.page.module.MODULE_IMPACT_ASSESSMENT',
         ];
     }
 

@@ -60,10 +60,11 @@
                                 </ul>
                             </ul>
                             @if(isset($library) && $library->count())
-                                <li class="mb-2">
-                                    <a href="" class="@if(str_contains(url()->current(), 'impact_assessments/library')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
-                                        {{ __('custom.library') }}
-                                    </a>
+                                <li class="mb-2 @if(str_contains(url()->current(), 'impact_assessments/library')) active-item-left text-white p-1 @endif">
+                                    {{ __('custom.library') }}
+{{--                                    <a href="" class="@if(str_contains(url()->current(), 'impact_assessments/library')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">--}}
+{{--                                        {{ __('custom.library') }}--}}
+{{--                                    </a>--}}
                                 </li>
                                 <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                     <ul class="list-unstyled ps-3">

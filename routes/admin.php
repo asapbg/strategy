@@ -163,6 +163,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/impact-assessments/library/{module?}', 'index')->name('impact_assessments.library')->middleware('can:viewAny,App\Models\Page');
         Route::get('/impact-assessments/library/edit/{item?}/{module?}', 'edit')->name('impact_assessments.library.edit');
         Route::match(['post', 'put'], '/impact-assessments/library/store/{module?}', 'store')->name('impact_assessments.page.store');
+
+        Route::get('/ogp/library/{module?}', 'index')->name('ogp.library')->middleware('can:viewAny,App\Models\Page');
+        Route::get('/ogp/library/edit/{item?}/{module?}', 'edit')->name('ogp.library.edit');
+        Route::match(['post', 'put'], '/ogp/library/store/{module?}', 'store')->name('ogp.page.store');
     });
 
     // Settings

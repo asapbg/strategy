@@ -16,16 +16,44 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
-                                    <li class="my-2 @if(str_contains(url()->current(),'national-action-plans')) active-item-left p-1 @endif"><a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a></li>
+                                    <li class="my-2 @if(str_contains(url()->current(),'national-action-plans')) active-item-left p-1 @endif">
+                                        <a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a>
+                                    </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a></li>
+                                    <li class="my-2">
+                                        <a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a>
+                                    </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plans')) active-item-left p-1 @endif"><a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a></li>
+                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plans')) active-item-left p-1 @endif">
+                                        <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>
+                                    </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a></li>
+                                    <li class="my-2">
+                                        <a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a>
+                                    </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">{{ __('custom.news_events') }}</a></li>
+                                    <li class="my-2">
+                                        <a href="#" class="link-dark  text-decoration-none">{{ __('custom.news_events') }}</a>
+                                    </li>
                                     <hr class="custom-hr">
+                                    @if(isset($library) && $library->count())
+                                        <li class="my-2 @if(str_contains(url()->current(), 'ogp/library')) active-item-left text-white p-1 @endif">
+                                            {{ __('custom.library') }}
+                                        </li>
+                                        <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
+                                            <ul class="list-unstyled ps-3">
+                                                <hr class="custom-hr">
+                                                @foreach($library as $page)
+                                                    <li class="my-2 @if(str_contains(url()->current(), 'ogp/library/'.$page->slug)) active-item-left p-1 @endif">
+                                                        <a href="{{ route('ogp.library.view', ['slug' => $page->slug]) }}" class=" text-decoration-none link-dark">{{ $page->name }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </ul>
+                                    @endif
+                                    <hr class="custom-hr">
+                                    <li class="my-2 @if(request()->route()->getName() == 'ogp.contacts') active-item-left p-1 @endif">
+                                        <a href="{{ route('ogp.contacts') }}" class="link-dark text-decoration-none">{{ trans_choice('custom.contacts', 2) }}</a>
+                                    </li>
                                 </ul>
                             </ul>
                         </ul>

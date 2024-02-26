@@ -40,6 +40,34 @@ class ViewServiceProvider extends ServiceProvider
 //
 //            $view->with('sectors', $sectors);
 //        });
+//
+        View::composer('site.legislative_initiatives.side_menu', function ($view) {
+            $ogpLibraryKey = Page::CACHE_MODULE_PAGES_OGP;
+            $library = Cache::get($ogpLibraryKey);
+            if( is_null($library) ) {
+                $library = Page::with(['translations'])
+                    ->where('module_enum', '=', PageModulesEnum::MODULE_OGP->value)
+                    ->orderBy('order_idx', 'asc')
+                    ->get();
+                Cache::put($ogpLibraryKey, $library, 3600);
+            }
+
+            $view->with('library', $library);
+        });
+
+        View::composer('impact_assessment.sidebar', function ($view) {
+            $ogpLibraryKey = Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT;
+            $library = Cache::get($ogpLibraryKey);
+            if( is_null($library) ) {
+                $library = Page::with(['translations'])
+                    ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+                    ->orderBy('order_idx', 'asc')
+                    ->get();
+                Cache::put($ogpLibraryKey, $library, 3600);
+            }
+
+            $view->with('library', $library);
+        });
 
         View::composer('partials.footer_front', function ($view) {
             $currentMenuKey = Setting::CONTACT_MAIL_KEY;

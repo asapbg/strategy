@@ -19,11 +19,12 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const LP_INFO = 'legislative-programs-info';
     const OP_INFO = 'operational-programs-info';
     const IA_INFO = 'impact-assessments-info';
-
     const STRATEGIC_DOCUMENT_DOCUMENTS = 'documents';
     const STRATEGIC_DOCUMENT_INFO = 'info';
 
     const CACHE_FOOTER_PAGES_KEY = 'footer_pages';
+    const CACHE_MODULE_PAGES_OGP = 'ogp_library';
+    const CACHE_MODULE_PAGES_IMPACT_ASSESSMENT = 'impact_assessment';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 

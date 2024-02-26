@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\PageModulesEnum;
 use App\Http\Requests\PageStoreRequest;
+use App\Models\CustomRole;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -32,10 +33,12 @@ class PageController  extends AdminController
             unset($filter['module']);
             $customEditRouteName = match ((int)$module) {
                 PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.library.edit',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library.edit',
                 default => null,
             };
             $customListRouteName = match ((int)$module) {
                 PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.library',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library',
                 default => null,
             };
         }
@@ -74,10 +77,12 @@ class PageController  extends AdminController
         if($module) {
             $customStoreRouteName = match ($module) {
                 PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.page.store',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.page.store',
                 default => null,
             };
             $customListRouteName = match ($module) {
                 PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.library',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library',
                 default => null,
             };
         }
@@ -99,13 +104,22 @@ class PageController  extends AdminController
 
     public function store(PageStoreRequest $request, int $module = 0)
     {
-        //TODO delete cache pages
         $validated = $request->validated();
         $id = $validated['id'];
         $item = $id ? Page::find($id) : new Page();
 
-        if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', Page::class) ) {
+        if( ($id && $request->user()->cannot('update', $item)) ||
+            (
+                (!$module &&  $request->user()->cannot('create', Page::class)) ||
+                (
+                    $module &&
+                    (
+                        $module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
+                        || ($module == PageModulesEnum::MODULE_OGP->value && $request->user()->hasRole([CustomRole::MODERATOR_PARTNERSHIP]))
+                    )
+                )
+            )
+        ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -135,6 +149,7 @@ class PageController  extends AdminController
                 if($module) {
                     $route = match ((int)$module) {
                         PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library.edit', ['item' => $item, 'module' => $module]),
+                        PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library.edit', ['item' => $item, 'module' => $module]),
                         default => null,
                     };
                 }
@@ -147,8 +162,19 @@ class PageController  extends AdminController
             if($module) {
                 $route = match ((int)$module) {
                     PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library', ['module' => $module]),
+                    PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library', ['module' => $module]),
                     default => null,
                 };
+
+                $modulePagesCacheKey = match ($module){
+                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT,
+                    PageModulesEnum::MODULE_OGP->value => Page::CACHE_MODULE_PAGES_OGP,
+                    default => null,
+                };
+
+                if($modulePagesCacheKey){
+                    Cache::forget($modulePagesCacheKey);
+                }
             }
             return redirect($route)
                 ->with('success', trans_choice('custom.pages', 1)." ".__('messages.created_successfully_m'));

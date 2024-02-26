@@ -167,6 +167,8 @@ Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentStatControll
 //OGP
 Route::controller(OpenGovernmentPartnership::class)->group(function () {
     Route::get('ogp', 'index')->name('ogp.list');
+    Route::get('ogp/contacts', 'contacts')->name('ogp.contacts');
+    Route::get('ogp/library/{slug}', 'libraryView')->name('ogp.library.view');
 });
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {
