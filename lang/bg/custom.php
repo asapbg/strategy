@@ -434,7 +434,7 @@ return [
     //public sections
     'public_sections'                           => 'Библиотека|Библиотека',
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
-    'public_sections.types.TYPE_OGP_NEWS'       => 'TYPE_OGP_NEWS',
+    'public_sections.types.TYPE_OGP_NEWS'       => 'Партньорство за ОУ',
     'public_sections.types.TYPE_NEWS'           => 'Новина|Новини',
     'public_sections.types.TYPE_ADVISORY_BOARD' => 'Консултативен съвет|Консултативни съвети',
     //dynamic structures
@@ -806,5 +806,6 @@ return [
     'strategic_document.levels.MUNICIPAL'        => 'Общинско',
     'pris_categories' => 'Вид на акт на МС|Видове на актове на МС',
     'help' => 'Помощна информация',
-    'strategic_documents_report_title' => 'Справка "Стратегически документи"'
+    'strategic_documents_report_title' => 'Справка "Стратегически документи"',
+    'ogp_news' => 'Новина|Новини',
 ];

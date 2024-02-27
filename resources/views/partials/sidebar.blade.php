@@ -218,6 +218,13 @@
                                     <p>{{ __('custom.base_information') }}</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.news.index') }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'ogp/news')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.news', 2) }}</p>
+                                </a>
+                            </li>
                             @canany(['manage.*'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.ogp.library', ['module' => \App\Enums\PageModulesEnum::MODULE_OGP->value]) }}"

@@ -603,6 +603,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['get', 'put'], '/base-information', 'info')->name('ogp.page.info');
     });
 
+    // Publications
+    Route::controller(\App\Http\Controllers\Admin\Ogp\OgpNewsController::class)->prefix('/ogp/news')->group(function () {
+        Route::get('/', 'index')->name('ogp.news.index')->middleware('can:viewAnyOgp,App\Models\Publication');
+        Route::get('/edit/{item?}', 'edit')->name('ogp.news.edit');
+        Route::match(['post', 'put'], '/store/{item?}', 'store')->name('ogp.news.store');
+        Route::post('/{item}/delete', 'destroy')->name('ogp.news.delete');
+    });
+
     Route::controller(Areas::class)->prefix('/ogp/areas')->group(function () {
         Route::get('', 'index')->name('ogp.area.index');
         Route::get('create', 'create')->name('ogp.area.create');

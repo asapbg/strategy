@@ -170,6 +170,8 @@ Route::controller(OpenGovernmentPartnership::class)->group(function () {
     Route::get('ogp/information', 'info')->name('ogp.info');
     Route::get('ogp/contacts', 'contacts')->name('ogp.contacts');
     Route::get('ogp/library/{slug}', 'libraryView')->name('ogp.library.view');
+    Route::get('ogp/news', 'news')->name('ogp.news');
+    Route::get('ogp/news/{item}/details', 'newsDetails')->name('ogp.news.details');
 });
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {

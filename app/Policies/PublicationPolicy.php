@@ -186,4 +186,84 @@ class PublicationPolicy
     {
         return false;
     }
+
+    //    ===========================
+    //    OGP
+    //     ==========================
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+
+    public function viewAnyOgp(User $user)
+    {
+        return $user->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_PARTNERSHIP]);
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function createOgp(User $user)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_PARTNERSHIP];
+        return $user->hasAnyRole($roles);
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function updateOgp(User $user, Publication $publication)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_PARTNERSHIP];
+
+        return $publication->type = PublicationTypesEnum::TYPE_OGP_NEWS && $user->hasAnyRole($roles);
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function deleteOgp(User $user, Publication $publication)
+    {
+        $roles = [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS];
+
+        return $user->hasAnyRole($roles) && $publication->type = PublicationTypesEnum::TYPE_OGP_NEWS;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restoreOgp(User $user, Publication $publication)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Publication  $publication
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDeleteOgp(User $user, Publication $publication)
+    {
+        return false;
+    }
 }

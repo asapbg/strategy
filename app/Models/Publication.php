@@ -47,7 +47,11 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     }
 
     public function scopeAdvBoard($query){
-        $query->where('publication.type', '=', PublicationTypesEnum::TYPE_ADVISORY_BOARD);
+        $query->where('publication.type', '=', PublicationTypesEnum::TYPE_ADVISORY_BOARD->value);
+    }
+
+    public function scopeOgp($query){
+        $query->where('publication.type', '=', PublicationTypesEnum::TYPE_OGP_NEWS->value);
     }
 
     /**

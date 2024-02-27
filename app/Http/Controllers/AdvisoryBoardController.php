@@ -497,7 +497,7 @@ class AdvisoryBoardController extends Controller
             'titleContent' => array(
                 'type' => 'text',
                 'label' => __('custom.title_content'),
-                'value' => $request->input('title_content'),
+                'value' => $request->input('titleContent'),
                 'col' => 'col-md-4'
             ),
             'from' => array(

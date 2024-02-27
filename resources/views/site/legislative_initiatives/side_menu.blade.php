@@ -54,6 +54,11 @@
                                             </ul>
                                         </ul>
                                     @endif
+                                    <li class="mb-2">
+                                        <a href="{{ route('ogp.news') }}" class="@if(str_contains(url()->current(),'news')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                            {{ trans_choice('custom.news', 2) }}
+                                        </a>
+                                    </li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'ogp.contacts') active-item-left p-1 @endif">
                                         <a href="{{ route('ogp.contacts') }}" class="link-dark text-decoration-none">{{ trans_choice('custom.contacts', 2) }}</a>
