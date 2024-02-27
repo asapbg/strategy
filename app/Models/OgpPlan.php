@@ -29,7 +29,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     public function scopeActive($query)
     {
-        return $query->where('active', '=', true);
+        return $query->where('ogp_plan.active', '=', true);
     }
 
     public function status(): HasOne

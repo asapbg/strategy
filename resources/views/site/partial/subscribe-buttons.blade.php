@@ -5,7 +5,7 @@
         </button>
     @else
         <button class="btn rss-sub main-color subscribe" @if(isset($subscribe_params)) data-filter="{{ json_encode($subscribe_params) }}" @endif data-channel="{{ App\Models\UserSubscribe::CHANNEL_RSS }}">
-            <i class="fas fa-envelope"></i>{{ __('custom.rss_subscribe') }} <span>{{ __('custom.subscribe') }}</span>
+            <i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
         </button>
     @endif
     @if(App\Models\User::isSubscribed(App\Models\UserSubscribe::CHANNEL_EMAIL))

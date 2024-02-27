@@ -32,17 +32,41 @@ class DevelopNewActionPlan extends Controller
      */
     public function index(Request $request): View
     {
-        $items = OgpPlan::Active()
-            ->whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
-            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
-            ->FilterBy($request->all())
-            ->orderBy('created_at', 'desc')
-            ->paginate(OgpPlan::PAGINATE);
+        //Filter
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        $filter = $this->filters($request, $rf);
+
+        //Sorter
+        $sorter = $this->sorters();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $paginate = $requestFilter['paginate'] ?? OgpPlan::PAGINATE;
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $items = OgpPlan::select('ogp_plan.*')
+            ->Active()
+            ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
+            ->leftJoin('ogp_plan_translations', function ($j){
+                $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
+                    ->where('ogp_plan_translations.locale', '=', app()->getLocale());
+            })
+            ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::FINAL->value])
+            ->orderBy('ogp_plan.created_at', 'desc')
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
+            ->paginate($paginate);
+
         $route_view_name = 'ogp.develop_new_action_plans.show';
+        if( $request->ajax() ) {
+            return view('site.ogp.plans_list', compact('filter','sorter', 'items', 'rf', 'route_view_name'));
+        }
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs();
-        return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name'));
+        return $this->view('site.ogp.plans', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'route_view_name'));
     }
 
     /**
@@ -55,7 +79,10 @@ class DevelopNewActionPlan extends Controller
         $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
             ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
             ->findOrFail($id);
-        return $this->view('site.ogp.plan_show', compact('plan'));
+
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($plan);
+        return $this->view('site.ogp.plan_show', compact('plan', 'pageTitle'));
     }
 
     /**
@@ -231,15 +258,58 @@ class DevelopNewActionPlan extends Controller
             ['name' => __('custom.develop_new_action_plan'), 'url' => route('ogp.develop_new_action_plans')]
         );
 
-//        if($item){
-//            $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('ogp.national_action_plans.show', $item->id) : null];
-//        }
+        if($item){
+            $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('ogp.national_action_plans.show', $item->id) : null];
+        }
         if(!empty($extraItems)){
             foreach ($extraItems as $eItem){
                 $customBreadcrumbs[] = $eItem;
             }
         }
         $this->setBreadcrumbsFull($customBreadcrumbs);
+    }
+
+    private function filters($request, $currentRequest)
+    {
+        return array(
+            'title' => array(
+                'type' => 'text',
+                'label' => __('custom.search_in_title_content'),
+                'value' => $request->input('title'),
+                'col' => 'col-md-4'
+            ),
+            'fromDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('fromDate'),
+                'label' => __('ogp.from_date'),
+                'col' => 'col-md-4'
+            ),
+            'toDate' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('toDate'),
+                'label' => __('ogp.to_date'),
+                'col' => 'col-md-4'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? OgpPlan::PAGINATE,
+                'col' => 'col-md-3'
+            ),
+
+        );
+    }
+
+    private function sorters()
+    {
+        return array(
+            'title' => ['class' => 'col-md-2', 'label' => __('custom.title')],
+            'fromDate' => ['class' => 'col-md-3', 'label' => __('ogp.from_date')],
+            'toDate' => ['class' => 'col-md-3', 'label' => __('ogp.to_date')],
+        );
     }
 
 }
