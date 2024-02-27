@@ -60,6 +60,23 @@
                 {!! $plan->content !!}
             </div>
         </div>
+        @if($plan->versionAfterConsultation())
+            <div class="row mb-4 mt-4">
+                <div class="row table-light">
+                    <div class="col-12 mb-2">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $plan->versionAfterConsultation()->id }}" data-url="{{ route('modal.file_preview', ['id' => $plan->versionAfterConsultation()->id]) }}">
+                                    {!! fileIcon($plan->versionAfterConsultation()->content_type) !!} {{ $plan->versionAfterConsultation()->description }} - {{ displayDate($plan->versionAfterConsultation()->created_at) }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row mb-4 mt-5">
             <div class="col-md-12">
                 <div class="accordion" id="accordionExample">

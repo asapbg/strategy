@@ -468,6 +468,7 @@ return [
     'public_consultation.doc_type.9'            => 'Коментари (csv)',
     'public_consultation.doc_type.10'            => 'Коментари (pdf)',
     'public_consultation.doc_type.11'            => 'Консултационен документ',
+    'ogp.doc_type.19'            => 'Версия след публична консултация',
     //polls
     'questions'                                 => 'Въпрос|Въпроси',
     'once'                                       => 'Еднократна',

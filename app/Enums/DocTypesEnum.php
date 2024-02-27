@@ -38,6 +38,7 @@ enum DocTypesEnum: int
     case AB_CUSTOM_SECTION = 16; // Файл към ръчно създадена секция от модератор към консултативен съвет
 
     case AB_MODERATOR = 17; // Файл към Инфорация за модератора „Консултативен съвет“
+    case OGP_VERSION_AFTER_CONSULTATION = 19; // Файл към OGP
 
     //TODO ask Izi about next two documents. Are they same as 1 and 2 ???
     //case PC_preliminary_IMPACT_EVALUATION = 6; //Предварителна оценка на въздействието

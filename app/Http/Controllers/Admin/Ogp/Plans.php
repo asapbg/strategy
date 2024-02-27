@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\Admin\Ogp;
 
+use App\Enums\DocTypesEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\OgpPlanArrangementRequest;
 use App\Http\Requests\OgpPlanRequest;
+use App\Models\File;
 use App\Models\OgpArea;
 use App\Models\OgpPlan;
 use App\Models\OgpPlanArea;
 use App\Models\OgpPlanArrangement;
 use App\Models\OgpStatus;
+use App\Services\FileOcr;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class Plans extends AdminController
@@ -59,6 +64,7 @@ class Plans extends AdminController
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
     {
+        $needToGeneratePdf = false;
         $validated = $request->validated();
         $id = $request->get('id');
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
@@ -73,7 +79,10 @@ class Plans extends AdminController
                 $item->author_id = $request->user()->id;
                 $item->ogp_status_id = OgpStatus::Draft()->first()->id;
             } else {
-                $item->ogp_status_id = $request->get('status');
+                if($item->ogp_status_id != $validated['status'] && $validated['status'] == OgpStatus::Final()->first()->id){
+                    $needToGeneratePdf = true;
+                }
+                $item->ogp_status_id = $validated['status'];
             }
                 $item->from_date = Carbon::parse($validated['from_date'])->format('Y-m-d');
                 $item->to_date = Carbon::parse($validated['to_date'])->format('Y-m-d');
@@ -91,8 +100,43 @@ class Plans extends AdminController
                 ]);
             }
 
+            $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
+            if($needToGeneratePdf) {
+                $exportData = [
+                    'title' => $item->name,
+                    'content' => $item->content,
+                    'rows' => $item->areas
+                ];
+                $path = File::OGP_PLAN_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
+                $fileName = 'version_after_consultation_'.$item->id;
+
+                $pdf = PDF::loadView('exports.ogp_plan', ['data' => $exportData, 'isPdf' => true]);
+                Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
+
+                //Attach files to public consultation
+                foreach (config('available_languages') as $lang) {
+                    $pdfFile = new File([
+                        'id_object' => $item->id,
+                        'code_object' => File::CODE_OBJ_OGP,
+                        'doc_type' => DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION,
+                        'filename' => $fileName.'.pdf',
+                        'content_type' => 'application/pdf',
+                        'path' => $path.$fileName.'.pdf',
+                        'description_'.$lang['code'] => __('custom.ogp.doc_type.'.DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value),
+                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'locale' => $lang['code'],
+                        'version' => '1.0',
+                    ]);
+                    $pdfFile->save();
+                    $ocr = new FileOcr($pdfFile->refresh());
+                    $ocr->extractText();
+                }
+                $route = route('admin.ogp.plan.index');
+            }
+
             DB::commit();
-            return to_route('admin.ogp.plan.edit', ['id' => $item->id])
+            return redirect($route)
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

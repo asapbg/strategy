@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -45,6 +46,16 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
     public function areas(): HasMany
     {
         return $this->hasMany(OgpPlanArea::class, 'ogp_plan_id', 'id');
+    }
+
+    public function versionAfterConsultation()
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_OGP)
+            ->where('doc_type', '=', DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value)
+            ->where('locale', '=', app()->getLocale())
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 
     public static function translationFieldsProperties(): array

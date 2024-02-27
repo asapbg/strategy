@@ -39,6 +39,7 @@ class File extends ModelActivityExtend
     const CODE_OBJ_AB_PAGE = 9;
     const CODE_OBJ_STRATEGIC_DOCUMENT = 10;
     const CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN = 11;
+    const CODE_OBJ_OGP = 12;
 
     //Directories objects
     const PUBLICATION_UPLOAD_DIR = 'publications' . DIRECTORY_SEPARATOR;
@@ -58,6 +59,7 @@ class File extends ModelActivityExtend
     const ADVISORY_BOARD_CUSTOM_SECTION_UPLOAD_DIR = 'custom-sections';
     const OP_GENERAL_UPLOAD_DIR = 'op'. DIRECTORY_SEPARATOR;
     const LP_GENERAL_UPLOAD_DIR = 'lp'. DIRECTORY_SEPARATOR;
+    const OGP_PLAN_UPLOAD_DIR = 'ogp_plan'. DIRECTORY_SEPARATOR;
 
     const MAX_UPLOAD_FILE_SIZE = 30720;
     const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
