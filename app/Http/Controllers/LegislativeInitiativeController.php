@@ -32,6 +32,7 @@ class LegislativeInitiativeController extends AdminController
     {
         parent::__construct($request);
         $this->title_singular = __('custom.legislative_initiatives');
+        $this->pageTitle = __('custom.legislative_initiatives');
     }
 
     /**
@@ -82,7 +83,8 @@ class LegislativeInitiativeController extends AdminController
             })
             ->paginate($countResults);
 
-        $pageTitle = "Закондателни инициативи";
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
         return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent'));
     }
@@ -97,8 +99,8 @@ class LegislativeInitiativeController extends AdminController
         $regulatoryActs = RegulatoryAct::orderBy('id')->get();
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $item = new LegislativeInitiative();
-
-        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item'));
+        $pageTitle = $this->pageTitle;
+        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle'));
     }
 
     /**
@@ -114,7 +116,9 @@ class LegislativeInitiativeController extends AdminController
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $regulatoryActs = RegulatoryAct::all();
 
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs'));
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($item);
+        return $this->view(self::EDIT_VIEW, compact('item', 'pageTitle', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs'));
     }
 
     public function store(StoreLegislativeInitiativeRequest $request)
@@ -142,8 +146,10 @@ class LegislativeInitiativeController extends AdminController
 
     public function show(LegislativeInitiative $item)
     {
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($item);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
-        return view(self::SHOW_VIEW, compact('item', 'pageTopContent'));
+        return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle'));
     }
 
     public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
@@ -178,5 +184,29 @@ class LegislativeInitiativeController extends AdminController
             Log::error($e);
             return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
         }
+    }
+
+    /**
+     * @param $item
+     * @param $extraItems
+     * @return void
+     */
+    private function composeBreadcrumbs($item = null, $extraItems = []){
+        $customBreadcrumbs = array(
+            ['name' => __('custom.legislative_initiatives'), 'url' => route('legislative_initiatives.index')]
+        );
+
+        if($item){
+            $customBreadcrumbs[] = [
+                'name' => (__('custom.change_f').' '.__('custom.in').' '.$item->operationalProgram?->value),
+                'url' => (!empty($extraItems) ? route('legislative_initiatives.view', $item) : null)
+            ];
+        }
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+        $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }
