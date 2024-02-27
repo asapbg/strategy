@@ -66,9 +66,9 @@
 
                     <div class="mb-3">
 
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Plans@index'])
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Areas@index'])
 
-                        <a href="{{ route('admin.ogp.plan.create') }}" class="btn btn-sm btn-success">
+                        <a href="{{ route('admin.ogp.area.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{__('custom.add')}}
                         </a>
 

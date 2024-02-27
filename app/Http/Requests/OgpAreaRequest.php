@@ -26,7 +26,7 @@ class OgpAreaRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'active' => '',
+            'active' => ['required', 'numeric'],
         ];
 
         foreach (config('available_languages') as $lang) {

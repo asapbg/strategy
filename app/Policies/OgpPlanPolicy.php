@@ -54,7 +54,7 @@ class OgpPlanPolicy
      */
     public function update(User $user, OgpPlan $ogpPlan)
     {
-        return $this->viewAny($user) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
+        return $user->canAny(['manage.*','manage.partnership']) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
     }
 
     /**

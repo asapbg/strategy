@@ -51,7 +51,7 @@ class Plans extends AdminController
 
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
-        $ogpArea = OgpArea::get();
+        $ogpArea = OgpArea::Active()->get();
         $areas = $item->areas;
 
         return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas'));
@@ -78,6 +78,7 @@ class Plans extends AdminController
                 $item->from_date = Carbon::parse($validated['from_date'])->format('Y-m-d');
                 $item->to_date = Carbon::parse($validated['to_date'])->format('Y-m-d');
 
+            $item->active = $validated['active'];
             $item->save();
 
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
@@ -94,7 +95,6 @@ class Plans extends AdminController
             return to_route('admin.ogp.plan.edit', ['id' => $item->id])
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             Log::error($e);
             DB::rollBack();
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -180,18 +180,21 @@ class Plans extends AdminController
     public function editArrangementStore(OgpPlanArrangementRequest $request, OgpPlanArea $ogpPlanArea): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validated();
-
+        $id = (int)$validated['id'];
         DB::beginTransaction();
 
         try {
 
-            $opa = new OgpPlanArrangement();
-            $opa->ogp_plan_area_id = $ogpPlanArea->id;
-            foreach ($validated as $field => $value) {
-                if((!is_null($value) || !empty($value)) && in_array($field, ['from_date', 'to_date']) ) {
-                    $opa->{$field} = Carbon::parse($value)->format('Y-m-d');
-                }
+            if($id) {
+                $opa = OgpPlanArrangement::find($id);
+            } else{
+                $opa = new OgpPlanArrangement();
+                $opa->ogp_plan_area_id = $ogpPlanArea->id;
             }
+
+            $fillable = $this->getFillableValidated($validated, $opa);
+            $opa->fill($fillable);
+
             $opa->save();
 
             $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);

@@ -35,9 +35,12 @@
                         </div>
                         <h5>{{ __('ogp.action_plan_measures') }}</h5>
                         <hr>
+
+                        <div class="accordion" id="accordionExample">
                         @foreach($rows->arrangements()->orderBy('created_at', 'desc')->get() as $arrangement)
-                            @include('admin.ogp_plan.arrangement_row', ['item' => $arrangement])
+                            @include('admin.ogp_plan.arrangement_row', ['item' => $arrangement, 'iteration' => $loop->iteration])
                         @endforeach
+                        </div>
                     </div>
                     @endforeach
                 </div>

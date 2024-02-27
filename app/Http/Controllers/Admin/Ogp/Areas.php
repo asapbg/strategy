@@ -59,6 +59,8 @@ class Areas extends AdminController
             if($id == 0) {
                 $item->author_id = $request->user()->id;
             }
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
             $item->save();
 
             $this->storeTranslateOrNew(OgpArea::TRANSLATABLE_FIELDS, $item, $validated);

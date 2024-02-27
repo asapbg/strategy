@@ -95,7 +95,7 @@
                                         @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
                                     </td>
                                     <td class="text-center">
-                                        @can('edit', $v)
+                                        @can('update', $v)
                                         <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
                                            class="btn btn-sm btn-info"
                                            data-toggle="tooltip"

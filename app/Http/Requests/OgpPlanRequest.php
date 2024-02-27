@@ -31,7 +31,7 @@ class OgpPlanRequest extends FormRequest
         $rules = [
             'from_date' => 'required',
             'to_date' => 'required',
-            'active' => '',
+            'active' => ['required', 'numeric'],
         ];
         if($id == 0) {
             $rules['ogp_area'] = 'required|gt:0';

@@ -10,9 +10,7 @@
                 <div class="card-body">
                     <form action="{{ route('admin.ogp.plan.arrangement.edit_store', $ogpPlanArea->id) }}" method="POST">
                         @csrf
-                        @if($item)
-                            <input type="hidden" name="id" value="{{ $item->id }}" />
-                        @endif
+                        <input type="hidden" name="id" value="{{ $item && $item->id ? $item->id : 0 }}" />
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="add-suggestion">
@@ -32,7 +30,7 @@
                                                     <label class="col-sm-12 control-label" for="from_date">{{ __('custom.from_date') }}</label>
                                                     <div class="col-12">
                                                         <div class="input-group">
-                                                            <input type="text" id="from_date" name="from_date" class="form-control form-control-sm datepicker @error('from_date'){{ 'is-invalid' }}@enderror" value="{{ old('to_date', '') }}" autocomplete="off">
+                                                            <input type="text" id="from_date" name="from_date" class="form-control form-control-sm datepicker @error('from_date'){{ 'is-invalid' }}@enderror" value="{{ old('from_date', $item && $item->id ? displayDate($item->from_date) : '') }}" autocomplete="off">
                                                             <span class="input-group-text" id="basic-addon2"><i class="fas fa-solid fa-calendar"></i></span>
                                                         </div>
                                                         @error('from_date')
@@ -46,7 +44,7 @@
                                                     <label class="col-sm-12 control-label" for="to_date">{{ __('custom.to_date') }}</label>
                                                     <div class="col-12">
                                                         <div class="input-group">
-                                                            <input type="text" id="to_date" name="to_date" class="form-control form-control-sm datepicker @error('to_date'){{ 'is-invalid' }}@enderror" value="{{ old('to_date', '') }}" autocomplete="off">
+                                                            <input type="text" id="to_date" name="to_date" class="form-control form-control-sm datepicker @error('to_date'){{ 'is-invalid' }}@enderror" value="{{ old('to_date', $item && $item->id ? displayDate($item->to_date) : '') }}" autocomplete="off">
                                                             <span class="input-group-text" id="basic-addon2"><i class="fas fa-solid fa-calendar"></i></span>
                                                         </div>
                                                         @error('to_date')

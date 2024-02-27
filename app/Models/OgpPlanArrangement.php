@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OgpPlanArrangement extends ModelActivityExtend implements TranslatableContract
@@ -25,6 +27,21 @@ class OgpPlanArrangement extends ModelActivityExtend implements TranslatableCont
     protected $fillable = ['ogp_plan_area_id', 'from_date', 'to_date', ];
     protected $translatedAttributes = OgpPlanArrangement::TRANSLATABLE_FIELDS;
 
+    protected function fromDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function toDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
 
     public static function translationFieldsProperties(): array
     {

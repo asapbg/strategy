@@ -15,7 +15,7 @@
                         <div class="row mb-4">
                             @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                         </div>
-                        <div class="row">
+                        <div class="row @if(!$item->id) d-none" @endif>
                             <div class="col-6">
                                 @include('admin.partial.active_field')
                             </div>

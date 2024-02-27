@@ -26,6 +26,7 @@ class OgpPlanArrangementRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'id' => ['required', 'numeric'],
             'from_date' => '',
             'to_date' => '',
         ];
