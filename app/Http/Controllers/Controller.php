@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Models\Page;
 use App\Models\StrategicDocumentFile;
 use App\Models\User;
+use App\Models\UserSubscribe;
 use App\Services\FileOcr;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -420,5 +421,30 @@ class Controller extends BaseController
     protected function setBreadcrumbsFull(array $segments)
     {
         $this->customBreadcrumb = $segments;
+    }
+
+    protected function hasSubscription($item = null, $modelClass = null, $filter = [], $channel = UserSubscribe::CHANNEL_EMAIL){
+        $hasSubscription = false;
+        $user = auth()->user();
+        if($item && $user){
+            if($user->subscriptions()->where(function ($q) use($channel, $item){
+                $q->where('subscribable_id', '=', $item->id)
+                    ->where('subscribable_type', '=', get_class($item))
+                    ->where('channel', '=', $channel)
+                    ->where('is_subscribed', true);
+            })->count()) {
+                $hasSubscription = true;
+            };
+        } elseif ($modelClass && $user){
+            if($user->subscriptions()->where(function ($q) use($channel, $modelClass, $filter){
+                    $q->where('search_filters', '=', json_encode($filter))
+                        ->where('subscribable_type', '=', $modelClass)
+                        ->where('channel', '=', $channel)
+                        ->where('is_subscribed', true);
+                })->count() ) {
+                $hasSubscription = true;
+            };
+        }
+        return $hasSubscription;
     }
 }

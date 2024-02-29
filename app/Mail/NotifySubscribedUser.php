@@ -45,15 +45,15 @@ class NotifySubscribedUser extends Mailable
         $markdown = $this->data['markdown'];
         $text = $this->data['text'];
         $user = $this->user;
-        $from = (env('MAIL_FROM_ADDRESS')) ? env('MAIL_FROM_ADDRESS') : "info@strategy.bg";
-        $class_expl = explode("\\", get_class($modelInstance));
-        $model_name = end($class_expl);
-        $controller = $model_name."Controller@show";
-        $action = "\App\Http\Controllers\\$controller";
-        $url = action($action, $modelInstance->id);
+        $from = (config('mail.from.address')) ? config('mail.from.address') : "info@strategy.bg";
+//        $class_expl = explode("\\", get_class($modelInstance));
+//        $model_name = end($class_expl);
+//        $controller = $model_name."Controller@show";
+//        $action = "\App\Http\Controllers\\$controller";
+        $url = $this->data['url'];
 
         return $this->from($from)
-            ->subject(__('Notification'))
+            ->subject($this->data['subject'])
             ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text'));
     }
 }

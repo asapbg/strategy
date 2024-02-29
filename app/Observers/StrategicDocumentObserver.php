@@ -21,7 +21,7 @@ class StrategicDocumentObserver
     public function created(StrategicDocument  $strategicDocument)
     {
         if ($strategicDocument->active) {
-            //$this->sendEmails($strategicDocument, 'created');
+            $this->sendEmails($strategicDocument, 'created');
 
             Log::info('Send subscribe email on creation');
         }
@@ -38,7 +38,7 @@ class StrategicDocumentObserver
         $old_active = $strategicDocument->getOriginal('active');
 
         if (!$old_active && $strategicDocument->active) {
-            //$this->sendEmails($strategicDocument, 'updated');
+            $this->sendEmails($strategicDocument, 'updated');
 
             Log::info('Send subscribe email on update');
         }
@@ -59,22 +59,57 @@ class StrategicDocumentObserver
             $administrators = User::whereActive(true)
                 ->hasRole(CustomRole::ADMIN_USER_ROLE)
                 ->get();
-            $moderator_roles = CustomRole::select('name')
-                ->where('name', 'ILIKE', 'moderator-%')
-                ->get()
-                ->pluck('name')
-                ->toArray();
-//            $moderators = User::whereActive(true)
-//                ->hasRole($moderator_roles)
-//                ->where('institution_id', $strategicDocument->importer_institution_id)
-//                ->get()
-//                ->unique('id');
+
+            $moderators = \DB::select('
+                select users.id
+                from users
+                join model_has_role on model_has_role.model_id = users.id and model_has_role.model_type = \'App\Models\User\'
+                join roles on roles.id = model_has_role.role_id and roles.deleted_at is null
+                join institution on institution.id = users.institution_id and institution.deleted_at is null
+                join institution_field_of_action on institution_field_of_action.institution_id = institution.id
+                join field_of_actions on field_of_actions.id = institution_field_of_action.field_of_action_id and field_of_actions.deleted_at is null
+                where
+                    users.active = '.User::STATUS_ACTIVE.'
+                    and users.user_type = '.User::USER_TYPE_INTERNAL.'
+                    and users.deleted_at is null
+                    and (
+                        roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENTS.'\'
+                        or (
+                            roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENT.'\'
+                            and field_of_actions.id = '.$strategicDocument->policy_area_id.'
+                        )
+                    )
+                group by users.id
+            ');
         }
-        $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+
+        //get users by model ID
+        $subscribedUsers = UserSubscribe::where('subscribable_type', StrategicDocument::class)
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', UserSubscribe::SUBSCRIBED)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->where('subscribable_id', '=', $strategicDocument->id)
             ->get();
+
+        //get users by model filter
+        $filterSubscribtions = UserSubscribe::where('subscribable_type', StrategicDocument::class)
+            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->whereNotNull('search_filters')
+            ->get();
+
+        if($filterSubscribtions->count()){
+            foreach ($filterSubscribtions as $fSubscribe){
+                $filterArray = json_decode($fSubscribe->search_filters, true);
+                if($filterArray){
+                    $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
+                    if(in_array($strategicDocument->id, $modelIds)){
+                        $subscribedUsers->add($fSubscribe->user());
+                    }
+                }
+            }
+        }
 
         if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;

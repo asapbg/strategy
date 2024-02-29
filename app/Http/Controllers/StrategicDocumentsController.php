@@ -20,6 +20,7 @@ use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
+use App\Models\UserSubscribe;
 use App\Services\Exports\ExportService;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
@@ -65,6 +66,7 @@ class StrategicDocumentsController extends Controller
         $rf = $request->all();
         $requestFilter = $request->all();
         if(empty($rf)){
+            $requestFilter['title'] = null;
             $requestFilter['status'] = 'active';
         }
         $filter = $this->filters($request, $rf);
@@ -77,32 +79,21 @@ class StrategicDocumentsController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $items = StrategicDocument::select('strategic_document.*')
-            ->Active()
-            ->with(['translations', 'policyArea', 'policyArea.translations'])
-            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-            ->leftJoin('field_of_action_translations', function ($j){
-                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
-            })
-            ->leftJoin('strategic_document_translations', function ($j){
-                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
-                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
-            })
-            ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
-            //->GroupBy('strategic_document.id')
-            ->paginate($paginate);
+        $items = StrategicDocument::list($requestFilter, $sort, $sortOrd, $paginate);
 
+        $hasSubscribeEmail = $this->hasSubscription(null, StrategicDocument::class, $requestFilter);
+        $hasSubscribeRss = $this->hasSubscription(null, StrategicDocument::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
 
         if( $request->ajax() ) {
-            return view('site.strategic_documents.list', compact('filter','sorter', 'items', 'rf', 'editRouteName', 'deleteRouteName'));
+            return view('site.strategic_documents.list', compact('filter','sorter', 'items',
+                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
 
-        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName'));
+        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle',
+            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function tree(Request $request)
@@ -233,7 +224,11 @@ class StrategicDocumentsController extends Controller
         $this->composeBreadcrumbs($strategicDocument);
 
         $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
-        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles', 'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents'));
+
+        $hasSubscribeEmail = $this->hasSubscription($strategicDocument);
+        $hasSubscribeRss = $this->hasSubscription($strategicDocument, null, null, UserSubscribe::CHANNEL_RSS);
+        return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles',
+            'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function contacts(Request $request, $itemId = null)

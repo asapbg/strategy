@@ -17,7 +17,8 @@
                                 <a href="#" class="link-dark text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a>
                             </li>
                             <li @class(['mb-2', 'p-1', 'active-item-left' => strstr(url()->current(), 'develop-a-new-action-plans') ])>
-                                <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>
+                                {{ __('custom.develop_new_action_plan') }}
+{{--                                <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>--}}
                             </li>
                             <li @class(['mb-2', 'p-1', 'active-item-left' => false])>
                                 <a href="#" class="link-dark text-decoration-none">{{ __('custom.ogp_forum') }}</a>

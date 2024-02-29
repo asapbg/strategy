@@ -10,8 +10,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use LaravelIdea\Helper\App\Models\_IH_StrategicDocument_C;
 
 class StrategicDocument extends ModelActivityExtend implements TranslatableContract
 {
@@ -261,5 +263,33 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         $q->groupBy('strategic_document.id', 'strategic_document_translations.title');
 
         return $q->get();
+    }
+
+
+    /**
+     * Use in public list page and subscription check
+     * @param array $filter
+     * @param string $sort
+     * @param string $sortOrd
+     * @param int $paginate
+     * @return StrategicDocument[]|LengthAwarePaginator|_IH_StrategicDocument_C
+     */
+    public static function list(array $filter, string $sort = 'title', string $sortOrd = 'desc', int $paginate = self::PAGINATE){
+        return self::select('strategic_document.*')
+            ->Active()
+            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('strategic_document_translations', function ($j){
+                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($filter)
+            ->SortedBy($sort,$sortOrd)
+            //->GroupBy('strategic_document.id')
+            ->paginate($paginate);
     }
 }
