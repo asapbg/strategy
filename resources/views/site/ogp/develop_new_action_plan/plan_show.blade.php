@@ -8,7 +8,7 @@
     <div class="col-lg-10 py-5 right-side-content">
         <div class="row mb-4">
             <div class="col-md-12">
-                <h2 class="obj-title mb-4">{{ $item->name }}</h2>
+                <h2 class="obj-title mb-4">{{ $item->name ?? __('ogp.no_develop_plan') }}</h2>
             </div>
             @can('updateDevelopPlan', $item)
                 <div class="row edit-consultation m-0">
@@ -28,30 +28,32 @@
 {{--                    <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>--}}
 {{--            </div>--}}
         </div>
-        <div class="row mb-5">
-            <div class="col-md-12 mb-4">
-                <h3 class="mb-2">{{ __('custom.develop_plan_calendar') }}</h3>
+        @if($item)
+            <div class="row mb-5">
+                <div class="col-md-12 mb-4">
+                    <h3 class="mb-2">{{ __('custom.develop_plan_calendar') }}</h3>
+                </div>
+                <div class="col-md-6">
+                    <div id="calendar"></div>
+                </div>
+                <div class="col-md-6 px-5" id="calendar-list">
+                    <div>
+                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.01.2024</strong> - Събитие 1
+                    </div>
+                    <div>
+                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.02.2024</strong> - Събитие 2
+                    </div>
+                    <div>
+                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.03.2024</strong> - Събитие 3
+                    </div>
+                    <div>
+                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.04.2024</strong> - Събитие 4
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <div id="calendar"></div>
-            </div>
-            <div class="col-md-6 px-5" id="calendar-list">
-                <div>
-                    <i class="fas bi-calendar text-primary me-2"></i> <strong>11.01.2024</strong> - Събитие 1
-                </div>
-                <div>
-                    <i class="fas bi-calendar text-primary me-2"></i> <strong>11.02.2024</strong> - Събитие 2
-                </div>
-                <div>
-                    <i class="fas bi-calendar text-primary me-2"></i> <strong>11.03.2024</strong> - Събитие 3
-                </div>
-                <div>
-                    <i class="fas bi-calendar text-primary me-2"></i> <strong>11.04.2024</strong> - Събитие 4
-                </div>
-            </div>
-        </div>
+        @endif
 
-        @if($item->versionAfterConsultation())
+        @if($item && $item->versionAfterConsultation())
             <div class="row mb-5">
                 <div class="row table-light">
                     <div class="col-12 mb-2">
@@ -68,124 +70,128 @@
             </div>
         @endif
 
-        <div class="row mb-3">
-            <h3 class="mb-2 col-12 mb-3">{{ trans_choice('custom.areas', 2) }}</h3>
-            @if($item->areas->count())
-                @foreach($item->areas as $area)
-                    <div class="col-md-12">
-                        <div class="consul-wrapper">
-                            <div class="single-consultation d-flex">
-                                <div class="consult-img-holder p-2">
-                                    <i class="bi bi-clipboard2-plus main-color"></i>
-                                </div>
-                                <div class="consult-body">
-                                    <div class="consul-item">
-                                        <div class="consult-item-header d-flex justify-content-between">
-                                            <div class="consult-item-header-link">
-                                                <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->ogp_area_id]) }}" class="text-decoration-none" title="{{ $area->name }}">
-                                                    <h3>{{ $area->name }}</h3>
+        @if($item)
+            <div class="row mb-3">
+                <h3 class="mb-2 col-12 mb-3">{{ trans_choice('custom.areas', 2) }}</h3>
+                @if($item->areas->count())
+                    @foreach($item->areas as $area)
+                        <div class="col-md-12">
+                            <div class="consul-wrapper">
+                                <div class="single-consultation d-flex">
+                                    <div class="consult-img-holder p-2">
+                                        <i class="bi bi-clipboard2-plus main-color"></i>
+                                    </div>
+                                    <div class="consult-body">
+                                        <div class="consul-item">
+                                            <div class="consult-item-header d-flex justify-content-between">
+                                                <div class="consult-item-header-link">
+                                                    <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->ogp_area_id]) }}" class="text-decoration-none" title="{{ $area->name }}">
+                                                        <h3>{{ $area->name }}</h3>
+                                                    </a>
+                                                </div>
+                                                <div class="consult-item-header-edit">
+                                                    @can('updateDevelopPlan', $item)
+                                                        <a target="_blank" href="{{ route('admin.ogp.plan.develop.edit', ['id' => $item->id]).'#area-tab-'.$area->id }}">
+                                                            <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}"></i>
+                                                        </a>
+                                                    @endcan
+                                                </div>
+                                            </div>
+                                            <div class="status mt-2">
+                                                <span class="text-dark">{{ trans_choice('ogp.proposals', 2) }}: <span class="text-secondary">{{ $area->offers->count() }}</span></span>
+                                            </div>
+                                            <div class="meta-consul mt-2">
+                                                <span class="text-secondary">
+                                                    <span class="text-dark">{{ __('custom.proposal_period') }}: </span> {{ displayDate($item->from_date_develop) }} - {{ displayDate($item->to_date_develop) }}
+                                                </span>
+                                                <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]) }}" title="{{ $area->name }}">
+                                                    <i class="fas fa-arrow-right read-more"></i>
                                                 </a>
                                             </div>
-                                            <div class="consult-item-header-edit">
-                                                @can('updateDevelopPlan', $item)
-                                                    <a target="_blank" href="{{ route('admin.ogp.plan.develop.edit', ['id' => $item->id]).'#area-tab-'.$area->id }}">
-                                                        <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}"></i>
-                                                    </a>
-                                                @endcan
-                                            </div>
-                                        </div>
-                                        <div class="status mt-2">
-                                            <span class="text-dark">{{ trans_choice('ogp.proposals', 2) }}: <span class="text-secondary">{{ $area->offers->count() }}</span></span>
-                                        </div>
-                                        <div class="meta-consul mt-2">
-                                            <span class="text-secondary">
-                                                <span class="text-dark">{{ __('custom.proposal_period') }}: </span> {{ displayDate($item->from_date_develop) }} - {{ displayDate($item->to_date_develop) }}
-                                            </span>
-                                            <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]) }}" title="{{ $area->name }}">
-                                                <i class="fas fa-arrow-right read-more"></i>
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
+                    @endforeach
+                @endif
+            </div>
+        @endif
     </div>
 </div>
 @endsection
 
-@push('scripts')
-    <script type="text/javascript">
-        $(function () {
-            {{--let events = <?php echo json_encode($itemsCalendar); ?>;--}}
-            let events = <?php echo json_encode(array(
-                array(
-                    "id" => 1,
-                    "title" => 'Събитие',
-                    "description" => 'Събитие 1',
-                    "start" => '2024-01-11 00:00:00',
-                    "end" => '2024-01-11 23:59:59',
-                    "backgroundColor" => '#00c0ef',
-                    "borderColor" => '#00c0ef'
-                ),
-                array(
-                    "id" => 1,
-                    "title" => 'Събитие',
-                    "description" => 'Събитие 2',
-                    "start" => '2024-02-11 00:00:00',
-                    "end" => '2024-02-11 23:59:59',
-                    "backgroundColor" => '#00c0ef',
-                    "borderColor" => '#00c0ef'
-                ),
-                array(
-                    "id" => 1,
-                    "title" => 'Събитие',
-                    "description" => 'Събитие 3',
-                    "start" => '2024-03-11 00:00:00',
-                    "end" => '2024-03-11 23:59:59',
-                    "backgroundColor" => '#00c0ef',
-                    "borderColor" => '#00c0ef'
-                ),
-                array(
-                    "id" => 1,
-                    "title" => 'Събитие',
-                    "description" => 'Събитие 4',
-                    "start" => '2024-04-11 00:00:00',
-                    "end" => '2024-04-11 23:59:59',
-                    "backgroundColor" => '#00c0ef',
-                    "borderColor" => '#00c0ef'
-                )
+@if($item)
+    @push('scripts')
+        <script type="text/javascript">
+            $(function () {
+                {{--let events = <?php echo json_encode($itemsCalendar); ?>;--}}
+                let events = <?php echo json_encode(array(
+                    array(
+                        "id" => 1,
+                        "title" => 'Събитие',
+                        "description" => 'Събитие 1',
+                        "start" => '2024-01-11 00:00:00',
+                        "end" => '2024-01-11 23:59:59',
+                        "backgroundColor" => '#00c0ef',
+                        "borderColor" => '#00c0ef'
+                    ),
+                    array(
+                        "id" => 1,
+                        "title" => 'Събитие',
+                        "description" => 'Събитие 2',
+                        "start" => '2024-02-11 00:00:00',
+                        "end" => '2024-02-11 23:59:59',
+                        "backgroundColor" => '#00c0ef',
+                        "borderColor" => '#00c0ef'
+                    ),
+                    array(
+                        "id" => 1,
+                        "title" => 'Събитие',
+                        "description" => 'Събитие 3',
+                        "start" => '2024-03-11 00:00:00',
+                        "end" => '2024-03-11 23:59:59',
+                        "backgroundColor" => '#00c0ef',
+                        "borderColor" => '#00c0ef'
+                    ),
+                    array(
+                        "id" => 1,
+                        "title" => 'Събитие',
+                        "description" => 'Събитие 4',
+                        "start" => '2024-04-11 00:00:00',
+                        "end" => '2024-04-11 23:59:59',
+                        "backgroundColor" => '#00c0ef',
+                        "borderColor" => '#00c0ef'
+                    )
 
-            )); ?>;
-            var Calendar = FullCalendar.Calendar;
+                )); ?>;
+                var Calendar = FullCalendar.Calendar;
 
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new Calendar(calendarEl, {
-                headerToolbar: {
-                    left  : 'prev,next today',
-                    center: 'title',
-                },
-                themeSystem: 'standard',
-                displayEventTime: false,
-                locale: 'bg-BG',
-                //Random default events
-                events: events,
-                eventDidMount: function(info) {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new Calendar(calendarEl, {
+                    headerToolbar: {
+                        left  : 'prev,next today',
+                        center: 'title',
+                    },
+                    themeSystem: 'standard',
+                    displayEventTime: false,
+                    locale: 'bg-BG',
+                    //Random default events
+                    events: events,
+                    eventDidMount: function(info) {
 
-                    $(info.el).tooltip({
-                        title: info.event.extendedProps.description,
-                        placement: 'top',
-                        trigger: 'hover',
-                        container: 'body',
-                        delay: { "show": 50, "hide": 50 }
-                    });
-                },
+                        $(info.el).tooltip({
+                            title: info.event.extendedProps.description,
+                            placement: 'top',
+                            trigger: 'hover',
+                            container: 'body',
+                            delay: { "show": 50, "hide": 50 }
+                        });
+                    },
+                });
+
+                calendar.render();
             });
-
-            calendar.render();
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
+@endif
