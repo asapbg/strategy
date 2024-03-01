@@ -6,6 +6,8 @@ use App\Enums\DocTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,12 +27,46 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
     //activity
     protected string $logName = "ogp_plan";
 
-    protected $fillable = ['from_date', 'to_date', 'active', 'author_id', 'ogp_status_id'];
+    protected $fillable = ['from_date', 'to_date', 'active', 'author_id',
+        'ogp_status_id', 'version_after_public_consultation_pdf', 'final_version_pdf',
+        'from_date_develop', 'to_date_develop'];
     protected $translatedAttributes = OgpPlan::TRANSLATABLE_FIELDS;
 
     public function scopeActive($query)
     {
         return $query->where('ogp_plan.active', '=', true);
+    }
+
+    protected function fromDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function toDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function fromDateDevelop(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function toDateDevelop(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
     }
 
     public function status(): HasOne
@@ -63,11 +99,13 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
         return array(
             'name' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255']
+                'rules' => ['required', 'string', 'max:255'],
+                'required_all_lang' => true
             ],
             'content' => [
                 'type' => 'summernote',
-                'rules' => ['required']
+                'rules' => ['required'],
+                'required_all_lang' => false
             ],
         );
     }

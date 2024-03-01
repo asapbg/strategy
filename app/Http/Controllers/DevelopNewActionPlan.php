@@ -32,58 +32,37 @@ class DevelopNewActionPlan extends Controller
      */
     public function index(Request $request): View
     {
-        //Filter
-        $rf = $request->all();
-        $requestFilter = $request->all();
-        $filter = $this->filters($request, $rf);
-
-        //Sorter
-        $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
-        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
-
-        $paginate = $requestFilter['paginate'] ?? OgpPlan::PAGINATE;
-        $defaultOrderBy = $sort;
-        $defaultDirection = $sortOrd;
-
-        $items = OgpPlan::select('ogp_plan.*')
+        $item = OgpPlan::select('ogp_plan.*')
             ->Active()
             ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
             ->leftJoin('ogp_plan_translations', function ($j){
                 $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
                     ->where('ogp_plan_translations.locale', '=', app()->getLocale());
             })
-            ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::FINAL->value])
+            ->where('ogp_status.type', OgpStatusEnum::IN_DEVELOPMENT->value)
             ->orderBy('ogp_plan.created_at', 'desc')
-            ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
-            ->paginate($paginate);
-
-        $route_view_name = 'ogp.develop_new_action_plans.show';
-        if( $request->ajax() ) {
-            return view('site.ogp.plans_list', compact('filter','sorter', 'items', 'rf', 'route_view_name'));
-        }
+            ->first();
 
         $pageTitle = $this->pageTitle;
-        $this->composeBreadcrumbs();
-        return $this->view('site.ogp.plans', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'route_view_name'));
+        $this->composeBreadcrumbs($item);
+        return $this->view('site.ogp.develop_new_action_plan.plan_show', compact('item', 'pageTitle'));
     }
 
-    /**
-     * @param Request $request
-     * @param OgpPlan $plan
-     * @return View
-     */
-    public function show(Request $request, $id): View
-    {
-        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
-            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
-            ->findOrFail($id);
-
-        $pageTitle = $this->pageTitle;
-        $this->composeBreadcrumbs($plan);
-        return $this->view('site.ogp.plan_show', compact('plan', 'pageTitle'));
-    }
+//    /**
+//     * @param Request $request
+//     * @param OgpPlan $plan
+//     * @return View
+//     */
+//    public function show(Request $request, $id): View
+//    {
+//        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
+//            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
+//            ->findOrFail($id);
+//
+//        $pageTitle = $this->pageTitle;
+//        $this->composeBreadcrumbs($plan);
+//        return $this->view('site.ogp.plan_show', compact('plan', 'pageTitle'));
+//    }
 
     /**
      * @param Request $request
@@ -93,7 +72,9 @@ class DevelopNewActionPlan extends Controller
      */
     public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
     {
-        return $this->view('site.ogp.plan_area_show', compact('plan', 'planArea'));
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
+        return $this->view('site.ogp.develop_new_action_plan.plan_area_show', compact('plan', 'planArea', 'pageTitle'));
     }
 
     public function store(OgpPlanAreaOfferRequest $request, $id): \Illuminate\Http\RedirectResponse
@@ -101,14 +82,14 @@ class DevelopNewActionPlan extends Controller
         $user = $request->user();
         $validated = $request->validated();
         $validated['users_id'] = $request->user()->id;
-        $item = OgpPlanArea::findOrFail($id);
-        $offer_id = $request->get('offer', 0);
+        $item = OgpPlanArea::find($id);
+        $offer_id = (int)$request->get('offer', 0);
 
         DB::beginTransaction();
 
         try {
             if($offer_id) {
-                $offer = OgpPlanAreaOffer::findOrFail($offer_id);
+                $offer = OgpPlanAreaOffer::find($offer_id);
                 $offer->content = $validated['content'];
                 $offer->save();
             } else {
@@ -120,8 +101,8 @@ class DevelopNewActionPlan extends Controller
             }
 
             DB::commit();
-            return to_route('ogp.develop_new_action_plans.area', ['plan' => $item->ogp_plan_id, 'planArea' => $item->id])
-                ->with('success', trans_choice('custom.proposals', 1)." ".__('messages.updated_successfully_f'));
+            return redirect(route('ogp.develop_new_action_plans.area', ['plan' => $item->ogp_plan_id, 'planArea' => $item->id]))
+                ->with('success', trans_choice('ogp.proposals', 1)." ".($offer_id ? __('messages.updated_successfully_n') : __('messages.created_successfully_n')));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -150,7 +131,7 @@ class DevelopNewActionPlan extends Controller
             return response()->json([
                 'error' => 1,
                 'message' => __('messages.no_rights_to_view_content')
-            ]);
+            ], 200);
         }
 
         $validator = Validator::make($request->all(), [
@@ -161,7 +142,7 @@ class DevelopNewActionPlan extends Controller
             return response()->json([
                 'error' => 1,
                 'message' => __('ogp.comment_field_required')
-            ]);
+            ], 200);
         }
 
         $comment = $offer->comments()->create([
@@ -170,10 +151,8 @@ class DevelopNewActionPlan extends Controller
         ]);
 
         return response()->json([
-            'error' => 0,
-            'offer_id' => $offer->id,
-            'html' => view('site.ogp.develop_new_action_plan.comment_row', compact('comment'))->render()
-        ]);
+            'error' => 0
+        ], 200);
     }
 
     public function deleteComment(Request $request, OgpPlanAreaOfferComment $comment): \Illuminate\Http\JsonResponse

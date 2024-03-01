@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -801,6 +802,37 @@ if (!function_exists('copyFile')) {
             }
 
             return null;
+        }
+    }
+
+    if (!function_exists('dateBetween')) {
+
+        /**
+         * Determine if date pased by parameter or NOW is between specified dates
+         */
+
+        function dateBetween($from, $to, $date = null): bool
+        {
+            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+            $from = Carbon::parse($from)->format('Y-m-d');
+            $to = Carbon::parse($to)->format('Y-m-d');
+
+            return $date >= $from && $date <= $to;
+        }
+    }
+
+    if (!function_exists('dateAfter')) {
+
+        /**
+         * Determine if date pased by parameter or NOW is after specified date
+         */
+
+        function dateAfter($afterDate, $date = null): bool
+        {
+            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+            $afterDate = Carbon::parse($afterDate)->format('Y-m-d');
+
+            return $date < $afterDate;
         }
     }
 }

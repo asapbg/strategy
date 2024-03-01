@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,6 +22,14 @@ class OgpPlanAreaOffer extends ModelActivityExtend
     protected string $logName = "ogp_plan_area_offer";
 
     protected $fillable = ['ogp_plan_area_id', 'users_id', 'content', 'likes_cnt', 'dislikes_cnt'];
+
+    protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value,
+            set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value, ['p', 'ul', 'ol', 'li', 'b', 'i', 'u', 'a'])) : $value,
+        );
+    }
 
     public function planArea(): HasOne
     {

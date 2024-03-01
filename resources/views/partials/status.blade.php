@@ -7,7 +7,7 @@
         ? array_merge(['type' => $type, 'active' => false], $q_arr)
         : array_merge(['active' => false], $q_arr);
 @endphp
-<div class="btn-group float-right">
+<div class="btn-group float-right mb-3">
     <a class="btn btn-sm {{ !request()->has('active') || request()->offsetGet('active') == 1 ? 'btn-success' : 'btn-default' }}"
        href="{{ action($action, $url_active) }}">
         <i class="fas fa-check-circle"></i> {{ trans_choice('custom.active', 1) }}

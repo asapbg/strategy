@@ -176,7 +176,7 @@ Route::controller(OpenGovernmentPartnership::class)->group(function () {
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::get('ogp/develop-a-new-action-plans', 'index')->name('ogp.develop_new_action_plans');
-    Route::get('ogp/develop-a-new-action-plans/{id}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
+//    Route::get('ogp/develop-a-new-action-plans/{id}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
     Route::get('ogp/develop-a-new-action-plan/{plan}/view/{planArea}', 'area')->name('ogp.develop_new_action_plans.area');
     Route::post('ogp/develop-a-new-action-plans/store-offer/{id}', 'store')->name('ogp.develop_new_action_plans.store_offer')->whereNumber('otg_area_id');
     Route::get('ogp/develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');

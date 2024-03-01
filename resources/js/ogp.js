@@ -8,24 +8,27 @@ $(function() {
         $('input[name="commitment_name"]').prop('disabled', $(this).val() > 0);
     });
 
-    $('.ogp-offer-comments').submit(function(e) {
-        e.preventDefault();
+
+    $('.submit-comment').on('click', function() {
         ShowLoadingSpinner();
+        let lForm = $(this).closest('form')[0];
+        let commentField = $(lForm).find('textarea');
+        $(lForm).find('.comment-error')[0].html('');
 
-        let commentField = $(this).find('textarea');
+        if(!commentField.val().length){
+            $(lForm).find('.comment-error')[0].html('Не сте въвели коментар');
+        }
 
-        $.post($(this).attr('action'), {
-            '_token': $(this).find('input[name="_token"]').val(),
+        $.post($(lForm).attr('action'), {
+            '_token': $(lForm).find('input[name="_token"]').val(),
             'content': commentField.val()
         }, function(response) {
             HideLoadingSpinner();
             if(response.error) {
-                alert(response.message);
+                $(lForm).find('.comment-error')[0].html(response.message);
             } else {
-                $('#offer-comments-'+response.offer_id).append(response.html);
+                window.location.reload();
             }
-            commentField.html('');
-            $('textarea[name="comment"]').summernote('reset')
         });
     });
 

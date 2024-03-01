@@ -718,5 +718,7 @@ return [
         'establishment_description_en' => 'Описание (EN)',
         'body_bg' => 'Съдържание (BG)',
         'body_en' => 'Съдържание (EN)',
+        'from_date_develop' => 'Приемане на предложения (от)',
+        'to_date_develop' => 'Приемане на предложения (до)',
     ],
 ];

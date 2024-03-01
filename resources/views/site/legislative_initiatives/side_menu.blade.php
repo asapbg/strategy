@@ -28,7 +28,7 @@
                                         <a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a>
                                     </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plans')) active-item-left p-1 @endif">
+                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plan')) active-item-left p-1 @endif">
                                         <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>
                                     </li>
                                     <hr class="custom-hr">

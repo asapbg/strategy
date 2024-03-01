@@ -6,6 +6,7 @@ use App\Enums\OgpStatusEnum;
 use App\Models\OgpPlan;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use function Clue\StreamFilter\fun;
 
 class OgpPlanPolicy
 {
@@ -95,7 +96,31 @@ class OgpPlanPolicy
 
     public function newOffer(User $user, OgpPlan $ogpPlan)
     {
-        return $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+        return !$ogpPlan->national_plan && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+    }
+
+
+//    Develop plan policy
+    public function createDevelopPlan(User $user): \Illuminate\Auth\Access\Response|bool
+    {
+        return $user->canAny(['manage.*','manage.partnership'])
+            && !OgpPlan::whereHas('status', function ($q){
+                $q->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value]);
+            })->get()->count();
+    }
+
+    public function updateDevelopPlan(User $user, OgpPlan $ogpPlan): bool
+    {
+        return $user->canAny(['manage.*','manage.partnership'])
+            && !$ogpPlan->national_plan
+            && (in_array($ogpPlan->status->type, [OgpStatusEnum::DRAFT->value, OgpStatusEnum::IN_DEVELOPMENT->value]));
+    }
+
+    public function deleteDevelopPlan(User $user, OgpPlan $ogpPlan): bool
+    {
+        return $user->canAny(['manage.*','manage.partnership'])
+            && !$ogpPlan->national_plan
+            && (in_array($ogpPlan->status->type, [OgpStatusEnum::DRAFT->value, OgpStatusEnum::IN_DEVELOPMENT->value]));
     }
 
 }

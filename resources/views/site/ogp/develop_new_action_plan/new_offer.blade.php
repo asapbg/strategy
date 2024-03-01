@@ -6,10 +6,10 @@
     @if($hasOffer)
         <input type="hidden" name="offer" value="{{ $offer->id }}">
     @endif
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-md-12">
         <div class="add-suggestion">
-            <h3 class="fs-4 mb-3">
+            <h3 class="mb-3">
                 @if($hasOffer)
                     {{ __('ogp.edit_proposal') }}
                 @else

@@ -716,6 +716,7 @@ return [
     'national_action_plans' => 'Национални планове за действие',
     'evaluation_implementation_action_plans_monitoring' => 'Оценка за изпълнението на плановете за действие – мониторинг',
     'develop_new_action_plan' => 'Разработване на нов план за действие',
+    'develop_plan' => 'Разработване на план',
     'ogp_forum' => 'OGP FORUM',
     'news_events' => 'Новини и събития',
     'from_date' => 'От дата',
@@ -809,4 +810,8 @@ return [
     'help' => 'Помощна информация',
     'strategic_documents_report_title' => 'Справка "Стратегически документи"',
     'ogp_news' => 'Новина|Новини',
+    'develop_new_plans' => 'План в разработка',
+    'develop_plan_calendar' => 'График за подготовката на плана',
+    'proposal_period' => 'Срок за предложения',
+    'to_all_comments' => 'Виж всички коментари'
 ];
