@@ -639,6 +639,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('create', 'create')->name('ogp.plan.develop.create');
         Route::post('add-area/{plan}', 'addArea')->name('ogp.plan.develop.add_area');
         Route::get('edit/{id}', 'edit')->name('ogp.plan.develop.edit');
+        Route::get('view/{plan}', 'show')->name('ogp.plan.develop.view');
         Route::post('edit/store', 'store')->name('ogp.plan.develop.create_store');
         Route::put('edit/store', 'store')->name('ogp.plan.develop.edit_store');
         Route::post('delete/{plan}', 'delete')->name('ogp.plan.develop.delete');

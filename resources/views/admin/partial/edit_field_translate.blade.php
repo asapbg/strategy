@@ -1,5 +1,5 @@
 @php($fieldProperties = isset($translatableFields) && sizeof($translatableFields) ? $translatableFields[$field] : [])
-
+@php($disabled = $disabled ?? false)
 @if(sizeof($fieldProperties))
     @foreach(config('available_languages') as $language)
         @php($mainLang = $language['code'] == config('app.default_lang'))
@@ -13,17 +13,22 @@
                 <div class="col-12">
                     @switch($fieldProperties['type'])
                         @case('textarea')
-                            <textarea id="{{ $fieldName }}" name="{{ $fieldName }}"
+                            <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif
                                       class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}</textarea>
                             {{--                            <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"--}}
                             {{--                                   class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"--}}
                             {{--                                   value="{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : '')) }}">--}}
                             @break
                         @case('summernote')
-                            <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
+                            @if($disabled)
+                                {!! old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) !!}
+                            @else
+                                <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
+
+                            @endif
                             @break
                         @default
-                            <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"
+                            <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif
                                    class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"
                                    value="{{ $value ?? old($fieldName, (isset($item) && $item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
                     @endswitch

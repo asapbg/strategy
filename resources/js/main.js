@@ -781,6 +781,21 @@ $(document).ready(function (e) {
         });
     }
 
+    if($('.summernote-disabled').length) {
+        $('.summernote-disabled').summernote({
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']], //,'paragraph'
+                ['view', ['fullscreen']],
+                ['insert', ['link']],
+                //['fontsize', ['fontsize']],
+            ],
+            dialogsInBody: true,
+            lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
+            disable: true
+        });
+    }
+
     $('.navbar .sidebar-toggle').bind('click', function() {
         let body = $("body");
         if(body.hasClass("sidebar-collapse")) {

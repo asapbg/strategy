@@ -20,19 +20,31 @@
     <body style="text-align: left;padding-left: 50px; padding-right: 50px;">
         <div style="font-size: 22px;">
 @endif
-            <h3>{{ $data['title'] }}</h3>
+            <h3 style="text-align: center">{{ $data['title'] }}</h3>
             {{ htmlToText($data['content']) }}
-
+            <br>
             <h4>ТЕМАТИЧНИ ОБЛАСТИ И АНГАЖИМЕНТИ</h4>
 
             @if(isset($data['rows']) && $data['rows']->count())
                 @foreach($data['rows'] as $key => $areas)
-                    <h4>ТЕМАТИЧНА ОБЛАСТ {{ $key + 1 }} <br>
-                        {{ mb_strtoupper($areas->area->name) }}</h4>
-                    <h4>Мерки</h4>
-                    @if($areas->arrangements && $areas->arrangements->count())
-                        @foreach($areas->arrangements as $keyA => $arrangement)
-                            <p><strong>{{ ($keyA + 1).' '.htmlToText($arrangement->content) }}</strong></p>
+                    <h4 style="background-color: #bce4ec; text-align: center;">ТЕМАТИЧНА ОБЛАСТ {{ $key + 1 }} <br>
+                        {{ mb_strtoupper($areas->area->name) }}
+                    </h4>
+                    @if($areas->offers && $areas->offers->count())
+                        @foreach($areas->offers as $keyA => $offer)
+                            @php($commentsCnt = $offer->comments->count())
+                            <p><strong>Предложение {{ ($keyA + 1)}}</strong> - Подкрепям ({{ $offer->likes_cnt }}) / Не подкрепям ({{ $offer->dislikes_cnt }})</p>
+                            <hr>
+                            {!! $offer->content !!}
+{{--                            {{ htmlToText($offer->content) }}--}}
+                            @if($commentsCnt)
+                                <br>
+                                <p><strong>Коментари ({{ $commentsCnt }})</strong>:</p>
+                                @foreach($offer->comments()->orderBy('created_at', 'asc')->get() as $keyC => $comment)
+                                    <p>({{ ($keyC + 1) }}) Автор: {{ $comment->author->fullname() }} ({{ displayDateTime($comment->created_at) }})</p>
+                                    {!! $comment->content !!}
+                                @endforeach
+                            @endif
                         @endforeach
                     @endif
                 @endforeach

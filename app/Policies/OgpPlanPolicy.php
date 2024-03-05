@@ -32,7 +32,7 @@ class OgpPlanPolicy
      */
     public function view(User $user, OgpPlan $ogpPlan)
     {
-        return $this->viewAny($user);
+        return $user->canAny(['manage.*','manage.partnership']);
     }
 
     /**
@@ -43,7 +43,7 @@ class OgpPlanPolicy
      */
     public function create(User $user)
     {
-        return $this->viewAny($user);
+        return $user->canAny(['manage.*','manage.partnership']);
     }
 
     /**
@@ -55,7 +55,7 @@ class OgpPlanPolicy
      */
     public function update(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
+        return $user->canAny(['manage.*','manage.partnership']);
     }
 
     /**
@@ -67,7 +67,7 @@ class OgpPlanPolicy
      */
     public function delete(User $user, OgpPlan $ogpPlan)
     {
-        return $this->viewAny($user) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
+        return $user->canAny(['manage.*','manage.partnership']) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
     }
 
     /**
@@ -101,6 +101,14 @@ class OgpPlanPolicy
 
 
 //    Develop plan policy
+
+    public function viewDevelopPlan(User $user, OgpPlan $ogpPlan): bool
+    {
+        return $user->canAny(['manage.*','manage.partnership'])
+            && !$ogpPlan->national_plan
+            && (in_array($ogpPlan->status->type, [OgpStatusEnum::FINAL->value]));
+    }
+
     public function createDevelopPlan(User $user): \Illuminate\Auth\Access\Response|bool
     {
         return $user->canAny(['manage.*','manage.partnership'])

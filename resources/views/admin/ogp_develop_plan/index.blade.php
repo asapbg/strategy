@@ -81,6 +81,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
+                            <th>{{__('custom.proposal_period')}}</th>
                             <th>{{__('custom.active_m')}}</th>
                             <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.actions')}}</th>
@@ -92,18 +93,27 @@
                                 <tr>
                                     <td>{{ $v->id }}</td>
                                     <td>{{ $v->name }}</td>
-                                    <td>{{ $v->status->name }}</td>
+                                    <td>{{ displayDate($v->from_date_develop) .' - '. displayDate($v->to_date_develop) }}</td>
                                     <td>
                                         @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
                                     </td>
+                                    <td>{{ $v->status->name }}</td>
                                     <td class="text-center">
+                                        @can('viewDevelopPlan', $v)
+                                            <a href="{{ route('admin.ogp.plan.develop.view', $v->id )}}"
+                                               class="btn btn-sm btn-primary"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.view')}}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @endcan
                                         @can('updateDevelopPlan', $v)
-                                        <a href="{{ route('admin.ogp.plan.develop.edit', $v->id )}}"
-                                           class="btn btn-sm btn-info"
-                                           data-toggle="tooltip"
-                                           title="{{__('custom.edit')}}">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
+                                            <a href="{{ route('admin.ogp.plan.develop.edit', $v )}}"
+                                               class="btn btn-sm btn-info"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.edit')}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
                                         @endcan
                                         @can('deleteDevelopPlan', $v)
                                         <a href="javascript:;"

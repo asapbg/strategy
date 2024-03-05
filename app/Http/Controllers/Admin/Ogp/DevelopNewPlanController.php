@@ -35,7 +35,7 @@ class DevelopNewPlanController extends AdminController
             ->leftJoin('ogp_plan_translations', function ($j){
                 $j->on('ogp_plan_translations.ogp_plan_id' ,'=', 'ogp_plan.id')->where('ogp_plan_translations.locale', '=', app()->getLocale());
             })
-            ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value])
+            ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value, OgpStatusEnum::FINAL->value])
             ->where('ogp_plan.active', $active)
             ->where('ogp_plan.national_plan', 0)
             ->when($name, function ($query, $name) {
@@ -68,6 +68,19 @@ class DevelopNewPlanController extends AdminController
         return $this->view('admin.ogp_develop_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas'));
     }
 
+    public function show(Request $request, OgpPlan $plan): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+    {
+        $item = $plan;
+        if($request->user()->cannot('viewDevelopPlan', $item)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
+
+        $areas = $item->areas;
+
+        return $this->view('admin.ogp_develop_plan.show', compact('item', 'translatableFields', 'areas'));
+    }
+
     public function store(OgpDevelopPlanRequest $request): \Illuminate\Http\RedirectResponse
     {
         $needToGeneratePdf = false;
@@ -82,9 +95,13 @@ class DevelopNewPlanController extends AdminController
 
         try {
             if(dateBetween($validated['from_date_develop'], $validated['to_date_develop'])){
-                $validated['ogp_status_id'] = OgpStatus::InDevelopment()->first()->id;
+                if(!$id) {
+                    $validated['ogp_status_id'] = OgpStatus::InDevelopment()->first()->id;
+                }
             } elseif(dateAfter($validated['from_date_develop'])) {
-                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+                if(!$id){
+                    $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+                }
             }
 
             if($id) {
@@ -140,7 +157,7 @@ class DevelopNewPlanController extends AdminController
                     $ocr = new FileOcr($pdfFile->refresh());
                     $ocr->extractText();
                 }
-                $route = route('admin.ogp.plan.develop.index');
+                $route = route('admin.ogp.plan.develop.view', $item);
             }
 
             DB::commit();
