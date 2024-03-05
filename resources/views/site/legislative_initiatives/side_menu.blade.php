@@ -30,7 +30,7 @@
                                             <ul class="list-unstyled ps-3">
                                                 <hr class="custom-hr">
                                                 @foreach($nationalPlans as $plan)
-                                                    <li class="my-2 @if(str_contains(url()->current(), 'national-action-plans/'.$plan['id'])) active-item-left p-1 @endif">
+                                                    <li class="@if(str_contains(url()->current(), 'national-action-plans/'.($plan['id'] ?? 0))) active-item-left p-1 @else my-2 @endif">
                                                         <a href="{{ $plan['url'] }}" class=" text-decoration-none link-dark">{{ $plan['label'] }}</a></li>
                                                 @endforeach
                                             </ul>

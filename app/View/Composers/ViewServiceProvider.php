@@ -56,7 +56,11 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with('library', $library);
 
-            $nationalPlans = [];
+            $nationalPlans = [
+                ['url' => '#', 'label' => 'Първи план'],
+                ['url' => '#', 'label' => 'Втори план'],
+                ['url' => '#', 'label' => 'Трети план'],
+            ];
             $nationalPlan = OgpPlan::Active()
                 ->National()
                 ->whereHas('status', function ($q){
