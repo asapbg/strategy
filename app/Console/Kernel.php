@@ -21,6 +21,9 @@ class Kernel extends ConsoleKernel
 
         //moderators adv board check for actual info reminder
         $schedule->command('adv_board:is_actual')->daily();
+
+        //OGP module
+        $schedule->command('ogp:to_development')->daily();
     }
 
     /**

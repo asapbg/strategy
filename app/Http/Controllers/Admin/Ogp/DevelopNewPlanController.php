@@ -94,14 +94,14 @@ class DevelopNewPlanController extends AdminController
         DB::beginTransaction();
 
         try {
-            if(dateBetween($validated['from_date_develop'], $validated['to_date_develop'])){
-                if(!$id) {
+            if($validated['ogp_status_id'] != OgpStatus::Final()->first()->id){
+                if(dateBetween($validated['from_date_develop'], $validated['to_date_develop'])){
                     $validated['ogp_status_id'] = OgpStatus::InDevelopment()->first()->id;
-                }
-            } elseif(dateAfter($validated['from_date_develop'])) {
-                if(!$id){
+                } elseif(dateAfter($validated['from_date_develop'])) {
                     $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
                 }
+            } else{
+                unset($validated['from_date_develop'], $validated['to_date_develop']);
             }
 
             if($id) {

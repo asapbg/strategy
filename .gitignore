@@ -22,6 +22,7 @@ yarn-error.log
 /public/files/advisory-boards
 /public/files/lp
 /public/files/op
+/public/files/ogp_plan
 app/Http/Controllers/Test.php
 /document_library
 /oldfiles
