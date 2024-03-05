@@ -123,4 +123,9 @@ class OgpPlanPolicy
             && (in_array($ogpPlan->status->type, [OgpStatusEnum::DRAFT->value, OgpStatusEnum::IN_DEVELOPMENT->value]));
     }
 
+    public function viewPublic(User $user, OgpPlan $ogpPlan)
+    {
+        return $user->id && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+    }
+
 }

@@ -178,10 +178,11 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
     Route::get('ogp/develop-a-new-action-plans', 'index')->name('ogp.develop_new_action_plans');
 //    Route::get('ogp/develop-a-new-action-plans/{id}', 'show')->name('ogp.develop_new_action_plans.show')->whereNumber('id');
     Route::get('ogp/develop-a-new-action-plan/{plan}/view/{planArea}', 'area')->name('ogp.develop_new_action_plans.area');
+    Route::get('ogp/develop-a-new-action-plan/{plan}/view/{planArea}/{offer}', 'offer')->name('ogp.develop_new_action_plans.area.offer');
     Route::post('ogp/develop-a-new-action-plans/store-offer/{id}', 'store')->name('ogp.develop_new_action_plans.store_offer')->whereNumber('otg_area_id');
-    Route::get('ogp/develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
+//    Route::get('ogp/develop-a-new-action-plans/offer/edit/{offer}', 'editOffer')->name('ogp.develop_new_action_plans.edit_offer');
     Route::post('ogp/develop-a-new-action-plans/add-comment/{offer}', 'storeComment')->name('ogp.develop_new_action_plans.add_comment');
-    Route::post('ogp/develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
+//    Route::post('ogp/develop-a-new-action-plans/delete-comment/{comment}', 'deleteComment')->name('ogp.develop_new_action_plans.delete_comment');
     Route::post('ogp/develop-a-new-action-plans/offer-vote/{id}/{like}', 'voteOffer')->name('ogp.develop_new_action_plans.vote');
 });
 

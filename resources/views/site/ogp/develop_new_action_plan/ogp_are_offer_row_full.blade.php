@@ -1,7 +1,7 @@
 <div class="card custom-card mb-2">
-    <div class="card-header" id="headingcat{{ $loop->iteration }}">
+    <div class="card-header" id="headingcat{{ $item->id }}">
         <div class="row">
-            <span class="text-dark fw-bold fs-18 me-3">{{ __('ogp.proposal_number', ['number' => $loop->iteration]) }}</span>
+            <span class="text-dark fw-bold fs-18 me-3">{{ __('ogp.proposal_number', ['number' => $item->id]) }}</span>
         </div>
     </div>
     <div class="card-body">
@@ -34,14 +34,8 @@
             @php($cntComments = $item->comments->count())
             @if($cntComments)
                 @foreach($item->comments()->orderBy('created_at', 'desc')->get() as $comment)
-                    @break($loop->iteration > 3)
                     @include('site.ogp.develop_new_action_plan.comment_row')
                 @endforeach
-                @if($cntComments > 3)
-                    <div class="col-12">
-                        <a href="{{ route('ogp.develop_new_action_plans.area.offer', ['plan' => $item->planArea->plan, 'planArea' => $item->planArea, 'offer' => $item]) }}">{{ __('custom.to_all_comments') }}</a>
-                    </div>
-                @endif
             @endif
         </div>
 

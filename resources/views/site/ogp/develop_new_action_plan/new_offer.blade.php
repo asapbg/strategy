@@ -16,6 +16,7 @@
                     {{ __('ogp.add_new_ogp_area') }}
                 @endif
             </h3>
+            <p class="main-color fst-italic">({{ __('custom.proposal_period') }}: {{ displayDate($plan->from_date_develop) }} - {{ displayDate($plan->to_date_develop) }})</p>
             <div class="row">
                 <div class="col-md-12">
                     <div class="input-group ">

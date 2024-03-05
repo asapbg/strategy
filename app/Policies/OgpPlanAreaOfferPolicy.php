@@ -32,7 +32,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function view(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
-        return $this->viewAny($user);
+        return $ogpPlanAreaOffer->planArea->plan->status->type != OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 
     /**
@@ -43,7 +43,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function create(User $user)
     {
-        return $this->viewAny($user);
+        return $user->id;
     }
 
     /**
@@ -55,7 +55,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function update(User $user, OgpPlanAreaOffer $ogpPlanAreaOffer)
     {
-        return $this->viewAny($user) && $user->id == $ogpPlanAreaOffer->users_id && $ogpPlanAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+        return $user->id && $user->id == $ogpPlanAreaOffer->users_id && $ogpPlanAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 
     /**
@@ -101,7 +101,7 @@ class OgpPlanAreaOfferPolicy
      */
     public function createComment(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
-        return $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+        return $user->id && $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 
     /**
@@ -112,6 +112,6 @@ class OgpPlanAreaOfferPolicy
     public function vote(User $user, OgpPlanAreaOffer $ogpAreaOffer): bool
     {
         $exits = OgpPlanAreaOfferVote::VoteExits($ogpAreaOffer->id, $user->id);
-        return !$exits && $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+        return $user->id && !$exits && $ogpAreaOffer->planArea->plan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 }

@@ -27,11 +27,6 @@
                             <label class="col-auto control-label"><i class="fas fa-user-alt text-primary me-1"></i> {{ __('ogp.author_proposal') }}: </label> {{ $item->author->fullName() }}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="col-auto control-label"><i class="fas fa-calendar-check text-primary me-1"></i> {{ __('ogp.from_date') }}: </label> {{ displayDateTime($item->created_at) }}
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-12">

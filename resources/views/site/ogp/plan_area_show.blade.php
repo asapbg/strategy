@@ -15,17 +15,17 @@
             </div>
         </div>
         @can('newOffer', $plan)
-        @include('site.ogp.develop_new_action_plan.new_offer', ['planArea' => $planArea, 'offer' => null])
-        <div class="row mb-4 mt-5">
-            <div class="col-md-12">
-                <h2 class="obj-title">{{ __('ogp.template_new_proposal') }}</h2>
-                <p>{{ __('ogp.template_new_proposal_info') }}</p>
+            @include('site.ogp.develop_new_action_plan.new_offer', ['planArea' => $planArea, 'offer' => null])
+            <div class="row mb-4 mt-5">
+                <div class="col-md-12">
+                    <h2 class="obj-title">{{ __('ogp.template_new_proposal') }}</h2>
+                    <p>{{ __('ogp.template_new_proposal_info') }}</p>
 
-                <button class="btn btn-success">
-                    <i class="fa fa-solid fa-download me-1"></i> {{ __('ogp.download_template_new_proposal') }}
-                </button>
+                    <button class="btn btn-success">
+                        <i class="fa fa-solid fa-download me-1"></i> {{ __('ogp.download_template_new_proposal') }}
+                    </button>
+                </div>
             </div>
-        </div>
         @endcan
         <div class="row mb-4 mt-5">
             <div class="col-md-12">

@@ -72,9 +72,23 @@ class DevelopNewActionPlan extends Controller
      */
     public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
     {
+        if(auth()->user()->cannot('viewPublic', $plan)) {
+            return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
+        }
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
         return $this->view('site.ogp.develop_new_action_plan.plan_area_show', compact('plan', 'planArea', 'pageTitle'));
+    }
+
+    public function offer(Request $request, OgpPlan $plan, OgpPlanArea $planArea, OgpPlanAreaOffer $offer): View
+    {
+        if(auth()->user()->cannot('viewPublic', $plan)) {
+            return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
+        }
+
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
+        return $this->view('site.ogp.develop_new_action_plan.plan_area_offer_show', compact('plan', 'planArea', 'pageTitle', 'offer'));
     }
 
     public function store(OgpPlanAreaOfferRequest $request, $id): \Illuminate\Http\RedirectResponse
@@ -84,6 +98,12 @@ class DevelopNewActionPlan extends Controller
         $validated['users_id'] = $request->user()->id;
         $item = OgpPlanArea::find($id);
         $offer_id = (int)$request->get('offer', 0);
+
+        if(!$id && $item->plan->status->type != OgpStatusEnum::IN_DEVELOPMENT->value
+            || ($id && $user->cannot('update', $item))
+        ){
+            return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
+        }
 
         DB::beginTransaction();
 

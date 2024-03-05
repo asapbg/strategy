@@ -813,5 +813,6 @@ return [
     'develop_new_plans' => 'План в разработка',
     'develop_plan_calendar' => 'График за подготовката на плана',
     'proposal_period' => 'Срок за предложения',
+    'proposal_votes_period' => 'Срок за подкрепа на предложението',
     'to_all_comments' => 'Виж всички коментари'
 ];
