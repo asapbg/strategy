@@ -4,10 +4,12 @@ namespace App\Http\Requests;
 
 use App\Models\OgpArea;
 use App\Models\OgpPlanArrangement;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OgpPlanArrangementRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,16 +29,10 @@ class OgpPlanArrangementRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'from_date' => '',
-            'to_date' => '',
+            'from_date' => ['required', 'date', 'before:to_date'],
+            'to_date' => ['required', 'date'],
         ];
+        return $this->getRules($rules, OgpPlanArrangement::translationFieldsProperties());
 
-        foreach (config('available_languages') as $lang) {
-            foreach (OgpPlanArrangement::translationFieldsProperties() as $field => $properties) {
-                $rules[$field.'_'.$lang['code']] = $properties['rules'];
-            }
-        }
-
-        return $rules;
     }
 }

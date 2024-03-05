@@ -211,13 +211,13 @@
                                     <p>{{ __('custom.develop_plan') }}</p>
                                 </a>
                             </li>
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{ route('admin.ogp.plan.index') }}"--}}
-{{--                                   class="nav-link @if(strstr(url()->current(), 'plans')) active @endif">--}}
-{{--                                    <i class="fas fa-circle nav-item-sub-icon"></i>--}}
-{{--                                    <p>{{ trans_choice('custom.plans', 2) }}</p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.plan.index') }}"
+                                   class="nav-link @if(strstr(url()->current(), 'plans')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ trans_choice('custom.ogp_national_plans', 2) }}</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.ogp.page.info') }}"
                                    class="nav-link @if(str_contains(url()->current(), 'ogp/page/base-information')) active @endif">

@@ -95,6 +95,16 @@
                                         @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
                                     </td>
                                     <td class="text-center">
+                                        @cannot('update', $v)
+                                            <a href="{{ route('ogp.national_action_plans.show', $v->id )}}"
+                                               class="btn btn-sm btn-primary"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.view')}}"
+                                                target="_blank"
+                                            >
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @endcannot
                                         @can('update', $v)
                                         <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
                                            class="btn btn-sm btn-info"

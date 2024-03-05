@@ -3,13 +3,13 @@
 @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_ogp_plans')])
 <input type="hidden" id="subscribe_model" value="App\Models\OgpPlan">
 <div class="row mb-2">
-    <div class="col-md-6 mt-2">
-        <div class="info-consul text-start">
-            <p class="fw-600">
-                {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->total()]) }}
-            </p>
-        </div>
-    </div>
+{{--    <div class="col-md-6 mt-2">--}}
+{{--        <div class="info-consul text-start">--}}
+{{--            <p class="fw-600">--}}
+{{--                {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->total()]) }}--}}
+{{--            </p>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     @include('site.partial.paginate_filter', ['ajaxContainer' => '#listContainer'])
 </div>
 

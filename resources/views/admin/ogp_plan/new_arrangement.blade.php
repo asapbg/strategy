@@ -16,6 +16,9 @@
                                 <div class="add-suggestion">
                                     <div class="row">
                                         <div class="row mb-4">
+                                            @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
+                                        </div>
+                                        <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
                                         </div>
                                         <div class="row mb-4">

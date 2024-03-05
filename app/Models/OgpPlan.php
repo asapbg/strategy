@@ -29,12 +29,17 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     protected $fillable = ['from_date', 'to_date', 'active', 'author_id',
         'ogp_status_id', 'version_after_public_consultation_pdf', 'final_version_pdf',
-        'from_date_develop', 'to_date_develop'];
+        'from_date_develop', 'to_date_develop', 'national_plan'];
     protected $translatedAttributes = OgpPlan::TRANSLATABLE_FIELDS;
 
     public function scopeActive($query)
     {
         return $query->where('ogp_plan.active', '=', true);
+    }
+
+    public function scopeNational($query)
+    {
+        return $query->where('ogp_plan.national_plan', '=', 1);
     }
 
     protected function fromDate(): Attribute

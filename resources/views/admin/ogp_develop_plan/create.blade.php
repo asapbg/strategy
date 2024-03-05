@@ -100,7 +100,7 @@
 {{--                        @endif--}}
                         <div class="row">
                             <div class="col-6">
-                                @include('admin.partial.active_field')
+                                @include('admin.partial.active_field', ['disabled' => false])
                             </div>
                         </div>
                         <div class="form-group row">

@@ -32,7 +32,7 @@ class OgpPlanPolicy
      */
     public function view(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']);
+        return $user->canAny(['manage.*','manage.partnership'])  && $ogpPlan->national_plan;
     }
 
     /**
@@ -55,7 +55,7 @@ class OgpPlanPolicy
      */
     public function update(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']);
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
     }
 
     /**
@@ -67,7 +67,7 @@ class OgpPlanPolicy
      */
     public function delete(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && ($ogpPlan->status->type == OgpStatusEnum::DRAFT->value || $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value);
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
     }
 
     /**

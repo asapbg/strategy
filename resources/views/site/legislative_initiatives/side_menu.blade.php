@@ -20,10 +20,24 @@
                                         <a href="{{ route('ogp.info') }}" class="link-dark  text-decoration-none">{{ __('site.base_info') }}</a>
                                     </li>
                                     <hr class="custom-hr">
+
+
                                     <li class="my-2 @if(str_contains(url()->current(),'national-action-plans')) active-item-left p-1 @endif">
                                         <a href="{{ route('ogp.national_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.national_action_plans') }}</a>
                                     </li>
-                                    <hr class="custom-hr">
+                                    @if(isset($nationalPlans) && sizeof($nationalPlans))
+                                        <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
+                                            <ul class="list-unstyled ps-3">
+                                                <hr class="custom-hr">
+                                                @foreach($nationalPlans as $plan)
+                                                    <li class="my-2 @if(str_contains(url()->current(), 'national-action-plans/'.$plan['id'])) active-item-left p-1 @endif">
+                                                        <a href="{{ $plan['url'] }}" class=" text-decoration-none link-dark">{{ $plan['label'] }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </ul>
+                                    @else
+                                        <hr class="custom-hr">
+                                    @endif
                                     <li class="my-2">
                                         <a href="#" class="link-dark  text-decoration-none">{{ __('custom.evaluation_implementation_action_plans_monitoring') }}</a>
                                     </li>

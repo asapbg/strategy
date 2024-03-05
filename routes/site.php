@@ -189,5 +189,6 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
 Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(function () {
     Route::get('ogp/national-action-plans', 'index')->name('ogp.national_action_plans');
     Route::get('ogp/national-action-plans/{id}', 'show')->name('ogp.national_action_plans.show')->whereNumber('id');
-    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
+    Route::get('ogp/national-action-plans/{id}/export', 'export')->name('ogp.national_action_plans.export')->whereNumber('id');
+//    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
 });

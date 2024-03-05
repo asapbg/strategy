@@ -20,17 +20,18 @@
                 </div>
             @endcan
             <div class="col-md-12 text-start">
-                <button class="btn btn-primary  main-color">
-                    <i class="fa-solid fa-download main-color me-2"></i>Експорт</button>
-                <button class="btn rss-sub main-color">
-                    <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>
-                <button class="btn rss-sub main-color">
-                    <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>
+                <a href="{{ route('ogp.national_action_plans.export', $plan->id) }}" class="btn btn-primary  main-color"><i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export_as_pdf') }}</a>
+{{--                <button class="btn btn-primary  main-color">--}}
+{{--                    <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export_as_pdf') }}</button>--}}
+{{--                <button class="btn rss-sub main-color">--}}
+{{--                    <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>--}}
+{{--                <button class="btn rss-sub main-color">--}}
+{{--                    <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>--}}
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <h3 class="mb-2 fs-5">{{ __('ogp.start_of_execution') }}</h3>
+                <h3 class="mb-2 fs-5">{{ __('custom.from_date') }}</h3>
                 <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-calendar main-color me-2 fs-18"></i>
@@ -39,7 +40,7 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <h3 class="mb-2 fs-5">{{ __('ogp.start_of_execution') }}</h3>
+                <h3 class="mb-2 fs-5">{{ __('custom.to_date') }}</h3>
                 <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
                         <i class="fas fa-calendar main-color me-2 fs-18"></i>
@@ -55,33 +56,17 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-12">
-                <h3 class="mb-2 fs-5">{{ __('ogp.plan_sublevel') }}</h3>
+            <div class="col-md-12 pt-3">
+{{--                <h3 class="mb-2 fs-5">{{ __('ogp.plan_sublevel') }}</h3>--}}
                 {!! $plan->content !!}
             </div>
         </div>
-        @if($plan->versionAfterConsultation())
-            <div class="row mb-4 mt-4">
-                <div class="row table-light">
-                    <div class="col-12 mb-2">
-                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $plan->versionAfterConsultation()->id }}" data-url="{{ route('modal.file_preview', ['id' => $plan->versionAfterConsultation()->id]) }}">
-                                    {!! fileIcon($plan->versionAfterConsultation()->content_type) !!} {{ $plan->versionAfterConsultation()->description }} - {{ displayDate($plan->versionAfterConsultation()->created_at) }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
 
-        <div class="row mb-4 mt-5">
+        <div class="row mb-4">
             <div class="col-md-12">
                 <div class="accordion" id="accordionExample">
                     @foreach($plan->areas as $row)
-                    <div class="accordion-item">
+                    <div class="accordion-item mb-2">
                         <h2 class="accordion-header" id="heading_{{ $loop->iteration }}">
                             <button class="accordion-button text-dark fs-18 fw-600" type="button"
                                     data-toggle="collapse" data-target="#collapse-{{ $loop->iteration }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
@@ -91,45 +76,50 @@
                         </h2>
                         <div id="collapse-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse", "show" => $loop->first])
                              aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample" style="">
-                            <div class="accordion-body">
-                                <div class="custom-card p-3 mb-2 pb-0">
-                                    <div class="row ">
-                                        <div class="document-info-body">
-                                            <div class="row mb-3">
-                                                <div class="col-m-12">
-                                                    <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $row->ogp_plan_id, 'planArea' => $row->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>
-                                                </div>
-                                            </div>
-                                            @foreach($row->arrangements as $a)
-                                                {!! $a->content !!}
-                                                @if($a->npo_partner)
-                                                <p>
-                                                    <strong>{{ __('ogp.npo_partner') }}</strong> {{ $a->npo_partner }}
-                                                </p>
-                                                @endif
-                                                @if($a->responsible_administration)
-                                                <p>
-                                                    <strong>{{ __('ogp.responsible_administration') }}</strong> {{ $a->responsible_administration }}
-                                                </p>
-                                                @endif
-                                                <p>
-                                                    <strong>{{ __('ogp.deadline') }}:</strong>
-                                                    @if(is_null($a->from_date) && is_null($a->to_date))
-                                                        {{ __('ogp.unlimited') }}
-                                                    @else
-                                                        @if(!is_null($a->from_date))
-                                                            {{ displayDate($a->from_date) }}
-                                                        @endif
-                                                        @if(!is_null($a->to_date))
-                                                            @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
-                                                        @endif
+                            @foreach($row->arrangements as $a)
+                                <div class="accordion-body">
+                                    <div class="custom-card p-3 mb-2 pb-0">
+                                        <div class="row ">
+                                            <div class="document-info-body">
+{{--                                                <div class="row mb-3">--}}
+{{--                                                    <div class="col-m-12">--}}
+{{--                                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $row->ogp_plan_id, 'planArea' => $row->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                @foreach($row->arrangements as $a)--}}
+                                                    <p>
+                                                        <strong>{{ trans_choice('custom.arrangement', 1) }}</strong> {{ $a->name }}
+                                                    </p>
+                                                    {!! $a->content !!}
+                                                    @if($a->npo_partner)
+                                                    <p>
+                                                        <strong>{{ __('ogp.npo_partner') }}</strong> {{ $a->npo_partner }}
+                                                    </p>
                                                     @endif
-                                                </p>
-                                            @endforeach
+                                                    @if($a->responsible_administration)
+                                                    <p>
+                                                        <strong>{{ __('ogp.responsible_administration') }}</strong> {{ $a->responsible_administration }}
+                                                    </p>
+                                                    @endif
+                                                    <p>
+                                                        <strong>{{ __('ogp.deadline') }}:</strong>
+                                                        @if(is_null($a->from_date) && is_null($a->to_date))
+                                                            {{ __('ogp.unlimited') }}
+                                                        @else
+                                                            @if(!is_null($a->from_date))
+                                                                {{ displayDate($a->from_date) }}
+                                                            @endif
+                                                            @if(!is_null($a->to_date))
+                                                                @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
+                                                            @endif
+                                                        @endif
+                                                    </p>
+{{--                                                @endforeach--}}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     @endforeach

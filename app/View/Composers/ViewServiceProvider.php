@@ -2,7 +2,9 @@
 
 namespace App\View\Composers;
 
+use App\Enums\OgpStatusEnum;
 use App\Enums\PageModulesEnum;
+use App\Models\OgpPlan;
 use App\Models\Page;
 use App\Models\Sector;
 use App\Models\Setting;
@@ -53,6 +55,20 @@ class ViewServiceProvider extends ServiceProvider
             }
 
             $view->with('library', $library);
+
+            $nationalPlans = [];
+            $nationalPlan = OgpPlan::Active()
+                ->National()
+                ->whereHas('status', function ($q){
+                $q->where('type', '=', OgpStatusEnum::ACTIVE->value);
+            })->first();
+
+            if($nationalPlan) {
+                $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $nationalPlan->id), 'id' => $nationalPlan->id, 'label' => $nationalPlan->name];
+            }
+            //TODO add other previews plans
+
+            $view->with('nationalPlans', $nationalPlans);
         });
 
         View::composer('impact_assessment.sidebar', function ($view) {

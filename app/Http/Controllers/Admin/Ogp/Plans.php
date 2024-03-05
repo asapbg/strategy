@@ -30,6 +30,7 @@ class Plans extends AdminController
         $paginate = $request->filled('paginate') ? $request->get('paginate') : OgpPlan::PAGINATE;
 
         $items = OgpPlan::with(['status'])
+            ->National()
             ->where('active', $active)
             ->when($name, function ($query, $name) {
                 return $query->where('name', 'ILIKE', "%$name%");
@@ -64,7 +65,6 @@ class Plans extends AdminController
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $needToGeneratePdf = false;
         $validated = $request->validated();
         $id = $request->get('id');
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
@@ -72,67 +72,36 @@ class Plans extends AdminController
         if($request->user()->cannot($id ? 'update' : 'create', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
+        //TODO validate dates by Arrangement and other plans
+
         DB::beginTransaction();
 
         try {
-            if($id == 0) {
-                $item->author_id = $request->user()->id;
-                $item->ogp_status_id = OgpStatus::Draft()->first()->id;
-            } else {
-                if($item->ogp_status_id != $validated['status'] && $validated['status'] == OgpStatus::Final()->first()->id){
-                    $needToGeneratePdf = true;
-                }
-                $item->ogp_status_id = $validated['status'];
+            if(dateBetween($validated['from_date'], $validated['to_date'])){
+                $validated['ogp_status_id'] = OgpStatus::ActiveStatus()->first()->id;
+                $route = route('admin.ogp.plan.index');
+            } elseif(dateAfter($validated['from_date'])) {
+                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+                $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
             }
-                $item->from_date = Carbon::parse($validated['from_date'])->format('Y-m-d');
-                $item->to_date = Carbon::parse($validated['to_date'])->format('Y-m-d');
 
-            $item->active = $validated['active'];
+            if(!$id) {
+                $item->author_id = $request->user()->id;
+            }
+
+            $fillable = $this->getFillableValidated($validated, $item);
+            $validated['national_plan'] = 1;
+            $item->fill($fillable);
             $item->save();
-
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if($id == 0) {
-                //create ogp_plan_area
+            //add new area
+            if(isset($validated['ogp_area']) && $validated['ogp_area']){
                 $item->areas()->create([
                     'ogp_plan_id' => $item->id,
                     'ogp_area_id' => $validated['ogp_area']
                 ]);
-            }
-
-            $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
-            if($needToGeneratePdf) {
-                $exportData = [
-                    'title' => $item->name,
-                    'content' => $item->content,
-                    'rows' => $item->areas
-                ];
-                $path = File::OGP_PLAN_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
-                $fileName = 'version_after_consultation_'.$item->id;
-
-                $pdf = PDF::loadView('exports.ogp_plan', ['data' => $exportData, 'isPdf' => true]);
-                Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
-
-                //Attach files to public consultation
-                foreach (config('available_languages') as $lang) {
-                    $pdfFile = new File([
-                        'id_object' => $item->id,
-                        'code_object' => File::CODE_OBJ_OGP,
-                        'doc_type' => DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION,
-                        'filename' => $fileName.'.pdf',
-                        'content_type' => 'application/pdf',
-                        'path' => $path.$fileName.'.pdf',
-                        'description_'.$lang['code'] => __('custom.ogp.doc_type.'.DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value),
-                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                        'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                        'locale' => $lang['code'],
-                        'version' => '1.0',
-                    ]);
-                    $pdfFile->save();
-                    $ocr = new FileOcr($pdfFile->refresh());
-                    $ocr->extractText();
-                }
-                $route = route('admin.ogp.plan.index');
             }
 
             DB::commit();
@@ -223,7 +192,16 @@ class Plans extends AdminController
      */
     public function editArrangementStore(OgpPlanArrangementRequest $request, OgpPlanArea $ogpPlanArea): \Illuminate\Http\RedirectResponse
     {
+        //TODO validate dates
         $validated = $request->validated();
+
+        if($request->user()->cannot('update', $ogpPlanArea->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        if(!dateBetween($ogpPlanArea->plan?->from_date, $ogpPlanArea->plan?->to_date, $validated['from_date']) || !dateBetween($ogpPlanArea->plan?->from_date, $ogpPlanArea->plan?->to_date, $validated['to_date'])){
+            return back()->withInput()->with('warning', 'Срокът на мярката трябва да е част от срокът в който планът ще бъде дейтсващ.');
+        }
+
         $id = (int)$validated['id'];
         DB::beginTransaction();
 
@@ -238,9 +216,7 @@ class Plans extends AdminController
 
             $fillable = $this->getFillableValidated($validated, $opa);
             $opa->fill($fillable);
-
             $opa->save();
-
             $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);
 
             DB::commit();

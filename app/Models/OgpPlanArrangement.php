@@ -12,7 +12,7 @@ class OgpPlanArrangement extends ModelActivityExtend implements TranslatableCont
 {
     use SoftDeletes, Translatable;
 
-    const TRANSLATABLE_FIELDS = ['content', 'npo_partner', 'responsible_administration'];
+    const TRANSLATABLE_FIELDS = ['name', 'content', 'npo_partner', 'responsible_administration'];
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.ogp_plans_arrangement');
@@ -30,7 +30,7 @@ class OgpPlanArrangement extends ModelActivityExtend implements TranslatableCont
     protected function fromDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
             set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
@@ -38,33 +38,34 @@ class OgpPlanArrangement extends ModelActivityExtend implements TranslatableCont
     protected function toDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
             set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
     }
 
+
     public static function translationFieldsProperties(): array
     {
         return array(
+            'name' => [
+                'type' => 'text',
+                'rules' => ['required', 'max:255'],
+                'required_all_lang' => true
+            ],
             'content' => [
                 'type' => 'summernote',
-                'rules' => ['required']
-            ],
-            'from_date' => [
-                'type' => 'date',
-                'rules' => []
-            ],
-            'to_date' => [
-                'type' => 'date',
-                'rules' => []
+                'rules' => ['required'],
+                'required_all_lang' => false
             ],
             'npo_partner' => [
                 'type' => 'date',
-                'rules' => ['max:255']
+                'rules' => ['max:255'],
+                'required_all_lang' => false
             ],
             'responsible_administration' => [
                 'type' => 'text',
-                'rules' => ['max:255']
+                'rules' => ['max:255'],
+                'required_all_lang' => false
             ],
         );
     }

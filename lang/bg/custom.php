@@ -720,7 +720,11 @@ return [
     'ogp_forum' => 'OGP FORUM',
     'news_events' => 'Новини и събития',
     'from_date' => 'От дата',
+    'active_from_date' => 'Активен (от дата)',
+    'active2_from_date' => 'Действащ (от дата)',
     'to_date' => 'До дата',
+    'active_to_date' => 'Активен (до дата)',
+    'active2_to_date' => 'Действащ (до дата)',
     'ogp_areas' => 'Област|Области',
     'deadline' => 'Срок',
     'edit_ogp_area' => 'Редактиране на план за действие',
@@ -814,5 +818,6 @@ return [
     'develop_plan_calendar' => 'График за подготовката на плана',
     'proposal_period' => 'Срок за предложения',
     'proposal_votes_period' => 'Срок за подкрепа на предложението',
-    'to_all_comments' => 'Виж всички коментари'
+    'to_all_comments' => 'Виж всички коментари',
+    'ogp_national_plans' => 'Национален план|Национални планове'
 ];
