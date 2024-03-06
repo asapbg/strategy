@@ -184,6 +184,7 @@ class CommonController extends Controller
                 File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
                 File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
                 File::CODE_OBJ_STRATEGIC_DOCUMENT,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
                 File::CODE_OBJ_OGP,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));

@@ -338,7 +338,7 @@
                                                     <i class="fas fa-download me-1" role="button"
                                                        data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']).'?is_sd_file=1' }}">
+                                                <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
                                                     <i class="fas fa-trash me-1" role="button"
                                                        data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                 </a>
