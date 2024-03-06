@@ -1,5 +1,5 @@
 <div class="px-md-5" style="min-height: 300px;">
-    @foreach ($formInputs as $fi)
+    @foreach ($data as $fi)
         @php
             $steps = \App\Http\Controllers\ImpactAssessmentController::getSteps($fi->form);
             $parsedData = $fi->dataParsed;

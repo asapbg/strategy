@@ -835,4 +835,28 @@ if (!function_exists('copyFile')) {
             return $date < $afterDate;
         }
     }
+
+    if (!function_exists('addUrlParams')) {
+
+        /**
+         * DO NOT CHANGE. Using in profile subscriptions
+         */
+
+        function addUrlParams($params): string
+        {
+            $strParams = '';
+
+            foreach ($params as $key => $value) {
+                if(is_array($value)){
+                    foreach ($value as $v){
+                        $strParams .= (empty($strParams) ? '?' : '&') .$key.'[]='.$v;
+                    }
+                } else{
+                    $strParams .= (empty($strParams) ? '?' : '&') .$key.'='.$value;
+                }
+            }
+
+            return $strParams;
+        }
+    }
 }

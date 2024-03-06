@@ -129,4 +129,5 @@ return [
     'strategic_document.all_documents_report' => 'Справки',
     'strategic_document.contacts.title' => 'Контакти на служители от дирекция „Стратегически документи"',
     'adv_board_all' => 'Всички съвети',
+    'do_not_have_subscriptions' => 'Все още нямате абонаменти',
 ];

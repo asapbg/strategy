@@ -819,5 +819,6 @@ return [
     'proposal_period' => 'Срок за предложения',
     'proposal_votes_period' => 'Срок за подкрепа на предложението',
     'to_all_comments' => 'Виж всички коментари',
-    'ogp_national_plans' => 'Национален план|Национални планове'
+    'ogp_national_plans' => 'Национален план|Национални планове',
+    'StrategicDocument' => 'Стратегически документи'
 ];
