@@ -19,8 +19,12 @@
                         @php($records = json_decode($s->subscriptions))
                         @if($records && sizeof($records) && is_array($records))
                             @foreach($records as $r)
+                                @php($url = '')
+                                @if($s->subscribable_type == 'App\Models\StrategicDocument')
+                                    @php($url = $r->subscribable_id ? route('strategy-document.view', $r->subscribable_id) : route('strategy-documents.index').addUrlParams($r->search_filters))
+                                @endif
                                 <tr>
-                                    <td><a href="{{ $r->subscribable_id ? route('strategy-document.view', $r->subscribable_id) : route('strategy-documents.index').addUrlParams($r->search_filters) }}" target="_blank">{{ $r->subscribable_id ? 'Към Стартегическия документ' : 'Към списъка' }}</a></td>
+                                    <td><a href="{{ $url }}" target="_blank">{{ $r->subscribable_id ? 'Към Стартегическия документ' : 'Към списъка' }}</a></td>
                                     <td>{{ $r->is_subscribed ? __('custom.active_m') : __('custom.inactive_m') }}</td>
                                     <td>
                                         <a href="{{ route('profile.subscribe.set', ['id' => $r->id, 'status' => (int)!$r->is_subscribed]) }}">{{ $r->is_subscribed ? 'Деактивирай' : 'Активирай' }}</a>
