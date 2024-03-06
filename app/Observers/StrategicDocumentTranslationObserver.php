@@ -5,48 +5,40 @@ namespace App\Observers;
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\CustomRole;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentTranslation;
 use App\Models\User;
 use App\Models\UserSubscribe;
 use Illuminate\Support\Facades\Log;
 
-class StrategicDocumentObserver
+class StrategicDocumentTranslationObserver
 {
 
     /**
-     * Handle the StrategicDocument "created" event.
+     * Handle the StrategicDocumentTranslation "created" event.
      *
-     * @param  StrategicDocument  $strategicDocument
+     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
      * @return void
      */
-    public function created(StrategicDocument  $strategicDocument)
+    public function created(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
-        if ($strategicDocument->active) {
-            $this->sendEmails($strategicDocument, 'created');
 
-            Log::info('Send subscribe email on creation');
-        }
     }
 
     /**
-     * Handle the StrategicDocument "updated" event.
+     * Handle the StrategicDocumentTranslation "updated" event.
      *
-     * @param  StrategicDocument  $strategicDocument
+     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
      * @return void
      */
-    public function updated(StrategicDocument  $strategicDocument)
+    public function updated(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
-        $old_active = $strategicDocument->getOriginal('active');
-
         //Check for real changes
-        $dirty = $strategicDocument->getDirty(); //return all changed fields
+        $dirty = $strategicDocumentTranslation->getDirty(); //return all changed fields
         //skip some fields in specific cases
         unset($dirty['updated_at']);
-        if($old_active == (boolval($strategicDocument->active))) {
-            unset($dirty['active']);
-        }
 
         if(sizeof($dirty)){
-            $this->sendEmails($strategicDocument, 'updated');
+            $this->sendEmails($strategicDocumentTranslation, 'updated');
             Log::info('Send subscribe email on update');
         }
 
@@ -55,11 +47,11 @@ class StrategicDocumentObserver
     /**
      * Send emails to all administrators, moderators and subscribed users
      *
-     * @param StrategicDocument  $strategicDocument
+     * @param StrategicDocumentTranslation  $strategicDocumentTranslation
      * @param $event
      * @return void
      */
-    private function sendEmails(StrategicDocument  $strategicDocument, $event): void
+    private function sendEmails(StrategicDocumentTranslation  $strategicDocumentTranslation, $event): void
     {
         $administrators = null;
         $moderators = null;
@@ -84,7 +76,7 @@ class StrategicDocumentObserver
                         roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENTS.'\'
                         or (
                             roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENT.'\'
-                            and field_of_actions.id = '.$strategicDocument->policy_area_id.'
+                            and field_of_actions.id = '.$strategicDocumentTranslation->parent->policy_area_id.'
                         )
                     )
                 group by users.id
@@ -96,7 +88,7 @@ class StrategicDocumentObserver
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
             ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $strategicDocument->id)
+            ->where('subscribable_id', '=', $strategicDocumentTranslation->parent->id)
             ->get();
 
         //get users by model filter
@@ -112,7 +104,7 @@ class StrategicDocumentObserver
                 $filterArray = json_decode($fSubscribe->search_filters, true);
                 if($filterArray){
                     $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($strategicDocument->id, $modelIds)){
+                    if(in_array($strategicDocumentTranslation->parent->id, $modelIds)){
                         $subscribedUsers->add($fSubscribe);
                     }
                 }
@@ -127,41 +119,41 @@ class StrategicDocumentObserver
         $data['administrators'] = $administrators;
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
-        $data['modelInstance'] = $strategicDocument;
+        $data['modelInstance'] = $strategicDocumentTranslation->parent;
         $data['markdown'] = 'strategic-document';
 
         SendSubscribedUserEmailJob::dispatch($data);
     }
 
     /**
-     * Handle the StrategicDocument "deleted" event.
+     * Handle the StrategicDocumentTranslation "deleted" event.
      *
-     * @param  StrategicDocument  $strategicDocument
+     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
      * @return void
      */
-    public function deleted(StrategicDocument  $strategicDocument)
+    public function deleted(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
         //
     }
 
     /**
-     * Handle the StrategicDocument "restored" event.
+     * Handle the StrategicDocumentTranslation "restored" event.
      *
-     * @param  StrategicDocument  $strategicDocument
+     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
      * @return void
      */
-    public function restored(StrategicDocument  $strategicDocument)
+    public function restored(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
         //
     }
 
     /**
-     * Handle the StrategicDocument "force deleted" event.
+     * Handle the StrategicDocumentTranslation "force deleted" event.
      *
-     * @param  StrategicDocument  $strategicDocument
+     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
      * @return void
      */
-    public function forceDeleted(StrategicDocument  $strategicDocument)
+    public function forceDeleted(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
         //
     }

@@ -27,4 +27,9 @@ class StrategicDocumentTranslation extends Model
             get: fn (string|null $value) => !empty($value) ? html_entity_decode($value) : $value
         );
     }
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicDocument::class, 'id', 'strategic_document_id');
+    }
 }

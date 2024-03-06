@@ -22,4 +22,9 @@ class StrategicDocumentChildrenTranslation extends ModelTranslatableActivityExte
             set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(StrategicDocumentChildren::class, 'id', 'strategic_document_children_id');
+    }
 }

@@ -6,10 +6,16 @@ use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\OgpPlanAreaOfferVote;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentChildren;
+use App\Models\StrategicDocumentChildrenTranslation;
+use App\Models\StrategicDocumentTranslation;
 use App\Observers\CommentsObserver;
 use App\Observers\OgpPlanAreaOfferVoteObserver;
 use App\Observers\PublicConsultationObserver;
+use App\Observers\StrategicDocumentChildObserver;
+use App\Observers\StrategicDocumentChildTranslationObserver;
 use App\Observers\StrategicDocumentObserver;
+use App\Observers\StrategicDocumentTranslationObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -37,6 +43,9 @@ class EventServiceProvider extends ServiceProvider
         Comments::class => [CommentsObserver::class],
         OgpPlanAreaOfferVote::class => [OgpPlanAreaOfferVoteObserver::class],
         StrategicDocument::class => [StrategicDocumentObserver::class],
+        StrategicDocumentTranslation::class => [StrategicDocumentTranslationObserver::class],
+        StrategicDocumentChildren::class => [StrategicDocumentChildObserver::class],
+        StrategicDocumentChildrenTranslation::class => [StrategicDocumentChildTranslationObserver::class],
 
     ];
 
