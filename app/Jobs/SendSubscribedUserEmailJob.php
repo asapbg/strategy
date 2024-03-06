@@ -66,7 +66,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     ${$varSubject} = __("Update consultation");
                 }
                 ${$varUrl} = match ($this) {
-                    'users' => route('public_consultation.view', ['id' => $this->data['modelInstance']->id]),
+                    'user' => route('public_consultation.view', ['id' => $this->data['modelInstance']->id]),
                     default => route('admin.consultations.public_consultations.edit', $this->data['modelInstance']),
                 };
 
@@ -79,12 +79,11 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     ${$varSubject} = __("New strategic document");
                 }
                 ${$varUrl} = match ($type) {
-                    'users' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
                     default => route('admin.strategic_documents.edit', ['id' => $this->data['modelInstance']->id]),
                 };
             }
         }
-
         if ($administrators) {
             foreach ($administrators as $admin) {
                 $this->data['text'] = $admin_text;

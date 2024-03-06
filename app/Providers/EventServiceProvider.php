@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\OgpPlanAreaOfferVote;
+use App\Models\StrategicDocument;
 use App\Observers\CommentsObserver;
 use App\Observers\OgpPlanAreaOfferVoteObserver;
 use App\Observers\PublicConsultationObserver;
+use App\Observers\StrategicDocumentObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -34,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
         PublicConsultation::class => [PublicConsultationObserver::class],
         Comments::class => [CommentsObserver::class],
         OgpPlanAreaOfferVote::class => [OgpPlanAreaOfferVoteObserver::class],
+        StrategicDocument::class => [StrategicDocumentObserver::class],
 
     ];
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class StrategicDocumentObserver
 {
+
     /**
      * Handle the PublicConsultation "created" event.
      *
@@ -37,11 +38,19 @@ class StrategicDocumentObserver
     {
         $old_active = $strategicDocument->getOriginal('active');
 
-        if (!$old_active && $strategicDocument->active) {
-            $this->sendEmails($strategicDocument, 'updated');
+        //Check for real changes
+        $dirty = $strategicDocument->getDirty(); //return all changed fields
+        //skip some fields in specific cases
+        unset($dirty['updated_at']);
+        if($old_active == (boolval($strategicDocument->active))) {
+            unset($dirty['active']);
+        }
 
+        if(sizeof($dirty)){
+            $this->sendEmails($strategicDocument, 'updated');
             Log::info('Send subscribe email on update');
         }
+
     }
 
     /**
@@ -105,7 +114,7 @@ class StrategicDocumentObserver
                 if($filterArray){
                     $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
                     if(in_array($strategicDocument->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe->user());
+                        $subscribedUsers->add($fSubscribe);
                     }
                 }
             }
