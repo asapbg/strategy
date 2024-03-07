@@ -8,9 +8,9 @@
                         {{ $iteration }}. {{ trans_choice('custom.arrangement', 1) }}
                     </button>
                     @can('update', $item)
-                    <a href="{{ route('admin.ogp.plan.arrangement.edit', ['id' => $item->id, 'ogpPlanArea' => $item->ogp_plan_area_id]) }}" class="btn btn-sm btn-info mr-1 float-end" title="Редакция">
-                        <i class="fas fa-edit"></i>
-                    </a>
+                        <a href="{{ route(($evaluationEdit ? 'admin.ogp.plan.arrangement.edit.evaluation' : 'admin.ogp.plan.arrangement.edit'), ['id' => $item->id, 'ogpPlanArea' => $item->ogp_plan_area_id]) }}" class="btn btn-sm btn-info mr-1 float-end" title="Редакция">
+                            <i class="fas fa-edit"></i>
+                        </a>
                     @endcan
                 </h2>
             </div>
@@ -18,16 +18,18 @@
         <div id="collapse{{ $iteration }}" class="collapse @if($iteration == 1) show @endif" aria-labelledby="heading{{ $iteration }}" data-parent="#accordionExample">
             <div class="card-body">
                @foreach(\App\Models\OgpPlanArrangement::TRANSLATABLE_FIELDS as $field)
-                    <div class="row mb-2">
-                        @foreach (config('available_languages') as $locale)
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="example">{{ __('validation.attributes.'.$field.'_'.$locale['code']) }}</label>
-                                    <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
+                   @if(!in_array($field, ['evaluation', 'evaluation_status']) || $evaluationEdit)
+                        <div class="row mb-2">
+                            @foreach (config('available_languages') as $locale)
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example">{{ __('validation.attributes.'.$field.'_'.$locale['code']) }}</label>
+                                        <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
+                    @endif
                 @endforeach
                 <div class="row mb-2">
                     <div class="col-md-6">

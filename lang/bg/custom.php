@@ -820,5 +820,7 @@ return [
     'proposal_votes_period' => 'Срок за подкрепа на предложението',
     'to_all_comments' => 'Виж всички коментари',
     'ogp_national_plans' => 'Национален план|Национални планове',
-    'StrategicDocument' => 'Стратегически документи'
+    'StrategicDocument' => 'Стратегически документи',
+    'evaluation' => 'Оценка',
+    'end_action_date' => 'Дата на приключване на дейността',
 ];

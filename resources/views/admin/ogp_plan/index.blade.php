@@ -106,12 +106,12 @@
                                             </a>
                                         @endcannot
                                         @can('update', $v)
-                                        <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
-                                           class="btn btn-sm btn-info"
-                                           data-toggle="tooltip"
-                                           title="{{__('custom.edit')}}">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
+                                            <a href="{{ route('admin.ogp.plan.edit', $v->id )}}"
+                                               class="btn btn-sm btn-info"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.edit')}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
                                         @endcan
                                         @can('delete', $v)
                                         <a href="javascript:;"

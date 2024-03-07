@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Enums\OgpStatusEnum;
 use App\Models\OgpPlan;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use function Clue\StreamFilter\fun;
 
@@ -55,7 +56,7 @@ class OgpPlanPolicy
      */
     public function update(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && ($ogpPlan->status->type != OgpStatusEnum::ACTIVE->value || Carbon::parse($ogpPlan->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d'));
     }
 
     /**

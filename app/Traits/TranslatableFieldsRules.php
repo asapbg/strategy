@@ -21,9 +21,11 @@ trait TranslatableFieldsRules
                 if(isset($properties['required_all_lang']) && !$properties['required_all_lang'] && !$mainLang) {
                     if (($key = array_search('required', $fieldRules)) !== false) {
                         if(empty(request()->input($fieldName))){
-                            $fieldRules = [];
-                        } else{
-                            unset($fieldRules[$key]);
+                            foreach ($fieldRules as $i => $r){
+                                if($r == 'required'){
+                                    $fieldRules[$i] = 'nullable';
+                                }
+                            }
                         }
                     }
                 }
@@ -33,7 +35,6 @@ trait TranslatableFieldsRules
                 }
             }
         }
-
         return $rules;
     }
 }

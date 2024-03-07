@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin\Ogp;
 
 use App\Enums\DocTypesEnum;
+use App\Enums\OgpStatusEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\OgpPlanArrangementEvaluationRequest;
 use App\Http\Requests\OgpPlanArrangementRequest;
 use App\Http\Requests\OgpPlanRequest;
 use App\Models\File;
@@ -49,18 +51,23 @@ class Plans extends AdminController
 
     public function edit(Request $request, $id = 0): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
+        $evaluationEdit = false;
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
 
         if($request->user()->cannot($id ? 'update' : 'create', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        if($id && Carbon::parse($item->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
+            && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
+            $evaluationEdit = true;
+        }
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
         $ogpArea = OgpArea::Active()->get();
         $areas = $item->areas;
 
-        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas'));
+        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit'));
     }
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
@@ -186,7 +193,13 @@ class Plans extends AdminController
 
         $item = $id ? OgpPlanArrangement::findOrFail($id) : new OgpPlanArrangement();
 
-        return $this->view('admin.ogp_plan.new_arrangement', compact('ogpPlanArea', 'translatableFields', 'item'));
+        $onlyEvaluationEdit = false;
+        if(Carbon::parse($ogpPlanArea->plan->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
+            && $ogpPlanArea->plan->status->type == OgpStatusEnum::ACTIVE->value ) {
+            $onlyEvaluationEdit = true;
+        }
+
+        return $this->view('admin.ogp_plan.new_arrangement', compact('ogpPlanArea', 'translatableFields', 'item', 'onlyEvaluationEdit'));
     }
 
     /**
@@ -221,6 +234,38 @@ class Plans extends AdminController
             $fillable = $this->getFillableValidated($validated, $opa);
             $opa->fill($fillable);
             $opa->save();
+            $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);
+
+            DB::commit();
+            return redirect( route('admin.ogp.plan.edit', $ogpPlanArea->ogp_plan_id). '#area-tab-'. $ogpPlanArea->id)
+                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function editArrangementEvaluation(Request $request, OgpPlanArea $ogpPlanArea, $id): \Illuminate\View\View
+    {
+        $translatableFields = \App\Models\OgpPlanArrangement::translationFieldsProperties();
+        $item = $id ? OgpPlanArrangement::findOrFail($id) : new OgpPlanArrangement();
+
+        return $this->view('admin.ogp_plan.arrangement_evaluation', compact('ogpPlanArea', 'translatableFields', 'item'));
+    }
+
+    public function editArrangementEvaluationStore(OgpPlanArrangementEvaluationRequest $request, OgpPlanArea $ogpPlanArea): \Illuminate\Http\RedirectResponse
+    {
+        $validated = $request->validated();
+
+        if($request->user()->cannot('update', $ogpPlanArea->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        $id = (int)$validated['id'];
+        DB::beginTransaction();
+
+        try {
+            $opa = OgpPlanArrangement::find($id);
             $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);
 
             DB::commit();
