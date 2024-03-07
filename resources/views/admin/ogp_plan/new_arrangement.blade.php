@@ -270,6 +270,51 @@
                     });
                 }
             });
+
+            $('.delete-arrangement-action').on('click', function (){
+                if( canAjax ) {
+                    canAjax = false;
+                    $('.ajax-error').html('');
+                    $('#main_error').html('');
+                    $('#main_success').html('');
+                    let row = $('#action-' + $(this).data('action'));
+                    let action = $(this).data('action');
+                    var formData = new FormData();
+                    formData.append('id', $('#id-' + action).val());
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        url: "<?php echo route('admin.ogp.plan.action.delete'); ?>",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            if(typeof result.errors != 'undefined'){
+                                let errors = Object.entries(result.errors);
+                                for (let i = 0; i < errors.length; i++) {
+                                    const search_class = '.error_' + errors[i][0];
+                                    $($(row).find(search_class)[0]).html(errors[i][1][0]);
+                                }
+                                canAjax = true;
+                            } else if(typeof result.main_error != 'undefined'){
+                                alert(result.main_error);
+                                $('#main_error').html(result.main_error);
+                                canAjax = true;
+                            } else{
+                                $('#main_success').html(result.message);
+                                row.remove();
+                                canAjax = true;
+                            }
+
+                        },
+                        error: function (result) {
+                            canAjax = true;
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush

@@ -98,4 +98,37 @@ class OgpPlanArrangementActionController extends AdminController
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
+
+    public function destroy(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric'],
+        ]);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
+        $item = OgpPlanArrangementAction::find((int)$validated['id']);
+        if(!$item){
+            return response()->json(['main_error' => __('messages.records_not_found')], 200);
+        }
+
+        if($request->user()->cannot('update', $item->arrangement->ogpPlanArea->plan)) {
+            return response()->json(['main_error' => __('messages.unauthorized')], 200);
+        }
+
+        DB::beginTransaction();
+        try {
+            $item->delete();
+
+            DB::commit();
+            return response()->json(['message' => __('custom.the_record'). ' ' .__('messages.deleted_successfully_m')], 200);
+
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
 }
