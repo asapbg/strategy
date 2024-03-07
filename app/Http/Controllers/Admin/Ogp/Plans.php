@@ -80,21 +80,25 @@ class Plans extends AdminController
         try {
             if(dateBetween($validated['from_date'], $validated['to_date'])){
                 $validated['ogp_status_id'] = OgpStatus::ActiveStatus()->first()->id;
-                $route = route('admin.ogp.plan.index');
             } elseif(dateAfter($validated['from_date'])) {
                 $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
-                $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
             }
 
             if(!$id) {
                 $item->author_id = $request->user()->id;
             }
 
-            $fillable = $this->getFillableValidated($validated, $item);
             $validated['national_plan'] = 1;
+            $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
+
+            if(dateBetween($validated['from_date'], $validated['to_date'])){
+                $route = route('admin.ogp.plan.index');
+            } elseif(dateAfter($validated['from_date'])) {
+                $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
+            }
 
             //add new area
             if(isset($validated['ogp_area']) && $validated['ogp_area']){
@@ -149,7 +153,7 @@ class Plans extends AdminController
         ]);
 
         if ($validator->fails()) {
-            return to_route('admin.ogp.plan.edit', $plan->id)
+            return to_route('admin.ogp.plan.edit', ['id' => $plan->id])
                 ->withErrors($validator)
                 ->withInput();;
         }

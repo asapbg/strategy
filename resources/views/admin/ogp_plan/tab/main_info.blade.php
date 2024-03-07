@@ -42,7 +42,7 @@
                         <label class="col-sm-12 control-label" for="from_date">{{ __('custom.from_date') }} <span class="required">*</span></label>
                         <div class="col-12">
                             <div class="input-group">
-                                <input type="text" id="from_date" name="from_date" class="form-control form-control-sm datepicker @error('from_date'){{ 'is-invalid' }}@enderror" value="{{ old('to_date', displayDate($item->from_date) ?? '') }}" autocomplete="off">
+                                <input type="text" id="from_date" name="from_date" class="form-control form-control-sm datepicker @error('from_date'){{ 'is-invalid' }}@enderror" value="{{ old('from_date', displayDate($item->from_date) ?? '') }}" autocomplete="off">
                                 <span class="input-group-text" id="basic-addon2"><i class="fas fa-solid fa-calendar"></i></span>
                             </div>
                             @error('from_date')
