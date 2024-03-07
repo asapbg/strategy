@@ -8,9 +8,16 @@
                         {{ $iteration }}. {{ trans_choice('custom.arrangement', 1) }}
                     </button>
                     @can('update', $item)
-                        <a href="{{ route(($evaluationEdit ? 'admin.ogp.plan.arrangement.edit.evaluation' : 'admin.ogp.plan.arrangement.edit'), ['id' => $item->id, 'ogpPlanArea' => $item->ogp_plan_area_id]) }}" class="btn btn-sm btn-info mr-1 float-end" title="Редакция">
-                            <i class="fas fa-edit"></i>
-                        </a>
+                        @if($evaluationEdit)
+                            <a href="{{ route('admin.ogp.plan.arrangement.edit.evaluation', ['id' => $item->id, 'ogpPlanArea' => $item->ogp_plan_area_id]) }}" class="btn btn-sm btn-info mr-1 float-end" title="Редакция">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        @endif
+                        @if(!$disableEdit)
+                                <a href="{{ route('admin.ogp.plan.arrangement.edit', ['id' => $item->id, 'ogpPlanArea' => $item->ogp_plan_area_id]) }}" class="btn btn-sm btn-info mr-1 float-end" title="Редакция">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                        @endif
                     @endcan
                 </h2>
             </div>
@@ -45,7 +52,31 @@
                         </div>
                     </div>
                 </div>
-
+                   @if($item->actions->count())
+                       <table class="table">
+                           <thead>
+                                <tr>
+                                    <th colspan="4">Дейности за и измерими резултати от изпълнението на мярката</th>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('validation.attributes.new_name_bg') }}</th>
+                                    <th>{{ __('validation.attributes.new_name_en') }}</th>
+                                    <th>{{ __('validation.attributes.new_from_date') }}</th>
+                                    <th>{{ __('validation.attributes.new_to_date') }}</th>
+                                </tr>
+                           </thead>
+                           <tbody>
+                           @foreach($item->actions as $k => $action)
+                               <tr id="action-{{ $action->id }}">
+                                   <td>{{ $action->translate('bg')->name }}</td>
+                                   <td>{{ $action->translate('en')->name }}</td>
+                                   <td>{{ $action->from_date }}</td>
+                                   <td>{{ $action->to_date }}</td>
+                               </tr>
+                           @endforeach
+                           </tbody>
+                       </table>
+                   @endif
             </div>
         </div>
 {{--    </div>--}}

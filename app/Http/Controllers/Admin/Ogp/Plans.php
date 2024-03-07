@@ -52,6 +52,7 @@ class Plans extends AdminController
     public function edit(Request $request, $id = 0): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         $evaluationEdit = false;
+        $mainInfoEdit = true;
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
 
         if($request->user()->cannot($id ? 'update' : 'create', $item)) {
@@ -62,12 +63,16 @@ class Plans extends AdminController
             && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
             $evaluationEdit = true;
         }
+
+        if($id && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
+            $mainInfoEdit = false;
+        }
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
         $ogpArea = OgpArea::Active()->get();
         $areas = $item->areas;
 
-        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit'));
+        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit', 'mainInfoEdit'));
     }
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
@@ -80,20 +85,65 @@ class Plans extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        //Edit only status
+        if(isset($validated['save_status'])){
+            if($id && isset($validated['status']) && $validated['status'] == OgpStatusEnum::ACTIVE->value
+                && !dateBetween($item->from_date, $item->to_date)) {
+                return back()->withInput()->with('warning', 'Планът не може да бъде \'Действащ\' извън срокът му на действие');
+            }
+
+            if($id && isset($validated['status']) && $validated['status'] == OgpStatusEnum::DRAFT->value
+                && Carbon::parse($item->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                return back()->withInput()->with('warning', 'Планът не може да бъде върнат в режим \'Чернова\'');
+            }
+            DB::beginTransaction();
+
+            try {
+                $item->ogp_status_id = $validated['status'];
+                $item->save();
+
+                DB::commit();
+                return redirect(route('admin.ogp.plan.edit', ['id' => $item->id]))
+                    ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+            } catch (\Exception $e) {
+                Log::error($e);
+                DB::rollBack();
+                return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            }
+
+        }
+
+        //Edit full main info
+        if($id && isset($validated['status']) && $validated['status'] == OgpStatusEnum::ACTIVE->value
+            && !dateBetween($validated['from_date'], $validated['to_date'])) {
+            return back()->withInput()->with('warning', 'Планът не може да бъде \'Действащ\' извън срокът му на действие');
+        }
+
+        if($id && isset($validated['status']) && $validated['status'] == OgpStatusEnum::DRAFT->value
+            && Carbon::parse($validated['to_date'])->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+            return back()->withInput()->with('warning', 'Планът не може да бъде върнат в режим \'Чернова\'');
+        }
+
         //TODO validate dates by Arrangement and other plans
 
         DB::beginTransaction();
 
         try {
-            if(dateBetween($validated['from_date'], $validated['to_date'])){
-                $validated['ogp_status_id'] = OgpStatus::ActiveStatus()->first()->id;
-            } elseif(dateAfter($validated['from_date'])) {
-                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
-            }
+            $validated['ogp_status_id'] = $validated['status'];
+//            if(dateBetween($validated['from_date'], $validated['to_date'])){
+//                $validated['ogp_status_id'] = OgpStatus::ActiveStatus()->first()->id;
+//            } elseif(dateAfter($validated['from_date'])) {
+//                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+//            }
 
-            if(!$id) {
-                $item->author_id = $request->user()->id;
-            }
+//            if($id && dateAfter($validated['from_date'])){
+//                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+//            }
+//
+//            if(!$id) {
+//                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
+//                $item->author_id = $request->user()->id;
+//            }
 
             $validated['national_plan'] = 1;
             $fillable = $this->getFillableValidated($validated, $item);

@@ -56,7 +56,8 @@ class OgpPlanPolicy
      */
     public function update(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && ($ogpPlan->status->type != OgpStatusEnum::ACTIVE->value || Carbon::parse($ogpPlan->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d'));
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan;
+            //&& ($ogpPlan->status->type != OgpStatusEnum::ACTIVE->value || Carbon::parse($ogpPlan->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d'));
     }
 
     /**

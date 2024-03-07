@@ -30,14 +30,27 @@ class OgpPlanRequest extends FormRequest
     {
         $id = $this->request->get('id', 0);
 
-        $rules = [
-            'from_date' => ['required', 'date', 'before:to_date'],
-            'to_date' => ['required', 'date'],
-            'active' => ['required', 'numeric'],
-            'ogp_status_id' => ['nullable', 'numeric'],
-            'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
-        ];
+        if(request()->get('save_status')){
 
-        return $this->getRules($rules, OgpPlan::translationFieldsProperties());
+            $rules = [
+                'save_status' => ['nullable', 'numeric'],
+                'status' => ['nullable', 'numeric'],
+                'ogp_status_id' => ['nullable', 'numeric'],
+            ];
+            return $rules;
+
+        } else {
+
+            $rules = [
+                'from_date' => ['required', 'date', 'before:to_date'],
+                'to_date' => ['required', 'date'],
+                'active' => ['required', 'numeric'],
+                'status' => ['nullable', 'numeric'],
+                'ogp_status_id' => ['nullable', 'numeric'],
+                'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
+            ];
+            return $this->getRules($rules, OgpPlan::translationFieldsProperties());
+
+        }
     }
 }

@@ -79,10 +79,10 @@
                         <label class="col-sm-12 control-label" for="status">{{ __('custom.status') }} <span class="required">*</span></label>
                         <div class="col-12">
                             <div class="input-group">
-                                <select @if($disabled) disabled readonly @endif id="status" name="status" class="form-control form-control-sm @error('status'){{ 'is-invalid' }}@enderror">
+                                <select @if($disabled && $evaluationEdit) disabled readonly @endif id="status" name="status" class="form-control form-control-sm @error('status'){{ 'is-invalid' }}@enderror">
                                     <option></option>
                                     @foreach(\App\Models\OgpStatus::get() as $v)
-                                        @if($v->id == $item->ogp_status_id)
+                                        @if(in_array($v->type, [\App\Enums\OgpStatusEnum::ACTIVE->value, \App\Enums\OgpStatusEnum::DRAFT->value]))
                                             <option value="{{ $v->id }}" @if(old('status', $item->ogp_status_id ?? '') == $v->id) selected="selected" @endif>{{ $v->name }}</option>
                                         @endif
                                     @endforeach
@@ -97,8 +97,11 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
+                    @if($disabled && !$evaluationEdit)
+                        <button id="save_status" type="submit" name="save_status" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
+                    @endif
                     @if(!$disabled)
-                        <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                        <button id="save" type="submit" name="save" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
                     @endif
                     <a href="{{ route('admin.ogp.plan.index') }}"
                        class="btn btn-primary">{{ __('custom.cancel') }}</a>

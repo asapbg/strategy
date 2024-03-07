@@ -80,10 +80,10 @@ class NationalActionPlans extends Controller
      * @param OgpPlanArea $area
      * @return View
      */
-    public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
-    {
-        return $this->view('site.ogp.plan_area_show', compact('plan', 'planArea'));
-    }
+//    public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
+//    {
+//        return $this->view('site.ogp.plan_area_show', compact('plan', 'planArea'));
+//    }
 
     /**
      * @param $item

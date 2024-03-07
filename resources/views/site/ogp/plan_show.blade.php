@@ -87,33 +87,99 @@
 {{--                                                    </div>--}}
 {{--                                                </div>--}}
 {{--                                                @foreach($row->arrangements as $a)--}}
-                                                    <p>
-                                                        <strong>{{ trans_choice('custom.arrangement', 1) }}</strong> {{ $a->name }}
-                                                    </p>
-                                                    {!! $a->content !!}
-                                                    @if($a->npo_partner)
-                                                    <p>
-                                                        <strong>{{ __('ogp.npo_partner') }}</strong> {{ $a->npo_partner }}
-                                                    </p>
-                                                    @endif
-                                                    @if($a->responsible_administration)
-                                                    <p>
-                                                        <strong>{{ __('ogp.responsible_administration') }}</strong> {{ $a->responsible_administration }}
-                                                    </p>
-                                                    @endif
-                                                    <p>
-                                                        <strong>{{ __('ogp.deadline') }}:</strong>
-                                                        @if(is_null($a->from_date) && is_null($a->to_date))
-                                                            {{ __('ogp.unlimited') }}
-                                                        @else
-                                                            @if(!is_null($a->from_date))
-                                                                {{ displayDate($a->from_date) }}
-                                                            @endif
-                                                            @if(!is_null($a->to_date))
-                                                                @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
-                                                            @endif
+                                                <hr class="custom-hr mb-2">
+                                                <h3 class="fs-18">{{ __('ogp.ogp_plan_arrangement_description') }}</h3>
+                                                <hr class="custom-hr mb-2">
+                                                <p>
+                                                    <strong>{{ trans_choice('custom.arrangement', 1) }}:</strong> {{ $a->name }}
+                                                </p>
+                                                <p>
+                                                    <strong>{{ __('ogp.deadline') }}:</strong>
+                                                    @if(is_null($a->from_date) && is_null($a->to_date))
+                                                        {{ __('ogp.unlimited') }}
+                                                    @else
+                                                        @if(!is_null($a->from_date))
+                                                            {{ displayDate($a->from_date) }}
                                                         @endif
+                                                        @if(!is_null($a->to_date))
+                                                            @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
+                                                        @endif
+                                                    @endif
+                                                </p>
+                                                @if($a->responsible_administration)
+                                                    <p>
+                                                        <strong>{{ __('ogp.responsible_administration') }}</strong> {!! $a->responsible_administration !!}
                                                     </p>
+                                                @endif
+                                                @if($a->problem)
+                                                    <p>
+                                                        <strong>{{ __('ogp.problem') }}</strong> {!! $a->problem !!}
+                                                    </p>
+                                                @endif
+                                                @if($a->content)
+                                                    <p>
+                                                        <strong>{{ __('ogp.action_content') }}</strong> {!! $a->content !!}
+                                                    </p>
+                                                @endif
+                                                @if($a->solving_problem)
+                                                    <p>
+                                                        <strong>{{ __('ogp.solving_problem') }}</strong> {!! $a->solving_problem !!}
+                                                    </p>
+                                                @endif
+                                                @if($a->values_initiative)
+                                                    <p>
+                                                        <strong>{{ __('ogp.values_initiative') }}</strong> {!! $a->values_initiative !!}
+                                                    </p>
+                                                @endif
+                                                @if($a->extra_info)
+                                                    <p>
+                                                        <strong>{{ __('ogp.extra_info') }}</strong> {!! $a->extra_info !!}
+                                                    </p>
+                                                @endif
+
+                                                @if($a->actions->count())
+                                                    <hr class="custom-hr mb-2 mt-5">
+                                                    <h3 class="fs-18">{{ __('ogp.ogp_plan_actions') }}</h3>
+                                                    <hr class="custom-hr mb-2">
+                                                    @foreach($a->actions as $action)
+                                                        <p>
+                                                            <strong>{{ $action->name }}</strong> {{ $action->from_date }} - {{ $action->to_date }}
+                                                        </p>
+                                                    @endforeach
+                                                    <hr class="custom-hr mb-2 mt-5">
+                                                @endif
+
+                                                @if($a->npo_partner)
+                                                    <p>
+                                                        <strong>{{ __('ogp.npo_partner') }}</strong> {!! $a->npo_partner !!}
+                                                    </p>
+                                                @endif
+                                                @if($a->interested_org)
+                                                    <p>
+                                                        <strong>{{ __('ogp.interested_org') }}</strong> {!! $a->interested_org !!}
+                                                    </p>
+                                                @endif
+
+                                                @if($a->contact_names || $a->contact_positions || $a->contact_phone_email)
+                                                    <hr class="custom-hr mb-2 mt-5">
+                                                    <h3 class="fs-18">{{ __('ogp.ogp_plan_contacts') }}</h3>
+                                                    <hr class="custom-hr mb-2">
+                                                    @if($a->contact_names)
+                                                        <p>
+                                                            <strong>{{ __('ogp.contact_names') }}</strong> {!! $a->contact_names !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->contact_positions)
+                                                        <p>
+                                                            <strong>{{ __('ogp.contact_positions') }}</strong> {!! $a->contact_positions !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->contact_phone_email)
+                                                        <p>
+                                                            <strong>{{ __('ogp.contact_phone_email') }}</strong> {!! $a->contact_phone_email !!}
+                                                        </p>
+                                                    @endif
+                                                @endif
 {{--                                                @endforeach--}}
                                             </div>
                                         </div>

@@ -32,7 +32,15 @@ class OgpPlanArrangementRequest extends FormRequest
             'from_date' => ['required', 'date', 'before:to_date'],
             'to_date' => ['required', 'date'],
         ];
-        return $this->getRules($rules, OgpPlanArrangement::translationFieldsProperties());
+
+        $translatableFields = [];
+        $translatable = OgpPlanArrangement::translationFieldsProperties();
+        foreach ($translatable as $k => $t) {
+            if(!in_array($k, ['evaluation', 'evaluation_status'])){
+                $translatableFields[$k] = $t;
+            }
+        }
+        return $this->getRules($rules, $translatableFields);
 
     }
 }

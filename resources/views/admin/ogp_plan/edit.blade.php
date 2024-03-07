@@ -22,7 +22,7 @@
             <div class="card-body">
                 <div class="tab-content" id="custom-tabsContent">
                     <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
-                        @include('admin.ogp_plan.tab.main_info', ['disabled' => $evaluationEdit])
+                        @include('admin.ogp_plan.tab.main_info', ['disabled' => !$mainInfoEdit])
                     </div>
                     @foreach($areas as $rows)
                     <div class="tab-pane fade" id="area-tab-{{ $rows->id }}" role="tabpanel" aria-labelledby="area-tab-{{ $rows->id }}-tab">
@@ -38,7 +38,7 @@
 
                         <div class="accordion" id="accordionExample">
                         @foreach($rows->arrangements()->orderBy('created_at', 'desc')->get() as $arrangement)
-                            @include('admin.ogp_plan.arrangement_row', ['item' => $arrangement, 'iteration' => $loop->iteration, 'evaluationEdit' => $evaluationEdit])
+                            @include('admin.ogp_plan.arrangement_row', ['item' => $arrangement, 'iteration' => $loop->iteration, 'evaluationEdit' => $evaluationEdit, 'disableEdit' => !$mainInfoEdit])
                         @endforeach
                         </div>
                     </div>

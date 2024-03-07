@@ -30,7 +30,7 @@
                                             @include('admin.partial.edit_field_translate', ['field' => 'problem', 'required' => false])
                                         </div>
                                         <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => false])
+                                            @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
                                         </div>
                                         <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'solving_problem', 'required' => false])
@@ -71,7 +71,7 @@
                                         <div class="row mb-4">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="from_date">{{ __('custom.from_date') }}</label>
+                                                    <label class="col-sm-12 control-label" for="from_date">{{ __('custom.from_date') }} <span class="required">*</span></label>
                                                     <div class="col-12">
                                                         <div class="input-group">
                                                             <input type="text" id="from_date" name="from_date" class="form-control form-control-sm datepicker @error('from_date'){{ 'is-invalid' }}@enderror" value="{{ old('from_date', $item && $item->id ? displayDate($item->from_date) : '') }}" autocomplete="off">
@@ -85,7 +85,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="to_date">{{ __('custom.to_date') }}</label>
+                                                    <label class="col-sm-12 control-label" for="to_date">{{ __('custom.to_date') }} <span class="required">*</span></label>
                                                     <div class="col-12">
                                                         <div class="input-group">
                                                             <input type="text" id="to_date" name="to_date" class="form-control form-control-sm datepicker @error('to_date'){{ 'is-invalid' }}@enderror" value="{{ old('to_date', $item && $item->id ? displayDate($item->to_date) : '') }}" autocomplete="off">
