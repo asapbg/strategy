@@ -170,18 +170,33 @@
                         @if($item->actions->count())
                             <table class="table">
                                 <tbody>
+                                    <tr>
+                                        <td colspan="5">
+                                            <div id="main_error" class="text-danger"></div>
+                                            <div id="main_success" class="text-success"></div>
+                                        </td>
+                                    </tr>
                                     @foreach($item->actions as $k => $action)
                                         <tr id="action-{{ $action->id }}">
                                             <td>
-                                                <input type="text" name="name" class="form-control form-control-sm " value="{{ old('name', $action->name) }}" autocomplete="off">
-                                                <div class="ajax-error error_name text-danger mt-1 "></div>
+                                                <label class="col-sm-12 control-label" for="name_bg">{{ __('validation.attributes.name_bg') }} <span class="required">*</span> </label>
+                                                <input type="hidden" id="id-{{ $action->id }}" name="id" class="form-control form-control-sm " value="{{ old('id', $action->id) }}" autocomplete="off">
+                                                <input type="text" id="name_bg-{{ $action->id }}" name="name_bg" class="form-control form-control-sm " value="{{ old('name_bg', $action->translate('bg')->name) }}" autocomplete="off">
+                                                <div class="ajax-error error_name_bg text-danger mt-1 "></div>
+                                            </td>
+                                            <td>
+                                                <label class="col-sm-12 control-label" for="name_en">{{ __('validation.attributes.name_en') }} <span class="required">*</span> </label>
+                                                <input type="text" id="name_en-{{ $action->id }}" name="name_en" class="form-control form-control-sm " value="{{ old('name_en', $action->translate('en')->name) }}" autocomplete="off">
+                                                <div class="ajax-error error_name_en text-danger mt-1 "></div>
                                             </td>
                                             <td >
-                                                <input type="text" name="from_date" class="form-control form-control-sm datepicker " value="{{ old('from_date', $action->from_date) }}" autocomplete="off">
+                                                <label class="col-sm-12 control-label" for="from_date">{{ __('validation.attributes.from_date') }} <span class="required">*</span> </label>
+                                                <input type="text" id="from_date-{{ $action->id }}" name="from_date" class="form-control form-control-sm datepicker " value="{{ old('from_date', $action->from_date) }}" autocomplete="off">
                                                 <div class="ajax-error error_from_date text-danger mt-1 "></div>
                                             </td>
                                             <td>
-                                                <input type="text" name="to_date" class="form-control form-control-sm datepicker" value="{{ old('to_date', $action->to_date) }}" autocomplete="off">
+                                                <label class="col-sm-12 control-label" for="to_date">{{ __('validation.attributes.to_date') }} <span class="required">*</span> </label>
+                                                <input type="text" id="to_date-{{ $action->id }}" name="to_date" class="form-control form-control-sm datepicker" value="{{ old('to_date', $action->to_date) }}" autocomplete="off">
                                                 <div class="ajax-error error_to_date text-danger mt-1 "></div>
                                             </td>
                                             <td>
@@ -206,7 +221,57 @@
 @endsection
 
 @push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.save-arrangement-action').on('click', function (){
+                if( canAjax ) {
+                    canAjax = false;
+                    $('.ajax-error').html('');
+                    $('#main_error').html('');
+                    $('#main_success').html('');
+                    let row = $('#action-' + $(this).data('action'));
+                    let action = $(this).data('action');
+                    var formData = new FormData();
+                    formData.append('id', $('#id-' + action).val());
+                    formData.append('name_bg', $('#name_bg-' + action).val());
+                    formData.append('name_en', $('#name_en-' + action).val());
+                    formData.append('from_date', $('#from_date-' + action).val());
+                    formData.append('to_date', $('#to_date-' + action).val());
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        url: "<?php echo route('admin.ogp.plan.action.store_ajax'); ?>",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            if(typeof result.errors != 'undefined'){
+                                let errors = Object.entries(result.errors);
+                                for (let i = 0; i < errors.length; i++) {
+                                    const search_class = '.error_' + errors[i][0];
+                                    $($(row).find(search_class)[0]).html(errors[i][1][0]);
+                                }
+                                canAjax = true;
+                            } else if(typeof result.main_error != 'undefined'){
+                                alert(result.main_error);
+                                $('#main_error').html(result.main_error);
+                                canAjax = true;
+                            } else{
+                                $('#main_success').html(result.message);
+                                canAjax = true;
+                            }
 
+                        },
+                        error: function (result) {
+                            canAjax = true;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endpush
 
 

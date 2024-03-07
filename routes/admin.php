@@ -639,6 +639,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\Ogp\OgpPlanArrangementActionController::class)->prefix('/ogp/plan/actions')->group(function () {
         Route::post('edit/store', 'store')->name('ogp.plan.action.store');
+        Route::post('ajax/edit/store', 'update')->name('ogp.plan.action.store_ajax');
         Route::post('delete/{action}', 'destroy')->name('ogp.plan.action.delete');
     });
 
