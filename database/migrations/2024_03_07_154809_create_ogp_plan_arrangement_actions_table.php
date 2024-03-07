@@ -27,9 +27,9 @@ return new class extends Migration
             $table->string('locale')->index();
             $table->unsignedInteger('ogp_plan_arrangement_action_id');
             $table->unique(['ogp_plan_arrangement_action_id', 'locale']);
-            $table->foreign('ogp_plan_arrangement_action_id')
-                ->references('id')
-                ->on('ogp_plan_arrangement_action');
+//            $table->foreign('ogp_plan_arrangement_action_id')
+//                ->references('id')
+//                ->on('ogp_plan_arrangement_action');
 
             $table->string('name');
         });
