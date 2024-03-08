@@ -64,130 +64,189 @@
 
         <div class="row mb-4">
             <div class="col-md-12">
+                <h4 class="custom-left-border mb-3">{{ trans_choice('ogp.arrangements', 2) }}</h4>
                 <div class="accordion" id="accordionExample">
                     @foreach($plan->areas as $row)
-                    <div class="accordion-item mb-2">
-                        <h2 class="accordion-header" id="heading_{{ $loop->iteration }}">
-                            <button class="accordion-button text-dark fs-18 fw-600" type="button"
-                                    data-toggle="collapse" data-target="#collapse-{{ $loop->iteration }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
-                                    aria-controls="collapse-{{ $loop->iteration }}">
-                                {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse", "show" => $loop->first])
-                             aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample" style="">
-                            @foreach($row->arrangements as $a)
-                                <div class="accordion-body">
-                                    <div class="custom-card p-3 mb-2 pb-0">
-                                        <div class="row ">
-                                            <div class="document-info-body">
-{{--                                                <div class="row mb-3">--}}
-{{--                                                    <div class="col-m-12">--}}
-{{--                                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $row->ogp_plan_id, 'planArea' => $row->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                @foreach($row->arrangements as $a)--}}
-                                                <hr class="custom-hr mb-2">
-                                                <h3 class="fs-18">{{ __('ogp.ogp_plan_arrangement_description') }}</h3>
-                                                <hr class="custom-hr mb-2">
-                                                <p>
-                                                    <strong>{{ trans_choice('custom.arrangement', 1) }}:</strong> {{ $a->name }}
-                                                </p>
-                                                <p>
-                                                    <strong>{{ __('ogp.deadline') }}:</strong>
-                                                    @if(is_null($a->from_date) && is_null($a->to_date))
-                                                        {{ __('ogp.unlimited') }}
-                                                    @else
-                                                        @if(!is_null($a->from_date))
-                                                            {{ displayDate($a->from_date) }}
-                                                        @endif
-                                                        @if(!is_null($a->to_date))
-                                                            @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
-                                                        @endif
-                                                    @endif
-                                                </p>
-                                                @if($a->responsible_administration)
-                                                    <p>
-                                                        <strong>{{ __('ogp.responsible_administration') }}</strong> {!! $a->responsible_administration !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->problem)
-                                                    <p>
-                                                        <strong>{{ __('ogp.problem') }}</strong> {!! $a->problem !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->content)
-                                                    <p>
-                                                        <strong>{{ __('ogp.action_content') }}</strong> {!! $a->content !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->solving_problem)
-                                                    <p>
-                                                        <strong>{{ __('ogp.solving_problem') }}</strong> {!! $a->solving_problem !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->values_initiative)
-                                                    <p>
-                                                        <strong>{{ __('ogp.values_initiative') }}</strong> {!! $a->values_initiative !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->extra_info)
-                                                    <p>
-                                                        <strong>{{ __('ogp.extra_info') }}</strong> {!! $a->extra_info !!}
-                                                    </p>
-                                                @endif
-
-                                                @if($a->actions->count())
-                                                    <hr class="custom-hr mb-2 mt-5">
-                                                    <h3 class="fs-18">{{ __('ogp.ogp_plan_actions') }}</h3>
+                        <div class="accordion-item mb-2">
+                            <h2 class="accordion-header" id="heading_{{ $loop->iteration }}">
+{{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
+                                <button class="accordion-button text-dark fs-18 fw-600" type="button"
+                                        data-toggle="collapse" data-target="#collapse-{{ $loop->iteration }}"
+                                        aria-controls="collapse-{{ $loop->iteration }}">
+                                    {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
+                                </button>
+                            </h2>
+{{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
+                            <div id="collapse-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
+                                 aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample" style="">
+                                @foreach($row->arrangements as $a)
+                                    <div class="accordion-body">
+                                        <div class="custom-card p-3 mb-2 pb-0">
+                                            <div class="row ">
+                                                <div class="document-info-body">
+    {{--                                                <div class="row mb-3">--}}
+    {{--                                                    <div class="col-m-12">--}}
+    {{--                                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $row->ogp_plan_id, 'planArea' => $row->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>--}}
+    {{--                                                    </div>--}}
+    {{--                                                </div>--}}
+    {{--                                                @foreach($row->arrangements as $a)--}}
                                                     <hr class="custom-hr mb-2">
-                                                    @foreach($a->actions as $action)
-                                                        <p>
-                                                            <strong>{{ $action->name }}</strong> {{ $action->from_date }} - {{ $action->to_date }}
-                                                        </p>
-                                                    @endforeach
-                                                    <hr class="custom-hr mb-2 mt-5">
-                                                @endif
-
-                                                @if($a->npo_partner)
-                                                    <p>
-                                                        <strong>{{ __('ogp.npo_partner') }}</strong> {!! $a->npo_partner !!}
-                                                    </p>
-                                                @endif
-                                                @if($a->interested_org)
-                                                    <p>
-                                                        <strong>{{ __('ogp.interested_org') }}</strong> {!! $a->interested_org !!}
-                                                    </p>
-                                                @endif
-
-                                                @if($a->contact_names || $a->contact_positions || $a->contact_phone_email)
-                                                    <hr class="custom-hr mb-2 mt-5">
-                                                    <h3 class="fs-18">{{ __('ogp.ogp_plan_contacts') }}</h3>
+                                                    <h3 class="fs-18">{{ __('ogp.ogp_plan_arrangement_description') }}</h3>
                                                     <hr class="custom-hr mb-2">
-                                                    @if($a->contact_names)
+                                                    <p>
+                                                        <strong>{{ trans_choice('custom.arrangement', 1) }}:</strong> {{ $a->name }}
+                                                    </p>
+                                                    <p>
+                                                        <strong>{{ __('ogp.deadline') }}:</strong>
+                                                        @if(is_null($a->from_date) && is_null($a->to_date))
+                                                            {{ __('ogp.unlimited') }}
+                                                        @else
+                                                            @if(!is_null($a->from_date))
+                                                                {{ displayDate($a->from_date) }}
+                                                            @endif
+                                                            @if(!is_null($a->to_date))
+                                                                @if(!is_null($a->from_date))- @endif {{ displayDate($a->to_date) }}
+                                                            @endif
+                                                        @endif
+                                                    </p>
+                                                    @if($a->responsible_administration)
                                                         <p>
-                                                            <strong>{{ __('ogp.contact_names') }}</strong> {!! $a->contact_names !!}
+                                                            <strong>{{ __('ogp.responsible_administration') }}:</strong> {!! $a->responsible_administration !!}
                                                         </p>
                                                     @endif
-                                                    @if($a->contact_positions)
+                                                    @if($a->problem)
                                                         <p>
-                                                            <strong>{{ __('ogp.contact_positions') }}</strong> {!! $a->contact_positions !!}
+                                                            <strong>{{ __('ogp.problem') }}:</strong> {!! $a->problem !!}
                                                         </p>
                                                     @endif
-                                                    @if($a->contact_phone_email)
+                                                    @if($a->content)
                                                         <p>
-                                                            <strong>{{ __('ogp.contact_phone_email') }}</strong> {!! $a->contact_phone_email !!}
+                                                            <strong>{{ __('ogp.action_content') }}:</strong> {!! $a->content !!}
                                                         </p>
                                                     @endif
-                                                @endif
-{{--                                                @endforeach--}}
+                                                    @if($a->solving_problem)
+                                                        <p>
+                                                            <strong>{{ __('ogp.solving_problem') }}:</strong> {!! $a->solving_problem !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->values_initiative)
+                                                        <p>
+                                                            <strong>{{ __('ogp.values_initiative') }}:</strong> {!! $a->values_initiative !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->extra_info)
+                                                        <p>
+                                                            <strong>{{ __('ogp.extra_info') }}:</strong> {!! $a->extra_info !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->npo_partner)
+                                                        <p>
+                                                            <strong>{{ __('ogp.npo_partner') }}:</strong> {!! $a->npo_partner !!}
+                                                        </p>
+                                                    @endif
+                                                    @if($a->interested_org)
+                                                        <p>
+                                                            <strong>{{ __('ogp.interested_org') }}:</strong> {!! $a->interested_org !!}
+                                                        </p>
+                                                    @endif
+
+                                                    @if($a->actions->count())
+                                                        <hr class="custom-hr mb-2 mt-5">
+                                                        <h3 class="fs-18">{{ __('ogp.ogp_plan_actions') }}</h3>
+                                                        <hr class="custom-hr mb-2">
+                                                        @foreach($a->actions as $action)
+                                                            <p>
+                                                                <strong>{{ $action->name }}</strong> {{ $action->from_date }} - {{ $action->to_date }}
+                                                            </p>
+                                                        @endforeach
+    {{--                                                    <hr class="custom-hr mb-2 mt-5">--}}
+                                                    @endif
+
+                                                    @if($a->contact_names || $a->contact_positions || $a->contact_phone_email)
+                                                        <hr class="custom-hr mb-2 mt-5">
+                                                        <h3 class="fs-18">{{ __('ogp.ogp_plan_contacts') }}</h3>
+                                                        <hr class="custom-hr mb-2">
+                                                        @if($a->contact_names)
+                                                            <p>
+                                                                <strong>{{ __('ogp.contact_names') }}:</strong> {!! $a->contact_names !!}
+                                                            </p>
+                                                        @endif
+                                                        @if($a->contact_positions)
+                                                            <p>
+                                                                <strong>{{ __('ogp.contact_positions') }}:</strong> {!! $a->contact_positions !!}
+                                                            </p>
+                                                        @endif
+                                                        @if($a->contact_phone_email)
+                                                            <p>
+                                                                <strong>{{ __('ogp.contact_phone_email') }}:</strong> {!! $a->contact_phone_email !!}
+                                                            </p>
+                                                        @endif
+                                                    @endif
+    {{--                                                @endforeach--}}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h4 class="custom-left-border mb-3">{{ __('ogp.national_plan_evaluation_section') }}</h4>
+                <div class="accordion" id="accordionExampleEvaluation">
+                    @foreach($plan->areas as $row)
+                        @php($hasEvaluation = false)
+                        @php($uniqueEvaluation = $row->arrangements->unique('evaluation')->pluck('evaluation')->toArray())
+                        @php($uniqueEvaluationStatus = $row->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())
+                            <div class="accordion-item mb-2">
+                                <h2 class="accordion-header" id="heading_evaluation_{{ $loop->iteration }}">
+    {{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
+                                    <button class="accordion-button text-dark fs-18 fw-600" type="button"
+                                            data-toggle="collapse" data-target="#collapse-evaluation-{{ $loop->iteration }}"
+                                            aria-controls="collapse-{{ $loop->iteration }}">
+                                        {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
+                                    </button>
+                                </h2>
+    {{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
+                                <div id="collapse-evaluation-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
+                                aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">
+                                    @if($row->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))
+                                        @php($hasEvaluation = true)
+                                        @foreach($row->arrangements as $a)
+                                            <div class="accordion-body">
+                                                <div class="custom-card p-3 mb-2 pb-0">
+                                                    <div class="row ">
+                                                        <div class="document-info-body">
+                                                            <hr class="custom-hr mb-2">
+                                                            <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $a->name }}</h3>
+                                                            <hr class="custom-hr mb-2">
+                                                            @if($a->evaluation)
+                                                                <p>
+                                                                    <strong>{{ __('ogp.evaluation') }}:</strong> {!! $a->evaluation !!}
+                                                                </p>
+                                                            @endif
+                                                            @if($a->evaluation_status)
+                                                                <p>
+                                                                    <strong>{{ __('custom.status') }}:</strong> {!! $a->evaluation_status !!}
+                                                                </p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                    @if(!$hasEvaluation)
+                                        <div class="col-12 ps-3 my-2">{{ __('ogp.no_evaluation_found') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+{{--                        @endif--}}
                     @endforeach
                 </div>
             </div>

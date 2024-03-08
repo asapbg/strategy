@@ -64,6 +64,9 @@ return [
     'ogp_plan_actions' => 'Дейности за и измерими резултати от изпълнението на мярката',
     'ogp_plan_contacts' => 'Контактна информация',
     'ogp_plan_arrangement_description' => 'Описание на мярката',
+    'national_plan_evaluation_section' => 'Оценка за изпълнението на плановете за действие - мониторинг',
+    'evaluation' => 'Самооценка на администрацията',
+    'no_evaluation_found' => 'Все още няма публикувани оценки',
 
 
 ];
