@@ -3,6 +3,7 @@
 namespace App\View\Composers;
 
 use App\Enums\OgpStatusEnum;
+use App\Enums\OldNationalPlanEnum;
 use App\Enums\PageModulesEnum;
 use App\Models\OgpPlan;
 use App\Models\Page;
@@ -57,9 +58,9 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('library', $library);
 
             $nationalPlans = [
-                ['url' => '#', 'label' => 'Първи план'],
-                ['url' => '#', 'label' => 'Втори план'],
-                ['url' => '#', 'label' => 'Трети план'],
+                ['id' => OldNationalPlanEnum::FIRST->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::FIRST->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::FIRST->value)],
+                ['id' => OldNationalPlanEnum::SECOND->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value)],
+                ['id' => OldNationalPlanEnum::THIRD->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::THIRD->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::THIRD->value)],
             ];
             $nationalPlan = OgpPlan::Active()
                 ->National()

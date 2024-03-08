@@ -69,6 +69,42 @@
             </div>
         </div>
     @endforeach
+    @foreach($nationalOldPlans as $oldPlan)
+        <div class="row mb-4" id="ogp-plan-row-old-{{ $oldPlan['id'] }}">
+            <div class="col-md-12">
+                <div class="consul-wrapper">
+                    <div class="single-consultation d-flex">
+                        <div class="consult-img-holder p-2">
+                            <i class="bi bi-clipboard2-plus main-color"></i>
+                        </div>
+                        <div class="consult-body">
+                            <div class="consul-item">
+                                <div class="consult-item-header d-flex justify-content-between">
+                                    <div class="consult-item-header-link">
+                                        <a href="{{ $oldPlan['url'] }}" class="text-decoration-none" title="{{ $oldPlan['label'] }}">
+                                            <h3>{{ $oldPlan['label'] }}</h3>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="status mt-2">
+                                    <span>{{ __('custom.status') }}: <span class="{{ $oldPlanStatus->css_class }}">{{ $oldPlanStatus->name }}</span></span>
+                                </div>
+                                <div class="meta-consul mt-2">
+                                    <span class="text-secondary">
+                                    <span class="text-dark">{{ __('custom.deadline') }}: </span> {{ \App\Enums\OldNationalPlanEnum::fromDateByValue($oldPlan['id']) }} - {{ \App\Enums\OldNationalPlanEnum::toDateByValue($oldPlan['id']) }}
+                                    </span>
+                                    <a href="{{ $oldPlan['url'] }}" title="{{ $oldPlan['label'] }}">
+                                        <i class="fas fa-arrow-right read-more"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endif
 
 <div class="row">

@@ -823,4 +823,7 @@ return [
     'StrategicDocument' => 'Стратегически документи',
     'evaluation' => 'Оценка',
     'end_action_date' => 'Дата на приключване на дейността',
+    'old_pan_names.FIRST' => 'Първи план',
+    'old_pan_names.SECOND' => 'Втори план',
+    'old_pan_names.THIRD' => 'Трети план',
 ];

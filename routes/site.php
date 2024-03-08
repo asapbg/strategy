@@ -7,6 +7,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\OpenGovernmentPartnership;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('site.home');
@@ -190,6 +191,12 @@ Route::controller(DevelopNewActionPlan::class)->group(function () {
 Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(function () {
     Route::get('ogp/national-action-plans', 'index')->name('ogp.national_action_plans');
     Route::get('ogp/national-action-plans/{id}', 'show')->name('ogp.national_action_plans.show')->whereNumber('id');
+    Route::get('ogp/national-action-plans/old/{id}', 'showOld')->name('ogp.national_action_plans.show.old')->whereNumber('id');
+    Route::get('ogp/national-action-plans/old/file/download', function (){
+        return Storage::disk('public')->download(request()->get('file'));
+    })->name('ogp.national_action_plans.old.file');
     Route::get('ogp/national-action-plans/{id}/export', 'export')->name('ogp.national_action_plans.export')->whereNumber('id');
+//    Route::get('ogp/national-action-plans/{id}/export-old', 'exportOld')->name('ogp.national_action_plans.export.old')->whereNumber('id');
 //    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
 });
+
