@@ -69,6 +69,8 @@
             </div>
         </div>
     @endforeach
+@endif
+@if(isset($nationalOldPlans) && sizeof($nationalOldPlans))
     @foreach($nationalOldPlans as $oldPlan)
         <div class="row mb-4" id="ogp-plan-row-old-{{ $oldPlan['id'] }}">
             <div class="col-md-12">
@@ -91,9 +93,9 @@
                                     <span>{{ __('custom.status') }}: <span class="{{ $oldPlanStatus->css_class }}">{{ $oldPlanStatus->name }}</span></span>
                                 </div>
                                 <div class="meta-consul mt-2">
-                                    <span class="text-secondary">
-                                    <span class="text-dark">{{ __('custom.deadline') }}: </span> {{ \App\Enums\OldNationalPlanEnum::fromDateByValue($oldPlan['id']) }} - {{ \App\Enums\OldNationalPlanEnum::toDateByValue($oldPlan['id']) }}
-                                    </span>
+                                        <span class="text-secondary">
+                                        <span class="text-dark">{{ __('custom.deadline') }}: </span> {{ \App\Enums\OldNationalPlanEnum::fromDateByValue($oldPlan['id']) }} - {{ \App\Enums\OldNationalPlanEnum::toDateByValue($oldPlan['id']) }}
+                                        </span>
                                     <a href="{{ $oldPlan['url'] }}" title="{{ $oldPlan['label'] }}">
                                         <i class="fas fa-arrow-right read-more"></i>
                                     </a>
