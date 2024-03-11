@@ -20,9 +20,11 @@
     </div>
     <div id="collapse{{ $d->id }}" class="collapse" aria-labelledby="heading{{ $d->id }}" data-parent="#accordionExample" style="">
         <div class="card-body">
-            <div class="row @if(!empty($defaultTranslation[0]['description'])) mb-3 @endif">
+            <div class="row @if(isset($defaultTranslation[0]) && !empty($defaultTranslation[0]['description'])) mb-3 @endif">
                 <div class="col-12 mb-2">
-                    {!! html_entity_decode($defaultTranslation[0]['description']) !!}
+                    @if(isset($defaultTranslation[0]))
+                        {!! html_entity_decode($defaultTranslation[0]['description']) !!}
+                    @endif
                 </div>
             </div>
             <div class="row">
