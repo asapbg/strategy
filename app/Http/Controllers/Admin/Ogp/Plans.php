@@ -124,6 +124,10 @@ class Plans extends AdminController
             return back()->withInput()->with('warning', 'Планът не може да бъде върнат в режим \'Чернова\'');
         }
 
+        if(!$id) {
+            $validated['status'] = OgpStatus::Draft()->first()->id;
+        }
+
         //TODO validate dates by Arrangement and other plans
 
         DB::beginTransaction();
@@ -140,10 +144,10 @@ class Plans extends AdminController
 //                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
 //            }
 //
-//            if(!$id) {
+            if(!$id) {
 //                $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
-//                $item->author_id = $request->user()->id;
-//            }
+                $item->author_id = $request->user()->id;
+            }
 
             $validated['national_plan'] = 1;
             $fillable = $this->getFillableValidated($validated, $item);
@@ -154,6 +158,8 @@ class Plans extends AdminController
             if(dateBetween($validated['from_date'], $validated['to_date'])){
                 $route = route('admin.ogp.plan.index');
             } elseif(dateAfter($validated['from_date'])) {
+                $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
+            } else{
                 $route = route('admin.ogp.plan.edit', ['id' => $item->id]);
             }
 
