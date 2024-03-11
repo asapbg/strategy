@@ -49,7 +49,7 @@
                                     </li>
                                     <hr class="custom-hr">
                                     <li class="my-2">
-                                        <a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a>
+                                        <a href="{{ route('ogp.forum') }}" class="@if(str_contains(url()->current(),'forum')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ __('custom.ogp_forum') }}</a>
                                     </li>
                                     <hr class="custom-hr">
                                     @if(isset($library) && $library->count())

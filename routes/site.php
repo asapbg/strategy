@@ -175,6 +175,7 @@ Route::controller(OpenGovernmentPartnership::class)->group(function () {
     Route::get('ogp/news', 'news')->name('ogp.news');
     Route::get('ogp/events', 'events')->name('ogp.events');
     Route::get('ogp/news/{item}/details', 'newsDetails')->name('ogp.news.details');
+    Route::get('ogp/forum', 'forum')->name('ogp.forum');
 });
 
 Route::controller(DevelopNewActionPlan::class)->group(function () {

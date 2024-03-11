@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
+use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\CustomRole;
 use App\Models\Page;
@@ -154,6 +155,17 @@ class OpenGovernmentPartnership extends Controller
             ['name' => trans_choice('custom.events', 2), 'url' => '']
         ));
         return $this->view('site.ogp.events', compact('itemsCalendar', 'pageTitle'));
+    }
+
+    public function forum(Request $request)
+    {
+        $advBoardId = Setting::where('name', '=', Setting::OGP_ADV_BOARD_FORUM)->first();
+        $item = !empty($advBoardId->value) ? AdvisoryBoard::find((int)$advBoardId->value) : null;
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs(null, array(
+            ['name' => __('custom.ogp_forum'), 'url' => '']
+        ));
+        return $this->view('site.ogp.forum', compact('item', 'pageTitle'));
     }
 
     /**

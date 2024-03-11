@@ -1,5 +1,30 @@
 @php($disabled = $disabled ?? false)
 <div class="row">
+    <div class="col-md-4">
+        <form method="POST" action="{{ route('admin.ogp.plan.develop.add_area', $item->id) }}">
+            @csrf
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="ogp_area_id">{{ trans_choice('custom.area', 1) }} <span class="required">*</span></label>
+                <div class="col-12">
+                    @php($itemAreas = $item->areas->pluck('ogp_area_id')->toArray())
+                    <select name="ogp_area" id="ogp_area" class="form-select @error('ogp_area'){{ 'is-invalid' }}@enderror">
+                        <option value=""></option>
+                        @foreach($ogpArea as $v)
+                            @if(!in_array($v->id, $itemAreas))
+                                <option value="{{ $v->id }}" @if(old('ogp_area', 0) == $v->id) selected="selected" @endif>{{ $v->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @error('ogp_area')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-group">
+                <button id="save" type="submit" class="btn btn-success">Добави</button>
+            </div>
+        </form>
+    </div>
     <div class="col-md-8">
         @if(!$disabled)
             <form action="{{ route('admin.ogp.plan.develop.'.($item->id ? "edit" : "create").'_store') }}" method="post" name="form" id="form">

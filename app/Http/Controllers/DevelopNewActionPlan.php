@@ -99,9 +99,8 @@ class DevelopNewActionPlan extends Controller
         $item = OgpPlanArea::find($id);
         $offer_id = (int)$request->get('offer', 0);
 
-        if(!$id && $item->plan->status->type != OgpStatusEnum::IN_DEVELOPMENT->value
-            || ($id && $user->cannot('update', $item))
-        ){
+
+        if(!$id || $item->plan->status->type != OgpStatusEnum::IN_DEVELOPMENT->value){
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
         }
 

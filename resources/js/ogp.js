@@ -13,10 +13,10 @@ $(function() {
         ShowLoadingSpinner();
         let lForm = $(this).closest('form')[0];
         let commentField = $(lForm).find('textarea');
-        $(lForm).find('.comment-error')[0].html('');
+        $($(lForm).find('.comment-error')[0]).html('');
 
         if(!commentField.val().length){
-            $(lForm).find('.comment-error')[0].html('Не сте въвели коментар');
+            $($(lForm).find('.comment-error')[0]).html('Не сте въвели коментар');
         }
 
         $.post($(lForm).attr('action'), {
@@ -25,7 +25,7 @@ $(function() {
         }, function(response) {
             HideLoadingSpinner();
             if(response.error) {
-                $(lForm).find('.comment-error')[0].html(response.message);
+                $($(lForm).find('.comment-error')[0]).html(response.message);
             } else {
                 window.location.reload();
             }
