@@ -85,7 +85,7 @@
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('view', $item)
-                                            <a href="{{ route('admin.advisory-boards.view', $item) }}"
+                                            <a href="{{ route('advisory-boards.view', $item) }}"
                                                class="btn btn-sm btn-primary mr-2"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.preview') }}">
