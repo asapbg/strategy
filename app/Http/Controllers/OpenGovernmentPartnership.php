@@ -149,7 +149,11 @@ class OpenGovernmentPartnership extends Controller
                 }
             }
         }
-        return $this->view('site.ogp.events', compact('itemsCalendar'));
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs(null, array(
+            ['name' => trans_choice('custom.events', 2), 'url' => '']
+        ));
+        return $this->view('site.ogp.events', compact('itemsCalendar', 'pageTitle'));
     }
 
     /**
