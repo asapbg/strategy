@@ -89,6 +89,12 @@ class StrategicDocumentObserver
                     )
                 group by users.id
             ');
+
+            if(sizeof($moderators)) {
+                $moderators = User::wherein('id', array_column($moderators, 'id'))->get();
+            } else{
+                $moderators = null;
+            }
         }
 
         //get users by model ID

@@ -107,8 +107,9 @@ class StrategicDocumentChildController extends AdminController
             return response()->json(['errors' => $validator->errors()], 200);
         }
 
-        $validated = $validator->validated();
+        $r = $validated = $validator->validated();
         $validated['document_date_accepted'] = isset($validated['pris_act_id']) ? Pris::find($validated['pris_act_id'])->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
+        $validated['document_date_expiring'] = isset($validated['date_expiring_indefinite']) ? null : ($validated['document_date_expiring'] ?? Carbon::now());
         $item = StrategicDocumentChildren::find((int)$validated['id']);
         if(!$item){
             return response()->json(['main_error' => __('messages.record_not_found')], 200);

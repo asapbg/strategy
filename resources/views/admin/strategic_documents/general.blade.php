@@ -552,6 +552,12 @@
             acceptActInstitutionByLevel(true);
             clearStartDate(true);
 
+            if($('#date_expiring_indefinite').is(':checked')){
+                $('#document_date_expiring').val('');
+                $('#document_date_expiring').prop('disabled', true);
+            } else{
+                $('#document_date_expiring').prop('disabled', false);
+            }
         });
     </script>
 @endpush

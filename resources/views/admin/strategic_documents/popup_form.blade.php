@@ -5,7 +5,7 @@
     </div>
     {{--    @csrf--}}
     <input type="hidden" name="sd" value="{{ $sd->id }}">
-    <input type="hidden" id="strategic_document_level_id" name="strategic_document_level_id" value="{{ $sd->strategic_document_level_id }}">
+    <input type="hidden" id="strategic_document_level_id_new" name="strategic_document_level_id" value="{{ $sd->strategic_document_level_id }}">
 {{--    <input type="hidden" id="accept_act_institution_type_id" name="accept_act_institution_type_id" value="{{ $sd->accept_act_institution_type_id }}">--}}
     @if(isset($doc) && $doc)
         <input type="hidden" name="doc" value="{{ $doc->id }}">
@@ -63,7 +63,7 @@
                        for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
                     <span class="required">*</span></label>
                 <div class="col-12">
-                    <select name="accept_act_institution_type_id" id="accept_act_institution_type_id"
+                    <select name="accept_act_institution_type_id" id="accept_act_institution_type_id_new"
                             class="form-control form-control-sm select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
                         <option value=""
                                 @if(old('accept_act_institution_type_id', $sd->id ? $sd->accept_act_institution_type_id : '') == '') selected @endif>---
@@ -108,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-4 d-none" id="prisSection">
+    <div class="row mb-4 d-none" id="prisSection_new">
         <div class="col-md-12" id="pris-act">
             <div class="col-12">
                 <div class="form-group">
@@ -117,7 +117,7 @@
                     </label>
 
                     <span class="text-danger" id="connect-doc-error"></span>
-                    <select id="legal_act_type_filter" name="legal_act_type_filter" class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
+                    <select id="legal_act_type_filter_new" name="legal_act_type_filter" class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
                         <option value="" @if(old('legal_act_type_filter', '') == '') selected @endif>--</option>
                         @if(isset($legalActTypes) && $legalActTypes->count())
                             @foreach($legalActTypes as $row)
@@ -135,7 +135,7 @@
                 <div class="form-group">
                     <label class="col-sm-12 control-label"
                            for="pris_act_id">Акт за приемане от раздел „Актове на МС“</label>
-                    <select id="pris_act_id" name="pris_act_id" data-types2ajax="pris_doc" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
+                    <select id="pris_act_id_new" name="pris_act_id" data-types2ajax="pris_doc" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
                             class="form-control form-control-sm select2-autocomplete-ajax @error('pris_act_id'){{ 'is-invalid' }}@enderror">
                     </select>
                     @error('pris_act_id')
@@ -156,7 +156,7 @@
                     {{ __('custom.date_accepted') }}
                     <span class="required">*</span></label>
                 <div class="col-12">
-                    <input type="text" id="document_date_accepted" name="document_date_accepted"
+                    <input type="text" id="document_date_accepted_new" name="document_date_accepted"
                            class="form-control form-control-sm datepicker @error('document_date_accepted'){{ 'is-invalid' }}@enderror"
                            value="{{ old('document_date_accepted', '') }}">
                     @error('document_date_accepted')
@@ -172,7 +172,7 @@
                        for="document_date_pris">{{ __('custom.date_expiring') }}
                     <span class="required">*</span></label>
                 <div class="col-12">
-                    <input type="text" id="document_date_expiring" name="document_date_expiring"
+                    <input type="text" id="document_date_expiring_new" name="document_date_expiring"
                            class="form-control form-control-sm datepicker @error('document_date_expiring'){{ 'is-invalid' }}@enderror"
                            value="{{ old('document_date_expiring', '') }}">
                     @error('document_date_expiring')
@@ -189,7 +189,7 @@
                     <span class="required">*</span></label>
                 <div class="col-12">
                     <div class="form-check">
-                        <input type="checkbox" id="date_expiring_indefinite"
+                        <input type="checkbox" id="date_expiring_indefinite_new"
                                name="date_expiring_indefinite"
                                class="form-check-input"
                                value="1" @if(is_null(old('document_date_expiring'))) checked @endif>
@@ -223,8 +223,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        const centralLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
-        const counsilMinisters = '<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>';
+        const centralLevelNew = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
+        const counsilMinistersNew = '<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>';
 
         $('#new_sd_child_form .summernote').summernote({
             toolbar: [
@@ -259,53 +259,53 @@
         }
 
 
-        function controlDateExpiration(){
-            if($('#date_expiring_indefinite').is(':checked')){
-                $('#document_date_expiring').val('');
-                $('#document_date_expiring').prop('disabled', true);
+        function controlDateExpirationNew(){
+            if($('#date_expiring_indefinite_new').is(':checked')){
+                $('#document_date_expiring_new').val('');
+                $('#document_date_expiring_new').prop('disabled', true);
             } else{
-                $('#document_date_expiring').prop('disabled', false);
+                $('#document_date_expiring_new').prop('disabled', false);
             }
         }
 
-        function controlPrisSection(){
-            if(parseInt($('#strategic_document_level_id').val()) == parseInt(centralLevel)
-                && (parseInt($('#accept_act_institution_type_id').val()) == counsilMinisters)
+        function controlPrisSectionNew(){
+            if(parseInt($('#strategic_document_level_id_new').val()) == parseInt(centralLevelNew)
+                && (parseInt($('#accept_act_institution_type_id_new').val()) == counsilMinistersNew)
             ){
-                $('#prisSection').removeClass('d-none');
+                $('#prisSection_new').removeClass('d-none');
             } else{
-                $('#legal_act_type_filter').val('');
-                $('#pris_act_id option').remove();
-                $('#prisSection').addClass('d-none');
+                $('#legal_act_type_filter_new').val('');
+                $('#pris_act_id_new option').remove();
+                $('#prisSection_new').addClass('d-none');
             }
         }
 
-        $('#date_expiring_indefinite').on('change', function (){
-            controlDateExpiration();
+        $('#date_expiring_indefinite_new').on('change', function (){
+            controlDateExpirationNew();
         });
 
-        $('#accept_act_institution_type_id').on('change', function (){
-            controlPrisSection();
+        $('#accept_act_institution_type_id_new').on('change', function (){
+            controlPrisSectionNew();
         });
 
         function clearStartDate(init = false){
-            if(parseInt($('#pris_act_id').val()) > 0){
-                $('#document_date_accepted').prop('disabled', true);
+            if(parseInt($('#pris_act_id_new').val()) > 0){
+                $('#document_date_accepted_new').prop('disabled', true);
                 if(!init){
                     //TODO get act date by data attribute from select2
-                    $('#document_date_accepted').val('');
+                    $('#document_date_accepted_new').val('');
                 }
             } else{
-                $('#document_date_accepted').prop('disabled', false);
+                $('#document_date_accepted_new').prop('disabled', false);
             }
         }
 
-        $('#pris_act_id').on('change', function (){
+        $('#pris_act_id_new').on('change', function (){
             clearStartDate();
         });
 
-        controlDateExpiration();
-        controlPrisSection();
+        controlDateExpirationNew();
+        controlPrisSectionNew();
     });
 </script>
 

@@ -84,14 +84,13 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-sm-12 control-label"
-                                               for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
+                                        <label class="col-sm-12 control-label" for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
                                             <span class="required">*</span></label>
                                         <div class="col-12">
                                             <select name="accept_act_institution_type_id"
                                                     class="form-control form-control-sm accept_act_institution_type_id select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
                                                 <option value=""
-                                                        @if(old('accept_act_institution_type_id', $item->id ? $item->accept_act_institution_type_id : '') == '') selected @endif>---
+                                                        @if(old('accept_act_institution_type_id', ($item->id ? $item->accept_act_institution_type_id : '')) == '') selected @endif>---
                                                 </option>
                                                 @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
                                                     @foreach($authoritiesAcceptingStrategic as $row)
@@ -106,6 +105,7 @@
                                             @error('accept_act_institution_type_id')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
+                                            <div class="ajax-error text-danger mt-1 error_accept_act_institution_type_id"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@
                                                 <input type="checkbox"
                                                        name="date_expiring_indefinite"
                                                        class="form-check-input date_expiring_indefinite"
-                                                       value="1" @if(is_null(old('document_date_expiring', $item->document_date_expiring))) checked @endif>
+                                                       value="1" @if(empty(old('document_date_expiring', $item->document_date_expiring))) checked @endif>
                                                 <label class="form-check-label" for="date_valid_indefinite_main">
                                                     {{ __('custom.date_expring_indefinite') }}
                                                 </label>
@@ -416,17 +416,23 @@
             function acceptActInstitutionByLevel(init = false){
                 if($('.strategic_document_level_id').length){
                     $('.strategic_document_level_id').each(function (){
+                        let found = false;
                         let selectedLevel = $(this).val();
                         let lForm = $(this.closest('form'));
                         let acceptActInstitution = $(lForm.find('.accept_act_institution_type_id')[0]);
                         $(acceptActInstitution).find('option').each(function (i){
                             if(typeof $(this).data('level') == 'undefined' || parseInt($(this).data('level')) == selectedLevel){
                                 $(this).removeAttr('disabled');
+                                $(acceptActInstitution).val($(this).val());
+                                found = true;
                             } else{
-                                $(acceptActInstitution).trigger('change')
+                                //$(acceptActInstitution).trigger('change');
                                 $(this).attr('disabled', 'disabled');
                             }
                         });
+                        if(!found){
+                            acceptActInstitution.val("");
+                        }
                     });
                 }
             }
