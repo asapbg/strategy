@@ -51,9 +51,8 @@ class NationalActionPlans extends Controller
     /**
      * @param Request $request
      * @param OgpPlan $plan
-     * @return View
      */
-    public function show(Request $request, $id): View
+    public function show(Request $request, $id)
     {
         $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)->find($id);
         if(!$plan){
