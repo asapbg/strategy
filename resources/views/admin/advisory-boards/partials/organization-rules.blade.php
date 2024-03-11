@@ -60,7 +60,7 @@
                         <label for="rules_description_{{ $lang['code'] }}">{{ __('custom.description') }}
                             ({{ Str::upper($lang['code']) }})</label>
                         <div class="row">
-                            {!! $item->organizationRule->tarnslate($lang['code'])->description !!}
+                            {!! $item->organizationRule->translate($lang['code'])->description !!}
                         </div>
                     </div>
                 </div>
