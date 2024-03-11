@@ -25,6 +25,10 @@ class Setting extends ModelActivityExtend
 
     const AB_REVIEW_PERIOD_NOTIFY = 'review_period_notify';
 
+    const OGP_SECTION = 'system_ogp';
+    const OGP_ADV_BOARD_FORUM = 'adv_board';
+    const OGP_FORUM_INFO = 'info_forum';
+
     //activity
     protected string $logName = "settings";
 

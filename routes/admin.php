@@ -620,6 +620,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('delete/{area}', 'destroy')->name('ogp.area.delete');
     });
 
+    // Settings
+    Route::controller(\App\Http\Controllers\Admin\Ogp\OgpSettingsController::class)->prefix('/ogp/settings')->group(function () {
+        Route::get( '/{section?}', 'edit')->name('ogp.settings');
+        Route::put( '/store', 'store')->name('ogp.settings.store');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\Ogp\Plans::class)->prefix('/ogp/plans')->group(function () {
         Route::get('', 'index')->name('ogp.plan.index');
         Route::get('create', 'create')->name('ogp.plan.create');

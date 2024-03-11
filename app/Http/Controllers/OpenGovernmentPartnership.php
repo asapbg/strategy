@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
+use App\Models\AdvisoryBoardMeeting;
 use App\Models\CustomRole;
 use App\Models\Page;
 use App\Models\Publication;
+use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -124,6 +127,29 @@ class OpenGovernmentPartnership extends Controller
             ['name' => $item->title, 'url' => '']
         ));
         return $this->view('site.ogp.main_news_details', compact('publication', 'pageTitle'));
+    }
+
+    public function events(Request $request)
+    {
+        $itemsCalendar = array();
+        $advBoardId = Setting::where('name', '=', Setting::OGP_ADV_BOARD_FORUM)->first();
+        if($advBoardId) {
+            $itemsCalendarDB = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', (int)$advBoardId->value)->orderBy('next_meeting', 'desc')->get();
+            if($itemsCalendarDB->count()) {
+                foreach ($itemsCalendarDB as $event) {
+                    $itemsCalendar[] = array(
+                        "id" => $event->id,
+                        "title" => trans_choice('custom.meetings', 1),
+                        "description" => $event->description ? strip_tags($event->description) : '',
+                        "start" => Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d H:i:s'),
+                        "end" => Carbon::parse($event->next_meeting)->endOfDay()->format('Y-m-d H:i:s'),
+                        "backgroundColor" => (Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                        "borderColor" => (Carbon::parse($event->next_meeting)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef')
+                    );
+                }
+            }
+        }
+        return $this->view('site.ogp.events', compact('itemsCalendar'));
     }
 
     /**

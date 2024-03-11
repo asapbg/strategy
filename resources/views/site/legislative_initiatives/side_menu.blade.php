@@ -12,7 +12,9 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2 @if(str_contains(url()->current(),'legislative-initiatives')) active-item-left p-1 @endif"><a href="{{ route('legislative_initiatives.index') }}" class="link-dark text-decoration-none">Законодателни инициативи</a></li>
                             <li class="mb-2 @if(str_contains(url()->current(),'polls')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a></li>
-                            <li class="mb-2 @if(request()->route()->getName() == 'ogp.list') active-item-left p-1 @endif"><a href="{{ route('ogp.list') }}" class="link-dark text-decoration-none">{{ __('custom.open_government_partnership') }}</a></li>
+                            <li class="mb-2 @if(request()->route()->getName() == 'ogp.list') active-item-left text-white p-1 @endif">
+                                {{ __('custom.open_government_partnership') }}
+                            </li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
@@ -50,10 +52,6 @@
                                         <a href="#" class="link-dark  text-decoration-none">{{ __('custom.ogp_forum') }}</a>
                                     </li>
                                     <hr class="custom-hr">
-                                    <li class="my-2">
-                                        <a href="#" class="link-dark  text-decoration-none">{{ __('custom.news_events') }}</a>
-                                    </li>
-                                    <hr class="custom-hr">
                                     @if(isset($library) && $library->count())
                                         <li class="my-2 @if(str_contains(url()->current(), 'ogp/library')) active-item-left text-white p-1 @endif">
                                             {{ __('custom.library') }}
@@ -72,6 +70,10 @@
                                         <a href="{{ route('ogp.news') }}" class="@if(str_contains(url()->current(),'news')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
                                             {{ trans_choice('custom.news', 2) }}
                                         </a>
+                                    </li>
+                                    <hr class="custom-hr">
+                                    <li class="my-2">
+                                        <a href="{{ route('ogp.events') }}" class="@if(str_contains(url()->current(),'events')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ trans_choice('custom.events', 2) }}</a>
                                     </li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'ogp.contacts') active-item-left p-1 @endif">

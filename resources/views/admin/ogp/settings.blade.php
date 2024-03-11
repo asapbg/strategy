@@ -10,7 +10,7 @@
                         @if(isset($sections) && sizeof($sections))
                             @foreach($sections as $s)
                                 <li class="nav-item">
-                                    <a class="nav-link @if($section == $s) active @endif" id="{{ $s }}-tab" href="{{ route('admin.settings', ['section' => $s]) }}">{{ __('custom.settings.sections.'.$s) }}</a>
+                                    <a class="nav-link @if($section == $s) active @endif" id="{{ $s }}-tab" href="{{ route('admin.ogp.settings', ['section' => $s]) }}">{{ __('custom.settings.sections.'.$s) }}</a>
                                 </li>
                             @endforeach
                         @endif
@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     @if(isset($settings) && $settings->count())
-                        <form action="{{ route('admin.settings.store') }}" method="post">
+                        <form action="{{ route('admin.ogp.settings.store') }}" method="post">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="section" value="{{ $section }}">
@@ -40,7 +40,7 @@
                                             @switch($row->type)
                                                 @case('summernote')
                                                     <textarea name="{{ $row->name }}" class="form-control form-control-sm summernote @error($row->name){{ 'is-invalid' }}@enderror">{{ old($row->name, ($row->value)) }}</textarea>
-                                                @break
+                                                    @break
                                                 @default
                                                     <input name="{{ $row->name }}" value="{{ old($row->name, ($row->value)) }}" class="form-control form-control-sm @error($row->name){{ 'is-invalid' }}@enderror" type="{{ $row->type }}">
                                             @endswitch

@@ -241,6 +241,13 @@
                                     </a>
                                 </li>
                             @endcan
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.settings') }}"
+                                   class="nav-link @if(request()->route()->getName() == 'admin.ogp.settings') active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.settings') }}</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

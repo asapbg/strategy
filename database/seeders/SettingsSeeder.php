@@ -119,6 +119,20 @@ class SettingsSeeder extends Seeder
                 'editable' => 1,
                 'is_required' => 1
             ],
+            [
+                'section' => 'system_ogp',
+                'name' => 'adv_board',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0
+            ],
+            [
+                'section' => 'system_ogp',
+                'name' => 'info_forum',
+                'type' => 'summernote',
+                'editable' => 1,
+                'is_required' => 0
+            ],
         );
 
         foreach ($data as $s) {
