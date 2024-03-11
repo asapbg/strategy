@@ -60,7 +60,7 @@
                         <label for="establishment_description_{{ $lang['code'] }}">{{ __('custom.description') }}
                             ({{ Str::upper($lang['code']) }})</label>
                         <div class="row">
-                            {!! $item->establishment ? $item->establishment->tarnslate($lang['code'])->description : '' !!}
+                            {!! $item->establishment ? $item->establishment->translate($lang['code'])->description : '' !!}
                         </div>
                     </div>
                 </div>
