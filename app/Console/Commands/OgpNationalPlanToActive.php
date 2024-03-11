@@ -33,7 +33,7 @@ class OgpNationalPlanToActive extends Command
         $draftStatus = OgpStatus::Draft()->first()->id;
         $toDevelopment = OgpPlan::Active()
             ->where('ogp_status_id', $draftStatus)
-            ->where('is_national', 1)
+            ->where('national_plan', 1)
             ->where('from_date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('to_date', '>=', Carbon::now()->format('Y-m-d'))
             ->get();
