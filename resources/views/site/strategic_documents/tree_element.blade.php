@@ -14,7 +14,7 @@
                 @else
                     <i class="me-1 bi bi-pin-map-fill main-color fs-18"></i>
                 @endif
-                {{ $defaultTranslation[0]['title'] }}
+                {{ isset($defaultTranslation[0]) ? $defaultTranslation[0]['title'] : '---' }}
             </button>
         </h2>
     </div>
