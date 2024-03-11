@@ -186,6 +186,7 @@ class CommonController extends Controller
                 File::CODE_OBJ_STRATEGIC_DOCUMENT,
                 File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
                 File::CODE_OBJ_OGP,
+                File::CODE_OBJ_PAGE,
             ]) ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
