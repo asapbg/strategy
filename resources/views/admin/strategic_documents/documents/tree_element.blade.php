@@ -14,7 +14,7 @@
                     @else
                         <i class="me-1 fas fa-grip-lines-vertical main-color fs-18"></i>
                     @endif
-                    {{ $defaultTranslation[0]['title'] }}
+                    {{ isset($defaultTranslation[0]) ? $defaultTranslation[0]['title'] : '' }}
                 </button>
             </h2>
         </div>
@@ -249,7 +249,7 @@
                                class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                                data-target="#modal-delete-resource"
                                data-resource-id="{{ $doc->id }}"
-                               data-resource-name="{{ $doc->id }} ({{ $defaultTranslation[0]['title'] }})"
+                               data-resource-name="{{ $doc->id }} ({{ isset($defaultTranslation[0]) ? $defaultTranslation[0]['title'] : '' }})"
                                data-resource-delete-url="{{ route('admin.strategic_documents.document.delete', $dItem) }}"
                                data-toggle="tooltip"
                                title="{{ __('custom.delete') }}">{{ __('custom.delete') }}
