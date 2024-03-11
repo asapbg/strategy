@@ -79,7 +79,7 @@ class AdvisoryBoard extends ModelActivityExtend
 
     public function moderators(): HasMany
     {
-        return $this->hasMany(AdvisoryBoardModerator::class);
+        return $this->hasMany(AdvisoryBoardModerator::class)->whereHas('user');
     }
 
     /**
