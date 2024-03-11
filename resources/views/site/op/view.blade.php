@@ -74,13 +74,13 @@
                                                     @if($rowData)
                                                         @php(usort($rowData, function ($a, $b) { return $a->ord > $b->ord; }))
                                                         <div class="accordion-item">
-                                                            <h2 class="accordion-header" id="heading{{ $m.'_'.$к }}">
+                                                            <h2 class="accordion-header" id="heading{{ $m.'_'.$k }}">
                                                                 <button class="accordion-button text-dark fs-18 fw-600" type="button" data-toggle="collapse"
-                                                                        data-target="#collapse{{ $m.'_'.$к }}" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapse{{ $m.'_'.$к }}">
+                                                                        data-target="#collapse{{ $m.'_'.$k }}" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapse{{ $m.'_'.$k }}">
                                                                     @if(isset($rowData[1]) && $rowData[1]->dsc_id == (int)config('lp_op_programs.op_ds_col_number_id')){{ __('custom.number_symbol').' '.$rowData[1]->value.' | ' }}@endif {{ html_entity_decode($rowData[0]->value) }}
                                                                 </button>
                                                             </h2>
-                                                            <div id="collapse{{ $m.'_'.$к }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $m.'_'.$к }}"
+                                                            <div id="collapse{{ $m.'_'.$k }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $m.'_'.$k }}"
                                                                  data-bs-parent="#accordion{{ $m }}">
                                                                 <div class="accordion-body">
                                                                     <div class="custom-card p-3 mb-5">
