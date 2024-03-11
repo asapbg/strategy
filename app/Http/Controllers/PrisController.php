@@ -64,7 +64,7 @@ class PrisController extends Controller
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
-            ->GroupBy('pris.id')
+            ->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
             ->paginate($paginate);
 
 
@@ -114,8 +114,8 @@ class PrisController extends Controller
         $items = Pris::select('pris.*')
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
-            ->join('institution', 'institution.id', '=', 'pris.institution_id')
-            ->join('institution_translations', function ($j){
+            ->leftJoin('institution', 'institution.id', '=', 'pris.institution_id')
+            ->leftJoin('institution_translations', function ($j){
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
@@ -129,7 +129,7 @@ class PrisController extends Controller
             ->SortedBy($sort,$sortOrd)->paginate($paginate);
 
         $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+        $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {
