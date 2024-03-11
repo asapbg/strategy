@@ -114,7 +114,7 @@ class OgpPlanPolicy
     public function createDevelopPlan(User $user): \Illuminate\Auth\Access\Response|bool
     {
         return $user->canAny(['manage.*','manage.partnership'])
-            && !OgpPlan::whereHas('status', function ($q){
+            && !OgpPlan::NotNational()->whereHas('status', function ($q){
                 $q->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value]);
             })->get()->count();
     }

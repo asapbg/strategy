@@ -42,6 +42,11 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
         return $query->where('ogp_plan.national_plan', '=', 1);
     }
 
+    public function scopeNotNational($query)
+    {
+        return $query->where('ogp_plan.national_plan', '=', 0);
+    }
+
     protected function fromDate(): Attribute
     {
         return Attribute::make(
