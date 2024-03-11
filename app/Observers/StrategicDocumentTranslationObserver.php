@@ -63,13 +63,13 @@ class StrategicDocumentTranslationObserver
             $moderators = \DB::select('
                 select users.id
                 from users
-                join model_has_role on model_has_role.model_id = users.id and model_has_role.model_type = \'App\Models\User\'
-                join roles on roles.id = model_has_role.role_id and roles.deleted_at is null
+                join model_has_roles on model_has_roles.model_id = users.id and model_has_roles.model_type = \'App\Models\User\'
+                join roles on roles.id = model_has_roles.role_id and roles.deleted_at is null
                 join institution on institution.id = users.institution_id and institution.deleted_at is null
                 join institution_field_of_action on institution_field_of_action.institution_id = institution.id
                 join field_of_actions on field_of_actions.id = institution_field_of_action.field_of_action_id and field_of_actions.deleted_at is null
                 where
-                    users.active = '.User::STATUS_ACTIVE.'
+                    users.active = true
                     and users.user_type = '.User::USER_TYPE_INTERNAL.'
                     and users.deleted_at is null
                     and (
