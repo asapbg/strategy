@@ -18,7 +18,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.plans');
-    const TRANSLATABLE_FIELDS = ['name', 'content'];
+    const TRANSLATABLE_FIELDS = ['name', 'content', 'report_title', 'report_content'];
 
     public $timestamps = true;
 
@@ -109,6 +109,24 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
             ->first();
     }
 
+    public function reportEvaluation(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_OGP)
+            ->where('doc_type', '=', DocTypesEnum::OGP_REPORT_EVALUATION->value)
+            //->where('locale', '=', app()->getLocale())
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function reportEvaluationByLang(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_OGP)
+            ->where('doc_type', '=', DocTypesEnum::OGP_REPORT_EVALUATION->value)
+            ->where('locale', '=', app()->getLocale())
+            ->orderBy('created_at', 'desc');
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(
@@ -120,6 +138,16 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
             'content' => [
                 'type' => 'summernote',
                 'rules' => ['required'],
+                'required_all_lang' => false
+            ],
+            'report_title' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:2000'],
+                'required_all_lang' => true
+            ],
+            'report_content' => [
+                'type' => 'summernote',
+                'rules' => ['nullable'],
                 'required_all_lang' => false
             ],
         );

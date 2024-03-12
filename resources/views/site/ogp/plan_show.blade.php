@@ -252,6 +252,80 @@
             </div>
         </div>
 
+        @if(!empty($plan->report_title))
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h4 class="custom-left-border mb-3">{{ $plan->report_title }}</h4>
+                    {!! $plan->report_content !!}
+                    @if($plan->reportEvaluationByLang->count())
+                        <div class="col-12 mb-2">
+                            <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.documents', 2) }}</p>
+                            <ul class="list-group list-group-flush">
+                                @foreach($plan->reportEvaluationByLang as $doc)
+                                    <li class="list-group-item">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+{{--                    <div class="accordion" id="accordionExampleEvaluation">--}}
+{{--                        @foreach($plan->areas as $row)--}}
+{{--                            @php($hasEvaluation = false)--}}
+{{--                            @php($uniqueEvaluation = $row->arrangements->unique('evaluation')->pluck('evaluation')->toArray())--}}
+{{--                            @php($uniqueEvaluationStatus = $row->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())--}}
+{{--                                <div class="accordion-item mb-2">--}}
+{{--                                    <h2 class="accordion-header" id="heading_evaluation_{{ $loop->iteration }}">--}}
+{{--        --}}{{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
+{{--                                        <button class="accordion-button text-dark fs-18 fw-600" type="button"--}}
+{{--                                                data-toggle="collapse" data-target="#collapse-evaluation-{{ $loop->iteration }}"--}}
+{{--                                                aria-controls="collapse-{{ $loop->iteration }}">--}}
+{{--                                            {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}--}}
+{{--                                        </button>--}}
+{{--                                    </h2>--}}
+{{--        --}}{{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
+{{--                                    <div id="collapse-evaluation-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])--}}
+{{--                                    aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">--}}
+{{--                                        @if($row->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))--}}
+{{--                                            @php($hasEvaluation = true)--}}
+{{--                                            @foreach($row->arrangements as $a)--}}
+{{--                                                <div class="accordion-body">--}}
+{{--                                                    <div class="custom-card p-3 mb-2 pb-0">--}}
+{{--                                                        <div class="row ">--}}
+{{--                                                            <div class="document-info-body">--}}
+{{--                                                                <hr class="custom-hr mb-2">--}}
+{{--                                                                <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $a->name }}</h3>--}}
+{{--                                                                <hr class="custom-hr mb-2">--}}
+{{--                                                                @if($a->evaluation)--}}
+{{--                                                                    <p>--}}
+{{--                                                                        <strong>{{ __('ogp.evaluation') }}:</strong> {!! $a->evaluation !!}--}}
+{{--                                                                    </p>--}}
+{{--                                                                @endif--}}
+{{--                                                                @if($a->evaluation_status)--}}
+{{--                                                                    <p>--}}
+{{--                                                                        <strong>{{ __('custom.status') }}:</strong> {!! $a->evaluation_status !!}--}}
+{{--                                                                    </p>--}}
+{{--                                                                @endif--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            @endforeach--}}
+{{--                                        @endif--}}
+{{--                                        @if(!$hasEvaluation)--}}
+{{--                                            <div class="col-12 ps-3 my-2">{{ __('ogp.no_evaluation_found') }}</div>--}}
+{{--                                        @endif--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--    --}}{{--                        @endif--}}
+{{--                        @endforeach--}}
+{{--                    </div>--}}
+                </div>
+            </div>
+        @endif
+
     </div>
 </div>
 @endsection

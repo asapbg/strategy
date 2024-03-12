@@ -59,7 +59,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/delete/{file}/{disk?}', 'deleteFile')->name('delete.file');
         Route::post('/upload-file/{object_id}/{object_type}', 'uploadFile')->name('upload.file');
         Route::post('/upload-file-lp-op/{object_id}/{object_type}/{row_num}/{row_month}', 'uploadFileLpOp')->name('upload.file.lp_op');
-        Route::post('/upload-file-languages/{object_id}/{object_type}', 'uploadFileLanguages')->name('upload.file.languages');
+        Route::post('/upload-file-languages/{object_id}/{object_type}/{doc_type?}', 'uploadFileLanguages')->name('upload.file.languages');
         Route::get('/select2-ajax/{type}', 'getSelect2Ajax')->name('select2.ajax');
     });
 
@@ -641,6 +641,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('arrangement/{ogpPlanArea}/{id?}/evaluation', 'editArrangementEvaluation')->name('ogp.plan.arrangement.edit.evaluation');
         Route::post('arrangement/{ogpPlanArea}/evaluation', 'editArrangementEvaluationStore')->name('ogp.plan.arrangement.edit.evaluation_store');
 
+        Route::post('edit/report/store', 'storeReport')->name('ogp.plan.report.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Ogp\OgpPlanArrangementActionController::class)->prefix('/ogp/plan/actions')->group(function () {

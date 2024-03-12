@@ -66,10 +66,12 @@ class ViewServiceProvider extends ServiceProvider
                 ->National()
                 ->whereHas('status', function ($q){
                 $q->where('type', '=', OgpStatusEnum::ACTIVE->value);
-            })->first();
+            })->orderBy('from_date', 'asc')->get();
 
-            if($nationalPlan) {
-                $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $nationalPlan->id), 'id' => $nationalPlan->id, 'label' => $nationalPlan->name];
+            if($nationalPlan->count()) {
+                foreach ($nationalPlan as $plan){
+                    $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $plan->id), 'id' => $plan->id, 'label' => $plan->name];
+                }
             }
             //TODO add other previews plans
 

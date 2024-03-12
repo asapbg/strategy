@@ -33,7 +33,8 @@ class FilePolicy
     {
         return ($file->code_object == File::CODE_OBJ_PUBLICATION || $file->code_object == File::CODE_OBJ_PAGE
                 || $file->code_object == File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL || $file->code_object == File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL
-                || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN)
+                || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN
+                || $file->code_object == File::CODE_OBJ_OGP)
             && $user->user_type == User::USER_TYPE_INTERNAL;
     }
 }

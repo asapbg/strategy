@@ -7,6 +7,7 @@ use App\Enums\OgpStatusEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\OgpPlanArrangementEvaluationRequest;
 use App\Http\Requests\OgpPlanArrangementRequest;
+use App\Http\Requests\OgpPlanReportRequest;
 use App\Http\Requests\OgpPlanRequest;
 use App\Models\File;
 use App\Models\OgpArea;
@@ -173,6 +174,30 @@ class Plans extends AdminController
 
             DB::commit();
             return redirect($route)
+                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+
+    }
+
+    public function storeReport(OgpPlanReportRequest $request): \Illuminate\Http\RedirectResponse
+    {
+        $validated = $request->validated();
+        $id = $validated['plan'];
+        $item = OgpPlan::find($id);
+
+        if($request->user()->cannot('update', $item)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        DB::beginTransaction();
+
+        try {
+            $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
+            DB::commit();
+            return redirect(route('admin.ogp.plan.edit', $item).'#report')
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

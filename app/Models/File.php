@@ -69,6 +69,8 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_LP_OO = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_PAGE = ['doc', 'docx', 'pdf', 'xsl', 'xlsx', 'jpeg', 'jpg', 'png', 'gif', 'apng', 'avif', 'webp']; //'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'
 
+    const ALLOWED_FILE_OGP_EVALUATION = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
+
     const CONTENT_TYPE_IMAGES = ['jpeg', 'jpg', 'png', 'gif', 'apng', 'avif', 'webp' ];//'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'
     protected $guarded = [];
 

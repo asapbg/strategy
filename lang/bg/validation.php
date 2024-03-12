@@ -744,5 +744,9 @@ return [
         'new_to_date' => 'Дата на приключване на дейността',
         'new_name_bg' => 'Наименование (BG)',
         'new_name_en' => 'Наименование (EN)',
+        'report_title_bg' => 'Заглавие (BG)',
+        'report_title_en' => 'Заглавие (EN)',
+        'report_content_bg' => 'Съдържание (BG)',
+        'report_content_en' => 'Съдържание (EN)',
     ],
 ];

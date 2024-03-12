@@ -304,10 +304,11 @@ class Controller extends BaseController
      * @param LanguageFileUploadRequest $request
      * @param $objectId
      * @param $typeObject
+     * @param int $docType
      * @param bool $redirect
      * @return Application|RedirectResponse|Redirector|void
      */
-    public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
+    public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject, $docType = 0, $redirect = true) {
         try {
             $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
             $validated = $request->all();
@@ -320,6 +321,7 @@ class Controller extends BaseController
                 File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => File::OP_GENERAL_UPLOAD_DIR,
                 File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => File::LP_GENERAL_UPLOAD_DIR,
                 File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN => StrategicDocumentFile::DIR_PATH,
+                File::CODE_OBJ_OGP => File::OGP_PLAN_UPLOAD_DIR,
 
                 default => '',
             };
@@ -347,6 +349,7 @@ class Controller extends BaseController
                 $newFile = new File([
                     'id_object' => $objectId,
                     'code_object' => $typeObjectToSave,
+                    'doc_type' => (int)$docType > 0 ? $docType : null,
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
@@ -381,6 +384,9 @@ class Controller extends BaseController
                 case File::CODE_OBJ_AB_PAGE:
                 case File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN:
                     $route = url()->previous().'#ct-files';
+                    break;
+                case File::CODE_OBJ_OGP:
+                    $route = route('admin.ogp.plan.edit', ['id' => $objectId]).'#report';
                     break;
                 default:
                     $route = '';

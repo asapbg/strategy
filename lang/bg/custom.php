@@ -831,4 +831,5 @@ return [
     'old_pan_names.THIRD' => 'Трети план',
     'with_long'                             => 'със',
     'ogp_plan_schedules'  => 'Събитие (график за разработка на план)',
+    'report_evaluation'  => 'Доклад независима оценка',
 ];
