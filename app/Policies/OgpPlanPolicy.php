@@ -98,6 +98,12 @@ class OgpPlanPolicy
 
     public function newOffer(User $user, OgpPlan $ogpPlan)
     {
+        return !$ogpPlan->national_plan && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value
+            && dateBetween($ogpPlan->from_date_develop, $ogpPlan->to_date_develop);
+    }
+
+    public function commentDevelopPlan(User $user, OgpPlan $ogpPlan)
+    {
         return !$ogpPlan->national_plan && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
     }
 

@@ -10,6 +10,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">Основна информация</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="schedule-tab" href="{{ route('admin.ogp.plan.develop.schedule', $item) }}" role="tab" aria-controls="schedule-tab" aria-selected="false">
+                            {{ __('custom.develop_plan_calendar') }}
+                        </a>
+                    </li>
                     @foreach($areas as $rows)
                     <li class="nav-item">
                         <a class="nav-link" id="area-tab-{{ $rows->id }}-tab" data-toggle="pill" href="#area-tab-{{ $rows->id }}" role="tab" aria-controls="area-tab-{{ $rows->id }}" aria-selected="false">

@@ -33,22 +33,23 @@
                 <div class="col-md-12 mb-4">
                     <h3 class="mb-2">{{ __('custom.develop_plan_calendar') }}</h3>
                 </div>
-                <div class="col-md-6">
+                @if(isset($schedules) && sizeof($schedules))
+                    <div class="col-md-5 px-5" id="calendar-list">
+                        @foreach($schedules as $s)
+                            <div>
+                                <p class="custom-left-border mb-1 @if(!$loop->first) mt-3 @endif">
+                                    <i class="fas bi-calendar text-primary me-2"></i>
+                                    <strong>{{ displayDate($s['start']). (!empty($s['end']) ? ' - '.displayDate($s['end']) : '') }}</strong> - {{ $s['title'] }}
+                                </p>
+                                @if(!empty($s['description_html']))
+                                    {{ __('custom.description') }}: {!! $s['description_html'] !!}
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                <div class="col-md-7">
                     <div id="calendar"></div>
-                </div>
-                <div class="col-md-6 px-5" id="calendar-list">
-                    <div>
-                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.01.2024</strong> - Събитие 1
-                    </div>
-                    <div>
-                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.02.2024</strong> - Събитие 2
-                    </div>
-                    <div>
-                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.03.2024</strong> - Събитие 3
-                    </div>
-                    <div>
-                        <i class="fas bi-calendar text-primary me-2"></i> <strong>11.04.2024</strong> - Събитие 4
-                    </div>
                 </div>
             </div>
         @endif
@@ -126,45 +127,7 @@
         <script type="text/javascript">
             $(function () {
                 {{--let events = <?php echo json_encode($itemsCalendar); ?>;--}}
-                let events = <?php echo json_encode(array(
-                    array(
-                        "id" => 1,
-                        "title" => 'Събитие',
-                        "description" => 'Събитие 1',
-                        "start" => '2024-01-11 00:00:00',
-                        "end" => '2024-01-11 23:59:59',
-                        "backgroundColor" => '#00c0ef',
-                        "borderColor" => '#00c0ef'
-                    ),
-                    array(
-                        "id" => 1,
-                        "title" => 'Събитие',
-                        "description" => 'Събитие 2',
-                        "start" => '2024-02-11 00:00:00',
-                        "end" => '2024-02-11 23:59:59',
-                        "backgroundColor" => '#00c0ef',
-                        "borderColor" => '#00c0ef'
-                    ),
-                    array(
-                        "id" => 1,
-                        "title" => 'Събитие',
-                        "description" => 'Събитие 3',
-                        "start" => '2024-03-11 00:00:00',
-                        "end" => '2024-03-11 23:59:59',
-                        "backgroundColor" => '#00c0ef',
-                        "borderColor" => '#00c0ef'
-                    ),
-                    array(
-                        "id" => 1,
-                        "title" => 'Събитие',
-                        "description" => 'Събитие 4',
-                        "start" => '2024-04-11 00:00:00',
-                        "end" => '2024-04-11 23:59:59',
-                        "backgroundColor" => '#00c0ef',
-                        "borderColor" => '#00c0ef'
-                    )
-
-                )); ?>;
+                let events = <?php echo json_encode($schedules ?? []); ?>;
                 var Calendar = FullCalendar.Calendar;
 
                 var calendarEl = document.getElementById('calendar');

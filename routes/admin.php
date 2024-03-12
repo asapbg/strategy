@@ -659,11 +659,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put('edit/store', 'store')->name('ogp.plan.develop.edit_store');
         Route::post('delete/{plan}', 'delete')->name('ogp.plan.develop.delete');
 //        Route::post('delete/{plan}', 'destroy')->name('ogp.plan.develop.delete');
+        Route::get('schedule/{plan}', 'schedule')->name('ogp.plan.develop.schedule');
 
         Route::get('arrangement/{ogpPlanArea}/{id?}', 'editArrangement')->name('ogp.plan.develop.arrangement.edit');
         Route::post('arrangement/{ogpPlanArea}', 'editArrangementStore')->name('ogp.plan.develop.arrangement.edit_store');
 
     });
 
+    Route::controller(\App\Http\Controllers\Admin\Ogp\OgpPlanScheduleController::class)->prefix('/ogp/develop-plan')->group(function () {
+        Route::get('schedule/{plan}', 'index')->name('ogp.plan.develop.schedule');
+        Route::post('schedule', 'store')->name('ogp.plan.develop.schedule.store');
+        Route::post('schedule/delete/{schedule}', 'destroy')->name('ogp.plan.develop.schedule.delete');
+    });
 
 });

@@ -859,4 +859,13 @@ if (!function_exists('copyFile')) {
             return $strParams;
         }
     }
+
+    if (!function_exists('clearAfterStripTag')) {
+        function clearAfterStripTag($string): string
+        {
+            $string = str_replace(['&nbsp;'], '', $string);
+
+            return $string;
+        }
+    }
 }

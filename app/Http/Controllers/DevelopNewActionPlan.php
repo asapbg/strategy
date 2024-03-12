@@ -9,6 +9,8 @@ use App\Models\OgpPlanArea;
 use App\Models\OgpPlanAreaOffer;
 use App\Models\OgpPlanAreaOfferComment;
 use App\Models\OgpPlanAreaOfferVote;
+use App\Models\OgpPlanSchedule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +47,23 @@ class DevelopNewActionPlan extends Controller
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item);
-        return $this->view('site.ogp.develop_new_action_plan.plan_show', compact('item', 'pageTitle'));
+
+        $schedules = [];
+        if($item->schedules->count()){
+            foreach ($item->schedules()->orderBy('start_date','asc')->get() as $event){
+                $schedules[] = array(
+                    "id" => $event->id,
+                    "title" => $event->name,
+                    "description" => $event->description ? clearAfterStripTag(strip_tags(html_entity_decode($event->description))) : '',
+                    "description_html" => $event->description ? strip_tags(html_entity_decode($event->description)) : '',
+                    "start" => Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d H:i:s'),
+                    "end" => Carbon::parse($event->end_date)->endOfDay()->format('Y-m-d H:i:s'),
+                    "backgroundColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                    "borderColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef')
+                );
+            }
+        }
+        return $this->view('site.ogp.develop_new_action_plan.plan_show', compact('item', 'pageTitle', 'schedules'));
     }
 
 //    /**

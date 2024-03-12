@@ -23,7 +23,7 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
 
     use SoftDeletes, Translatable, FilterSort;
 
-    const PAGINATE = 5;
+    const PAGINATE = 10;
     const MODULE_NAME = ('custom.advisory_board_meetings');
     const TRANSLATABLE_FIELDS = ['description'];
 

@@ -94,6 +94,11 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
         return $this->hasMany(OgpPlanArea::class, 'ogp_plan_id', 'id');
     }
 
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(OgpPlanSchedule::class, 'ogp_plan_id', 'id');
+    }
+
     public function versionAfterConsultation()
     {
         return $this->hasMany(File::class, 'id_object', 'id')
