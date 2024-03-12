@@ -11,6 +11,13 @@
                     <h2 class="mb-2">{{ __('custom.information') }} @if($item) <a class="fs-16" href="{{ route('advisory-boards.view', $item) }}" target="_blank">({{ $item->name }})</a> @endif</h2>
                 </div>
             </div>
+
+            @if($customContent)
+                <div class="row mb-4">
+                    {!! $customContent->value !!}
+                </div>
+            @endif
+
             @if($item)
                 <!-- Област на политика -->
                 <div class="row mb-4 ks-row">
@@ -389,7 +396,8 @@
 {{--                    </div>--}}
 {{--                </div>--}}
 {{--            @endif--}}
-            @else
+            @endif
+            @if(!$item && !$customContent))
                 <p>Не е открита информация</p>
             @endif
         </div>

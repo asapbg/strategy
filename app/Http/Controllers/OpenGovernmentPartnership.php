@@ -210,12 +210,17 @@ class OpenGovernmentPartnership extends Controller
     public function forum(Request $request)
     {
         $advBoardId = Setting::where('name', '=', Setting::OGP_ADV_BOARD_FORUM)->first();
-        $item = !empty($advBoardId->value) ? AdvisoryBoard::find((int)$advBoardId->value) : null;
+        $customContent = Setting::where('name', '=', Setting::OGP_FORUM_INFO)->first();
+        $item = !empty($advBoardId->value) ? AdvisoryBoard::with(['chairmen', 'chairmen.translations',
+            'viceChairmen', 'viceChairmen.translations',
+            'members', 'members.translations', 'secretaryCouncil',
+            'secretaryCouncil.translations', 'meetings',
+            'meetings.translations', 'moderators'])->find((int)$advBoardId->value) : null;
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs(null, array(
             ['name' => __('custom.ogp_forum'), 'url' => '']
         ));
-        return $this->view('site.ogp.forum', compact('item', 'pageTitle'));
+        return $this->view('site.ogp.forum', compact('item', 'pageTitle', 'customContent'));
     }
 
     /**
