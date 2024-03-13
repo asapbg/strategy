@@ -29,7 +29,7 @@ class OgpPlanArea extends ModelActivityExtend
 
     public function area(): HasOne
     {
-        return $this->hasOne(OgpArea::class, 'id', 'ogp_area_id');
+        return $this->hasOne(OgpArea::class, 'id', 'ogp_area_id')->withTrashed();
     }
 
     public function arrangements(): HasMany

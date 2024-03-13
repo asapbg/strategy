@@ -195,7 +195,8 @@ class OpenGovernmentPartnership extends Controller
                         "start" => Carbon::parse($event->start)->startOfDay()->format('Y-m-d H:i:s'),
                         "end" => !empty($event->end) ? Carbon::parse($event->end)->endOfDay()->format('Y-m-d H:i:s') : Carbon::parse($event->start)->endOfDay()->format('Y-m-d H:i:s'),
                         "backgroundColor" => (Carbon::parse($event->start)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
-                        "borderColor" => (Carbon::parse($event->start)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef')
+                        "borderColor" => (Carbon::parse($event->start)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                        "oneDay" =>  empty($event->end)
                     );
                 }
             }

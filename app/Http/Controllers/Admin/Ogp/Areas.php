@@ -74,30 +74,44 @@ class Areas extends AdminController
 
     }
 
-    public function destroy(Request $request, OgpArea $area): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request, OgpArea $area)
     {
         $user = $request->user();
         if($user->cannot('delete', $area)) {
-            return response()->json([
-                'error' => 1,
-                'message' => __('messages.no_rights_to_view_content')
-            ]);
+            if($request->ajax()){
+                return response()->json([
+                    'error' => 1,
+                    'message' => __('messages.no_rights_to_view_content')
+                ]);
+            } else{
+                return back()->with('warning', __('messages.unauthorized'));
+            }
         }
 
         try {
             $area->delete();
-            return response()->json([
-                'error' => 0,
-                'row_id' => $request->get('row_id')
-            ]);
+
+            if($request->ajax()) {
+                return response()->json([
+                    'error' => 0,
+                    'row_id' => $request->get('row_id')
+                ]);
+            } else{
+                return redirect(route('admin.ogp.area.index'))->with('success', trans_choice('custom.ogp_areas', 1) .' ' .__('messages.deleted_successfully_f'));;
+            }
         }
         catch (\Exception $e) {
             Log::error($e);
 
-            return response()->json([
-                'error' => 1,
-                'message' => __('messages.system_error')
-            ]);
+            if($request->ajax()) {
+                return response()->json([
+                    'error' => 1,
+                    'message' => __('messages.system_error')
+                ]);
+            } else{
+                return redirect(route('admin.ogp.area.index'))->with('warning', __('messages.system_error'));
+            }
+
         }
     }
 }

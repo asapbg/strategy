@@ -39,7 +39,7 @@
                             <div>
                                 <p class="custom-left-border mb-1 @if(!$loop->first) mt-3 @endif">
                                     <i class="fas bi-calendar text-primary me-2"></i>
-                                    <strong>{{ displayDate($s['start']). (!empty($s['end']) ? ' - '.displayDate($s['end']) : '') }}</strong> - {{ $s['title'] }}
+                                    <strong>{{ displayDate($s['start']). (!$s['oneDay'] ? ' - '.displayDate($s['end']) : '') }}</strong> - {{ $s['title'] }}
                                 </p>
                                 @if(!empty($s['description_html']))
                                     {{ __('custom.description') }}: {!! $s['description_html'] !!}

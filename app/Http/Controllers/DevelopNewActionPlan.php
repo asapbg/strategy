@@ -57,9 +57,10 @@ class DevelopNewActionPlan extends Controller
                     "description" => $event->description ? clearAfterStripTag(strip_tags(html_entity_decode($event->description))) : '',
                     "description_html" => $event->description ? strip_tags(html_entity_decode($event->description)) : '',
                     "start" => Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d H:i:s'),
-                    "end" => Carbon::parse($event->end_date)->endOfDay()->format('Y-m-d H:i:s'),
+                    "end" => !empty($event->end_date) ? Carbon::parse($event->end_date)->endOfDay()->format('Y-m-d H:i:s') : Carbon::parse($event->start_date)->endOfDay()->format('Y-m-d H:i:s'),
                     "backgroundColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
-                    "borderColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef')
+                    "borderColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                    "oneDay" => empty($event->end_date)
                 );
             }
         }

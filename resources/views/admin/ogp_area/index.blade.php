@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            @includeIf('modals.delete-resource', ['resource' => $title_singular])
+            @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.ogp_areas', 1)])
         </div>
     </section>
 
