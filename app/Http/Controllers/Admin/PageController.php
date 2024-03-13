@@ -29,6 +29,11 @@ class PageController  extends AdminController
         $filter = $this->filters($request);
         //request comes from some module
         if($module) {
+            if(($module == PageModulesEnum::MODULE_OGP->value && !$request->user()->canAny(['manage.*', 'manage.partnership']))
+            || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && !$request->user()->canAny(['manage.*']))){
+                return back()->with('warning', __('messages.unauthorized'));
+            }
+
             $requestFilter['module'] = $module;
             unset($filter['module']);
             $customEditRouteName = match ((int)$module) {
@@ -73,6 +78,12 @@ class PageController  extends AdminController
     public function edit(Request $request, int $item, int $module = 0)
     {
         $customStoreRouteName = $customListRouteName = null;
+
+        if(($module == PageModulesEnum::MODULE_OGP->value && !$request->user()->canAny(['manage.*', 'manage.partnership']))
+            || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && !$request->user()->canAny(['manage.*']))){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
         //request comes from some module
         if($module) {
             $customStoreRouteName = match ($module) {
@@ -92,7 +103,7 @@ class PageController  extends AdminController
         } else {
             $item = Page::find($item);
         }
-        if( ($item && isset($item->id) && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Page::class) ) {
+        if( ($item && isset($item->id) && $request->user()->cannot('update', $item)) || (!$item && $request->user()->cannot('create', Page::class)) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -108,21 +119,18 @@ class PageController  extends AdminController
         $id = $validated['id'];
         $item = $id ? Page::find($id) : new Page();
 
-        if( ($id && $request->user()->cannot('update', $item)) ||
-            (
-                (!$module &&  $request->user()->cannot('create', Page::class)) ||
-                (
-                    $module &&
-                    (
-                        $module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value
-                        || ($module == PageModulesEnum::MODULE_OGP->value && $request->user()->hasRole([CustomRole::MODERATOR_PARTNERSHIP]))
-                    )
+        if(
+            (!$module && ( ($id && $request->user()->cannot('update', $item)) || (!$id && $request->user()->cannot('create', Page::class)) ))
+            || (
+                $module
+                && (
+                    ($module == PageModulesEnum::MODULE_OGP->value && (($id && $request->user()->cannot('update', $item)) || (!$request->user()->canAny(['manage.*', 'manage.partnership']))))
+                    || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && (($id && $request->user()->cannot('update', $item)) || (!$request->user()->canAny(['manage.*']))))
                 )
-            )
-        ) {
+            )){
             return back()->with('warning', __('messages.unauthorized'));
         }
-
+        
         DB::beginTransaction();
         try {
             if( empty($validated['slug']) ) {

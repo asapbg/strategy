@@ -232,15 +232,13 @@
                                     <p>{{ trans_choice('custom.news', 2) }}</p>
                                 </a>
                             </li>
-                            @canany(['manage.*'])
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.ogp.library', ['module' => \App\Enums\PageModulesEnum::MODULE_OGP->value]) }}"
-                                       class="nav-link @if(str_contains(url()->current(), 'ogp/library')) active @endif">
-                                        <i class="fas fa-circle nav-item-sub-icon"></i>
-                                        <p>{{ __('custom.library') }}</p>
-                                    </a>
-                                </li>
-                            @endcan
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ogp.library', ['module' => \App\Enums\PageModulesEnum::MODULE_OGP->value]) }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'ogp/library')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.library') }}</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.ogp.settings') }}"
                                    class="nav-link @if(request()->route()->getName() == 'admin.ogp.settings') active @endif">
