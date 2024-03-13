@@ -415,6 +415,7 @@ return [
     'settings.sections.system_strategy_doc'                        => 'Стратегически докумнети',
     'settings.sections.system_advisory_boards'                        => 'Консултативни съвети',
     'settings.sections.system_ogp'                        => 'Партньорство за отктито управление',
+    'settings.sections.legislative_init'                        => 'Законодателни инициативи',
     'settings.system_email'                     => 'Ел. поща за получаване на системни известия',
     'settings.op_text_bg'                     => 'Начален текст в рздела (BG)',
     'settings.op_text_en'                     => 'Начален текст в рздела (EN)',
@@ -434,6 +435,7 @@ return [
     'settings.review_period_notify'                     => 'Период на известяване за необходимост от проверка на актуалност на данните (в месеци). При \'0\', съобщенията се деактивират.',
     'settings.adv_board'                     => 'Консултативен съвет (OGP Forum)',
     'settings.info_forum'                     => 'Информация (OGP Forum)',
+    'settings.required_likes'                     => 'Необходима подкрепа (разлика между \'подкрепям\' и \'не подкрепям\')',
     //public sections
     'public_sections'                           => 'Библиотека|Библиотека',
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',

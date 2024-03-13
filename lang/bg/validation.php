@@ -748,5 +748,6 @@ return [
         'report_title_en' => 'Заглавие (EN)',
         'report_content_bg' => 'Съдържание (BG)',
         'report_content_en' => 'Съдържание (EN)',
+        'required_likes' => 'Необходима покрепа',
     ],
 ];

@@ -28,6 +28,9 @@ class Setting extends ModelActivityExtend
     const OGP_SECTION = 'system_ogp';
     const OGP_ADV_BOARD_FORUM = 'adv_board';
     const OGP_FORUM_INFO = 'info_forum';
+    const OGP_LEGISLATIVE_INIT_SECTION = 'legislative_init';
+    const OGP_LEGISLATIVE_INIT_REQUIRED_LIKES = 'required_likes';
+
 
     //activity
     protected string $logName = "settings";

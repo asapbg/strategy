@@ -303,6 +303,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/pc-subjects/store/{item?}', 'store')->name('pc_subjects.store');
     });
 
+    // Settings
+    Route::controller( \App\Http\Controllers\Admin\LegislativeInitiativeSettingsController::class)->prefix('/legislative_initiatives')->group(function () {
+        Route::get( '/{section?}', 'edit')->name('legislative_initiatives.settings');
+        Route::put( '/store', 'store')->name('legislative_initiatives.settings.store');
+    });
+
     // Legislative Initiatives
     Route::controller(LegislativeInitiativeController::class)->prefix('/legislative-initiatives')->group(function () {
         Route::get('', 'index')->name('legislative_initiatives.index');

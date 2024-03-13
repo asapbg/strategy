@@ -133,6 +133,14 @@ class SettingsSeeder extends Seeder
                 'editable' => 1,
                 'is_required' => 0
             ],
+            [
+                'section' => 'legislative_init',
+                'name' => 'required_likes',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 1,
+                'value' => 50
+            ],
         );
 
         foreach ($data as $s) {
