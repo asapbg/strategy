@@ -212,7 +212,7 @@ class seedOldPublicConsultations extends Command
                     } catch (\Exception $e) {
                         Log::error('Migration old startegy public consultations, comment and files: ' . $e);
                         DB::rollBack();
-                        dd($prepareNewPc, $comments ?? []);
+                        //dd($prepareNewPc, $comments ?? []);
                     }
                 }
                 $currentStep += $step;

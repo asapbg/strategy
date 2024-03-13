@@ -49,8 +49,15 @@ class OgpPlanRequest extends FormRequest
                 'ogp_status_id' => ['nullable', 'numeric'],
                 'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
             ];
-            return $this->getRules($rules, OgpPlan::translationFieldsProperties());
 
+            $fields = array();
+            foreach (OgpPlan::translationFieldsProperties() as $key => $v){
+                if(!in_array($key, ['report_title', 'report_content'])){
+                    $fields[$key] = $v;
+                }
+            }
+
+            return $this->getRules($rules, $fields);
         }
     }
 }

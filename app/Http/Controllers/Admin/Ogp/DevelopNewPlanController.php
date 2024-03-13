@@ -77,7 +77,6 @@ class DevelopNewPlanController extends AdminController
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
         $areas = $item->areas;
-
         return $this->view('admin.ogp_develop_plan.show', compact('item', 'translatableFields', 'areas'));
     }
 

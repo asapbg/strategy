@@ -93,7 +93,7 @@
                         <div class="col-12">
                             @foreach($item->importerInstitution->links as $l)
                                 @if(!$loop->first)
-                                <br>
+                                    <br>
                                 @endif
                                 <a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none"><i class="fas fa-regular fa-link  main-color me-1 fs-6"></i> {{ $l->title }}</a>
                             @endforeach
@@ -135,8 +135,8 @@
                             @foreach($actTypes as $row)
                                 <option value="{{ $row->id }}" data-level="{{ $row->consultation_level_id }}"
                                         @if(old('act_type_id', ($item->id ? $item->act_type_id : 0)) == $row->id) selected @endif
-{{--                                        data-id="{{ $row->id }}"--}}
-{{--                                        data-cl="{{ $row->consultationLevel->id }}"--}}
+                                    {{--                                        data-id="{{ $row->id }}"--}}
+                                    {{--                                        data-cl="{{ $row->consultationLevel->id }}"--}}
                                 >{{ $row->name }}</option>
                             @endforeach
                         @endif
@@ -147,44 +147,44 @@
                 </div>
             </div>
         </div>
-            <div class="col-md-4" id="pris_section">
-                <div class="form-group">
-                    <label class="col-sm-12 control-label" for="pris_id">Постановление</label>
-                    <div class="col-12">
-                        <select id="pris_id" name="pris_id" data-types2ajax="pris_doc" data-legalacttype="{{ \App\Models\LegalActType::TYPE_DECREES }}" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('pris_id'){{ 'is-invalid' }}@enderror">
-                            <option value="" @if(old('pris_id', ($item->id && $pris ? $item->pris_id : 0)) == 0) selected @endif>---</option>
-                            @if(!old('pris_id') && $pris)
-                                <option value="{{ $pris->id }}" selected>{{ $pris->displayName }}</option>
-                            @endif
-                        </select>
-                        @error('pris_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
+        <div class="col-md-4" id="pris_section">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="pris_id">Постановление</label>
+                <div class="col-12">
+                    <select id="pris_id" name="pris_id" data-types2ajax="pris_doc" data-legalacttype="{{ \App\Models\LegalActType::TYPE_DECREES }}" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('pris_id'){{ 'is-invalid' }}@enderror">
+                        <option value="" @if(old('pris_id', ($item->id && $pris ? $item->pris_id : 0)) == 0) selected @endif>---</option>
+                        @if(!old('pris_id') && $pris)
+                            <option value="{{ $pris->id }}" selected>{{ $pris->displayName }}</option>
+                        @endif
+                    </select>
+                    @error('pris_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4" id="law_section">
-                <div class="form-group">
-                    <label class="col-sm-12 control-label" for="law_id">Закон</label>
-                    <div class="col-12">
-                        <select name="law_id" class="form-control form-control-sm select2 @error('law_id'){{ 'is-invalid' }}@enderror">
-                            <option value="0">---</option>
-                            @if(isset($laws) && $laws->count())
-                                @foreach($laws as $row)
-                                    <option value="{{ $row->id }}"
-                                            @if(old('law_id', ($item->id ? $item->law_id : 0)) == $row->id) selected @endif
-                                            data-id="{{ $row->id }}"
-                                    >{{ $row->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                        @error('law_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
+        <div class="col-md-4" id="law_section">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="law_id">Действащ закон който се променя</label>
+                <div class="col-12">
+                    <select name="law_id" class="form-control form-control-sm select2 @error('law_id'){{ 'is-invalid' }}@enderror">
+                        <option value="0">---</option>
+                        @if(isset($laws) && $laws->count())
+                            @foreach($laws as $row)
+                                <option value="{{ $row->id }}"
+                                        @if(old('law_id', ($item->id ? $item->law_id : 0)) == $row->id) selected @endif
+                                        data-id="{{ $row->id }}"
+                                >{{ $row->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('law_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-4 my-3" id="legislative_programs">
@@ -208,7 +208,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-12 control-label" for="legislative_program_row_id">{{ trans_choice('custom.legislative_programs_rows', 1) }}</label>
+                <label class="col-sm-12 control-label" for="legislative_program_row_id">Законопроект от законодателната програма</label>
                 @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc" data-institution="{{ $institutionid }}"
                         data-urls2="{{ route('admin.select2.ajax', 'lp_record_pc') }}"
@@ -219,7 +219,7 @@
                     @endif
                 </select>
                 @error('legislative_program_row_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
+                <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
@@ -234,7 +234,7 @@
 
         <div class="col-md-4 my-3" id="operational_programs">
             <div class="form-group" id="operational_program_id" >
-                <label class="col-sm-12 control-label" for="operational_program_id">{{ trans_choice('custom.operational_programs', 1) }}</label>
+                <label class="col-sm-12 control-label" for="operational_program_id">Законопроект от оперативна програма</label>
                 <div class="col-12">
                     <select name="operational_program_id" class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
                         <option value="0" @if(old('operational_program_id', ($item->id ? $item->operational_program_id : 0)) == 0) selected @endif>---</option>
@@ -335,7 +335,7 @@
         <div class="form-group">
             <label class="col-md-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
             <div class="col-12">
-{{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
+                {{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
                 <select id="connected_pc" name="connected_pc[]" multiple="multiple" data-current="{{ $item->id ?? 0 }}"  data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror">
                     @if($item->consultations->count())
                         @foreach($item->consultations as $row)
@@ -348,17 +348,17 @@
                 @enderror
             </div>
         </div>
-{{--        @php($pcByOpLp = $item->connectedConsultationByProgram())--}}
+        {{--        @php($pcByOpLp = $item->connectedConsultationByProgram())--}}
         @php($pcByDecree = $item->decree ? $item->decree->decreesConsultation : null)
         @if($pcByDecree)
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="connected_pc">{{ __('custom.connections_by_op_lp') }}</label>
                 <div class="col-12">
-    {{--                @if($pcByOpLp->count())--}}
-    {{--                    @foreach($pcByOpLp as $row)--}}
-    {{--                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>--}}
-    {{--                    @endforeach--}}
-    {{--                @endif--}}
+                    {{--                @if($pcByOpLp->count())--}}
+                    {{--                    @foreach($pcByOpLp as $row)--}}
+                    {{--                        <p>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</p>--}}
+                    {{--                    @endforeach--}}
+                    {{--                @endif--}}
                     @php($found = false)
                     @if($pcByDecree && $pcByDecree->count())
                         @foreach($pcByDecree as $row)
@@ -379,17 +379,17 @@
     </div>
 
     <div class="row">
-{{--        <div class="col-md-3">--}}
-{{--            <div class="form-group">--}}
-{{--                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>--}}
-{{--                <input type="text" id="monitorstat" name="monitorstat"--}}
-{{--                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"--}}
-{{--                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">--}}
-{{--                @error('monitorstat')--}}
-{{--                <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--                @enderror--}}
-{{--            </div>--}}
-{{--        </div>--}}
+        {{--        <div class="col-md-3">--}}
+        {{--            <div class="form-group">--}}
+        {{--                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>--}}
+        {{--                <input type="text" id="monitorstat" name="monitorstat"--}}
+        {{--                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"--}}
+        {{--                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">--}}
+        {{--                @error('monitorstat')--}}
+        {{--                <div class="text-danger mt-1">{{ $message }}</div>--}}
+        {{--                @enderror--}}
+        {{--            </div>--}}
+        {{--        </div>--}}
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
@@ -438,14 +438,22 @@
                     });
 
                     $('#field_of_actions_id').val('').trigger('change');
+
                     $('#field_of_actions_id option').each(function (){
-                        if(foa.indexOf(parseInt($(this).attr('value'))) != -1) {
-                            $(this).attr('disabled', false);
+                        if(typeof foa != 'undefined'){
+                            if(foa.indexOf(parseInt($(this).attr('value'))) != -1) {
+                                $(this).attr('disabled', false);
+                            } else{
+                                $(this).attr('disabled', true);
+                            }
                         } else{
                             $(this).attr('disabled', true);
                         }
                     });
                 });
+
+
+                $('#institution_id').trigger('change');
             });
         </script>
     @endpush

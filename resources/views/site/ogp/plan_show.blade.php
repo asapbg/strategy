@@ -93,7 +93,7 @@
                                                     <hr class="custom-hr mb-2">
                                                     <h3 class="fs-18">{{ __('ogp.ogp_plan_arrangement_description') }}</h3>
                                                     <hr class="custom-hr mb-2">
-                                                    <p>
+                                                    <p class="custom-left-border" style="font-size: 28px;">
                                                         <strong>{{ trans_choice('custom.arrangement', 1) }}:</strong> {{ $a->name }}
                                                     </p>
                                                     <p>

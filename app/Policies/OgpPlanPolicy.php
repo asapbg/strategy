@@ -121,7 +121,7 @@ class OgpPlanPolicy
     {
         return $user->canAny(['manage.*','manage.partnership'])
             && !OgpPlan::NotNational()->whereHas('status', function ($q){
-                $q->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value]);
+                $q->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value]);
             })->get()->count();
     }
 

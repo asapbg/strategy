@@ -1,5 +1,6 @@
 @php($disabled = $disabled ?? false)
 <div class="row">
+    @if(isset($ogpArea))
     <div class="col-md-4">
         <form method="POST" action="{{ route('admin.ogp.plan.develop.add_area', $item->id) }}">
             @csrf
@@ -25,6 +26,7 @@
             </div>
         </form>
     </div>
+    @endif
     <div class="col-md-8">
         @if(!$disabled)
             <form action="{{ route('admin.ogp.plan.develop.'.($item->id ? "edit" : "create").'_store') }}" method="post" name="form" id="form">
