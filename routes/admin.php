@@ -635,14 +635,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(\App\Http\Controllers\Admin\Ogp\Plans::class)->prefix('/ogp/plans')->group(function () {
         Route::get('', 'index')->name('ogp.plan.index');
         Route::get('create', 'create')->name('ogp.plan.create');
-        Route::post('add-area/{plan}', 'addArea')->name('ogp.plan.add_area');
         Route::get('edit/{id}', 'edit')->name('ogp.plan.edit');
         Route::post('edit/store', 'store')->name('ogp.plan.create_store');
         Route::put('edit/store', 'store')->name('ogp.plan.edit_store');
         Route::post('delete/{plan}', 'destroy')->name('ogp.plan.delete');
+        Route::post('edit/area/{area}/order', 'orderArea')->name('ogp.plan.order_area');
+        Route::post('add-area/{plan}', 'addArea')->name('ogp.plan.add_area');
+        Route::post('area/delete/{area}', 'deleteArea')->name('ogp.plan.delete_area');
 
         Route::get('arrangement/{ogpPlanArea}/{id?}', 'editArrangement')->name('ogp.plan.arrangement.edit');
         Route::post('arrangement/{ogpPlanArea}', 'editArrangementStore')->name('ogp.plan.arrangement.edit_store');
+        Route::post('arrangement/delete/{arrangement}', 'deleteArrangement')->name('ogp.plan.arrangement.delete');
+
 
         Route::get('arrangement/{ogpPlanArea}/{id?}/evaluation', 'editArrangementEvaluation')->name('ogp.plan.arrangement.edit.evaluation');
         Route::post('arrangement/{ogpPlanArea}/evaluation', 'editArrangementEvaluationStore')->name('ogp.plan.arrangement.edit.evaluation_store');
@@ -667,6 +671,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('delete/{plan}', 'delete')->name('ogp.plan.develop.delete');
 //        Route::post('delete/{plan}', 'destroy')->name('ogp.plan.develop.delete');
         Route::get('schedule/{plan}', 'schedule')->name('ogp.plan.develop.schedule');
+        Route::post('area/delete/{area}', 'deleteArea')->name('ogp.plan.develop.delete_area');
+        Route::post('edit/area/{area}/order', 'orderArea')->name('ogp.plan.develop.order_area');
 
         Route::get('arrangement/{ogpPlanArea}/{id?}', 'editArrangement')->name('ogp.plan.develop.arrangement.edit');
         Route::post('arrangement/{ogpPlanArea}', 'editArrangementStore')->name('ogp.plan.develop.arrangement.edit_store');

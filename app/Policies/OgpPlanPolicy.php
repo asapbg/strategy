@@ -72,6 +72,17 @@ class OgpPlanPolicy
         return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
     }
 
+
+    public function deleteArea(User $user, OgpPlan $ogpPlan)
+    {
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
+    }
+
+    public function deleteArrangement(User $user, OgpPlan $ogpPlan)
+    {
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
+    }
+
     /**
      * Determine whether the user can restore the model.
      *
@@ -138,6 +149,13 @@ class OgpPlanPolicy
             && !$ogpPlan->national_plan
             && (in_array($ogpPlan->status->type, [OgpStatusEnum::DRAFT->value, OgpStatusEnum::IN_DEVELOPMENT->value]));
     }
+
+    public function deleteDevelopArea(User $user, OgpPlan $ogpPlan)
+    {
+        return $user->canAny(['manage.*','manage.partnership']) && !$ogpPlan->national_plan
+            && (in_array($ogpPlan->status->type, [OgpStatusEnum::DRAFT->value, OgpStatusEnum::IN_DEVELOPMENT->value]));
+    }
+
 
     public function viewPublic(User $user, OgpPlan $ogpPlan)
     {

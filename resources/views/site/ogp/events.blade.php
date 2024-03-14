@@ -7,12 +7,11 @@
 
         <div class="col-lg-10 right-side-content py-5" id="listContainer">
             <div class="row">
-                <div class="col-md-7">
-                    <div id="calendar"></div>
+                <div class="col-md-12 mb-4">
+                    <h3 class="mb-2">{{ trans_choice('custom.lists', 1) }} {{ __('custom.with_long') }} {{ mb_strtolower(trans_choice('custom.events', 2)) }}</h3>
                 </div>
                 @if(isset($itemsCalendar) && sizeof($itemsCalendar))
-                    <div class="col-12">
-                        <h3 class="mt-4 mb-2 fs-4">{{ trans_choice('custom.lists', 1) }} {{ __('custom.with_long') }} {{ mb_strtolower(trans_choice('custom.events', 2)) }}</h3>
+                    <div class="col-md-5">
                         @foreach($itemsCalendar as $event)
                             <div>
                                 <p class="custom-left-border mb-1 @if(!$loop->first) mt-3 @endif">
@@ -20,7 +19,7 @@
                                     <strong>{{ displayDate($event['start']). (!$event['oneDay'] ? ' - '.displayDate($event['end']) : '') }}</strong> - {{ $event['title'] }}
                                 </p>
                                 @if(!empty($event['description_html']))
-                                    {{ __('custom.description') }}: {!! $event['description_html'] !!}
+                                    <strong>{{ __('custom.description') }}</strong>: {!! $event['description_html'] !!}
                                 @endif
                             </div>
                             {{--                            <div class="col-12 mb-3">--}}
@@ -32,6 +31,9 @@
                         @endforeach
                     </div>
                 @endif
+                <div class="col-md-7">
+                    <div id="calendar"></div>
+                </div>
             </div>
         </div>
 

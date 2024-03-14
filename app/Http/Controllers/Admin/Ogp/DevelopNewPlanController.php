@@ -183,12 +183,77 @@ class DevelopNewPlanController extends AdminController
         }
 
         try {
+            if($plan->areas->count()){
+                foreach ($plan->areas as $a){
+                    $a->offers()->delete();
+                }
+            }
+            $plan->areas();
+            $plan->schedules();
             $plan->delete();
             return redirect(route('admin.ogp.plan.develop.index'))->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
         }
         catch (\Exception $e) {
             Log::error($e);
             return back()->with('warning', __('messages.system_error'));
+        }
+    }
+
+    public function deleteArea(Request $request, OgpPlanArea $area)
+    {
+        $user = $request->user();
+        if(!$area || !$area->id) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if($user->cannot('deleteDevelopArea', $area->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        try {
+            $area->arrangements()->delete();
+            $area->delete();
+            return redirect(route('admin.ogp.plan.develop.edit', ['id' => $area->plan->id]))->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return back()->with('warning', __('messages.system_error'));
+        }
+    }
+
+    public function orderArea(Request $request, OgpPlanArea $area)
+    {
+        if(!$area || !$area->id) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        $validator = Validator::make($request->all(), [
+            'ord' => 'required|numeric|gt:0',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if($request->user()->cannot('updateDevelopPlan', $area->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $validated = $validator->validated();
+            $area->ord = $validated['ord'];
+            $area->save();
+            DB::commit();
+            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
+                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
 

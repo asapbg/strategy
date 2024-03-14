@@ -76,6 +76,18 @@ class ViewServiceProvider extends ServiceProvider
             //TODO add other previews plans
 
             $view->with('nationalPlans', $nationalPlans);
+
+            $developPlan = OgpPlan::select('ogp_plan.*')
+                ->Active()
+                ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
+                ->leftJoin('ogp_plan_translations', function ($j){
+                    $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
+                        ->where('ogp_plan_translations.locale', '=', app()->getLocale());
+                })
+                ->where('ogp_status.type', OgpStatusEnum::IN_DEVELOPMENT->value)
+                ->orderBy('ogp_plan.created_at', 'desc')
+                ->count();
+            $view->with('developPlan', $developPlan);
         });
 
         View::composer('impact_assessment.sidebar', function ($view) {

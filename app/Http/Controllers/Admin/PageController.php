@@ -130,7 +130,7 @@ class PageController  extends AdminController
             )){
             return back()->with('warning', __('messages.unauthorized'));
         }
-        
+
         DB::beginTransaction();
         try {
             if( empty($validated['slug']) ) {
@@ -151,29 +151,22 @@ class PageController  extends AdminController
             $this->storeTranslateOrNew(Page::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
+
+            $route = route(self::EDIT_ROUTE, $item);
+            if($module){
+                $route = match ((int)$module) {
+                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library.edit', ['item' => $item, 'module' => $module]),
+                    PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library.edit', ['item' => $item, 'module' => $module]),
+                    default => null,
+                };
+            }
             if( $id ) {
-                $route = route(self::EDIT_ROUTE, $item);
-                //request comes from some module
-                if($module) {
-                    $route = match ((int)$module) {
-                        PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library.edit', ['item' => $item, 'module' => $module]),
-                        PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library.edit', ['item' => $item, 'module' => $module]),
-                        default => null,
-                    };
-                }
                 return redirect($route)
                     ->with('success', trans_choice('custom.pages', 1)." ".__('messages.updated_successfully_m'));
             }
 
-            $route = route(self::EDIT_ROUTE, $item);
             //request comes from some module
             if($module) {
-                $route = match ((int)$module) {
-                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library', ['module' => $module]),
-                    PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library', ['module' => $module]),
-                    default => null,
-                };
-
                 $modulePagesCacheKey = match ($module){
                     PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT,
                     PageModulesEnum::MODULE_OGP->value => Page::CACHE_MODULE_PAGES_OGP,

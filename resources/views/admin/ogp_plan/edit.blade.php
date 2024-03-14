@@ -114,6 +114,47 @@
                     @endif
                     @foreach($areas as $rows)
                         <div class="tab-pane fade" id="area-tab-{{ $rows->id }}" role="tabpanel" aria-labelledby="area-tab-{{ $rows->id }}-tab">
+                            <div class="row mb-5">
+                                <form action="{{ route('admin.ogp.plan.order_area', $rows) }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="ord" value="{{ $rows->ord }}">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group row">
+                                                <label class="col-md-4 control-label" for="from_date">{{ __('custom.order') }}: <span class="required">*</span></label>
+                                                <div class="col-md-6">
+                                                    <div class="input-group">
+                                                        <input type="number" name="ord" class="form-control form-control-sm @error('ord'){{ 'is-invalid' }}@enderror" aria-describedby="basic-addon2" value="{{ old('ord', $rows->ord) }}" autocomplete="off">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-sm btn-success" type="submit"><i class="fas fa-save mr-2"></i> {{ __('custom.save') }}</button>
+                                                        </div>
+                                                    </div>
+                                                    @error('ord')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 text-right">
+                                            @can('deleteArea', $item)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $rows->id }}"
+                                                   data-resource-name="{{ $rows->area->name }}"
+                                                   data-resource-delete-url="{{route('admin.ogp.plan.delete_area',$rows->id)}}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.deletion')}}">
+                                                    <i class="fa fa-trash"></i> Изтриване на областта
+                                                </a>
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <h5>{{ __('ogp.action_plan_measures') }}</h5>
+                            <hr>
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <a href="{{ route('admin.ogp.plan.arrangement.edit', $rows->id) }}" class="btn btn-success">
@@ -121,8 +162,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <h5>{{ __('ogp.action_plan_measures') }}</h5>
-                            <hr>
 
                             <div class="accordion" id="accordionExample">
                             @foreach($rows->arrangements()->orderBy('created_at', 'desc')->get() as $arrangement)
@@ -136,5 +175,7 @@
             </div>
         </div>
     </div>
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.ogp_areas', 1)])
+    @includeIf('modals.delete-resource', ['modal_id' =>'arrangement_delete_modal', 'resource' => trans_choice('ogp.arrangements', 1)])
 </section>
 @endsection

@@ -20,7 +20,7 @@ class OgpPlanArea extends ModelActivityExtend
     //activity
     protected string $logName = "ogp_plan_area";
 
-    protected $fillable = ['ogp_plan_id', 'ogp_area_id'];
+    protected $fillable = ['ogp_plan_id', 'ogp_area_id', 'ord'];
 
     public function plan(): HasOne
     {

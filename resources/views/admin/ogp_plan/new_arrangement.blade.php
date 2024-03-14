@@ -13,6 +13,11 @@
                         <input type="hidden" name="id" value="{{ $item && $item->id ? $item->id : 0 }}" />
                         <div class="row mb-4">
                             <div class="col-md-12">
+                                <strong>Срок на действие на плана</strong>: {{ displayDate($ogpPlanArea->plan->from_date) }} - {{ displayDate($ogpPlanArea->plan->to_date) }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
                                 <div class="add-suggestion">
                                     <div class="row">
                                         <div class="row">
@@ -30,7 +35,7 @@
                                             @include('admin.partial.edit_field_translate', ['field' => 'problem', 'required' => false])
                                         </div>
                                         <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true])
+                                            @include('admin.partial.edit_field_translate', ['field' => 'content', 'required' => true, 'custom_lang_key' => 'ogp_arrangement_content'])
                                         </div>
                                         <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'solving_problem', 'required' => false])

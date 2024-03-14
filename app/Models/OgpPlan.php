@@ -91,7 +91,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     public function areas(): HasMany
     {
-        return $this->hasMany(OgpPlanArea::class, 'ogp_plan_id', 'id');
+        return $this->hasMany(OgpPlanArea::class, 'ogp_plan_id', 'id')->orderBy('ord', 'asc');
     }
 
     public function schedules(): HasMany

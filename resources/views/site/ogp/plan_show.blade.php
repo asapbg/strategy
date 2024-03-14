@@ -73,7 +73,7 @@
                                 <button class="accordion-button text-dark fs-18 fw-600" type="button"
                                         data-toggle="collapse" data-target="#collapse-{{ $loop->iteration }}"
                                         aria-controls="collapse-{{ $loop->iteration }}">
-                                    {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
+                                    {{ __('ogp.subject_area') }} - {{ $row->area->name }}
                                 </button>
                             </h2>
 {{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}

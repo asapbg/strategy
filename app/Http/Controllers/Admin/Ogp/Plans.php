@@ -60,7 +60,7 @@ class Plans extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        if($id && Carbon::parse($item->to_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
+        if($id && Carbon::parse($item->from_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
             && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
             $evaluationEdit = true;
         }
@@ -207,6 +207,50 @@ class Plans extends AdminController
 
     }
 
+    public function deleteArea(Request $request, OgpPlanArea $area)
+    {
+        $user = $request->user();
+        if(!$area || !$area->id) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if($user->cannot('deleteArea', $area->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        try {
+            $area->arrangements()->delete();
+            $area->delete();
+            return redirect(route('admin.ogp.plan.edit', ['id' => $area->plan->id]))->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return back()->with('warning', __('messages.system_error'));
+        }
+    }
+
+    public function deleteArrangement(Request $request, OgpPlanArrangement $arrangement)
+    {
+        $user = $request->user();
+        if(!$arrangement || !$arrangement->id) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if($user->cannot('deleteArea', $arrangement->ogpPlanArea->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        try {
+            $arrangement->delete();
+            return redirect(route('admin.ogp.plan.edit', $arrangement->ogpPlanArea->ogp_plan_id). '#area-tab-'. $arrangement->ogpPlanArea->id)
+                ->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return back()->with('warning', __('messages.system_error'));
+        }
+    }
+
     public function destroy(Request $request, OgpPlan $plan): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
@@ -243,7 +287,7 @@ class Plans extends AdminController
         if ($validator->fails()) {
             return to_route('admin.ogp.plan.edit', ['id' => $plan->id])
                 ->withErrors($validator)
-                ->withInput();;
+                ->withInput();
         }
         if($request->user()->cannot('update', $plan)) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -260,6 +304,42 @@ class Plans extends AdminController
 
             DB::commit();
             return to_route('admin.ogp.plan.edit', ['id' => $plan->id])
+                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function orderArea(Request $request, OgpPlanArea $area)
+    {
+        if(!$area || !$area->id) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        $validator = Validator::make($request->all(), [
+            'ord' => 'required|numeric|gt:0',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect(route('admin.ogp.plan.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if($request->user()->cannot('update', $area->plan)) {
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $validated = $validator->validated();
+            $area->ord = $validated['ord'];
+            $area->save();
+            DB::commit();
+            return redirect(route('admin.ogp.plan.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
                 ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

@@ -140,7 +140,7 @@
                 </div>
             </div>
 
-            @includeIf('modals.delete-resource', ['resource' => $title_singular])
+            @includeIf('modals.delete-resource', ['resource' => 'Национален план'])
         </div>
     </section>
 

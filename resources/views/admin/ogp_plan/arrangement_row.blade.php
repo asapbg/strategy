@@ -19,26 +19,83 @@
                                 </a>
                         @endif
                     @endcan
+                    @can('deleteArrangement', $item->ogpPlanArea->plan)
+                        <a href="javascript:;"
+                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
+                           data-target="#arrangement_delete_modal"
+                           data-resource-id="{{ $item->id }}"
+                           data-resource-name="{{ $item->name }}"
+                           data-resource-delete-url="{{ route('admin.ogp.plan.arrangement.delete', $item) }}"
+                           data-toggle="tooltip"
+                           title="{{__('custom.deletion')}}">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    @endcan
                 </h2>
             </div>
 {{--        </div>--}}
         <div id="collapse{{ $iteration }}" class="collapse @if($iteration == 1) show @endif" aria-labelledby="heading{{ $iteration }}" data-parent="#accordionExample">
             <div class="card-body">
-               @foreach(\App\Models\OgpPlanArrangement::TRANSLATABLE_FIELDS as $field)
-                   @if(!in_array($field, ['evaluation', 'evaluation_status']) || $evaluationEdit)
-                        <div class="row mb-2">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h4 class="custom-left-border">Описание на мярката:</h4>
+                    </div>
+                    @php($baseInfoFields = ['name', 'responsible_administration', 'problem', 'content', 'solving_problem', 'values_initiative', 'extra_info', 'npo_partner', 'interested_org'])
+                    @foreach($baseInfoFields as $field)
+                        @foreach (config('available_languages') as $locale)
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @php($label = $field == 'content' ? 'ogp_arrangement_content_'.$locale['code'] : $field.'_'.$locale['code'])
+                                    <label for="example">{{ __('validation.attributes.'.$label) }}</label>
+                                    <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h4 class="custom-left-border">Контактна информация:</h4>
+                    </div>
+                    @php($contactInfoFields = ['contact_names', 'contact_positions', 'problem', 'contact_phone_email'])
+                    @foreach($contactInfoFields as $field)
+                        @foreach (config('available_languages') as $locale)
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @php($label = $field == 'content' ? 'ogp_arrangement_content_'.$locale['code'] : $field.'_'.$locale['code'])
+                                    <label for="example">{{ __('validation.attributes.'.$label) }}</label>
+                                    <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
+
+                @if($evaluationEdit)
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <h4 class="custom-left-border">Оценка за изпълнението на плановете за действие - мониторинг:</h4>
+                        </div>
+                        @php($evalInfoFields = ['evaluation', 'evaluation_status'])
+                        @foreach($evalInfoFields as $field)
                             @foreach (config('available_languages') as $locale)
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example">{{ __('validation.attributes.'.$field.'_'.$locale['code']) }}</label>
+                                        @php($label = $field == 'content' ? 'ogp_arrangement_content_'.$locale['code'] : $field.'_'.$locale['code'])
+                                        <label for="example">{{ __('validation.attributes.'.$label) }}</label>
                                         <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
                                     </div>
                                 </div>
                             @endforeach
-                        </div>
-                    @endif
-                @endforeach
+                        @endforeach
+                    </div>
+                @endif
                 <div class="row mb-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="custom-left-border">Начална и крайна дата за изпълнение на мярката:</h4>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="example">{{ __('ogp.from_date') }}</label>
@@ -82,3 +139,4 @@
 {{--    </div>--}}
 </div>
 {{--</div>--}}
+

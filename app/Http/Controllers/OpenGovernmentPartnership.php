@@ -164,7 +164,8 @@ class OpenGovernmentPartnership extends Controller
                     from advisory_board_meetings
                     left join advisory_board_meeting_translations on advisory_board_meeting_translations.advisory_board_meeting_id = advisory_board_meetings.id and advisory_board_meeting_translations.locale = \''.app()->getLocale().'\'
                     where
-                        advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value.'
+                        advisory_board_meetings.deleted_at is null
+                        and advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value.'
                     '.($ogpPlan ?
                         'union all
                             select
@@ -178,7 +179,8 @@ class OpenGovernmentPartnership extends Controller
                             from ogp_plan_schedule
                             left join ogp_plan_schedule_translations on ogp_plan_schedule_translations.ogp_plan_schedule_id = ogp_plan_schedule.id and ogp_plan_schedule_translations.locale = \''.app()->getLocale().'\'
                             where
-                                ogp_plan_schedule.ogp_plan_id = '.$ogpPlan->id.' '
+                                ogp_plan_schedule.deleted_at is null
+                                and ogp_plan_schedule.ogp_plan_id = '.$ogpPlan->id.' '
                     : '').'
                 ) events
                 order by events.start desc

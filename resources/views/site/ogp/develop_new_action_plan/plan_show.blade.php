@@ -42,7 +42,7 @@
                                     <strong>{{ displayDate($s['start']). (!$s['oneDay'] ? ' - '.displayDate($s['end']) : '') }}</strong> - {{ $s['title'] }}
                                 </p>
                                 @if(!empty($s['description_html']))
-                                    {{ __('custom.description') }}: {!! $s['description_html'] !!}
+                                    <strong>{{ __('custom.description') }}</strong>: {!! $s['description_html'] !!}
                                 @endif
                             </div>
                         @endforeach

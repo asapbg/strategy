@@ -50,7 +50,7 @@ class DevelopNewActionPlan extends Controller
 
         $schedules = [];
         if($item && $item->schedules->count()){
-            foreach ($item->schedules()->orderBy('start_date','asc')->get() as $event){
+            foreach ($item->schedules()->orderBy('start_date','desc')->get() as $event){
                 $schedules[] = array(
                     "id" => $event->id,
                     "title" => $event->name,

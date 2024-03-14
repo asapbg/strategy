@@ -26,7 +26,6 @@
                                         <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'evaluation_status', 'required' => false])
                                         </div>
-
                                         <div class="col-md-12 mb-2">
                                             <div class="col-md-12">
                                                 <button class="btn btn-success" title="{{ __('custom.save') }}">
