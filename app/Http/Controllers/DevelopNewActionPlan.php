@@ -49,7 +49,7 @@ class DevelopNewActionPlan extends Controller
         $this->composeBreadcrumbs($item);
 
         $schedules = [];
-        if($item->schedules->count()){
+        if($item && $item->schedules->count()){
             foreach ($item->schedules()->orderBy('start_date','asc')->get() as $event){
                 $schedules[] = array(
                     "id" => $event->id,
