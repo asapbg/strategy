@@ -22,6 +22,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     const DEFAULT_IMG_LIBRARY = 'img'.DIRECTORY_SEPARATOR.'library.jpg';
     const DEFAULT_IMG_NEWS = 'img'.DIRECTORY_SEPARATOR.'news-2.jpg';
     const DEFAULT_IMG_ADV = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
+    const DEFAULT_IMG_OGP = 'images'.DIRECTORY_SEPARATOR.'ogp-img.png';
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
@@ -91,7 +92,8 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     {
         return Attribute::make(
             get: fn () => $this->type == PublicationTypesEnum::TYPE_ADVISORY_BOARD->value ? asset(self::DEFAULT_IMG_ADV)
-                : ($this->type == PublicationTypesEnum::TYPE_NEWS->value ? asset(self::DEFAULT_IMG_NEWS) : asset(self::DEFAULT_IMG_LIBRARY) ),
+                : ($this->type == PublicationTypesEnum::TYPE_NEWS->value ? asset(self::DEFAULT_IMG_NEWS)
+                    : ($this->type == PublicationTypesEnum::TYPE_OGP_NEWS->value ? asset(self::DEFAULT_IMG_OGP) : asset(self::DEFAULT_IMG_LIBRARY)) ),
         );
     }
 

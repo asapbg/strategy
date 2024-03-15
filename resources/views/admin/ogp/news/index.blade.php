@@ -10,7 +10,7 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PublicationController@index'])
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\OgpNewsController@index'])
                         @can('createOgp', \App\Models\Publication::class)
                             <a href="{{ route($editRouteName, 0) }}" class="btn btn-sm btn-success">
                                 <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}

@@ -35,7 +35,7 @@
              class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img publication-main-img img-thumbnail"
         >
     @endif
-    {!! $publication->content !!}
+    {!! str_replace(['&nbsp;', '&amp;'], '', html_entity_decode($publication->content)) !!}
 </div>
 
 @php

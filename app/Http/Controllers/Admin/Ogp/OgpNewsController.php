@@ -43,14 +43,10 @@ class OgpNewsController extends AdminController
             $requestFilter['active'] = 1;
         }
 
-        $userAdvBoards = $request->user()->hasAnyRole(
-            [CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_PARTNERSHIP]) ?
-            null
-            : ($request->user()->advisoryBoards->count() ? $request->user()->advisoryBoards->pluck('advisory_board_id')->toArray() : [0]);
-
         $items = Publication::with(['translation', 'mainImg'])
             ->Ogp()
             ->FilterBy($requestFilter)
+            ->orderBy('published_at', 'desc')
             ->orderBy('id', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Publication';
