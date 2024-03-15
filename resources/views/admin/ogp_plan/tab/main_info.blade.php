@@ -70,6 +70,28 @@
             </div>
             <div class="row">
                 <div class="col-6">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label" for="develop_plan_id">{{ __('custom.connection') }} {{ __('custom.with') }} {{ __('custom.develop_plan') }}</label>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <select @if(!$devPlanEdit) disabled readonly @endif id="develop_plan_id" name="develop_plan_id" class="form-control form-control-sm @error('develop_plan_id'){{ 'is-invalid' }}@enderror">
+                                    <option></option>
+                                    @if($devPlans->count())
+                                        @foreach($devPlans as $v)
+                                            <option value="{{ $v->id }}" @if(old('develop_plan_id', $item->develop_plan_id ?? '') == $v->id) selected="selected" @endif>{{ $v->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            @error('develop_plan_id')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
                     @include('admin.partial.active_field')
                 </div>
             </div>
@@ -99,6 +121,8 @@
                 <div class="col-md-6 col-md-offset-3">
                     @if($disabled && !$evaluationEdit)
                         <button id="save_status" type="submit" name="save_status" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
+                    @elseif($disabled && $evaluationEdit)
+                        <button id="save_dev_plan" type="submit" name="save_dev_plan" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
                     @endif
                     @if(!$disabled)
                         <button id="save" type="submit" name="save" class="btn btn-success" value="1">{{ __('custom.save') }}</button>

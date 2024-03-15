@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
 
         //OGP module
         $schedule->command('ogp:to_development')->daily();
+        $schedule->command('ogp:ogp:to_final')->daily();
     }
 
     /**

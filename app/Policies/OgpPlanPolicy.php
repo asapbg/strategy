@@ -159,7 +159,10 @@ class OgpPlanPolicy
 
     public function viewPublic(User $user, OgpPlan $ogpPlan)
     {
-        return $user->id && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value;
+        return $user->id && (
+                $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value
+                || ($ogpPlan->status->type != OgpStatusEnum::DRAFT->value && $ogpPlan->has('plan'))
+            );
     }
 
 }

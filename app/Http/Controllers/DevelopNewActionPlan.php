@@ -87,9 +87,8 @@ class DevelopNewActionPlan extends Controller
      * @param Request $request
      * @param OgpPlan $plan
      * @param OgpPlanArea $area
-     * @return View
      */
-    public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea): View
+    public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea)
     {
         if(auth()->user()->cannot('viewPublic', $plan)) {
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
@@ -99,7 +98,7 @@ class DevelopNewActionPlan extends Controller
         return $this->view('site.ogp.develop_new_action_plan.plan_area_show', compact('plan', 'planArea', 'pageTitle'));
     }
 
-    public function offer(Request $request, OgpPlan $plan, OgpPlanArea $planArea, OgpPlanAreaOffer $offer): View
+    public function offer(Request $request, OgpPlan $plan, OgpPlanArea $planArea, OgpPlanAreaOffer $offer)
     {
         if(auth()->user()->cannot('viewPublic', $plan)) {
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
@@ -117,7 +116,6 @@ class DevelopNewActionPlan extends Controller
         $validated['users_id'] = $request->user()->id;
         $item = OgpPlanArea::find($id);
         $offer_id = (int)$request->get('offer', 0);
-
 
         if(!$id || $item->plan->status->type != OgpStatusEnum::IN_DEVELOPMENT->value){
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));

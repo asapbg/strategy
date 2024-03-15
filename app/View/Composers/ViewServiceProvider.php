@@ -58,9 +58,9 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('library', $library);
 
             $nationalPlans = [
-                ['id' => OldNationalPlanEnum::FIRST->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::FIRST->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::FIRST->value)],
-                ['id' => OldNationalPlanEnum::SECOND->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value)],
-                ['id' => OldNationalPlanEnum::THIRD->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::THIRD->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::THIRD->value)],
+                ['id' => OldNationalPlanEnum::FIRST->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::FIRST->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::FIRST->value), 'old' => true],
+                ['id' => OldNationalPlanEnum::SECOND->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value), 'old' => true],
+                ['id' => OldNationalPlanEnum::THIRD->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::THIRD->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::THIRD->value), 'old' => true],
             ];
             $nationalPlan = OgpPlan::Active()
                 ->National()
@@ -70,7 +70,7 @@ class ViewServiceProvider extends ServiceProvider
 
             if($nationalPlan->count()) {
                 foreach ($nationalPlan as $plan){
-                    $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $plan->id), 'id' => $plan->id, 'label' => $plan->name];
+                    $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $plan->id), 'id' => $plan->id, 'label' => $plan->name, 'old' => false];
                 }
             }
             //TODO add other previews plans

@@ -85,9 +85,10 @@
                                     <div class="consult-body">
                                         <div class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
+                                                @php($editRoute = isset($nationalPlanSection) ? route('ogp.national_action_plans.develop_plan.area', ['id' => $item->plan->id, 'planArea' => $area->id]) : route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]))
                                                 <div class="consult-item-header-link">
-                                                    <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->ogp_area_id]) }}" class="text-decoration-none" title="{{ $area->name }}">
-                                                        <h3>{{ $area->name }}</h3>
+                                                    <a href="{{ $editRoute }}" class="text-decoration-none" title="{{ $area->name }}">
+                                                        <h3>{{ $area->area->name }}</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
@@ -105,7 +106,7 @@
                                                 <span class="text-secondary">
                                                     <span class="text-dark">{{ __('custom.proposal_period') }}: </span> {{ displayDate($item->from_date_develop) }} - {{ displayDate($item->to_date_develop) }}
                                                 </span>
-                                                <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]) }}" title="{{ $area->name }}">
+                                                <a href="{{ $editRoute }}" title="{{ $area->name }}">
                                                     <i class="fas fa-arrow-right read-more"></i>
                                                 </a>
                                             </div>

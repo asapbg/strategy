@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-5">{{ __('custom.from_date') }}</h3>
                 <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
@@ -39,7 +39,7 @@
                     </span>
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-5">{{ __('custom.to_date') }}</h3>
                 <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
@@ -48,12 +48,23 @@
                     </span>
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <h3 class="mb-2 fs-5">{{ __('custom.status') }}</h3>
                 <span class="main-color text-decoration-none fs-18">
                     <span class="{{ $plan->status->css_class }} fs-16">{{ $plan->status->name }}</span>
                 </span>
             </div>
+            @if($plan->developPlan)
+                <div class="col-md-6 mb-4">
+                    <h3 class="mb-2 fs-5">{{ __('custom.connection') }} {{ __('custom.with') }} {{ __('custom.develop_plan') }}</h3>
+                    <a href="{{ route('ogp.national_action_plans.develop_plan', ['id' => $plan->id]) }}" class="main-color text-decoration-none fs-18" target="_blank">
+                        <span class="obj-icon-info me-2">
+                            <i class="fas fa-arrow-right-from-bracket me-2 main-color"></i>
+                            {{ $plan->developPlan->name }}
+                        </span>
+                    </a>
+                </div>
+            @endif
         </div>
         <div class="row mb-3">
             <div class="col-md-12 pt-3">

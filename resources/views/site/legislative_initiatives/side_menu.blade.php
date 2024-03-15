@@ -32,7 +32,7 @@
                                             <ul class="list-unstyled ps-3">
                                                 <hr class="custom-hr">
                                                 @foreach($nationalPlans as $plan)
-                                                    <li class="@if(str_contains(url()->current(), 'national-action-plans/'.($plan['id'] ?? 0)) || str_contains(url()->current(), 'national-action-plans/old/'.($plan['id'] ?? 0))) active-item-left p-1 @else my-2 @endif">
+                                                    <li class="@if((!$plan['old'] && str_contains(url()->current(), 'national-action-plans/'.($plan['id'] ?? 0))) || ($plan['old'] && str_contains(url()->current(), 'national-action-plans/old/'.($plan['id'] ?? 0)))) active-item-left p-1 @else my-2 @endif">
                                                         <a href="{{ $plan['url'] }}" class=" text-decoration-none link-dark">{{ $plan['label'] }}</a></li>
                                                 @endforeach
                                             </ul>
@@ -40,9 +40,11 @@
                                     @else
                                         <hr class="custom-hr">
                                     @endif
-                                    <li class="my-2 @if(str_contains(url()->current(),'develop-a-new-action-plan')) active-item-left p-1 @endif">
-                                        <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>
-                                    </li>
+                                    @if(isset($developPlan) && $developPlan)
+                                        <li class="my-2 @if(str_contains(url()->current(),'ogp/develop-a-new-action-plan') || str_contains(url()->current(),'ogp/develop-a-new-action-plans')) active-item-left p-1 @endif">
+                                            <a href="{{ route('ogp.develop_new_action_plans') }}" class="link-dark  text-decoration-none">{{ __('custom.develop_new_action_plan') }}</a>
+                                        </li>
+                                    @endif
                                     <hr class="custom-hr">
                                     <li class="my-2">
                                         <a href="{{ route('ogp.forum') }}" class="@if(str_contains(url()->current(),'forum')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ __('custom.ogp_forum') }}</a>

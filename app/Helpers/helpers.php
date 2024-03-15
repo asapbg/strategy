@@ -836,6 +836,21 @@ if (!function_exists('copyFile')) {
         }
     }
 
+    if (!function_exists('dateBefore')) {
+
+        /**
+         * Determine if date pased by parameter or NOW is before specified date
+         */
+
+        function dateBefore($beforeDate, $date = null): bool
+        {
+            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+            $beforeDate = Carbon::parse($beforeDate)->format('Y-m-d');
+
+            return $date > $beforeDate;
+        }
+    }
+
     if (!function_exists('addUrlParams')) {
 
         /**

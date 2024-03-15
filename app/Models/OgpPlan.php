@@ -29,7 +29,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     protected $fillable = ['from_date', 'to_date', 'active', 'author_id',
         'ogp_status_id', 'version_after_public_consultation_pdf', 'final_version_pdf',
-        'from_date_develop', 'to_date_develop', 'national_plan'];
+        'from_date_develop', 'to_date_develop', 'national_plan', 'develop_plan_id'];
     protected $translatedAttributes = OgpPlan::TRANSLATABLE_FIELDS;
 
     public function scopeActive($query)
@@ -97,6 +97,16 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
     public function schedules(): HasMany
     {
         return $this->hasMany(OgpPlanSchedule::class, 'ogp_plan_id', 'id');
+    }
+
+    public function developPlan(): HasOne
+    {
+        return $this->hasOne(OgpPlan::class, 'id', 'develop_plan_id');
+    }
+
+    public function plan(): HasOne
+    {
+        return $this->hasOne(OgpPlan::class, 'develop_plan_id', 'id');
     }
 
     public function versionAfterConsultation()

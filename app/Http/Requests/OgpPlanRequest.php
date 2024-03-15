@@ -30,14 +30,19 @@ class OgpPlanRequest extends FormRequest
     {
         $id = $this->request->get('id', 0);
 
-        if(request()->get('save_status')){
+        if(request()->get('save_dev_plan')){
+            return [
+                'save_dev_plan' => ['nullable', 'numeric'],
+                'develop_plan_id' => ['nullable', 'numeric'],
+            ];
 
-            $rules = [
+        } elseif(request()->get('save_status')){
+
+            return [
                 'save_status' => ['nullable', 'numeric'],
                 'status' => ['nullable', 'numeric'],
                 'ogp_status_id' => ['nullable', 'numeric'],
             ];
-            return $rules;
 
         } else {
 
@@ -48,6 +53,7 @@ class OgpPlanRequest extends FormRequest
                 'status' => ['nullable', 'numeric'],
                 'ogp_status_id' => ['nullable', 'numeric'],
                 'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
+                'develop_plan_id' => ['nullable', 'numeric'],
             ];
 
             $fields = array();

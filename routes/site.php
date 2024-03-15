@@ -198,7 +198,9 @@ Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(funct
         return Storage::disk('public_uploads')->download(request()->get('file'));
     })->name('ogp.national_action_plans.old.file');
     Route::get('ogp/national-action-plans/{id}/export', 'export')->name('ogp.national_action_plans.export')->whereNumber('id');
-//    Route::get('ogp/national-action-plans/{id}/export-old', 'exportOld')->name('ogp.national_action_plans.export.old')->whereNumber('id');
+    Route::get('ogp/national-action-plans/{id}/develop-plan', 'developPlan')->name('ogp.national_action_plans.develop_plan');
+    Route::get('ogp/national-action-plans/{id}/develop-plan/area/view/{planArea}', 'areaDevelopPlan')->name('ogp.national_action_plans.develop_plan.area');
+    //    Route::get('ogp/national-action-plans/{id}/export-old', 'exportOld')->name('ogp.national_action_plans.export.old')->whereNumber('id');
 //    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
 });
 

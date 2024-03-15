@@ -54,26 +54,38 @@ class Plans extends AdminController
     {
         $evaluationEdit = false;
         $mainInfoEdit = true;
+        $devPlanEdit = true;
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
 
         if($request->user()->cannot($id ? 'update' : 'create', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        if($id && Carbon::parse($item->from_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
+//        if($id && Carbon::parse($item->from_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
+        if($id && dateBefore($item->from_date)
             && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
             $evaluationEdit = true;
         }
 
         if($id && $item->status->type == OgpStatusEnum::ACTIVE->value ) {
             $mainInfoEdit = false;
+
+            if(dateAfter($item->from_date)){
+                $devPlanEdit = false;
+            }
         }
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
         $ogpArea = OgpArea::Active()->get();
         $areas = $item->areas;
 
-        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit', 'mainInfoEdit'));
+        $devPlans = OgpPlan::whereHas('status', function ($q){
+            $q->where('type', '=', OgpStatusEnum::FINAL->value);
+        })->NotNational()->get();
+
+        return $this->view('admin.ogp_plan.'.($id ? 'edit' : "create"),
+            compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit', 'mainInfoEdit',
+                'devPlanEdit', 'devPlans'));
     }
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
@@ -86,8 +98,27 @@ class Plans extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        //Edit only status
-        if(isset($validated['save_status'])){
+        //Edit only develop plan connection
+        if(isset($validated['save_dev_plan'])){
+            $devPlan = OgpPlan::NotNational()->find($validated['develop_plan_id']);
+            if(!$devPlan){
+                return back()->withInput(request()->all())->with('error', __('Посоченият план за разработка не съществува'));
+            }
+            DB::beginTransaction();
+            try {
+                $fillable = $this->getFillableValidated($validated, $item);
+                $item->fill($fillable);
+                $item->save();
+                DB::commit();
+                return redirect(route('admin.ogp.plan.edit', ['id' => $item->id]))
+                    ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+            } catch (\Exception $e) {
+                Log::error($e);
+                DB::rollBack();
+                return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            }
+        } elseif(isset($validated['save_status'])){
+            //Edit only status
             if($id && isset($validated['status']) && $validated['status'] == OgpStatusEnum::ACTIVE->value
                 && !dateBetween($item->from_date, $item->to_date)) {
                 return back()->withInput()->with('warning', 'Планът не може да бъде \'Действащ\' извън срокът му на действие');

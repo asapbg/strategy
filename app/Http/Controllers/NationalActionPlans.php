@@ -8,6 +8,7 @@ use App\Models\OgpPlan;
 use App\Models\OgpPlanArea;
 use App\Models\OgpStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -93,6 +94,69 @@ class NationalActionPlans extends Controller
 
         $pdf = PDF::loadView('exports.ogp_national_plan', ['data' => $exportData, 'isPdf' => true]);
         return $pdf->download($fileName);
+    }
+
+    public function developPlan(Request $request, $id){
+        $plan = OgpPlan::National()->find($id);
+        if(!$plan){
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        $item = $plan->developPlan;
+
+        $pageTitle = $this->pageTitle;
+        $this->composeBreadcrumbs($plan, array(
+            ['name' => __('custom.develop_plan'), 'url' => ''],
+            ['name' => $item->name, 'url' => '']
+        ));
+
+        $schedules = [];
+        if($item && $item->schedules->count()){
+            foreach ($item->schedules()->orderBy('start_date','desc')->get() as $event){
+                $schedules[] = array(
+                    "id" => $event->id,
+                    "title" => $event->name,
+                    "description" => $event->description ? clearAfterStripTag(strip_tags(html_entity_decode($event->description))) : '',
+                    "description_html" => $event->description ? strip_tags(html_entity_decode($event->description)) : '',
+                    "start" => Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d H:i:s'),
+                    "end" => !empty($event->end_date) ? Carbon::parse($event->end_date)->endOfDay()->format('Y-m-d H:i:s') : Carbon::parse($event->start_date)->endOfDay()->format('Y-m-d H:i:s'),
+                    "backgroundColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                    "borderColor" => (Carbon::parse($event->start_date)->startOfDay()->format('Y-m-d') > Carbon::now()->startOfDay()->format('Y-m-d') ? '#00a65a' : '#00c0ef'),
+                    "oneDay" => empty($event->end_date)
+                );
+            }
+        }
+
+        $nationalPlanSection = true;
+        return $this->view('site.ogp.develop_new_action_plan.plan_show',
+            compact('item', 'pageTitle', 'schedules', 'nationalPlanSection'));
+    }
+
+    public function areaDevelopPlan(Request $request, $id, OgpPlanArea $planArea)
+    {
+        $item = OgpPlan::whereHas('developPlan', function ($q) use($planArea){
+            $q->whereHas('areas', function ($q) use($planArea){
+                $q->where('id', '=', $planArea->id);
+            });
+        })->find((int)$id);
+
+        if(!$item || !$item->developPlan) {
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if(auth()->user()->cannot('viewPublic', $item->developPlan)) {
+            return redirect(route('ogp.national_action_plans.show', ['id' => $item->id]))->with('warning', __('messages.no_rights_to_view_content'));
+        }
+        $pageTitle = $this->pageTitle;
+        $plan = $item->developPlan;
+        $this->composeBreadcrumbs($plan, array(
+            ['name' => __('custom.develop_plan'), 'url' => ''],
+            ['name' => $plan->name, 'url' => route('ogp.national_action_plans.develop_plan', ['id' => $item->id])],
+            ['name' => $planArea->area->name, 'url' => '']
+        ));
+        $nationalPlanSection = true;
+        return $this->view('site.ogp.develop_new_action_plan.plan_area_show',
+            compact('plan', 'planArea', 'pageTitle', 'nationalPlanSection'));
     }
 
     /**
