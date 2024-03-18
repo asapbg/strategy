@@ -77,19 +77,19 @@
                                             @endif
                                         @endcan
 
-                                        @can('restore', $item)
-                                            @if($member->deleted_at)
-                                                <a href="javascript:;"
-                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"
-                                                   data-target="#modal-restore-resource"
-                                                   data-resource-id="{{ $member->id }}"
-                                                   data-resource-restore-url="{{ route('admin.advisory-boards.members.restore', $member) }}"
-                                                   data-toggle="tooltip"
-                                                   title="{{__('custom.restore')}}">
-                                                    <i class="fa fa-plus"></i>
-                                                </a>
-                                            @endif
-                                        @endcan
+{{--                                        @can('restore', $item)--}}
+{{--                                            @if($member->deleted_at)--}}
+{{--                                                <a href="javascript:;"--}}
+{{--                                                   class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
+{{--                                                   data-target="#modal-restore-resource"--}}
+{{--                                                   data-resource-id="{{ $member->id }}"--}}
+{{--                                                   data-resource-restore-url="{{ route('admin.advisory-boards.members.restore', $member) }}"--}}
+{{--                                                   data-toggle="tooltip"--}}
+{{--                                                   title="{{__('custom.restore')}}">--}}
+{{--                                                    <i class="fa fa-plus"></i>--}}
+{{--                                                </a>--}}
+{{--                                            @endif--}}
+{{--                                        @endcan--}}
                                     </td>
                                 </tr>
                                 @php($inx += 1)
