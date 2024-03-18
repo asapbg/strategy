@@ -173,25 +173,27 @@
     {{--                                                    <hr class="custom-hr mb-2 mt-5">--}}
                                                     @endif
 
-                                                    @if($a->contact_names || $a->contact_positions || $a->contact_phone_email)
+{{--                                                    @if($a->contact_names || $a->contact_positions || $a->contact_phone_email)--}}
+                                                    @if($a->contact_names)
                                                         <hr class="custom-hr mb-2 mt-5">
                                                         <h3 class="fs-18">{{ __('ogp.ogp_plan_contacts') }}</h3>
                                                         <hr class="custom-hr mb-2">
-                                                        @if($a->contact_names)
-                                                            <p>
-                                                                <strong>{{ __('ogp.contact_names') }}:</strong> {!! $a->contact_names !!}
-                                                            </p>
-                                                        @endif
-                                                        @if($a->contact_positions)
-                                                            <p>
-                                                                <strong>{{ __('ogp.contact_positions') }}:</strong> {!! $a->contact_positions !!}
-                                                            </p>
-                                                        @endif
-                                                        @if($a->contact_phone_email)
-                                                            <p>
-                                                                <strong>{{ __('ogp.contact_phone_email') }}:</strong> {!! $a->contact_phone_email !!}
-                                                            </p>
-                                                        @endif
+                                                        {!! $a->contact_names !!}
+{{--                                                        @if($a->contact_names)--}}
+{{--                                                            <p>--}}
+{{--                                                                <strong>{{ __('ogp.contact_names') }}:</strong> {!! $a->contact_names !!}--}}
+{{--                                                            </p>--}}
+{{--                                                        @endif--}}
+{{--                                                        @if($a->contact_positions)--}}
+{{--                                                            <p>--}}
+{{--                                                                <strong>{{ __('ogp.contact_positions') }}:</strong> {!! $a->contact_positions !!}--}}
+{{--                                                            </p>--}}
+{{--                                                        @endif--}}
+{{--                                                        @if($a->contact_phone_email)--}}
+{{--                                                            <p>--}}
+{{--                                                                <strong>{{ __('ogp.contact_phone_email') }}:</strong> {!! $a->contact_phone_email !!}--}}
+{{--                                                            </p>--}}
+{{--                                                        @endif--}}
                                                     @endif
     {{--                                                @endforeach--}}
                                                 </div>

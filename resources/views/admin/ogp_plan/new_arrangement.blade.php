@@ -52,21 +52,24 @@
                                         <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'interested_org', 'required' => false])
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h4 class="custom-left-border">Контактна информация:</h4>
-                                            </div>
-                                        </div>
                                         <div class="row mb-4">
                                             @include('admin.partial.edit_field_translate', ['field' => 'contact_names', 'required' => false])
                                         </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'contact_positions', 'required' => false])
-                                        </div>
-                                        <div class="row mb-4">
-                                            @include('admin.partial.edit_field_translate', ['field' => 'contact_phone_email', 'required' => false])
-                                        </div>
+
+{{--                                        <div class="row">--}}
+{{--                                            <div class="col-12">--}}
+{{--                                                <h4 class="custom-left-border">Контактна информация:</h4>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="row mb-4">--}}
+{{--                                            @include('admin.partial.edit_field_translate', ['field' => 'contact_names', 'required' => false])--}}
+{{--                                        </div>--}}
+{{--                                        <div class="row mb-4">--}}
+{{--                                            @include('admin.partial.edit_field_translate', ['field' => 'contact_positions', 'required' => false])--}}
+{{--                                        </div>--}}
+{{--                                        <div class="row mb-4">--}}
+{{--                                            @include('admin.partial.edit_field_translate', ['field' => 'contact_phone_email', 'required' => false])--}}
+{{--                                        </div>--}}
 
                                         <div class="row">
                                             <div class="col-12">

@@ -109,16 +109,16 @@ class OgpPlanArrangement extends ModelActivityExtend implements TranslatableCont
                 'rules' => ['nullable'],
                 'required_all_lang' => false
             ],
-            'contact_positions' => [
-                'type' => 'summernote',
-                'rules' => ['nullable'],
-                'required_all_lang' => false
-            ],
-            'contact_phone_email' => [
-                'type' => 'summernote',
-                'rules' => ['nullable'],
-                'required_all_lang' => false
-            ],
+//            'contact_positions' => [
+//                'type' => 'summernote',
+//                'rules' => ['nullable'],
+//                'required_all_lang' => false
+//            ],
+//            'contact_phone_email' => [
+//                'type' => 'summernote',
+//                'rules' => ['nullable'],
+//                'required_all_lang' => false
+//            ],
             'evaluation' => [
                 'type' => 'summernote',
                 'rules' => ['required'],

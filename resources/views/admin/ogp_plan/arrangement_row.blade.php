@@ -40,7 +40,7 @@
                     <div class="col-12">
                         <h4 class="custom-left-border">Описание на мярката:</h4>
                     </div>
-                    @php($baseInfoFields = ['name', 'responsible_administration', 'problem', 'content', 'solving_problem', 'values_initiative', 'extra_info', 'npo_partner', 'interested_org'])
+                    @php($baseInfoFields = ['name', 'responsible_administration', 'problem', 'content', 'solving_problem', 'values_initiative', 'extra_info', 'npo_partner', 'interested_org', 'contact_names'])
                     @foreach($baseInfoFields as $field)
                         @foreach (config('available_languages') as $locale)
                             <div class="col-md-6">
@@ -53,23 +53,23 @@
                         @endforeach
                     @endforeach
                 </div>
-                <div class="row mb-2">
-                    <div class="col-12">
-                        <h4 class="custom-left-border">Контактна информация:</h4>
-                    </div>
-                    @php($contactInfoFields = ['contact_names', 'contact_positions', 'problem', 'contact_phone_email'])
-                    @foreach($contactInfoFields as $field)
-                        @foreach (config('available_languages') as $locale)
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    @php($label = $field == 'content' ? 'ogp_arrangement_content_'.$locale['code'] : $field.'_'.$locale['code'])
-                                    <label for="example">{{ __('validation.attributes.'.$label) }}</label>
-                                    <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endforeach
-                </div>
+{{--                <div class="row mb-2">--}}
+{{--                    <div class="col-12">--}}
+{{--                        <h4 class="custom-left-border">Контактна информация:</h4>--}}
+{{--                    </div>--}}
+{{--                    @php($contactInfoFields = ['contact_names', 'contact_positions', 'problem', 'contact_phone_email'])--}}
+{{--                    @foreach($contactInfoFields as $field)--}}
+{{--                        @foreach (config('available_languages') as $locale)--}}
+{{--                            <div class="col-md-6">--}}
+{{--                                <div class="form-group">--}}
+{{--                                    @php($label = $field == 'content' ? 'ogp_arrangement_content_'.$locale['code'] : $field.'_'.$locale['code'])--}}
+{{--                                    <label for="example">{{ __('validation.attributes.'.$label) }}</label>--}}
+{{--                                    <div class="form-text"> {!! $item->{ $field.':'.$locale['code']} !!}</div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
 
                 @if($evaluationEdit)
                     <div class="row mb-2">
