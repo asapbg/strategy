@@ -536,31 +536,31 @@ class NationalActionPlans extends Controller
                             'name' => 'Втори план за действие на Република България по инициативата “Партньорство за открито управление” (БГ)',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
-                        [
-                            'path' => 'old_ogp_plan/2/ОБОБЩЕНИ_КОМЕНТАРИ_ОТ_НПО_СЕКТОРА_И_ГРАЖДАНСКОТО_ОБЩЕСТВО_ПО_ПРОЕКТ_НА_ВТОРИ_ПЛАН_ЗА_ДЕЙСТВИЕ_ПОУ.pdf',
-                            'name' => 'Обобщени коментари/предложения от неправителствения сектор и гражданското общество по проекта на Втори план за действие по инициативата „Партньорство за открито управление“, получени в процеса на неговото обсъждане',
-                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-                        ],
-                        [
-                            'path' => 'old_ogp_plan/2/Proposals_BCNP.pdf',
-                            'name' => 'Предложения на Българския център за нестопанско право',
-                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-                        ],
-                        [
-                            'path' => 'old_ogp_plan/2/Proposals_FO.bg.pdf',
-                            'name' => 'Предложения на Фондация "Общество.бг"',
-                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-                        ],
-                        [
-                            'path' => 'old_ogp_plan/2/Proposals_Boyan_Yurukov.pdf',
-                            'name' => 'Предложения на Боян Юруков',
-                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-                        ],
-                        [
-                            'path' => 'old_ogp_plan/2/Proposals_PDOI.pdf',
-                            'name' => 'Предложения на Програма за достъп до информация',
-                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-                        ],
+//                        [
+//                            'path' => 'old_ogp_plan/2/ОБОБЩЕНИ_КОМЕНТАРИ_ОТ_НПО_СЕКТОРА_И_ГРАЖДАНСКОТО_ОБЩЕСТВО_ПО_ПРОЕКТ_НА_ВТОРИ_ПЛАН_ЗА_ДЕЙСТВИЕ_ПОУ.pdf',
+//                            'name' => 'Обобщени коментари/предложения от неправителствения сектор и гражданското общество по проекта на Втори план за действие по инициативата „Партньорство за открито управление“, получени в процеса на неговото обсъждане',
+//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+//                        ],
+//                        [
+//                            'path' => 'old_ogp_plan/2/Proposals_BCNP.pdf',
+//                            'name' => 'Предложения на Българския център за нестопанско право',
+//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+//                        ],
+//                        [
+//                            'path' => 'old_ogp_plan/2/Proposals_FO.bg.pdf',
+//                            'name' => 'Предложения на Фондация "Общество.бг"',
+//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+//                        ],
+//                        [
+//                            'path' => 'old_ogp_plan/2/Proposals_Boyan_Yurukov.pdf',
+//                            'name' => 'Предложения на Боян Юруков',
+//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+//                        ],
+//                        [
+//                            'path' => 'old_ogp_plan/2/Proposals_PDOI.pdf',
+//                            'name' => 'Предложения на Програма за достъп до информация',
+//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+//                        ],
                         [
                             'path' => 'old_ogp_plan/2/15RH503.pdf',
                             'name' => 'Нови ангажименти в рамките на Втория план за действие на Република България за участие в Инициативата „Партньорство за открито управление“',

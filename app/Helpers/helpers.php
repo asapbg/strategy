@@ -501,7 +501,6 @@ if (!function_exists('fileHtmlContent')) {
      * Check if string is a json format.
      *
      * @param $file
-     * @return bool
      */
     function fileHtmlContent($file)
     {
@@ -537,6 +536,29 @@ if (!function_exists('fileHtmlContent')) {
         return $content;
     }
 }
+
+    if (!function_exists('fileHtmlContentByPath')) {
+
+        /**
+         * Check if string is a json format.
+         *
+         * @param string $path
+         */
+        function fileHtmlContentByPath(string $path, $type = 'pdf')
+        {
+            $content = '';
+
+            switch ($type) {
+                case 'pdf':
+                    $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
+                    break;
+                default:
+                    return '<p>Документът не може да бъде визуализиран</p>';
+            }
+
+            return $content;
+        }
+    }
 
 if (!function_exists('strategicFileHtmlContent')) {
 

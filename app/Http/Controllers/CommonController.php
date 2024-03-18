@@ -213,6 +213,18 @@ class CommonController extends Controller
         return fileHtmlContent($file);
     }
 
+    public function previewModalFileStaticPage(Request $request)
+    {
+        $path = $request->get('path');
+        $type = $request->get('type') ?? 'pdf';
+        if (empty($path)) {
+            return __('messages.record_not_found');
+        }
+
+        $path = Storage::disk('public_uploads')->path($path);
+        return fileHtmlContentByPath($path, $type);
+    }
+
     /**
      * Delete public file
      * @param Request $request
