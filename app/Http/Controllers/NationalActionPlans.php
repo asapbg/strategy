@@ -1190,12 +1190,12 @@ class NationalActionPlans extends Controller
                 'evaluations' => array(
                     'bg' => array(
                         [
-                            'path' => 'old_ogp_plan/2/Доклад_за_самооценка_на_администрацията _БГ.pdf',
+                            'path' => 'old_ogp_plan/3/Доклад_за_самооценка_на_администрацията_БГ.pdf',
                             'name' => 'Отчет на правителството',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
-                            'path' => 'old_ogp_plan/2/Bulgaria_End-of-Term_Report_2016-2018_BUL.pdf',
+                            'path' => 'old_ogp_plan/3/Bulgaria_End-of-Term_Report_2016-2018_BUL.pdf',
                             'name' => 'Отчет на независимия изследовател',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
