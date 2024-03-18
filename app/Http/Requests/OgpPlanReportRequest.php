@@ -27,7 +27,8 @@ class OgpPlanReportRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'plan' => ['required', 'numeric']
+            'plan' => ['required', 'numeric'],
+            'report_published_at' => ['nullable', 'date']
         ];
 
         $fields = array();

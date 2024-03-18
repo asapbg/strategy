@@ -265,7 +265,7 @@
             </div>
         </div>
 
-        @if(!empty($plan->report_title))
+        @if(!empty($plan->report_title) && !empty($plan->report_evaluation_published_at) && \Carbon\Carbon::parse($plan->report_evaluation_published_at)->format('Y-m-d') <= \Carbon\Carbon::now()->format('Y-m-d'))
             <div class="row mb-4">
                 <div class="col-md-12">
                     <h4 class="custom-left-border mb-3">{{ $plan->report_title }}</h4>

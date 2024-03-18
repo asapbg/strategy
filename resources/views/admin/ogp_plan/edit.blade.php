@@ -45,6 +45,22 @@
                                         @include('admin.partial.edit_field_translate', ['field' => 'report_content', 'required' => false, 'translatableFields' => \App\Models\OgpPlan::translationFieldsProperties()])
                                     </div>
                                     <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-12 control-label" for="from_date">{{ __('custom.published_at') }}</label>
+                                                <div class="col-12">
+                                                    <div class="input-group">
+                                                        <input type="text" id="report_published_at" name="report_published_at" class="form-control form-control-sm datepicker @error('report_published_at'){{ 'is-invalid' }}@enderror" value="{{ old('report_published_at', displayDate($item->report_evaluation_published_at) ?? '') }}" autocomplete="off">
+                                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-solid fa-calendar"></i></span>
+                                                    </div>
+                                                    @error('report_published_at')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-12">
                                             <button id="add" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                                         </div>

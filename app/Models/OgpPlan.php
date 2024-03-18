@@ -29,7 +29,8 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
 
     protected $fillable = ['from_date', 'to_date', 'active', 'author_id',
         'ogp_status_id', 'version_after_public_consultation_pdf', 'final_version_pdf',
-        'from_date_develop', 'to_date_develop', 'national_plan', 'develop_plan_id'];
+        'from_date_develop', 'to_date_develop', 'national_plan', 'develop_plan_id',
+        'report_evaluation_published_at', 'self_evaluation_published_at'];
     protected $translatedAttributes = OgpPlan::TRANSLATABLE_FIELDS;
 
     public function scopeActive($query)
@@ -72,6 +73,22 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
     }
 
     protected function toDateDevelop(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function reportEvaluationPublishedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => !empty($value) ? displayDate($value) : null,
+            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+        );
+    }
+
+    protected function selfEvaluationPublishedAt(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => !empty($value) ? displayDate($value) : null,

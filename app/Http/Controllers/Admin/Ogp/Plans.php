@@ -219,13 +219,16 @@ class Plans extends AdminController
         $validated = $request->validated();
         $id = $validated['plan'];
         $item = OgpPlan::find($id);
-
+        $validated['report_evaluation_published_at'] = $validated['report_published_at'] ?? null;
         if($request->user()->cannot('update', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         DB::beginTransaction();
 
         try {
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->save();
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
             return redirect(route('admin.ogp.plan.edit', $item).'#report')
