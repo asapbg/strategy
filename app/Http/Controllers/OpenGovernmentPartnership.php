@@ -148,26 +148,12 @@ class OpenGovernmentPartnership extends Controller
             ->first();
 
 
-        if($advBoardId) {
+//        if($advBoardId) {
 //            $itemsCalendarDB = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', (int)$advBoardId->value)->orderBy('next_meeting', 'desc')->get();
             $itemsCalendarDB = \DB::select('
                 select events.*
                 from (
                     select
-                        advisory_board_meetings.id as id,
-                        advisory_board_meetings.advisory_board_id as url_id,
-                        \'adv_board\' as url_type,
-                        \''.trans_choice('custom.meetings', 1).'\' as title,
-                        advisory_board_meeting_translations.description as description,
-                        case when advisory_board_meetings.next_meeting is not null then advisory_board_meetings.next_meeting::text else null end as start,
-                        null as end
-                    from advisory_board_meetings
-                    left join advisory_board_meeting_translations on advisory_board_meeting_translations.advisory_board_meeting_id = advisory_board_meetings.id and advisory_board_meeting_translations.locale = \''.app()->getLocale().'\'
-                    where
-                        advisory_board_meetings.deleted_at is null
-                        and advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value.'
-                    union all
-                        select
                             publication.id as id,
                             publication.id as url_id,
                             \'ogp_news\' as url_type,
@@ -182,7 +168,43 @@ class OpenGovernmentPartnership extends Controller
                             and publication.active = true
                             and publication.deleted_at is null
                             and published_at <= \''.Carbon::now()->format('Y-m-d 00:00:00').'\'
-                    '.($ogpPlan ?
+                        union all
+                            select
+                                ogp_plan.id as id,
+                                ogp_plan.id as url_id,
+                                \'ogp_national_plan\' as url_type,
+                                \''.__('ogp.self_evaluation_event').'\' as title,
+                                ogp_plan_translations.name as description,
+                                ogp_plan.self_evaluation_published_at::text as start,
+                                null as end
+                            from ogp_plan
+                            join ogp_status on ogp_status.id = ogp_plan.ogp_status_id
+                            join ogp_plan_translations on ogp_plan_translations.ogp_plan_id = ogp_plan.id and ogp_plan_translations.locale = \''.app()->getLocale().'\'
+                            where
+                                ogp_plan.active = true
+                                and ogp_plan.national_plan = 1
+                                and ogp_plan.deleted_at is null
+                                and ogp_status.type in ('.OgpStatusEnum::ACTIVE->value.', '.OgpStatusEnum::FINAL->value.')
+                                and ogp_plan.self_evaluation_published_at is not null
+                                and ogp_plan.self_evaluation_published_at <= now()
+
+                    '.($advBoardId ?
+                    'union all
+                        select
+                        advisory_board_meetings.id as id,
+                        advisory_board_meetings.advisory_board_id as url_id,
+                        \'adv_board\' as url_type,
+                        \''.trans_choice('custom.meetings', 1).'\' as title,
+                        advisory_board_meeting_translations.description as description,
+                        case when advisory_board_meetings.next_meeting is not null then advisory_board_meetings.next_meeting::text else null end as start,
+                        null as end
+                    from advisory_board_meetings
+                    left join advisory_board_meeting_translations on advisory_board_meeting_translations.advisory_board_meeting_id = advisory_board_meetings.id and advisory_board_meeting_translations.locale = \''.app()->getLocale().'\'
+                    where
+                        advisory_board_meetings.deleted_at is null
+                        and advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value
+                    : '').
+                ($ogpPlan ?
                         'union all
                             select
                                 ogp_plan_schedule.id as id,
@@ -207,7 +229,10 @@ class OpenGovernmentPartnership extends Controller
                     $itemsCalendar[] = array(
                         "id" => $event->id,
                         "title" => $event->title,
-                        "url" => $event->url_type == 'adv_board' ? route('advisory-boards.view', $event->url_id) : ($event->url_type == 'ogp_news' ? route('ogp.news.details', $event->url_id) : route('ogp.develop_new_action_plans')),
+                        "url" => $event->url_type == 'adv_board' ? route('advisory-boards.view', $event->url_id)
+                            : ($event->url_type == 'ogp_news' ? route('ogp.news.details', $event->url_id)
+                                : ($event->url_type == 'ogp_national_plan' ? route('ogp.national_action_plans.show', $event->url_id)
+                                    : route('ogp.develop_new_action_plans'))),
                         "description" => $event->description ? clearAfterStripTag(strip_tags(html_entity_decode($event->description))) : '',
                         "description_html" => $event->description ? strip_tags(html_entity_decode($event->description)) : '',
                         "start" => Carbon::parse($event->start)->startOfDay()->format('Y-m-d H:i:s'),
@@ -218,7 +243,7 @@ class OpenGovernmentPartnership extends Controller
                     );
                 }
             }
-        }
+//        }
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs(null, array(
             ['name' => trans_choice('custom.events', 2), 'url' => '']
