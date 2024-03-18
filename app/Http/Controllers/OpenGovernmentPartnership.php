@@ -187,7 +187,25 @@ class OpenGovernmentPartnership extends Controller
                                 and ogp_status.type in ('.OgpStatusEnum::ACTIVE->value.', '.OgpStatusEnum::FINAL->value.')
                                 and ogp_plan.self_evaluation_published_at is not null
                                 and ogp_plan.self_evaluation_published_at <= now()
-
+                        union all
+                            select
+                                ogp_plan.id as id,
+                                ogp_plan.id as url_id,
+                                \'ogp_national_plan\' as url_type,
+                                \''.__('ogp.report_evaluation_event').'\' as title,
+                                ogp_plan_translations.name as description,
+                                ogp_plan.report_evaluation_published_at::text as start,
+                                null as end
+                            from ogp_plan
+                            join ogp_status on ogp_status.id = ogp_plan.ogp_status_id
+                            join ogp_plan_translations on ogp_plan_translations.ogp_plan_id = ogp_plan.id and ogp_plan_translations.locale = \''.app()->getLocale().'\'
+                            where
+                                ogp_plan.active = true
+                                and ogp_plan.national_plan = 1
+                                and ogp_plan.deleted_at is null
+                                and ogp_status.type in ('.OgpStatusEnum::ACTIVE->value.', '.OgpStatusEnum::FINAL->value.')
+                                and ogp_plan.report_evaluation_published_at is not null
+                                and ogp_plan.report_evaluation_published_at <= now()
                     '.($advBoardId ?
                     'union all
                         select

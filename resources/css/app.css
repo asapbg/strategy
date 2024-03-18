@@ -7,6 +7,12 @@
     --secondary_color: #6c757d;
 }
 
+/*START fix calendar title wrap*/
+.fc-event-time, .fc-event-title {
+    padding: 0 1px;
+    white-space: normal;
+}
+/*END fix calendar title wrap*/
 .standard-list{
     list-style: none;
 }
