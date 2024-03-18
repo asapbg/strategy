@@ -220,8 +220,7 @@ class CommonController extends Controller
         if (empty($path)) {
             return __('messages.record_not_found');
         }
-
-        $path = Storage::disk('public_uploads')->path($path);
+        $path = 'files'.DIRECTORY_SEPARATOR.$path;
         return fileHtmlContentByPath($path, $type);
     }
 

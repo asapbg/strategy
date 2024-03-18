@@ -550,7 +550,7 @@ if (!function_exists('fileHtmlContent')) {
 
             switch ($type) {
                 case 'pdf':
-                    $content = '<embed src="' . $path . '" width="100%" height="700px" />';
+                    $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
                     break;
                 default:
                     return '<p>Документът не може да бъде визуализиран</p>';
