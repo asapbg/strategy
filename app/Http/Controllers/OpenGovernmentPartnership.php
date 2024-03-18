@@ -159,13 +159,29 @@ class OpenGovernmentPartnership extends Controller
                         \'adv_board\' as url_type,
                         \''.trans_choice('custom.meetings', 1).'\' as title,
                         advisory_board_meeting_translations.description as description,
-                        advisory_board_meetings.next_meeting as start,
+                        case when advisory_board_meetings.next_meeting is not null then advisory_board_meetings.next_meeting::text else null end as start,
                         null as end
                     from advisory_board_meetings
                     left join advisory_board_meeting_translations on advisory_board_meeting_translations.advisory_board_meeting_id = advisory_board_meetings.id and advisory_board_meeting_translations.locale = \''.app()->getLocale().'\'
                     where
                         advisory_board_meetings.deleted_at is null
                         and advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value.'
+                    union all
+                        select
+                            publication.id as id,
+                            publication.id as url_id,
+                            \'ogp_news\' as url_type,
+                            publication_translations.title as title,
+                            publication_translations.short_content as description,
+                            case when publication.published_at is not null then publication.published_at::text else null end as start,
+                            null as end
+                        from publication
+                        join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \''.app()->getLocale().'\'
+                        where
+                            publication.type = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
+                            and publication.active = true
+                            and publication.deleted_at is null
+                            and published_at <= \''.Carbon::now()->format('Y-m-d 00:00:00').'\'
                     '.($ogpPlan ?
                         'union all
                             select
@@ -174,8 +190,8 @@ class OpenGovernmentPartnership extends Controller
                                 \'ogp_plan\' as url_type,
                                 ogp_plan_schedule_translations.name as title,
                                 ogp_plan_schedule_translations.description as description,
-                                ogp_plan_schedule.start_date as start,
-                                ogp_plan_schedule.end_date as end
+                                case when ogp_plan_schedule.start_date is not null then ogp_plan_schedule.start_date::text else null end as start,
+                                case when ogp_plan_schedule.end_date is not null then ogp_plan_schedule.end_date::text else null end as end
                             from ogp_plan_schedule
                             left join ogp_plan_schedule_translations on ogp_plan_schedule_translations.ogp_plan_schedule_id = ogp_plan_schedule.id and ogp_plan_schedule_translations.locale = \''.app()->getLocale().'\'
                             where
@@ -191,7 +207,7 @@ class OpenGovernmentPartnership extends Controller
                     $itemsCalendar[] = array(
                         "id" => $event->id,
                         "title" => $event->title,
-                        "url" => $event->url_type == 'adv_board' ? route('advisory-boards.view', $event->url_id) : route('ogp.develop_new_action_plans'),
+                        "url" => $event->url_type == 'adv_board' ? route('advisory-boards.view', $event->url_id) : ($event->url_type == 'ogp_news' ? route('ogp.news.details', $event->url_id) : route('ogp.develop_new_action_plans')),
                         "description" => $event->description ? clearAfterStripTag(strip_tags(html_entity_decode($event->description))) : '',
                         "description_html" => $event->description ? strip_tags(html_entity_decode($event->description)) : '',
                         "start" => Carbon::parse($event->start)->startOfDay()->format('Y-m-d H:i:s'),

@@ -110,7 +110,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract
             'title' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:2000'],
-                'required_all_lang' => false
+                'required_all_lang' => true
             ],
             'short_content' => [
                 'type' => 'textarea',
