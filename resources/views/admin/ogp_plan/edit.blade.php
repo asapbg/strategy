@@ -47,7 +47,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label class="col-sm-12 control-label" for="from_date">{{ __('custom.published_at') }}</label>
+                                                <label class="col-sm-12 control-label" for="report_published_at">{{ __('custom.published_at') }}</label>
                                                 <div class="col-12">
                                                     <div class="input-group">
                                                         <input type="text" id="report_published_at" name="report_published_at" class="form-control form-control-sm datepicker @error('report_published_at'){{ 'is-invalid' }}@enderror" value="{{ old('report_published_at', displayDate($item->report_evaluation_published_at) ?? '') }}" autocomplete="off">

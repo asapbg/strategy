@@ -34,6 +34,7 @@ class OgpPlanRequest extends FormRequest
             return [
                 'save_dev_plan' => ['nullable', 'numeric'],
                 'develop_plan_id' => ['nullable', 'numeric'],
+                'self_evaluation_published_at' => ['nullable', 'date'],
             ];
 
         } elseif(request()->get('save_status')){
@@ -54,6 +55,7 @@ class OgpPlanRequest extends FormRequest
                 'ogp_status_id' => ['nullable', 'numeric'],
                 'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
                 'develop_plan_id' => ['nullable', 'numeric'],
+                'self_evaluation_published_at' => ['nullable', 'date'],
             ];
 
             $fields = array();

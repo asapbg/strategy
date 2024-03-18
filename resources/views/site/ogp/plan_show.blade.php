@@ -207,63 +207,64 @@
                 </div>
             </div>
         </div>
-
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <h4 class="custom-left-border mb-3">{{ __('ogp.national_plan_evaluation_section') }}</h4>
-                <div class="accordion" id="accordionExampleEvaluation">
-                    @foreach($plan->areas as $row)
-                        @php($hasEvaluation = false)
-                        @php($uniqueEvaluation = $row->arrangements->unique('evaluation')->pluck('evaluation')->toArray())
-                        @php($uniqueEvaluationStatus = $row->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())
-                            <div class="accordion-item mb-2">
-                                <h2 class="accordion-header" id="heading_evaluation_{{ $loop->iteration }}">
-    {{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
-                                    <button class="accordion-button text-dark fs-18 fw-600" type="button"
-                                            data-toggle="collapse" data-target="#collapse-evaluation-{{ $loop->iteration }}"
-                                            aria-controls="collapse-{{ $loop->iteration }}">
-                                        {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
-                                    </button>
-                                </h2>
-    {{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
-                                <div id="collapse-evaluation-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
-                                aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">
-                                    @if($row->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))
-                                        @php($hasEvaluation = true)
-                                        @foreach($row->arrangements as $a)
-                                            <div class="accordion-body">
-                                                <div class="custom-card p-3 mb-2 pb-0">
-                                                    <div class="row ">
-                                                        <div class="document-info-body">
-                                                            <hr class="custom-hr mb-2">
-                                                            <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $a->name }}</h3>
-                                                            <hr class="custom-hr mb-2">
-                                                            @if($a->evaluation)
-                                                                <p>
-                                                                    <strong>{{ __('ogp.evaluation') }}:</strong> {!! $a->evaluation !!}
-                                                                </p>
-                                                            @endif
-                                                            @if($a->evaluation_status)
-                                                                <p>
-                                                                    <strong>{{ __('custom.status') }}:</strong> {!! $a->evaluation_status !!}
-                                                                </p>
-                                                            @endif
+        @if(!empty($plan->self_evaluation_published_at) && \Carbon\Carbon::parse($plan->self_evaluation_published_at)->format('Y-m-d') <= \Carbon\Carbon::now()->format('Y-m-d'))
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h4 class="custom-left-border mb-3">{{ __('ogp.national_plan_evaluation_section') }}</h4>
+                    <div class="accordion" id="accordionExampleEvaluation">
+                        @foreach($plan->areas as $row)
+                            @php($hasEvaluation = false)
+                            @php($uniqueEvaluation = $row->arrangements->unique('evaluation')->pluck('evaluation')->toArray())
+                            @php($uniqueEvaluationStatus = $row->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())
+                                <div class="accordion-item mb-2">
+                                    <h2 class="accordion-header" id="heading_evaluation_{{ $loop->iteration }}">
+        {{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
+                                        <button class="accordion-button text-dark fs-18 fw-600" type="button"
+                                                data-toggle="collapse" data-target="#collapse-evaluation-{{ $loop->iteration }}"
+                                                aria-controls="collapse-{{ $loop->iteration }}">
+                                            {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
+                                        </button>
+                                    </h2>
+        {{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
+                                    <div id="collapse-evaluation-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
+                                    aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">
+                                        @if($row->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))
+                                            @php($hasEvaluation = true)
+                                            @foreach($row->arrangements as $a)
+                                                <div class="accordion-body">
+                                                    <div class="custom-card p-3 mb-2 pb-0">
+                                                        <div class="row ">
+                                                            <div class="document-info-body">
+                                                                <hr class="custom-hr mb-2">
+                                                                <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $a->name }}</h3>
+                                                                <hr class="custom-hr mb-2">
+                                                                @if($a->evaluation)
+                                                                    <p>
+                                                                        <strong>{{ __('ogp.evaluation') }}:</strong> {!! $a->evaluation !!}
+                                                                    </p>
+                                                                @endif
+                                                                @if($a->evaluation_status)
+                                                                    <p>
+                                                                        <strong>{{ __('custom.status') }}:</strong> {!! $a->evaluation_status !!}
+                                                                    </p>
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                    @if(!$hasEvaluation)
-                                        <div class="col-12 ps-3 my-2">{{ __('ogp.no_evaluation_found') }}</div>
-                                    @endif
+                                            @endforeach
+                                        @endif
+                                        @if(!$hasEvaluation)
+                                            <div class="col-12 ps-3 my-2">{{ __('ogp.no_evaluation_found') }}</div>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
-{{--                        @endif--}}
-                    @endforeach
+    {{--                        @endif--}}
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         @if(!empty($plan->report_title) && !empty($plan->report_evaluation_published_at) && \Carbon\Carbon::parse($plan->report_evaluation_published_at)->format('Y-m-d') <= \Carbon\Carbon::now()->format('Y-m-d'))
             <div class="row mb-4">

@@ -101,7 +101,7 @@ class Plans extends AdminController
         //Edit only develop plan connection
         if(isset($validated['save_dev_plan'])){
             $devPlan = OgpPlan::NotNational()->find($validated['develop_plan_id']);
-            if(!$devPlan){
+            if(isset($validated['develop_plan_id']) && !is_null($validated['develop_plan_id']) && !$devPlan){
                 return back()->withInput(request()->all())->with('error', __('Посоченият план за разработка не съществува'));
             }
             DB::beginTransaction();

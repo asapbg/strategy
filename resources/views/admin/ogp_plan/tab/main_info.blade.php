@@ -68,6 +68,24 @@
                     </div>
                 </div>
             </div>
+            @if($disabled && $evaluationEdit)
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="self_evaluation_published_at">{{ __('ogp.evaluation') }} ({{ mb_strtolower(__('custom.published_at_f')) }})</label>
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" id="self_evaluation_published_at" name="self_evaluation_published_at" class="form-control form-control-sm datepicker @error('report_published_at'){{ 'is-invalid' }}@enderror" value="{{ old('self_evaluation_published_at', displayDate($item->self_evaluation_published_at) ?? '') }}" autocomplete="off">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-solid fa-calendar"></i></span>
+                                </div>
+                                @error('self_evaluation_published_at')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
