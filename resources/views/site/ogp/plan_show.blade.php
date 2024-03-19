@@ -10,16 +10,16 @@
             <div class="col-md-12">
                 <h2 class="obj-title mb-4">{{ $plan->name }}</h2>
             </div>
-            @can('update', $plan)
-                <div class="row edit-consultation m-0">
-                    <div class="col-md-12 text-end">
-                        <a href="{{ route('admin.ogp.plan.edit', ['id' => $plan->id]) }}" class="btn btn-sm btn-primary main-color">
-                            <i class="fas fa-pen me-2 main-color"></i> {{ __('custom.edit_ogp_area') }}
-                        </a>
-                    </div>
-                </div>
-            @endcan
-            <div class="col-md-12 text-start">
+{{--            @can('update', $plan)--}}
+{{--                <div class="row edit-consultation m-0">--}}
+{{--                    <div class="col-md-12 text-end">--}}
+{{--                        <a href="{{ route('admin.ogp.plan.edit', ['id' => $plan->id]) }}" class="btn btn-sm btn-primary main-color">--}}
+{{--                            <i class="fas fa-pen me-2 main-color"></i> {{ __('custom.edit_ogp_area') }}--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endcan--}}
+            <div class="col-md-12 ">
                 <a href="{{ route('ogp.national_action_plans.export', $plan->id) }}" class="btn btn-primary  main-color"><i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export_as_pdf') }}</a>
 {{--                <button class="btn btn-primary  main-color">--}}
 {{--                    <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export_as_pdf') }}</button>--}}
@@ -27,6 +27,11 @@
 {{--                    <i class="fas fa-square-rss text-warning me-2"></i>RSS</button>--}}
 {{--                <button class="btn rss-sub main-color">--}}
 {{--                    <i class="fas fa-envelope me-2 main-color"></i>Абониране</button>--}}
+                @can('update', $plan)
+                    <a href="{{ route('admin.ogp.plan.edit', ['id' => $plan->id]) }}" class="btn btn-primary main-color mt-md-0 mt-2">
+                        <i class="fas fa-pen me-2 main-color"></i> {{ __('custom.edit_ogp_area') }}
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="row mb-3">
