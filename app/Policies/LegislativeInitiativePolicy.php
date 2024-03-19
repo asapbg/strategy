@@ -58,7 +58,8 @@ class LegislativeInitiativePolicy
      */
     public function update(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $user->canAny(['manage.*', 'manage.legislative_initiatives']);
+        return $user->id == $legislative_initiative->author_id
+            && $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
     }
 
     /**

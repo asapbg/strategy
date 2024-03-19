@@ -34,16 +34,36 @@
                     <div class="col-md-12">
                         <div class="input-group">
                             <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="operational_program_id" class="form-label">{{ __('custom.name_of_normative_act') }}</label>
+                                <label for="operational_program_id" class="form-label">{{ trans_choice('custom.laws', 1) }}</label>
 
-                                <select id="operational_program_id" name="operational_program_id" data-types2ajax="op_record"
-                                        data-urls2="{{ route('admin.select2.ajax', 'op_record') }}"
+                                <select id="law_id" name="law_id" data-types2ajax="law"
+                                        data-urls2="{{ route('admin.select2.ajax', 'law') }}"
                                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
-                                        class="form-control form-control-sm select2-autocomplete-ajax @error('operation_program_id'){{ 'is-invalid' }}@enderror">
-                                    @if($item->operational_program_id)
-                                        <option value="{{ $item->operational_program_id }}" selected="selected">{{ $item->operationalProgram?->value }}</option>
+                                        class="form-control form-control-sm select2-autocomplete-ajax li-law @error('law_id'){{ 'is-invalid' }}@enderror">
+                                    @if($item->law_id)
+                                        <option value="{{ $item->law_id }}" selected="selected">{{ $item->law?->name }}</option>
                                     @endif
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" id="institutions_section">
+                        <div class="input-group">
+                            <div class="mb-3 d-flex flex-column  w-100">
+                                @php($itemInstitutions = $item->institutions->pluck('id')->toArray())
+                                <label for="institutions" class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
+                                <select id="institutions" name="institutions[]" multiple class="form-control form-control-sm select2 @error('institutions'){{ 'is-invalid' }}@enderror">
+                                    <option value="0">{{ __('custom.send_to_all') }}</option>
+                                    @if(isset($institutions) && $institutions->count())
+                                        @foreach($institutions as $inst)
+                                            <option value="{{ $inst->value }}" data-laws="{{ $inst->laws }}" @if(in_array($inst->value, old('institutions', $itemInstitutions))) selected @endif>{{ $inst->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('institutions')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -67,3 +87,10 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('#law_id').trigger('change');
+        });
+    </script>
+@endpush

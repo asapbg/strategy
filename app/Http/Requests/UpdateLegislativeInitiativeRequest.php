@@ -32,7 +32,9 @@ class UpdateLegislativeInitiativeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'operational_program_id' => ['required', 'numeric'],
+            'law_id' => ['required', 'numeric'],
+            'institutions' => ['array', 'min:1'],
+            'institutions.*' => ['numeric'],
             'description' => ['required', 'string'],
         ];
     }

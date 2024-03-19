@@ -21,6 +21,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.label')}}</th>
+                            <th>{{__('validation.attributes.institutions')}}</th>
                             <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -31,6 +32,15 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
+                                    <td class="text-center">
+                                        @if($item->institutions->count())
+                                            @foreach($item->institutions->pluck('name')->toArray() as $name)
+                                                {!! (!$loop->first ? '<br>' : '').$name !!}
+                                            @endforeach
+                                        @else
+                                            <i class="fas fa-minus text-danger"></i>
+                                        @endif
+                                    </td>
                                     <td>
                                         @can('update', $item)
                                             @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => 'Law'])

@@ -15,7 +15,7 @@
             @endif
             <div class="filter-results mb-2">
                 <h2 class="mb-4">
-                    Търсене
+                    {{ __('custom.search') }}
                 </h2>
                 <form id="filter" class="row" action="{{ route('legislative_initiatives.index') }}" method="GET">
                     <div class="col-md-4">
@@ -130,17 +130,13 @@
                                                 <div class="consult-item-header-link">
                                                     <a href="{{ route('legislative_initiatives.view', $item) }}"
                                                        class="text-decoration-none"
-                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->operationalProgram?->value }}">
+                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->law?->name }}">
                                                         <h3>{{ __('custom.change_f') }} {{ __('custom.in') }}
-                                                            {{ mb_strtolower($item->operationalProgram?->value) }}</h3>
+                                                            "{{ $item->law?->name }}"</h3>
                                                     </a>
                                                 </div>
                                                 <div class="consult-item-header-edit">
-                                                    @if(
-                                                        auth()->check() &&
-                                                        auth()->user()->id === $item->author_id
-                                                        && $item->getStatus($item->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value
-                                                    )
+                                                    @can('update', $item)
                                                         <form class="d-none"
                                                               method="POST"
                                                               action="{{ route('legislative_initiatives.delete', $item) }}"

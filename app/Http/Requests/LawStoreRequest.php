@@ -24,7 +24,9 @@ class LawStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
+        $rules = [
+            'institution_id' => ['array']
+        ];
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:law'];
         }

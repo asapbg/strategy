@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -44,6 +45,11 @@ class Law extends ModelActivityExtend implements TranslatableContract
         $query->where('law.active', 1);
     }
 
+    public function institutions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Institution::class, 'law_institution', 'law_id', 'institution_id');
+    }
+
     public static function optionsList($active = false)
     {
         $q = DB::table('law')
@@ -57,5 +63,25 @@ class Law extends ModelActivityExtend implements TranslatableContract
 
         return $q->orderBy('law_translations.name', 'asc')
             ->get();
+    }
+
+    public static function select2AjaxOptions($filters)
+    {
+        $q = DB::table('law')
+            ->select(['law.id', DB::raw('law_translations.name')])
+            ->join('law_institution', 'law_institution.law_id', '=', 'law.id')
+            ->join('law_translations', function ($j){
+                $j->on('law.id', '=', 'law_translations.law_id')
+                    ->where('law_translations.locale', '=', app()->getLocale());
+            });
+
+        if(isset($filters['search'])) {
+            $q->where('law_translations.name', 'ilike', '%'.$filters['search'].'%');
+        }
+
+        $q->whereNull('law.deleted_at');
+        $q->groupBy('law.id', 'law_translations.name');
+
+        return $q->orderBy('law_translations.name', 'asc')->get();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\Consultations\OperationalProgramRow;
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
@@ -31,7 +32,7 @@ class LegislativeInitiative extends ModelActivityExtend
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['operational_program_id', 'author_id', 'description'];
+    protected $fillable = ['author_id', 'description', 'law_id', 'cap'];
 
     /**
      * Get the model name
@@ -51,16 +52,16 @@ class LegislativeInitiative extends ModelActivityExtend
         );
     }
 
-    public function operationalProgram()
-    {
-        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id');
-    }
+//    public function operationalProgram()
+//    {
+//        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id');
+//    }
 
-    public function operationalProgramTitle()
-    {
-        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id')
-            ->where('dynamic_structures_column_id', config('lp_op_programs.op_ds_col_title_id'));
-    }
+//    public function operationalProgramTitle()
+//    {
+//        return $this->belongsTo(OperationalProgramRow::class, 'operational_program_id', 'operational_program_id')
+//            ->where('dynamic_structures_column_id', config('lp_op_programs.op_ds_col_title_id'));
+//    }
 
     public function votes(): HasMany
     {
@@ -113,6 +114,21 @@ class LegislativeInitiative extends ModelActivityExtend
     public function dislikes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LegislativeInitiativeVote::class)->where('is_like', false);
+    }
+
+    public function law(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Law::class, 'id', 'law_id');
+    }
+
+    public function institutions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Institution::class, 'legislative_initiative_institution', 'legislative_initiative_id', 'institution_id');
+    }
+
+    public function countSupport(): int
+    {
+        return ($this->likes()->count() - $this->dislikes()->count());
     }
 
     public function countLikes(): int

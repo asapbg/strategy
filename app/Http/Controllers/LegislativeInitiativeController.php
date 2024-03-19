@@ -8,6 +8,7 @@ use App\Http\Requests\CloseLegislativeInitiativeRequest;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
+use App\Models\Law;
 use App\Models\LegislativeInitiative;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
@@ -49,7 +50,7 @@ class LegislativeInitiativeController extends AdminController
         $order_by = $request->offsetGet('order_by');
         $order_by_direction = $request->offsetGet('direction');
 
-        $items = LegislativeInitiative::with(['comments'])
+        $items = LegislativeInitiative::whereHas('law')->with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
                     $query->whereHas('operationalProgramTitle', function ($query) use ($keywords) {
                         $query->where('value', 'ilike', "%$keywords%");
@@ -100,7 +101,8 @@ class LegislativeInitiativeController extends AdminController
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $item = new LegislativeInitiative();
         $pageTitle = $this->pageTitle;
-        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle'));
+        $institutions = Institution::optionsListWithAttr();
+        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions'));
     }
 
     /**
@@ -118,7 +120,8 @@ class LegislativeInitiativeController extends AdminController
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item);
-        return $this->view(self::EDIT_VIEW, compact('item', 'pageTitle', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs'));
+        $institutions = Institution::optionsListWithAttr();
+        return $this->view(self::EDIT_VIEW, compact('item', 'pageTitle', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs', 'institutions'));
     }
 
     public function store(StoreLegislativeInitiativeRequest $request)
@@ -127,12 +130,22 @@ class LegislativeInitiativeController extends AdminController
 
         DB::beginTransaction();
         try {
+            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
+            unset($validated['institutions']);
             $validated['author_id'] = auth()->user()->id;
+            $settingsCap = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES)
+                ->where('section', '=', Setting::OGP_SECTION)->first();
+            $validated['cap'] = $settingsCap ? $settingsCap->value : 50;
 
             $new = new LegislativeInitiative();
             $new->fill($validated);
             $new->save();
 
+            //Set all if selected all
+            if(!sizeof($selectedInstitutions)){
+                $selectedInstitutions = Law::find($validated['law_id'])->institutions->pluck('id')->toArray();
+            }
+            $new->institutions()->sync($selectedInstitutions);
             DB::commit();
 
             return to_route(self::LIST_ROUTE)
@@ -149,7 +162,8 @@ class LegislativeInitiativeController extends AdminController
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
-        return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle'));
+        $needSupport = ($item->cap - $item->countSupport());
+        return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport'));
     }
 
     public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
@@ -158,9 +172,17 @@ class LegislativeInitiativeController extends AdminController
 
         DB::beginTransaction();
         try {
+            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
+            unset($validated['institutions']);
+
             $item->fill($validated);
             $item->save();
 
+            //Set all if selected all
+            if(!sizeof($selectedInstitutions)){
+                $selectedInstitutions = Law::find($validated['law_id'])->institutions->pluck('id')->toArray();
+            }
+            $item->institutions()->sync($selectedInstitutions);
             DB::commit();
 
             return to_route(self::LIST_ROUTE)
@@ -198,7 +220,7 @@ class LegislativeInitiativeController extends AdminController
 
         if($item){
             $customBreadcrumbs[] = [
-                'name' => (__('custom.change_f').' '.__('custom.in').' '.$item->operationalProgram?->value),
+                'name' => (__('custom.change_f').' '.__('custom.in').' '.$item->law?->name),
                 'url' => (!empty($extraItems) ? route('legislative_initiatives.view', $item) : null)
             ];
         }

@@ -86,8 +86,8 @@ class LegislativeInitiativeController extends AdminController
         }
 
         $comments = $query->where('legislative_initiative_id', $item->id)->get();
-
-        return $this->view('admin.legislative_initiatives.show', compact('item', 'comments'));
+        $needSupport = ($item->cap - $item->countSupport());
+        return $this->view('admin.legislative_initiatives.show', compact('item', 'comments', 'needSupport'));
     }
 
     public function update(AdminUpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)

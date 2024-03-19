@@ -10,6 +10,7 @@ use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
+use App\Models\Law;
 use App\Models\Page;
 use App\Models\Pris;
 use App\Models\Publication;
@@ -359,6 +360,9 @@ class CommonController extends Controller
                 break;
             case 'adv_board':
                 $data = AdvisoryBoard::select2AjaxOptions($requestData);
+                break;
+            case 'law':
+                $data = Law::select2AjaxOptions($requestData);
                 break;
         }
 

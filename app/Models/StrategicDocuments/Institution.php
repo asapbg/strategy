@@ -95,10 +95,12 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return DB::table('institution')
             ->select(['institution.id as value', 'institution_translations.name',
                 DB::raw('json_agg(institution_field_of_action.field_of_action_id) as foa'),
+                DB::raw('case when max(law_institution.law_id) is null then \'[]\' else json_agg(distinct(law_institution.law_id)) end as laws'),
                 DB::raw('max(institution_level.nomenclature_level) as level')])
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
             ->join('institution_field_of_action', 'institution_field_of_action.institution_id', '=', 'institution.id')
             ->join('institution_level', 'institution_level.id', '=', 'institution.institution_level_id')
+            ->leftJoin('law_institution', 'law_institution.institution_id', '=', 'institution.id')
             ->where('institution.active', '=', 1)
             ->where('institution_translations.locale', '=', app()->getLocale())
             ->where('institution.id', '<>', config('app.default_institution_id'))

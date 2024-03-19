@@ -6,16 +6,16 @@
 
 
         <div class="col-lg-10 py-5 right-side-content">
-            @if(isset($pageTopContent) && !empty($pageTopContent->value))
-                <div class="row">
-                    <div class="col-12 mb-5">
-                        {!! $pageTopContent->value !!}
-                    </div>
-                </div>
-            @endif
+{{--            @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
+{{--                <div class="row">--}}
+{{--                    <div class="col-12 mb-5">--}}
+{{--                        {!! $pageTopContent->value !!}--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
             <div class="row">
                 <div class="col-lg-10">
-                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ mb_strtolower($item->operationalProgram?->value) }}</h2>
+                    <h2 class="obj-title mb-4">{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->law?->name }}</h2>
                 </div>
 
                 <div class="col-lg-2">
@@ -38,6 +38,46 @@
                             {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') . ' ' . __('custom.year_short') }}
                         </span>
                     </a>
+                    <div class="mb-0 d-inline-block">
+                        <!-- LIKES -->
+                        <span class="fw-bold">{{ __('custom.supported_f') }}:</span>
+                        {{ $item->countLikes() }}
+
+                        @if($item->userHasLike())
+                            <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                               class="me-2 text-decoration-none">
+                                <i class="fa fa-thumbs-up fs-18"
+                                   aria-hidden="true"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('legislative_initiatives.vote.store', [$item, 'like']) }}"
+                               class="me-2 text-decoration-none">
+                                <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
+                            </a>
+                        @endif
+
+
+                        <!-- DISLIKES -->
+
+                        {{ $item->countDislikes() }}
+
+                        @if($item->userHasDislike())
+                            <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                               class="text-decoration-none">
+                                <i class="fa fa-thumbs-down fs-18"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('legislative_initiatives.vote.store', [$item, 'dislike']) }}"
+                               class="text-decoration-none">
+                                <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
+                            </a>
+                        @endif
+                        @if($needSupport > 0)
+                            <span class="text-danger">(необходими са още {{ $needSupport }} {{ mb_strtolower(trans_choice('custom.votes', $needSupport)) }})</span>
+                        @else
+                            <span class="text-success fw-bold">(има необходимата подкрепа)</span>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="col-md-4 text-end">
@@ -67,6 +107,30 @@
                 <div class="col-md-12">
                     <div class="custom-card p-3">
                         <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
+                        @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                            <div class="col-md-12 my-4">
+                                <div>
+                                    <form class="mb-0" method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                        @csrf
+
+                                        <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
+
+                                        <div class="form-group">
+                                            <!--  <div class="summernote-wrapper mb-3">
+                                                -- Вътре се се слага textarea с клас "summernote"
+                                                  </div>   -->
+                                            <textarea name="description" class="form-control mb-3 rounded summernote"
+                                                      id="description" rows="2"
+                                                      placeholder="{{ __('custom.enter_comment') }}">
+                                             </textarea>
+                                        </div>
+
+                                        <button type="submit"
+                                                class="btn btn-primary mt-3">{{ __('custom.add_comment') }}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                         @if(isset($item->comments) && $item->comments->count() > 0)
                             @foreach($item->comments as $key => $comment)
                                 <div class="obj-comment comment-background p-2 rounded mb-3">
@@ -137,34 +201,6 @@
                                     </div>
                                 </div>
                             @endforeach
-                        @endif
-
-                        @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
-                            <div class="col-md-12 mt-4">
-                                <div>
-                                    <form class="mb-0" method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
-                                        @csrf
-
-                                        <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
-
-                                        <div class="form-group">
-                                            <!--  <div class="summernote-wrapper mb-3">
-                                                -- Вътре се се слага textarea с клас "summernote"
-                                                  </div>   -->
-
-                                            <textarea name="description" class="form-control mb-3 rounded"
-                                            id="description" rows="2"
-                                            placeholder="{{ __('custom.enter_comment') }}">
-                                             </textarea>
-
-
-                                        </div>
-
-                                        <button type="submit"
-                                                class="btn btn-primary">{{ __('custom.add_comment') }}</button>
-                                    </form>
-                                </div>
-                            </div>
                         @endif
                     </div>
                 </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LawStoreRequest;
 use App\Models\Law;
+use App\Models\StrategicDocuments\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,14 +30,13 @@ class LawController extends AdminController
 
         $paginate = $filter['paginate'] ?? Law::PAGINATE;
 
-        $items = Law::with(['translation'])
+        $items = Law::with(['translation', 'institutions', 'institutions.translations'])
             ->FilterBy($requestFilter)
             ->orderBy('id')
             ->paginate($paginate);
         $toggleBooleanModel = 'Law';
         $editRouteName = self::EDIT_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-
         return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
     }
 
@@ -53,7 +53,8 @@ class LawController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Law::translationFieldsProperties();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
+        $institutions = Institution::optionsListWithAttr();
+        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'institutions'));
     }
 
     public function store(LawStoreRequest $request, Law $item)
@@ -69,6 +70,7 @@ class LawController extends AdminController
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
             $item->save();
+            $item->institutions()->sync($validated['institution_id'] ?? []);
             $this->storeTranslateOrNew(Law::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {

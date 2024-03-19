@@ -24,13 +24,13 @@
                                 <div class="row gap-3">
                                     <div class="col-12">
                                         <h3 class="border-bottom border-4 border-primary pb-2">
-                                            {{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->operationalProgram?->value) }}
+                                            {{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . $item->law?->name }}
                                         </h3>
                                     </div>
 
                                     <div class="col-12">
                                         <span class="fw-bold">{{ __('custom.name_of_normative_act') }}:</span>
-                                        {{ $item->operationalProgram?->value }}
+                                        {{ $item->law?->name }}
                                     </div>
 
                                     <div class="col-12">
@@ -56,8 +56,11 @@
                                                 <span class="show-cap">
                                                     {{ $item->cap . ' ' . trans_choice('custom.likes', 2) }}
                                                 </span>
-                                                <a href="#" class="btn" id="edit-cap"><i class="fa fa-edit"
-                                                                                         aria-hidden="true"></i></a>
+                                                @if($needSupport > 0)
+                                                    <span class="text-danger">(необходими са още {{ $needSupport }} {{ mb_strtolower(trans_choice('custom.votes', $needSupport)) }})</span>
+                                                @else
+                                                    <span class="text-success fw-bold">(има необходимата подкрепа)</span>
+                                                @endif
                                             </div>
 
                                             <div class="col-auto">

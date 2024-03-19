@@ -448,6 +448,28 @@ $(document).ready(function () {
         })
     }
 
+    if($('.li-law').length){
+        $('.li-law').on('change', function (){
+            let selectedLaw = parseInt($(this).val());
+            $('#institutions_section select option').each(function (){
+                let laws = $(this).data('laws');
+                if(selectedLaw > 0 && (typeof laws == 'undefined' || laws.indexOf(selectedLaw) != -1)) {
+                    $(this).attr('disabled', false);
+                } else{
+                    $(this).attr('disabled', true);
+                }
+            });
+        });
+
+        $('#institutions_section select').on('change', function (){
+            let lValues = $('#institutions_section select').val();
+            if(lValues.indexOf('0') != -1 && lValues.length > 1){
+                $('#institutions_section select').val('0');
+                $('#institutions_section select').trigger('change');
+            }
+        });
+    }
+
     //======================================
     // START PDOI SUBJECTS SELECT FROM MODAL
     // use <select name="subjects[]" id="subjects" class="select2">
