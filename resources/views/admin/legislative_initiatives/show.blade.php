@@ -13,7 +13,7 @@
                             <div class="form-group">
                                 <label class="control-label mr-2 fw-bold"
                                        for="from_date">{{ __('validation.attributes.from_date') }}
-                                    : </label>{{ date('m-Y', strtotime($item->created_at)) }}
+                                    : </label>{{ date('m.Y', strtotime($item->created_at)) }}
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                                                                 </div>
 
                                                                 <div class="col-auto">
-                                                                    <i class="fa fa-thumbs-up fs-18"
+                                                                    <i class="fa fa-thumbs-up fs-18 text-success"
                                                                        aria-hidden="true"></i>
                                                                 </div>
 
@@ -169,7 +169,7 @@
                                                                 </div>
 
                                                                 <div class="col-auto">
-                                                                    <i class="fa fa-thumbs-down fs-18"></i>
+                                                                    <i class="fa fa-thumbs-down fs-18 text-danger"></i>
                                                                 </div>
                                                             </div>
                                                         </div>

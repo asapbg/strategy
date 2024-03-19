@@ -24,13 +24,12 @@
                                         <label for="institution"
                                                class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
                                         <select id="institution" class="institution form-select select2"
-                                                name="institution"
+                                                name="institution[]"
                                                 multiple>
                                             <option value="" disabled>--</option>
                                             @foreach($institutions as $institution)
-                                                @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
-                                                <option
-                                                    value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
+                                                @php $selected = in_array($institution->id, request()->get('institution', []))  ? 'selected' : '' @endphp
+                                                <option value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

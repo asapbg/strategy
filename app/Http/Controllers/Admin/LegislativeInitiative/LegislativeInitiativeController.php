@@ -32,38 +32,31 @@ class LegislativeInitiativeController extends AdminController
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
         $status = $request->offsetGet('status');
-
-        $items = LegislativeInitiative::withTrashed()->where(function ($query) use ($keywords) {
-            // Keywords search
-            $query->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->whereHas('operationalProgram', function ($query) use ($keywords) {
-                    $query->whereIn('operational_program_id', OperationalProgramRow::where('value', 'ilike', "%$keywords%")->where('dynamic_structures_column_id', config('lp_op_programs.op_ds_col_title_id'))->pluck('operational_program_id'));
-                })
-                ->orWhere('description', 'ilike', "%$keywords")
-                ->orWhereHas('user', function ($query) use ($keywords) {
-                    $query->where(function ($query) use ($keywords) {
-                        $query->where('first_name', 'ilike', "%$keywords")
-                            ->orWhere('middle_name', 'ilike', "%$keywords")
-                            ->orWhere('last_name', 'ilike', "%$keywords");
-                    });
-                });
-            });
-        })
-            // Institution search
+        $items = LegislativeInitiative::select('legislative_initiative.*')->withTrashed()
+            ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->when(!empty($institution), function ($query) use ($institution) {
-                $query->whereHas('operationalProgram', function ($query) use ($institution) {
-                    $query->whereIn('operational_program_id',
-                        OperationalProgramRow::where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
-                            ->whereHas('institutions', function ($query) use ($institution) {
-                                $query->where('institution.id', '=', $institution);
-                            })
-                            ->pluck('operational_program_id'));
+                $query->join('law_institution', function ($query) use ($institution) {
+                    $query->on('law_institution.law_id', '=', 'law.id')
+                        ->whereIn('law_institution.institution_id',$institution);
                 });
+            })
+            ->join('law_translations', function ($q){
+                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
+            })
+            ->when(!empty($keywords), function ($query) use ($keywords){
+                $query->where('law_translations.name', 'ilike', '%' . $keywords . '%');
+                $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
+                    ->orWhereHas('user', function ($query) use ($keywords) {
+                        $query->where('first_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('last_name', 'like', '%' . $keywords . '%');
+                    });
             })
             // Status search
             ->when(!empty($status), function ($query) use ($status) {
-                $query->where('status', $status);
+                $query->where('legislative_initiative.status', $status);
             })
+            ->groupBy('legislative_initiative.id')
             ->paginate($count_results);
 
         return $this->view('admin.legislative_initiatives.index', compact('institutions', 'items'));
