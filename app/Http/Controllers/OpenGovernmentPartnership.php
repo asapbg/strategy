@@ -136,16 +136,36 @@ class OpenGovernmentPartnership extends Controller
     {
         $itemsCalendar = array();
         $advBoardId = Setting::where('name', '=', Setting::OGP_ADV_BOARD_FORUM)->first();
-        $ogpPlan = OgpPlan::select('ogp_plan.*')
+        $ogpPlans = OgpPlan::select('ogp_plan.*')
             ->Active()
             ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
             ->leftJoin('ogp_plan_translations', function ($j){
                 $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
                     ->where('ogp_plan_translations.locale', '=', app()->getLocale());
             })
-            ->where('ogp_status.type', OgpStatusEnum::IN_DEVELOPMENT->value)
+            ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::FINAL->value])
             ->orderBy('ogp_plan.created_at', 'desc')
-            ->first();
+            ->get();
+
+        $devPlansUnions = '';
+        if($ogpPlans->count()){
+            foreach ($ogpPlans as $devPlan){
+                $devPlansUnions.= 'union all
+                            select
+                                ogp_plan_schedule.id as id,
+                                ogp_plan_schedule.ogp_plan_id as url_id,
+                                \'ogp_plan\' as url_type,
+                                ogp_plan_schedule_translations.name as title,
+                                ogp_plan_schedule_translations.description as description,
+                                case when ogp_plan_schedule.start_date is not null then ogp_plan_schedule.start_date::text else null end as start,
+                                case when ogp_plan_schedule.end_date is not null then ogp_plan_schedule.end_date::text else null end as end
+                            from ogp_plan_schedule
+                            left join ogp_plan_schedule_translations on ogp_plan_schedule_translations.ogp_plan_schedule_id = ogp_plan_schedule.id and ogp_plan_schedule_translations.locale = \''.app()->getLocale().'\'
+                            where
+                                ogp_plan_schedule.deleted_at is null
+                                and ogp_plan_schedule.ogp_plan_id = '.$devPlan->id.' ';
+            }
+        }
 
 
 //        if($advBoardId) {
@@ -221,23 +241,7 @@ class OpenGovernmentPartnership extends Controller
                     where
                         advisory_board_meetings.deleted_at is null
                         and advisory_board_meetings.advisory_board_id = '.(int)$advBoardId->value
-                    : '').
-                ($ogpPlan ?
-                        'union all
-                            select
-                                ogp_plan_schedule.id as id,
-                                ogp_plan_schedule.ogp_plan_id as url_id,
-                                \'ogp_plan\' as url_type,
-                                ogp_plan_schedule_translations.name as title,
-                                ogp_plan_schedule_translations.description as description,
-                                case when ogp_plan_schedule.start_date is not null then ogp_plan_schedule.start_date::text else null end as start,
-                                case when ogp_plan_schedule.end_date is not null then ogp_plan_schedule.end_date::text else null end as end
-                            from ogp_plan_schedule
-                            left join ogp_plan_schedule_translations on ogp_plan_schedule_translations.ogp_plan_schedule_id = ogp_plan_schedule.id and ogp_plan_schedule_translations.locale = \''.app()->getLocale().'\'
-                            where
-                                ogp_plan_schedule.deleted_at is null
-                                and ogp_plan_schedule.ogp_plan_id = '.$ogpPlan->id.' '
-                    : '').'
+                    : ''). $devPlansUnions .'
                 ) events
                 order by events.start desc
             ');

@@ -837,4 +837,5 @@ return [
     'connection'  => 'Връзка',
     'published_at_m'  => 'Публикуван на',
     'votes'  => 'Глас|Гласове',
+    'develop_plan_information' => 'Информацията от процеса на разработвеане на плана'
 ];

@@ -75,12 +75,12 @@ class OgpPlanPolicy
 
     public function deleteArea(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan; // && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value
     }
 
     public function deleteArrangement(User $user, OgpPlan $ogpPlan)
     {
-        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan && $ogpPlan->status->type != OgpStatusEnum::ACTIVE->value;
+        return $user->canAny(['manage.*','manage.partnership']) && $ogpPlan->national_plan; //$ogpPlan->status->type != OgpStatusEnum::ACTIVE->value
     }
 
     /**

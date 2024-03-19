@@ -166,6 +166,15 @@ select {
 min-height: 38px !important;
 max-height: 38px !important;
 }
+.custom-pagination-item {
+    color: var(--bs-pagination-color);
+}
+
+.custom-pagination-item.active,
+.custom-pagination-item:hover {
+    color: #fff;
+    background-color: var(--primary_btn);
+}
 
 /*======================*/
 /*START SELECT 2*/
