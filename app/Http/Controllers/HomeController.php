@@ -82,20 +82,24 @@ class HomeController extends Controller
         $paginate = 4;
         $is_search = $request->has('search');
         $keywords = $request->offsetGet('keywords');
-        $initiatives = LegislativeInitiative::with(['comments:legislative_initiative_id','likes','operationalProgramTitle'])
-            ->when(!empty($keywords), function ($query) use ($keywords) {
-                $query->whereHas('operationalProgramTitle', function ($query) use ($keywords) {
-                    $query->where('value', 'ilike', "%$keywords%");
-                })
-                ->orWhere('description', 'like', '%' . $keywords . '%')
-                ->orWhereHas('user', function ($query) use ($keywords) {
-                    $query->where('first_name', 'like', '%' . $keywords . '%');
-                    $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
-                    $query->orWhere('last_name', 'like', '%' . $keywords . '%');
-                });
+        $initiatives = LegislativeInitiative::with(['comments:legislative_initiative_id','likes'])
+            ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
+            ->join('law_translations', function ($q){
+                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
             })
+            ->when(!empty($keywords), function ($query) use ($keywords){
+                $query->where('law_translations.name', 'ilike', '%' . $keywords . '%');
+                $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
+                    ->orWhereHas('user', function ($query) use ($keywords) {
+                        $query->where('first_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
+                        $query->orWhere('last_name', 'like', '%' . $keywords . '%');
+                    });
+            })
+            ->whereNull('law.deleted_at')
+            ->where('law.active', '=', true)
             ->whereStatus(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE)
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('legislative_initiative.created_at', 'DESC')
             ->paginate($paginate);
 
         if ($is_search) {

@@ -11,9 +11,9 @@
                             <div class="consult-item-header d-flex justify-content-between">
                                 <div class="consult-item-header-link">
                                     <a href="{{ route('legislative_initiatives.view', $initiative->id) }}" class="text-decoration-none"
-                                       title="{{ $initiative->operationalProgram?->value }}">
+                                       title="{{ $initiative->law?->name }}">
                                         <h3 class="strip-header-words">
-                                            {{ $initiative->operationalProgram?->value }}
+                                            {{ $initiative->law?->name }}
                                         </h3>
                                     </a>
                                 </div>

@@ -88,7 +88,7 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->operationalProgram?->value) }}</td>
+                                    <td>{{ __('custom.change_f') . ' ' . __('custom.in') . ' ' . mb_strtolower($item->law?->name) }}</td>
                                     <td>{{ $item->user->fullName() }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td>{{ __('custom.legislative_' . strtolower($item->getStatus($item->status)->name)) }}</td>

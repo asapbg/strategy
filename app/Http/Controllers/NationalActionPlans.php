@@ -199,15 +199,15 @@ class NationalActionPlans extends Controller
                 'files' => array(
                     'bg' => array(
                         [
-                            'path' => 'old_ogp_plan/1/OGP-selfassessment.pdf',
-                            'name' => 'Партньорство за открито управление. Оценка за изпълнението на плана за действие (БГ)',
+                            'path' => 'old_ogp_plan/1/Plan-BG.pdf',
+                            'name' => 'Оперативен план (БГ)',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
                     'en' => array(
                         [
-                            'path' => 'old_ogp_plan/1/OGP-selfassessement-2013-Bulgaria-ENG-version-final_0.pdf',
-                            'name' => 'Партньорство за открито управление. Оценка за изпълнението на плана за действие (EN)',
+                            'path' => 'old_ogp_plan/1/PLAN-BG-ENGlast_0-1.pdf',
+                            'name' => 'Оперативен план (EN)',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )

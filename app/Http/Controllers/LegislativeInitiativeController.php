@@ -52,8 +52,8 @@ class LegislativeInitiativeController extends AdminController
 
         $items = LegislativeInitiative::whereHas('law')->with(['comments'])
             ->when(!empty($keywords), function ($query) use ($keywords) {
-                    $query->whereHas('operationalProgramTitle', function ($query) use ($keywords) {
-                        $query->where('value', 'ilike', "%$keywords%");
+                    $query->whereHas('law', function ($query) use ($keywords) {
+                        $query->where('name', 'ilike', "%$keywords%");
                     })
                     ->orWhere('description', 'like', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
