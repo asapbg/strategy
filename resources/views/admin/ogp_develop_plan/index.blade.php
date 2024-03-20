@@ -66,7 +66,7 @@
 
                     <div class="mb-3">
 
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\DevelopNewPlanController@index'])
+{{--                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\DevelopNewPlanController@index'])--}}
 
                         @can('createDevelopPlan', \App\Models\OgpPlan::class)
                             <a href="{{ route('admin.ogp.plan.develop.create') }}" class="btn btn-sm btn-success">
@@ -82,7 +82,7 @@
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
                             <th>{{__('custom.proposal_period')}}</th>
-                            <th>{{__('custom.active_m')}}</th>
+{{--                            <th>{{__('custom.active_m')}}</th>--}}
                             <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -94,9 +94,9 @@
                                     <td>{{ $v->id }}</td>
                                     <td>{{ $v->name }}</td>
                                     <td>{{ displayDate($v->from_date_develop) .' - '. displayDate($v->to_date_develop) }}</td>
-                                    <td>
-                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
-                                    </td>
+{{--                                    <td>--}}
+{{--                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])--}}
+{{--                                    </td>--}}
                                     <td>{{ $v->status->name }}</td>
                                     <td class="text-center">
                                         @can('viewDevelopPlan', $v)
