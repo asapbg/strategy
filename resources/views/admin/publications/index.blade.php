@@ -59,7 +59,7 @@
                                                data-target="#modal-delete-resource"
                                                data-resource-id="{{ $item->id }}"
                                                data-resource-name="{{ "$item->title" }}"
-                                               data-resource-delete-url="{{route('admin.publications.delete',$item->id)}}"
+                                               data-resource-delete-url="{{ route('admin.publications.delete',$item->id) }}"
                                                data-toggle="tooltip"
                                                title="{{__('custom.deletion')}}">
                                                 <i class="fa fa-trash"></i>

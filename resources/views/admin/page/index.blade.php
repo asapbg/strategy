@@ -14,8 +14,7 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
-
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PageController@index'])
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\PageController@index', 'specificUrl' => (!empty($customListRouteName) ? route($customListRouteName, ($module ? ['module' => $module] : [])) : null)])
 
                         <a href="{{ isset($customEditRouteName) && !empty($customEditRouteName) ? route($customEditRouteName, ['item' => 0, 'module' => $module]) : route($editRouteName) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
@@ -63,6 +62,18 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endcan
+                                            @can('delete', $item)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-name="{{ "$item->name" }}"
+                                                   data-resource-delete-url="{{ route($customDeleteRouteName, ($module ? ['item' => $item, 'module' => $module] : ['item' => $item])) }}"
+                                                   data-toggle="tooltip"
+                                                   title="{{__('custom.deletion')}}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            @endcan
                                     </td>
                                 </tr>
                             @endforeach

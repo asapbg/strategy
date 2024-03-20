@@ -85,7 +85,25 @@ class PagePolicy
      */
     public function delete(User $user, Page $page)
     {
-        return false;
+        if($page->module_enum){
+            return $user->canAny(['manage.*', 'manage.page'])
+                || ($page->module_enum == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value) //TODO add role for ОВ
+                || ($page->module_enum == PageModulesEnum::MODULE_OGP->value && $user->hasRole([CustomRole::MODERATOR_PARTNERSHIP]));
+        }
+
+        return $user->canAny(['manage.*', 'manage.page'])
+            || (
+                in_array($page->system_name, [Page::ADV_BOARD_DOCUMENTS, Page::ADV_BOARD_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_ADVISORY_BOARDS])
+            )
+            || (
+                in_array($page->system_name, [Page::STRATEGIC_DOCUMENT_DOCUMENTS, Page::STRATEGIC_DOCUMENT_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])
+            )
+            || (
+                in_array($page->system_name, [Page::OGP_INFO])
+                && $user->hasRole([CustomRole::MODERATOR_PARTNERSHIP])
+            );
     }
 
     /**

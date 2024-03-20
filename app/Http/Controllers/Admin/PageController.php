@@ -6,6 +6,8 @@ use App\Enums\PageModulesEnum;
 use App\Http\Requests\PageStoreRequest;
 use App\Models\CustomRole;
 use App\Models\Page;
+use App\Models\Publication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,11 +25,13 @@ class PageController  extends AdminController
 
     public function index(Request $request, $module = 0)
     {
-        $customEditRouteName = $customListRouteName = null;
+        $customEditRouteName = null;
 
         $requestFilter = $request->all();
         $filter = $this->filters($request);
         //request comes from some module
+        $customListRouteName = 'admin.page';
+        $customDeleteRouteName = 'admin.page.delete';
         if($module) {
             if(($module == PageModulesEnum::MODULE_OGP->value && !$request->user()->canAny(['manage.*', 'manage.partnership']))
             || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && !$request->user()->canAny(['manage.*']))){
@@ -46,8 +50,12 @@ class PageController  extends AdminController
                 PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library',
                 default => null,
             };
+            $customDeleteRouteName = match ((int)$module) {
+                PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.page.delete',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.page.delete',
+                default => null,
+            };
         }
-
         $paginate = $filter['paginate'] ?? Page::PAGINATE;
 
         if( !isset($requestFilter['active']) ) {
@@ -66,7 +74,7 @@ class PageController  extends AdminController
         $listRouteName = self::LIST_ROUTE;
 
         return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel',
-            'editRouteName', 'listRouteName', 'customEditRouteName', 'customListRouteName', 'module'));
+            'editRouteName', 'listRouteName', 'customEditRouteName', 'customListRouteName', 'module', 'customDeleteRouteName'));
     }
 
     /**
@@ -185,6 +193,40 @@ class PageController  extends AdminController
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
+    }
+
+    /**
+     * Delete existing publication
+     *
+     * @param Request $request
+     * @param Page $item
+     * @param int $module
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request, Page $item, int $module = 0)
+    {
+        if($request->user()->cannot('delete', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $item->delete();
+            $route = route(self::LIST_ROUTE);
+            if($module){
+                $route = match ($module) {
+                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library', ['module' => $module]),
+                    PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library', ['module' => $module]),
+                    default => null,
+                };
+            }
+            return redirect($route)
+                ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
+        }
     }
 
     private function filters($request)
