@@ -118,7 +118,7 @@ class LegislativeInitiative extends ModelActivityExtend
 
     public function law(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(Law::class, 'id', 'law_id');
+        return $this->hasOne(Law::class, 'id', 'law_id')->withTrashed();
     }
 
     public function institutions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

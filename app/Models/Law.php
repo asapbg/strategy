@@ -80,6 +80,7 @@ class Law extends ModelActivityExtend implements TranslatableContract
         }
 
         $q->whereNull('law.deleted_at');
+        $q->where('law.active', '=', 1);
         $q->groupBy('law.id', 'law_translations.name');
 
         return $q->orderBy('law_translations.name', 'asc')->get();
