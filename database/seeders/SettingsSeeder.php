@@ -141,6 +141,14 @@ class SettingsSeeder extends Seeder
                 'is_required' => 1,
                 'value' => 50
             ],
+            [
+                'section' => 'legislative_init',
+                'name' => 'required_support_days',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 1,
+                'value' => 50
+            ],
         );
 
         foreach ($data as $s) {

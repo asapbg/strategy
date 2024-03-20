@@ -33,14 +33,37 @@
             <div class="row mt-2">
                 <div class="col-md-8">
                     <a href="#" class="text-decoration-none">
-                        <span class="obj-icon-info me-2">
+                        <span class="obj-icon-info">
                             <i class="far fa-calendar me-1 dark-blue" title="{{ __('custom.public_from') }}"></i>
-                            {{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') . ' ' . __('custom.year_short') }}
+                            {{ displayDate($item->created_at) . ' ' . __('custom.year_short') }}
                         </span>
                     </a>
                     <div class="mb-0 d-inline-block">
+                        @php
+                            $status_class = 'active-li';
+                            switch ($item->getStatus($item->status)->name) {
+                                case 'STATUS_CLOSED':
+                                    $status_class = 'closed-li';
+                                    break;
+
+                                case 'STATUS_SEND':
+                                    $status_class = 'send-li';
+                                    break;
+                            }
+                        @endphp
+                        <span class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
+                        @if($item->endAfterDays)
+                            <span class="fw-bold ms-2">{{ __('custom.end_after') }}:</span>
+                            {{ $item->endAfterDays.' '.trans_choice('custom.days', $item->endAfterDays) }}
+                        @endif
+
+
+                        @if(!empty($item->active_support) && $item->daysLeft)
+                            <span class="fw-bold ms-2">{{ __('custom.time_left') }}:</span>
+                            {{ $item->daysLeft }} {{ trans_choice('custom.days', ($item->daysLeft > 1 ? 2 : 1)) }}
+                        @endif
                         <!-- LIKES -->
-                        <span class="fw-bold">{{ __('custom.supported_f') }}:</span>
+                        <span class="fw-bold ms-2">{{ __('custom.supported_f') }}:</span>
                         {{ $item->countLikes() }}
 
                         @if($item->userHasLike())
@@ -72,10 +95,13 @@
                                 <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
                             </a>
                         @endif
-                        @if($needSupport > 0)
-                            <span class="text-danger">(необходими са още {{ $needSupport }} {{ mb_strtolower(trans_choice('custom.votes', $needSupport)) }})</span>
-                        @else
-                            <span class="text-success fw-bold">(има необходимата подкрепа)</span>
+
+                        @if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                            @if($needSupport > 0)
+                                <span class="text-danger">(необходими са още {{ $needSupport }} {{ mb_strtolower(trans_choice('custom.votes', $needSupport)) }})</span>
+                            @else
+                                <span class="text-success fw-bold">(има необходимата подкрепа)</span>
+                            @endif
                         @endif
                     </div>
                 </div>

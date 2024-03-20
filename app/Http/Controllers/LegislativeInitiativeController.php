@@ -13,6 +13,7 @@ use App\Models\LegislativeInitiative;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,32 +45,45 @@ class LegislativeInitiativeController extends AdminController
     public function index(Request $request)
     {
         $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
+        $laws = Law::select('id')->Active()->orderByTranslation('name')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
+        $law = $request->offsetGet('law');
         $order_by = $request->offsetGet('order_by');
         $order_by_direction = $request->offsetGet('direction');
 
-        $items = LegislativeInitiative::whereHas('law')->with(['comments'])
-            ->when(!empty($keywords), function ($query) use ($keywords) {
-                    $query->whereHas('law', function ($query) use ($keywords) {
-                        $query->where('name', 'ilike', "%$keywords%");
-                    })
-                    ->orWhere('description', 'like', '%' . $keywords . '%')
+        $items = LegislativeInitiative::select('legislative_initiative.*')
+            ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
+            ->when(!empty($institution), function ($query) use ($institution) {
+                $query->join('law_institution', function ($query) use ($institution) {
+                    $query->on('law_institution.law_id', '=', 'law.id')
+                        ->whereIn('law_institution.institution_id',$institution);
+                });
+            })
+            ->join('law_translations', function ($q){
+                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
+            })
+            ->when(!empty($law), function ($query) use ($law) {
+                $query->whereIn('law.id', $law);
+            })
+            ->when(!empty($keywords), function ($query) use ($keywords){
+                $query->where('law_translations.name', 'ilike', '%' . $keywords . '%');
+                $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
                         $query->where('first_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
                         $query->orWhere('last_name', 'like', '%' . $keywords . '%');
                     });
             })
-            ->when(!empty($institution), function ($query) use ($institution) {
-                $query->whereHas('operationalProgram', function ($query) use ($institution) {
-                    $query->where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
-                    ->whereHas('institutions', function ($query) use ($institution) {
-                        $query->where('institution.id', '=', $institution);
-                    });
-                });
-            })
+//            ->when(!empty($institution), function ($query) use ($institution) {
+//                $query->whereHas('operationalProgram', function ($query) use ($institution) {
+//                    $query->where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
+//                    ->whereHas('institutions', function ($query) use ($institution) {
+//                        $query->where('institution.id', '=', $institution);
+//                    });
+//                });
+//            })
             ->when(!empty($order_by), function ($query) use ($order_by, $order_by_direction) {
                 $direction = !in_array($order_by_direction, ['asc', 'desc']) ? 'asc' : $order_by_direction;
 
@@ -82,12 +96,13 @@ class LegislativeInitiativeController extends AdminController
             ->when(empty($order_by), function ($query) {
                 $query = $query->orderBy('status');
             })
+            ->groupBy('legislative_initiative.id')
             ->paginate($countResults);
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent'));
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent', 'laws'));
     }
 
     /**
@@ -133,10 +148,14 @@ class LegislativeInitiativeController extends AdminController
             $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
             unset($validated['institutions']);
             $validated['author_id'] = auth()->user()->id;
-            DB::enableQueryLog();
+
             $settingsCap = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES)
                 ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
             $validated['cap'] = $settingsCap ? $settingsCap->value : 50;
+
+            $settingsSupportDays = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS)
+                ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
+            $validated['active_support'] = Carbon::now()->addDays($settingsSupportDays ? $settingsSupportDays->value : 50)->endOfDay()->format('Y-m-d H:i:s');
 
             $new = new LegislativeInitiative();
             $new->fill($validated);

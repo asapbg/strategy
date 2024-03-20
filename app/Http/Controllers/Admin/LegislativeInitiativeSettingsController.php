@@ -15,7 +15,7 @@ class LegislativeInitiativeSettingsController extends Controller
             return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
         }
 
-        $availableSettings = [Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES];
+        $availableSettings = [Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES, Setting::OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS];
         $settings = null;
         if(sizeof($availableSettings)){
             $settings = Setting::Editable()->orderBy('id')

@@ -30,6 +30,7 @@ class Setting extends ModelActivityExtend
     const OGP_FORUM_INFO = 'info_forum';
     const OGP_LEGISLATIVE_INIT_SECTION = 'legislative_init';
     const OGP_LEGISLATIVE_INIT_REQUIRED_LIKES = 'required_likes';
+    const OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS = 'required_support_days';
 
 
     //activity

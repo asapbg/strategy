@@ -33,13 +33,31 @@
                             <div class="mb-3 d-flex flex-column  w-100">
                                 <label for="institution"
                                        class="form-label">{{ trans_choice('custom.institutions', 1) }}</label>
-                                <select id="institution" class="institution form-select select2" name="institution"
+                                <select id="institution" class="institution form-select select2" name="institution[]"
                                         multiple>
                                     <option value="" disabled>--</option>
                                     @foreach($institutions as $institution)
-                                        @php $selected = request()->get('institution', '') == $institution->id ? 'selected' : '' @endphp
+                                        @php $selected = in_array($institution->id, request()->get('institution', []))  ? 'selected' : '' @endphp
                                         <option
                                             value="{{ $institution->id }}" {{ $selected }}>{{ $institution->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="input-group ">
+                            <div class="mb-3 d-flex flex-column  w-100">
+                                <label for="law"
+                                       class="form-label">{{ trans_choice('custom.laws', 1) }}</label>
+                                <select id="law" class=" form-select select2" name="law[]"
+                                        multiple>
+                                    <option value="" disabled>--</option>
+                                    @foreach($laws as $law)
+                                        @php $selected = in_array($law->id, request()->get('law', []))  ? 'selected' : '' @endphp
+                                        <option
+                                            value="{{ $law->id }}" {{ $selected }}>{{ $law->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -169,7 +187,6 @@
                                                     <span class="me-2 mb-2"><strong>{{ __('validation.attributes.status') }}:</strong>
                                                         @php
                                                             $status_class = 'active-li';
-
                                                             switch ($item->getStatus($item->status)->name) {
                                                                 case 'STATUS_CLOSED':
                                                                     $status_class = 'closed-li';
@@ -180,12 +197,20 @@
                                                                     break;
                                                             }
                                                         @endphp
-                                                        <span
-                                                            class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
+                                                        <span class="{{ $status_class }}">{{ __('custom.legislative_' . \Illuminate\Support\Str::lower($item->getStatus($item->status)->name)) }}</span>
                                                     </span>
 
-                                                    <span class="item-separator mb-2">|</span>
+                                                    @if($item->endAfterDays)
+                                                        <span class="item-separator mb-2">|</span>
+                                                        <span class="ms-2 mb-2">
+                                                            <strong>  {{ __('custom.end_after') }}:</strong>
+                                                            <span class="voted-li">
+                                                            {{ $item->endAfterDays.' '.trans_choice('custom.days', $item->endAfterDays) }}
+                                                            </span>
+                                                        </span>
+                                                    @endif
 
+                                                    <span class="item-separator mb-2">|</span>
                                                     <span class="ms-2 mb-2">
                                                         <strong>  {{ __('custom.supported_f') }}:</strong>
                                                         <span class="voted-li">
@@ -208,6 +233,20 @@
                                                                 <i class="far fa-calendar text-secondary"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
                                                             </span>
                                                         </div>
+
+                                                        <div class="col-auto">
+                                                                <span class="text-secondary">
+                                                                    <i class="far fa-user text-secondary" title="{{ __('custom.author') }}"></i> {{ $item->user->fullName() }}
+                                                                </span>
+                                                        </div>
+
+                                                        @if(!empty($item->active_support) && $item->daysLeft)
+                                                            <div class="col-auto">
+                                                                <span class="text-secondary">
+                                                                    <i class="far fa-hourglass text-secondary" title="{{ __('custom.time_left') }}"></i> {{ $item->daysLeft }} {{ trans_choice('custom.days', ($item->daysLeft > 1 ? 2 : 1)) }}
+                                                                </span>
+                                                            </div>
+                                                        @endif
 
                                                         <div class="col-auto">
                                                             <div class="mb-0">

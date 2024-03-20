@@ -436,6 +436,7 @@ return [
     'settings.adv_board'                     => 'Консултативен съвет (OGP Forum)',
     'settings.info_forum'                     => 'Информация (OGP Forum)',
     'settings.required_likes'                     => 'Необходима подкрепа (разлика между \'подкрепям\' и \'не подкрепям\')',
+    'settings.required_support_days'                     => 'Период за събиране на покрепа (в дни)',
     //public sections
     'public_sections'                           => 'Библиотека|Библиотека',
     'public_sections.types.TYPE_LIBRARY'        => 'Публикация|Публикации',
@@ -558,8 +559,8 @@ return [
     'continue' => 'Продължи',
     'change_file_warning' => 'Ако е подменен файл от консултацията, след нейното начало, следва изчисляването на сроковете на консултацията да започне от датата на последно подменения файл (това не става автоматично).',
     'legislative_status_active' => 'Активна',
-    'legislative_status_send' => 'Изпратена до администрация',
-    'legislative_status_closed' => 'Затворена',
+    'legislative_status_send' => 'Приключила успешно',
+    'legislative_status_closed' => 'Приключила неуспешно',
     'legislative_comment_delete_warning' => 'Сигурни ли сте, че искате да изтриете Вашият коментар?',
     'legislative_admin_comment_delete_warning' => 'Сигурни ли сте, че искате да изтриете този коментар?',
     'legislative_vote_need' => 'Брой изисквана подкрепа',
@@ -837,5 +838,7 @@ return [
     'connection'  => 'Връзка',
     'published_at_m'  => 'Публикуван на',
     'votes'  => 'Глас|Гласове',
-    'develop_plan_information' => 'Информацията от процеса на разработвеане на плана'
+    'develop_plan_information' => 'Информацията от процеса на разработвеане на плана',
+    'time_left' => 'Оставащо време',
+    'end_after' => 'Приключила след',
 ];

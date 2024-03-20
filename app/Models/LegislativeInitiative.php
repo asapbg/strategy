@@ -6,6 +6,8 @@ use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
@@ -32,7 +34,7 @@ class LegislativeInitiative extends ModelActivityExtend
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['author_id', 'description', 'law_id', 'cap', 'ready_to_send'];
+    protected $fillable = ['author_id', 'description', 'law_id', 'cap', 'ready_to_send', 'active_support', 'send_at', 'end_support_at'];
 
     /**
      * Get the model name
@@ -40,6 +42,36 @@ class LegislativeInitiative extends ModelActivityExtend
     public function getModelName()
     {
         return $this->name;
+    }
+
+    /**
+     * Value
+     */
+    protected function daysLeft(): Attribute
+    {
+        $from = Carbon::now();
+        $to = !empty($this->active_support) && Carbon::now()->format('Y-m-d H:i:s') < $this->active_support ? Carbon::parse($this->active_support) : null;
+        return Attribute::make(
+            get: fn () => !empty($to) ? $from->diffInDays($to) : 0,
+        );
+    }
+
+    /**
+     * Value
+     */
+    protected function endAfterDays(): Attribute
+    {
+        $from = Carbon::parse($this->created_at);
+        $to = !empty($this->end_support_at) ? Carbon::parse($this->end_support_at) : null;
+        return Attribute::make(
+            get: fn () => !empty($to) ? ($from->diffInDays($to) > 0 ? $from->diffInDays($to) : 1) : 0,
+        );
+    }
+
+    public function scopeExpired($query){
+        $query->where('status', '=', LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+            ->whereNotNull('active_support')
+            ->where('active_support', '<', Carbon::now()->format('Y-m-d H:i:s'));
     }
 
     public static function translationFieldsProperties(): array

@@ -6,6 +6,7 @@ use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeVote;
 use App\Notifications\SendLegislativeInitiative;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +37,9 @@ class LegislativeInitiativeVotesController extends Controller
             $new->save();
 
             if($item->cap <= $item->countSupport()) {
+                $item->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
                 $item->ready_to_send = 1;
+                $item->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
                 $item->save();
             }
 

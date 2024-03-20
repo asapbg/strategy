@@ -36,7 +36,7 @@ class SettingsStoreRequest extends FormRequest
                     $s['type'] == 'numeric' ? 'numeric' : 'string'
                 ];
 
-                if($s['name'] == Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES){
+                if($s['name'] == Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES || $s['name'] == Setting::OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS){
                     $rules[$s['name']][] = 'min:1';
                 }
             }
