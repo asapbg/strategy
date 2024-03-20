@@ -17,7 +17,7 @@ use Spatie\Permission\Models\Role;
 
 class EAuthController extends Controller
 {
-    private string $homeRouteName = 'home';
+    private string $homeRouteName = 'site.home';
     private string $adminRouteName = 'admin.home';
     //required field to register new user
     private array $newUserRequiredFields = ['name', 'legal_form', 'identity_number', 'email'];
