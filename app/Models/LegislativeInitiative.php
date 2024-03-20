@@ -32,7 +32,7 @@ class LegislativeInitiative extends ModelActivityExtend
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['author_id', 'description', 'law_id', 'cap'];
+    protected $fillable = ['author_id', 'description', 'law_id', 'cap', 'ready_to_send'];
 
     /**
      * Get the model name

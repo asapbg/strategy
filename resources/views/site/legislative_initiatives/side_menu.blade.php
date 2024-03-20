@@ -12,7 +12,7 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 small">
                             <li class="mb-2 @if(str_contains(url()->current(),'legislative-initiatives')) active-item-left p-1 @endif"><a href="{{ route('legislative_initiatives.index') }}" class="link-dark text-decoration-none">Законодателни инициативи</a></li>
                             <li class="mb-2 @if(str_contains(url()->current(),'polls')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a></li>
-                            <li class="mb-2 @if(request()->route()->getName() == 'ogp.list') active-item-left text-white p-1 @endif">
+                            <li class="mb-2 @if(str_contains(url()->current(),'ogp')) active-item-left text-white p-1 @endif">
                                 {{ __('custom.open_government_partnership') }}
                             </li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">

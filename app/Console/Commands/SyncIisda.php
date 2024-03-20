@@ -99,6 +99,9 @@ class SyncIisda extends Command
         //Get list and base info
         $dataSoap= $this->dataSoapSearchBatchesIdentificationInfo();
         $responseArray = $this->getSoap($dataSoap);
+        $responseArrayJson = json_encode($responseArray,JSON_UNESCAPED_UNICODE);
+        //file_put_contents(storage_path('iisda_batch_list.json'), $responseArrayJson);
+
         if( $responseArray ) {
             if( isset($responseArray['error']) && $responseArray['error'] ) {
                 return Command::FAILURE;
@@ -301,6 +304,8 @@ class SyncIisda extends Command
                     if(empty($dataSoap)) {continue;}
 
                     $responseArray = $this->getSoap($dataSoap);
+                    $responseArrayJson = json_encode($responseArray,JSON_UNESCAPED_UNICODE);
+                    //file_put_contents(storage_path('iisda_batch_list.json'), PHP_EOL.'=========================='.PHP_EOL.$responseArrayJson, FILE_APPEND);
 
                     if( isset($responseArray['error']) && $responseArray['error'] ) {
                         continue;
@@ -329,6 +334,10 @@ class SyncIisda extends Command
                                     ];
 
                                     if( isset($item['Administration']) ) {
+                                        //save specific item info response
+//                                        if($responseKey == '0000000001'){
+//                                            file_put_contents(storage_path('iisda_batch_list.json'), json_encode($item['Administration'],JSON_UNESCAPED_UNICODE), FILE_APPEND);
+//                                        }
                                         if( isset($item['Administration']['CorrespondenceData']) && isset($item['Administration']['CorrespondenceData']['@attributes']) ) {
                                             $correspondenceData = $item['Administration']['CorrespondenceData']['@attributes'];
 
@@ -413,7 +422,9 @@ class SyncIisda extends Command
         $dataSoap = $itemsToSearch = '';
         foreach ($items as $row) {
             if (isset($row['@attributes']) && isset($row['@attributes']['Type'])
-                && isset($row['@attributes']['IdentificationNumber']) && in_array($row['@attributes']['Type'], $this->typesWithAddress) ) {
+                && isset($row['@attributes']['IdentificationNumber'])
+                //&& in_array($row['@attributes']['Type'], $this->typesWithAddress)
+            ) {
                 $itemsToSearch .= '<int:string>'. $row['@attributes']['IdentificationNumber'] .'</int:string>';
             }
         }

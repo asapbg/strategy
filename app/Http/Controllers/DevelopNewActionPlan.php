@@ -269,7 +269,7 @@ class DevelopNewActionPlan extends Controller
      */
     private function composeBreadcrumbs($item = null, $extraItems = []){
         $customBreadcrumbs = array(
-            ['name' => __('custom.open_government_partnership'), 'url' => route('ogp.list')],
+            ['name' => __('custom.open_government_partnership'), 'url' => ''],
             ['name' => __('custom.develop_new_action_plan'), 'url' => route('ogp.develop_new_action_plans')]
         );
 

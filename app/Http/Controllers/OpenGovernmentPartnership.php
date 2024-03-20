@@ -296,7 +296,7 @@ class OpenGovernmentPartnership extends Controller
      */
     private function composeBreadcrumbs($item = null, $extraItems = []){
         $customBreadcrumbs = array(
-            ['name' => __('custom.open_government_partnership'), 'url' => route('ogp.list')]
+            ['name' => __('custom.open_government_partnership'), 'url' => '']
         );
 
 //        if($item){

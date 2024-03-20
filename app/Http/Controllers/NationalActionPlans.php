@@ -177,7 +177,7 @@ class NationalActionPlans extends Controller
      */
     private function composeBreadcrumbs($item = null, $extraItems = []){
         $customBreadcrumbs = array(
-            ['name' => __('custom.open_government_partnership'), 'url' => route('ogp.list')],
+            ['name' => __('custom.open_government_partnership'), 'url' => ''],
             ['name' => __('custom.national_action_plans'), 'url' => route('ogp.national_action_plans')]
         );
 

@@ -44,13 +44,13 @@
                         {{ $item->countLikes() }}
 
                         @if($item->userHasLike())
-                            <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                            <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.revert', $item) }}@else{{ '#' }}@endif"
                                class="me-2 text-decoration-none">
                                 <i class="fa fa-thumbs-up fs-18"
                                    aria-hidden="true"></i>
                             </a>
                         @else
-                            <a href="{{ route('legislative_initiatives.vote.store', [$item, 'like']) }}"
+                            <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.store', [$item, 'like']) }}@else{{ '#' }}@endif"
                                class="me-2 text-decoration-none">
                                 <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
                             </a>
@@ -62,12 +62,12 @@
                         {{ $item->countDislikes() }}
 
                         @if($item->userHasDislike())
-                            <a href="{{ route('legislative_initiatives.vote.revert', $item) }}"
+                            <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.revert', $item) }}@else{{ '#' }}@endif"
                                class="text-decoration-none">
                                 <i class="fa fa-thumbs-down fs-18"></i>
                             </a>
                         @else
-                            <a href="{{ route('legislative_initiatives.vote.store', [$item, 'dislike']) }}"
+                            <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.store', [$item, 'dislike']) }}@else{{ '#' }}@endif"
                                class="text-decoration-none">
                                 <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
                             </a>
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="col-md-4 text-end">
-                    @if(auth()->check() && auth()->user()->id === $item->author_id)
+                    @can('update', $item)
                         <a href="{{ route('legislative_initiatives.edit', $item) }}"
                            class="btn btn-sm btn-primary main-color">
                             <i class="fas fa-pen me-2 main-color"></i>

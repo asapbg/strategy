@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeVote;
+use App\Notifications\SendLegislativeInitiative;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +34,11 @@ class LegislativeInitiativeVotesController extends Controller
             $new->user_id = auth()->user()->id;
             $new->is_like = $is_like;
             $new->save();
+
+            if($item->cap <= $item->countSupport()) {
+                $item->ready_to_send = 1;
+                $item->save();
+            }
 
             return redirect()->back();
         } catch (\Exception $e) {

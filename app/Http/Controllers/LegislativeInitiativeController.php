@@ -133,8 +133,9 @@ class LegislativeInitiativeController extends AdminController
             $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
             unset($validated['institutions']);
             $validated['author_id'] = auth()->user()->id;
+            DB::enableQueryLog();
             $settingsCap = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES)
-                ->where('section', '=', Setting::OGP_SECTION)->first();
+                ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
             $validated['cap'] = $settingsCap ? $settingsCap->value : 50;
 
             $new = new LegislativeInitiative();
