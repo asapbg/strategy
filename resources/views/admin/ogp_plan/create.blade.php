@@ -7,6 +7,7 @@
                 <div class="card-body">
                     <form action="{{ route('admin.ogp.plan.'.($item->id ? "edit" : "create").'_store') }}" method="post" name="form" id="form">
                         @csrf
+                        <input type="hidden" name="active" value="1">
                         @if($item->id)
                             @method('PUT')
                         @endif
@@ -68,11 +69,11 @@
 {{--                                </div>--}}
 {{--                            </div>--}}
 {{--                        @endif--}}
-                        <div class="row">
-                            <div class="col-6">
-                                @include('admin.partial.active_field', ['disabled' => false])
-                            </div>
-                        </div>
+{{--                        <div class="row">--}}
+{{--                            <div class="col-6">--}}
+{{--                                @include('admin.partial.active_field', ['disabled' => false])--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>

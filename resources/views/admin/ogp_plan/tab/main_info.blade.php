@@ -3,6 +3,7 @@
     @if(!$disabled)
         <div class="col-md-4">
             <form method="POST" action="{{ route('admin.ogp.plan.add_area', $item->id) }}">
+                <input type="hidden" name="active" value="1">
                 @csrf
                 <div class="form-group">
                     <label class="col-sm-12 control-label" for="ogp_area_id">{{ trans_choice('custom.area', 1) }} <span class="required">*</span></label>
@@ -108,11 +109,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-6">
-                    @include('admin.partial.active_field')
-                </div>
-            </div>
+{{--            <div class="row">--}}
+{{--                <div class="col-6">--}}
+{{--                    @include('admin.partial.active_field')--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">

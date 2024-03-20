@@ -11,6 +11,7 @@
                             @method('PUT')
                         @endif
                         <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
+                        <input type="hidden" name="active" value="1">
 
                         <div class="row mb-4">
                             @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
@@ -98,11 +99,11 @@
 {{--                            </div>--}}
 {{--                        </div>--}}
 {{--                        @endif--}}
-                        <div class="row">
-                            <div class="col-6">
-                                @include('admin.partial.active_field', ['disabled' => false])
-                            </div>
-                        </div>
+{{--                        <div class="row">--}}
+{{--                            <div class="col-6">--}}
+{{--                                @include('admin.partial.active_field', ['disabled' => false])--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-3">
                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>

@@ -66,7 +66,7 @@
 
                     <div class="mb-3">
 
-                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Plans@index'])
+{{--                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Ogp\Plans@index'])--}}
 
                         <a href="{{ route('admin.ogp.plan.create') }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{__('custom.add')}}
@@ -79,7 +79,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.name')}}</th>
-                            <th>{{__('custom.active_m')}}</th>
+{{--                            <th>{{__('custom.active_m')}}</th>--}}
                             <th>{{__('custom.status')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -91,9 +91,9 @@
                                     <td>{{ $v->id }}</td>
                                     <td>{{ $v->name }}</td>
                                     <td>{{ $v->status->name }}</td>
-                                    <td>
-                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])
-                                    </td>
+{{--                                    <td>--}}
+{{--                                        @includeIf('partials.toggle-boolean', ['object' => $v, 'model' => 'OgpPlan'])--}}
+{{--                                    </td>--}}
                                     <td class="text-center">
                                         @cannot('update', $v)
                                             <a href="{{ route('ogp.national_action_plans.show', $v->id )}}"
