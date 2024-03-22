@@ -50,7 +50,7 @@ class LegislativeInitiative extends ModelActivityExtend
     protected function daysLeft(): Attribute
     {
         $from = Carbon::now();
-        $to = !empty($this->active_support) && Carbon::now()->format('Y-m-d H:i:s') < $this->active_support ? Carbon::parse($this->active_support) : null;
+        $to = !empty($this->active_support) && Carbon::now()->format('Y-m-d H:i:s') < $this->active_support && $this->status == LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value ? Carbon::parse($this->active_support) : null;
         return Attribute::make(
             get: fn () => !empty($to) ? $from->diffInDays($to) : 0,
         );
@@ -110,6 +110,11 @@ class LegislativeInitiative extends ModelActivityExtend
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function receivers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Institution::class, 'legislative_initiative_receiver', 'legislative_initiative_id', 'institution_id')->withPivot(['created_at']);
+    }
+
     public function getStatus(int $value): LegislativeInitiativeStatusesEnum
     {
         return LegislativeInitiativeStatusesEnum::from($value);
@@ -119,6 +124,7 @@ class LegislativeInitiative extends ModelActivityExtend
     {
         $this->attributes['status'] = $value->value;
     }
+
 
     public function userHasLike(): bool
     {

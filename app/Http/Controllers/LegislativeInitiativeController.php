@@ -91,7 +91,7 @@ class LegislativeInitiativeController extends AdminController
             ->paginate($countResults);
 
         $pageTitle = $this->pageTitle;
-        $this->composeBreadcrumbs();
+        $this->composeBreadcrumbs(null, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
 
         $defaultDirection = $request->get('direction');
@@ -109,6 +109,7 @@ class LegislativeInitiativeController extends AdminController
         $item = new LegislativeInitiative();
         $pageTitle = $this->pageTitle;
         $institutions = Institution::optionsListWithAttr();
+        $this->composeBreadcrumbs(null, array(['name' => __('site.new_legislative_initiative'), 'url' => '']));
         return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions'));
     }
 
@@ -177,7 +178,8 @@ class LegislativeInitiativeController extends AdminController
     public function show(LegislativeInitiative $item)
     {
         $pageTitle = $this->pageTitle;
-        $this->composeBreadcrumbs($item);
+        $this->composeBreadcrumbs($item, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
+
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
         $needSupport = ($item->cap - $item->countSupport());
         return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport'));
@@ -214,11 +216,31 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function destroy(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function close(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
+        if($request->user()->cannot('close', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+
         try {
             $item->setStatus(LegislativeInitiativeStatusesEnum::STATUS_CLOSED);
+            $item->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
             $item->save();
+
+            return back()->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.close_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function destroy(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    {
+        if($request->user()->cannot('delete', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
+        try {
+            $item->delete();
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
@@ -254,17 +276,19 @@ class LegislativeInitiativeController extends AdminController
             ['name' => __('custom.legislative_initiatives'), 'url' => route('legislative_initiatives.index')]
         );
 
+        if(!empty($extraItems)){
+            foreach ($extraItems as $eItem){
+                $customBreadcrumbs[] = $eItem;
+            }
+        }
+
         if($item){
             $customBreadcrumbs[] = [
                 'name' => (__('custom.change_f').' '.__('custom.in').' '.$item->law?->name),
                 'url' => (!empty($extraItems) ? route('legislative_initiatives.view', $item) : null)
             ];
         }
-        if(!empty($extraItems)){
-            foreach ($extraItems as $eItem){
-                $customBreadcrumbs[] = $eItem;
-            }
-        }
+
         $this->setBreadcrumbsFull($customBreadcrumbs);
     }
 }

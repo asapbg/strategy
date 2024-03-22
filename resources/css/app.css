@@ -5,6 +5,7 @@
     --primary_icon: #21659e;
     --primary_border: #21659e;
     --secondary_color: #6c757d;
+    --warning_color: #ffc107;
 }
 
 /*START fix calendar title wrap*/
@@ -898,6 +899,17 @@ a.box-link span {
 
 .btn.btn-danger:hover, .btn.btn-reject:hover {
     background: #ffe6e6 !important;
+}
+
+.btn.btn-warning {
+    border: 2px solid var(--warning_color);
+    background: #fff !important;
+    color: var(--warning_color) !important;
+    border-radius: 30px !important;
+}
+
+.btn.btn-warning:hover{
+    background: #fff6ce !important;
 }
 
 .btn.btn-reject {

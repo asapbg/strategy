@@ -149,6 +149,7 @@ Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)-
     Route::get('/legislative-initiatives/{item}/edit', 'edit')->name('legislative_initiatives.edit');
     Route::post('/legislative-initiatives/{item}/update', 'update')->name('legislative_initiatives.update');
     Route::post('/legislative-initiatives/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
+    Route::post('/legislative-initiatives/{item}/close', 'close')->name('legislative_initiatives.close');
     Route::get('/legislative-initiatives/information', 'info')->name('legislative_initiatives.info');
 });
 

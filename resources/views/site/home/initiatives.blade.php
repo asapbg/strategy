@@ -37,11 +37,11 @@
                                                role="button" title="{{ __('custom.deletion') }}"></i>
                                         </a>
 
-                                        <a href="{{ route('legislative_initiatives.edit', $initiative) }}">
-                                            <i class="fas fa-pen-to-square float-end main-color fs-4"
-                                               role="button" title="{{ __('custom.edit') }}">
-                                            </i>
-                                        </a>
+{{--                                        <a href="{{ route('legislative_initiatives.edit', $initiative) }}">--}}
+{{--                                            <i class="fas fa-pen-to-square float-end main-color fs-4"--}}
+{{--                                               role="button" title="{{ __('custom.edit') }}">--}}
+{{--                                            </i>--}}
+{{--                                        </a>--}}
                                     @endif
                                 </div>
                             </div>

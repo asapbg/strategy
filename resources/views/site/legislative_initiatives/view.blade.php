@@ -107,14 +107,68 @@
                 </div>
 
                 <div class="col-md-4 text-end">
-                    @can('update', $item)
-                        <a href="{{ route('legislative_initiatives.edit', $item) }}"
-                           class="btn btn-sm btn-primary main-color">
-                            <i class="fas fa-pen me-2 main-color"></i>
-                            {{ __('custom.edit_of') . trans_choice('custom.legislative_initiatives_list', 1) }}
-                        </a>
-                    @endif
+                    @can('close', $item)
+                        <form class="d-none"
+                              method="POST"
+                              action="{{ route('legislative_initiatives.close', $item) }}"
+                              name="CLOSE_ITEM_{{ $item->id }}"
+                        >
+                            @csrf
+                        </form>
+
+{{--                        <i class="open-close-modal fas fa-regular fa-times-circle float-end text-warning fs-4  ms-2"--}}
+{{--                           role="button" title="{{ __('custom.close') }}"></i>--}}
+
+                        <button href="{{ route('legislative_initiatives.edit', $item) }}"
+                                class="btn btn-primary open-close-modal">
+                            <i class="fas fa-times-circle me-2"></i>
+                            {{ __('custom.close') }}
+                        </button>
+                    @endcan
+                    @can('delete', $item)
+                        <form class="d-none"
+                              method="POST"
+                              action="{{ route('legislative_initiatives.delete', $item) }}"
+                              name="DELETE_ITEM_{{ $item->id }}"
+                        >
+                            @csrf
+                        </form>
+
+{{--                        <i class="open-delete-modal fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"--}}
+{{--                           role="button" title="{{ __('custom.deletion') }}"></i>--}}
+
+                        <button href="{{ route('legislative_initiatives.edit', $item) }}"
+                           class="btn btn-danger open-li-delete-modal">
+                            <i class="fas fa-trash me-2"></i>
+                            {{ __('custom.deletion') }}
+                        </button>
+                    @endcan
                 </div>
+{{--                <div class="col-md-4 text-end">--}}
+{{--                    @can('update', $item)--}}
+{{--                        <a href="{{ route('legislative_initiatives.edit', $item) }}"--}}
+{{--                           class="btn btn-sm btn-primary main-color">--}}
+{{--                            <i class="fas fa-pen me-2 main-color"></i>--}}
+{{--                            {{ __('custom.edit_of') . trans_choice('custom.legislative_initiatives_list', 1) }}--}}
+{{--                        </a>--}}
+{{--                    @endif--}}
+{{--                </div>--}}
+            </div>
+
+            @if($item->receivers->count())
+                <div class="row mt-4">
+                    <div class="col-md-auto fw-bold">{{ __('custom.send_to_administrations_of') }}:</div>
+                    <div class="col-md-9">
+                        @foreach($item->receivers as $r)
+                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
+                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
+                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <div class="row mt-2">
             </div>
 
             <hr class="custom-hr my-4"/>
@@ -240,4 +294,29 @@
         'title_text'                => __('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.comments', 1),
         'file_change_warning_txt'   => __('custom.legislative_comment_delete_warning'),
     ])
+
+    @include('components.close-modal', [
+        'cancel_btn_text'           => __('custom.cancel'),
+        'continue_btn_text'         => __('custom.continue'),
+        'title_text'                => __('custom.closing') . ' ' . __('custom.of') . ' ' . trans_choice('custom.legislative_initiatives', 1),
+        'file_change_warning_txt'   => __('custom.are_you_sure_to_close') . ' ' . Str::lower(trans_choice('custom.legislative_initiatives_list', 1)) . '?',
+    ])
 @endsection
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.open-li-delete-modal').on('click', function () {
+                const form = $(this).parent().find('form').attr('name');
+
+                new MyModal({
+                    title: @json(__('custom.deletion') . ' ' . __('custom.of') . ' ' . trans_choice('custom.legislative_initiatives', 1)),
+                    footer: '<button class="btn btn-sm btn-success ms-3" onclick="' + form + '.submit()">' + @json(__('custom.continue')) + '</button>' +
+                        '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + @json(__('custom.cancel')) + '">' + @json(__('custom.cancel')) + '</button>',
+                    body: '<div class="alert alert-danger">' + @json(__('custom.are_you_sure_to_delete') . ' ' . Str::lower(trans_choice('custom.legislative_initiatives_list', 1)) . '?') + '</div>',
+                });
+            });
+        });
+    </script>
+
+@endpush

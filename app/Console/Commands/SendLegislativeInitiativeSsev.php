@@ -34,7 +34,7 @@ class SendLegislativeInitiativeSsev extends Command
     {
         $items = \DB::select('
             select
-                legislative_initiative.id,
+                legislative_initiative.id
             from legislative_initiative
             join legislative_initiative_votes on legislative_initiative_votes.legislative_initiative_id = legislative_initiative.id and legislative_initiative_votes.deleted_at is null
             where

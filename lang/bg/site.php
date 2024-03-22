@@ -132,4 +132,5 @@ return [
     'adv_board_all' => 'Всички съвети',
     'do_not_have_subscriptions' => 'Все още нямате абонаменти',
     'all_legislative_initiative' => 'Всички инициативи',
+    'new_legislative_initiative' => 'Нова Законодателна инициатива',
 ];

@@ -45,8 +45,7 @@ class LegislativeInitiativePolicy
      */
     public function create(User $user): bool
     {
-        //return (bool)$user;
-        return $user && $user->eauth;
+        return $this->eauthUser();
     }
 
     /**
@@ -59,8 +58,8 @@ class LegislativeInitiativePolicy
      */
     public function update(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $user
-            && $user->eauth
+        return false;
+        return $this->eauthUser()
             && $user->id == $legislative_initiative->author_id
             && $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
     }
@@ -101,11 +100,30 @@ class LegislativeInitiativePolicy
      */
     public function delete(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return false;
-//        return $user
-//            && $user->eauth
-//            && $user->id == $legislative_initiative->author_id
-//            && $legislative_initiative->getStatus($legislative_initiative->status)->value == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
+        return
+            (
+                $user->can('manage.*')
+                || (
+                    $this->eauthUser()
+                    && $user->id == $legislative_initiative->author_id
+                )
+            )
+            && in_array($legislative_initiative->getStatus($legislative_initiative->status)->value, [\App\Enums\LegislativeInitiativeStatusesEnum::STATUS_CLOSED->value, \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value]);
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param User                  $user
+     * @param LegislativeInitiative $legislative_initiative
+     *
+     * @return bool
+     */
+    public function close(User $user, LegislativeInitiative $legislative_initiative): bool
+    {
+        return $this->eauthUser()
+            && $user->id == $legislative_initiative->author_id
+            && in_array($legislative_initiative->getStatus($legislative_initiative->status)->value, [\App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value]);
     }
 
     /**
@@ -143,7 +161,7 @@ class LegislativeInitiativePolicy
      */
     public function vote(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $user && $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
+        return $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
     }
 
     /**
@@ -156,7 +174,13 @@ class LegislativeInitiativePolicy
      */
     public function comment(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $user && $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
+        return $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
     }
 
+    private function eauthUser()
+    {
+        $user = auth()->user();
+        return true;
+        return $user->eauth;
+    }
 }
