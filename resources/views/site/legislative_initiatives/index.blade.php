@@ -248,6 +248,12 @@
                                                         @endif
 
                                                         <div class="col-auto">
+                                                                <span class="text-secondary">
+                                                                    <i class="far fa-comments text-secondary" title="{{ trans_choice('custom.comment', 2) }}"></i> {{ $item->comments->count() }}
+                                                                </span>
+                                                        </div>
+
+                                                        <div class="col-auto">
                                                             <div class="mb-0">
                                                                 <!-- LIKES -->
 
