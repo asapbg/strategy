@@ -68,7 +68,7 @@
     </div>
 @endforeach
 
-<div id="consultations_pagination" class="ajax_pagination row mb-4" data-id="consultations" @if(!($initiatives->total() > \App\Models\Consultations\PublicConsultation::HOME_PAGINATE)) style="margin-top: 75px;" @endif>
+<div id="consultations_pagination" class="ajax_pagination row mb-4" data-id="consultations" @if($initiatives->total() <= \App\Models\Consultations\PublicConsultation::HOME_PAGINATE) style="margin-top: 75px;" @endif>
     @desktop
     @if($consultations->count() > 0 && $consultations instanceof Illuminate\Pagination\LengthAwarePaginator)
         {{ $consultations->onEachSide(2)->appends(request()->query())->links() }}
