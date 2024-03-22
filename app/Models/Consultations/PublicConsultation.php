@@ -32,7 +32,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const HOME_PAGINATE = 5;
+    const HOME_PAGINATE = 4;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
     const SHORT_REASON_FIELD = 'short_term_reason';
     const MODULE_NAME = ('custom.consultations.public_consultation');
