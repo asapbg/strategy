@@ -25,6 +25,7 @@ class LegislativeInitiative extends ModelActivityExtend
     use FilterSort;
 
     const PAGINATE = 20;
+    const HOME_PAGINATE = 5;
     const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
 
     public $timestamps = true;
