@@ -33,12 +33,12 @@
     }
 
     $asc = isset($defaultOrderBy) && isset($sort_array['order_by']) && $sort_array['order_by'] == $defaultOrderBy && $defaultDirection == 'asc';
-    if (!request()->has('direction') && request()->get('order_by' , '') === $sort_by|| $asc) {
+    if ((!request()->has('direction') && request()->get('order_by' , '') === $sort_by) || $asc) {
         $sort_icon = 'fa-sort-asc';
     }
 
     $desc = isset($defaultOrderBy) && isset($sort_array['order_by']) && $sort_array['order_by'] == $defaultOrderBy && 'desc';
-    if (request()->has('direction') && request()->get('order_by' , '') === $sort_by || $desc) {
+    if ((request()->has('direction') && request()->get('order_by' , '') === $sort_by) || $desc) {
         $sort_icon = 'fa-sort-desc';
         $sort_array = [];
 

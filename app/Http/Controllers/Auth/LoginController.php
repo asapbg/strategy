@@ -133,7 +133,7 @@ class LoginController extends Controller
 
             $user = \Auth::guard($guard)->user();
             \Auth::guard($guard)->login($user);
-
+            $user->eauth = 0;
             $user->last_login_at = Carbon::now();
             $user->save();
 

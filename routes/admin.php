@@ -83,6 +83,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.legislative_programs.delete.file');
         Route::post('/legislative-programs/{item}/delete', 'destroy')->name('consultations.legislative_programs.delete');
     });
+
     Route::controller(OperationalProgramController::class)->group(function () {
         Route::get('/operational-programs', 'index')->name('consultations.operational_programs.index')->middleware('can:viewAny,App\Models\Consultations\OperationalProgram');
         Route::get('/operational-programs/edit/{item?}', 'edit')->name('consultations.operational_programs.edit');
@@ -307,7 +308,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     // Settings
-    Route::controller( \App\Http\Controllers\Admin\LegislativeInitiativeSettingsController::class)->prefix('/legislative_initiatives')->group(function () {
+    Route::controller( \App\Http\Controllers\Admin\LegislativeInitiativeSettingsController::class)->prefix('/legislative-initiatives')->group(function () {
         Route::get( '/{section?}', 'edit')->name('legislative_initiatives.settings');
         Route::put( '/store', 'store')->name('legislative_initiatives.settings.store');
     });
@@ -319,6 +320,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/{item}/update', 'update')->name('legislative_initiatives.update');
         Route::delete('/{item}/delete', 'destroy')->name('legislative_initiatives.delete');
         Route::post('{item}/restore', 'restore')->name('legislative_initiatives.restore')->withTrashed();
+    });
+
+    // Pages
+    Route::controller(\App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativePageController::class)->prefix('/legislative-initiatives/page')->group(function () {
+        Route::match(['get', 'put'], '/base-information', 'info')->name('legislative_initiatives.page.info');
     });
 
     Route::controller(\App\Http\Controllers\Admin\LegislativeInitiative\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments')->group(function () {

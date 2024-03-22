@@ -25,6 +25,11 @@ class LegislativeInitiativeComment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function initiative(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->HasOne(LegislativeInitiative::class, 'legislative_initiative_id', 'id');
+    }
+
     public function stats(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LegislativeInitiativeCommentStat::class, 'comment_id');

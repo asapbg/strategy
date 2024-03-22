@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
+use App\Models\Page;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
@@ -44,57 +45,47 @@ class LegislativeInitiativeController extends AdminController
      */
     public function index(Request $request)
     {
-        $institutions = Institution::select('id')->orderBy('id')->with('translation')->get();
+        $institutions = Institution::select('id')->whereHas('laws')->orderBy('id')->with('translation')->get();
         $laws = Law::select('id')->Active()->orderByTranslation('name')->with('translation')->get();
         $countResults = $request->get('count_results', 10);
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
         $law = $request->offsetGet('law');
-        $order_by = $request->offsetGet('order_by');
-        $order_by_direction = $request->offsetGet('direction');
 
-        $items = LegislativeInitiative::select('legislative_initiative.*')
+        $order_by = $request->filled('order_by') ? $request->input('order_by') : 'date';
+        $order_by_direction = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : null);
+
+        $items = LegislativeInitiative::select(['legislative_initiative.*'])
+            ->with(['user', 'law', 'law.translation', 'likes', 'dislikes'])
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
-            ->when(!empty($institution), function ($query) use ($institution) {
-                $query->join('law_institution', function ($query) use ($institution) {
-                    $query->on('law_institution.law_id', '=', 'law.id')
-                        ->whereIn('law_institution.institution_id',$institution);
+            ->join('law_institution', function ($query) use ($institution) {
+                $query->on('law_institution.law_id', '=', 'law.id')->when(!empty($institution),function ($query) use ($institution) {
+                    $query->whereIn('law_institution.institution_id',$institution);
                 });
             })
-            ->join('law_translations', function ($q){
-                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
+            ->join('institution', 'law_institution.institution_id', '=', 'institution.id')
+            ->join('institution_translations', function ($q){
+                $q->on('institution_translations.institution_id', '=', 'institution.id')->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->when(!empty($law), function ($query) use ($law) {
                 $query->whereIn('law.id', $law);
             })
             ->when(!empty($keywords), function ($query) use ($keywords){
-                $query->where('law_translations.name', 'ilike', '%' . $keywords . '%');
                 $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
-                        $query->where('first_name', 'like', '%' . $keywords . '%');
-                        $query->orWhere('middle_name', 'like', '%' . $keywords . '%');
-                        $query->orWhere('last_name', 'like', '%' . $keywords . '%');
+                        $query->where('first_name', 'ilike', '%' . $keywords . '%');
+                        $query->orWhere('middle_name', 'ilike', '%' . $keywords . '%');
+                        $query->orWhere('last_name', 'ilike', '%' . $keywords . '%');
                     });
             })
-//            ->when(!empty($institution), function ($query) use ($institution) {
-//                $query->whereHas('operationalProgram', function ($query) use ($institution) {
-//                    $query->where('dynamic_structures_column_id', '=', config('lp_op_programs.op_ds_col_institution_id'))
-//                    ->whereHas('institutions', function ($query) use ($institution) {
-//                        $query->where('institution.id', '=', $institution);
-//                    });
-//                });
-//            })
             ->when(!empty($order_by), function ($query) use ($order_by, $order_by_direction) {
                 $direction = !in_array($order_by_direction, ['asc', 'desc']) ? 'asc' : $order_by_direction;
 
-                $query = match ($order_by) {
-                    'keywords' => $query->orderBy('description', $direction),
-                    'institutions' => $query->orderBy('operational_program_id', $direction),
-                    default => $query->orderBy('created_at', $direction),
-                };
-            })
-            ->when(empty($order_by), function ($query) {
-                $query = $query->orderBy('status');
+                if($order_by == 'institutions'){
+                    $query->orderBy('institution_translations.name', $direction);
+                }else {
+                    $query->orderBy('legislative_initiative.created_at', $direction);
+                }
             })
             ->groupBy('legislative_initiative.id')
             ->paginate($countResults);
@@ -102,16 +93,17 @@ class LegislativeInitiativeController extends AdminController
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent', 'laws'));
+
+        $defaultDirection = $request->get('direction');
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent', 'laws', 'defaultDirection'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return View
-     */
-    public function create(): View
+
+    public function create(Request $request)
     {
+        if($request->user()->cannot('create', LegislativeInitiative::class)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
         $regulatoryActs = RegulatoryAct::orderBy('id')->get();
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $item = new LegislativeInitiative();
@@ -124,10 +116,12 @@ class LegislativeInitiativeController extends AdminController
      * @param Request               $request
      * @param LegislativeInitiative $item
      *
-     * @return View
      */
-    public function edit(Request $request, LegislativeInitiative $item): View
+    public function edit(Request $request, LegislativeInitiative $item)
     {
+        if($request->user()->cannot('update', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
@@ -142,6 +136,9 @@ class LegislativeInitiativeController extends AdminController
     public function store(StoreLegislativeInitiativeRequest $request)
     {
         $validated = $request->validated();
+        if($request->user()->cannot('create', LegislativeInitiative::class)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
 
         DB::beginTransaction();
         try {
@@ -190,6 +187,9 @@ class LegislativeInitiativeController extends AdminController
     {
         $validated = $request->validated();
 
+        if($request->user()->cannot('update', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
         DB::beginTransaction();
         try {
             $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
@@ -226,6 +226,22 @@ class LegislativeInitiativeController extends AdminController
             Log::error($e);
             return redirect(route(self::LIST_ROUTE, $item))->with('danger', __('messages.system_error'));
         }
+    }
+
+    public function info()
+    {
+        $page = Page::with(['files' => function($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
+            ->where('system_name', '=', Page::LEGISLATIVE_INITIATIVE_INFO)
+            ->first();
+        if(!$page){
+            abort(404);
+        }
+        $pageTitle = $this->pageTitle;
+        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
+        return $this->view('site.ogp.page', compact('page', 'pageTitle'));
     }
 
     /**

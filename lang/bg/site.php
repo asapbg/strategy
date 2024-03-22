@@ -115,6 +115,7 @@ return [
     'sort_info_ogp_plans' => '<p class="mb-1"><strong>Заглавие</strong> - сортира записите по заглавие в азбучен ред (низходящо и възходящо)</p>
     <p class="mb-1"><strong>Срок от</strong> - сортира записите по начална дата на валидност (низходящо и възходящо)</p>
     <p class="mb-1"><strong>Срок до </strong> - сортира записите по крайна дата на валидност (низходящо и възходящо)</p>',
+    'sort_info_legislative_initiative' => '<p class="mb-1"><strong>Дата </strong> - сортира записите по дата на предложението (низходящо и възходящо)</p>',
     'impact_assessments_forms_and_docs' => 'Образци и форми',
     'planning' => 'Планиране',
     'footer.copyright' => 'Портал за обществени консултации. Всички права запазени МС.',
@@ -130,4 +131,5 @@ return [
     'strategic_document.contacts.title' => 'Контакти на служители от дирекция „Стратегически документи"',
     'adv_board_all' => 'Всички съвети',
     'do_not_have_subscriptions' => 'Все още нямате абонаменти',
+    'all_legislative_initiative' => 'Всички инициативи',
 ];

@@ -73,6 +73,10 @@ class PagePolicy
             || (
                 in_array($page->system_name, [Page::OGP_INFO])
                 && $user->hasRole([CustomRole::MODERATOR_PARTNERSHIP])
+            )
+            || (
+                in_array($page->system_name, [Page::LEGISLATIVE_INITIATIVE_INFO])
+                && $user->can('manage.legislative_initiatives')
             );
     }
 

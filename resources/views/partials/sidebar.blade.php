@@ -154,7 +154,7 @@
                 @endcan
 
                 @canany(['manage.*','manage.legislative_initiatives'])
-                    <li class="nav-item @if(Str::endsWith(url()->current(), 'legislative-initiatives')) menu-open @endif">
+                    <li class="nav-item @if(str_contains(url()->current(), 'legislative-initiatives')) menu-open @endif">
                         <a href="#" class="nav-link">
                             <i class="fas fa-weight"></i>
                             <p>{{ trans_choice('custom.legislative_initiatives', 2) }}<i class="fas fa-angle-left right"></i></p>
@@ -162,9 +162,16 @@
                         <ul class="nav nav-treeview" style="display: none;">
                             <li class="nav-item">
                                 <a href="{{ route('admin.legislative_initiatives.index') }}"
-                                   class="nav-link @if(Str::endsWith(url()->current(), 'legislative-initiatives')) active @endif">
+                                   class="nav-link @if(in_array(request()->route()->getName(), ['admin.legislative_initiatives.index', 'admin.legislative_initiatives.view'])) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ trans_choice('custom.legislative_initiatives_list', 2) }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.legislative_initiatives.page.info') }}"
+                                   class="nav-link @if(str_contains(url()->current(), 'legislative-initiatives/page/base-information')) active @endif">
+                                    <i class="fas fa-circle nav-item-sub-icon"></i>
+                                    <p>{{ __('custom.base_information') }}</p>
                                 </a>
                             </li>
                             <li class="nav-item">

@@ -22,6 +22,15 @@ class LegislativeInitiativeCommentController extends Controller
     public function store(StoreLegislativeInitiativeCommentRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $item = LegislativeInitiative::find($validated['legislative_initiative_id']);
+
+        if(!$item){
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        if($request->user()->cannot('comment', $item)){
+            return back()->with('warning', __('messages.unauthorized'));
+        }
 
         try {
             $validated['user_id'] = auth()->user()->id;
@@ -30,7 +39,7 @@ class LegislativeInitiativeCommentController extends Controller
             $new->fill($validated);
             $new->save();
 
-            return to_route('legislative_initiatives.view', LegislativeInitiative::find($validated['legislative_initiative_id']))
+            return to_route('legislative_initiatives.view', )
                 ->with('success', trans_choice('custom.comments', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
@@ -49,6 +58,11 @@ class LegislativeInitiativeCommentController extends Controller
     public function destroy(DeleteLegislativeInitiativeCommentRequest $request, LegislativeInitiativeComment $comment)
     {
         try {
+
+            if($request->user()->cannot('comment', $comment->initiative) || $comment->user_id != $request->user()->id){
+                return back()->with('warning', __('messages.unauthorized'));
+            }
+
             $comment->delete();
 
             return redirect()

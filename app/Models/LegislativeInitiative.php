@@ -122,20 +122,31 @@ class LegislativeInitiative extends ModelActivityExtend
 
     public function userHasLike(): bool
     {
-        if (auth()->user()) {
-            return $this->likes()->where('user_id', auth()->user()->id)->exists();
-        }
-
-        return false;
+        $userId = auth()->user() ? auth()->user()->id : 0;
+        $cnt = $this->likes->filter(function ($item) use ($userId){
+            return $item->user_id == $userId;
+        })->count();
+        return (bool)$cnt;
+//        if (auth()->user()) {
+//            return $this->likes()->where('user_id', auth()->user()->id)->exists();
+//        }
+//
+//        return false;
     }
 
     public function userHasDislike(): bool
     {
-        if (auth()->user()) {
-            return $this->dislikes()->where('user_id', auth()->user()->id)->exists();
-        }
+        $userId = auth()->user() ? auth()->user()->id : 0;
+        $cnt = $this->dislikes->filter(function ($item) use ($userId){
+            return $item->user_id == $userId;
+        })->count();
+        return (bool)$cnt;
 
-        return false;
+//        if (auth()->user()) {
+//            return $this->dislikes()->where('user_id', auth()->user()->id)->exists();
+//        }
+//
+//        return false;
     }
 
     public function likes(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -160,16 +171,16 @@ class LegislativeInitiative extends ModelActivityExtend
 
     public function countSupport(): int
     {
-        return ($this->likes()->count() - $this->dislikes()->count());
+        return ($this->likes->count() - $this->dislikes->count());
     }
 
     public function countLikes(): int
     {
-        return $this->likes()->count();
+        return $this->likes->count();
     }
 
     public function countDislikes(): int
     {
-        return $this->dislikes()->count();
+        return $this->dislikes->count();
     }
 }

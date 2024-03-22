@@ -6,6 +6,7 @@ use App\Models\EkatteSettlement;
 use App\Models\FieldOfAction;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
+use App\Models\Law;
 use App\Models\ModelActivityExtend;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -51,6 +52,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function settlement()
     {
         return $this->hasOne(EkatteSettlement::class, 'id', 'town');
+    }
+
+    public function laws()
+    {
+        return $this->belongsToMany(Law::class, 'law_institution', 'institution_id', 'law_id');
     }
 
     public function fieldsOfAction()

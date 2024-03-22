@@ -21,7 +21,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <div class="mb-3 d-flex flex-column w-100">
-                                <label for="keywords" class="form-label">{{ trans_choice('custom.keyword', 2) }}</label>
+                                <label for="keywords" class="form-label">Съдържание/Автор</label>
                                 <input id="keywords" class="form-control" name="keywords" type="text"
                                        value="{{ request()->get('keywords', '') }}">
                             </div>
@@ -97,7 +97,7 @@
                             </button>
                             <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
 
-                            @if(auth()->check())
+                            @can('create', \App\Models\LegislativeInitiative::class)
                                 <a href="{{ route('legislative_initiatives.create') }}"
                                    class="btn btn-success text-success">
                                     <i class="fas fa-circle-plus text-success me-1"></i>
@@ -110,15 +110,14 @@
             </div>
 
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
-                <div class="col-md-4">
-                    @include('components.sortable-link', ['sort_by' => 'keywords', 'translation' => trans_choice('custom.keyword', 1)])
+                <div class="text-start col-md-1">
+                    <i class="fas fa-info-circle text-primary " style="font-size: 20px" title="{{ __('site.sort_info_legislative_initiative') }}" data-html="true" data-bs-placement="top" data-bs-toggle="tooltip"><span class="d-none">.</span></i>
                 </div>
+{{--                <div class="col-md-4 cursor-pointer ">--}}
+{{--                    @include('components.sortable-link', ['sort_by' => 'institutions', 'translation' => trans_choice('custom.institutions', 1)])--}}
+{{--                </div>--}}
 
-                <div class="col-md-4 cursor-pointer ">
-                    @include('components.sortable-link', ['sort_by' => 'institutions', 'translation' => trans_choice('custom.institutions', 1)])
-                </div>
-
-                <div class="col-md-4">
+                <div class="col-md-4 cursor-pointer">
                     @include('components.sortable-link', ['sort_by' => 'date', 'translation' => trans_choice('validation.attributes.date', 1)])
                 </div>
             </div>

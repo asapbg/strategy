@@ -123,6 +123,7 @@ class EAuthController extends Controller
                 } else {
                     $user->company_identity = $data['identity_number'];
                 }
+                $user->eauth = 1;
                 $user->save();
             }
 
@@ -204,6 +205,7 @@ class EAuthController extends Controller
 
         Auth::login($user);
         $user->last_login_at = Carbon::now();
+        $user->eauth = 1;
         $user->save();
         return redirect(route($redirectRoute));
     }
