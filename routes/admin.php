@@ -309,7 +309,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Settings
     Route::controller( \App\Http\Controllers\Admin\LegislativeInitiativeSettingsController::class)->prefix('/legislative-initiatives')->group(function () {
-        Route::get( '/{section?}', 'edit')->name('legislative_initiatives.settings');
+        Route::get( '/{section}', 'edit')->name('legislative_initiatives.settings');
         Route::put( '/store', 'store')->name('legislative_initiatives.settings.store');
     });
 

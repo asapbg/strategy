@@ -37,6 +37,8 @@ class StoreLegislativeInitiativeRequest extends FormRequest
             'institutions' => ['array', 'min:1'],
             'institutions.*' => ['numeric'],
             'description' => ['required', 'string'],
+            'law_paragraph' => ['required', 'string'],
+            'law_text' => ['required', 'string'],
         ];
     }
 }

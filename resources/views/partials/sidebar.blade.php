@@ -175,7 +175,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.legislative_initiatives.settings') }}"
+                                <a href="{{ route('admin.legislative_initiatives.settings', ['section' => \App\Models\Setting::OGP_LEGISLATIVE_INIT_SECTION]) }}"
                                    class="nav-link @if(request()->route()->getName() == 'admin.legislative_initiatives.settings') active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ __('custom.settings') }}</p>

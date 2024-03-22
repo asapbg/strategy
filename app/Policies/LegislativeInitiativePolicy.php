@@ -180,7 +180,6 @@ class LegislativeInitiativePolicy
     private function eauthUser()
     {
         $user = auth()->user();
-        return true;
-        return $user->eauth;
+        return env('NO_EAUTH_RESTRICT', false) || $user->eauth;
     }
 }

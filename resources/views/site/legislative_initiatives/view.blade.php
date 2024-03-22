@@ -174,13 +174,34 @@
             <hr class="custom-hr my-4"/>
 
             <div class="row">
-                <div class="edit-li">
-                    <p class="mb-4">
-                        {!! $item->description !!}
-                    </p>
-
-                    <hr class="custom-hr"/>
+                <div class="col-md-12 fw-bold py-2">
+                    <span class="custom-left-border">{{ __('validation.attributes.law_paragraph') }}:</span>
                 </div>
+                <div class="col-12">{!! $item->law_paragraph !!}</div>
+            </div>
+            <div class="row">
+                <div class="col-12 fw-bold py-2">
+                    <span class="custom-left-border">
+                        {{ __('validation.attributes.law_text') }}:
+                    </span>
+                </div>
+                <div class="col-12">{!! $item->law_text !!}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 fw-bold py-2">
+                    <span class="custom-left-border">
+                        {{ __('custom.description_of_suggested_change') }}:
+                    </span>
+                </div>
+                <div class="col-12">{!! $item->description !!}</div>
+{{--                <div class="edit-li">--}}
+{{--                    <p class="mb-4">--}}
+{{--                        {!! $item->description !!}--}}
+{{--                    </p>--}}
+
+{{--                    <hr class="custom-hr"/>--}}
+{{--                </div>--}}
             </div>
 
             <div class="row my-4">

@@ -44,6 +44,6 @@ class LegislativeInitiativeSettingsController extends Controller
             $setting->value = $value;
             $setting->update();
         }
-        return redirect(route('admin.legislative_initiatives.settings'))->with('success', __('custom.settings').' '.__('messages.updated_successfully_pl'));
+        return redirect(route('admin.legislative_initiatives.settings', ['section' => Setting::OGP_LEGISLATIVE_INIT_SECTION]))->with('success', __('custom.settings').' '.__('messages.updated_successfully_pl'));
     }
 }

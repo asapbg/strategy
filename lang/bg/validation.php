@@ -752,5 +752,7 @@ return [
         'ogp_arrangement_content_bg' => 'В какво се състои мярката?',
         'ogp_arrangement_content_en' => 'В какво се състои мярката?',
         'ord' => 'Поредност',
+        'law_paragraph' => 'Член/алинея/точка',
+        'law_text' => 'Текст на разпоредбата',
     ],
 ];

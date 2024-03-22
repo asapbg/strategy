@@ -94,6 +94,16 @@
                                     </div>
 
                                     <div class="col-12">
+                                        <span class="fw-bold">{{ __('validation.attributes.law_paragraph') }}:</span>
+                                        {!! $item->law_paragraph !!}
+                                    </div>
+
+                                    <div class="col-12">
+                                        <span class="fw-bold">{{ __('validation.attributes.law_text') }}:</span>
+                                        {!! $item->law_text !!}
+                                    </div>
+
+                                    <div class="col-12">
                                         <span class="fw-bold">{{ __('custom.description_of_suggested_change') }}:</span>
                                         {!! $item->description !!}
                                     </div>
