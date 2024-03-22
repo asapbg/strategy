@@ -82,7 +82,7 @@ class HomeController extends Controller
         $paginate = 4;
         $is_search = $request->has('search');
         $keywords = $request->offsetGet('keywords');
-        $initiatives = LegislativeInitiative::with(['comments:legislative_initiative_id','likes'])
+        $initiatives = LegislativeInitiative::select('legislative_initiative.*')->with(['comments','likes'])
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->join('law_translations', function ($q){
                 $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
@@ -100,6 +100,7 @@ class HomeController extends Controller
             ->where('law.active', '=', true)
             ->whereStatus(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE)
             ->orderBy('legislative_initiative.created_at', 'DESC')
+            ->groupBy('legislative_initiative.id')
             ->paginate($paginate);
 
         if ($is_search) {

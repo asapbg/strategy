@@ -39,7 +39,7 @@ class LegislativeInitiativeCommentController extends Controller
             $new->fill($validated);
             $new->save();
 
-            return to_route('legislative_initiatives.view', )
+            return to_route('legislative_initiatives.view', $item)
                 ->with('success', trans_choice('custom.comments', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
