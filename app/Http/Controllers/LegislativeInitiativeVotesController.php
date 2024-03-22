@@ -16,7 +16,11 @@ class LegislativeInitiativeVotesController extends Controller
 
     public function store(LegislativeInitiative $item, string $stat)
     {
-        if(!auth()->user() || auth()->user()->cannot('vote', $item)){
+        if(!auth()->user()){
+            return back()->with('warning', __('messages.action_only_registered'));
+        }
+
+        if(auth()->user()->cannot('vote', $item)){
             return back()->with('warning', __('messages.unauthorized'));
         }
         $is_like = $stat == 'like';

@@ -5,7 +5,9 @@
 @section('content')
     <div class="row">
         @include('site.legislative_initiatives.side_menu')
-
+        @php
+            $user = auth()->user()
+        @endphp
 
         <div class="col-lg-10 right-side-content py-5">
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
@@ -272,12 +274,14 @@
 
                                                                 @if($item->userHasLike())
                                                                     <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.revert', $item) }}@else{{ '#' }}@endif"
+                                                                       @if(!$user) data-bs-toggle="tooltip" title="{{ __('messages.action_only_registered') }}" @endif
                                                                        class="me-2 text-decoration-none">
                                                                         <i class="fa fa-thumbs-up fs-18"
                                                                            aria-hidden="true"></i>
                                                                     </a>
                                                                 @else
                                                                     <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.store', [$item, 'like']) }}@else{{ '#' }}@endif"
+                                                                        @if(!$user) data-bs-toggle="tooltip" title="{{ __('messages.action_only_registered') }}" @endif
                                                                        class="me-2 text-decoration-none">
                                                                         <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
                                                                     </a>
@@ -290,11 +294,13 @@
 
                                                                 @if($item->userHasDislike())
                                                                     <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.revert', $item) }}@else{{ '#' }}@endif"
+                                                                       @if(!$user) data-bs-toggle="tooltip" title="{{ __('messages.action_only_registered') }}" @endif
                                                                        class="text-decoration-none">
                                                                         <i class="fa fa-thumbs-down fs-18"></i>
                                                                     </a>
                                                                 @else
                                                                     <a href="@if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value){{ route('legislative_initiatives.vote.store', [$item, 'dislike']) }}@else{{ '#' }}@endif"
+                                                                       @if(!$user) data-bs-toggle="tooltip" title="{{ __('messages.action_only_registered') }}" @endif
                                                                        class="text-decoration-none">
                                                                         <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
                                                                     </a>
