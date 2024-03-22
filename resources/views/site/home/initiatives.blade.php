@@ -58,7 +58,6 @@
         </div>
     </div>
 @endforeach
-
 <div id="initiatives_pagination" class="ajax_pagination row mb-4" data-id="initiatives" @if($initiatives->total() <= \App\Models\LegislativeInitiative::HOME_PAGINATE) style="margin-top: 75px;" @endif>
     @desktop
         @if($initiatives->count() > 0 && $initiatives instanceof Illuminate\Pagination\LengthAwarePaginator)

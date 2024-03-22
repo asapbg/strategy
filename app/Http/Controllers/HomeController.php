@@ -98,7 +98,7 @@ class HomeController extends Controller
             })
             ->whereNull('law.deleted_at')
             ->where('law.active', '=', true)
-            ->whereStatus(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE)
+//            ->whereStatus(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE)
             ->orderBy('legislative_initiative.created_at', 'DESC')
             ->groupBy('legislative_initiative.id')
             ->paginate($paginate);
