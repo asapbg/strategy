@@ -8,4 +8,5 @@ return [
     'certificate_public_key' => env('E_AUTH_CERT_PUBLIC_KEY_PATH', 'test'),
     'certificate_private_key' => env('E_AUTH_CERT_PRIVATE_KEY_PATH', 'test'),
     'chilkat_library' => env('CHILKAT_LIBRARY', 'test'),
+    'decrypt' => env('E_AUTH_DECRYPT', true),
 ];
