@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\StrategicDocuments\Institution;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -163,6 +164,15 @@ class User extends Authenticatable
         return $this->hasMany(AdvisoryBoardModerator::class, 'user_id');
     }
 
+    public function certificates(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(UserCertificate::class, 'user');
+    }
+
+    public function activeCertificate(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(UserCertificate::class, 'user')->where('valid_to', '>', Carbon::now());
+    }
 
     /**
      * Return the user's full name if not empty
