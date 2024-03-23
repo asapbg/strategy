@@ -108,7 +108,7 @@ class EAuthController extends Controller
                 return $this->redirectExistingUser($existUser);
             }
 
-            return $this->saveNewUser($userInfo);
+            return $this->saveNewUser($userInfo, true);
         }
 
        //Email is optional
@@ -153,9 +153,10 @@ class EAuthController extends Controller
      * When user not exist, and we receive all required data
      * or after user submit missing data, we use this method to create new user in db
      * @param $data
+     * @param $createCertificate
      * @return \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
      */
-    private function saveNewUser($data): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+    private function saveNewUser($data, $createCertificate = false): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -201,6 +202,11 @@ class EAuthController extends Controller
             }
 
             $user->refresh();
+
+            if($createCertificate){
+                $this->addUserCertificate($user, $data['certificate']);
+            }
+
             Auth::login($user);
 
             DB::commit();
