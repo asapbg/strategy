@@ -37,7 +37,7 @@
                                 <label for="operational_program_id" class="form-label">{{ trans_choice('custom.laws', 1) }}</label>
 
                                 <select id="law_id" name="law_id" data-types2ajax="law"
-                                        data-urls2="{{ route('admin.select2.ajax', 'law') }}"
+                                        data-urls2="{{ route('select2.ajax', 'law') }}"
                                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                                         class="form-control form-control-sm select2-autocomplete-ajax li-law @error('law_id'){{ 'is-invalid' }}@enderror">
                                     @if($item->law_id)

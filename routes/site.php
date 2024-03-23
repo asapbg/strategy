@@ -133,6 +133,7 @@ Route::controller(ImpactAssessmentController::class)->group(function () {
 
 Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
     Route::get('/download/{file}', 'downloadFile')->name('download.file');
+    Route::get('/select2-ajax/{type}', 'getSelect2Ajax')->name('select2.ajax');
 });
 
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {

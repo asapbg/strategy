@@ -110,7 +110,18 @@
                     </div>
                 </form>
             </div>
-
+            @if(!$user || ($user && !$user->eauth))
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        @if(!$user)
+                            <div class="main-color fw-bold">{!! __('site.new_li_actions_info') !!}</div>
+                            <div class="main-color fw-bold">{!! __('site.vote_li_actions_info') !!}</div>
+                        @elseif(!$user->eauth)
+                            <div class="main-color fw-bold">{!! __('site.new_li_actions_info') !!}</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
             <div class="row sort-row fw-600 main-color-light-bgr align-items-center rounded py-2 px-2 m-0">
                 <div class="text-start col-md-1">
                     <i class="fas fa-info-circle text-primary " style="font-size: 20px" title="{{ __('site.sort_info_legislative_initiative') }}" data-html="true" data-bs-placement="top" data-bs-toggle="tooltip"><span class="d-none">.</span></i>
@@ -312,7 +323,7 @@
 
                                                 <div class="col-auto">
                                                     <a href="{{ route('legislative_initiatives.view', $item) }}"
-                                                       title="Проект на Решение на Министерския съвет за приемане на Национален план за развитие на биологичното производство до 2030 г.">
+                                                       title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $item->law?->name }}">
                                                         <i class="fas fa-arrow-right read-more">
                                                             <span class="d-none"></span>
                                                         </i>
