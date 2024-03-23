@@ -122,13 +122,13 @@ class EAuthentication
         $glob = new CkGlobal();
         $success = $glob->UnlockBundle('ASAPBG.CB4092025_GvUzdfJg0H2z');
         if ($success != true) {
-            Log::error('['.Carbon::now().'] Chilkat License error: '.$glob->lastErrorText());
+            Log::error('[' . Carbon::now() . '] Chilkat License error: ' . $glob->lastErrorText());
             return null;
         }
 
         $status = $glob->get_UnlockStatus();
         if ($status != 2) {
-            Log::error('['.Carbon::now().'] Chilkat License expired');
+            Log::error('[' . Carbon::now() . '] Chilkat License expired');
             return null;
         }
 
@@ -142,108 +142,116 @@ class EAuthentication
         );
 
         $message = $samlResponse ? base64_decode($samlResponse, true) : '';
-        if($message && empty($message)) {
+        if ($message && empty($message)) {
             return redirect(route('home'))->with('danger', __('custom.system_error'));
         }
 
-        $xml = new CkXml();
-        $xml->LoadXml2($message,true);
+        if (config('eauth.decrypt')) {
+            $xml = new CkXml();
+            $xml->LoadXml2($message, true);
 
-        //  Load the RSA private key..
-        $privkey = new CkPrivateKey();
-        $success = $privkey->LoadPem(file_get_contents(config('eauth.certificate_private_key')));
+            //  Load the RSA private key..
+            $privkey = new CkPrivateKey();
+            $success = $privkey->LoadPem(file_get_contents(config('eauth.certificate_private_key')));
 
-        if ($success != true) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: '.$privkey->lastErrorText().PHP_EOL.'Response: '.$message);
-            return null;
+            if ($success != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: ' . $privkey->lastErrorText() . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            //  Prepare an RSA object w/ the private key...
+            $rsa = new CkRsa();
+            $success = $rsa->ImportPrivateKeyObj($privkey);
+            if ($success != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: ' . $rsa->lastErrorText() . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            //  RSA will be used to decrypt the xenc:EncryptedKey
+            //  The bytes to be decrypted are in xenc:CipherValue (in base64 format)
+            $encryptedAesKey = $xml->getChildContent('saml2:EncryptedAssertion|xenc:EncryptedData|ds:KeyInfo|xenc:EncryptedKey|xenc:CipherData|xenc:CipherValue');
+            if ($xml->get_LastMethodSuccess() != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: Encrypted AES key not found.' . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            $bdAesKey = new CkBinData();
+            $bdAesKey->AppendEncoded($encryptedAesKey, 'base64');
+
+            $sbRsaAlg = new CkStringBuilder();
+            $sbRsaAlg->Append($xml->chilkatPath('saml2:EncryptedAssertion|xenc:EncryptedData|ds:KeyInfo|xenc:EncryptedKey|xenc:EncryptionMethod|(Algorithm)'));
+            //print 'sbRsaAlg contains: ' . $sbRsaAlg->getAsString() . "\n";
+            if ($sbRsaAlg->Contains('rsa-oaep', true) == true) {
+                $rsa->put_OaepPadding(true);
+            }
+
+            //  Note: The DecryptBd method is introduced in Chilkat v9.5.0.76
+            $success = $rsa->DecryptBd($bdAesKey, true);
+            if ($success != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: ' . $rsa->lastErrorText() . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            //  Get the encrypted XML (in base64) to be decrypted w/ the AES key.
+            $encrypted64 = $xml->getChildContent('saml2:EncryptedAssertion|xenc:EncryptedData|xenc:CipherData|xenc:CipherValue');
+            if ($xml->get_LastMethodSuccess() != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: Encrypted data not found.' . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            $bdEncrypted = new CkBinData();
+            $bdEncrypted->AppendEncoded($encrypted64, 'base64');
+
+            //  Get the symmetric algorithm:  "http://www.w3.org/2001/04/xmlenc#aes128-cbc"
+            //  and set the symmetric decrypt properties.
+            $crypt = new CkCrypt2();
+            $crypt->put_Charset('windows-1252');
+            $sbAlg = new CkStringBuilder();
+            $sbAlg->Append($xml->chilkatPath('saml2:EncryptedAssertion|xenc:EncryptedData|xenc:EncryptionMethod|(Algorithm)'));
+            if ($sbAlg->Contains('aes128-cbc', true) == true) {
+                $crypt->put_CryptAlgorithm('aes');
+                $crypt->put_KeyLength(128);
+                $crypt->put_CipherMode('cbc');
+                //  The 1st 16 bytes of the encrypted data are the AES IV.
+                $crypt->SetEncodedIV($bdEncrypted->getEncodedChunk(0, 16, 'hex'), 'hex');
+                $bdEncrypted->RemoveChunk(0, 16);
+            }
+
+            //  Other algorithms, key lengths, etc, can be supported by checking for different Algorithm attribute values..
+            $crypt->SetEncodedKey($bdAesKey->getEncoded('hex'), 'hex');
+
+            //  AES decrypt...
+            $success = $crypt->DecryptBd($bdEncrypted);
+            if ($success != true) {
+                Log::error('[' . Carbon::now() . '] eAuthentication Error decrypt message: ' . $crypt->lastErrorText() . PHP_EOL . 'Response: ' . $message);
+                return null;
+            }
+
+            //  Get the decrypted XML
+            $decryptedXml = $bdEncrypted->getString('utf-8');
+
+            $xmlAssertion = new CkXml();
+            $xmlAssertion->LoadXml($decryptedXml);
+
+            //  Replace the saml2:EncryptedAssertion XML subtree with the saml2:Assertion XML.
+            // xmlEncryptedAssertion is a CkXml
+            $xmlEncryptedAssertion = $xml->FindChild('saml2:EncryptedAssertion');
+            $xmlEncryptedAssertion->SwapTree($xmlAssertion);
+
+            //  The decrypted XML assertion has now replaced the encrypted XML assertion.
+            //  Examine the fully decrypted XML document:
+
+            $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml->getXml());
+            $xml = simplexml_load_string(utf8_encode($response));
+
+        } else {
+            $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $message);
+            $xml = simplexml_load_string($response);
         }
 
-        //  Prepare an RSA object w/ the private key...
-        $rsa = new CkRsa();
-        $success = $rsa->ImportPrivateKeyObj($privkey);
-        if ($success != true) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: '.$rsa->lastErrorText().PHP_EOL.'Response: '.$message);
-            return null;
-        }
-
-        //  RSA will be used to decrypt the xenc:EncryptedKey
-        //  The bytes to be decrypted are in xenc:CipherValue (in base64 format)
-        $encryptedAesKey = $xml->getChildContent('saml2:EncryptedAssertion|xenc:EncryptedData|ds:KeyInfo|xenc:EncryptedKey|xenc:CipherData|xenc:CipherValue');
-        if ( $xml->get_LastMethodSuccess() != true ) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: Encrypted AES key not found.'.PHP_EOL.'Response: '.$message);
-            return null;
-        }
-
-        $bdAesKey = new CkBinData();
-        $bdAesKey->AppendEncoded($encryptedAesKey,'base64');
-
-        $sbRsaAlg = new CkStringBuilder();
-        $sbRsaAlg->Append($xml->chilkatPath('saml2:EncryptedAssertion|xenc:EncryptedData|ds:KeyInfo|xenc:EncryptedKey|xenc:EncryptionMethod|(Algorithm)'));
-        //print 'sbRsaAlg contains: ' . $sbRsaAlg->getAsString() . "\n";
-        if ($sbRsaAlg->Contains('rsa-oaep',true) == true) {
-            $rsa->put_OaepPadding(true);
-        }
-
-        //  Note: The DecryptBd method is introduced in Chilkat v9.5.0.76
-        $success = $rsa->DecryptBd($bdAesKey,true);
-        if ( $success != true ) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: '.$rsa->lastErrorText().PHP_EOL.'Response: '.$message);
-            return null;
-        }
-
-        //  Get the encrypted XML (in base64) to be decrypted w/ the AES key.
-        $encrypted64 = $xml->getChildContent('saml2:EncryptedAssertion|xenc:EncryptedData|xenc:CipherData|xenc:CipherValue');
-        if ( $xml->get_LastMethodSuccess() != true ) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: Encrypted data not found.'.PHP_EOL.'Response: '.$message);
-            return null;
-        }
-
-        $bdEncrypted = new CkBinData();
-        $bdEncrypted->AppendEncoded($encrypted64,'base64');
-
-        //  Get the symmetric algorithm:  "http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-        //  and set the symmetric decrypt properties.
-        $crypt = new CkCrypt2();
-        $crypt->put_Charset('windows-1252');
-        $sbAlg = new CkStringBuilder();
-        $sbAlg->Append($xml->chilkatPath('saml2:EncryptedAssertion|xenc:EncryptedData|xenc:EncryptionMethod|(Algorithm)'));
-        if ( $sbAlg->Contains('aes128-cbc',true) == true ) {
-            $crypt->put_CryptAlgorithm('aes');
-            $crypt->put_KeyLength(128);
-            $crypt->put_CipherMode('cbc');
-            //  The 1st 16 bytes of the encrypted data are the AES IV.
-            $crypt->SetEncodedIV($bdEncrypted->getEncodedChunk(0,16,'hex'),'hex');
-            $bdEncrypted->RemoveChunk(0,16);
-        }
-
-        //  Other algorithms, key lengths, etc, can be supported by checking for different Algorithm attribute values..
-        $crypt->SetEncodedKey($bdAesKey->getEncoded('hex'),'hex');
-
-        //  AES decrypt...
-        $success = $crypt->DecryptBd($bdEncrypted);
-        if ( $success != true ) {
-            Log::error('['.Carbon::now().'] eAuthentication Error decrypt message: '.$crypt->lastErrorText().PHP_EOL.'Response: '.$message);
-            return null;
-        }
-
-        //  Get the decrypted XML
-        $decryptedXml = $bdEncrypted->getString('utf-8');
-
-        $xmlAssertion = new CkXml();
-        $xmlAssertion->LoadXml($decryptedXml);
-
-        //  Replace the saml2:EncryptedAssertion XML subtree with the saml2:Assertion XML.
-        // xmlEncryptedAssertion is a CkXml
-        $xmlEncryptedAssertion = $xml->FindChild('saml2:EncryptedAssertion');
-        $xmlEncryptedAssertion->SwapTree($xmlAssertion);
-
-        //  The decrypted XML assertion has now replaced the encrypted XML assertion.
-        //  Examine the fully decrypted XML document:
-
-        $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml->getXml());
-        $xml = simplexml_load_string(utf8_encode($response));
         $json = json_encode($xml);
         $fullMsg = json_decode($json, true);
+
 //        return $fullMsg;
         if( is_null($fullMsg) ) {
             Log::error('['.Carbon::now().'] eAuthentication Invalid response: '.$message);
@@ -302,6 +310,7 @@ class EAuthentication
                 return null;
             }
 
+            //Log::info(dump($fullMsg));
             foreach ($fullMsg['saml2Assertion']['saml2AttributeStatement']['saml2Attribute'] as $attribute){
                 if( isset($attribute['@attributes']) && isset($attribute['@attributes']['Name']) && isset($attribute['saml2AttributeValue']) ) {
                     switch ($attribute['@attributes']['Name']) {
@@ -309,6 +318,7 @@ class EAuthentication
                             if( $attribute['saml2AttributeValue'] != 'Потребител идентифициран с ПИК на НАП' && !is_array($attribute['saml2AttributeValue'])) { //ПИК login not returning name
                                 $user['name'] = mb_convert_case(transliterate_new($attribute['saml2AttributeValue'], true), MB_CASE_TITLE, 'UTF-8');
                             }
+                            break;
                         case 'urn:egov:bg:eauth:2.0:attributes:email':
                             $user['email'] = $attribute['saml2AttributeValue'];
                             break;
@@ -317,6 +327,9 @@ class EAuthentication
                             break;
                         case 'urn:egov:bg:eauth:2.0:attributes:canonicalResidenceAddress':
                             $user['address'] = $attribute['saml2AttributeValue'];
+                            break;
+                        case 'urn:egov:bg:eauth:2.0:attributes:X509':
+                            $user['certificate'] = $attribute['saml2AttributeValue'];
                             break;
                         case 'urn:egov:bg:eauth:2.0:attributes:personIdentifier':
                             $identity = $this->parseIdentity($attribute['saml2AttributeValue']);
