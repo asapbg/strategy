@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Consultations\PublicConsultation;
 use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -48,6 +49,11 @@ class Law extends ModelActivityExtend implements TranslatableContract
     public function institutions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Institution::class, 'law_institution', 'law_id', 'institution_id');
+    }
+
+    public function pc(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultation::class, 'law_id', 'id');
     }
 
     public static function optionsList($active = false)

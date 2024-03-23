@@ -11,6 +11,7 @@ use App\Models\ConsultationLevel;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\Law;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\PublicConsultationContact;
@@ -100,6 +101,12 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function scopeActivePublic($query){
         $query->where('public_consultation.active', 1)
             ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'));
+    }
+
+    public function scopeActivePeriodPublic($query){
+        $query->where('public_consultation.active', 1)
+            ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('public_consultation.open_to', '>=', Carbon::now()->format('Y-m-d'));
     }
 
     public function scopeByUser($query){
@@ -264,6 +271,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->whereIn('doc_type', [DocTypesEnum::PC_COMMENTS_CSV->value, DocTypesEnum::PC_COMMENTS_PDF->value])
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
+    }
+
+    public function law(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Law::class, 'id', 'law_id');
     }
 
     public function commentsDocumentPdf()

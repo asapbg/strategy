@@ -39,7 +39,7 @@
                             <div class="input-group">
                                 <div class="mb-3 d-flex flex-column  w-100">
                                     <label for="law_id" class="form-label">{{ trans_choice('custom.laws', 1) }}</label>
-                                    <select id="law_id" name="law_id" data-types2ajax="law"
+                                    <select id="law_id" name="law_id" @if(isset($lawWithActivePc) && sizeof($lawWithActivePc)) data-activepc={{ json_encode($lawWithActivePc, JSON_UNESCAPED_UNICODE) }} @endif data-types2ajax="law"
                                             data-urls2="{{ route('select2.ajax', 'law') }}"
                                             data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                                             class="form-control form-control-sm select2-autocomplete-ajax  li-law @error('law_id'){{ 'is-invalid' }}@enderror">
@@ -66,6 +66,17 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-none" id="active_consultation_info">
+                        <div class="col-12">
+                            <div class="text-danger mb-2">
+                                Към момента има отворени публични консултации свързани с посочения закон.
+                                <br>Можете да направите своето предложение в страницата на консултацията:
+                            </div>
+                            <div id="consultations">
                             </div>
                         </div>
                     </div>
@@ -121,7 +132,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary">{{ __('custom.send') }}</button>
+                    <button type="submit" id="new_li_submit" class="btn btn-primary">{{ __('custom.send') }}</button>
                 </form>
             </div>
         </div>

@@ -451,14 +451,42 @@ $(document).ready(function () {
     if($('.li-law').length){
         $('.li-law').on('change', function (){
             let selectedLaw = parseInt($(this).val());
-            $('#institutions_section select option').each(function (){
-                let laws = $(this).data('laws');
-                if(selectedLaw > 0 && (typeof laws == 'undefined' || laws.indexOf(selectedLaw) != -1)) {
-                    $(this).attr('disabled', false);
-                } else{
+            let activePc = $(this).data('activepc');
+
+            $('#active_consultation_info').addClass('d-none');
+            $('#active_consultation_info #consultations').html('');
+            $('#institutions_section').removeClass('d-none');
+            $('#new_li_submit').removeClass('d-none');
+
+            let foundPc = false;
+            if(selectedLaw > 0 && typeof activePc != 'undefined' && typeof activePc[selectedLaw] != 'undefined'){
+                foundPc = true;
+                $('#new_li_submit').addClass('d-none');
+                //deselect and hide institution section
+                $('#institutions_section select option').each(function (){
                     $(this).attr('disabled', true);
-                }
-            });
+                });
+                $('#institutions_section').addClass('d-none');
+
+                //show active consultation info
+                let consultationsHtml = '';
+                $.each(activePc[selectedLaw], function(index,value) {
+                    consultationsHtml += '<a class="w-100" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
+                });
+                $('#active_consultation_info #consultations').html(consultationsHtml)
+                $('#active_consultation_info').removeClass('d-none');
+            }
+
+            if(!foundPc){
+                $('#institutions_section select option').each(function (){
+                    let laws = $(this).data('laws');
+                    if(selectedLaw > 0 && (typeof laws == 'undefined' || laws.indexOf(selectedLaw) != -1)) {
+                        $(this).attr('disabled', false);
+                    } else{
+                        $(this).attr('disabled', true);
+                    }
+                });
+            }
         });
 
         $('#institutions_section select').on('change', function (){

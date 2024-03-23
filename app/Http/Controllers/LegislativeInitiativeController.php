@@ -108,9 +108,33 @@ class LegislativeInitiativeController extends AdminController
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $item = new LegislativeInitiative();
         $pageTitle = $this->pageTitle;
+
+        $lawWithActivePc = array();
+        //get law with active public consultation
+        $lawWithPcDB = Law::with(['translation', 'pc' => function($q){
+            $q->ActivePeriodPublic();
+        }])->get();
+
+        if($lawWithPcDB->count()){
+            foreach ($lawWithPcDB as $r){
+                if($r->pc->count()){
+                    foreach ($r->pc as $pc){
+                        if(!isset($lawWithActivePc[$r->id])){
+                            $lawWithActivePc[$r->id] = array();
+                        }
+                        $lawWithActivePc[$r->id][] = [
+                            'id' => $pc->id,
+                            'name' => $pc->title,
+                            'url' => route('public_consultation.view', $pc->id),
+                        ];
+                    }
+                }
+            }
+        }
+
         $institutions = Institution::optionsListWithAttr();
         $this->composeBreadcrumbs(null, array(['name' => __('site.new_legislative_initiative'), 'url' => '']));
-        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions'));
+        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions', 'lawWithActivePc'));
     }
 
     /**
