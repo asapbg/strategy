@@ -24,7 +24,7 @@
                             <th>ID</th>
                             <th>{{__('validation.attributes.label')}}</th>
                             <th>{{__('validation.attributes.institutions')}}</th>
-                            <th>{{__('custom.status')}}</th>
+                            <th>{{__('custom.active_m')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
                         </thead>
