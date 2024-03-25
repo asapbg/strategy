@@ -214,7 +214,7 @@
                         data-urls2="{{ route('admin.select2.ajax', 'lp_record_pc') }}"
                         data-placeholders2="{{ __('custom.search_lp_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('legislative_program_row_id'){{ 'is-invalid' }}@enderror">
-                    @if(!old('legislative_program_row_id') && $item->legislative_program_row_id && $item->lpRow)
+                    @if(!old('legislative_program_row_id') && $item->legislative_program_row_id && $item->lpRow && $item->lpRow->parent)
                         <option value="{{ $item->lpRow->id }}" >{{ $item->lpRow->value }} {{ $item->lpRow->parent->recordPeriod }}</option>
                     @endif
                 </select>
@@ -259,7 +259,7 @@
                         data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}" data-institution="{{ $institutionid }}"
                         data-placeholders2="{{ __('custom.search_op_record_js_placeholder') }}"
                         class="form-control form-control-sm select2-autocomplete-ajax @error('operational_program_row_id'){{ 'is-invalid' }}@enderror">
-                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow)
+                    @if(!old('operational_program_row_id') && $item->operational_program_row_id && $item->opRow && $item->opRow->parent)
                         <option value="{{ $item->opRow->id }}" selected="selected">{{ $item->opRow->value }} {{ $item->opRow->parent->recordPeriod }}</option>
                     @endif
                 </select>
