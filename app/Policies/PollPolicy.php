@@ -75,7 +75,7 @@ class PollPolicy
     public function delete(User $user, Poll $poll)
     {
         $pcList = $poll->consultations;
-        return !$poll->has_entry && !$pcList->count()
+        return !$poll->has_entry 
             && is_null($poll->deleted_at)
             && (
                 $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])

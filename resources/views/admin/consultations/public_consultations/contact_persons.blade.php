@@ -70,4 +70,4 @@
         @endif
     </div>
 </div>
-@includeIf('modals.delete-resource', ['resource' => trans_choice('custom.person_contacts', 1)])
+{{--@includeIf('modals.delete-resource', ['resource' => trans_choice('custom.person_contacts', 1)])--}}

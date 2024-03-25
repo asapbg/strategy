@@ -47,6 +47,19 @@
                             @can('preview', $poll)
                                 <a href="{{ route('admin.polls.preview', $poll).'?pc='.$item->id }}"><i class="btn btn-sm btn-success fas fa-eye"></i></a>
                             @endcan
+                            @can('delete', $poll)
+                                    <a href="javascript:;"
+                                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
+                                       data-target="#modal-delete-poll-resource"
+                                       data-resource-id="{{ $poll->id }}"
+                                       data-resource-name="{{ "$poll->name" }}"
+                                       data-resource-delete-url="{{ route('admin.polls.delete', $poll).'?pc='.$item->id }}"
+                                       data-toggle="tooltip"
+                                       title="{{__('custom.deletion')}}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+{{--                                <a href="{{ route('admin.polls.delete', ['id' => $poll->id]).'?pc='.$item->id }}"><i class="btn btn-sm btn-primary fas fa-edit"></i></a>--}}
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
@@ -58,3 +71,4 @@
         </tbody>
     </table>
 </div>
+
