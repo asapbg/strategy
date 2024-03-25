@@ -27,7 +27,7 @@
 
             @if(isset($data['rows']) && $data['rows']->count())
                 @foreach($data['rows'] as $key => $areas)
-                    <h4 style="background-color: #bce4ec; text-align: center;">ТЕМАТИЧНА ОБЛАСТ {{ $key + 1 }} <br>
+                    <h4 style="background-color: #bce4ec; text-align: center; border-radius: 5px; padding:10px 20px;">ТЕМАТИЧНА ОБЛАСТ {{ $key + 1 }} <br>
                         {{ mb_strtoupper($areas->area->name) }}
                     </h4>
                     @if($areas->arrangements && $areas->arrangements->count())
