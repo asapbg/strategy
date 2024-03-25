@@ -141,7 +141,7 @@
                         </td>
                         <td>{{ displayDateTime($c->created_at) }}</td>
                         <td>
-                            @if($c->user_id)
+                            @if($c->user_id && $c->author)
                                 <a target="_blank" class="text-primary" href="{{ route('admin.users.edit', $c->author) }}">{{ $c->author->fullName() }}</a>
                             @else
                                 {{ __('custom.anonymous') }}
