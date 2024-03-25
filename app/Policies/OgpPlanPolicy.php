@@ -109,7 +109,7 @@ class OgpPlanPolicy
 
     public function newOffer(User $user, OgpPlan $ogpPlan)
     {
-        return !$ogpPlan->national_plan && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value
+        return $user && !$ogpPlan->national_plan && $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value
             && dateBetween($ogpPlan->from_date_develop, $ogpPlan->to_date_develop);
     }
 
@@ -157,9 +157,9 @@ class OgpPlanPolicy
     }
 
 
-    public function viewPublic(User $user, OgpPlan $ogpPlan)
+    public function viewPublic(?User $user, OgpPlan $ogpPlan)
     {
-        return $user->id && (
+        return (
                 $ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value
                 || ($ogpPlan->status->type != OgpStatusEnum::DRAFT->value && $ogpPlan->has('plan'))
             );

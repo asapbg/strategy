@@ -90,7 +90,8 @@ class DevelopNewActionPlan extends Controller
      */
     public function area(Request $request, OgpPlan $plan, OgpPlanArea $planArea)
     {
-        if(auth()->user()->cannot('viewPublic', $plan)) {
+//        if(auth()->user()->cannot('viewPublic', $plan)) {
+        if(!$this->authorize('viewPublic', $plan)) {
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
         }
         $pageTitle = $this->pageTitle;
