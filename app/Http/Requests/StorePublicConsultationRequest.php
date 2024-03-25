@@ -40,7 +40,7 @@ class StorePublicConsultationRequest extends FormRequest
             //'act_links' => ['nullable', 'string'],
             'connected_pc' => ['array'],
             'connected_pc.*' => ['numeric', 'exists:public_consultation,id'],
-            'active' => ['boolean', 'nullable'],
+            'active' => ['nullable', 'numeric'],
             'stay' => ['nullable'],
 //            'monitorstat' => ['nullable', 'string', 'max:255'],
             'field_of_actions_id' => ['required', 'numeric', 'exists:field_of_actions,id'],

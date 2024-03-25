@@ -209,7 +209,7 @@ class PublicConsultationController extends AdminController
                 $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
             }
             $item->fill($fillable);
-            $item->active = $request->input('active') ? 1 : 0;
+            $item->active = $request->filled('active') ? $request->input('active') : 0;
 
             if( !$id ) {
                 $item->importer_institution_id = $institution ? $institution->id : null;
