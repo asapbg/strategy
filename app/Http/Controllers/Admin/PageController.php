@@ -127,6 +127,13 @@ class PageController  extends AdminController
         $id = $validated['id'];
         $item = $id ? Page::find($id) : new Page();
 
+        if(!$id && (!isset($validated['slug']) || empty($validated['slug']))){
+            $existSlug = Page::where('slug', '=', Str::slug($validated['name_bg']))->first();
+            if($existSlug){
+                return back()->withInput()->with('danger', 'Вече съществува страница с това име');
+            }
+        }
+
         if(
             (!$module && ( ($id && $request->user()->cannot('update', $item)) || (!$id && $request->user()->cannot('create', Page::class)) ))
             || (
