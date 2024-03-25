@@ -58,7 +58,7 @@
                     <p class="short-decription text-secondary">
                         {!! strip_tags($item->short_content) ? strip_tags(Str::limit($item->short_content, 200)) : "" !!}
                     </p>
-                    <a href="{{ route('ogp.news.details', $item) }}" class="readmore stretched-link mt-1" target="_blank" title="{{ $item->title }}">{{ __('site.read_more') }} <i class="fas fa-long-arrow-right"></i></a>
+                    <a href="{{ route('ogp.news.details', $item) }}" class="readmore mt-1" target="_blank" title="{{ $item->title }}">{{ __('site.read_more') }} <i class="fas fa-long-arrow-right"></i></a>
                 </div>
             </div>
         @endforeach
