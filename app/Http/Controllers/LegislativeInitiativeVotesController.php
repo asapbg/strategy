@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeVote;
-use App\Notifications\SendLegislativeInitiative;
+use App\Models\User;
+use App\Notifications\LegislativeInitiativeSuccessful;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class LegislativeInitiativeVotesController extends Controller
@@ -39,11 +38,24 @@ class LegislativeInitiativeVotesController extends Controller
 
             $item->refresh();
             if($item->cap <= $item->countSupport()) {
-
                 $item->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
                 $item->ready_to_send = 1;
                 $item->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
                 $item->save();
+
+                //Send notification to author and all voted for successful initiative
+                $likesUserIds = $item->likes->pluck('user_id')->toArray();
+                if(sizeof($likesUserIds)){
+                    $users = User::whereIn('id', $likesUserIds)->get();
+                    if($users->count()){
+                        foreach ($users as $n){
+                            $n->notify(new LegislativeInitiativeSuccessful($item));
+                        }
+                    }
+                }
+                if($item->user){
+                    $item->user->notify(new LegislativeInitiativeSuccessful($item));
+                }
             }
             \DB::commit();
             return redirect()->back();

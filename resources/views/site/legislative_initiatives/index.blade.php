@@ -95,9 +95,8 @@
                         </div>
 
                         <div class="col-md-6 text-end col-md-6 px-0">
-                            <button class="btn rss-sub main-color"><i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}
-                            </button>
-                            <button class="btn rss-sub main-color"><i class="fas fa-envelope"></i>{{ __('custom.subscribe') }}</button>
+                            <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
+                            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])
 
                             @can('create', \App\Models\LegislativeInitiative::class)
                                 <a href="{{ route('legislative_initiatives.create') }}"

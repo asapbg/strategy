@@ -33,6 +33,18 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     protected $guarded = [];
 
     /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification): array|string
+    {
+        return config('app.env') != 'production' ? config('mail.local_to_mail') : $this->email;
+
+    }
+
+    /**
      * Get the model name
      */
     public function getModelName() {

@@ -76,6 +76,18 @@ class User extends Authenticatable
     ];
 
     /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification): array|string
+    {
+        return config('app.env') != 'production' ? config('mail.local_to_mail') : $this->email;
+
+    }
+
+    /**
      * Get the user's name
      */
     public function getModelName() {

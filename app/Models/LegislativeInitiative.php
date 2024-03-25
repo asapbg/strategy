@@ -9,6 +9,7 @@ use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -189,5 +190,36 @@ class LegislativeInitiative extends ModelActivityExtend
     public function countDislikes(): int
     {
         return $this->dislikes->count();
+    }
+
+    /**
+     * Use in subscription check
+     * @param array $filter
+     */
+    public static function list(array $filter){
+        return self::select('legislative_initiative.*')
+            ->leftJoin('law', 'law.id', '=', 'legislative_initiative.law_id')
+            ->leftJoin('law_translations', function ($j){
+                $j->on('law_translations.law_id', '=', 'law.id')
+                    ->where('law_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('law_institution', function ($query) use ($filter) {
+                $query->on('law_institution.law_id', '=', 'law.id')->when(!empty($filter['institution']),function ($query) use ($filter) {
+                    $query->whereIn('law_institution.institution_id',$filter['institution']);
+                });
+            })
+            ->when(!empty($filter['law']), function ($query) use ($filter) {
+                $query->whereIn('law.id', $filter['law']);
+            })
+            ->when(!empty($filter['keywords']), function ($query) use ($filter){
+                $query->orWhere('legislative_initiative.description', 'ilike', '%' . $filter['keywords'] . '%')
+                    ->orWhereHas('user', function ($query) use ($filter) {
+                        $query->where('first_name', 'ilike', '%' . $filter['keywords'] . '%');
+                        $query->orWhere('middle_name', 'ilike', '%' . $filter['keywords'] . '%');
+                        $query->orWhere('last_name', 'ilike', '%' . $filter['keywords'] . '%');
+                    });
+            })
+            ->groupBy('legislative_initiative.id')
+            ->get();
     }
 }

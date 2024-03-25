@@ -14,6 +14,9 @@ use App\Models\Page;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\User;
+use App\Models\UserSubscribe;
+use App\Notifications\LegislativeInitiativeClosed;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,7 +98,12 @@ class LegislativeInitiativeController extends AdminController
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
 
         $defaultDirection = $request->get('direction');
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent', 'laws', 'defaultDirection'));
+
+        $requestFilter = $request->all();
+        $hasSubscribeEmail = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter);
+        $hasSubscribeRss = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent',
+            'laws', 'defaultDirection', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
 
@@ -206,7 +214,12 @@ class LegislativeInitiativeController extends AdminController
 
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
         $needSupport = ($item->cap - $item->countSupport());
-        return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport'));
+
+        $hasSubscribeEmail = $this->hasSubscription($item);
+        $hasSubscribeRss = $this->hasSubscription($item, null, null, UserSubscribe::CHANNEL_RSS);
+
+        return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport',
+            'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)
@@ -251,6 +264,17 @@ class LegislativeInitiativeController extends AdminController
             $item->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
             $item->save();
 
+            //Send notification to all voted for closed initiative
+            $likesUserIds = $item->likes->pluck('user_id')->toArray();
+            if(sizeof($likesUserIds)){
+                $users = User::whereIn('id', $likesUserIds)->get();
+                if($users->count()){
+                    foreach ($users as $n){
+                        $n->notify(new LegislativeInitiativeClosed($item, 'closed'));
+                    }
+                }
+            }
+
             return back()->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.close_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
@@ -265,6 +289,16 @@ class LegislativeInitiativeController extends AdminController
         }
         try {
             $item->delete();
+            //Send notification to all voted for closed initiative
+            $likesUserIds = $item->likes->pluck('user_id')->toArray();
+            if(sizeof($likesUserIds)){
+                $users = User::whereIn('id', $likesUserIds)->get();
+                if($users->count()){
+                    foreach ($users as $n){
+                        $n->notify(new LegislativeInitiativeClosed($item, 'deleted'));
+                    }
+                }
+            }
 
             return redirect(route(self::LIST_ROUTE, $item))
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));

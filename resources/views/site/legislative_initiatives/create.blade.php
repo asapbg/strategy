@@ -73,8 +73,7 @@
                     <div class="row d-none" id="active_consultation_info">
                         <div class="col-12">
                             <div class="text-danger mb-2">
-                                Към момента има отворени публични консултации свързани с посочения закон.
-                                <br>Можете да направите своето предложение в страницата на консултацията:
+                                {!! __('site.li_there_is_active_consultation') !!}
                             </div>
                             <div id="consultations">
                             </div>

@@ -30,8 +30,55 @@
                 </div>
             </div>
 
+            @if(auth()->user())
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
+                        <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                        @includeIf('site.partial.subscribe-buttons')
+
+                        @can('close', $item)
+                            <form class="d-none"
+                                  method="POST"
+                                  action="{{ route('legislative_initiatives.close', $item) }}"
+                                  name="CLOSE_ITEM_{{ $item->id }}"
+                            >
+                                @csrf
+                            </form>
+
+                            {{--                        <i class="open-close-modal fas fa-regular fa-times-circle float-end text-warning fs-4  ms-2"--}}
+                            {{--                           role="button" title="{{ __('custom.close') }}"></i>--}}
+
+                            <button href="{{ route('legislative_initiatives.edit', $item) }}"
+                                    class="btn btn-primary open-close-modal">
+                                <i class="fas fa-times-circle me-2"></i>
+                                {{ __('custom.close') }}
+                            </button>
+                        @endcan
+                        @can('delete', $item)
+                            <form class="d-none"
+                                  method="POST"
+                                  action="{{ route('legislative_initiatives.delete', $item) }}"
+                                  name="DELETE_ITEM_{{ $item->id }}"
+                            >
+                                @csrf
+                            </form>
+
+                            {{--                        <i class="open-delete-modal fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"--}}
+                            {{--                           role="button" title="{{ __('custom.deletion') }}"></i>--}}
+
+                            <button href="{{ route('legislative_initiatives.edit', $item) }}"
+                                    class="btn btn-danger open-li-delete-modal">
+                                <i class="fas fa-trash me-2"></i>
+                                {{ __('custom.deletion') }}
+                            </button>
+                        @endcan
+                    </div>
+                </div>
+            @endif
+
             <div class="row mt-2">
-                <div class="col-md-8">
+                <div class="col-12">
                     <a href="#" class="text-decoration-none">
                         <span class="obj-icon-info">
                             <i class="far fa-calendar me-1 dark-blue" title="{{ __('custom.public_from') }}"></i>
@@ -106,44 +153,44 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 text-end">
-                    @can('close', $item)
-                        <form class="d-none"
-                              method="POST"
-                              action="{{ route('legislative_initiatives.close', $item) }}"
-                              name="CLOSE_ITEM_{{ $item->id }}"
-                        >
-                            @csrf
-                        </form>
+{{--                <div class="col-md-3 text-end">--}}
+{{--                    @can('close', $item)--}}
+{{--                        <form class="d-none"--}}
+{{--                              method="POST"--}}
+{{--                              action="{{ route('legislative_initiatives.close', $item) }}"--}}
+{{--                              name="CLOSE_ITEM_{{ $item->id }}"--}}
+{{--                        >--}}
+{{--                            @csrf--}}
+{{--                        </form>--}}
 
 {{--                        <i class="open-close-modal fas fa-regular fa-times-circle float-end text-warning fs-4  ms-2"--}}
 {{--                           role="button" title="{{ __('custom.close') }}"></i>--}}
 
-                        <button href="{{ route('legislative_initiatives.edit', $item) }}"
-                                class="btn btn-primary open-close-modal">
-                            <i class="fas fa-times-circle me-2"></i>
-                            {{ __('custom.close') }}
-                        </button>
-                    @endcan
-                    @can('delete', $item)
-                        <form class="d-none"
-                              method="POST"
-                              action="{{ route('legislative_initiatives.delete', $item) }}"
-                              name="DELETE_ITEM_{{ $item->id }}"
-                        >
-                            @csrf
-                        </form>
+{{--                        <button href="{{ route('legislative_initiatives.edit', $item) }}"--}}
+{{--                                class="btn btn-primary open-close-modal">--}}
+{{--                            <i class="fas fa-times-circle me-2"></i>--}}
+{{--                            {{ __('custom.close') }}--}}
+{{--                        </button>--}}
+{{--                    @endcan--}}
+{{--                    @can('delete', $item)--}}
+{{--                        <form class="d-none"--}}
+{{--                              method="POST"--}}
+{{--                              action="{{ route('legislative_initiatives.delete', $item) }}"--}}
+{{--                              name="DELETE_ITEM_{{ $item->id }}"--}}
+{{--                        >--}}
+{{--                            @csrf--}}
+{{--                        </form>--}}
 
 {{--                        <i class="open-delete-modal fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"--}}
 {{--                           role="button" title="{{ __('custom.deletion') }}"></i>--}}
 
-                        <button href="{{ route('legislative_initiatives.edit', $item) }}"
-                           class="btn btn-danger open-li-delete-modal">
-                            <i class="fas fa-trash me-2"></i>
-                            {{ __('custom.deletion') }}
-                        </button>
-                    @endcan
-                </div>
+{{--                        <button href="{{ route('legislative_initiatives.edit', $item) }}"--}}
+{{--                           class="btn btn-danger open-li-delete-modal">--}}
+{{--                            <i class="fas fa-trash me-2"></i>--}}
+{{--                            {{ __('custom.deletion') }}--}}
+{{--                        </button>--}}
+{{--                    @endcan--}}
+{{--                </div>--}}
 {{--                <div class="col-md-4 text-end">--}}
 {{--                    @can('update', $item)--}}
 {{--                        <a href="{{ route('legislative_initiatives.edit', $item) }}"--}}

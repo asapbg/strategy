@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\NotifySubscribedUser;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\LegislativeInitiative;
 use App\Models\StrategicDocument;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -81,6 +82,18 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 ${$varUrl} = match ($type) {
                     'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
                     default => route('admin.strategic_documents.edit', ['id' => $this->data['modelInstance']->id]),
+                };
+            } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
+                if ($this->data['event'] == "updated") {
+                    ${$var} = __("Update legislative initiative $type text");
+                    ${$varSubject} = __("Update legislative initiative");
+                } else {
+                    ${$var} = __("New legislative initiative $type text");
+                    ${$varSubject} = __("New legislative initiative");
+                }
+                ${$varUrl} = match ($type) {
+                    'user' => route('legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
+                    default => route('admin.legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
                 };
             }
         }

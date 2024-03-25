@@ -51,5 +51,15 @@
     "New strategic document": "Нов стратегически документ",
     "Update strategic document": "Обновен стратегически документ",
     "Change subscriptions here": "Ако желаете да промените своите абонаменти, моля натиснете тук:",
-    "Subscription's management": "Управление на абонаменти"
+    "Subscription's management": "Управление на абонаменти",
+    "See the legislative initiative": "Вижте законодателната инициатива",
+    "Link to the legislative initiative on the Public Consultation Portal": "Линк към законодателната инициатива на Портала за обществени консултации",
+    "New legislative initiative admin text": "Беше създаден следната законодателна инициатива",
+    "New legislative initiative moderator text": "Беше създаден следната законодателна инициатива",
+    "New legislative initiative user text": "На Портала за обществени консултации е създадена нова за законодателна инициатива (промяна в нормативен акт), която започва да събира подкрепа. След генерирането на необходимата подкрепа, предложението ще бъде изпратено до отговорна институция за разглеждане. Информация за законодателната инициатива:",
+    "Update legislative initiative admin text": "Беше обновена следната законодателна инициатива:",
+    "Update legislative initiative moderator text": "Беше обновена следната законодателна инициатива",
+    "Update legislative initiative user text": "На Портала за обществени консултации е обновена следната законодателна инициатива:",
+    "New legislative initiative": "Нова законодателна инициатива",
+    "Update legislative initiative": "Обновена законодателна инициатива"
 }
