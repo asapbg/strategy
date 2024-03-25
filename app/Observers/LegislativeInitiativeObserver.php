@@ -3,10 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
-use App\Models\CustomRole;
 use App\Models\LegislativeInitiative;
-use App\Models\StrategicDocument;
-use App\Models\User;
 use App\Models\UserSubscribe;
 use Illuminate\Support\Facades\Log;
 
