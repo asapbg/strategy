@@ -1,8 +1,10 @@
-<div class="row mb-3">
-    <div class="col-md-3">
-        <a class="btn btn-sm btn-success" type="submit" href="{{ route('admin.polls.edit', ['id' => 0]).'?pc='.$item->id }}"><i class="fas fa-plus mr-2"></i>{{ __('custom.create').' '.__('custom.new_f').' '.trans_choice('custom.polls', 1) }}</a>
+@if(auth()->user()->can('create', \App\Models\Poll::class))
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <a class="btn btn-sm btn-success" type="submit" href="{{ route('admin.polls.edit', ['id' => 0]).'?pc='.$item->id }}"><i class="fas fa-plus mr-2"></i>{{ __('custom.create').' '.__('custom.new_f').' '.trans_choice('custom.polls', 1) }}</a>
+        </div>
     </div>
-</div>
+@endif
 <form class="row" action="{{ route('admin.consultations.public_consultations.poll.attach') }}" method="post">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
