@@ -33,7 +33,7 @@ class OgpDevelopPlanRequest extends FormRequest
             'to_date' => ['required', 'date'],
             'from_date_develop' => ['required', 'date', 'before:to_date_develop', 'before:from_date'],
             'to_date_develop' => ['required', 'date', 'before:from_date'],
-            'active' => ['required', 'numeric'],
+//            'active' => ['required', 'numeric'],
             'ogp_status_id' => ['nullable', 'numeric'],
             'ogp_area' => ['nullable', 'numeric', 'exists:ogp_area,id'],
         ];
