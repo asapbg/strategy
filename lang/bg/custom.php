@@ -811,6 +811,7 @@ return [
     'strategic_document.category.AREA'        => 'Стратегически документи на областно ниво',
     'strategic_document.category.MUNICIPAL'        => 'Стратегически документи на общинско ниво',
     'strategic_document.dropdown.CENTRAL'        => 'Национално',
+    'strategic_document.dropdown.CENTRAL_OTHER'        => '---',
     'strategic_document.dropdown.AREA'        => 'Областно',
     'strategic_document.dropdown.MUNICIPAL'        => 'Общинско',
     'strategic_document.levels.CENTRAL'        => 'Национално',

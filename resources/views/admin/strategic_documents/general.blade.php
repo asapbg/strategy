@@ -108,10 +108,12 @@
                                                 ---
                                             </option>
 
-                                        @foreach ($ekateAreas as $ekateArea)
-                                            <option value="{{ $ekateArea->id }}"
-                                                    @if(old('ekatte_area_id', ($item->id ? $item->policy_area_id : 0)) == $ekateArea->id) selected @endif data-id="{{ $ekateArea->id }}">{{ $ekateArea->name }}</option>
-                                        @endforeach
+                                        @if($ekateAreas && $ekateAreas->count())
+                                            @foreach ($ekateAreas as $ekateArea)
+                                                <option value="{{ $ekateArea->id }}"
+                                                        @if(old('ekatte_area_id', ($item->id ? $item->policy_area_id : 0)) == $ekateArea->id) selected @endif data-id="{{ $ekateArea->id }}">{{ $ekateArea->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>

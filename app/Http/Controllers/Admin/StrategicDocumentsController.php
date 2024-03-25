@@ -135,7 +135,10 @@ class StrategicDocumentsController extends AdminController
                     $strategicDocumentLevels = !$user->institution ? []
                         : array(
                             ['value' => '', 'name' => ''],
-                            ['value' => $user->institution->level->nomenclature_level, 'name' => __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($user->institution->level->nomenclature_level))]
+                            [
+                                'value' => ($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level) ,
+                                'name' => __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level ))
+                            ]
                         );
                 }
 
