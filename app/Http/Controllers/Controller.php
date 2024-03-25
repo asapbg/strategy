@@ -419,8 +419,8 @@ class Controller extends BaseController
     protected function setSeo(string|null $title = '', string|null $description ='', string|null $keywords = '')
     {
         seo()->title(!empty($title) ? $title : __('site.seo_title'));
-        seo()->meta('keywords', !empty($description) ? $description : __('site.seo_description'));
-        seo()->meta('description', !empty($keywords) ? $keywords : __('site.seo_keywords'));
+        seo()->meta('description', !empty($description) ? $description : __('site.seo_description'));
+        seo()->meta('keywords', !empty($keywords) ? $keywords : __('site.seo_keywords'));
     }
 
 

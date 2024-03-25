@@ -121,7 +121,7 @@
                                 @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
                             </div>
                             <div class="row mb-4">
-                                @include('admin.partial.edit_field_translate', ['field' => 'meta_description', 'required' => false])
+                                @include('admin.partial.edit_field_translate', ['field' => 'meta_keyword', 'required' => false])
                             </div>
 
                             <div class="col-md-3 col-12">
