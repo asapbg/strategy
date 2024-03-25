@@ -36,9 +36,9 @@ class PageStoreRequest extends FormRequest
         ];
 
         if( request()->input('id') ) {
-            $rules['email'][] = Rule::unique('page', 'slug')->ignore((int)request()->input('id'));
+            $rules['slug'][] = Rule::unique('page', 'slug')->ignore((int)request()->input('id'));
         } else {
-            $rules['email'][] = 'unique:page,slug';
+            $rules['slug'][] = 'unique:page,slug';
         }
 
         if( request()->isMethod('put') ) {
