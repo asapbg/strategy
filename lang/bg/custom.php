@@ -387,7 +387,7 @@ return [
     'files_hierarchy_bg'                 => 'Файлова йерархия (BG)',
     'files_hierarchy_en'                 => 'Файлова йерархия (EN)',
     'download'                        => 'Изтегли',
-    'ord'                               => 'Порденост',
+    'ord'                               => 'Поредност',
     'period'                               => 'Период',
     'new_f'                               => 'Нова',
     'select_file'                               => 'Изберете файл',

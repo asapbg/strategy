@@ -554,7 +554,7 @@ return [
         'end_date'            => 'Крайна дата',
         'new_question_name'            => 'Въпрос',
         'new_answers.*'            => 'Отговор',
-        'order_idx'                 => 'Порденост',
+        'order_idx'                 => 'Поредност',
         'meta_title_bg'                => 'Заглавие (meta) BG',
         'meta_title_en'                => 'Заглавие (meta) EN',
         'meta_description_bg'          => 'Описание (meta) BG',

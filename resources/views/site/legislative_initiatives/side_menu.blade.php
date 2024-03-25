@@ -25,7 +25,7 @@
                                     </li>
                                 </ul>
                             </ul>
-                            <li class="mb-2 @if(str_contains(url()->current(),'polls')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a></li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'polls') || str_contains(url()->current(),'poll')) active-item-left p-1 @endif"><a href="{{ route('poll.index') }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.polls', 2) }}">{{ trans_choice('custom.polls', 2) }}</a></li>
                             <li class="mb-2 @if(str_contains(url()->current(),'ogp')) active-item-left text-white p-1 @endif">
                                 {{ __('custom.open_government_partnership') }}
                             </li>
