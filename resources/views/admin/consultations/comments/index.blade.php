@@ -32,7 +32,7 @@
                                     </td>
                                     <td>{{ displayDateTime($item->created_at) }}</td>
                                     <td>
-                                        @if($item->user_id)
+                                        @if($item->user_id && $item->author)
                                             <a target="_blank" class="text-primary" href="{{ route('admin.users.edit', $item->author) }}">{{ $item->author->fullName() }}</a>
                                         @else
                                             {{ __('custom.anonymous') }}
