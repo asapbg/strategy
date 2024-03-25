@@ -4,8 +4,13 @@
     --primary_btn: #21659e;
     --primary_icon: #21659e;
     --primary_border: #21659e;
+    --primary_bg_color: #21659e;
     --secondary_color: #6c757d;
     --warning_color: #ffc107;
+}
+
+.main-progress-bar {
+    background-color: var(--primary_bg_color);
 }
 
 /*START fix calendar title wrap*/

@@ -47,6 +47,7 @@ Route::controller(\App\Http\Controllers\PollController::class)->group(function (
     Route::get('poll/{id}/show', 'show')->name('poll.show');
     Route::get('poll/{id}/statistic', 'statistic')->name('poll.statistic');
     Route::post('poll', 'store')->name('poll.store');
+    Route::get('polls/export/{id}/{format?}', 'export')->name('polls.export');
 });
 
 Route::controller(\App\Http\Controllers\PartnershipController::class)->group(function () {

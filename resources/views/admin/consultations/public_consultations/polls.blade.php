@@ -38,7 +38,7 @@
                 @foreach($item->polls as $poll)
                     <tr>
                         <td>
-                            {{ $poll->name }}
+                            {{ $poll->name }} ({{ displayDate($poll->start_date) }} - {{ displayDate(displayDate($poll->end_date)) }})
                         </td>
                         <td>
                             @can('update', $poll)

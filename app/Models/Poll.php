@@ -49,7 +49,14 @@ class Poll extends ModelActivityExtend
     public function scopeNotExpired($query)
     {
         $query->where(function ($query) {
-            $query->where('end_date', '>', databaseDate(Carbon::now()))->orWhereNull('end_date');
+            $query->where('end_date', '>=', databaseDate(Carbon::now()))->orWhereNull('end_date');
+        });
+    }
+
+    public function scopeExpired($query)
+    {
+        $query->where(function ($query) {
+            $query->where('end_date', '<', databaseDate(Carbon::now()))->orWhereNull('end_date');
         });
     }
 

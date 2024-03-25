@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PollStatusEnum;
+use App\Exports\PollExport;
 use App\Http\Requests\StoreUserPollRequest;
-use App\Models\FieldOfAction;
 use App\Models\Poll;
-use App\Models\User;
 use App\Models\UserPoll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PollController extends Controller
 {
@@ -177,6 +178,30 @@ class PollController extends Controller
             Log::error($e);
             DB::rollBack();
             return back()->with('warning', __('messages.system_error'));
+        }
+    }
+
+    public function export(Request $request, $id, $format = 'pdf')
+    {
+        $poll = Poll::Expired()->find($id);
+        if(!$poll){
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        try {
+            if($format == 'excel'){
+                return Excel::download(new PollExport($poll), date('d_m_Y_H_i_s').'_poll.xlsx');
+
+            } else{
+                $isPdf = true;
+                $statistic = $poll->getStats();
+                $pdf = PDF::loadView('exports.poll', compact('poll', 'statistic', 'isPdf'));
+                return $pdf->download(date('d_m_Y_H_i_s').'_poll.pdf');
+            }
+        }
+        catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('warning', "Възникна грешка при експортирането, моля опитайте отново");
         }
     }
 

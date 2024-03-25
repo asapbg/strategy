@@ -240,9 +240,17 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function pollsInPeriod(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Poll::class, 'public_consultation_poll', 'public_consultation_id', 'poll_id')
-            ->where('status', '=', 1);
-            //->where('end_date', '>=', Carbon::now()->format('Y-m-d'));
+            ->where('status', '=', 1)
+            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'));
     }
+
+    public function pollsFinished(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Poll::class, 'public_consultation_poll', 'public_consultation_id', 'poll_id')
+            ->where('status', '=', 1)
+        ->where('end_date', '<', Carbon::now()->format('Y-m-d'));
+    }
+
 
     public function timeline(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

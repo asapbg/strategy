@@ -51,3 +51,50 @@
         </div>
     </div>
 @endif
+
+@if($item->pollsFinished->count())
+    <div class="row mb-0 mt-4">
+        <div class="col-md-12">
+            <div class="custom-card py-4 px-3 mb-4">
+                <h3 class="mb-3">{{ __('site.public_consultation.polls') }}</h3>
+                @foreach($item->pollsFinished as $poll)
+                    <div class="col-12">
+                        <h4># {{ $poll->name }}</h4>
+                        <hr class="custom-hr">
+                        <a href="{{ route('polls.export', ['id' => $poll->id, 'format' => 'pdf']) }}" class="btn btn-sm btn-primary main-color mt-2">
+                            <i class="fas fa-file-pdf me-2 main-color"></i>{{ __('custom.export_as_pdf') }}
+                        </a>
+                        <a href="{{ route('polls.export', ['id' => $poll->id,'format' => 'excel']) }}" class="btn btn-sm btn-primary main-color mt-2">
+                            <i class="fas fa-file-excel me-2 main-color"></i>{{ __('custom.export_as_excel') }}
+                        </a>
+                    </div>
+                    @php($statistic = $poll->getStats())
+                    @if($poll->questions->count())
+                        @foreach($poll->questions as $key => $q)
+                            <div class="col-md-6 mb-4 @if($loop->first) mt-3 @endif">
+                                <div class="comment-background p-2 rounded">
+                                    <p class="fw-bold fs-18 mb-2">{{ __('custom.question_with_number', ['number' => ($key+1)]) }} {{ $q->name }} </p>
+                                    <div class="mb-2">Потребители: <span>{{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }}</span></div>
+                                    @foreach($q->answers as $key => $a)
+                                        @php($percents = 0)
+                                        <div class="col-12 @if(!$loop->first) mt-2 @endif">
+                                            {{ $a->name }}
+                                        </div>
+                                        @if(sizeof($statistic) && isset($statistic[$q->id]) && isset($statistic[$q->id]['options'][$a->id]))
+                                            @php($percents = ($statistic[$q->id]['options'][$a->id] * 100) / $statistic[$q->id]['users'])
+                                        @endif
+                                        <div class="col-md-6">
+                                            <div class="progress">
+                                                <div class="progress-bar main-progress-bar" role="progressbar" style="width: {{ $percents }}%" aria-valuenow="{{ $percents }}" aria-valuemin="0" aria-valuemax="100">{{ $percents }}%</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endif
