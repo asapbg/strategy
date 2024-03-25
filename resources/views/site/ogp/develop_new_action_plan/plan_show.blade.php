@@ -76,7 +76,7 @@
                 <h3 class="mb-2 col-12 mb-3">{{ trans_choice('custom.areas', 2) }}</h3>
                 @if($item->areas->count())
                     @foreach($item->areas as $area)
-                        <div class="col-md-12">
+                        <div class="col-md-12 mb-3">
                             <div class="consul-wrapper">
                                 <div class="single-consultation d-flex">
                                     <div class="consult-img-holder p-2">
