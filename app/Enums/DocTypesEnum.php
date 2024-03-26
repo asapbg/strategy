@@ -75,7 +75,7 @@ enum DocTypesEnum: int
                         self::PC_REPORT->value,
                         self::PC_MOTIVES->value,
                         self::PC_OTHER_DOCUMENTS->value,
-                        self::PC_COMMENTS_REPORT->value,
+                        //self::PC_COMMENTS_REPORT->value,
                         self::PC_IMPACT_EVALUATION->value,
                         self::PC_IMPACT_EVALUATION_OPINION->value,
                         self::PC_CONSOLIDATED_ACT_VERSION->value,
@@ -98,7 +98,7 @@ enum DocTypesEnum: int
                     self::PC_DRAFT_ACT->value,
                     self::PC_MOTIVES->value,
                     self::PC_OTHER_DOCUMENTS->value,
-                    self::PC_COMMENTS_REPORT->value,
+                    //self::PC_COMMENTS_REPORT->value,
                     self::PC_CONSOLIDATED_ACT_VERSION->value,
                 ],
                 'kd' => [
@@ -114,7 +114,7 @@ enum DocTypesEnum: int
                     'base' => [
                         self::PC_DRAFT_ACT->value,
                         self::PC_OTHER_DOCUMENTS->value,
-                        self::PC_COMMENTS_REPORT->value,
+                        //self::PC_COMMENTS_REPORT->value,
                     ],
                     'kd' => [],
                     'report' => [
