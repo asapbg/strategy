@@ -69,27 +69,33 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return array(
             'title' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255']
+                'rules' => ['required', 'string', 'max:5000'],
+                'required_all_lang' => true
             ],
             'description' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'proposal_ways' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'short_term_reason' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string']
+                'rules' => ['nullable', 'string'],
+                'required_all_lang' => false
             ],
             'responsible_unit' => [
                 'type' => 'summernote',
-                'rules' => ['nullable', 'string']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ],
             'importer' => [
                 'type' => 'text',
-                'rules' => ['nullable', 'string', 'max:255']
+                'rules' => ['nullable', 'string', 'max:255'],
+                'required_all_lang' => false
             ]
         );
     }

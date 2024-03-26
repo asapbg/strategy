@@ -4,11 +4,13 @@ namespace App\Http\Requests;
 
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Traits\TranslatableFieldsRules;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePublicConsultationRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -70,6 +72,7 @@ class StorePublicConsultationRequest extends FormRequest
             $rules['institution_id'] = ['required', 'numeric', 'exists:institution,id'];
         }
 
-        return $rules;
+//        return $rules;
+        return $this->getRules($rules, PublicConsultation::translationFieldsProperties());
     }
 }
