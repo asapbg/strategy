@@ -13,7 +13,7 @@ class FilesContent extends QueryFilter implements FilterContract{
     {
         if( !empty($value) ){
             $this->query->whereHas('files', function (Builder $query) use ($value){
-                $query->whereFullText('file_text', $value);
+                $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$value]);
             });
         }
     }

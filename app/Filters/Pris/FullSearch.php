@@ -17,10 +17,10 @@ class FullSearch extends QueryFilter implements FilterContract{
                     ->orWhere('pris_translations.legal_reason', 'ilike', '%'.$value.'%')
                     ->orWhere('tag_translations.label', 'ilike', '%'.$value.'%')
                     ->orWhereHas('files', function (Builder $query) use ($value){
-                        $query->whereFullText('file_text', $value);
+                        $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$value]);
                     });
             });
-        }
+        };
     }
 }
 

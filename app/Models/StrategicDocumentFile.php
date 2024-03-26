@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Scout\Searchable;
 
 class StrategicDocumentFile extends ModelActivityExtend implements TranslatableContract
 {
-    use FilterSort, Translatable;
+    use FilterSort, Translatable, Searchable;
 
     const TRANSLATABLE_FIELDS = ['display_name', 'file_info'];
     const MODULE_NAME = ('custom.strategic_document_files');
@@ -27,7 +28,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     protected string $logName = "strategic_document_file";
 
     protected $fillable = ['strategic_document_id', 'strategic_document_type_id', 'valid_at',
-        'visible_in_report', 'sys_user', 'path', 'file_text',
+        'visible_in_report', 'sys_user', 'path', 'file_text', 'sd_file_text_ts_bg',
         'filename', 'content_type', 'ord', 'parent_id', 'version', 'strategic_document_file_id'];
 
     const DIR_PATH = 'strategic_doc'.DIRECTORY_SEPARATOR;

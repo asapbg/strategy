@@ -136,7 +136,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
             'title' => [
                 'type' => 'text',
                 'rules' => ['required', 'string'],
-                'required_all_lang' => false
+                'required_all_lang' => true
             ],
             'description' => [
                 'type' => 'summernote',

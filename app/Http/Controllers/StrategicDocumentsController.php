@@ -79,7 +79,15 @@ class StrategicDocumentsController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        if(isset($requestFilter['title']) && !empty($requestFilter['title'])){
+            $requestFilter['text'] = $requestFilter['title'];
+            unset($requestFilter['title']);
+        }
         $items = StrategicDocument::list($requestFilter, $sort, $sortOrd, $paginate);
+        if(isset($requestFilter['text'])){
+            $requestFilter['title'] = $requestFilter['text'];
+            unset($requestFilter['text']);
+        }
 
         $hasSubscribeEmail = $this->hasSubscription(null, StrategicDocument::class, $requestFilter);
         $hasSubscribeRss = $this->hasSubscription(null, StrategicDocument::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
