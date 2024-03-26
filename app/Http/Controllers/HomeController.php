@@ -61,7 +61,8 @@ class HomeController extends Controller
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
             ->when($title, function ($query, $title) {
-                return $query->where('title', 'ILIKE', "%$title%");
+                return $query->where('field_of_action_translations.name', 'ILIKE', "%$title%")
+                    ->orWhere('public_consultation_translation.title', 'ILIKE', "%$title%");
             })
             ->orderBy('public_consultation.created_at', 'DESC')
             ->paginate($paginate);
