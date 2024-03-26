@@ -702,7 +702,7 @@ $(document).ready(function () {
             data: $form.serialize(),
             success: function (res) {
                 $("#"+id+"_results").html(res);
-                $("#"+id+"_total").html($("#"+id+"_total .row").length);
+                $("#"+id+"_total").html($("#"+id+"-total-data").data('total'));
                 HideLoadingSpinner();
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $form.offset().top

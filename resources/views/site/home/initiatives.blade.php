@@ -1,3 +1,4 @@
+<div id="initiatives-total-data" data-total="{{ $initiatives->total() }}" class="d-none"></div>
 @foreach($initiatives as $initiative)
     <div class="row mb-4">
         <div class="col-md-12">
