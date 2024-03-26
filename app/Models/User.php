@@ -186,6 +186,13 @@ class User extends Authenticatable
         return $this->morphMany(UserCertificate::class, 'user')->where('valid_to', '>', Carbon::now());
     }
 
+    public function commentsPc(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comments::class, 'user_id', 'id')
+            ->where('object_code', '=', Comments::PC_OBJ_CODE)
+            ->orderBy('created_at', 'desc');
+    }
+
     /**
      * Return the user's full name if not empty
      * else return the username

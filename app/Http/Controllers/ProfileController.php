@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Consultations\PublicConsultation;
 use App\Models\FormInput;
 use App\Models\UserSubscribe;
 use Illuminate\Http\Request;
@@ -31,6 +32,12 @@ class ProfileController extends Controller
                 break;
             case 'form_inputs':
                 $data = FormInput::whereUserId($profile->id)->get();
+                break;
+            case 'pc':
+                $pcIds = $profile->commentsPc->pluck('object_id')->unique()->toArray();
+                $data = PublicConsultation::with(['comments' => function ($q) use($profile){
+                    $q->where('user_id', '=', $profile->id);
+                }])->whereIn('id', $pcIds)->get();
                 break;
             default:
         }
