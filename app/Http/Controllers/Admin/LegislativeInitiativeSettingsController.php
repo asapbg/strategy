@@ -11,7 +11,7 @@ class LegislativeInitiativeSettingsController extends Controller
 {
     public function edit(Request $request, $section = Setting::OGP_LEGISLATIVE_INIT_SECTION){
 
-        if(!$request->user()->canAny('manage.*', 'manage.legislative_initiatives')){
+        if(!$request->user()->canAny(['manage.*', 'manage.legislative_initiatives'])){
             return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
         }
 
@@ -38,7 +38,7 @@ class LegislativeInitiativeSettingsController extends Controller
 
         foreach ($validated as $name => $value) {
             $setting = Setting::Editable()->where('name', '=', $name)->first();
-            if( !$request->user()->canAny('manage.*', 'manage.legislative_initiatives') ) {
+            if( !$request->user()->canAny(['manage.*', 'manage.legislative_initiatives']) ) {
                 return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
             $setting->value = $value;

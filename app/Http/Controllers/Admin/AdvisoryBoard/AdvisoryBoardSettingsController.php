@@ -14,7 +14,7 @@ class AdvisoryBoardSettingsController extends Controller
 
     public function edit(Request $request, $section = Setting::ADVISORY_BOARDS_SECTION){
 
-        if(!$request->user()->canAny('manage.*', 'manage.advisory-boards')){
+        if(!$request->user()->canAny(['manage.*', 'manage.advisory-boards'])){
             return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
         }
 
@@ -41,7 +41,7 @@ class AdvisoryBoardSettingsController extends Controller
 
         foreach ($validated as $name => $value) {
             $setting = Setting::Editable()->where('name', '=', $name)->first();
-            if( !$request->user()->canAny('manage.*', 'manage.advisory-boards') ) {
+            if( !$request->user()->canAny(['manage.*', 'manage.advisory-boards']) ) {
                 return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
             $setting->value = $value;

@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class OgpSettingsController extends Controller
 {
-    public function edit(Request $request, $section = Setting::OGP_SECTION){
-
-        if(!$request->user()->canAny('manage.*', 'manage.partnership')){
+    public function edit(Request $request, $section = Setting::OGP_SECTION)
+    {
+        if(!$request->user()->canAny(['manage.*', 'manage.partnership'])){
             return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
         }
 
@@ -38,7 +38,7 @@ class OgpSettingsController extends Controller
 
         foreach ($validated as $name => $value) {
             $setting = Setting::Editable()->where('name', '=', $name)->first();
-            if( !$request->user()->canAny('manage.*', 'manage.partnership') ) {
+            if( !$request->user()->canAny(['manage.*', 'manage.partnership']) ) {
                 return back()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
             $setting->value = $value;
