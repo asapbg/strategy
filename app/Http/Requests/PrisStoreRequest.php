@@ -4,10 +4,12 @@ namespace App\Http\Requests;
 
 use App\Models\Pris;
 use App\Rules\UniquePrisNumber;
+use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PrisStoreRequest extends FormRequest
 {
+    use TranslatableFieldsRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -53,6 +55,6 @@ class PrisStoreRequest extends FormRequest
             }
         }
 
-        return $rules;
+        return $this->getRules($rules, Pris::translationFieldsProperties());
     }
 }

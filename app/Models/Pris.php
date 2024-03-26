@@ -107,15 +107,18 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         return array(
             'about' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => true
             ],
             'legal_reason' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string']
+                'rules' => ['required', 'string'],
+                'required_all_lang' => false
             ],
             'importer' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255']
+                'rules' => ['required', 'string', 'max:255'],
+                'required_all_lang' => true
             ],
         );
     }

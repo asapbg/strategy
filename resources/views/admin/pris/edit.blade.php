@@ -312,44 +312,34 @@
                         </div>
                         @if($item->id)
                             <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
-                                <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_PRIS]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+                                <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item && $item->id ? $item->id : 0, 'object_type' => \App\Models\File::CODE_OBJ_PRIS]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="col-md-6 mb-3">
-                                        <label for="description_bg" class="form-label">Публично име (BG)<span class="required">*</span> </label>
-                                        <input value="{{ old('description_bg', '') }}" class="form-control form-control-sm @error('description_bg') is-invalid @enderror" id="description_bg" type="text" name="description_bg">
-                                        @error('description_bg')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="description_en" class="form-label">Публично име (EN) </label>
-                                        <input value="{{ old('description_en', '') }}" class="form-control form-control-sm @error('description_en') is-invalid @enderror" id="description_en" type="text" name="description_en">
-                                        @error('description_en')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
                                     <input type="hidden" name="formats" value="ALLOWED_FILE_PRIS">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="file_bg" class="form-label">Изберете файл (BG)<span class="required">*</span> </label>
-                                        <input class="form-control form-control-sm @error('file_bg') is-invalid @enderror" id="file_bg" type="file" name="file_bg">
-                                        @error('file_bg')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="file_en" class="form-label">Изберете файл (EN)</label>
-                                        <input class="form-control form-control-sm @error('file_en') is-invalid @enderror" id="file_en" type="file" name="file_en">
-                                        @error('file_en')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6 mb-3">
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input value="{{ old('description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror" id="description_{{ $lang['code'] }}" type="text" name="description_{{ $lang['code'] }}">
+                                            @error('description_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endforeach
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="file_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input class="form-control form-control-sm @error('file_'.$lang['code']) is-invalid @enderror" id="file_{{ $lang['code'] }}" type="file" name="file_{{ $lang['code'] }}">
+                                            @error('file_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endforeach
+                                    <div class="col-md-4">
+                                        <br>
                                         <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                                     </div>
                                 </form>
-
                                 @if($item->files->count())
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         @foreach($item->files as $f)
                                             <div class="mb-3">
                                                 <a class="mr-3" href="{{ route('admin.download.file', $f) }}" target="_blank" title="{{ __('custom.download') }}">
