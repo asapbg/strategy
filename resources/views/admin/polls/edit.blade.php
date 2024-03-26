@@ -7,7 +7,7 @@
                 <div class="card-body">
                     @php($storeRoute = route($storeRouteName, ['id' => $item->id ?? 0]))
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
@@ -107,8 +107,10 @@
                                     </div>
                                 </div>
                             </form>
+
+                        </div>
+                        <div class="col-md-6">
                             @if(isset($item->id) && !$item->has_entry)
-                                <hr>
                                 <h4>{{ __('custom.add_question_title') }}</h4>
                                 <form action="{{ route('admin.polls.question.create') }}" method="post" id="new-question">
                                     @csrf
@@ -134,12 +136,25 @@
                                                     <i class="fa fa-remove text-danger remove-answer mr-1" data-new-answer="{{ $i }}" title="{{ __('custom.remove') }}" role="button"></i>
                                                     {{ __('custom.label_answer') }} <span class="required">*</span>
                                                 </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input maxlength="255" type="text" name="new_answers[]" class="form-control form-control-sm @error('new_answers.'.($i - 1)) is-invalid @enderror" value="{{ old('new_answers.'.($i - 1), '') }}">
+                                                <div class="col-md-6 col-sm-6 col-xs-12 mb-2 input-group input-group-sm answer">
+                                                    <input maxlength="255" type="text" name="new_answers[]" class="form-control @error('new_answers.'.($i - 1)) is-invalid @enderror" value="{{ old('new_answers.'.($i - 1), '') }}">
+                                                    <span class="input-group-append">
+                                                            <button type="button" class="btn btn-outline-danger btn-flat remove-new-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button>
+                                                        </span>
                                                     @error('new_answers.'.($i - 1))
-                                                    <div class="text-danger">{{ $message }}</div>
+                                                    <div class="w-100 text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
+
+
+                                                {{--                                                <div class="col-md-6 col-sm-6 col-xs-12 mb-2 pl-0 input-group input-group-sm answer">--}}
+                                                {{--                                                    <input type="hidden" value="{{ $a->id }}" name="answer_id[]">--}}
+                                                {{--                                                    <input type="text" maxlength="255" name="answer_name[]" class="form-control" placeholder="{{ __('custom.answer') }}" value="{{ $a->name }}" required>--}}
+                                                {{--                                                    <span class="input-group-append">--}}
+                                                {{--                                                            <button type="button" class="btn btn-outline-danger btn-flat remove-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button>--}}
+                                                {{--                                                        </span>--}}
+                                                {{--                                                </div>--}}
+
                                             </div>
                                         </div>
                                     @endfor
@@ -149,44 +164,52 @@
                             @endif
                         </div>
                         @if(isset($item) && $item->questions->count())
-                            <div class="col-md-6">
+                            <div class="row">
+                                <hr>
                                 <h4 class="mb-4">{{ trans_choice('custom.questions', 2) }}</h4>
                                 @foreach($item->questions as $key => $q)
                                     @if(!$item->has_entry)
-                                        <form action="{{ route('admin.polls.question.edit') }}" method="post" class="mb-5" class="question">
-                                            @csrf
-                                            <input type="hidden" value="{{ $q->id }}" name="question_id">
-                                            <input type="hidden" name="pc" value="{{ isset($pc) && $pc ? $pc->id : '0' }}">
-                                            @endif
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <label class="col-sm-12 control-label" for="question_name">
-                                                        <a href="{{ route('admin.polls.question.delete', ['id' => $q->id ]) }}" class="mr-1"><i class="fas fa-trash-alt text-danger" title="{{ __('site.button_delete') }}"></i></a>
-                                                        {{ __('custom.question_with_number', ['number' => ($key+1)]) }} <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input maxlength="255" type="text" name="question_name" class="form-control form-control-sm" value="{{ old('question_name', $q->name) }}" required>
-                                                        @error('question_name')
-                                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{--                                    Answers--}}
-                                            @if($q->answers->count())
-                                                @foreach($q->answers as $kk => $a)
-                                                    <div class="col-md-6 col-sm-6 col-xs-12 mb-2 pl-0 input-group input-group-sm answer">
-                                                        <input type="hidden" value="{{ $a->id }}" name="answer_id[]">
-                                                        <input type="text" maxlength="255" name="answer_name[]" class="form-control" placeholder="{{ __('custom.answer') }}" value="{{ $a->name }}" required>
-                                                        <span class="input-group-append">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <form action="{{ route('admin.polls.question.edit') }}" method="post" class="question">
+                                                        @csrf
+                                                        <input type="hidden" value="{{ $q->id }}" name="question_id">
+                                                        <input type="hidden" name="pc" value="{{ isset($pc) && $pc ? $pc->id : '0' }}">
+                                                        @endif
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <label class="col-sm-12 control-label" for="question_name">
+                                                                    <a href="{{ route('admin.polls.question.delete', ['id' => $q->id ]) }}" class="mr-1"><i class="fas fa-trash-alt text-danger" title="{{ __('site.button_delete') }}"></i></a>
+                                                                    {{ __('custom.question_with_number', ['number' => ($key+1)]) }} <span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                    <input maxlength="255" type="text" name="question_name" class="form-control form-control-sm" value="{{ old('question_name', $q->name) }}" required>
+                                                                    @error('question_name')
+                                                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {{--                                    Answers--}}
+                                                        @if($q->answers->count())
+                                                            @foreach($q->answers as $kk => $a)
+                                                                <div class="col-md-6 col-sm-6 col-xs-12 mb-2 pl-0 input-group input-group-sm answer">
+                                                                    <input type="hidden" value="{{ $a->id }}" name="answer_id[]">
+                                                                    <input type="text" maxlength="255" name="answer_name[]" class="form-control" placeholder="{{ __('custom.answer') }}" value="{{ $a->name }}" required>
+                                                                    <span class="input-group-append">
                                                             <button type="button" class="btn btn-outline-danger btn-flat remove-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button>
                                                         </span>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                            @if(!$item->has_entry)
-                                                <button type="submit" name="edit_question" class="btn btn-sm btn-success">{{ __('custom.save') }}</button>
-                                        </form>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                        @if(!$item->has_entry)
+                                                            <button type="submit" name="edit_question" class="btn btn-sm btn-success">{{ __('custom.save') }}</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     @endif
                                 @endforeach
                             </div>
@@ -231,6 +254,14 @@
                 }
             });
 
+            $(document).on('click', '.remove-new-answer', function(){
+                if( $(this).closest('form').find('.answer').length <= 2 ) {
+                    adminModal("<?php echo __('custom.error');?>", "<?php echo __('custom.at_least_two_answer');?>");
+                } else {
+                    $(this).closest('.new_answer').remove();
+                }
+            });
+
             newQuestionForm.on('click', '#add-new-answer', function (){
                 let newAnswerIndex = newQuestionForm.find('.new_answer').length + 1;
                 $('<div class="form-group new_answer" id="new_answers-'+ newAnswerIndex +'">'
@@ -239,8 +270,9 @@
                     +'<i class="fa fa-remove text-danger remove-answer mr-1" data-new-answer="'+ newAnswerIndex +'" title="{{ __('custom.remove') }}" role="button"></i>'
                     +'{{ __('custom.label_answer') }} <span class="required">*</span>'
                     +'</label>'
-                    +'<div class="col-md-6 col-sm-6 col-xs-12">'
-                    +'<input maxlength="255" type="text" name="new_answers[]" class="form-control form-control-sm" value="">'
+                    +'<div class="col-md-6 col-sm-6 col-xs-12 mb-2 input-group input-group-sm answer">'
+                    +'<input maxlength="255" type="text" name="new_answers[]" class="form-control " value="">'
+                    +'<span class="input-group-append"><button type="button" class="btn btn-outline-danger btn-flat remove-new-answer"><i class="fas fa-trash-alt" title="{{ __('custom.delete') }}"></i></button></span>'
                     +'</div>'
                     +'</div>'
                     +'</div>'

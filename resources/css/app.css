@@ -2812,3 +2812,8 @@ html #slider-range .ui-button.ui-state-disabled:active {
     max-height: 300px;
 }
 
+.fc-toolbar-chunk button { 
+    background: #21659e !important;
+    border-color: #1b517e !important;
+}
+
