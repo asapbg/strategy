@@ -252,7 +252,7 @@
                                                     <div class="row">
                                                         <div class="col-auto">
                                                             <span class="text-secondary">
-                                                                <i class="far fa-calendar text-secondary"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
+                                                                <i class="far fa-calendar text-secondary" title="{{ __('custom.creation_of') }}"></i> {{ $item->created_at->format('d.m.Y') }}{{ __('custom.year_short') }}
                                                             </span>
                                                         </div>
 

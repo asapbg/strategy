@@ -18,6 +18,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $tab == 'li' ? 'active' : '' }}" href="{{ route('profile', ['tab' => 'li']) }}">
+                        {{ trans_choice('custom.legislative_initiatives', 2) }}
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $tab == 'form_inputs' ? 'active' : '' }}" href="{{ route('profile', ['tab' => 'form_inputs']) }}">
                     {{ __('custom.form_inputs') }}
                     </a>

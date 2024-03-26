@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consultations\PublicConsultation;
 use App\Models\FormInput;
+use App\Models\LegislativeInitiative;
 use App\Models\UserSubscribe;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,19 @@ class ProfileController extends Controller
                 $data = PublicConsultation::with(['comments' => function ($q) use($profile){
                     $q->where('user_id', '=', $profile->id);
                 }])->whereIn('id', $pcIds)->get();
+                break;
+            case 'li':
+                //Author
+                $ids = $profile->legislativeInitiatives->pluck('id')->toArray();
+                $commentsLiIds = $profile->legislativeInitiativesComments->pluck('legislative_initiative_id')->toArray();
+                if(sizeof($commentsLiIds)){
+                    $ids = array_merge($ids, $commentsLiIds);
+                }
+                $votedLiIds = $profile->legislativeInitiativesLike->pluck('legislative_initiative_id')->toArray();
+                if(sizeof($votedLiIds)){
+                    $ids = array_merge($ids, $votedLiIds);
+                }
+                $data = LegislativeInitiative::whereIn('id', array_keys($ids))->get();
                 break;
             default:
         }

@@ -193,6 +193,25 @@ class User extends Authenticatable
             ->orderBy('created_at', 'desc');
     }
 
+    public function legislativeInitiatives(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LegislativeInitiative::class, 'author_id', 'id')
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function legislativeInitiativesComments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LegislativeInitiativeComment::class, 'user_id', 'id')
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function legislativeInitiativesLike(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LegislativeInitiativeVote::class, 'user_id', 'id')
+            ->where('is_like', true)
+            ->orderBy('created_at', 'desc');
+    }
+
     /**
      * Return the user's full name if not empty
      * else return the username
