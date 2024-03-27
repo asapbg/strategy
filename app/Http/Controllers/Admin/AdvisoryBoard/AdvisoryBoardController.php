@@ -288,7 +288,7 @@ class AdvisoryBoardController extends AdminController
                 $query->withTrashed();
             })->orderBy('order');
         }, 'members' => function ($query) {
-            $query->withTrashed()->with('translations')->orderBy('id');
+            $query->with('translations')->orderBy('id');
         }, 'npos' => function ($query) {
             $query->with('translations');
         }])->find($item->id);

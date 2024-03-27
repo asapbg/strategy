@@ -6,6 +6,7 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,6 +33,13 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         'filename', 'content_type', 'ord', 'parent_id', 'version', 'strategic_document_file_id'];
 
     const DIR_PATH = 'strategic_doc'.DIRECTORY_SEPARATOR;
+
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('created_at', 'desc');
+        });
+    }
 
     /**
      * Get the model name

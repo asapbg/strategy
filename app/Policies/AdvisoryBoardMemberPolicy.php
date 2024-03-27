@@ -71,7 +71,7 @@ class AdvisoryBoardMemberPolicy
      */
     public function delete(User $user, AdvisoryBoardMember $member): bool
     {
-        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']);
+        return $user->canAny(['manage.*', 'manage.advisory-boards', 'manage.advisory-board']) && is_null($member->deleted_at);
     }
 
     /**

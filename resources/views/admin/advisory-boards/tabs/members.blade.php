@@ -64,17 +64,15 @@
                                         @endcan
 
                                         @can('delete', $item)
-                                            @if(!$member->deleted_at)
-                                                <a href="javascript:;"
-                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                   data-target="#modal-delete-resource"
-                                                   data-resource-id="{{ $member->id }}"
-                                                   data-resource-delete-url="{{ route('admin.advisory-boards.members.delete', $member) }}"
-                                                   data-toggle="tooltip"
-                                                   title="{{__('custom.delete')}}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            @endif
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                               data-target="#modal-delete-resource"
+                                               data-resource-id="{{ $member->id }}"
+                                               data-resource-delete-url="{{ route('admin.advisory-boards.members.delete', $member) }}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.delete')}}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         @endcan
 
 {{--                                        @can('restore', $item)--}}
