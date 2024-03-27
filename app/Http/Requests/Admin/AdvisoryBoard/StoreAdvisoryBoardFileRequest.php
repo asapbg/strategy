@@ -4,6 +4,8 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
+use App\Models\File;
+use App\Rules\FileClientMimeType;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -49,7 +51,7 @@ class   StoreAdvisoryBoardFileRequest extends FormRequest
 //            $rules['file_name_' . $lang['code']] = ($defaultLang == $lang['code'] ? 'required|' : 'nullable|' ) .'string';
 //            $rules['file_description_' . $lang['code']] = 'nullable|string';
 
-            $rules['file_' . $lang['code']] = ($defaultLang == $lang['code'] ? 'required|' : 'nullable|' ) .'file|mimes:pdf,doc,docx,xlsx';
+            $rules['file_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable' ),  new FileClientMimeType(File::ALL_ALLOWED_FILE_EXTENSIONS_MIMES_TYPE)];
             $rules['file_name_' . $lang['code']] = 'required|string';
             $rules['file_description_' . $lang['code']] = 'nullable|string';
         }

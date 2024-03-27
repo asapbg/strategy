@@ -197,7 +197,7 @@ class CommonController extends Controller
         };
 
         if (Storage::disk('public_uploads')->has($path)) {
-            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : '')).($file->id_object ? $file->id_object.'_' : '');
+            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : (!empty($file->custom_name) ? \Str::slug($file->custom_name, '_').'_' : ''))).($file->id_object ? $file->id_object.'_' : '');
             return Storage::disk('public_uploads')->download($path, $extraName.$file->filename);
         } else {
             return back()->with('warning', __('custom.record_not_found'));
