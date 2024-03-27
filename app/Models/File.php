@@ -81,7 +81,7 @@ class File extends ModelActivityExtend
     protected static function boot() {
         parent::boot();
         static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('created_at', 'desc');
+            $builder->orderBy('created_at', 'asc');
         });
     }
 
