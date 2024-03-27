@@ -203,6 +203,7 @@ return [
 
     'default_institution_id' => env('DEFAULT_INSTITUTION_ID', 0),
     'default_institution_level_id' => env('DEFAULT_INSTITUTION_LEVEL_ID', 0),
-    'disable_registration' => env('DISABLE_REGISTRATION', false)
+    'disable_registration' => env('DISABLE_REGISTRATION', false),
+    'default_paginate' => env('DEFAULT_PAGINATE', 20)
 
 ];

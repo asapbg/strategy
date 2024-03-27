@@ -23,12 +23,11 @@ class PublicConsultationController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->filters($request);
-
         //Sorter
         $sorter = $this->sorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'date';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
-        $paginate = $requestFilter['paginate'] ?? PublicConsultation::PAGINATE;
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
 
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
@@ -179,7 +178,7 @@ class PublicConsultationController extends Controller
                 'multiple' => false,
                 'default' => '',
                 'label' => __('custom.filter_pagination'),
-                'value' => $request->input('paginate') ?? PublicConsultation::PAGINATE,
+                'value' => $request->input('paginate') ?? config('app.default_paginate'),
                 'col' => 'col-md-s4'
             ),
         );

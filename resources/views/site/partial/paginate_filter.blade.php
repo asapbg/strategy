@@ -6,7 +6,7 @@
         <select class="form-select w-auto @if(isset($field['class'])){{$field['class'] }}@endif" name="paginate" id="list-paginate" @if(isset($ajaxContainer)) data-container="{{ $ajaxContainer }}" @endif>
             @foreach($field['options'] as $option)
                 @php($fRequest['paginate'] = $option['value'])
-                <option value="{{ $option['value'] }}" data-url="{{ url()->current(). '?' . http_build_query($fRequest) }}" @if(old('paginate', request()->input('paginate') ?? 20) == $option['value']) selected @endif>{{ $option['name'] }}</option>
+                <option value="{{ $option['value'] }}" data-url="{{ url()->current(). '?' . http_build_query($fRequest) }}" @if(old('paginate', request()->input('paginate') ?? config('app.default_paginate')) == $option['value']) selected @endif>{{ $option['name'] }}</option>
             @endforeach
         </select>
     </div>

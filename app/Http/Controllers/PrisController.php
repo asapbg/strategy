@@ -34,7 +34,7 @@ class PrisController extends Controller
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
-        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
         $items = Pris::select('pris.*')
@@ -264,7 +264,7 @@ class PrisController extends Controller
                 'multiple' => false,
                 'default' => '',
                 'label' => __('custom.filter_pagination'),
-                'value' => $request->input('paginate') ?? Pris::PAGINATE,
+                'value' => $request->input('paginate') ?? config('app.default_paginate'),
                 'col' => 'col-md-3'
             ),
 

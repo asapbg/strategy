@@ -50,7 +50,7 @@ class LegislativeInitiativeController extends AdminController
     {
         $institutions = Institution::select('id')->whereHas('laws')->orderBy('id')->with('translation')->get();
         $laws = Law::select('id')->Active()->orderByTranslation('name')->with('translation')->get();
-        $countResults = $request->get('count_results', 10);
+        $countResults = $request->get('count_results', config('app.default_paginate'));
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
         $law = $request->offsetGet('law');

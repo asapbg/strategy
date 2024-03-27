@@ -66,26 +66,26 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="input-group ">
-                            <div class="mb-3 d-flex flex-column  w-100">
-                                <label for="count_results"
-                                       class="form-label">{{ __('custom.count') . ' ' . mb_strtolower(trans_choice('custom.results', 2)) }}
-                                    :</label>
-                                <select id="count_results" class="form-select" name="count_results">
-                                    <option value="10">10</option>
-                                    @php $selected = request()->get('count_results', '') == 20 ? 'selected' : '' @endphp
-                                    <option value="20" {{ $selected }}>20</option>
-                                    @php $selected = request()->get('count_results', '') == 30 ? 'selected' : '' @endphp
-                                    <option value="30" {{ $selected }}>30</option>
-                                    @php $selected = request()->get('count_results', '') == 40 ? 'selected' : '' @endphp
-                                    <option value="40" {{ $selected }}>40</option>
-                                    @php $selected = request()->get('count_results', '') == 50 ? 'selected' : '' @endphp
-                                    <option value="50" {{ $selected }}>50</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="col-md-4">--}}
+{{--                        <div class="input-group ">--}}
+{{--                            <div class="mb-3 d-flex flex-column  w-100">--}}
+{{--                                <label for="count_results"--}}
+{{--                                       class="form-label">{{ __('custom.count') . ' ' . mb_strtolower(trans_choice('custom.results', 2)) }}--}}
+{{--                                    :</label>--}}
+{{--                                <select id="count_results" class="form-select" name="count_results">--}}
+{{--                                    <option value="10">10</option>--}}
+{{--                                    @php $selected = request()->get('count_results', '') == 20 ? 'selected' : '' @endphp--}}
+{{--                                    <option value="20" {{ $selected }}>20</option>--}}
+{{--                                    @php $selected = request()->get('count_results', '') == 30 ? 'selected' : '' @endphp--}}
+{{--                                    <option value="30" {{ $selected }}>30</option>--}}
+{{--                                    @php $selected = request()->get('count_results', '') == 40 ? 'selected' : '' @endphp--}}
+{{--                                    <option value="40" {{ $selected }}>40</option>--}}
+{{--                                    @php $selected = request()->get('count_results', '') == 50 ? 'selected' : '' @endphp--}}
+{{--                                    <option value="50" {{ $selected }}>50</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="row m-0 mb-5 action-btn-wrapper ">
                         <div class="col-md-6 px-0">
