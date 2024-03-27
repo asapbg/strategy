@@ -11,7 +11,8 @@ class DocNum extends QueryFilter implements FilterContract{
     public function handle($value): void
     {
         if( !empty($value) ){
-            $this->query->where('pris.doc_num', 'ilike', '%'.$value.'%');
+            $this->query->where('pris.doc_num', '=', $value);
+//            $this->query->where('pris.doc_num', 'ilike', '%'.$value.'%');
         }
     }
 }

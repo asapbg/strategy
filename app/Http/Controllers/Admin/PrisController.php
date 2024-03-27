@@ -222,7 +222,7 @@ class PrisController extends AdminController
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::Pris()->get(), true),
+                'options' => optionsFromModel(LegalActType::with(['translations'])->Pris()->get(), true),
                 'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.legal_act_types', 1),
@@ -274,6 +274,12 @@ class PrisController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('custom.document_number'),
                 'value' => $request->input('docNum'),
+                'col' => 'col-md-2'
+            ),
+            'year' => array(
+                'type' => 'text',
+                'placeholder' => __('custom.year'),
+                'value' => $request->input('year'),
                 'col' => 'col-md-2'
             ),
             'newspaperNumber' => array(
