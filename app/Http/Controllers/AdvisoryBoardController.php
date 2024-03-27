@@ -235,7 +235,8 @@ class AdvisoryBoardController extends Controller
             ->where('next_meeting', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
             ->orderBy('next_meeting', 'desc')
             ->FilterBy($requestFilter)
-            ->paginate($paginate);
+            ->get();
+//            ->paginate($paginate);
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         if( $request->ajax() ) {
@@ -480,15 +481,15 @@ class AdvisoryBoardController extends Controller
                 'label' => __('custom.to_date'),
                 'col' => 'col-md-12'
             ),
-            'paginate' => array(
-                'type' => 'select',
-                'options' => paginationSelect(),
-                'multiple' => false,
-                'default' => '',
-                'label' => __('custom.filter_pagination'),
-                'value' => $request->input('paginate') ?? Publication::PAGINATE,
-                'col' => 'col-md-3'
-            ),
+//            'paginate' => array(
+//                'type' => 'select',
+//                'options' => paginationSelect(),
+//                'multiple' => false,
+//                'default' => '',
+//                'label' => __('custom.filter_pagination'),
+//                'value' => $request->input('paginate') ?? Publication::PAGINATE,
+//                'col' => 'col-md-3'
+//            ),
         );
     }
     private function newsFilters($request)

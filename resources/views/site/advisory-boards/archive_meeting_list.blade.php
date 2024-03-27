@@ -11,7 +11,7 @@
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
             <p class="fw-600">
-                {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->total()]) }}
+                {{ trans_choice('custom.total_pagination_result', $items->count(), ['number' => $items->count()]) }}
             </p>
         </div>
     </div>
