@@ -239,7 +239,6 @@
                     <div class="form-group">
                         <label class="control-label" for="meetings_per_year">
                             {{ trans_choice('validation.attributes.meetings_per_year', 1) }}
-                            <span class="required">*</span>
                         </label>
 
                         <input type="number" id="meetings_per_year" name="meetings_per_year"

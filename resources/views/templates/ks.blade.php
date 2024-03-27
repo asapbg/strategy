@@ -73,7 +73,7 @@
                 </ul>
               </div>
             </div>
-        </div>   
+        </div>
 
         <div class="row mb-4 ks-row">
             <div class="col-md-12">
@@ -194,7 +194,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -205,13 +205,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -236,17 +236,17 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div> 
+                    </div>
+                </div>
 
-              </div>  
+              </div>
             </div>
         </div>
 
-        <div class="row mb-5 ks-row">         
+        <div class="row mb-5 ks-row">
             <div class="col-md-12 ">
               <div class="custom-card p-3">
-                <h3 class="mb-3 fs-4">Работна програма</h3>      
+                <h3 class="mb-3 fs-4">Работна програма</h3>
                     <p>Свободен текст на работна програма</p>
                     <p class="fw-600">Примерна таблица</p>
                     <div class="table-responsive">
@@ -284,11 +284,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>                              
+                    </div>
                     <div class="document-wrapper-ks mt-3">
                       <a href="#" class="main-color text-decoration-none fs-18"><i
                         class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                        <div class="document-info-field d-flex mt-3 pb-2">                         
+                        <div class="document-info-field d-flex mt-3 pb-2">
                           <div class="doc-info-item">
                            <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                           </div>
@@ -299,13 +299,13 @@
                             </span>
                           </div>
                           <div class="doc-info-item">
-                            <strong> ДВ:</strong> 
+                            <strong> ДВ:</strong>
                             <span>
                               <a href="#" class="text-decoration-none">№105</a>
                             </span>
                           </div>
                           <div class="doc-info-item">
-                            <strong> В сила от:</strong> 
+                            <strong> В сила от:</strong>
                             <span>
                               10.10.2023г.
                             </span>
@@ -330,12 +330,12 @@
                             <span>&#47;</span>
                             <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                           </span>
-                        </div>    
-                    </div> 
+                        </div>
+                    </div>
                     <div class="document-wrapper-ks mt-3">
                       <a href="#" class="main-color text-decoration-none fs-18"><i
                         class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                        <div class="document-info-field d-flex mt-3 pb-2">                         
+                        <div class="document-info-field d-flex mt-3 pb-2">
                           <div class="doc-info-item">
                            <strong> Статус:</strong> <span class="closed-li w-min-content">Неактивен</span>
                           </div>
@@ -346,13 +346,13 @@
                             </span>
                           </div>
                           <div class="doc-info-item">
-                            <strong> ДВ:</strong> 
+                            <strong> ДВ:</strong>
                             <span>
                               <a href="#" class="text-decoration-none">№105</a>
                             </span>
                           </div>
                           <div class="doc-info-item">
-                            <strong> В сила от:</strong> 
+                            <strong> В сила от:</strong>
                             <span>
                               10.10.2023г.
                             </span>
@@ -377,9 +377,9 @@
                             <span>&#47;</span>
                             <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                           </span>
-                        </div>    
-                    </div> 
-              </div>              
+                        </div>
+                    </div>
+              </div>
             </div>
         </div>
 
@@ -391,7 +391,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -402,13 +402,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -433,13 +433,13 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div> 
+                    </div>
+                </div>
 
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -450,13 +450,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -481,8 +481,8 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div>  
+                    </div>
+                </div>
             </div>
             </div>
         </div>
@@ -499,7 +499,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -510,13 +510,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -541,8 +541,8 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div> 
+                    </div>
+                </div>
             </div>
             </div>
         </div>
@@ -550,12 +550,12 @@
         <div class="row mb-4 ks-row">
             <div class="col-md-12">
               <div class="custom-card p-3">
-                <h3 class="mb-2 fs-4">Инфорация за модератора „Консултативен съвет“ </h3>
+                <h3 class="mb-2 fs-4">Информация за модератора „Консултативен съвет“ </h3>
                 <p>Свободен текст</p>
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -566,13 +566,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -597,8 +597,8 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div> 
+                    </div>
+                </div>
             </div>
             </div>
         </div>
@@ -646,7 +646,7 @@
                 <div class="document-wrapper-ks mt-3">
                   <a href="#" class="main-color text-decoration-none fs-18"><i
                     class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Примерен файл</a>
-                    <div class="document-info-field d-flex mt-3 pb-2">                         
+                    <div class="document-info-field d-flex mt-3 pb-2">
                       <div class="doc-info-item">
                        <strong> Статус:</strong> <span class="active-li w-min-content">Активен</span>
                       </div>
@@ -657,13 +657,13 @@
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> ДВ:</strong> 
+                        <strong> ДВ:</strong>
                         <span>
                           <a href="#" class="text-decoration-none">№105</a>
                         </span>
                       </div>
                       <div class="doc-info-item">
-                        <strong> В сила от:</strong> 
+                        <strong> В сила от:</strong>
                         <span>
                           10.10.2023г.
                         </span>
@@ -688,8 +688,8 @@
                         <span>&#47;</span>
                         <a href="#" class="text-decoration-none">Версия 3 - 25.06.2023</a>
                       </span>
-                    </div>    
-                </div> 
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -703,10 +703,10 @@
   window.onscroll = function() {scrollFunction()};
   function scrollFunction() {
 
-    let navLink = document.querySelectorAll('nav.navbar a.nav-link'); 
+    let navLink = document.querySelectorAll('nav.navbar a.nav-link');
     let navItem = document.querySelectorAll('li.nav-item');
     let navBar = document.querySelectorAll('nav.navbar');
-  
+
     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
       document.getElementById("siteLogo").style.width = "45px";
       document.getElementById("ms").style.fontSize = "12px";
@@ -734,7 +734,7 @@
         nav.style.boxShadow = 'rgb(27 81 126 / 81%) 0px 1px 4px';
       });
 
-    } 
+    }
     else {
       document.getElementById("siteLogo").style.width = "55px";
       document.getElementById("ms").style.fontSize = "16px";

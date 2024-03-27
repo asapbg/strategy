@@ -37,7 +37,7 @@ enum DocTypesEnum: int
 
     case AB_CUSTOM_SECTION = 16; // Файл към ръчно създадена секция от модератор към консултативен съвет
 
-    case AB_MODERATOR = 17; // Файл към Инфорация за модератора „Консултативен съвет“
+    case AB_MODERATOR = 17; // Файл към Информация за модератора „Консултативен съвет“
     case OGP_VERSION_AFTER_CONSULTATION = 19; // Файл към OGP
     case OGP_REPORT_EVALUATION = 20; // Доклади за независима оценка
 

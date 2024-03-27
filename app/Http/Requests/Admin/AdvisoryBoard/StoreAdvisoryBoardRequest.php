@@ -36,7 +36,7 @@ class StoreAdvisoryBoardRequest extends FormRequest
             'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',
             'advisory_act_type_id'      => 'required|integer|exists:advisory_act_type,id',
             'authority_id'              => 'required|integer|exists:authority_advisory_board,id',
-            'meetings_per_year'         => 'required|integer',
+            'meetings_per_year'         => 'nullable|integer',
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
             'public'                    => 'nullable|integer',

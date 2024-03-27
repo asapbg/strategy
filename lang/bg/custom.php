@@ -697,7 +697,7 @@ return [
     'rules_internal_organization' => 'Правилник за дейността',
     'effective_at' => 'В сила от',
     'versions' => 'Версии',
-    'advisory_board_moderator_info' => 'Инфорация за модератора „Консултативен съвет“',
+    'advisory_board_moderator_info' => 'Информация за модератора „Консултативен съвет“',
     'advisory_board_description_link' => 'Запис на описание на съвет - линк',
     'resolution_council_ministers_short' => 'ПМС №',
     'state_papernew_short' => 'ДВ',
