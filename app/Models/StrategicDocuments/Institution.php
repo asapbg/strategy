@@ -2,12 +2,15 @@
 
 namespace App\Models\StrategicDocuments;
 
+use App\Models\EkatteArea;
+use App\Models\EkatteMunicipality;
 use App\Models\EkatteSettlement;
 use App\Models\FieldOfAction;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
 use App\Models\Law;
 use App\Models\ModelActivityExtend;
+use App\Models\User;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -66,6 +69,16 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return $this->hasOne(EkatteSettlement::class, 'id', 'town');
     }
 
+    public function area()
+    {
+        return $this->hasOne(EkatteArea::class, 'id', 'region');
+    }
+
+    public function municipal()
+    {
+        return $this->hasOne(EkatteMunicipality::class, 'id', 'municipality');
+    }
+
     public function laws()
     {
         return $this->belongsToMany(Law::class, 'law_institution', 'institution_id', 'law_id');
@@ -84,6 +97,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
                 'rules' => ['required', 'string', 'max:255']
             ],
         );
+    }
+
+    public function moderators()
+    {
+        return $this->hasMany(User::class, 'institution_id', 'id');
     }
 
     public static function optionsList($withDefault = true)

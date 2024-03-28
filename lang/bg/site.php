@@ -148,4 +148,8 @@ return [
     'search_no_result' => 'Няма намерени резултати',
     'learn_more' => 'Научете повече',
     'the_ministry' => 'Министерския съвет',
+    'institution_data' => 'Данни за институцията в ИИСДА',
+    'section' => 'Раздел',
+    'correspondences_address' => 'Адрес за кореспонденция',
+    'institution.contacts.title' => 'Контакти на служители от дирекция :name',
 ];

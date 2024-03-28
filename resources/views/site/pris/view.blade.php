@@ -100,7 +100,8 @@
                         <div class="col-md-9 pris-left-column">
                             @foreach($item->institutions as $i)
                                 @if($i->id != config('app.default_institution_id'))
-                                    <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
+{{--                                    <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>--}}
+                                    <a href="{{ route('institution.profile', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
                                 @endif
                             @endforeach
                         </div>

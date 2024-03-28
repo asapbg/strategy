@@ -207,9 +207,10 @@
                     <div class="col-md-auto fw-bold">{{ __('custom.send_to_administrations_of') }}:</div>
                     <div class="col-md-9">
                         @foreach($item->receivers as $r)
-                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
-                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
-                            <span class="d-block">{{ $r->name }} ({{ displayDateTime($r->pivot->created_at) }})</span>
+                            <span class="d-block">
+                                <a class="main-color text-decoration-none" href="{{ route('institution.profile', $r) }}" target="_blank">{{ $r->name }}</a>
+                                ({{ displayDateTime($r->pivot->created_at) }})
+                            </span>
                         @endforeach
                     </div>
                 </div>

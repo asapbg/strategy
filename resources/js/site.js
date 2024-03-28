@@ -481,7 +481,7 @@ $(document).ready(function () {
                 //show active consultation info
                 let consultationsHtml = '';
                 $.each(activePc[selectedLaw], function(index,value) {
-                    consultationsHtml += '<a class="w-100" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
+                    consultationsHtml += '<a class="w-100 d-block" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
                 });
                 $('#active_consultation_info #consultations').html(consultationsHtml)
                 $('#active_consultation_info').removeClass('d-none');

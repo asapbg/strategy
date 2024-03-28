@@ -16,6 +16,16 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
 });
 
+Route::controller(\App\Http\Controllers\PublicProfilesController::class)->group(function () {
+    Route::get('/user-profile/information/{item}', 'userProfile')->name('user.profile');
+    Route::get('/institution-profile/information/{item}', 'institutionProfile')->name('institution.profile');
+    Route::get('/institution-profile/public-consultations/{item}', 'institutionPublicConsultations')->name('institution.profile.pc');
+    Route::get('/institution-profile/strategic-documents/{item}', 'institutionStrategicDocuments')->name('institution.profile.sd');
+    Route::get('/institution-profile/legislative-initiatives/{item}', 'institutionLegislativeInitiatives')->name('institution.profile.li');
+    Route::get('/institution-profile/pris/{item}', 'institutionPris')->name('institution.profile.pris');
+    Route::get('/institution-profile/moderators/{item}', 'institutionModerators')->name('institution.profile.moderators');
+});
+
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
     Route::get('/page/{slug}', 'show')->name('page.view');
 });
