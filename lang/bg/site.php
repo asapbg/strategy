@@ -142,4 +142,10 @@ return [
     'not_involved_in_pc' => 'Към момента не участвате в обществени консултации',
     'not_involved_in_li' => 'Към момента не участвате в законодателни инициативи',
     'my_comments' => 'Моите коментари',
+    'search_in_platform' => 'Търсене в портала...',
+    'search_in_platform_page_title' => 'Търсене в портала',
+    'search_result_title' => 'Резултати от вашето търсене за ":text"',
+    'search_no_result' => 'Няма намерени резултати',
+    'learn_more' => 'Научете повече',
+    'the_ministry' => 'Министерския съвет',
 ];

@@ -13,6 +13,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('site.home');
     Route::get('/get-consultations', 'getConsultations')->name('get-consultations');
     Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
+    Route::get('/search', 'search')->name('search');
 });
 
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {

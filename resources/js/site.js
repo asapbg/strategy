@@ -418,6 +418,16 @@ $(document).ready(function () {
         });
     }
 
+    $('#global_search_btn').on('click', function (){
+        let lForm = $(this).closest('form');
+        $('#global_search_error').html('').addClass('d-none');
+        if($('#global_search').val().length > 3){
+            $(lForm).submit();
+        } else{
+            $('#global_search_error').html('Въведете поне три символа').removeClass('d-none');
+        }
+    });
+
     if ($('.limit-length').length) {
         $('.limit-length').each(function (index, el) {
             let text = $(this).text();

@@ -180,13 +180,15 @@
                </a>
               </div>
               <div class="col-md-12 mb-5">
-                <div class="search-wrapper-modal">
-                  <input class="search-site-input w-100" type="text" placeholder="Търсене в портала...">
-                  <a type="button" class="text-decoration-none text-light cursor-pointer" title="Търсене">
-                    <i class="fa-solid fa-search text-light ms-3"></i>
-                    <span class="d-none">Search</span>
-                  </a>
-                 </a>
+                <div class="search-wrapper-modal flex-column">
+                    <form action="{{ route('search') }}" method="get" class="w-100 d-flex">
+                        <input class="search-site-input w-100" type="text" name="search" id="global_search" placeholder="{{ __('site.search_in_platform') }}" autocomplete="off">
+                        <button type="button" class="bg-transparent border-0" id="global_search_btn">
+                            <i class="fa-solid fa-search text-light ms-3"></i>
+                        </button>
+                    </form>
+                    <div class="w-100 d-none text-danger bg-white rounded-2 fw-bold px-2 py-2 mb-1 opacity-75" id="global_search_error"></div>
+
                 </div>
               </div>
 
