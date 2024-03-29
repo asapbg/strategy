@@ -246,17 +246,6 @@ class OperationalProgramController extends AdminController
                 $langReq = LanguageFileUploadRequest::createFrom($request);
                 $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL, false);
             }
-//            //Upload files
-//            if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
-//                foreach ($request->all() as $k => $v){
-//                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en'])){
-//                        $request->request->add([str_replace('a_', '', $k) => $v]);
-//                        $request->offsetUnset($k);
-//                    }
-//                }
-//                $langReq = LanguageFileUploadRequest::createFrom($request);
-//                $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL, false);
-//            }
 
             DB::commit();
             return redirect(route(self::EDIT_ROUTE, $item) )

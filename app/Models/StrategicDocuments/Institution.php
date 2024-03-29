@@ -92,7 +92,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
 
     public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id');
+        return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id')->ActivePublic();
     }
 
     public static function translationFieldsProperties(): array
