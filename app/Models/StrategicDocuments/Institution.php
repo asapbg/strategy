@@ -12,6 +12,7 @@ use App\Models\InstitutionLink;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
 use App\Models\ModelActivityExtend;
+use App\Models\Pris;
 use App\Models\User;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -94,6 +95,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id')->ActivePublic();
+    }
+
+    public function pris(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Pris::class, 'pris_institution', 'institution_id', 'pris_id')->Published();
     }
 
     public function legislativeInitiatives()

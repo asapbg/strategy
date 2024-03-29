@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,7 +48,18 @@ class PublicProfilesController extends Controller
     }
 
     public function institutionPris(Request $request, Institution $item){
-        return $this->view('site.public_profiles.institution', compact('item'));
+        $paginate = $filter['paginate'] ?? config('app.default_paginate');
+        $items = $item->pris()
+            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->paginate($paginate);
+        $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->name;
+        $this->setBreadcrumbsFull(
+            array(
+                ['name' => $pageTitle, 'url' => route('institution.profile', $item)],
+                ['name' => __('custom.pris'), 'url' => '']
+            )
+        );
+        return $this->view('site.public_profiles.institution.pris', compact('item', 'pageTitle', 'items'));
     }
 
     public function institutionModerators(Request $request, Institution $item){

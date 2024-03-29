@@ -154,5 +154,6 @@ return [
     'institution.contacts.title' => 'Контакти на служители от дирекция :name',
     'institution.pc.title' => 'Обществени консултации свързани с дирекция :name',
     'institution.li.title' => 'Законодателни инициативи свързани с дирекция :name',
+    'institution.pris.title' => 'Актове на Министерски съвет свързани с дирекция :name',
     'success_vote' => 'Гласът ви е отразен успешно',
 ];
