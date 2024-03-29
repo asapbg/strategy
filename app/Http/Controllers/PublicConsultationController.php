@@ -71,7 +71,16 @@ class PublicConsultationController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
         $pageTitle = $item->title;
-        $this->setBreadcrumbsTitle($pageTitle);
+        
+        $breadcrumbs = array(
+            ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')]
+        );
+        if($item->fieldOfAction){
+            $breadcrumbs[] = ['name' => $item->fieldOfAction->name, 'url' => route('public_consultation.index').'?fieldOfActions[]='.$item->fieldOfAction->id];
+        }
+        $breadcrumbs[] = ['name' => $item->title, 'url' => ''];
+        $this->setBreadcrumbsFull($breadcrumbs);
+
         $documents = $item->lastDocumentsByLocaleAndSection(true);
         $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
