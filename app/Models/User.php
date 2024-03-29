@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -210,6 +211,18 @@ class User extends Authenticatable
         return $this->hasMany(LegislativeInitiativeVote::class, 'user_id', 'id')
             ->where('is_like', true)
             ->orderBy('created_at', 'desc');
+    }
+
+    public function changeRequests(): HasMany
+    {
+        return $this->hasMany(UserChangeRequest::class);
+    }
+
+    public function pendingChangeRequests(): HasMany
+    {
+        return $this->hasMany(UserChangeRequest::class, 'user_id', 'id')
+            ->where('status', '=', UserChangeRequest::PENDING)
+            ->orderBy('id', 'desc');
     }
 
     /**

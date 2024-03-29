@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\ChangeUserDataRequest;
+use App\Mail\UsersChangePassword;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\FormInput;
 use App\Models\LegislativeInitiative;
+use App\Models\UserChangeRequest;
 use App\Models\UserSubscribe;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
     public function index($tab = null)
     {
         $pageTitle = trans_choice('custom.profiles', 1);
-        $secondTitle = trans_choice('custom.profiles', 1);
+        $secondTitle = __('custom.main_information');
         $profile = auth()->user();
         $tab = $tab ? $tab : 'change_info';
         $data = null;
@@ -67,23 +73,41 @@ class ProfileController extends Controller
                 $secondTitle = trans_choice('custom.legislative_initiatives', 2);
                 break;
             default:
+                $breadcrumbs[] = ['name' => __('custom.change_info'), 'url' => ''];
         }
 
         $this->setBreadcrumbsFull($breadcrumbs);
         return $this->view('site.profile', compact('profile', 'tab', 'data', 'pageTitle', 'secondTitle'));
     }
 
-    public function store(Request $request) {
-        $user = app('auth')->user();
-        $data = $request->all();
-        if ($user->is_org) {
-            $user->org_name = $request->input('org_name');
-        } else {
-            $user->first_name = $request->input('first_name');
-            $user->last_name = $request->input('last_name');
+    public function store(ChangeUserDataRequest $request) {
+        $validated = $request->validated();
+        return back()->with('danger', 'Функционалността е в процес на разработка');
+//        dd($validated);
+
+        try {
+            $changes = [];
+            foreach (['first_name', 'middle_name', 'last_name', 'email', 'org_name'] as $k){
+                if(
+                    (isset($validated[$k]) && $validated[$k] != $request->user()->{$k})
+                    || (!isset($validated[$k]) && !empty($request->user()->{$k}))
+                ){
+                    $changes[$k] = $validated[$k];
+                }
+            }
+            if(!sizeof($changes)){
+                return back()->with('danger', __('site.change_request_not_send'));
+            }
+
+            $request->user()->changeRequests()->create([
+                'data' => json_encode($changes, JSON_UNESCAPED_UNICODE)
+            ]);
+            return redirect(route('profile'))->with('success', __('site.change_request_success'));
+
+        } catch (\Exception $e){
+            Log::error('Change profile request for user ('.$request->user()->id.'): '.$e);
+            return back()->with('danger', __('messages.system_error'));
         }
-        $user->save();
-        return redirect()->back();
     }
 
     public function subscriptionState(Request $request, int $id, int $status) {
@@ -101,5 +125,26 @@ class ProfileController extends Controller
         $subscription->save();
 
         return redirect(route('profile', ['tab' => 'subscriptions']))->with('success', $status ? __('messages.success_subscribe') : __('messages.success_unsubscribe') );
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $validated = $request->validated();
+
+        try {
+            $user = auth()->user();
+            $user->password = bcrypt($validated['password']);
+            $user->password_changed_at = Carbon::now();
+            $user->save();
+            return redirect()->back()->with('success', __('site.password_change_success'));
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+
+            return redirect()->back()->with('danger', __('messages.system_error'));
+
+        }
+
     }
 }
