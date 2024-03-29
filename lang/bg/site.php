@@ -152,4 +152,5 @@ return [
     'section' => 'Раздел',
     'correspondences_address' => 'Адрес за кореспонденция',
     'institution.contacts.title' => 'Контакти на служители от дирекция :name',
+    'institution.pc.title' => 'Обществени консултации свързани с дирекция :name',
 ];

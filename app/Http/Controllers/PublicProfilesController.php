@@ -21,12 +21,19 @@ class PublicProfilesController extends Controller
     }
 
     public function institutionPublicConsultations(Request $request, Institution $item){
-        return $this->view('site.public_profiles.institution', compact('item'));
+        $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->name;
+        $this->setBreadcrumbsFull(
+            array(
+                ['name' => $pageTitle, 'url' => route('institution.profile', $item)],
+                ['name' => trans_choice('custom.public_consultations', 2), 'url' => '']
+            )
+        );
+        return $this->view('site.public_profiles.institution.pc', compact('item', 'pageTitle'));
     }
 
-    public function institutionStrategicDocuments(Request $request, Institution $item){
-        return $this->view('site.public_profiles.institution', compact('item'));
-    }
+//    public function institutionStrategicDocuments(Request $request, Institution $item){
+//        return $this->view('site.public_profiles.institution', compact('item'));
+//    }
 
     public function institutionLegislativeInitiatives(Request $request, Institution $item){
         return $this->view('site.public_profiles.institution', compact('item'));

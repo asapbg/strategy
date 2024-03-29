@@ -2,6 +2,7 @@
 
 namespace App\Models\StrategicDocuments;
 
+use App\Models\Consultations\PublicConsultation;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
 use App\Models\EkatteSettlement;
@@ -87,6 +88,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function fieldsOfAction()
     {
         return $this->belongsToMany(FieldOfAction::class, 'institution_field_of_action', 'institution_id', 'field_of_action_id');
+    }
+
+    public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id');
     }
 
     public static function translationFieldsProperties(): array

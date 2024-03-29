@@ -16,9 +16,9 @@
                             <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/public-consultations')) active-item-left p-1 @endif">
                                 <a href="{{ route('institution.profile.pc', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.public_consultations', 2) }}">{{ trans_choice('custom.public_consultations', 2) }}</a>
                             </li>
-                            <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/strategic-documents')) active-item-left p-1 @endif">
-                                <a href="{{ route('institution.profile.sd', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.strategic_documents', 2) }}">{{ trans_choice('custom.strategic_documents', 2) }}</a>
-                            </li>
+{{--                            <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/strategic-documents')) active-item-left p-1 @endif">--}}
+{{--                                <a href="{{ route('institution.profile.sd', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.strategic_documents', 2) }}">{{ trans_choice('custom.strategic_documents', 2) }}</a>--}}
+{{--                            </li>--}}
                             <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/legislative-initiatives')) active-item-left p-1 @endif">
                                 <a href="{{ route('institution.profile.li', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.legislative_initiatives', 2) }}">{{ trans_choice('custom.legislative_initiatives', 2) }}</a>
                             </li>

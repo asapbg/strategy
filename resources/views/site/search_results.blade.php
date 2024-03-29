@@ -104,8 +104,8 @@
         @if($totalResults > 0 && $totalResults > $defaultPaginate)
             @php($totalPages = ceil($totalResults / $defaultPaginate))
             <div class="row">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination m-0">
+                <nav aria-label="Page navigation example" >
+                    <ul class="pagination m-0" style="flex-wrap: wrap;">
                         @if($page > 1)
                             <li class="page-item">
                                 <a class="page-link" href="{{ route('search').'?search='.$search }}" aria-label="{{ __('pagination.previous') }}">

@@ -63,7 +63,7 @@
             @if($item->importer_institution_id != config('app.default_institution_id'))
                 <div class="col-md-4 mb-4">
                     <h3 class="mb-2 fs-18">{{ __('site.public_consultation.importer') }}</h3>
-                    <a class="main-color text-decoration-none" href="{{ route('institution.profile', $item) }}" target="_blank">
+                    <a class="main-color text-decoration-none" href="{{ route('institution.profile', $item->importer_institution_id) }}" target="_blank">
                       <span class="obj-icon-info">
                         <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
                           {{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
