@@ -176,8 +176,8 @@ class StrategicDocumentsModerators extends Controller
         }
 
         $data = $request->except(['_token', 'roles']);
-        $roles = $request->offsetGet('roles');
-        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
+        $roles = $request->input('roles',[]);
+//        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
 
         $role = Role::whereActive(true)->whereIn('name', [CustomRole::MODERATOR_STRATEGIC_DOCUMENT])->first()->id;
 
