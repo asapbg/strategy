@@ -304,6 +304,13 @@
                                         <p>{{ trans_choice('custom.documents', 2) }}</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.sd.users') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'strategic-documents/users')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.moderators', 2) }}</p>
+                                    </a>
+                                </li>
                             @endif
                         </ul>
                     </li>

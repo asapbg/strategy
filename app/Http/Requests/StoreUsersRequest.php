@@ -33,10 +33,21 @@ class StoreUsersRequest extends FormRequest
             'first_name'            => ['required', 'string', 'max:255'],
             'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
-            'roles'                 => ['required' ,'array', 'min:1'],
-            'user_type'             => ['required' ,'numeric'],
-            'institution_id'        => ['nullable' ,'numeric'],
+            'user_type'             => ['required' ,'numeric']
         ];
+
+        if(request()->input('sd', 0)){
+            if( !request()->input('id', 0) ) {
+                $rules['roles'] = ['required' ,'array', 'min:1'];
+            } else{
+                $rules['roles'] = ['nullable', 'array'];
+            }
+            $rules['institution_id'] = ['required' ,'numeric'];
+        } else{
+
+            $rules['institution_id'] = ['nullable' ,'numeric'];
+            $rules['roles'] = ['required' ,'array', 'min:1'];
+        }
 
         if( request()->input('id') ) {
             $rules['email'][] = Rule::unique('users', 'email')->ignore((int)request()->input('id'));

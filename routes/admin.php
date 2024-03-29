@@ -123,6 +123,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['get', 'put'],'/documents', 'documents')->name('strategic_documents.page.documents');
     });
 
+    //Moderators Strategic documents
+    Route::controller(\App\Http\Controllers\Admin\StrategicDocumentsModerators::class)->prefix('/strategic-documents/users')->group(function () {
+        Route::get('', 'index')->name('sd.users')->middleware('can:viewSdAny,App\Models\User');
+        Route::get('/create', 'create')->name('sd.users.create');
+        Route::post('/store', 'store')->name('sd.users.store');
+        Route::get('/{user}/edit', 'edit')->name('sd.users.edit');
+        Route::post('/{user}/update', 'update')->name('sd.users.update');
+        Route::get('/{user}/delete', 'destroy')->name('sd.users.delete');
+    });
+
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
