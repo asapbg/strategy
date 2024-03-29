@@ -12,9 +12,14 @@ class ProfileController extends Controller
 {
     public function index($tab = null)
     {
+        $pageTitle = trans_choice('custom.profiles', 1);
+        $secondTitle = trans_choice('custom.profiles', 1);
         $profile = auth()->user();
         $tab = $tab ? $tab : 'change_info';
         $data = null;
+        $breadcrumbs = [
+            ['name' => $pageTitle, 'url' => route('profile')]
+        ];
 
         switch ($tab){
             case 'subscriptions':
@@ -30,15 +35,21 @@ class ProfileController extends Controller
                     group by user_subscribes.subscribable_type
 
                 ');
+                $breadcrumbs[] = ['name' => __('custom.subscriptions'), 'url' => ''];
+                $secondTitle = __('custom.subscriptions');
                 break;
             case 'form_inputs':
                 $data = FormInput::whereUserId($profile->id)->get();
+                $breadcrumbs[] = ['name' => __('custom.form_inputs'), 'url' => ''];
+                $secondTitle = __('custom.form_inputs');
                 break;
             case 'pc':
                 $pcIds = $profile->commentsPc->pluck('object_id')->unique()->toArray();
                 $data = PublicConsultation::with(['comments' => function ($q) use($profile){
                     $q->where('user_id', '=', $profile->id);
                 }])->whereIn('id', $pcIds)->get();
+                $breadcrumbs[] = ['name' => trans_choice('custom.public_consultations', 2), 'url' => ''];
+                $secondTitle = trans_choice('custom.public_consultations', 2);
                 break;
             case 'li':
                 //Author
@@ -52,11 +63,14 @@ class ProfileController extends Controller
                     $ids = array_merge($ids, $votedLiIds);
                 }
                 $data = LegislativeInitiative::whereIn('id', array_keys($ids))->get();
+                $breadcrumbs[] = ['name' => trans_choice('custom.legislative_initiatives', 2), 'url' => ''];
+                $secondTitle = trans_choice('custom.legislative_initiatives', 2);
                 break;
             default:
         }
 
-        return view('site.profile', compact('profile', 'tab', 'data'));
+        $this->setBreadcrumbsFull($breadcrumbs);
+        return $this->view('site.profile', compact('profile', 'tab', 'data', 'pageTitle', 'secondTitle'));
     }
 
     public function store(Request $request) {
