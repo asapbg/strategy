@@ -300,7 +300,7 @@ class LegislativeInitiativeController extends AdminController
                 }
             }
 
-            return redirect(route(self::LIST_ROUTE, $item))
+            return redirect(url()->previous())
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);

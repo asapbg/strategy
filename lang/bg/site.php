@@ -153,4 +153,6 @@ return [
     'correspondences_address' => 'Адрес за кореспонденция',
     'institution.contacts.title' => 'Контакти на служители от дирекция :name',
     'institution.pc.title' => 'Обществени консултации свързани с дирекция :name',
+    'institution.li.title' => 'Законодателни инициативи свързани с дирекция :name',
+    'success_vote' => 'Гласът ви е отразен успешно',
 ];

@@ -1,6 +1,6 @@
 @component('mail::message')
 
-    {{ __('Respected') }} {{ $user->fullName() }},
+    {{ __('Respected') }} {{ $data['item']->user?->fullName() }},
 
     {!! __('notifications_msg.legislative_initiative.success.main_text') !!}
 

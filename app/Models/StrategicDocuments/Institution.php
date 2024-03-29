@@ -10,6 +10,7 @@ use App\Models\FieldOfAction;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
 use App\Models\Law;
+use App\Models\LegislativeInitiative;
 use App\Models\ModelActivityExtend;
 use App\Models\User;
 use App\Traits\FilterSort;
@@ -93,6 +94,16 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id')->ActivePublic();
+    }
+
+    public function legislativeInitiatives()
+    {
+        return LegislativeInitiative::select(['legislative_initiative.*'])
+            ->with(['user', 'law', 'law.translation', 'likes', 'dislikes'])
+            ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
+            ->join('law_institution', function ($query) {
+                $query->on('law_institution.law_id', '=', 'law.id')->where('law_institution.institution_id', '=', $this->id);
+            })->get();
     }
 
     public static function translationFieldsProperties(): array

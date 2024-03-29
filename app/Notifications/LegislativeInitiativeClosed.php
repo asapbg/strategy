@@ -52,7 +52,7 @@ class LegislativeInitiativeClosed extends Notification
 
         return (new MailMessage)
             ->subject(__('notifications_msg.legislative_initiative.closed.subject'))
-            ->view('emails.legislative_initiative.unsuccessful', $this->data);
+            ->view('emails.legislative_initiative.unsuccessful', ['data' => $this->data]);
     }
 
     /**

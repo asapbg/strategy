@@ -58,7 +58,7 @@ class LegislativeInitiativeVotesController extends Controller
                 }
             }
             \DB::commit();
-            return redirect()->back();
+            return redirect()->back()->with('success', __('site.success_vote'));
         } catch (\Exception $e) {
             \DB::rollBack();
             Log::error($e);

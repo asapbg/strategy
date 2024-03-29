@@ -22,9 +22,16 @@
                                 @php($url = '')
                                 @if($s->subscribable_type == 'App\Models\StrategicDocument')
                                     @php($url = $r->subscribable_id ? route('strategy-document.view', $r->subscribable_id) : route('strategy-documents.index').addUrlParams($r->search_filters))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Стартегическия документ' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\LegislativeInitiative')
+                                    @php($url = $r->subscribable_id ? route('legislative_initiatives.view', $r->subscribable_id) : route('legislative_initiatives.index').addUrlParams($r->search_filters))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Законодателната инициатива' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\Consultations\PublicConsultation')
+                                    @php($url = $r->subscribable_id ? route('public_consultation.view', $r->subscribable_id) : route('public_consultation.index.index').addUrlParams($r->search_filters))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Обществената консултация' : 'Към списъка')
                                 @endif
                                 <tr>
-                                    <td><a href="{{ $url }}" target="_blank">{{ $r->subscribable_id ? 'Към Стартегическия документ' : 'Към списъка' }}</a></td>
+                                    <td><a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a></td>
                                     <td>{{ $r->is_subscribed ? __('custom.active_m') : __('custom.inactive_m') }}</td>
                                     <td>
                                         <a href="{{ route('profile.subscribe.set', ['id' => $r->id, 'status' => (int)!$r->is_subscribed]) }}">{{ $r->is_subscribed ? 'Деактивирай' : 'Активирай' }}</a>

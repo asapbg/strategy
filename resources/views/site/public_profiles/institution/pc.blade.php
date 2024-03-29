@@ -1,7 +1,5 @@
 @extends('layouts.site', ['fullwidth' => true])
 
-@section('pageTitle', trans_choice('custom.advisory_boards', 2))
-
 @section('content')
     <div class="row">
         @include('site.public_profiles.institution_menu')
