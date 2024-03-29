@@ -233,9 +233,17 @@ class LegislativeProgramController extends AdminController
             //Upload files
             if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
                 foreach ($request->all() as $k => $v){
-                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en'])){
-                        $request->request->add([str_replace('a_', '', $k) => $v]);
+                    if(!in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])){
                         $request->offsetUnset($k);
+                    }
+                }
+                foreach ($request->all() as $k => $v){
+
+                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])){
+                        $request->request->add([str_replace('a_', '', $k) => $v]);
+                        if($k != 'formats'){
+                            $request->offsetUnset($k);
+                        }
                     }
                 }
                 $langReq = LanguageFileUploadRequest::createFrom($request);

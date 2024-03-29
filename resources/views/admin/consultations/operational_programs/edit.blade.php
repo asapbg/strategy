@@ -47,37 +47,57 @@
                             <div class="card card-secondary p-0 mt-4">
                                 <div class="card-body row">
                                     <h3 class="border-bottom border-4 border-primary col-12">Файлове</h3>
-                                    @foreach($languages as $lang)
-                                            <?php
-                                            $default = $lang['default'];
-                                            $code = $lang['code'];
-                                            $code_upper = mb_strtoupper($code);
-                                            ?>
-                                        <div class="col-6">
-                                            <div class="mb-3">
-                                                <label for="a_description_{{ $code }}" class="form-label">
-                                                    Публично име ({{ $code_upper }}) @if($lang['code'] == config('app.default_lang'))<span class="required">*</span>@endif
-                                                </label>
-                                                <input value="{{ old("а_description_$code", '') }}" class="form-control form-control-sm @error("a_description_$code") is-invalid @enderror"
-                                                       id="a_description_{{ $code }}" type="text" name="a_description_{{ $code }}"
-                                                >
-                                                @error('a_description_'.$code)
-                                                <div class="text-danger mt-1">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="file_{{ $code }}" class="form-label">
-                                                    Изберете файл ({{ $code_upper }})
-                                                </label>
-                                                <input class="form-control form-control-sm @error("a_file_$code") is-invalid @enderror"
-                                                       id="a_file_{{ $code }}" type="file" name="a_file_{{ $code }}"
-                                                >
-                                                @error('a_file_'.$code)
-                                                <div class="text-danger mt-1">{{ $message }}</div>
-                                                @enderror
-                                            </div>
+                                    <input type="hidden" name="formats" value="ALLOWED_FILE_LP_OO">
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="a_description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input value="{{ old('a_description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('a_description_'.$lang['code']) is-invalid @enderror" id="a_description_{{ $lang['code'] }}" type="text" name="a_description_{{ $lang['code'] }}">
+                                            @error('a_description_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     @endforeach
+                                    @foreach(config('available_languages') as $lang)
+                                        <div class="col-md-6 mb-3">
+                                            <label for="a_file_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <input class="form-control form-control-sm @error('a_file_'.$lang['code']) is-invalid @enderror" id="a_file_{{ $lang['code'] }}" type="file" name="a_file_{{ $lang['code'] }}">
+                                            @error('a_file_'.$lang['code'])
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endforeach
+
+{{--                                    @foreach($languages as $lang)--}}
+{{--                                            <?php--}}
+{{--                                            $default = $lang['default'];--}}
+{{--                                            $code = $lang['code'];--}}
+{{--                                            $code_upper = mb_strtoupper($code);--}}
+{{--                                            ?>--}}
+{{--                                        <div class="col-6">--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="a_description_{{ $code }}" class="form-label">--}}
+{{--                                                    Публично име ({{ $code_upper }}) @if($lang['code'] == config('app.default_lang'))<span class="required">*</span>@endif--}}
+{{--                                                </label>--}}
+{{--                                                <input value="{{ old("а_description_$code", '') }}" class="form-control form-control-sm @error("a_description_$code") is-invalid @enderror"--}}
+{{--                                                       id="a_description_{{ $code }}" type="text" name="a_description_{{ $code }}"--}}
+{{--                                                >--}}
+{{--                                                @error('a_description_'.$code)--}}
+{{--                                                <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                @enderror--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="file_{{ $code }}" class="form-label">--}}
+{{--                                                    Изберете файл ({{ $code_upper }})--}}
+{{--                                                </label>--}}
+{{--                                                <input class="form-control form-control-sm @error("a_file_$code") is-invalid @enderror"--}}
+{{--                                                       id="a_file_{{ $code }}" type="file" name="a_file_{{ $code }}"--}}
+{{--                                                >--}}
+{{--                                                @error('a_file_'.$code)--}}
+{{--                                                <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                @enderror--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    @endforeach--}}
                                     <div class="col-12">
                                         <button type="submit" name="save_files" class="btn btn-success" value="1">{{ __('custom.save') }}</button>
                                         <button type="submit" name="stay_in_files" class="btn btn-success" value="1">{{ __('custom.save_and_stay') }}</button>

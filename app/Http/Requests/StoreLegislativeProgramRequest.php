@@ -27,7 +27,10 @@ class StoreLegislativeProgramRequest extends FormRequest
      */
     public function rules()
     {
-        $defaultLang = config('app.default_lang');
+        $formatInput = request()->input('formats');
+        $formats = constant("\App\Models\File::$formatInput");
+
+//        $defaultLang = config('app.default_lang');
         $rules = [
             'id' => ['required', 'numeric'],
             'new_row' => ['nullable', 'numeric'],
@@ -81,10 +84,15 @@ class StoreLegislativeProgramRequest extends FormRequest
         }
 
         if( request()->input('save_files') || request()->input('stay_in_files')) {
-            foreach (config('available_languages') as $lang) {
-                $rules['a_file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
-                $rules['a_description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
-            }
+            $rules['a_description_bg'] = ['nullable', 'string', 'max:255', 'required_without:a_description_en', 'required_with:a_file_bg'];
+            $rules['a_description_en'] = ['nullable', 'string', 'max:255', 'required_without:a_description_bg', 'required_with:a_file_en'];
+            $rules['a_file_bg'] = ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats), 'required_with:a_description_bg'];
+            $rules['a_file_en'] = ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats), 'required_with:a_description_en'];
+
+//            foreach (config('available_languages') as $lang) {
+//                $rules['a_file_' . $lang['code']] = ['nullable', 'file',  'max:'.File::MAX_UPLOAD_FILE_SIZE, 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+//                $rules['a_description_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable'), 'string'];
+//            }
         }
 
         return $rules;

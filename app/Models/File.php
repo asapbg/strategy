@@ -68,6 +68,8 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_PRIS = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_STRATEGIC_DOC = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_LP_OO = ['doc', 'docx', 'pdf'];
+
+    const ALLOWED_FILE_PAGE = ['doc', 'docx', 'pdf', 'xsl', 'xlsx', 'jpeg', 'jpg', 'png', 'gif', 'apng', 'avif', 'webp']; //'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'
     const ALL_ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'pdf', 'p7s', 'p7m', 'zip', 'rar', '7z', 'jpeg', 'jpg', 'png'];
     const ALL_ALLOWED_FILE_EXTENSIONS_MIMES_TYPE = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf',

@@ -755,5 +755,9 @@ return [
         'law_paragraph' => 'Член/алинея/точка',
         'law_text' => 'Текст на разпоредбата',
         'legal_act_type_id' => 'Категория акт',
+        'a_description_bg'              => 'Описание  (BG)',
+        'a_description_en'              => 'Описание (EN)',
+        'a_file_bg'           => 'Файл (BG)',
+        'a_file_en'           => 'Файл (EN)',
     ],
 ];
