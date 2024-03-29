@@ -414,7 +414,9 @@ $(document).ready(function () {
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['view', ['fullscreen']],
                 ['insert', ['link']]
-            ]
+            ],
+            dialogsInBody: true,
+            lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
         });
     }
 

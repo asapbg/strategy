@@ -71,7 +71,7 @@ class PublicConsultationController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
         $pageTitle = $item->title;
-        
+
         $breadcrumbs = array(
             ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')]
         );

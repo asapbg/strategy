@@ -492,9 +492,9 @@ span.left-link-icon i {
     z-index: 500;
 }
 
-.modal.note-modal.link-dialog.show .modal-header {
-    flex-direction: row-reverse;
-}
+/*.modal.note-modal.link-dialog.show .modal-header {*/
+/*    flex-direction: row-reverse;*/
+/*}*/
 
 .modal.note-modal.link-dialog.show .modal-header .close{
     color: #fff0 !important;
@@ -2812,7 +2812,7 @@ html #slider-range .ui-button.ui-state-disabled:active {
     max-height: 300px;
 }
 
-.fc-toolbar-chunk button { 
+.fc-toolbar-chunk button {
     background: #21659e !important;
     border-color: #1b517e !important;
 }
