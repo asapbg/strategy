@@ -17,7 +17,8 @@ Route::controller(HomeController::class)->group(function () {
 });
 
 Route::controller(\App\Http\Controllers\PublicProfilesController::class)->group(function () {
-    Route::get('/user-profile/information/{item}', 'userProfile')->name('user.profile');
+    Route::get('/user-profile/public-consultations/{item}', 'userPublicConsultation')->name('user.profile.pc');
+    Route::get('/user-profile/legislative-initiatives/{item}', 'userLegislativeInitiatives')->name('user.profile.li');
     Route::get('/institution-profile/information/{item}', 'institutionProfile')->name('institution.profile');
     Route::get('/institution-profile/public-consultations/{item}', 'institutionPublicConsultations')->name('institution.profile.pc');
 //    Route::get('/institution-profile/strategic-documents/{item}', 'institutionStrategicDocuments')->name('institution.profile.sd');

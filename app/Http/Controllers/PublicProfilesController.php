@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Consultations\PublicConsultation;
+use App\Models\LegislativeInitiative;
 use App\Models\Publication;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
@@ -74,15 +76,45 @@ class PublicProfilesController extends Controller
     }
 
     //USer
-    public function userProfile(Request $request, User $item){
+    public function userPublicConsultation(Request $request, User $item){
 
         $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->fullName();
         $this->setBreadcrumbsFull(
             array(
-                ['name' => $pageTitle, 'url' => route('user.profile', $item)],
-                ['name' => __('site.base_info'), 'url' => '']
+                ['name' => $pageTitle, 'url' => ''],
+                ['name' => trans_choice('custom.public_consultations', 2), 'url' => '']
             )
         );
-        return $this->view('site.public_profiles.user', compact('item', 'pageTitle'));
+
+        $pcIds = $item->commentsPc->pluck('object_id')->unique()->toArray();
+        $items = PublicConsultation::ActivePublic()->with(['comments' => function ($q) use($item){
+            $q->where('user_id', '=', $item->id);
+        }])->whereIn('id', $pcIds)->get();
+
+        return $this->view('site.public_profiles.user.pc', compact('item', 'pageTitle', 'items'));
     }
+    public function userLegislativeInitiatives(Request $request, User $item){
+
+        $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->fullName();
+        $this->setBreadcrumbsFull(
+            array(
+                ['name' => $pageTitle, 'url' => ''],
+                ['name' => trans_choice('custom.legislative_initiatives', 2), 'url' => '']
+            )
+        );
+        //Author
+        $ids = $item->legislativeInitiatives->pluck('id')->toArray();
+        $commentsLiIds = $item->legislativeInitiativesComments->pluck('legislative_initiative_id')->toArray();
+        if(sizeof($commentsLiIds)){
+            $ids = array_merge($ids, $commentsLiIds);
+        }
+        $votedLiIds = $item->legislativeInitiativesLike->pluck('legislative_initiative_id')->toArray();
+        if(sizeof($votedLiIds)){
+            $ids = array_merge($ids, $votedLiIds);
+        }
+        $items = LegislativeInitiative::whereIn('id', array_keys($ids))->get();
+
+        return $this->view('site.public_profiles.user.li', compact('item', 'pageTitle', 'items'));
+    }
+
 }
