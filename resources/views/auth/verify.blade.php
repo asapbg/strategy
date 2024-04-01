@@ -1,24 +1,33 @@
-@extends('layouts.app')
-
+@extends('layouts.site')
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="padding-top: 115px;">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Verify Your Email Address') }}</div>
-
+            <div class="card mb-5">
+                <div class="card-header app-card-header py-2">
+                    <h4 class="fs-5 m-0">{{ __('auth.verify_email') }}</h4>
+                </div>
                 <div class="card-body">
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
-                            {{ __('A fresh verification link has been sent to your email address.') }}
+                            {{ __('auth.fresh_link_is_send') }}
                         </div>
                     @endif
-
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }},
-                    <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
+                    {{ __('auth.verification_link') }}<br>
+                    <hr>
+                    {{ __('auth.receive_email') }}
+                    <form class="pt-2" method="POST" action="{{ route('verification.resend') }}">
                         @csrf
-                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">{{ __('click here to request another') }}</button>.
+                        <div class="form-group form-group-sm col-12 mb-3">
+                            <label class="form-label fw-semibold" for="email">{{ __('validation.attributes.email') }}:</label>
+                            <input class="form-control form-control-sm @error('email') is-invalid @enderror" type="text" value="{{ old('email', '') }}" name="email" id="email" required autocomplete="off">
+                            @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">{{ __('auth.resend_link') }}</button>
                     </form>
                 </div>
             </div>

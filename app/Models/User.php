@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\StrategicDocuments\Institution;
 use Carbon\Carbon;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,7 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property int $id
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
     use HasFactory;
     use SoftDeletes;
@@ -30,6 +32,7 @@ class User extends Authenticatable
     use Notifiable;
     use HasRoles;
     use Notifiable;
+    use MustVerifyEmail;
 
     protected string $logName = "users";
 
@@ -123,6 +126,7 @@ class User extends Authenticatable
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
     const STATUS_BLOCKED = 3;
+    const STATUS_REG_IN_PROCESS = 4;
 
     /**
      * Get user statuses
@@ -250,6 +254,25 @@ class User extends Authenticatable
         }
 
         return $this->username;
+    }
+
+    public function scopeIsActive($query)
+    {
+        $query->where('users.activity_status', '<>', self::STATUS_INACTIVE)
+            ->where('users.active', 1);
+    }
+
+    public function scopeIsInProcess($query)
+    {
+        $query->where('users.activity_status', self::STATUS_REG_IN_PROCESS);
+    }
+
+    public function scopeNotVerified($query, $id)
+    {
+        $query->where('users.activity_status', self::STATUS_REG_IN_PROCESS)
+            ->whereNull('users.email_verified_at')
+            ->where('users.id', '=', $id)
+            ->where('users.user_type', '=', User::USER_TYPE_EXTERNAL);
     }
 
     /**

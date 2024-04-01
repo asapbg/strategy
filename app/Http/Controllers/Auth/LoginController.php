@@ -114,12 +114,20 @@ class LoginController extends Controller
                 'error' => [trans('auth.active')],
             ]);
         }
+
+        if ($user->status == User::STATUS_REG_IN_PROCESS) {
+            throw ValidationException::withMessages([
+                'error' => [trans('auth.verify_email')],
+            ]);
+        }
+
         if (!$user->password_changed_at) {
             $this->incrementLoginAttempts($request);
             throw ValidationException::withMessages([
                 'error' => [trans('auth.password_not_changed')],
             ]);
         }
+
         if ($user->activity_status != User::STATUS_ACTIVE) {
             throw ValidationException::withMessages([
                 'error' => [trans('auth.status_blocked')],
