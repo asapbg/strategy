@@ -24,12 +24,20 @@ class ChangeUserDataRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'org_name' => ['nullable', 'string', 'max:255', 'required_without:first_name'],
-            'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['nullable', 'string'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore((int)auth()->user()->id)],
-        ];
+        if(request()->input('edit', 0)){
+            return [
+                'edit' => ['nullable', 'numeric'],
+                'notification_email' => ['required', 'string', 'email', 'max:255'],
+            ];
+        } else{
+            return [
+                'edit' => ['nullable', 'numeric'],
+                'org_name' => ['nullable', 'string', 'max:255', 'required_without:first_name'],
+                'first_name' => ['required', 'string', 'max:255'],
+                'middle_name' => ['nullable', 'string'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore((int)auth()->user()->id)],
+            ];
+        }
     }
 }

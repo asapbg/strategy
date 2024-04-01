@@ -759,5 +759,6 @@ return [
         'a_description_en'              => 'Описание (EN)',
         'a_file_bg'           => 'Файл (BG)',
         'a_file_en'           => 'Файл (EN)',
+        'notification_email'           => 'Електронна поща (известия)',
     ],
 ];

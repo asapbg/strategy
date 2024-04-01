@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\FilterSort;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserChangeRequest extends ModelActivityExtend
 {
+    use FilterSort;
     const MODULE_NAME = ('custom.user_change_requests');
     public $timestamps = true;
 
@@ -23,6 +25,11 @@ class UserChangeRequest extends ModelActivityExtend
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
+    }
+
+    public function statusUser(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'status_user_id')->withTrashed();
     }
 }

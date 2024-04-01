@@ -241,6 +241,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/users/{user}/update', 'update')->name('users.update');
         Route::get('/users/{user}/delete', 'destroy')->name('users.delete');
         Route::get('/users/export', 'export')->name('users.export');
+        Route::get('/users/change-requests', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\UserChangeRequestController::class)->group(function () {
+        Route::get('/users/change-requests', 'index')->name('users.change_request')->middleware('can:viewAny,App\Models\UserChangeRequest');
+        Route::get('/users/change-requests/approve', 'approve')->name('users.change_request.approve');
+        Route::get('/users/change-requests/reject', 'reject')->name('users.change_request.reject');
     });
 
     Route::controller(RolesController::class)->group(function () {

@@ -42,10 +42,10 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="javascript:;"
-                                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();document.getElementsByClassName('logout-form')[0].submit();">
                                         {{ __('auth.logout') }}
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form class="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </li>

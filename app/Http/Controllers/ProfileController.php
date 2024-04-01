@@ -82,27 +82,36 @@ class ProfileController extends Controller
 
     public function store(ChangeUserDataRequest $request) {
         $validated = $request->validated();
-        return back()->with('danger', 'Функционалността е в процес на разработка');
+//        return back()->with('danger', 'Функционалността е в процес на разработка');
 //        dd($validated);
 
         try {
-            $changes = [];
-            foreach (['first_name', 'middle_name', 'last_name', 'email', 'org_name'] as $k){
-                if(
-                    (isset($validated[$k]) && $validated[$k] != $request->user()->{$k})
-                    || (!isset($validated[$k]) && !empty($request->user()->{$k}))
-                ){
-                    $changes[$k] = $validated[$k];
+            if(!isset($validated['edit']) || !$validated['edit']){
+                $changes = [];
+                foreach (['first_name', 'middle_name', 'last_name', 'email', 'org_name'] as $k){
+                    if(
+                        (isset($validated[$k]) && $validated[$k] != $request->user()->{$k})
+                        || (!isset($validated[$k]) && !empty($request->user()->{$k}))
+                    ){
+                        $changes[$k] = $validated[$k];
+                    }
                 }
-            }
-            if(!sizeof($changes)){
-                return back()->with('danger', __('site.change_request_not_send'));
-            }
+                if(!sizeof($changes)){
+                    return back()->withInput()->with('danger', __('site.change_request_not_send'));
+                }
 
-            $request->user()->changeRequests()->create([
-                'data' => json_encode($changes, JSON_UNESCAPED_UNICODE)
-            ]);
-            return redirect(route('profile'))->with('success', __('site.change_request_success'));
+                $request->user()->changeRequests()->create([
+                    'data' => json_encode($changes, JSON_UNESCAPED_UNICODE)
+                ]);
+                return redirect(route('profile'))->with('success', __('site.change_request_success'));
+            } else{
+                $user = auth()->user();
+                foreach (['notification_email'] as $k){
+                    $user->{$k} = $validated[$k];
+                }
+                $user->save();
+                return redirect(route('profile'))->with('success', __('messages.data_updated_successfully'));
+            }
 
         } catch (\Exception $e){
             Log::error('Change profile request for user ('.$request->user()->id.'): '.$e);
@@ -143,8 +152,24 @@ class ProfileController extends Controller
             Log::error($e);
 
             return redirect()->back()->with('danger', __('messages.system_error'));
+        }
+    }
 
+    public function withdrew(Request $request)
+    {
+        $itemId = $request->input('change_id', 0);
+        $item = UserChangeRequest::where('user_id', '=', $request->user()->id)->find($itemId);
+        if(!$item){
+            return back()->with('danger', __('messages.record_not_found'));
         }
 
+        try {
+            $item->status = UserChangeRequest::CANCELED;
+            $item->save();
+            return redirect(route('profile'))->with('success', __('site.withdrew_change_request_success'));
+        } catch (\Exception $e){
+            Log::error('Withdrew user change request: '.$e);
+            return redirect(route('profile'))->with('danger', __('messages.system_error'));
+        }
     }
 }

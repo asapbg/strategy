@@ -45,4 +45,6 @@
     'success_subscribe'         => 'Успешно активирахте абонамента',
     'close_successfully_f'    => 'беше затворена успешно',
     'action_only_registered'         => 'Необходимо е да влзете с профила си за да извършите това действие',
+    'record_updated_successfully_m'    => 'Записът беше обновен успешно',
+    'data_updated_successfully'    => 'Данните са обновени успешно',
 ];

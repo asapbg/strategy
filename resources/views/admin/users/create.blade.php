@@ -9,7 +9,7 @@
 
                     <form action="{{ route('admin.users.store') }}" method="post" name="form" id="form">
                         @csrf
-
+                        <input type="hidden" name="active" value="1">
                         <div class="row">
 
                             <div class="col-md-6 col-sm-12">

@@ -542,6 +542,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{route('admin.users.change_request')}}"
+                           class="nav-link @if(str_contains(url()->current(), 'users/change-requests')) active @endif">
+                            <i class="fas fa-user-edit"></i>
+                            <p>{{ __('custom.change_requests') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{route('admin.permissions')}}"
                            class="nav-link @if(str_contains(url()->current(), 'permissions')) active @endif">
                             <i class="fas fa-gavel"></i>

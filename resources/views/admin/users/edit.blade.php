@@ -67,7 +67,7 @@
                                     </label>
                                     <div class="col-12">
                                         <input type="text" id="first_name" name="first_name" class="form-control"
-                                               value="{{ old('first_name') ?? $user->first_name }}">
+                                               value="{{ old('first_name', $user->first_name) }}">
                                         @error('first_name')
                                         <div class="alert alert-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -80,7 +80,7 @@
                                     </label>
                                     <div class="col-12">
                                         <input type="text" id="middle_name" name="middle_name" class="form-control"
-                                               value="{{ old('middle_name') ?? $user->middle_name }}">
+                                               value="{{ old('middle_name', $user->middle_name) }}">
                                         @error('middle_name')
                                         <div class="alert alert-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -93,7 +93,7 @@
                                     </label>
                                     <div class="col-12">
                                         <input type="text" id="last_name" name="last_name" class="form-control"
-                                               value="{{ old('last_name') ?? $user->last_name }}">
+                                               value="{{ old('last_name', $user->last_name) }}">
                                         @error('last_name')
                                         <div class="alert alert-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -110,6 +110,18 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="form-group d-none" id="notification_email">
+                                    <label class="col-sm-12 control-label" for="notification_email">{{ __('custom.notification_email') }} <span class="required">*</span></label>
+                                    <div class="col-12">
+                                        <input type="email" id="notification_email" name="notification_email" class="form-control"
+                                               value="{{ old('notification_email', $user->notification_email) }}">
+                                        @error('notification_email')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -249,6 +261,18 @@
                     $('#institution_select').addClass('d-none');
                 }
             });
+
+            $('#user_type').on('change', function (){
+                let selectedType = $(this).val();
+                if(parseInt(selectedType) == @json(\App\Models\User::USER_TYPE_EXTERNAL)) {
+                    $('#notification_email').removeClass('d-none');
+                } else {
+                    $('#notification_email input').val('');
+                    $('#notification_email').addClass('d-none');
+                }
+            });
+
+            $('#user_type').trigger('change');
         });
     </script>
 @endpush

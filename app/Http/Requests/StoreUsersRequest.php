@@ -32,8 +32,10 @@ class StoreUsersRequest extends FormRequest
             //'username'              => ['required', 'unique:users', 'string', 'max:255'],
             'first_name'            => ['required', 'string', 'max:255'],
             'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
+            'middle_name'             => ['nullable', 'string', 'max:255'],
             'email'                 => ['nullable', 'string', 'email', 'max:255'],
-            'user_type'             => ['required' ,'numeric']
+            'user_type'             => ['required' ,'numeric'],
+            'active'             => ['required' ,'numeric'],
         ];
 
         if(request()->input('sd', 0)){
@@ -50,6 +52,11 @@ class StoreUsersRequest extends FormRequest
         }
 
         if( request()->input('id') ) {
+            $rules['activity_status'] = ['required', 'numeric'];
+            if( (int)request()->input('user_type') == User::USER_TYPE_EXTERNAL ) {
+                $rules['notification_email'] = ['required', 'email'];
+            }
+
             $rules['email'][] = Rule::unique('users', 'email')->ignore((int)request()->input('id'));
         } else {
             $rules['email'][] = 'unique:users,email';

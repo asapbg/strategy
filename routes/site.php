@@ -152,6 +152,7 @@ Route::controller(\App\Http\Controllers\CommonController::class)->group(function
 Route::controller(ProfileController::class)->middleware('auth')->group(function () {
     Route::get('/profile/{tab?}', 'index')->name('profile');
     Route::post('/profile/change-request', 'store')->name('profile.store');
+    Route::get('/profile/change-request/withdrew', 'withdrew')->name('profile.withdrew');
     Route::post('/profile/change-password', 'changePassword')->name('profile.store.password');
     Route::get('/profile/{id}/{status}', 'subscriptionState')->name('profile.subscribe.set');
 });

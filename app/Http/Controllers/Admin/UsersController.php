@@ -64,8 +64,8 @@ class  UsersController extends Controller
                 return $query->where('email', 'ILIKE', "%$email%");
             })
             ->where('active', $active)
-            ->orderBy('first_name', 'asc')
-            ->orderBy('last_name', 'asc')
+            ->orderBy('created_at', 'desc')
+//            ->orderBy('last_name', 'asc')
             ->paginate($paginate);
         //dd(\DB::getQueryLog());
 
@@ -210,15 +210,15 @@ class  UsersController extends Controller
      * @param UpdateUsersRequest $request
      * @return RedirectResponse
      */
-    public function update(User $user, UpdateUsersRequest $request)
+    public function update(UpdateUsersRequest $request, User $user)
     {
         if(auth()->user()->cannot('update', $user)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
-
-        $data = $request->except(['_token','roles']);
-        $roles = $request->offsetGet('roles');
-        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
+        $data = $request->validated();
+//        $data = $request->except(['_token','roles']);
+//        $roles = $request->offsetGet('roles');
+        $rolesNames = rolesNames($data['roles']);
 
         DB::beginTransaction();
 
@@ -230,11 +230,12 @@ class  UsersController extends Controller
             $user->middle_name = $data['middle_name'];
             $user->last_name = $data['last_name'];
             $user->email = $data['email'];
+            $user->notification_email = $data['user_type'] == User::USER_TYPE_INTERNAL ? null : $data['notification_email'];
             $user->active = $data['active'];
             $user->activity_status = $data['activity_status'];
             $user->institution_id = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
 
-            $user->syncRoles($roles);
+            $user->syncRoles($data['roles']);
 
             if (!is_null($data['password'])) {
                 $user->password = bcrypt($data['password']);
@@ -254,7 +255,7 @@ class  UsersController extends Controller
 
             DB::rollBack();
 
-            return to_route('admin.users')->with('danger', __('messages.system_error'));
+            return back()->with('danger', __('messages.system_error'));
 
         }
     }

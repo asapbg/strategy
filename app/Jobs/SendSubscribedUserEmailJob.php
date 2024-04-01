@@ -102,7 +102,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['text'] = $admin_text;
                 $this->data['subject'] = $admin_subject_text;
                 $this->data['url'] = $admin_url;
-                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $admin['email'];
+                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $admin->email;
                 Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data));
             }
         }
@@ -111,7 +111,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['text'] = $moderator_text;
                 $this->data['subject'] = $moderator_subject_text;
                 $this->data['url'] = $moderator_url;
-                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $moderator['email'];
+                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $moderator->email;
                 Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data));
             }
         }
@@ -121,7 +121,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['subject'] = $user_subject_text;
                 $this->data['url'] = $user_url;
                 $user = $subscribedUser->user;
-                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $user['email'];
+                $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $user->notification_email;
                 Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
             }
         }

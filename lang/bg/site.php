@@ -164,4 +164,13 @@ return [
     'password_change_success' => 'Успешно сменихте паролата си',
     'change_request_success' => 'Заявката е изпратена успешно',
     'change_request_not_send' => 'Заявката не е изпратена тъй като няма промяна в данните ви',
+    'your_change_requests' => 'Вашите заявки за промяна',
+    'first_name' => 'Име',
+    'middle_name' => 'Презиме',
+    'last_name' => 'Фамилия',
+    'email' => 'Електронна поща',
+    'withdrew' => 'Оттегли',
+    'withdrew_change_request_title' => 'Оттегляне на заявка',
+    'withdrew_change_request_title_confirm_text' => 'Сигурни ли сте, че искате да оттеглите заявката за промяна на данните',
+    'withdrew_change_request_success' => 'Заявката е оттеглена успешно',
 ];
