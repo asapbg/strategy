@@ -113,6 +113,7 @@ class VerificationController extends Controller
 
         if ($user->markEmailAsVerified()) {
             $user->activity_status = User::STATUS_ACTIVE;
+            $user->email_verified_at = Carbon::now();
 //            $user->status_date = Carbon::now();
             $user->save();
             Auth::guard('web')->login($user);
