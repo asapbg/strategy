@@ -188,11 +188,15 @@
                 person: {
                     first_name: {
                         required: true,
-                        maxlength: 255
+                        maxlength: 255,
+                        no_digits:true,
+                        no_special_characters: true
                     },
                     last_name: {
                         required: true,
-                        maxlength: 255
+                        maxlength: 255,
+                        no_digits:true,
+                        no_special_characters:true
                     },
                     email: {
                         required: true,
@@ -259,6 +263,20 @@
                 }
                 return false;
             });
+
+            $.validator.addMethod("no_digits", function (value, element) {
+                if ((/^(?=.*[0-9])/.test(value))) {
+                    return false;
+                }
+                return true;
+            }, jQuery.validator.messages.noDigits);
+
+            $.validator.addMethod("no_special_characters", function (value, element) {
+                if ((/^(?=.*[@#$%&!_=№*}{\]\[^:,.()])/.test(value))) {
+                    return false;
+                }
+                return true;
+            }, jQuery.validator.messages.noSpecialCharacters);
 
             $('#reg_btn').on('click', function (){
                 validateRegistration();

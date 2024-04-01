@@ -34,6 +34,8 @@ $.extend( $.validator.messages, {
     oneDigit: "Password must contain at least one digit.",
     oneSpecialCharacter: "Password must contain special characters from @#$%&!_=*-.",
     betweenLength: "Password must be between 8 to 16 characters long.",
+    noDigits: "Digits are not allowed in the field",
+    noSpecialCharacters: "Special characters are not allowed in the field @#$%&!_=*№}{\\]\\[^:,.().",
 } );
 return $;
 }));
