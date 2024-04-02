@@ -49,7 +49,7 @@ class LegislativeInitiativeSuccessful extends Notification
 
         return (new MailMessage)
             ->subject(__('notifications_msg.legislative_initiative.success.subject'))
-            ->view('emails.legislative_initiative.successful', ['data' => $this->data]);
+            ->markdown('emails.legislative_initiative.successful', ['data' => $this->data]);
     }
 
     /**
