@@ -181,13 +181,13 @@ class StrategicDocumentsController extends AdminController
     }
 
     /**
-     * @param StrategicDocumentUploadFileRequest $request
+     * @param LanguageFileUploadRequest $request
      * @param $objectId
      * @param $typeObject
      * @param bool $redirect
      * @return Application|RedirectResponse|Redirector|void
      */
-    public function uploadFileLanguagesSd(StrategicDocumentUploadFileRequest $request, $objectId, $typeObject, $redirect = true) {
+    public function uploadFileLanguagesSd(LanguageFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
         try {
             $validated = $request->validated();
             // Upload File
