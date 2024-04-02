@@ -118,9 +118,9 @@ class VerificationController extends Controller
             $user->save();
             Auth::guard('web')->login($user);
 
-//            \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
-//            $sessionLifetime = Settings::where('name', '=', Settings::SESSION_LIMIT_KEY)->first();
-//            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : 10);
+            \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
+            $sessionLifetime = config('app.default_session_expiration');
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
 
             event(new Verified($user));
         }

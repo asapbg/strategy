@@ -35,6 +35,11 @@
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
+            <div id="front-timer">
+                @include('partials.count-down-timer')
+            </div>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.user.notifications') }}" aria-expanded="false">
                 <i class="fas fa-bell"></i>
                 @if($user && !is_null($user->unreadNotifications) && $user->unreadNotifications->count())

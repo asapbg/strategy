@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Library\DigitalSignature;
 use App\Library\EAuthentication;
+use App\Models\Settings;
 use App\Models\User;
 use App\Models\UserCertificate;
 use Carbon\Carbon;
@@ -209,6 +210,9 @@ class EAuthController extends Controller
 
             Auth::login($user);
 
+            \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
+            $sessionLifetime = config('app.default_session_expiration');
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
             DB::commit();
             return redirect(route($this->homeRouteName));
 
@@ -286,6 +290,11 @@ class EAuthController extends Controller
         } else{
             $redirectRoute = 'site.home';
         }
+
+        \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
+        $sessionLifetime = config('app.default_session_expiration');
+        \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+
         return redirect(route($redirectRoute));
     }
 

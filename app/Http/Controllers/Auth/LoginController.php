@@ -156,6 +156,10 @@ class LoginController extends Controller
             }
             session(['subscriptions' => $subscriptions]);
 
+            \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
+            $sessionLifetime = config('app.default_session_expiration');
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+
             \Auth::logoutOtherDevices(request('password'));
             $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin' : $this->redirectPath();
             return redirect()->intended($route);

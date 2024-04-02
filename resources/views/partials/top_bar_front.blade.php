@@ -25,8 +25,11 @@
             <div class="col-md-6 text-end top-bar-right-column">
                 <div class="auth d-flex justify-content-end top-bar-left-side-desktop">
                     @if(app('auth')->check())
+                        <div id="front-timer me-2">
+                            @include('partials.count-down-timer')
+                        </div>
                         @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
-                        <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2 me-2"
+                        <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2"
                             id="back-to-admin"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
                         @endif
                         <div class="dropdown">
