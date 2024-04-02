@@ -299,7 +299,7 @@ class StrategicDocumentsController extends Controller
 
         $q = StrategicDocument::select('strategic_document.*')
             ->Active()
-            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->with(['translations', 'policyArea', 'policyArea.translations', 'acceptActInstitution', 'acceptActInstitution.translations'])
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
             ->leftJoin('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
@@ -309,6 +309,7 @@ class StrategicDocumentsController extends Controller
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
+            ->whereNull('parent_document_id')
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd);
             //->GroupBy('strategic_document.id');
@@ -322,7 +323,9 @@ class StrategicDocumentsController extends Controller
 
             $fileName = 'sd_report_'.Carbon::now()->format('Y_m_d_H_i_s');
             if($request->input('export_pdf')){
+//                dd($exportData);
                 $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
+//                dd('ready loading');
                 return $pdf->download($fileName.'.pdf');
             } else{
                 return Excel::download(new StrategicDocumentsExport($exportData), $fileName.'.xlsx');
