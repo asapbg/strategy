@@ -256,31 +256,40 @@
                 <div class="col-md-12">
                     <div class="custom-card p-3">
                         <h3 class="mb-3">{{ trans_choice('custom.comments', 2) }}</h3>
-                        @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
-                            <div class="col-md-12 my-4">
-                                <div>
-                                    <form class="mb-0" method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
-                                        @csrf
+                        @can('comment', $item)
+                            @if((int)$item->status === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                                <div class="col-md-12 my-4">
+                                    <div>
+                                        <form class="mb-0" method="POST" action="{{ route('legislative_initiatives.comments.store') }}">
+                                            @csrf
 
-                                        <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
+                                            <input type="hidden" name="legislative_initiative_id" value="{{ $item->id }}"/>
 
-                                        <div class="form-group">
-                                            <!--  <div class="summernote-wrapper mb-3">
-                                                -- Вътре се се слага textarea с клас "summernote"
-                                                  </div>   -->
-                                            <textarea name="description" class="form-control mb-3 rounded summernote"
-                                                      id="description" rows="2"
-                                                      placeholder="{{ __('custom.enter_comment') }}">
-                                             </textarea>
-                                        </div>
+                                            <div class="form-group">
+                                                <!--  <div class="summernote-wrapper mb-3">
+                                                    -- Вътре се се слага textarea с клас "summernote"
+                                                      </div>   -->
+                                                <textarea name="description" class="form-control mb-3 rounded summernote"
+                                                          id="description" rows="2"
+                                                          placeholder="{{ __('custom.enter_comment') }}">
+                                                 </textarea>
+                                            </div>
 
-                                        <button type="submit"
-                                                class="btn btn-primary mt-3">{{ __('custom.add_comment') }}</button>
-                                    </form>
+                                            <button type="submit"
+                                                    class="btn btn-primary mt-3">{{ __('custom.add_comment') }}</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        @endcan
                         @if(isset($item->comments) && $item->comments->count() > 0)
+                            @if(!auth()->user())
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <div class="main-color fw-bold">{!! __('site.vote_li_actions_info') !!}</div>
+                                    </div>
+                                </div>
+                            @endif
                             @foreach($item->comments as $key => $comment)
                                 <div class="obj-comment comment-background p-2 rounded mb-3">
                                     <div class="info">
@@ -321,12 +330,12 @@
                                             {{ $comment->countLikes() }}
 
                                             @if($comment->userHasLike())
-                                                <a href="{{ route('legislative_initiatives.comments.stats.revert', $comment) }}"
+                                                <a href="@can('comment', $item){{ route('legislative_initiatives.comments.stats.revert', $comment) }}@else{{ '#' }}@endcan"
                                                    class="me-2 text-decoration-none">
                                                     <i class="fa fa-thumbs-up fs-18" aria-hidden="true"></i>
                                                 </a>
                                             @else
-                                                <a href="{{ route('legislative_initiatives.comments.stats.store', [$comment, 'like']) }}"
+                                                <a href="@can('comment', $item){{ route('legislative_initiatives.comments.stats.store', [$comment, 'like']) }}@else{{ '#' }}@endcan"
                                                    class="me-2 text-decoration-none">
                                                     <i class="ms-1 fa fa-regular fa-thumbs-up main-color fs-18"></i>
                                                 </a>
@@ -336,12 +345,12 @@
 
                                             {{ $comment->countDislikes() }}
                                             @if($comment->userHasDislike())
-                                                <a href="{{ route('legislative_initiatives.comments.stats.revert', [$comment]) }}"
+                                                <a href="@can('comment', $item){{ route('legislative_initiatives.comments.stats.revert', [$comment]) }}@else{{ '#' }}@endcan"
                                                    class="text-decoration-none">
                                                     <i class="fa fa-thumbs-down fs-18"></i>
                                                 </a>
                                             @else
-                                                <a href="{{ route('legislative_initiatives.comments.stats.store', [$comment, 'dislike']) }}"
+                                                <a href="@can('comment', $item){{ route('legislative_initiatives.comments.stats.store', [$comment, 'dislike']) }}@else{{ '#' }}@endcan"
                                                    class="text-decoration-none">
                                                     <i class="ms-1 fa fa-regular fa-thumbs-down main-color fs-18"></i>
                                                 </a>

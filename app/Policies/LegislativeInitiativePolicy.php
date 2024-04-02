@@ -174,7 +174,7 @@ class LegislativeInitiativePolicy
      */
     public function comment(User $user, LegislativeInitiative $legislative_initiative): bool
     {
-        return $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
+        return $user && $legislative_initiative->getStatus($legislative_initiative->status)->value === \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value;
     }
 
     private function eauthUser()
