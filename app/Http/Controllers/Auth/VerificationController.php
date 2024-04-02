@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\Settings;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -119,8 +120,8 @@ class VerificationController extends Controller
             Auth::guard('web')->login($user);
 
             \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
-            $sessionLifetime = config('app.default_session_expiration');
-            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+            $sessionLifetime = Setting::where('name', '=', Setting::SESSION_LIMIT_KEY)->first();
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
 
             event(new Verified($user));
         }

@@ -16,6 +16,14 @@ class SettingsSeeder extends Seeder
         $data = array(
             [
                 'section' => 'system_notifications',
+                'name' => 'session_time_limit',
+                'type' => 'number',
+                'value' => 60,
+                'editable' => 1,
+                'is_required' => 1
+            ],
+            [
+                'section' => 'system_notifications',
                 'name' => 'contact_email',
                 'type' => 'text',
                 'editable' => 1,

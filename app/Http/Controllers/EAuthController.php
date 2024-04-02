@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Library\DigitalSignature;
 use App\Library\EAuthentication;
+use App\Models\Setting;
 use App\Models\Settings;
 use App\Models\User;
 use App\Models\UserCertificate;
@@ -211,8 +212,8 @@ class EAuthController extends Controller
             Auth::login($user);
 
             \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
-            $sessionLifetime = config('app.default_session_expiration');
-            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+            $sessionLifetime = Setting::where('name', '=', Setting::SESSION_LIMIT_KEY)->first();
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
             DB::commit();
             return redirect(route($this->homeRouteName));
 
@@ -292,8 +293,8 @@ class EAuthController extends Controller
         }
 
         \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
-        $sessionLifetime = config('app.default_session_expiration');
-        \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+        $sessionLifetime = Setting::where('name', '=', Setting::SESSION_LIMIT_KEY)->first();
+        \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
 
         return redirect(route($redirectRoute));
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\UserSubscribe;
 use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
@@ -157,8 +158,8 @@ class LoginController extends Controller
             session(['subscriptions' => $subscriptions]);
 
             \Illuminate\Support\Facades\Session::put('user_last_login', $user->last_login_at);
-            $sessionLifetime = config('app.default_session_expiration');
-            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime);
+            $sessionLifetime = Setting::where('name', '=', Setting::SESSION_LIMIT_KEY)->first();
+            \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
 
             \Auth::logoutOtherDevices(request('password'));
             $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin' : $this->redirectPath();

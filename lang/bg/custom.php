@@ -406,6 +406,7 @@ return [
     'system_li' => 'Настройки - Законодателни инициативи',
     'system_strategy_doc' => 'Настройки - Стратегически докумнети',
     'system_advisory_boards' => 'Настройки - Консултативни съвети',
+    'settings.session_time_limit' => 'Потребителска сесия без активност (в минути)',
     'settings.sections.system_notifications'    => 'Основни',
     'settings.sections.system_op'                        => 'Оперативни програми',
     'settings.sections.system_lp'                        => 'Законодателни програми',
