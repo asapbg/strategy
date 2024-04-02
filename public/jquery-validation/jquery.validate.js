@@ -392,6 +392,7 @@ $.extend( $.validator, {
         betweenLength: "The field must be between 8 to 16 characters long.",
         noDigits: "Digits are not allowed in the field",
         noSpecialCharacters: "Special characters are not allowed in the field @#$%&!_=*№}{\\]\\[^:,.().",
+        allowedSymbolsPassword: "Only latin letters, numbers and special symbols @#$%&!_=№*}{\\]\\[^:,.() are allowed.",
 	},
 
 	autoCreateRanges: false,

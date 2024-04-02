@@ -204,6 +204,7 @@
                         maxlength: 255
                     },
                     password: {
+                        allowed_characters: true,
                         required: true,
                         strong_password: true,
                     },
@@ -224,6 +225,7 @@
                         maxlength: 255
                     },
                     password: {
+                        allowed_characters: true,
                         required: true,
                         strong_password: true,
                     },
@@ -240,7 +242,7 @@
         $(document).ready(function () {
             $.validator.addMethod("strong_password", function (value, element) {
                 let password = value;
-                if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%&])(.{8,20}$)/.test(password))) {
+                if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%&!_=*№*}{\]\[^:,\-.()])(.{8,16}$)/.test(password))) {
                     return false;
                 }
                 return true;
@@ -258,7 +260,7 @@
                 else if (!(/^(?=.*[0-9])/.test(password))) {
                     return jQuery.validator.messages.oneDigit;
                 }
-                else if (!(/^(?=.*[@#$%&!_=*-])/.test(password))) {
+                else if (!(/^(?=.*[@#$%&!_=*№*}{\]\[^:,\-.()])/.test(password))) {
                     return jQuery.validator.messages.oneSpecialCharacter;
                 }
                 return false;
@@ -277,6 +279,10 @@
                 }
                 return true;
             }, jQuery.validator.messages.noSpecialCharacters);
+
+            $.validator.addMethod("allowed_characters", function(value, element) {
+                return value == value.match(/^[0-9a-zA-Z@#$%&!_=№*}{\]\[^:,.()]*$/);
+            }, jQuery.validator.messages.allowedSymbolsPassword);
 
             $('#reg_btn').on('click', function (){
                 validateRegistration();
