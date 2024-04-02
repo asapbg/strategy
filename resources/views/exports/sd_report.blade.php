@@ -6,19 +6,23 @@
         <title>{{ $data['title'] }}</title>
         <style>body { font-family: DejaVu Sans, sans-serif !important; }</style>
         <style>
+            @page {
+                margin: 0 !important;
+                padding: 5px 0 !important;
+            }
             body {
                 font-family: DejaVu Sans, sans-serif;
-                font-size: 22px;
+                font-size: 10pt;
             }
             table, th, td {
                 border: 2px solid black;
                 border-collapse: collapse;
-                padding: 10px 15px;
+                padding: 4px 7px;
             }
         </style>
     </head>
     <body style="text-align: left;padding-left: 50px; padding-right: 50px;">
-        <div style="font-size: 22px;">
+        <div>
 @endif
             <table style="border-collapse:collapse;">
                 <tr>

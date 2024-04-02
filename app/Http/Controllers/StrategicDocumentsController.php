@@ -324,7 +324,7 @@ class StrategicDocumentsController extends Controller
             $fileName = 'sd_report_'.Carbon::now()->format('Y_m_d_H_i_s');
             if($request->input('export_pdf')){
 //                dd($exportData);
-                $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
+                $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true]);
 //                dd('ready loading');
                 return $pdf->download($fileName.'.pdf');
             } else{
