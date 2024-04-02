@@ -21,7 +21,7 @@ class CloseLegislativeInitiativeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && $this->item && (auth()->user()->id === $this->item->author_id);
+        return true;
     }
 
     /**

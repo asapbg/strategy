@@ -282,7 +282,7 @@ class LegislativeInitiativeController extends AdminController
         }
     }
 
-    public function destroy(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
+    public function destroy(Request $request, LegislativeInitiative $item)
     {
         if($request->user()->cannot('delete', $item)){
             return back()->with('warning', __('messages.unauthorized'));
@@ -299,8 +299,8 @@ class LegislativeInitiativeController extends AdminController
                     }
                 }
             }
-
-            return redirect(url()->previous())
+            $redirectTo = str_contains('/view', url()->previous()) ? route('legislative_initiatives.index') : url()->previous();
+            return redirect($redirectTo)
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
         } catch (\Exception $e) {
             Log::error($e);
