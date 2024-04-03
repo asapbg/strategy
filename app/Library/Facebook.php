@@ -45,13 +45,13 @@ class Facebook
     public function getUserLongLiveToken(): array
     {
         if(empty($this->userToken)){
-            return array('error' => 1, 'message' => 'Потребител (Token)');
+            return array('error' => 1, 'message' => 'Липсва Потребител (Token)');
         }
         if(empty($this->appId)){
-            return array('error' => 1, 'message' => 'Клиент (App ID)');
+            return array('error' => 1, 'message' => 'Липсва Клиент (App ID)');
         }
         if(empty($this->appSecret)){
-            return array('error' => 1, 'message' => 'Клиент (App Secret)');
+            return array('error' => 1, 'message' => 'Липсва Клиент (App Secret)');
         }
 
         $url = 'oauth/access_token?grant_type=fb_exchange_token&client_id='.$this->appId.'&client_secret='.$this->appSecret.'&fb_exchange_token='.$this->userToken;
@@ -76,10 +76,10 @@ class Facebook
     public function getPageToken(): array
     {
         if(empty($this->userToken)){
-            return array('error' => 1, 'message' => 'Клиент (App Secret)');
+            return array('error' => 1, 'message' => 'Липсва Клиент (App Secret)');
         }
         if(empty($this->pageId)){
-            return array('error' => 1, 'message' => 'Страница (ID)');
+            return array('error' => 1, 'message' => 'Липсва Страница (ID)');
         }
 
         $url = $this->pageId.'/?fields=name,access_token&access_token='.$this->userToken;
@@ -105,10 +105,10 @@ class Facebook
     public function getPageLongLiveToken(): array
     {
         if(empty($this->userTokenLongLived)){
-            return array('error' => 1, 'message' => 'Потребител (Long Live Token)');
+            return array('error' => 1, 'message' => 'Липсва Потребител (Long Live Token)');
         }
         if(empty($this->pageId)){
-            return array('error' => 1, 'message' => 'Страница (ID)');
+            return array('error' => 1, 'message' => 'Липсва Страница (ID)');
         }
 
         $url = $this->pageId.'/?fields=name,access_token&access_token='.$this->userTokenLongLived;
