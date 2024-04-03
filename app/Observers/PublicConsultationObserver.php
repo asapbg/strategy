@@ -3,8 +3,10 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserSubscribe;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +22,21 @@ class PublicConsultationObserver
     public function created(PublicConsultation $publicConsultation)
     {
         if ($publicConsultation->active) {
+            //TODO post on facebook
+            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                ->get()->first();
+            if($activeFB->value){
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage(array(
+                    'message' => 'Публикувана е Обществена консултация: '.$publicConsultation->title,
+                    'link' => route('public_consultation.view', $publicConsultation->id),
+                    'published' => true
+                ));
+            }
+
+            //TODO post on twitter
+
             //$this->sendEmails($publicConsultation, 'created');
 
             Log::info('Send subscribe email on creation');
@@ -37,6 +54,20 @@ class PublicConsultationObserver
         $old_active = $publicConsultation->getOriginal('active');
 
         if (!$old_active && $publicConsultation->active) {
+            //TODO post on facebook
+            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                ->get()->first();
+            if($activeFB->value){
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage(array(
+                    'message' => 'Публикувана е Обществена консултация: '.$publicConsultation->title,
+                    'link' => route('public_consultation.view', $publicConsultation->id),
+                    'published' => true
+                ));
+            }
+            //TODO post on twitter
+
             //$this->sendEmails($publicConsultation, 'updated');
 
             Log::info('Send subscribe email on update');

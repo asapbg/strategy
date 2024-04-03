@@ -22,16 +22,21 @@ class Setting extends ModelActivityExtend
 
 
     const ADVISORY_BOARDS_SECTION = 'system_advisory_boards';
+    const OGP_LEGISLATIVE_INIT_SECTION = 'legislative_init';
+    const FACEBOOK_SECTION = 'facebook';
 
     const AB_REVIEW_PERIOD_NOTIFY = 'review_period_notify';
 
     const OGP_SECTION = 'system_ogp';
     const OGP_ADV_BOARD_FORUM = 'adv_board';
     const OGP_FORUM_INFO = 'info_forum';
-    const OGP_LEGISLATIVE_INIT_SECTION = 'legislative_init';
     const OGP_LEGISLATIVE_INIT_REQUIRED_LIKES = 'required_likes';
     const OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS = 'required_support_days';
     const SESSION_LIMIT_KEY = 'session_time_limit';
+    const FACEBOOK_IS_ACTIVE = 'fb_active';
+    const FACEBOOK_USER_LONG_LIVE_TOKEN = 'user_token_long';
+    const FACEBOOK_PAGE_LONG_LIVE_TOKEN = 'page_access_token_long';
+    const FACEBOOK_APP_ID = 'app_id';
 
 
     //activity
@@ -47,5 +52,10 @@ class Setting extends ModelActivityExtend
     public function scopeEditable($query)
     {
         $query->where('settings.editable', 1);
+    }
+
+    public function scopeNotEditable($query)
+    {
+        $query->where('settings.editable', 0);
     }
 }

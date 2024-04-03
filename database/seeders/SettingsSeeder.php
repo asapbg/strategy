@@ -157,6 +157,86 @@ class SettingsSeeder extends Seeder
                 'is_required' => 1,
                 'value' => 50
             ],
+            [
+                'section' => 'facebook',
+                'name' => 'fb_active',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => 0
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'app_id',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'app_secret',
+                'type' => 'text',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'user_id',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'user_id',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'user_token',
+                'type' => 'text',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'user_token_long',
+                'type' => 'text',
+                'editable' => 0,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'page_id',
+                'type' => 'numeric',
+                'editable' => 1,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'page_access_token',
+                'type' => 'text',
+                'editable' => 0,
+                'is_required' => 0,
+                'value' => ''
+            ],
+            [
+                'section' => 'facebook',
+                'name' => 'page_access_token_long',
+                'type' => 'text',
+                'editable' => 0,
+                'is_required' => 0,
+                'value' => ''
+            ],
         );
 
         foreach ($data as $s) {

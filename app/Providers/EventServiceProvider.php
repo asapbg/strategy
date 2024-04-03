@@ -2,17 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\AdvisoryBoard;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\OgpPlan;
 use App\Models\OgpPlanAreaOfferVote;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentChildrenTranslation;
 use App\Models\StrategicDocumentTranslation;
+use App\Observers\AdvisoryBoardObserver;
 use App\Observers\CommentsObserver;
 use App\Observers\LegislativeInitiativeObserver;
 use App\Observers\OgpPlanAreaOfferVoteObserver;
+use App\Observers\OgpPlanObserver;
 use App\Observers\PublicConsultationObserver;
 use App\Observers\StrategicDocumentChildObserver;
 use App\Observers\StrategicDocumentChildTranslationObserver;
@@ -49,6 +53,8 @@ class EventServiceProvider extends ServiceProvider
         StrategicDocumentChildren::class => [StrategicDocumentChildObserver::class],
         StrategicDocumentChildrenTranslation::class => [StrategicDocumentChildTranslationObserver::class],
         LegislativeInitiative::class => [LegislativeInitiativeObserver::class],
+        AdvisoryBoard::class => [AdvisoryBoardObserver::class],
+        OgpPlan::class => [OgpPlanObserver::class],
     ];
 
     /**

@@ -28,8 +28,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('close:legislative_initiative')->daily();
         //SSEV TODO uncomment and test after password is fixed
-        //$schedule->command('ssev:legislative_initiative')->everyMinute();
-        //$schedule->command('e:delivery')->everyMinute();
+        $schedule->command('ssev:legislative_initiative')->everyMinute();
+        $schedule->command('e:delivery')->everyMinute();
+
+        //Facebook
+        $schedule->command('facebook:tokens')->monthly();
     }
 
     /**

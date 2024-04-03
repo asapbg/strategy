@@ -2,50 +2,158 @@
 
 namespace App\Library;
 
-use Carbon\Carbon;
-use CkBinData;
-use CkCrypt2;
-use CkGlobal;
-use CkPrivateKey;
-use CkRsa;
-use CkStringBuilder;
-use CkXml;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 
 class Facebook
 {
-    /**
-     * @var string
-     * values: {LOW; SUBSTANTIAL; HIGH}
-     */
-    private string $levelOfAssurance = 'LOW';
 
     /** @var string $endpoint */
     private string $endpoint;
     private string $pageId;
+    private string $appId;
+    private string $appSecret;
+
+    private $apiVersion;
+    private $userToken;
+    private $userTokenLongLived;
+//    private $pageToken;
+    private $pageTokenLongLived;
 
     public function __construct()
     {
-        $this->endpoint = 'https://graph.facebook.com/v19.0';
-        $this->pageId = '????';
+        $this->apiVersion = 'v19.0';
+        $this->endpoint = 'https://graph.facebook.com';
+        $this->initTokens();
     }
 
+    public function initTokens()
+    {
+        $settings = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+        ->pluck('value', 'name')
+        ->toArray();
+
+        $this->appId = (int)$settings['app_id'] ?? null;
+        $this->appSecret = $settings['app_secret'] ?? null;
+        $this->pageId = (int)$settings['page_id'] ?? null;
+        $this->userToken = $settings['user_token'] ?? null;
+        $this->userTokenLongLived = $settings['user_token_long'] ?? null;
+//        $this->pageToken = '';
+        $this->pageTokenLongLived = $settings['page_access_token_long'] ?? null;
+    }
+
+    public function getUserLongLiveToken(): array
+    {
+        if(empty($this->userToken)){
+            return array('error' => 1, 'message' => 'Потребител (Token)');
+        }
+        if(empty($this->appId)){
+            return array('error' => 1, 'message' => 'Клиент (App ID)');
+        }
+        if(empty($this->appSecret)){
+            return array('error' => 1, 'message' => 'Клиент (App Secret)');
+        }
+
+        $url = 'oauth/access_token?grant_type=fb_exchange_token&client_id='.$this->appId.'&client_secret='.$this->appSecret.'&fb_exchange_token='.$this->userToken;
+        $result = $this->curlRequest($url, 'get', [], ["Content-Type: application/json"]);
+        if (isset($result['error'])) {
+            $result['message'] = isset($result['response']) && isset($result['response']['message']) ? $result['response']['message'] : 'Unknown error';
+        } else{
+            if(isset($result['response'])){
+                $result = array(
+                    'access_token' => $result['response']['access_token'] ?? ''
+                );
+            } else{
+                return [
+                    'error' => 1,
+                    'message' => 'Facebook get User Long Live Token error: Unknown error'
+                ];
+            }
+        }
+        return $result;
+    }
+
+    public function getPageToken(): array
+    {
+        if(empty($this->userToken)){
+            return array('error' => 1, 'message' => 'Клиент (App Secret)');
+        }
+        if(empty($this->pageId)){
+            return array('error' => 1, 'message' => 'Страница (ID)');
+        }
+
+        $url = $this->pageId.'/?fields=name,access_token&access_token='.$this->userToken;
+        $result = $this->curlRequest($url, 'get', [], ["Content-Type: application/json"]);
+
+        if (isset($result['error'])) {
+            $result['message'] = isset($result['response']) && isset($result['response']['message']) ? $result['response']['message'] : 'Unknown error';
+        } else{
+            if(isset($result['response'])){
+                $result = array(
+                    'access_token' => $result['response']['access_token'] ?? ''
+                );
+            } else{
+                return [
+                    'error' => 1,
+                    'message' => 'Facebook get Page Token error: Unknown error'
+                ];
+            }
+        }
+        return $result;
+    }
+
+    public function getPageLongLiveToken(): array
+    {
+        if(empty($this->userTokenLongLived)){
+            return array('error' => 1, 'message' => 'Потребител (Long Live Token)');
+        }
+        if(empty($this->pageId)){
+            return array('error' => 1, 'message' => 'Страница (ID)');
+        }
+
+        $url = $this->pageId.'/?fields=name,access_token&access_token='.$this->userTokenLongLived;
+        $result = $this->curlRequest($url, 'get', [], ["Content-Type: application/json"]);
+        if (isset($result['error'])) {
+            $result['message'] = isset($result['response']) && isset($result['response']['message']) ? $result['response']['message'] : 'Unknown error';
+        } else{
+            if(isset($result['response'])){
+                $result = array(
+                    'access_token' => $result['response']['access_token'] ?? ''
+                );
+            } else{
+                return [
+                    'error' => 1,
+                    'message' => 'Facebook get Page Long Live Token error: Unknown error'
+                ];
+            }
+        }
+        return $result;
+    }
 
     public function postOnPage(array $data): array
     {
-        foreach (['message', 'link', 'published', 'scheduled_publish_time'] as $k){
+        foreach (['message', 'link', 'published'] as $k){
             if (!isset($data[$k]) || empty($data[$k])) {
                 return array('error' => 1, 'message' => 'Missing parameter: '.$k);
             }
         }
-        $result = $this->curlRequest($this->pageId.'/feed', 'post', $data, ["Content-Type: application/json"]);
 
-        if (!isset($result['error']) && (!isset($result[0]) || !isset($result[0]['uniqueIdentificationNumber']))) {
-            Log::error('Facebook post on page error. Response: ' . json_encode($result));
-            $result['error'] = 1;
-            $result['message'] = __('messages.system_error');
+        $result = $this->curlRequest($this->pageId.'/feed?access_token='.$this->pageTokenLongLived, 'post', $data, ["Content-Type: application/json"]);
+
+        if (isset($result['error'])) {
+            $result['message'] = isset($result['response']) && isset($result['response']['message']) ? $result['response']['message'] : 'Unknown error';
+        } else{
+            if(isset($result['response'])){
+                $result = array(
+                    'id' => $result['response']['id'] ?? ''
+                );
+            } else{
+                return [
+                    'error' => 1,
+                    'message' => 'Facebook Post on page error: Unknown error'
+                ];
+            }
         }
-
         return $result;
     }
 
@@ -60,7 +168,7 @@ class Facebook
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL => $this->endpoint.'/'.$url,
+            CURLOPT_URL => $this->endpoint.'/'.$this->apiVersion.'/'.$url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 60,
             CURLOPT_SSL_VERIFYHOST => false,
@@ -82,25 +190,26 @@ class Facebook
         $response = curl_exec($ch);
 
         $err = curl_error($ch);
-        $err = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $errInfo = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-dd($response,$err, $err);
-        if( $err ) {
-            $result = array('error' => 1, 'message' => $err);
+//dd($response, $errInfo);
+        $responseArray = json_decode($response, true);
+        if( !empty($err) && $err != 200 ) {
+            $result = array('error' => 1, 'response' => $responseArray);
         } else {
-            $responseArray = json_decode($response, true);
             if( is_null($responseArray) ) {
-                $result = array('error' => 1, 'message' => 'Invalid response json format');
-            } elseif( isset($responseArray['errors']) ) {
-                $result = array('error' => 1, 'message' => is_array($responseArray['errors']) ? implode(';', $responseArray['errors']) : $responseArray['errors']);
+                $result = array('error' => 1, 'response' => ['message' => 'Invalid response json format']);
+            } elseif( isset($responseArray['error']) ) {
+                $result = array('error' => 1, 'response' => $responseArray);
             } else {
-                $result = $responseArray;
+                $result = array('response' => $responseArray);
             }
         }
 
         if( isset($result['error']) ) {
-            Log::error('['.date('Y-m-d H:i:s').'] Facebook integration error '.PHP_EOL.'Error: '.$result['message'].PHP_EOL.'Request data: '.json_encode($requestData, JSON_UNESCAPED_UNICODE).PHP_EOL.'Response: '.$response);
+            Log::error('['.date('Y-m-d H:i:s').'] Facebook integration error '.PHP_EOL.'Error: '.$result['message'].PHP_EOL.'Request Url: '.$this->endpoint.'/'.$this->apiVersion.'/'.$url.PHP_EOL.'Request data: '.json_encode($requestData, JSON_UNESCAPED_UNICODE).PHP_EOL.'Response: '.$response);
         }
+
         return $result;
     }
 

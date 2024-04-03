@@ -30,6 +30,7 @@
             @csrf
             @if($item->id)
                 @method('PUT')
+                <input type="hidden" name="active" value="1">
                 <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
             @endif
 

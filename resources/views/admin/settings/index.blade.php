@@ -36,6 +36,19 @@
                                                     @endforeach
                                                 @endif
                                             </select>
+                                        @elseif($row->name == \App\Models\Setting::FACEBOOK_IS_ACTIVE)
+                                            <div class="form-check">
+                                                <input type="radio" id="{{ $row->name.'1' }}" name="{{ $row->name }}" class="form-check-input" value="1" @if(old($row->name, ($row->value ?? 0)) == 1) checked @endif>
+                                                <label class="form-check-label" for="{{ $row->name.'1' }}">
+                                                    Активна
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="radio" id="{{ $row->name.'0' }}" name="{{ $row->name }}" class="form-check-input" value="0" @if(old($row->name, ($row->value ?? 0)) == 0) checked @endif>
+                                                <label class="form-check-label" for="{{ $row->name.'0' }}">
+                                                    Неактивна
+                                                </label>
+                                            </div>
                                         @else
                                             @switch($row->type)
                                                 @case('summernote')
@@ -51,12 +64,39 @@
                                     </div>
                                 </div>
                             @endforeach
+
                             <div class="form-group row">
                                 <div class="col-md-6 col-md-offset-3">
                                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                                 </div>
                             </div>
                         </form>
+                        @if(isset($disabledSettings) && $disabledSettings->count())
+                            @foreach($disabledSettings as $ds)
+                                <div class="row mb-2 @if($loop->first) mt-5 @endif">
+                                    <label class="col-md-4 control-label" for="active">{{ __('custom.settings.'.$ds->name) }}: </label>
+                                    <div class="col-md-8 bg-light rounded border border-secondary" id="{{ $ds->name }}">
+                                        {{ empty($ds->value) ? '---' : $ds->value }}
+                                    </div>
+                                    @if(!empty($ds->custom_value))
+                                        <div class="col-12 main-color">{{ $ds->custom_value }}</div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            @if($section == \App\Models\Setting::FACEBOOK_SECTION)
+                                <div class="row mb-2">
+                                    <div class="text-danger" id="facebook-err"></div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="text-success" id="facebook-success"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <button type="button" class="btn btn-sm btn-success" id="refresh-facebook-tokens">Обнови креденшълите</button>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
                     @else
                         <p>Не са открити записи</p>
                     @endif
@@ -67,5 +107,41 @@
     </section>
 
 @endsection
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('#refresh-facebook-tokens').on('click', function (){
+                if(canAjax){
+                    $('#facebook-err').html('');
+                    $('#facebook-success').html('');
+                    canAjax = false;
+                    $.ajax({
+                        type: 'GET',
+                        url: @json(route('admin.settings.facebook.init')),
+                        success: function (res) {
 
+                            if(typeof res.error != 'undefined'){
+                                $('#facebook-err').html(res.msg);
+                            } else if(typeof res.tokens == 'undefined'){
+                                $('#facebook-err').html('Неуспешен опит за инициализация.');
+                            } else{
+                                console.log(res);
+                                $.each(res.tokens, function(keyName, keyValue) {
+                                    $('#' + keyName).html(keyValue);
+                                    console.log(keyName + ': ' + keyValue);
+                                });
+                                $('#facebook-success').html(res.msg);
+                            }
+                            canAjax = true;
+                        },
+                        error: function () {
+                            $('#facebook-err').html('Неуспешен опит за комуникация');
+                            canAjax = true;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
 

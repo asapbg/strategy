@@ -187,6 +187,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(\App\Http\Controllers\Admin\SettingsController::class)->group(function () {
         Route::get('/settings/{section?}', 'index')->name('settings')->middleware('can:viewAny,App\Models\Settings');
         Route::match(['put'], '/settings', 'store')->name('settings.store');
+        Route::get('/settings/facebook/init', 'initFacebook')->name('settings.facebook.init');
     });
 
     //PRIS

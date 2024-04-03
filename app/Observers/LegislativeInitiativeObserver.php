@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\LegislativeInitiative;
+use App\Models\Setting;
 use App\Models\UserSubscribe;
 use Illuminate\Support\Facades\Log;
 
@@ -18,8 +20,23 @@ class LegislativeInitiativeObserver
      */
     public function created(LegislativeInitiative  $legislativeInitiative)
     {
-            $this->sendEmails($legislativeInitiative, 'created');
-            Log::info('Send subscribe email on creation');
+        //TODO post on facebook
+        $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+            ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+            ->get()->first();
+        if($activeFB->value){
+            $facebookApi = new Facebook();
+            $facebookApi->postOnPage(array(
+                'message' => 'Публикувана е нова Законодателна инициатива: '.$legislativeInitiative->facebookTitle,
+                'link' => route('legislative_initiatives.view', $legislativeInitiative),
+                'published' => true
+            ));
+        }
+        //TODO post on twitter
+
+
+        $this->sendEmails($legislativeInitiative, 'created');
+        Log::info('Send subscribe email on creation');
     }
 
     /**

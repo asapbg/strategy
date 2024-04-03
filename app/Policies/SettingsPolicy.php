@@ -91,4 +91,9 @@ class SettingsPolicy
     {
         return false;
     }
+
+    public function facebookInit(User $user)
+    {
+        return $user->canAny(['manage.*','manage.settings']);
+    }
 }

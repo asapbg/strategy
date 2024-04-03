@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\CustomRole;
+use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\User;
 use App\Models\UserSubscribe;
@@ -21,6 +23,22 @@ class StrategicDocumentObserver
     public function created(StrategicDocument  $strategicDocument)
     {
         if ($strategicDocument->active) {
+            if(!$strategicDocument->parent_document_id) {
+                //TODO post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if($activeFB->value){
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Публикуван е нов Стратегически документ: '.$strategicDocument->title,
+                        'link' => route('strategy-document.view', $strategicDocument->id),
+                        'published' => true
+                    ));
+                }
+                //TODO post on twitter
+            }
+
             $this->sendEmails($strategicDocument, 'created');
 
             Log::info('Send subscribe email on creation');
@@ -41,6 +59,23 @@ class StrategicDocumentObserver
         $dirty = $strategicDocument->getDirty(); //return all changed fields
         //skip some fields in specific cases
         unset($dirty['updated_at']);
+
+        if(!$old_active && $strategicDocument->active && !$strategicDocument->parent_document_id) {
+            //TODO post on facebook
+            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                ->get()->first();
+            if($activeFB->value){
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage(array(
+                    'message' => 'Публикуван е нов Стратегически документ: '.$strategicDocument->title,
+                    'link' => route('strategy-document.view', $strategicDocument->id),
+                    'published' => true
+                ));
+            }
+            //TODO post on twitter
+        }
+
         if($old_active == (boolval($strategicDocument->active))) {
             unset($dirty['active']);
         }

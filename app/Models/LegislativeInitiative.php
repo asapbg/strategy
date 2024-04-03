@@ -46,6 +46,13 @@ class LegislativeInitiative extends ModelActivityExtend
         return $this->name;
     }
 
+    protected function facebookTitle(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => __('custom.change_f') .' '. __('custom.in') .' '.$this->law?->name,
+        );
+    }
+
     /**
      * Value
      */
