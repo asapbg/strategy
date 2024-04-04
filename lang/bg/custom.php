@@ -832,6 +832,7 @@ return [
     'help' => 'Помощна информация',
     'strategic_documents_report_title' => 'Справка "Стратегически документи"',
     'adv_board_report_title' => 'Справка "Консултативни съвети"',
+    'pc_report_title' => 'Справка "Обществени консултации"',
     'ogp_news' => 'Новина|Новини',
     'develop_new_plans' => 'План в разработка',
     'develop_plan_calendar' => 'График за подготовката на плана',
@@ -874,4 +875,5 @@ return [
     'approve'                  => 'Одобри',
     'reject'                  => 'Откажи',
     'notification_email'                  => 'Електронна поща (известия)',
+    'finished'                  => 'Приключила',
 ];

@@ -153,6 +153,14 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
+    protected function periodState(): Attribute
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        return Attribute::make(
+            get: fn () => ($now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now) ? __('custom.active_f') : ( databaseDate($this->open_to) >= $now  ? __('custom.inactive_f') : __('custom.finished')),
+        );
+    }
+
     protected function inPeriodBoolean(): Attribute
     {
         $now = Carbon::now()->format('Y-m-d');
@@ -274,6 +282,15 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
+    public function proposalReport(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->where('doc_type', '=', DocTypesEnum::PC_COMMENTS_REPORT->value)
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
     }

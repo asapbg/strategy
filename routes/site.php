@@ -91,6 +91,10 @@ Route::controller(\App\Http\Controllers\PublicConsultationController::class)->gr
     Route::get('/public-consultations', 'index')->name('public_consultation.index');
     Route::get('/public-consultations/{id}', 'show')->name('public_consultation.view');
     Route::post('/public-consultations/add-comment', 'addComment')->name('public_consultation.comment.add');
+    Route::get('/public-consultations/reports/simple', 'simpleReport')->name('public_consultation.report.simple');
+    Route::get('/public-consultations/reports/field-of-actions', 'fieldОfАctionsReport')->name('public_consultation.report.field_of_actions');
+    Route::get('/public-consultations/reports/field-of-actions-institution', 'fieldОfАctionsInstitutionReport')->name('public_consultation.report.field_of_actions.institution');
+    Route::get('/public-consultations/reports/institutions', 'institutionsReport')->name('public_consultation.report.institutions');
 });
 
 Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {

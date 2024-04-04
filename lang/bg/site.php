@@ -130,6 +130,7 @@ return [
     'strategic_document.all_documents_report' => 'Справки',
     'strategic_document.contacts.title' => 'Контакти на служители от дирекция „Стратегически документи"',
     'adv_board_all' => 'Всички съвети',
+    'pc_all' => 'Всички консултации',
     'do_not_have_subscriptions' => 'Все още нямате абонаменти',
     'all_legislative_initiative' => 'Всички инициативи',
     'new_legislative_initiative' => 'Нова Законодателна инициатива',
