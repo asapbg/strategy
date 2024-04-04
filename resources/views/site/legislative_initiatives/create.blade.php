@@ -5,8 +5,8 @@
         @include('site.legislative_initiatives.side_menu')
 
         <div class="col-lg-10 py-5 d-flex justify-content-center right-side-content">
-            <div class="col-md-12 col-lg-8 custom-card p-3 col-sm-12">
-                <form action="{{ route('legislative_initiatives.store') }}" method="POST">
+            <div class="col-md-12 col-lg-8 col-sm-12">
+                <form  class="custom-card p-3" action="{{ route('legislative_initiatives.store') }}" method="POST">
                     @csrf
 
                     <div class="row">

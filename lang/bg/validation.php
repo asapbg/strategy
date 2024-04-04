@@ -760,5 +760,6 @@ return [
         'a_file_bg'           => 'Файл (BG)',
         'a_file_en'           => 'Файл (EN)',
         'notification_email'           => 'Електронна поща (известия)',
+        'law_id'           => 'Закон',
     ],
 ];
