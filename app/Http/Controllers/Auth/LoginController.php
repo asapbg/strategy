@@ -162,8 +162,9 @@ class LoginController extends Controller
             \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
 
             \Auth::logoutOtherDevices(request('password'));
-            $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin' : $this->redirectPath();
-            return redirect()->intended($route);
+            $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin.home' : 'site.home';
+//            return redirect()->intended($route);
+            return redirect()->route($route);
 
         } else {
 

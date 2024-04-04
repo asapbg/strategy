@@ -332,7 +332,7 @@
 
                         @if($item->moderators->count())
                             @foreach($item->moderators as $m)
-                                <div class="col-lg-6 mb-4 ">
+                                <div class="col-lg-6 mb-4 @if($loop->first) mt-4 @endif">
                                     <div class="member d-flex align-items-center p-3 custom-shadow br-08">
                                         <div class="member-info">
                                             <p class="team-member-name fs-3 main-color mb-0">
