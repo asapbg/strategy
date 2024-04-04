@@ -16,6 +16,10 @@
                                 </a>
                             </li>
                             <li class="mb-2">
+                                <a href="{{ route('advisory-boards.reports') }}" class="@if(request()->route()->getName() == 'advisory-boards.reports') active-item-left text-white p-1 @else link-dark @endif text-decoration-none"
+                                >{{ __('site.strategic_document.all_documents_report') }}</a>
+                            </li>
+                            <li class="mb-2">
                                 <a href="{{ route('advisory-boards.info') }}" class="@if(str_contains(url()->current(),'information')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
                                     {{ __('site.base_info') }}
                                 </a>

@@ -12,9 +12,19 @@ class Status extends QueryFilter implements FilterContract{
 
     public function handle($value): void
     {
-        if( $value > -1 ){
-            $this->query->where('advisory_boards.active', $value);
+        if(!empty($value)){
+            if(is_string($value) && $value == 'inactive') {
+                $value = 0;
+            }
+            if(is_string($value) && $value == 'active') {
+                $value = 1;
+            }
+
+            if( $value > -1 ){
+                $this->query->where('advisory_boards.active', (bool)$value);
+            }
         }
+
     }
 }
 

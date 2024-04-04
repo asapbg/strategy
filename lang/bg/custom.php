@@ -831,6 +831,7 @@ return [
     'pris_categories' => 'Вид на акт на МС|Видове на актове на МС',
     'help' => 'Помощна информация',
     'strategic_documents_report_title' => 'Справка "Стратегически документи"',
+    'adv_board_report_title' => 'Справка "Консултативни съвети"',
     'ogp_news' => 'Новина|Новини',
     'develop_new_plans' => 'План в разработка',
     'develop_plan_calendar' => 'График за подготовката на плана',
