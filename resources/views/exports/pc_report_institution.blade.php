@@ -25,32 +25,22 @@
         <div>
 @endif
             <table style="border-collapse:collapse;">
-                @php($colspan = 9)
-                <tr>
-                    <td colspan="{{ $colspan }}" style="background: #d9d7d7; font-weight: bold;"><b>{{ mb_strtoupper($data['title']) }}</b></td>
-                </tr>
+                <tr><th colspan="6">{{ $data['title'] }}</th></tr>
                 <tr>
                     <th>{{ __('custom.name') }}</th>
-                    <th>{{ trans_choice('custom.field_of_actions', 1) }}</th>
-                    <th>{{ __('custom.status') }}</th>
-                    <th>{{ trans_choice('custom.institution', 1) }}</th>
-                    <th>{{ trans_choice('custom.act_type', 1) }}</th>
-                    <th>Срок (дни)</th>
-                    <th>Мотиви за кратък срок</th>
-                    <td>Липсващи документи</td>
-                    <th>{{ trans_choice('custom.comment', 2) }}</th>
-                    <th>Справка/съобщение</th>
+                    <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
+                    <th>По-кратки от 30 дни</th>
+                    <th>Без мотив за кратък срок</th>
+                    <th>Липса на документ</th>
+                    <th>Без справка (мнения)</th>
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
                         <tr>
-                            <td>@if(isset($isPdf) && $isPdf)<a href="{{ route('public_consultation.view', $row->id) }}" target="_blank">{{ $row->title }}</a>@else {{ $row->title }}@endif</td>
-                            <td>{{ $row->fieldOfAction?->name }}</td>
-                            <td>{{ $row->inPeriod }}</td>
-                            <td>{{ $row->importerInstitution?->name }}</td>
-                            <td>{{ $row->actType?->name }}</td>
-                            <td>{{ $row->daysCnt }}</td>
-                            <td>{!! $row->short_term_reason !!}</td>
+                            <td class="custom-left-border">{{ $row->name }}</td>
+                            <td>{{ $row->pc_cnt }}</td>
+                            <td>{{ $row->less_days_cnt }}</td>
+                            <td>{{ $row->no_less_days_reason_cnt }}</td>
                             <td>
                                 @if(isset($data['missingFiles']) && sizeof($data['missingFiles']) && isset($data['missingFiles'][$row->id]) && $data['missingFiles'][$row->id] > 0)
                                     {{ __('custom.yes') }}
@@ -58,9 +48,22 @@
                                     {{ __('custom.no') }}
                                 @endif
                             </td>
-                            <td>{{ $row->comments->count() }}</td>
-                            <td>@if($row->proposalReport->count()){{ 'Да' }}@else{{ 'Не' }}@endif</td>
+                            <td>{{ $row->has_report }}</td>
                         </tr>
+                        @if(isset($data['consultationByType']) && sizeof($data['consultationByType']) && isset($data['consultationByType'][$row->id]))
+                            @php($byActType = json_decode($data['consultationByType'][$row->id]->act_info, true))
+                            @if($byActType)
+                                <tr>
+                                    <th colspan="6">{{ trans_choice('custom.act_type', 1) }}</th>
+                                </tr>
+                                @foreach($byActType as $act)
+                                    <tr>
+                                        <td>{{ $act['act_name'] }}</td>
+                                        <td colspan="5">{{ $act['act_cnt'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        @endif
                     @endforeach
                 @endif
             </table>

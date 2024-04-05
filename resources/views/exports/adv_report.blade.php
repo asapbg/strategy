@@ -27,20 +27,20 @@
             @php($colspan = $data['searchMeetings'] ? 9 : 8)
             <table style="border-collapse:collapse;">
                 <tr>
-                    <td colspan="{{ $colspan }}" style="background: #d9d7d7; font-weight: bold;"><b>{{ mb_strtoupper($data['title']) }}</b></td>
+                    <th colspan="{{ $colspan }}" style="background: #d9d7d7; font-weight: bold;"><b>{{ mb_strtoupper($data['title']) }}</b></th>
                 </tr>
                 <tr>
-                    <td>{{ __('custom.name') }}</td>
-                    <td>{{ trans_choice('custom.field_of_actions', 1) }}</td>
-                    <td>{{ __('custom.type_of_governing') }}</td>
-                    <td>{{ __('validation.attributes.act_of_creation') }}</td>
-                    <td>{{ __('validation.attributes.advisory_chairman_type_id') }}</td>
-                    <td>Представител на НПО</td>
-                    <td>Мин. бр. заседания на година</td>
+                    <th>{{ __('custom.name') }}</th>
+                    <th>{{ trans_choice('custom.field_of_actions', 1) }}</th>
+                    <th>{{ __('custom.type_of_governing') }}</th>
+                    <th>{{ __('validation.attributes.act_of_creation') }}</th>
+                    <th>{{ __('validation.attributes.advisory_chairman_type_id') }}</th>
+                    <th>Представител на НПО</th>
+                    <th>Мин. бр. заседания на година</th>
                     @if($data['searchMeetings'])
-                        <td>Бр. заседания в периода</td>
+                        <th>Бр. заседания в периода</th>
                     @endif
-                    <td>{{ __('custom.status') }}</td>
+                    <th>{{ __('custom.status') }}</th>
 
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())

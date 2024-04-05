@@ -26,14 +26,14 @@
 @endif
             <table style="border-collapse:collapse;">
                 <tr>
-                    <td colspan="5" style="background: #d9d7d7; font-weight: bold; text-align: center;"><b>{{ mb_strtoupper($data['title']) }}</b></td>
+                    <th colspan="5" style="background: #d9d7d7; font-weight: bold; text-align: center;"><b>{{ mb_strtoupper($data['title']) }}</b></th>
                 </tr>
                 <tr>
-                    <td><b>{{ __('custom.title') }}</b></td>
-                    <td><b>{{ __('site.strategic_document.level') }}</b></td>
-                    <td><b>{{ trans_choice('custom.field_of_actions', 1) }}</b></td>
-                    <td><b>{{ trans_choice('custom.authority_accepting_strategic', 1) }}</b></td>
-                    <td><b>{{ __('custom.validity') }}</b></td>
+                    <th><b>{{ __('custom.title') }}</b></th>
+                    <th><b>{{ __('site.strategic_document.level') }}</b></th>
+                    <th><b>{{ trans_choice('custom.field_of_actions', 1) }}</b></th>
+                    <th><b>{{ trans_choice('custom.authority_accepting_strategic', 1) }}</b></th>
+                    <th><b>{{ __('custom.validity') }}</b></th>
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)

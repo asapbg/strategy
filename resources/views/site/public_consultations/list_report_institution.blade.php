@@ -24,27 +24,20 @@
                 <thead>
                     <tr>
                         <th>{{ __('custom.name') }}</th>
-                        <th>{{ trans_choice('custom.field_of_actions', 1) }}</th>
-                        <th>{{ __('custom.status') }}</th>
-                        <th>{{ trans_choice('custom.institution', 1) }}</th>
-                        <th>{{ trans_choice('custom.act_type', 1) }}</th>
-                        <th>Срок (дни)</th>
-                        <th>Мотиви за кратък срок</th>
-                        <th>Липсващи документи</th>
-                        <th>{{ trans_choice('custom.comment', 2) }}</th>
-                        <th>Справка/съобщение</th>
+                        <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
+                        <th>По-кратки от 30 дни</th>
+                        <th>Без мотив за кратък срок</th>
+                        <th>Липса на документ</th>
+                        <th>Без справка (мнения)</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach($items as $item)
                     <tr>
-                        <td><a href="{{ route('public_consultation.view', $item->id) }}" target="_blank">{{ $item->title }}</a></td>
-                        <td>{{ $item->fieldOfAction?->name }}</td>
-                        <td>{{ $item->inPeriod }}</td>
-                        <td>{{ $item->importerInstitution?->name }}</td>
-                        <td>{{ $item->actType?->name }}</td>
-                        <td>{{ $item->daysCnt }}</td>
-                        <td>{!! $item->short_term_reason !!}</td>
+                        <td class="custom-left-border">{{ $item->name }}</td>
+                        <td>{{ $item->pc_cnt }}</td>
+                        <td>{{ $item->less_days_cnt }}</td>
+                        <td>{{ $item->no_less_days_reason_cnt }}</td>
                         <td>
                             @if(isset($missingFiles) && sizeof($missingFiles) && isset($missingFiles[$item->id]) && $missingFiles[$item->id] > 0)
                                 {{ __('custom.yes') }}
@@ -52,9 +45,22 @@
                                 {{ __('custom.no') }}
                             @endif
                         </td>
-                        <td>{{ $item->comments->count() }}</td>
-                        <td>@if($item->proposalReport->count()){{ 'Да' }}@else{{ 'Не' }}@endif</td>
+                        <td>{{ $item->has_report }}</td>
                     </tr>
+                    @if(isset($consultationsByActType) && sizeof($consultationsByActType) && isset($consultationsByActType[$item->id]))
+                        @php($byActType = json_decode($consultationsByActType[$item->id]->act_info, true))
+                        @if($byActType)
+                            <tr>
+                                <th colspan="6">{{ trans_choice('custom.act_type', 1) }}</th>
+                            </tr>
+                            @foreach($byActType as $act)
+                                <tr>
+                                    <td>{{ $act['act_name'] }}</td>
+                                    <td colspan="5">{{ $act['act_cnt'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    @endif
                 @endforeach
                 </tbody>
             </table>

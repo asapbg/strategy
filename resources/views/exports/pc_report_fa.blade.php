@@ -27,11 +27,11 @@
             <table style="border-collapse:collapse;">
                 @php($colspan = 2)
                 <tr>
-                    <td colspan="{{ $colspan }}" style="background: #d9d7d7; font-weight: bold;"><b>{{ mb_strtoupper($data['title']) }}</b></td>
+                    <th colspan="{{ $colspan }}" style="background: #d9d7d7; font-weight: bold;"><b>{{ mb_strtoupper($data['title']) }}</b></th>
                 </tr>
                 <tr>
-                    <td>{{ __('custom.name') }}</td>
-                    <td>{{ trans_choice('custom.public_consultations', 2) }}</td>
+                    <th>{{ __('custom.name') }}</th>
+                    <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)

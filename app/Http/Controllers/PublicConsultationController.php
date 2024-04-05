@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Exports\PublicConsultationFaReportExport;
+use App\Exports\PublicConsultationInstitutionReportExport;
 use App\Exports\PublicConsultationReportExport;
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\FieldOfAction;
+use App\Models\File;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -134,11 +137,37 @@ class PublicConsultationController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        //Липса на документ
+        $missingFiles = array();
+        $qMissingFiles = DB::select('
+            select
+                    public_consultation.id,
+                    case when (
+                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and count(files.id) < 9)
+                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 6)
+                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 3)
+                    ) then 1 else 0 end as missing_files
+                from public_consultation
+                left join files on files.id_object = public_consultation.id
+                    and files.code_object = 6
+                    and files.deleted_at is null
+                    and (
+                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_REPORT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_IMPACT_EVALUATION->value.','.DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                    )
+                where public_consultation.old_id is null
+                group by public_consultation.id
+        ');
+        if(sizeof($qMissingFiles)){
+            $missingFiles = array_combine(array_column($qMissingFiles, 'id'), array_column($qMissingFiles, 'missing_files'));
+        }
         $q = PublicConsultation::select('public_consultation.*')
             ->ActivePublic()
             ->with(['translation', 'comments', 'fieldOfAction', 'fieldOfAction.translations',
                 'actType', 'actType.translations',
                 'importerInstitution', 'importerInstitution.translations', 'comments', 'proposalReport'])
+            ->join('institution', 'institution.id', '=', 'public_consultation.importer_institution_id')
             ->join('public_consultation_translations', function ($j){
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
@@ -153,14 +182,15 @@ class PublicConsultationController extends Controller
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
+            ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd);
-
         if($request->input('export_excel') || $request->input('export_pdf')){
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.pc_report_title'),
                 'rows' => $items,
+                'missingFiles' => $missingFiles
             ];
 
             $fileName = 'pc_report_'.Carbon::now()->format('Y_m_d_H_i_s');
@@ -176,12 +206,12 @@ class PublicConsultationController extends Controller
         }
 
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report', compact('filter','items', 'rf'));
+            return view('site.public_consultations.list_report', compact('filter','items', 'rf', 'missingFiles'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'missingFiles'));
     }
 
     private function filtersReport($request){
@@ -299,7 +329,7 @@ class PublicConsultationController extends Controller
         if($request->input('export_excel') || $request->input('export_pdf')){
             $items = $q->get();
             $exportData = [
-                'title' => __('custom.pc_report_title'),
+                'title' => __('custom.pc_report_title') .' - '.trans_choice('custom.field_of_actions', 2),
                 'rows' => $items,
             ];
 
@@ -390,14 +420,13 @@ class PublicConsultationController extends Controller
             ->whereNull('field_of_actions.deleted_at')
             ->whereNull('public_consultation.deleted_at')
             ->where('public_consultation.active', '=', 1)
-            ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'))
             ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
             ->groupBy('institution_translations.id');
 
         if($request->input('export_excel') || $request->input('export_pdf')){
             $items = $q->get();
             $exportData = [
-                'title' => __('custom.pc_report_title'),
+                'title' => __('custom.pc_report_title') .' - '.trans_choice('custom.field_of_actions', 2).' ('.trans_choice('custom.institutions', 2).')',
                 'rows' => $items,
             ];
 
@@ -453,7 +482,156 @@ class PublicConsultationController extends Controller
 
     public function institutionsReport(Request $request)
     {
-        echo 'sdff';
+        $rf = $request->all();
+        $requestFilter = $request->all();
+        $filter = $this->filtersInstitutionReport($request, $rf);
+        //Sorter
+        //$sorter = $this->sortersReport();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'date';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
+
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
+
+        $institution = isset($requestFilter['institution']) && !empty($requestFilter['institution']) ? $requestFilter['institution'] : null;
+
+        //Колко са консултациите по вид на обекта на консултации групирано по Институции
+        $consultationsByActType = array();
+        $qConsultationsByActType = DB::select('
+            select
+                A.institution_id,
+                jsonb_agg(jsonb_build_object(\'act_name\', A.act_name, \'act_cnt\', A.act_cnt)) as act_info
+            from (
+                select
+                    public_consultation.importer_institution_id as institution_id,
+                    act_type.id as act_id,
+                    count(act_type.id) as act_cnt,
+                    max(act_type_translations.name) as act_name
+                from public_consultation
+                join act_type on act_type.id = public_consultation.act_type_id
+                join act_type_translations on act_type_translations.act_type_id = act_type.id and act_type_translations.locale = \''.app()->getLocale().'\'
+                group by public_consultation.importer_institution_id, act_type.id
+            ) A
+            group by A.institution_id
+        ');
+        if(sizeof($qConsultationsByActType)){
+            $consultationsByActType = array_combine(array_column($qConsultationsByActType, 'institution_id'), $qConsultationsByActType);
+        }
+        //Липса на документ
+        $missingFiles = array();
+        $qMissingFiles = DB::select('
+            select
+                A.institution_id,
+                sum(A.missing_files) as missing_files
+            from (
+                select
+                    public_consultation.id,
+                    public_consultation.importer_institution_id as institution_id,
+                    -- files.id
+                    case when (
+                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and count(files.id) < 9)
+                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 6)
+                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 3)
+                    ) then 1 else 0 end as missing_files
+                from public_consultation
+                left join files on files.id_object = public_consultation.id
+                    and files.code_object = 6
+                    and files.deleted_at is null
+                    and (
+                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_REPORT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_IMPACT_EVALUATION->value.','.DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
+                    )
+                where public_consultation.old_id is null
+                group by public_consultation.id
+            ) A
+            group by A.institution_id
+        ');
+        if(sizeof($qMissingFiles)){
+            $missingFiles = array_combine(array_column($qMissingFiles, 'institution_id'), array_column($qMissingFiles, 'missing_files'));
+        }
+
+        $q = DB::table('institution')
+            ->select([
+                'institution.id',
+                DB::raw('max(institution_translations.name) as name'),
+                DB::raw('count(distinct(public_consultation.id)) as pc_cnt'),
+                DB::raw('sum(case when (open_to - open_from) < 30 then 1 else 0 end) as less_days_cnt'),
+                DB::raw('sum(case when (open_to - open_from) < 30 and (public_consultation_translations.short_term_reason is null or public_consultation_translations.short_term_reason = \'\') then 1 else 0 end) as no_less_days_reason_cnt'),
+                DB::raw('count(distinct(files.id)) as has_report')
+            ])
+            ->join('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+            ->join('public_consultation', 'institution.id', '=', 'public_consultation.importer_institution_id')
+            ->join('public_consultation_translations', function ($j){
+                $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                    ->where('public_consultation_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('files', function ($q){
+                $q->on('files.id_object', '=', 'public_consultation.id')
+                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->where('files.doc_type', '=', DocTypesEnum::PC_COMMENTS_REPORT->value)
+                    ->whereNull('files.deleted_at');
+            })
+            ->when($institution, function($q) use($institution){
+                $q->where('public_consultation.importer_institution_id', '=', $institution);
+            })
+            ->whereNull('public_consultation.deleted_at')
+            ->where('public_consultation.active', '=', 1)
+            ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
+            ->groupBy('institution.id');
+
+        if($request->input('export_excel') || $request->input('export_pdf')){
+            $items = $q->get();
+            $exportData = [
+                'title' => __('custom.pc_report_title').' ('.trans_choice('custom.institutions', 2).')',
+                'rows' => $items,
+                'consultationByType' => $consultationsByActType,
+                'missingFiles' => $missingFiles
+            ];
+
+            $fileName = 'pc_report_'.Carbon::now()->format('Y_m_d_H_i_s');
+            if($request->input('export_pdf')){
+                ini_set('max_execution_time', 60);
+                $pdf = PDF::loadView('exports.pc_report_institution', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
+                return $pdf->download($fileName.'.pdf');
+            } else{
+                return Excel::download(new PublicConsultationInstitutionReportExport($exportData), $fileName.'.xlsx');
+            }
+        } else{
+            $items = $q->paginate($paginate);
+        }
+        if( $request->ajax() ) {
+            return view('site.public_consultations.list_report_institution', compact('filter','items', 'rf', 'consultationsByActType', 'missingFiles'));
+        }
+        $pageTitle = __('site.menu.public_consultation');
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles'));
+    }
+
+    public function filtersInstitutionReport($request){
+        return array(
+            'institution' => array(
+                'type' => 'subjects',
+                'label' => __('site.public_consultation.importer'),
+                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('custom.all')),
+                'value' => request()->input('institution'),
+                'default' => '',
+                'col' => 'col-md-4'
+            ),
+            'paginate' => array(
+                'type' => 'select',
+                'options' => paginationSelect(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.filter_pagination'),
+                'value' => $request->input('paginate') ?? config('app.default_paginate'),
+                'col' => 'col-md-s4'
+            )
+        );
     }
 
     private function sorters()

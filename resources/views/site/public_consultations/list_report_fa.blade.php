@@ -23,8 +23,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <td>{{ __('custom.name') }}</td>
-                        <td>{{ trans_choice('custom.public_consultations', 2) }}</td>
+                        <th>{{ __('custom.name') }}</th>
+                        <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
                     </tr>
                 </thead>
                 <tbody>
