@@ -156,6 +156,42 @@ class PageSeeder extends Seeder
                 'content_en' => 'Content in Information',
                 'is_system' => 1
             ],
+            [
+                'slug' => 'accessibility-policy',
+                'system_name' => Page::ACCESS_POLICY,
+                'name_bg' => 'Политика за достъпност',
+                'name_en' => 'Accessibility Policy',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1,
+            ],
+            [
+                'slug' => 'privacy-policy',
+                'system_name' => Page::PRIVACY_POLICY,
+                'name_bg' => 'Политика за поверителност',
+                'name_en' => 'Privacy Policy',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1,
+            ],
+            [
+                'slug' => 'terms-of-use',
+                'system_name' => Page::TERMS,
+                'name_bg' => 'Условия за ползване',
+                'name_en' => 'Terms of Use',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1,
+            ],
+            [
+                'slug' => 'cookies',
+                'system_name' => Page::COOKIES,
+                'name_bg' => 'Бисквитки',
+                'name_en' => 'Cookies',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1,
+            ],
         ];
 
         foreach ($data as $page) {
@@ -167,6 +203,7 @@ class PageSeeder extends Seeder
                         'slug' => $page['slug'],
                         'system_name' => $page['system_name'] ?? null,
                         'is_system' => $page['is_system'] ?? 0,
+                        'in_footer' => $page['in_footer'] ?? 0,
                         'module_enum' => $page['module_enum'] ?? null
                     ]);
 

@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
+use App\Http\Requests\SendMessageRequest;
+use App\Mail\ContactFormMsg;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\LegislativeInitiative;
 use App\Models\Publication;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use App\Enums\LegislativeInitiativeStatusesEnum;
 
@@ -422,5 +427,76 @@ class HomeController extends Controller
             ['name' => $pageTitle, 'url' => '']
         ));
         return $this->view('site.search_results', compact('items', 'pageTitle', 'search', 'totalResults', 'page', 'defaultPaginate'));
+    }
+
+    public function contacts(Request $request, $section = '')
+    {
+        $title = empty($section) ? __('site.contact_with_administrator') : __('site.contact_with_'.str_replace('-', '_', $section));
+        $form = false;
+        switch ($section){
+            case 'public-consultations':
+                $roles = [CustomRole::MODERATOR_PUBLIC_CONSULTATION];
+                break;
+            case 'advisory-boards':
+                $roles = [CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD];
+                break;
+            case 'strategy-documents':
+                $roles = [CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT];
+                break;
+            case 'ogp':
+                $roles = [CustomRole::MODERATOR_PARTNERSHIP];
+                break;
+            case 'pris':
+                $roles = [CustomRole::MODERATOR_PRIS];
+                break;
+            default:
+                $form = true;
+                $roles = [CustomRole::ADMIN_USER_ROLE];
+        }
+
+        $users = User::role($roles)->orderBy('first_name')->get();
+
+        $pageTitle = trans_choice('custom.contacts', 2);
+        return $this->view('site.contacts', compact('pageTitle', 'title', 'form', 'users', 'roles', 'section'));
+    }
+
+    public function sendMessage(SendMessageRequest $request)
+    {
+        $validated = $request->validated();
+
+        if(config('app.env') != 'production'){
+            $admins = [config('mail.local_to_mail')];
+        } else{
+            $admins = User::role([CustomRole::ADMIN_USER_ROLE])->get()->pluck('email')->toArray();
+        }
+
+        if(!sizeof($admins)){
+            return back()->withInput()->with('danger', __('site.no_admins_for_contact'));
+        }
+
+        Mail::to($admins)->send(new ContactFormMsg($validated));
+
+        return back()->with('success', __('site.contacts.success_send_msg'));
+
+    }
+
+    public function otherLinks(Request $request)
+    {
+        $title = __('site.footer.other_links');
+        $links = array(
+            ['url' => 'https://iisda.government.bg/', 'name' => __('site.footer.other_links.1'), 'logo' => 'logo-gerb.jpg'],
+            ['url' => 'https://jobs.government.bg/PJobs/', 'name' => __('site.footer.other_links.2'), 'logo' => 'logo-jobs-gov.png'],
+            ['url' => 'https://pitay.government.bg/', 'name' => __('site.footer.other_links.3'), 'logo' => 'logo-gerb.jpg'],
+            ['url' => 'https://data.egov.bg/', 'name' => __('site.footer.other_links.4'), 'logo' => 'opendata-logo.svg'],
+            ['url' => 'https://www.parliament.bg/bg/bills', 'name' => __('site.footer.other_links.5'), 'logo' => 'logo-ns.png'],
+            ['url' => 'https://www.parliament.bg/bg/ncpi', 'name' => __('site.footer.other_links.6'), 'logo' => 'logo-ns.png'],
+            ['url' => 'https://dv.parliament.bg/DVWeb/index.faces', 'name' => __('site.footer.other_links.7'), 'logo' => 'logo-gerb.jpg'],
+        );
+
+        $pageTitle = __('site.footer.other_links');
+        $this->setBreadcrumbsFull(array(
+            ['name' => __('site.footer.other_links'), 'url' => '']
+        ));
+        return $this->view('site.other_links', compact('pageTitle', 'title', 'links'));
     }
 }

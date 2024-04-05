@@ -155,6 +155,27 @@ class ViewServiceProvider extends ServiceProvider
                 Cache::put($footerPagesCacheKey, $footerPages, 3600);
             }
             $view->with('footerPages', $footerPages);
+
+            //Terms pages
+            $footerTermsPagesCacheKey = Page::CACHE_FOOTER_TERMS_PAGES;
+            $footerTermsPages = Cache::get($footerTermsPagesCacheKey);
+            if( is_null($footerTermsPages) ) {
+                $footerTermsPages = [];
+                $termsPageNames = [Page::ACCESS_POLICY, Page::PRIVACY_POLICY, Page::TERMS, Page::COOKIES];
+                $pages = Page::with(['translations'])->isActive()->whereIn('system_name', $termsPageNames)->get();
+                if($pages->count()){
+                    foreach ($termsPageNames as $systemName){
+                        foreach ($pages as $p){
+                            if($systemName == $p->system_name){
+                                $footerTermsPages[] = ['name' => $p->name, 'url' => route('page.view', ['slug' => $p->slug])];
+                            }
+                        }
+                    }
+                }
+                Cache::put($footerTermsPagesCacheKey, $footerTermsPages, 3600);
+            }
+            $view->with('footerTermsPages', $footerTermsPages);
+
         });
     }
 }

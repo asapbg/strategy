@@ -1,13 +1,13 @@
 <footer>
     <div class="container">
-        @if(isset($footerPages) && sizeof($footerPages))
+        @if(isset($footerTermsPages) && sizeof($footerTermsPages))
             <div class="row mb-3">
                 <div class="col-md-4 mb-1">
-                    <h3 class="text-light fs-4 fw-400 w-100">{{ __('site.footer.extra_links') }}</h3>
+                    <h3 class="text-light fs-4 fw-400 w-100">{{ __('site.footer.section.terms') }}</h3>
                 </div>
                 <div class="col-md-8 mb-1">
                     <div class="row">
-                        @foreach($footerPages as $page)
+                        @foreach($footerTermsPages as $page)
                             <div class="col-md-6 mb-1">
                                 <a class="p-0 text-light text-decoration-none" href="{{ $page['url'] }}" title="{{ $page['name'] }}">{{ $page['name'] }}</a>
                             </div>
@@ -16,13 +16,34 @@
                 </div>
             </div>
             <div class="d-flex flex-column flex-sm-row justify-content-center pb-4 border-top"></div>
-
         @endif
+
+        <div class="row mb-3">
+            <div class="col-md-4 mb-1">
+                <h3 class="text-light fs-4 fw-400 w-100">{{ __('site.footer.extra_links') }}</h3>
+            </div>
+            <div class="col-md-8 mb-1">
+                <div class="row">
+                    @if(isset($footerPages) && sizeof($footerPages))
+                        @foreach($footerPages as $page)
+                            <div class="col-md-6 mb-1">
+                                <a class="p-0 text-light text-decoration-none" href="{{ $page['url'] }}" title="{{ $page['name'] }}">{{ $page['name'] }}</a>
+                            </div>
+                        @endforeach
+                    @endif
+                        <div class="col-md-6 mb-1">
+                            <a class="p-0 text-light text-decoration-none" href="{{ route('other_links') }}" title="{{ __('site.footer.other_links') }}">{{ __('site.footer.other_links') }}</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-sm-row justify-content-center pb-4 border-top"></div>
+
         <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
                 <h3 class="text-light fs-4 fw-400">{{ trans_choice('custom.contacts', 2) }}</h3>
                 <ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Петя Цанкова</a></li>
+                    <li class="nav-item mb-2"><a class="p-0 text-light text-decoration-none" href="{{ route('contacts') }}" title="{{ __('site.footer.section.contact.link') }}">{{ __('site.footer.section.contact.link') }}</a></li>
                     <li class="nav-item mb-2"><a href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" class="p-0 text-light">» @if(isset($contactMail) &&
                             !empty($contactMail)){{ $contactMail }}@else{{ '---' }}@endif</a></li>
                 </ul>
@@ -45,7 +66,7 @@
 
 
         <div class="d-flex flex-column flex-sm-row justify-content-center pt-4 border-top">
-            <p class="m-0 text-light text-center">© {{ date('Y') }} {{ __('site.footer.copyright') }}</p>
+            <p class="m-0 text-light text-center">{{ __('site.footer.copyright', ['year' => date('Y')]) }}</p>
         </div>
     </div>
 </footer>

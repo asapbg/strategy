@@ -14,6 +14,9 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/get-consultations', 'getConsultations')->name('get-consultations');
     Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
     Route::get('/search', 'search')->name('search');
+    Route::get('/contacts/{section?}', 'contacts')->name('contacts');
+    Route::post('/contacts', 'sendMessage')->name('contacts.message');
+    Route::get('/other', 'otherLinks')->name('other_links');
 });
 
 Route::controller(\App\Http\Controllers\PublicProfilesController::class)->group(function () {

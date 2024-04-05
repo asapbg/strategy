@@ -256,7 +256,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/roles/create', 'create')->name('roles.create');
         Route::post('/roles/store', 'store')->name('roles.store');
         Route::get('/roles/{role}/edit', 'edit')->name('roles.edit');
-        Route::get('/roles/{role}/update', 'update')->name('roles.update');
+        Route::post('/roles/{role}/update', 'update')->name('roles.update');
         Route::get('/roles/{role}/delete', 'destroy')->name('roles.delete');
     });
 

@@ -7,8 +7,18 @@
     --primary_bg_color: #21659e;
     --secondary_color: #6c757d;
     --warning_color: #ffc107;
+    --cookie-bkg-color: #fff3d3;
 }
 
+/*Cookies*/
+.js-cookie-consent{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--cookie-bkg-color);
+}
+
+/*Progress bar*/
 .main-progress-bar {
     background-color: var(--primary_bg_color);
 }

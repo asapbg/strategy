@@ -121,7 +121,7 @@
         <div class="sk-cube sk-cube9"></div>
     </div>
 </div>
-
+@include('cookie-consent::index')
 <!-- SCRIPTS -->
 <script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>
 @stack('scripts')
