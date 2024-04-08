@@ -32,7 +32,7 @@
                             <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>
                         <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
                         <input type="hidden" id="subscribe_model_id" value="{{ $strategicDocument->id }}">
-                        @includeIf('site.partial.subscribe-buttons')
+                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
 {{--                        <button class="btn rss-sub main-color">--}}
 {{--                            <i class="fas fa-square-rss text-warning me-2"></i>{{ trans_choice('custom.rss_subscribe', 1) }}</button>--}}
 {{--                        <button class="btn rss-sub main-color">--}}

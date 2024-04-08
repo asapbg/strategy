@@ -14,8 +14,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use LaravelIdea\Helper\App\Models\_IH_StrategicDocument_C;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class StrategicDocument extends ModelActivityExtend implements TranslatableContract
+class StrategicDocument extends ModelActivityExtend implements TranslatableContract, Feedable
 {
     use FilterSort, Translatable;
 
@@ -35,6 +37,37 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         'strategic_act_type_id', 'strategic_act_number', 'strategic_act_link', 'accept_act_institution_type_id',
         'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat',
         'document_date_accepted', 'document_date_expiring', 'parent_document_id', 'ekatte_area_id', 'ekatte_municipality_id'];
+
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->title,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('strategy-document.view', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->Active()
+            ->whereNull('parent_document_id')
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+//            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query

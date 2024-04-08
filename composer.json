@@ -28,6 +28,7 @@
         "sentry/sentry-laravel": "^2.11",
         "spatie/laravel-activitylog": "^4.4",
         "spatie/laravel-cookie-consent": "^3.2",
+        "spatie/laravel-feed": "*",
         "spatie/laravel-permission": "^5.5",
         "spatie/pdf-to-text": "^1.52"
     },

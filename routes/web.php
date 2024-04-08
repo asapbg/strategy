@@ -16,6 +16,8 @@ Route::get('/', function(){
     return Redirect::to(app()->getLocale());
 });
 
+Route::feeds();
+
 Route::prefix(app()->getLocale())->group(function (){
     Auth::routes(['verify' => true]);
     require_once('site.php');
