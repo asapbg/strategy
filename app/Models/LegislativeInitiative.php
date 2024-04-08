@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
 /**
  * @property int        $id
@@ -20,7 +22,7 @@ use Illuminate\Support\Collection;
  *
  * @method static find(mixed $legislative_initiative_id)
  */
-class LegislativeInitiative extends ModelActivityExtend
+class LegislativeInitiative extends ModelActivityExtend implements Feedable
 {
 
     use FilterSort;
@@ -37,6 +39,34 @@ class LegislativeInitiative extends ModelActivityExtend
     protected string $logName = "legislative_initiative";
 
     protected $fillable = ['author_id', 'law_paragraph', 'law_text', 'description', 'law_id', 'cap', 'ready_to_send', 'active_support', 'send_at', 'end_support_at'];
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->facebookTitle,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('legislative_initiatives.view', ['item' => $this->id]),
+            'authorName' => $this->user?->fullName(),
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+//            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
+
 
     /**
      * Get the model name

@@ -60,6 +60,7 @@ class StrategicDocumentsController extends Controller
      */
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.sd.url');
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         //Filter
@@ -101,7 +102,7 @@ class StrategicDocumentsController extends Controller
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
 
         return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle',
-            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss'));
+            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     public function tree(Request $request)

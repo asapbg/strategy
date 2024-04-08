@@ -48,6 +48,7 @@ class LegislativeInitiativeController extends AdminController
      */
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.legislative_initiative.url');
         $institutions = Institution::select('id')->whereHas('laws')->orderBy('id')->with('translation')->get();
         $laws = Law::select('id')->Active()->orderByTranslation('name')->with('translation')->get();
         $countResults = $request->get('count_results', config('app.default_paginate'));
@@ -103,7 +104,7 @@ class LegislativeInitiativeController extends AdminController
         $hasSubscribeEmail = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter);
         $hasSubscribeRss = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
         return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent',
-            'laws', 'defaultDirection', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss'));
+            'laws', 'defaultDirection', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
 

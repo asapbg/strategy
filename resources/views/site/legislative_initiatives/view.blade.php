@@ -35,7 +35,7 @@
                     <div class="col-12">
                         <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
                         <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
-                        @includeIf('site.partial.subscribe-buttons')
+                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
 
                         @can('close', $item)
                             <form class="d-none"

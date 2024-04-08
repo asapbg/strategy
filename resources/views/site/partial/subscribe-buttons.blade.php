@@ -5,8 +5,8 @@
             <i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }} <span>{{ __('custom.unsubscribe') }}</span>
         </button>
     @else
-        @if((isset($no_rss) && !$no_rss) || !isset($no_rss))
-            <a href="{{ config('feed.feeds.sd.url') }}" id="rss-link"
+        @if(((isset($no_rss) && !$no_rss) || !isset($no_rss)) && isset($rssUrl))
+            <a href="{{ $rssUrl }}" id="rss-link"
                class="btn rss-sub main-color text-decoration-none"
                target="_blank" title="{{ __('custom.subscribe') }}">
                 <i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}

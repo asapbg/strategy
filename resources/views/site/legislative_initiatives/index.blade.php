@@ -96,7 +96,7 @@
 
                         <div class="col-md-6 text-end col-md-6 px-0">
                             <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
-                            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])
+                            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => false])
 
                             @can('create', \App\Models\LegislativeInitiative::class)
                                 <a href="{{ route('legislative_initiatives.create') }}"
