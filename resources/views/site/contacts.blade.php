@@ -10,52 +10,55 @@
                     {{ $title }}
                 </h2>
                 @if(isset($users) && $users->count())
-                    <div class="col-12 mb-5 ">
-                        <div class="member d-flex align-items-center p-3 custom-shadow br-08">
+                    @if($form)
+                        <div class="col-12 mb-5 ">
+                            <div class="member d-flex align-items-center p-3 custom-shadow br-08">
 
-                            <form class="col-12 mb-4 " action="{{ route('contacts.message') }}" method="POST">
-                                @csrf
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="input-group">
-                                                <div class="mb-3 d-flex flex-column  w-100">
-                                                    <label for="subject" class="form-label">{{ __('site.contacts.subject') }} <span class="required">*</span></label>
-                                                    <select id="subject" name="subject" class="form-control form-control-sm select2 @error('subjectsubject'){{ 'is-invalid' }}@enderror">
-                                                        <option value="">---</option>
-                                                        <option value="{{ __('site.contacts.subject.report_problem') }}">{{ __('site.contacts.subject.report_problem') }}</option>
-                                                        <option value="{{ __('site.contacts.subject.question') }}">{{ __('site.contacts.subject.question') }}</option>
-                                                        <option value="{{ __('site.contacts.subject.proposal') }}">{{ __('site.contacts.subject.proposal') }}</option>
-                                                    </select>
-                                                    @error('subject')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="input-group ">
-                                                <div class="mb-3 d-flex flex-column w-100">
-                                                    <label for="message" class="form-label">{{ __('site.contacts.message') }} <span class="required">*</span></label>
-                                                    <div class="summernote-wrapper">
-                                                        <textarea class="form-control @error('message'){{ 'is-invalid' }}@enderror" name="message">@if(!empty(old('message'))){!! old('message') !!}@endif</textarea>
-                                                        @error('message')
+                                <form class="col-12 mb-4 " action="{{ route('contacts.message') }}" method="POST">
+                                    @csrf
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group">
+                                                    <div class="mb-3 d-flex flex-column  w-100">
+                                                        <label for="subject" class="form-label">{{ __('site.contacts.subject') }} <span class="required">*</span></label>
+                                                        <select id="subject" name="subject" class="form-control form-control-sm select2 @error('subjectsubject'){{ 'is-invalid' }}@enderror">
+                                                            <option value="">---</option>
+                                                            <option value="{{ __('site.contacts.subject.report_problem') }}">{{ __('site.contacts.subject.report_problem') }}</option>
+                                                            <option value="{{ __('site.contacts.subject.question') }}">{{ __('site.contacts.subject.question') }}</option>
+                                                            <option value="{{ __('site.contacts.subject.proposal') }}">{{ __('site.contacts.subject.proposal') }}</option>
+                                                        </select>
+                                                        @error('subject')
                                                         <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">{{ __('custom.send') }}</button>
-                            </form>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group ">
+                                                    <div class="mb-3 d-flex flex-column w-100">
+                                                        <label for="message" class="form-label">{{ __('site.contacts.message') }} <span class="required">*</span></label>
+                                                        <div class="summernote-wrapper">
+                                                            <textarea class="form-control @error('message'){{ 'is-invalid' }}@enderror" name="message">@if(!empty(old('message'))){!! old('message') !!}@endif</textarea>
+                                                            @error('message')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">{{ __('custom.send') }}</button>
+                                </form>
 
+                            </div>
                         </div>
-                    </div>
-                    <h2 class="mb-4">
-                        {{ trans_choice('site.administrators', 2) }}
-                    </h2>
+                        <h2 class="mb-4">
+                            {{ trans_choice('site.administrators', 2) }}
+                        </h2>
+                    @endif
+
                     @foreach($users as $row)
                         <div class="col-lg-6 mb-4 ">
                             <div class="member d-flex align-items-center p-3 custom-shadow br-08">
