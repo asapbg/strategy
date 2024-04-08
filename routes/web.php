@@ -11,11 +11,29 @@ use App\Http\Controllers\Admin\{HomeController as AdminHomeController,
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Auth::routes(['verify' => true]);
+//To redirect if no language in url
+Route::get('/', function(){
+    return Redirect::to(app()->getLocale());
+});
+
+Route::prefix(app()->getLocale())->group(function (){
+    Auth::routes(['verify' => true]);
+    require_once('site.php');
+
+    Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
+        Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
+        Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
+        Route::post('/forgot-password/update',                'confirmPassword')->name('forgot_pass.password.update');
+    });
+});
 
 include 'eauth.php';
 
-require_once('site.php');
+Route::get('/sitemap.xml', [\App\Http\Controllers\HomeController::class, 'sitemap'])->name('sitemap');
+Route::get('/sitemap/base', [\App\Http\Controllers\HomeController::class, 'sitemapBase'])->name('sitemap.base');
+Route::get('/sitemap/sub/{page}', [\App\Http\Controllers\HomeController::class, 'sitemapSub'])->name('sitemap.sub');
+
+
 
 Route::get('/admin/login', function (){
     return redirect(route('login'));
@@ -31,11 +49,6 @@ Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates/{slug}',                'show')->name('templates.view');
 });
 
-Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
-    Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
-    Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
-    Route::post('/forgot-password/update',                'confirmPassword')->name('forgot_pass.password.update');
-});
 
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
