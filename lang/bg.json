@@ -68,5 +68,7 @@
     "This password reset link will expire in :count minutes.": "Връзка за повторно задаване на парола ще изтече след :count минути.",
     "Please click the button below to verify your email address.": "Моля, използвайте връзката по-долу (Потвърди ел. поща), за да потвърдите своя имейл адрес.",
     "Verify Email Address": "Потвърди ел. поща",
-    "If you did not create an account, no further action is required.": "Ако не сте регистрирали този профил, не е необходимо да предприемате действия."
+    "If you did not create an account, no further action is required.": "Ако не сте регистрирали този профил, не е необходимо да предприемате действия.",
+    "Comment legislative initiative user text": "На Портал за обществени консултации е постъпил нов коментар по законодателна инициатива в която сте взели участие.",
+    "Comment legislative initiative": "Нов коментар по законодателна инициaтива"
 }

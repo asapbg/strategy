@@ -4,19 +4,19 @@
 
 {!! $text !!}
 
-{{ __('custom.name') }}: {{ $modelInstance->getModelName() }}\
-{{ trans_choice('custom.strategic_document_level', 1) }}: {{ __('custom.strategic_document.dropdown.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($modelInstance->strategic_document_level_id)) }}\
-{{ trans_choice('custom.strategic_document_type', 1) }} : {{ $modelInstance->documentType?->name }}\
-{{ trans_choice('custom.field_of_actions', 1) }}: {{ $modelInstance->policyArea?->translation?->name }}\
-{{ __('custom.date_accepted') }}: {{ !empty($modelInstance->document_date_accepted) ? displayDate($modelInstance->document_date_accepted) : '---' }}\
-{{ __('custom.date_valid') }}: {{ !empty($modelInstance->document_date_expiring) ? displayDate($modelInstance->document_date_expiring) : __('custom.unlimited') }}\
+{{ __('custom.name') }}: {{ $modelInstance->getModelName() }}<br>
+{{ trans_choice('custom.strategic_document_level', 1) }}: {{ __('custom.strategic_document.dropdown.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($modelInstance->strategic_document_level_id)) }}<br>
+{{ trans_choice('custom.strategic_document_type', 1) }} : {{ $modelInstance->documentType?->name }}<br>
+{{ trans_choice('custom.field_of_actions', 1) }}: {{ $modelInstance->policyArea?->translation?->name }}<br>
+{{ __('custom.date_accepted') }}: {{ !empty($modelInstance->document_date_accepted) ? displayDate($modelInstance->document_date_accepted) : '---' }}<br>
+{{ __('custom.date_valid') }}: {{ !empty($modelInstance->document_date_expiring) ? displayDate($modelInstance->document_date_expiring) : __('custom.unlimited') }}<br>
 {{ __('Link to the strategic document on the Public Consultation Portal') }}:
-@component('mail::link', ['url' => $url])
+@component('mail::button', ['url' => $url])
     {{ __('See the strategic document') }}
 @endcomponent
 
 {{ __('Change subscriptions here') }}
-@component('mail::link', ['url' => route('profile', ['tab' => 'subscriptions'])])
+@component('mail::button', ['url' => route('profile', ['tab' => 'subscriptions'])])
     {{ __("Subscription's management") }}
 @endcomponent
 

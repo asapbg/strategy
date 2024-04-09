@@ -87,6 +87,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($this->data['event'] == "updated") {
                     ${$var} = __("Update legislative initiative $type text");
                     ${$varSubject} = __("Update legislative initiative");
+                }elseif($this->data['event'] == "comment"){
+                    ${$var} = __("Comment legislative initiative $type text");
+                    ${$varSubject} = __("Comment legislative initiative");
                 } else {
                     ${$var} = __("New legislative initiative $type text");
                     ${$varSubject} = __("New legislative initiative");
