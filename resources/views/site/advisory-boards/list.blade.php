@@ -1,7 +1,7 @@
 @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\AdvisoryBoard::class))
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.advisory-boards.create')])
 @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_adv_board')])
-
+<input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">

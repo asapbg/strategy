@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
+use App\Enums\PublicationTypesEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
 /**
  * @property int                      $id
@@ -44,7 +47,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static find(mixed $get)
  * @method moderatorListing()
  */
-class AdvisoryBoard extends ModelActivityExtend
+class AdvisoryBoard extends ModelActivityExtend implements Feedable
 {
 
     use FilterSort, Translatable;
@@ -63,6 +66,40 @@ class AdvisoryBoard extends ModelActivityExtend
     protected string $logName = "advisory_board";
 
     protected $fillable = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public', 'file_id'];
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->name,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('advisory-boards.view', ['item' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->ActivePublic()
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
+
+    public function scopeActivePublic($query){
+        $query->where('advisory_boards.active', true)
+            ->where('advisory_boards.public', true);
+    }
 
     /**
      * Listing only moderator's advisory boards.
@@ -267,5 +304,39 @@ class AdvisoryBoard extends ModelActivityExtend
             });
 
         return $q->get();
+    }
+
+    public static function list($requestFilter)
+    {
+        return self::select('advisory_boards.*')
+            ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
+                'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
+                'advisoryActType', 'advisoryActType.translations'])
+            ->leftJoin('advisory_board_translations', function ($j){
+                $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
+                    ->where('advisory_board_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
+            ->leftJoin('authority_advisory_board_translations', function ($j){
+                $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
+                    ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
+            ->leftJoin('advisory_act_type_translations', function ($j){
+                $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
+                    ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
+            ->leftJoin('advisory_chairman_type_translations', function ($j){
+                $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
+                    ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
+            })
+            ->where('public', true)
+            ->FilterBy($requestFilter)->get();
     }
 }

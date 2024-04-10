@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Enums\PublicationTypesEnum;
 use App\Mail\NotifySubscribedUser;
+use App\Models\AdvisoryBoard;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
@@ -100,6 +101,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('library.details', ['type' => $this->data['modelInstance']->type, 'id' => $this->data['modelInstance']->id]),
                 };
+            } elseif ($this->data['modelInstance'] instanceof AdvisoryBoard) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New adv board $type text");
+                    ${$varSubject} = __("New adv board");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('advisory-boards.view', ['item' => $this->data['modelInstance']->id]),
+                };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {
                     ${$var} = __("Update legislative initiative $type text");
@@ -143,7 +154,6 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $user_url;
                 $user = $subscribedUser->user;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $user->notification_email;
-                dd($data);
                 Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
             }
         }

@@ -63,6 +63,7 @@ class PublicConsultationController extends Controller
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
+
         $hasSubscribeEmail = $this->hasSubscription(null, PublicConsultation::class, $requestFilter);
         $hasSubscribeRss = false;
 

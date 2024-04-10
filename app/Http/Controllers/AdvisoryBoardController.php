@@ -44,6 +44,8 @@ class AdvisoryBoardController extends Controller
      */
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.adv_boards.url');
+
         $groupOptions = array(
             ['value' => '', 'name' => ''],
             ['value' => 'fieldOfAction', 'name' => trans_choice('custom.field_of_actions', 1)],
@@ -125,12 +127,18 @@ class AdvisoryBoardController extends Controller
             ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
+        $subscribeFilter = $requestFilter;
+        if(isset($subscribeFilter['status'])){
+            $subscribeFilter['status'] = str($subscribeFilter['status']);
+        }
+        $hasSubscribeEmail = $this->hasSubscription(null, AdvisoryBoard::class, $subscribeFilter);
+        $hasSubscribeRss = false;
 
         if( $request->ajax() ) {
-            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions'));
+            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
         }
 
-        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions'));
+        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
     }
 
     /**
