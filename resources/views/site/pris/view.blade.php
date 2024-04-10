@@ -9,6 +9,9 @@
                         <a class="btn btn-primary main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
                             <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
                     @endcan
+                    <input type="hidden" id="subscribe_model" value="App\Models\Pris">
+                    <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                    @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
                 </div>
             </div>
         </div>
@@ -24,16 +27,6 @@
                         {!! $pageTopContent->value !!}
                     </div>
                 @endif
-
-                    <div class="row mb-4 action-btn-wrapper">
-                        <div class="col-md-12 text-start">
-                            <button class="btn btn-primary main-color">
-                                <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
-                            <button class="btn btn-primary main-color">
-                                <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
-                        </div>
-                    </div>
-
                 <div class="col-md-12 mb-5">
                     <h2 class="mb-3">{{ __('custom.pris_about') }}</h2>
                     {!! $item->about !!}

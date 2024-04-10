@@ -7,10 +7,9 @@
             <div class="col-md-12 text-start">
                 <button class="btn btn-primary  main-color">
                     <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export') }}</button>
-                <button class="btn rss-sub main-color">
-                    <i class="fas fa-square-rss text-warning me-2"></i>{{ __('custom.rss_subscribe') }}</button>
-                <button class="btn rss-sub main-color">
-                    <i class="fas fa-envelope me-2 main-color"></i>{{ __('custom.subscribe') }}</button>
+                <input type="hidden" id="subscribe_model" value="App\Models\Consultations\PublicConsultation">
+                <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
             </div>
         </div>
 

@@ -187,8 +187,11 @@ class PrisController extends Controller
         if($item->actType) {
             $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
         }
+        $hasSubscribeEmail = $this->hasSubscription($item);
+        $hasSubscribeRss = false;
+
         $this->composeBreadcrumbs($extraBreadCrumbs, $item);
-        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories'));
+        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     private function sorters()

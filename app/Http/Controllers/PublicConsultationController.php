@@ -101,7 +101,10 @@ class PublicConsultationController extends Controller
         $timeline = $item->orderTimeline();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
         $this->setSeo($item->title);
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport'));
+
+        $hasSubscribeEmail = $this->hasSubscription($item);
+        $hasSubscribeRss = false;
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function addComment(StoreCommentRequest $request)
