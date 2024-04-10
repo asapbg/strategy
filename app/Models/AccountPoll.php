@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountPoll extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
-    protected $table = 'account_polls';
+    protected $table = 'user_poll';
     public $timestamps = true;
     protected $guarded = [];
 

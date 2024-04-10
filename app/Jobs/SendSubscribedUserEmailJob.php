@@ -62,13 +62,17 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 } elseif ($this->data['event'] == "created") {
                     ${$var} = __("New consultation $type text");
                     ${$varSubject} = __("New consultation");
+                } elseif ($this->data['event'] == "expire") {
+                    ${$var} = __("Public consultation expire soon in couple of days", ['days' => PublicConsultation::NOTIFY_DAYS_BEFORE_END]);
+                    ${$varSubject} = __("Public consultation expire soon");
                 } else{
                     ${$var} = __("Update consultation $type text");
                     ${$varSubject} = __("Update consultation");
                 }
                 ${$varUrl} = match ($this) {
-                    'user' => route('public_consultation.view', ['id' => $this->data['modelInstance']->id]),
-                    default => route('admin.consultations.public_consultations.edit', $this->data['modelInstance']),
+//                    'user' => route('public_consultation.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.consultations.public_consultations.edit', $this->data['modelInstance']),
+                    default => route('public_consultation.view', ['id' => $this->data['modelInstance']->id]),
                 };
 
             } elseif ($this->data['modelInstance'] instanceof StrategicDocument) {
@@ -80,8 +84,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     ${$varSubject} = __("New strategic document");
                 }
                 ${$varUrl} = match ($type) {
-                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
-                    default => route('admin.strategic_documents.edit', ['id' => $this->data['modelInstance']->id]),
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {
@@ -95,8 +100,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     ${$varSubject} = __("New legislative initiative");
                 }
                 ${$varUrl} = match ($type) {
-                    'user' => route('legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
-                    default => route('admin.legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
+//                    'user' => route('legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
+//                    default => route('admin.legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
+                    default => route('legislative_initiatives.view', ['item' => $this->data['modelInstance']->id]),
                 };
             }
         }

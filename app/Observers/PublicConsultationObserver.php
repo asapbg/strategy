@@ -22,7 +22,7 @@ class PublicConsultationObserver
     public function created(PublicConsultation $publicConsultation)
     {
         if ($publicConsultation->active) {
-            //TODO post on facebook
+            //post on facebook
             $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                 ->get()->first();
@@ -35,9 +35,7 @@ class PublicConsultationObserver
                 ));
             }
 
-            //TODO post on twitter
-
-            //$this->sendEmails($publicConsultation, 'created');
+            $this->sendEmails($publicConsultation, 'created');
 
             Log::info('Send subscribe email on creation');
         }
@@ -51,10 +49,16 @@ class PublicConsultationObserver
      */
     public function updated(PublicConsultation $publicConsultation)
     {
-        $old_active = $publicConsultation->getOriginal('active');
+        $old_active = (int)$publicConsultation->getOriginal('active');
+
+        //Check for real changes
+        $dirty = $publicConsultation->getDirty(); //return all changed fields
+        //skip some fields in specific cases
+        unset($dirty['updated_at']);
+        unset($dirty['end_notify']);
 
         if (!$old_active && $publicConsultation->active) {
-            //TODO post on facebook
+            //post on facebook
             $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                 ->get()->first();
@@ -66,16 +70,20 @@ class PublicConsultationObserver
                     'published' => true
                 ));
             }
-            //TODO post on twitter
+        }
 
-            //$this->sendEmails($publicConsultation, 'updated');
+        if($old_active == (int)$publicConsultation->active) {
+            unset($dirty['active']);
+        }
 
+        if(sizeof($dirty)){
+            $this->sendEmails($publicConsultation, 'updated');
             Log::info('Send subscribe email on update');
         }
     }
 
     /**
-     * Send emails to all administrators, moderators and subscribed users
+     * Send emails
      *
      * @param PublicConsultation $publicConsultation
      * @param $event
@@ -89,23 +97,39 @@ class PublicConsultationObserver
             $administrators = User::whereActive(true)
                 ->hasRole(CustomRole::ADMIN_USER_ROLE)
                 ->get();
-            $moderator_roles = CustomRole::select('name')
-                ->where('name', 'ILIKE', 'moderator-%')
-                ->get()
-                ->pluck('name')
-                ->toArray();
             $moderators = User::whereActive(true)
-                ->hasRole($moderator_roles)
-                ->where('institution_id', $publicConsultation->importer_institution_id)
+                ->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE, CustomRole::MODERATOR_PUBLIC_CONSULTATION])
+                ->where('id', '=', $publicConsultation->user_id)
+//                ->where('institution_id', $publicConsultation->importer_institution_id)
                 ->get()
                 ->unique('id');
         }
+
+        //get users by model ID
         $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', UserSubscribe::SUBSCRIBED)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->where('subscribable_id', '=', $publicConsultation->id)
             ->get();
 
+        //get users by model filter
+        $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->whereNull('subscribable_id')
+            ->get();
+
+        if($filterSubscribtions->count()){
+            foreach ($filterSubscribtions as $fSubscribe){
+                $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
+                if(in_array($publicConsultation->id, $modelIds)){
+                    $subscribedUsers->add($fSubscribe);
+                }
+            }
+        }
         if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;
         }

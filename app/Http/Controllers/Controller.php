@@ -443,8 +443,12 @@ class Controller extends BaseController
             };
         } elseif ($modelClass && $user){
             if($user->subscriptions()->where(function ($q) use($channel, $modelClass, $filter){
-                    $q->where('search_filters', '=', json_encode($filter))
-                        ->where('subscribable_type', '=', $modelClass)
+                    if(empty($filter)){
+                        $q->whereNull('search_filters');
+                    } else{
+                        $q->where('search_filters', '=', json_encode($filter));
+                    }
+                    $q->where('subscribable_type', '=', $modelClass)
                         ->where('channel', '=', $channel)
                         ->where('is_subscribed', true);
                 })->count() ) {

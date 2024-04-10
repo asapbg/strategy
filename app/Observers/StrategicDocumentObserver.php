@@ -24,7 +24,7 @@ class StrategicDocumentObserver
     {
         if ($strategicDocument->active) {
             if(!$strategicDocument->parent_document_id) {
-                //TODO post on facebook
+                //post on facebook
                 $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                     ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                     ->get()->first();
@@ -36,7 +36,6 @@ class StrategicDocumentObserver
                         'published' => true
                     ));
                 }
-                //TODO post on twitter
             }
 
             $this->sendEmails($strategicDocument, 'created');
@@ -61,7 +60,7 @@ class StrategicDocumentObserver
         unset($dirty['updated_at']);
 
         if(!$old_active && $strategicDocument->active && !$strategicDocument->parent_document_id) {
-            //TODO post on facebook
+            //post on facebook
             $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                 ->get()->first();
@@ -73,7 +72,6 @@ class StrategicDocumentObserver
                     'published' => true
                 ));
             }
-            //TODO post on twitter
         }
 
         if($old_active == (boolval($strategicDocument->active))) {
@@ -145,7 +143,7 @@ class StrategicDocumentObserver
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
             ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->whereNotNull('search_filters')
+            ->whereNull('subscribable_id')
             ->get();
 
         if($filterSubscribtions->count()){

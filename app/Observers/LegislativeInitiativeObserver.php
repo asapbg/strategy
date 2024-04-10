@@ -84,7 +84,7 @@ class LegislativeInitiativeObserver
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
             ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->whereNotNull('search_filters')
+            ->whereNull('subscribable_id')
             ->get();
 
         if($filterSubscribtions->count()){

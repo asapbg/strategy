@@ -235,7 +235,7 @@ class StrategicDocumentsController extends Controller
         $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
 
         $hasSubscribeEmail = $this->hasSubscription($strategicDocument);
-        $hasSubscribeRss = $this->hasSubscription($strategicDocument, null, null, UserSubscribe::CHANNEL_RSS);
+        $hasSubscribeRss = false;
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles',
             'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }

@@ -15,6 +15,7 @@ use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\UserSubscribe;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,8 +28,10 @@ class PublicConsultationController extends Controller
 {
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.public_consultation.url');
         $rf = $request->all();
         $requestFilter = $request->all();
+
         //Filter
         $filter = $this->filters($request);
         //Sorter
@@ -60,13 +63,16 @@ class PublicConsultationController extends Controller
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
+        $hasSubscribeEmail = $this->hasSubscription(null, PublicConsultation::class, $requestFilter);
+        $hasSubscribeRss = false;
+
         if( $request->ajax() ) {
-            return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf'));
+            return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl'));
     }
 
     public function show(Request $request, int $id = 0)

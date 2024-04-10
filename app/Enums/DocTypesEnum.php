@@ -23,6 +23,8 @@ enum DocTypesEnum: int
 
     case PC_COMMENTS_CSV = 9; //Списък с коментари
     case PC_COMMENTS_PDF = 10; //Списък с коментари
+
+    case PC_POLLS_PDF = 21; //Списък с Анкети
     case PC_KD_PDF = 11; //Консултационен документ
 
     // Advisory board - Консултативен съвет

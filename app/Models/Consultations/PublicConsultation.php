@@ -18,6 +18,7 @@ use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
+use App\Models\User;
 use App\Models\UserSubscribe;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -25,13 +26,17 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModelActivityExtend;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class PublicConsultation extends ModelActivityExtend implements TranslatableContract
+class PublicConsultation extends ModelActivityExtend implements TranslatableContract, Feedable
 {
     use FilterSort, Translatable;
 
+    const NOTIFY_DAYS_BEFORE_END = 3;
     const PAGINATE = 20;
     const HOME_PAGINATE = 4;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
@@ -51,11 +56,41 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to',
         'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
         'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id',
-        'proposal_report_comment_id', 'field_of_actions_id', 'law_id', 'pris_id'
+        'proposal_report_comment_id', 'field_of_actions_id', 'law_id', 'pris_id', 'user_id', 'end_notify'
     ];
 
     const MIN_DURATION_DAYS = 14;
     const SHORT_DURATION_DAYS = 29;
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->title,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('public_consultation.view', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->ActivePublic()
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
+
 
     /**
      * Get the model name
@@ -195,6 +230,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $this->hasOne(OperationalProgram::class, 'id', 'operational_program_id');
     }
 
+    public function author(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function lp(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(LegislativeProgram::class, 'id', 'legislative_program_id');
@@ -295,6 +335,24 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('locale');
     }
 
+    public function pollsDocuments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereIn('doc_type', [DocTypesEnum::PC_POLLS_PDF->value])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
+    public function pollsDocumentPdf()
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->where('doc_type', '=', DocTypesEnum::PC_POLLS_PDF->value)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale')->first();
+    }
+
     public function commentsDocuments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(File::class, 'id_object', 'id')
@@ -303,6 +361,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
     }
+
 
     public function law(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -612,5 +671,37 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function subscriptions()
     {
         return $this->morphMany(UserSubscribe::class, 'subscribable');
+    }
+
+    /**
+     * Use in public list page and subscription check
+     * @param array $filter
+     * @param string $sort
+     * @param string $sortOrd
+     * @param int $paginate
+     */
+    public static function list(array $filter, string $sort = 'title', string $sortOrd = 'desc', int $paginate = self::PAGINATE){
+        $q = self::select('public_consultation.*')
+            ->Active()
+            ->with(['translations', 'fieldOfAction', 'fieldOfAction.translations'])
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'public_consultation.field_of_actions_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('public_consultation_translations', function ($j){
+                $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                    ->where('public_consultation_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($filter)
+            ->SortedBy($sort,$sortOrd);
+            //->GroupBy('strategic_document.id')
+
+
+        if($paginate){
+            return $q->paginate($paginate);
+        } else{
+            return $q->get();
+        }
     }
 }
