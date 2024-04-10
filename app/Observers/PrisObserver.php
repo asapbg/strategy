@@ -29,7 +29,6 @@ class PrisObserver
                 Log::info('Send subscribe email on creation');
             }
         }
-        dd('nooooooo');
     }
 
     /**
