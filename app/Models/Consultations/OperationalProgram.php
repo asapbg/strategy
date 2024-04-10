@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class OperationalProgram extends ModelActivityExtend
+class OperationalProgram extends ModelActivityExtend implements Feedable
 {
     use FilterSort;
 
@@ -29,10 +31,38 @@ class OperationalProgram extends ModelActivityExtend
     protected $guarded = [];
 
     /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->name,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('op.view', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::Published()
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
+
+    /**
      * Get the model name
      */
     public function getModelName() {
-        return __('custom.dynamic_structures.type.'.DynamicStructureTypesEnum::keyByValue($this->type));
+        return $this->name;
     }
 
     public function scopeNotLockedOrByCd($query, $excludeCdId = 0)
@@ -242,5 +272,12 @@ class OperationalProgram extends ModelActivityExtend
         $q->groupBy('operational_program_row.id');
 
         return $q->get();
+    }
+
+    public static function list(array $filter){
+        return self::Published()
+            ->FilterBy($filter)
+            ->orderBy('from_date', 'desc')
+            ->get();
     }
 }

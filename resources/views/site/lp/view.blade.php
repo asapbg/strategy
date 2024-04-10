@@ -13,7 +13,7 @@
     </style>
     <section>
         <div class="container-fluid">
-            <div class="row edit-consultation m-0">
+            <div class="row edit-consultation mb-0">
                 <div class="col-md-12 text-end">
                     @can('update', $item)
                         <a class="btn btn-sm btn-primary main-color mt-2" target="_blank" href="{{ route('admin.consultations.legislative_programs.edit', $item) }}">
@@ -29,6 +29,11 @@
                 @include('site.pris.side_menu')
 
                 <div class="col-lg-10  right-side-content py-5">
+                    <div class="col-12 mb-2">
+                        <input type="hidden" id="subscribe_model" value="App\Models\Consultations\LegislativeProgram">
+                        <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
+                    </div>
 {{--                    @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
 {{--                        <div class="col-12 mb-5">--}}
 {{--                            {!! $pageTopContent->value !!}--}}

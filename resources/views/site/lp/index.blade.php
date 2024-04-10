@@ -20,6 +20,11 @@
                         </p>
                     </div>
                 </div>
+                <div class="col-md-6 mt-2 text-end">
+                    <input type="hidden" id="subscribe_model" value="App\Models\Consultations\LegislativeProgram">
+                    <input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
+                    @includeIf('site.partial.subscribe-buttons')
+                </div>
 {{--                @include('site.partial.paginate_filter', ['ajaxContainer' => '#listContainer'])--}}
             </div>
             @if($items->count())

@@ -29,6 +29,11 @@
                 @include('site.pris.side_menu')
 
                 <div class="col-lg-10  right-side-content py-5">
+                    <div class="col-12 mb-2">
+                        <input type="hidden" id="subscribe_model" value="App\Models\Consultations\OperationalProgram">
+                        <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
+                    </div>
 {{--                    @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
 {{--                        <div class="col-12 mb-5">--}}
 {{--                            {!! $pageTopContent->value !!}--}}

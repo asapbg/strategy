@@ -15,6 +15,7 @@ class OperationalProgramController extends Controller
 {
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.op.url');
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
         $items = OperationalProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
         $infoPage = Page::where('system_name', '=', Page::OP_INFO)->first();
@@ -38,7 +39,10 @@ class OperationalProgramController extends Controller
 
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs();
-        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories'));
+
+        $hasSubscribeEmail = $this->hasSubscription(null, OperationalProgram::class, $request->all());
+        $hasSubscribeRss = false;
+        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -56,7 +60,10 @@ class OperationalProgramController extends Controller
         //$pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_OP.'_'.app()->getLocale())->first();
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs([], $item);
-        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle'));
+
+        $hasSubscribeEmail = $this->hasSubscription($item);
+        $hasSubscribeRss = false;
+        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     /**

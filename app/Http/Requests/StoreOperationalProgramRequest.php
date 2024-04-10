@@ -28,7 +28,7 @@ class StoreOperationalProgramRequest extends FormRequest
     public function rules()
     {
         $formatInput = request()->input('formats');
-        $formats = constant("\App\Models\File::$formatInput");
+        $formats = $formatInput ? constant("\App\Models\File::$formatInput") : File::ALLOWED_FILE_LP_OO;
 
 //        $defaultLang = config('app.default_lang');
         $rules = [

@@ -7,6 +7,8 @@ use App\Mail\NotifySubscribedUser;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\Comments;
+use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
 use App\Models\Pris;
@@ -136,6 +138,26 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('pris.view', ['category' => Str::slug($this->data['modelInstance']->actType?->name), 'id' => $this->data['modelInstance']->id]),
+                };
+            } elseif ($this->data['modelInstance'] instanceof LegislativeProgram) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New lp $type text");
+                    ${$varSubject} = __("New lp");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('lp.view', ['id' => $this->data['modelInstance']->id]),
+                };
+            }elseif ($this->data['modelInstance'] instanceof OperationalProgram) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New op $type text");
+                    ${$varSubject} = __("New op");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('op.view', ['id' => $this->data['modelInstance']->id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {
