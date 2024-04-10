@@ -9,6 +9,7 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -298,6 +299,14 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         return $q->get();
     }
 
+
+    /**
+     * @return morphMany
+     */
+    public function subscriptions()
+    {
+        return $this->morphMany(UserSubscribe::class, 'subscribable');
+    }
 
     /**
      * Use in public list page and subscription check

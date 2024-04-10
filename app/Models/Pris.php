@@ -10,6 +10,7 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Feed\Feedable;
@@ -245,6 +246,14 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->orderBy('pris.doc_num', 'asc');
 
         return $q->get();
+    }
+
+    /**
+     * @return morphMany
+     */
+    public function subscriptions()
+    {
+        return $this->morphMany(UserSubscribe::class, 'subscribable');
     }
 
     /**
