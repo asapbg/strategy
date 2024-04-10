@@ -12,8 +12,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class Pris extends ModelActivityExtend implements TranslatableContract
+class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 {
     use FilterSort, Translatable;
 
@@ -34,6 +36,36 @@ class Pris extends ModelActivityExtend implements TranslatableContract
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
         'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate'];
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->mcDisplayName,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations', 'actType', 'actType.translations'])
+            ->Published()
+            ->where('active', '=', 1)
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
 
     /**
      * Get the model name
@@ -213,5 +245,39 @@ class Pris extends ModelActivityExtend implements TranslatableContract
             ->orderBy('pris.doc_num', 'asc');
 
         return $q->get();
+    }
+
+    /**
+     * Use in public list page and subscription check
+     * @param array $filter
+     */
+    public static function list(array $filter){
+        return self::select('pris.*')
+            ->Published()
+            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('pris_translations', function ($j){
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
+            ->leftJoin('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+            ->join('legal_act_type_translations', function ($j){
+                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
+            ->leftJoin('tag_translations', function ($j){
+                $j->on('tag_translations.tag_id', '=', 'tag.id')
+                    ->where('tag_translations.locale', '=', app()->getLocale());
+            })
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->FilterBy($filter)
+            ->get();
     }
 }

@@ -11,6 +11,7 @@ use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
 use App\Models\OgpPlan;
 use App\Models\OgpPlanAreaOfferVote;
+use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
@@ -23,6 +24,7 @@ use App\Observers\LegislativeInitiativeCommentObserver;
 use App\Observers\LegislativeInitiativeObserver;
 use App\Observers\OgpPlanAreaOfferVoteObserver;
 use App\Observers\OgpPlanObserver;
+use App\Observers\PrisObserver;
 use App\Observers\PublicationObserver;
 use App\Observers\PublicConsultationObserver;
 use App\Observers\PublicConsultationTranslationObserver;
@@ -67,6 +69,7 @@ class EventServiceProvider extends ServiceProvider
         PublicConsultationTranslation::class => [PublicConsultationTranslationObserver::class],
         Publication::class => [PublicationObserver::class],
         AdvisoryBoardMeeting::class => [AdvisoryBoardMeetingObserver::class],
+        Pris::class => [PrisObserver::class],
     ];
 
     /**

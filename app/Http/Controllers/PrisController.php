@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActType;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
@@ -17,6 +18,8 @@ class PrisController extends Controller
 {
     public function index(Request $request, $category = '')
     {
+        $rssUrl = config('feed.feeds.pris.url');
+
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
@@ -68,8 +71,11 @@ class PrisController extends Controller
             ->paginate($paginate);
 
 
+        $hasSubscribeEmail = $this->hasSubscription(null, Pris::class, $requestFilter);
+        $hasSubscribeRss = false;
+
         if( $request->ajax() ) {
-            return view('site.pris.list', compact('filter','sorter', 'items', 'rf'));
+            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
         }
 
         $menuCategories = [];
@@ -96,7 +102,7 @@ class PrisController extends Controller
             }
         }
         $this->composeBreadcrumbs($extraBreadCrumbs);
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
     }
 
     public function archive(Request $request)

@@ -35,6 +35,9 @@
                                 @elseif($s->subscribable_type == 'App\Models\Publication')
                                     @php($url = $r->subscribable_id ? route('library.details', $r->subscribable->type, $r->subscribable_id) : (!empty($r->route_name) ? route($r->route_name).(!empty($r->search_filters) ? addUrlParams($r->search_filters) : '') : ''))
                                     @php($objUrlTitle = $r->subscribable_id ? $r->subscribable->type == \App\Enums\PublicationTypesEnum::TYPE_LIBRARY->value ? 'Към публикацията' : 'Към новината' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\Pris')
+                                    @php($url = $r->subscribable_id ? route('pris.view', ['category' => \Illuminate\Support\Str::slug($r->subscribable->actType?->name), 'id' => $r->subscribable_id]) : route('pris.index').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Акт на Министерски съвет' : 'Към списъка')
                                 @endif
                                 <tr>
                                     <td><a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a></td>

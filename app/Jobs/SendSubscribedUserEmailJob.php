@@ -9,6 +9,7 @@ use App\Models\AdvisoryBoardMeeting;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocument;
 use Illuminate\Bus\Queueable;
@@ -17,6 +18,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class SendSubscribedUserEmailJob implements ShouldQueue
 {
@@ -69,6 +71,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 } elseif ($this->data['event'] == "expire") {
                     ${$var} = __("Public consultation expire soon in couple of days", ['days' => PublicConsultation::NOTIFY_DAYS_BEFORE_END]);
                     ${$varSubject} = __("Public consultation expire soon");
+                } elseif ($this->data['event'] == "created_with_pc") {
+                    ${$var} = __("Public consultation accept pris $type text", ['days' => PublicConsultation::NOTIFY_DAYS_BEFORE_END]);
+                    ${$varSubject} = __("Public consultation accept pris");
                 } else{
                     ${$var} = __("Update consultation $type text");
                     ${$varSubject} = __("Update consultation");
@@ -121,6 +126,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('advisory-boards.view', ['item' => $this->data['modelInstance']->advisory_board_id]),
+                };
+            } elseif ($this->data['modelInstance'] instanceof Pris) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New pris $type text");
+                    ${$varSubject} = __("New pris");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('pris.view', ['category' => Str::slug($this->data['modelInstance']->actType?->name), 'id' => $this->data['modelInstance']->id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {
