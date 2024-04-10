@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Enums\PublicationTypesEnum;
 use App\Mail\NotifySubscribedUser;
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMeeting;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
@@ -110,6 +111,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('advisory-boards.view', ['item' => $this->data['modelInstance']->id]),
+                };
+            } elseif ($this->data['modelInstance'] instanceof AdvisoryBoardMeeting) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New adv board meeting $type text");
+                    ${$varSubject} = __("New adv board meeting");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('advisory-boards.view', ['item' => $this->data['modelInstance']->advisory_board_id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {

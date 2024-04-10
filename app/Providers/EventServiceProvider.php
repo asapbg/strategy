@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMeeting;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\Consultations\PublicConsultationTranslation;
@@ -15,6 +16,7 @@ use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentChildrenTranslation;
 use App\Models\StrategicDocumentTranslation;
+use App\Observers\AdvisoryBoardMeetingObserver;
 use App\Observers\AdvisoryBoardObserver;
 use App\Observers\CommentsObserver;
 use App\Observers\LegislativeInitiativeCommentObserver;
@@ -64,6 +66,7 @@ class EventServiceProvider extends ServiceProvider
         OgpPlan::class => [OgpPlanObserver::class],
         PublicConsultationTranslation::class => [PublicConsultationTranslationObserver::class],
         Publication::class => [PublicationObserver::class],
+        AdvisoryBoardMeeting::class => [AdvisoryBoardMeetingObserver::class],
     ];
 
     /**

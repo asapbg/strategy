@@ -39,6 +39,11 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
         return $this->hasMany(AdvisoryBoardMeetingDecision::class);
     }
 
+    public function advBoard()
+    {
+        return $this->hasOne(AdvisoryBoard::class, 'id', 'advisory_board_id');
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
