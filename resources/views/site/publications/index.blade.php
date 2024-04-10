@@ -89,6 +89,7 @@
                             <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
                         </span>
                     </div>
+                    <input type="hidden" id="subscribe_model" value="App\Models\Publication">
                     <div class="col-md-8 text-end">
 {{--                        <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS</button>--}}
 {{--                        <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>--}}

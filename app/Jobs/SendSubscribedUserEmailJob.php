@@ -2,10 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Enums\PublicationTypesEnum;
 use App\Mail\NotifySubscribedUser;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\Publication;
 use App\Models\StrategicDocument;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -88,6 +90,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
                 };
+            } elseif ($this->data['modelInstance'] instanceof Publication) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = $this->data['modelInstance']->type == PublicationTypesEnum::TYPE_LIBRARY->value ? __("New publication $type text") : __("New news $type text");
+                    ${$varSubject} = $this->data['modelInstance']->type == PublicationTypesEnum::TYPE_LIBRARY->value ? __("New publication") : __("New news");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('library.details', ['type' => $this->data['modelInstance']->type, 'id' => $this->data['modelInstance']->id]),
+                };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {
                     ${$var} = __("Update legislative initiative $type text");
@@ -131,6 +143,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $user_url;
                 $user = $subscribedUser->user;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $user->notification_email;
+                dd($data);
                 Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
             }
         }

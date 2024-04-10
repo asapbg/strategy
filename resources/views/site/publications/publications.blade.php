@@ -1,3 +1,11 @@
+<div class="row mb-3">
+    <div class="col-12 text-end">
+        @if(!isset($subscribe) || $subscribe)
+            @php($requestFilter['type'] = $type)
+            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])
+        @endif
+    </div>
+</div>
 @foreach($publications as $publication)
     <div class="row mb-4">
         <div class="col-md-12">

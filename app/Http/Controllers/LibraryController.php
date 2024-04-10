@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PublicationTypesEnum;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\Publication;
@@ -32,6 +33,9 @@ class LibraryController extends Controller
     public function publications(Request $request, int $type = null)
     {
         $type = PublicationTypesEnum::tryFrom($type) ?? PublicationTypesEnum::TYPE_LIBRARY;
+        $rssUrl = config('feed.feeds.publication.url');
+        $requestFilter = $request->all();
+
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type->value], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
@@ -41,8 +45,14 @@ class LibraryController extends Controller
         $publications = $this->getPublications($request, $type->value);
 
         $default_img = asset(Publication::DEFAULT_IMG_LIBRARY);
+
+        $requestFilter['type'] = str(PublicationTypesEnum::TYPE_LIBRARY->value);
+        $hasSubscribeEmail = $this->hasSubscription(null, PublicConsultation::class, $requestFilter);
+        $hasSubscribeRss = false;
+        unset($requestFilter['type']);
+
         if ($is_search) {
-            return $this->view('site.publications.publications', compact('publications', 'default_img', 'type'));
+            return $this->view('site.publications.publications', compact('publications', 'default_img', 'type', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true, $type);
@@ -52,7 +62,7 @@ class LibraryController extends Controller
         }
 
         return $this->view('site.publications.index',
-            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));
+            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     /**
@@ -62,6 +72,9 @@ class LibraryController extends Controller
     public function news(Request $request)
     {
         $type = PublicationTypesEnum::TYPE_NEWS->value;
+        $rssUrl = config('feed.feeds.news.url');
+        $requestFilter = $request->all();
+
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $is_search = $request->has('search');
         $paginate = $request->filled('paginate')
@@ -70,15 +83,21 @@ class LibraryController extends Controller
 
         $news = $this->getPublications($request, $type);
 
+        $requestFilter['type'] = str(PublicationTypesEnum::TYPE_NEWS->value);
+
+        $hasSubscribeEmail = $this->hasSubscription(null, Publication::class, $requestFilter);
+        $hasSubscribeRss = false;
+        unset($requestFilter['type']);
+
         $default_img = asset(Publication::DEFAULT_IMG_NEWS);
         if ($is_search) {
-            return $this->view('site.publications.news', compact('news', 'default_img', 'type'));
+            return $this->view('site.publications.news', compact('news', 'default_img', 'type', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true);
 
         return $this->view('site.publications.index',
-            compact('news','type', 'publicationCategories', 'pageTitle','paginate', 'default_img'));
+            compact('news','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     /**

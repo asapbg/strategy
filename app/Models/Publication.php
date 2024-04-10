@@ -10,8 +10,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class Publication extends ModelActivityExtend implements TranslatableContract
+class Publication extends ModelActivityExtend implements TranslatableContract, Feedable
 {
     use FilterSort, Translatable;
 
@@ -34,6 +36,50 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     protected string $logName = "publication";
 
     protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id', 'users_id', 'is_adv_board_user'];
+
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->title,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('strategy-document.view', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItemsPublication(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->ActivePublic()
+            ->where('type', '=', PublicationTypesEnum::TYPE_LIBRARY->value)
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItemsNews(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->ActivePublic()
+            ->where('type', '=', PublicationTypesEnum::TYPE_NEWS->value)
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
 
     /**
      * Get the model name
@@ -193,5 +239,27 @@ class Publication extends ModelActivityExtend implements TranslatableContract
     public function author(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'users_id');
+    }
+
+    public static function list(array $filter, $type){
+        $filter['from'] = empty($filter['published_from']) ? null : $filter['published_from'];
+        $filter['to'] = empty($filter['published_till']) ? null : $filter['published_till'];
+        $filter['category'] = empty($filter['categories']) ? null : $filter['categories'];
+
+        return self::select('publication.*')
+            ->ActivePublic()
+            ->where('publication.type', '=', (int)$type)
+            ->with(['translations', 'category', 'category.translations'])
+            ->leftJoin('publication_category', 'publication_category.id', '=', 'publication.publication_category_id')
+            ->leftJoin('publication_category_translations', function ($j){
+                $j->on('publication_category_translations.publication_category_id', '=', 'publication_category.id')
+                    ->where('publication_category_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('publication_translations', function ($j){
+                $j->on('publication_translations.publication_id', '=', 'publication.id')
+                    ->where('publication_translations.locale', '=', app()->getLocale());
+            })
+            ->FilterBy($filter)
+            ->get();
     }
 }
