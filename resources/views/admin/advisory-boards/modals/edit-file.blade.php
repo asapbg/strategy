@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <form method="POST" name="FILE_UPDATE" enctype="multipart/form-data" class="pull-left">
                     @csrf
-
+                    <input type="hidden" name="formats" value="ALL_ALLOWED_FILE_EXTENSIONS">
                     <input type="hidden" name="file_id" value=""/>
 
                     <div class="row">

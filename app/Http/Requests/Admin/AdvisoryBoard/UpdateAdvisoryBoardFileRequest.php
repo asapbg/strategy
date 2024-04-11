@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 use App\Enums\DocTypesEnum;
 use App\Models\AdvisoryBoard;
 use App\Models\File;
+use App\Rules\FileClientMimeType;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -36,7 +37,8 @@ class UpdateAdvisoryBoardFileRequest extends FormRequest
     {
         $rules = [
             'file_id'                       => ['required', 'integer', 'exists:files,id'],
-            'file'                          => ['nullable', 'file', 'mimes:pdf,doc,docx,xlsx'],
+//            'file'                          => ['nullable', 'file', 'mimes:pdf,doc,docx,xlsx'],
+            'file' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), new FileClientMimeType(File::ALL_ALLOWED_FILE_EXTENSIONS_MIMES_TYPE)],
             'resolution_council_ministers'  => ['nullable', 'string'],
             'state_newspaper'               => ['nullable', 'string'],
             'effective_at'                  => ['nullable', 'date'],
