@@ -98,12 +98,14 @@
     "New poll user text": "На Портала за обществени е публикувана нова анкета.",
     "New poll": "Нова Анкета",
     "Link to the poll on the Public Consultation Portal": "Линк към анкетата",
-    "Link to the ogp on the Public Consultation Portal": "Линк към плана",
+    "Link to the ogp on the Public Consultation Portal": "Линк към плана в Раздел „Партньорство за открито управление“",
     "See the op": "Виж Оперативната програма",
     "See the lp": "Виж Законодателната програма",
     "See the poll": "Виж Анкетата",
     "See the pris": "Виж Акта",
     "See the national plan": "Виж Плана",
     "New ogp user text": "На Портала за обществени консултации е публикуван нов план за действие във връзка с инициативата Партньорство за открито управление (OGP).",
-    "New ogp": "Нов Национален план"
+    "New ogp": "Нов Национален план",
+    "Ogp plan report user text": "На Портала за обществени консултации е публикуван нов доклад във връзка с план по инициативата Партньорство за открито управление (OGP).",
+    "Ogp plan report": "Нов доклад (OGP)"
 }

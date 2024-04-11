@@ -36,10 +36,13 @@ class OgpPlanObserver
     {
         $old_ogp_status = $ogpPlan->getOriginal('ogp_status_id');
         $old_active = $ogpPlan->getOriginal('active');
+        $report_evaluation_published_at = $ogpPlan->getOriginal('report_evaluation_published_at');
 
-        if($ogpPlan->active
+        if(
+            $ogpPlan->active
             && !$old_ogp_status != $ogpPlan->ogp_status_id
-            && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id) {
+            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+        ) {
             //post on facebook
             $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
@@ -54,8 +57,21 @@ class OgpPlanObserver
             }
         }
 
-        if(($old_active != $ogpPlan->active || $old_ogp_status != $ogpPlan->ogp_status_id) && $ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id){
+        if(
+            ($old_active != $ogpPlan->active || $old_ogp_status != $ogpPlan->ogp_status_id)
+            && $ogpPlan->active && $ogpPlan->national_plan
+            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+        ){
             $this->sendEmails($ogpPlan, 'created');
+            Log::info('Send subscribe email on creation');
+        }
+
+        if(
+            (is_null($report_evaluation_published_at) && $report_evaluation_published_at != $ogpPlan->report_evaluation_published_at)
+            && $ogpPlan->active && $ogpPlan->national_plan
+            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+        ){
+            $this->sendEmails($ogpPlan, 'created_report');
             Log::info('Send subscribe email on creation');
         }
     }
@@ -102,47 +118,45 @@ class OgpPlanObserver
      */
     private function sendEmails(OgpPlan $ogpPlan, $event): void
     {
-        if($event == 'created'){
-            $administrators = null;
-            $moderators = null;
-            //get users by model ID
-            $subscribedUsers = UserSubscribe::where('subscribable_type', OgpPlan::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->where('subscribable_id', '=', $ogpPlan->id)
-                ->get();
+        $administrators = null;
+        $moderators = null;
+        //get users by model ID
+        $subscribedUsers = UserSubscribe::where('subscribable_type', OgpPlan::class)
+            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->where('subscribable_id', '=', $ogpPlan->id)
+            ->get();
 
-            //get users by model filter
-            $filterSubscribtions = UserSubscribe::where('subscribable_type', OgpPlan::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->whereNull('subscribable_id')
-                ->get();
+        //get users by model filter
+        $filterSubscribtions = UserSubscribe::where('subscribable_type', OgpPlan::class)
+            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+            ->whereNull('subscribable_id')
+            ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
-                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                    $modelIds = OgpPlan::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($ogpPlan->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe);
-                    }
+        if($filterSubscribtions->count()){
+            foreach ($filterSubscribtions as $fSubscribe){
+                $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                $modelIds = OgpPlan::list($filterArray)->pluck('id')->toArray();
+                if(in_array($ogpPlan->id, $modelIds)){
+                    $subscribedUsers->add($fSubscribe);
                 }
             }
-            if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
-                return;
-            }
-
-            $data['event'] = $event;
-            $data['administrators'] = $administrators;
-            $data['moderators'] = $moderators;
-            $data['subscribedUsers'] = $subscribedUsers;
-            $data['modelInstance'] = $ogpPlan;
-            $data['markdown'] = 'ogp';
-
-            SendSubscribedUserEmailJob::dispatch($data);
-
         }
+        if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
+            return;
+        }
+
+        $data['event'] = $event;
+        $data['administrators'] = $administrators;
+        $data['moderators'] = $moderators;
+        $data['subscribedUsers'] = $subscribedUsers;
+        $data['modelInstance'] = $ogpPlan;
+        $data['markdown'] = $event == 'created_report' ? 'ogp_report' : 'ogp';
+
+        SendSubscribedUserEmailJob::dispatch($data);
+
     }
 }
