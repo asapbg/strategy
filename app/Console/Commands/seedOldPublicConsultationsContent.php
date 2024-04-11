@@ -47,14 +47,15 @@ class seedOldPublicConsultationsContent extends Command
         //max id in old db
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
-        $ourPc = PublicConsultation::whereHas('translation', function ($query){
-            $query->whereNull('description')->where('locale', '=', 'bg');
-        })->get()->pluck('id', 'old_id')->toArray();
+        $ourPc = PublicConsultation::whereHas('translation', function ($query) {
+//            $query->whereNull('description')->where('locale', '=', 'bg');
+            $query->where('locale', '=', 'bg');
+        })->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
-        if( (int)$maxOldId[0]->max ) {
+        if ((int)$maxOldId[0]->max) {
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep < $maxOldId) {
-                echo "FromId: ".$currentStep.PHP_EOL;
+                echo "FromId: " . $currentStep . PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
                         pc.id as old_id,
@@ -66,25 +67,29 @@ class seedOldPublicConsultationsContent extends Command
                     order by pc.id ');
 
                 if (sizeof($oldDbResult)) {
-                    DB::beginTransaction();
-                    try {
-                        foreach ($oldDbResult as $item) {
-                            if(isset($ourPc[(int)$item->old_id])) {
-                                foreach ($locales as $locale) {
-                                    DB::statement('UPDATE public_consultation_translations set description = ? where public_consultation_id = ? and locale = ?', [$item->description, ((int)$ourPc[$item->old_id]), $locale['code']]);
+                    foreach ($oldDbResult as $item) {
+                        if (isset($ourPc[(int)$item->old_id])) {
+                            DB::beginTransaction();
+                            try {
+                                $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
+                                if ($existPc) {
+                                    foreach ($locales as $locale) {
+//                                        dd($item->description);
+                                        $existPc->translateOrNew($locale['code'])->description = stripHtmlTags(html_entity_decode($item->description));
+//                                        DB::statement('UPDATE public_consultation_translations set description = ? where public_consultation_id = ? and locale = ?', [$item->description, ((int)$ourPc[$item->old_id]), $locale['code']]);
+                                    }
+                                    $existPc->save();
+                                    $this->comment('PC ID  with Old ID ' . $item->old_id . ' is updated');
                                 }
-                                $this->comment('PC ID  with Old ID '.$item->old_id. ' is updated' );
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                Log::error('Migration old startegy public consultations,update description for old id ' . $item->old_id . ' error:' . $e);
+                                DB::rollBack();
                             }
-
                         }
-                        DB::commit();
-                    } catch (\Exception $e) {
-                        Log::error('Migration old startegy public consultations,update description: ' . $e);
-                        DB::rollBack();
-                        dd($item);
                     }
+                    $currentStep += $step;
                 }
-                $currentStep += $step;
             }
         }
     }

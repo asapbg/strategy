@@ -152,11 +152,11 @@ class seedOldPublicConsultations extends Command
                                     $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
                                     if($existPc){
                                         $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
-                                        $existPc->saveQuietly();
+                                        $existPc->save();
                                     }
                                 } else {
                                     $existPc->field_of_actions_id = null;
-                                    $existPc->saveQuietly();
+                                    $existPc->save();
                                     //Collect not existing fields of actions or create mapping on fly
                                     file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
                                 }
@@ -195,16 +195,16 @@ class seedOldPublicConsultations extends Command
 
                             $newPc = new PublicConsultation();
                             $newPc->fill($prepareNewPc);
-                            $newPc->saveQuietly();
+                            $newPc->save();
 
                             if($newPc) {
                                 $comments = [];
                                 $newPc->reg_num = $newPc->id.'-K';
                                 foreach ($locales as $locale) {
                                     $newPc->translateOrNew($locale['code'])->title = $prepareNewPc['title'];
-                                    $newPc->translateOrNew($locale['code'])->description = $prepareNewPc['description'];
+                                    $newPc->translateOrNew($locale['code'])->description = stripHtmlTags(html_entity_decode($prepareNewPc['description']));
                                 }
-                                $newPc->saveQuietly();
+                                $newPc->save();
 
                                 $oldDbComments = DB::connection('old_strategy_app')
                                     ->select('select
