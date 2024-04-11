@@ -7,7 +7,7 @@
 {{ __('custom.name') }}: {{ $modelInstance->name }}<br>
 {{ __('Link to the poll on the Public Consultation Portal') }}:
 @component('mail::button', ['url' => $url])
-    {{ __('See the consultation') }}
+    {{ __('See the poll') }}
 @endcomponent
 
 {{ __('Change subscriptions here') }}

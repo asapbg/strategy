@@ -40,6 +40,18 @@
                                     @php($subscribable = $r->subscribable_id ? \App\Models\Pris::find($r->subscribable_id) : null)
                                     @php($url = $r->subscribable_id ? route('pris.view', ['category' => \Illuminate\Support\Str::slug($subscribable->actType?->name), 'id' => $r->subscribable_id]) : route('pris.index').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
                                     @php($objUrlTitle = $r->subscribable_id ? 'Към Акт на Министерски съвет' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\Poll')
+                                    @php($url = $r->subscribable_id ? route('poll.show', $r->subscribable_id) : route('poll.index').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Анкетата' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\OgpPlan')
+                                    @php($url = $r->subscribable_id ? route('ogp.national_action_plans.show', $r->subscribable_id) : route('ogp.national_action_plans').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Плана' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\Consultations\LegislativeProgram')
+                                    @php($url = $r->subscribable_id ? route('lp.view', $r->subscribable_id) : route('lp.index').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Законодателната програма' : 'Към списъка')
+                                @elseif($s->subscribable_type == 'App\Models\Consultations\OperationalProgram')
+                                    @php($url = $r->subscribable_id ? route('op.view', $r->subscribable_id) : route('op.index').(!empty($r->search_filters) ? addUrlParams($r->search_filters) : ''))
+                                    @php($objUrlTitle = $r->subscribable_id ? 'Към Оперативната програма' : 'Към списъка')
                                 @endif
                                 <tr>
                                     <td><a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a></td>

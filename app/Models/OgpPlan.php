@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DocTypesEnum;
+use App\Enums\OgpStatusEnum;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -11,8 +12,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class OgpPlan extends ModelActivityExtend implements TranslatableContract
+class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feedable
 {
     use FilterSort, Translatable, SoftDeletes;
 
@@ -32,6 +35,34 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
         'from_date_develop', 'to_date_develop', 'national_plan', 'develop_plan_id',
         'report_evaluation_published_at', 'self_evaluation_published_at'];
     protected $translatedAttributes = OgpPlan::TRANSLATABLE_FIELDS;
+
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->name,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => route('ogp.national_action_plans.show', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::with(['translations'])
+            ->where('active', '=', 1)
+            ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
+            ->where('national_plan', '=', 1)
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
 
     public function scopeActive($query)
     {
@@ -178,5 +209,15 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract
                 'required_all_lang' => false
             ],
         );
+    }
+
+    public static function list($filter)
+    {
+        return OgpPlan::Active()
+            ->National()
+            ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
+            ->FilterBy($filter)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 }

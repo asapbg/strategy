@@ -29,6 +29,8 @@ class NationalActionPlans extends Controller
      */
     public function index(Request $request): View
     {
+        $requestFilter = $request->all();
+        $rssUrl = config('feed.feeds.national_plans.url');
         $items = OgpPlan::Active()
             ->National()
             ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
@@ -46,7 +48,10 @@ class NationalActionPlans extends Controller
             ['id' => OldNationalPlanEnum::SECOND->value,'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value)],
             ['id' => OldNationalPlanEnum::FIRST->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::FIRST->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::FIRST->value)],
         ];
-        return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name', 'oldPlanStatus', 'nationalOldPlans'));
+
+        $hasSubscribeEmail = $this->hasSubscription(null, OgpPlan::class, $request->all());
+        $hasSubscribeRss = false;
+        return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name', 'oldPlanStatus', 'nationalOldPlans', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter'));
     }
 
     /**

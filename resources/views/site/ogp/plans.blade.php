@@ -6,7 +6,6 @@
 
     <div class="col-lg-10 py-5 right-side-content" id="listContainer">
         @include('site.ogp.plans_list')
-
 {{--        @include('site.ogp.develop_new_action_plan.filter')--}}
 {{--        @include('site.ogp.search_btn_actions')--}}
 {{--        @include('site.ogp.develop_new_action_plan.sort')--}}

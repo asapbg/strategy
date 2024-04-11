@@ -2,10 +2,13 @@
 
 namespace App\Observers;
 
+use App\Jobs\SendSubscribedUserEmailJob;
 use App\Library\Facebook;
 use App\Models\OgpPlan;
 use App\Models\OgpStatus;
 use App\Models\Setting;
+use App\Models\UserSubscribe;
+use Illuminate\Support\Facades\Log;
 
 class OgpPlanObserver
 {
@@ -17,7 +20,10 @@ class OgpPlanObserver
      */
     public function created(OgpPlan $ogpPlan)
     {
-        //
+        if($ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id){
+            $this->sendEmails($ogpPlan, 'created');
+            Log::info('Send subscribe email on creation');
+        }
     }
 
     /**
@@ -29,11 +35,12 @@ class OgpPlanObserver
     public function updated(OgpPlan $ogpPlan)
     {
         $old_ogp_status = $ogpPlan->getOriginal('ogp_status_id');
+        $old_active = $ogpPlan->getOriginal('active');
 
         if($ogpPlan->active
             && !$old_ogp_status != $ogpPlan->ogp_status_id
             && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id) {
-            //TODO post on facebook
+            //post on facebook
             $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                 ->get()->first();
@@ -45,7 +52,11 @@ class OgpPlanObserver
                     'published' => true
                 ));
             }
-            //TODO post on twitter
+        }
+
+        if(($old_active != $ogpPlan->active || $old_ogp_status != $ogpPlan->ogp_status_id) && $ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id){
+            $this->sendEmails($ogpPlan, 'created');
+            Log::info('Send subscribe email on creation');
         }
     }
 
@@ -80,5 +91,58 @@ class OgpPlanObserver
     public function forceDeleted(OgpPlan $ogpPlan)
     {
         //
+    }
+
+    /**
+     * Send emails
+     *
+     * @param OgpPlan $ogpPlan
+     * @param $event
+     * @return void
+     */
+    private function sendEmails(OgpPlan $ogpPlan, $event): void
+    {
+        if($event == 'created'){
+            $administrators = null;
+            $moderators = null;
+            //get users by model ID
+            $subscribedUsers = UserSubscribe::where('subscribable_type', OgpPlan::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->where('subscribable_id', '=', $ogpPlan->id)
+                ->get();
+
+            //get users by model filter
+            $filterSubscribtions = UserSubscribe::where('subscribable_type', OgpPlan::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->whereNull('subscribable_id')
+                ->get();
+
+            if($filterSubscribtions->count()){
+                foreach ($filterSubscribtions as $fSubscribe){
+                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                    $modelIds = OgpPlan::list($filterArray)->pluck('id')->toArray();
+                    if(in_array($ogpPlan->id, $modelIds)){
+                        $subscribedUsers->add($fSubscribe);
+                    }
+                }
+            }
+            if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
+                return;
+            }
+
+            $data['event'] = $event;
+            $data['administrators'] = $administrators;
+            $data['moderators'] = $moderators;
+            $data['subscribedUsers'] = $subscribedUsers;
+            $data['modelInstance'] = $ogpPlan;
+            $data['markdown'] = 'ogp';
+
+            SendSubscribedUserEmailJob::dispatch($data);
+
+        }
     }
 }

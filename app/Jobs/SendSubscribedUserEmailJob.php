@@ -11,6 +11,7 @@ use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\OgpPlan;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
@@ -169,6 +170,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('poll.show', ['id' => $this->data['modelInstance']->id]),
+                };
+            } elseif ($this->data['modelInstance'] instanceof OgpPlan) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New ogp $type text");
+                    ${$varSubject} = __("New ogp");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('ogp.national_action_plans.show', ['id' => $this->data['modelInstance']->id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {

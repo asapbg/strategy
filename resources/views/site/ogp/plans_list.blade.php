@@ -1,7 +1,11 @@
 @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\OgpArea::class))
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.ogp.plan.create')])
 @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_ogp_plans')])
-<input type="hidden" id="subscribe_model" value="App\Models\OgpPlan">
+<div class="col-12 mt-2 text-end">
+    <input type="hidden" id="subscribe_model" value="App\Models\OgpPlan">
+    <input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
+    @includeIf('site.partial.subscribe-buttons')
+</div>
 <div class="row mb-2">
 {{--    <div class="col-md-6 mt-2">--}}
 {{--        <div class="info-consul text-start">--}}

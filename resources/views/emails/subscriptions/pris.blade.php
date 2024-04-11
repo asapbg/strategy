@@ -7,7 +7,7 @@
 {{ __('custom.name') }}: {{ $modelInstance->mcDisplayName }}<br>
 {{ __('Link to the pris on the Public Consultation Portal') }}:
 @component('mail::button', ['url' => $url])
-    {{ __('See the consultation') }}
+    {{ __('See the pris') }}
 @endcomponent
 
 {{ __('Change subscriptions here') }}

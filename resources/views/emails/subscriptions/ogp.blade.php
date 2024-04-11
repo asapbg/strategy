@@ -4,9 +4,10 @@
 
 {{ $text }}
 
-{{ __('Link to the program on the Public Consultation Portal') }}:
+{{ __('custom.name') }}: {{ $modelInstance->name }}<br>
+{{ __('Link to the ogp on the Public Consultation Portal') }}:
 @component('mail::button', ['url' => $url])
-    {{ __('See the op') }}
+    {{ __('See the national plan') }}
 @endcomponent
 
 {{ __('Change subscriptions here') }}

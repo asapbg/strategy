@@ -6,7 +6,7 @@
 
 {{ __('Link to the program on the Public Consultation Portal') }}:
 @component('mail::button', ['url' => $url])
-    {{ __('See the consultation') }}
+    {{ __('See the lp') }}
 @endcomponent
 
 {{ __('Change subscriptions here') }}
