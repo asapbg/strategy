@@ -165,12 +165,23 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($this->data['event'] == "created") {
                     ${$var} = __("New poll $type text");
                     ${$varSubject} = __("New poll");
-                }
-                ${$varUrl} = match ($type) {
+
+                    ${$varUrl} = match ($type) {
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
-                    default => route('poll.show', ['id' => $this->data['modelInstance']->id]),
-                };
+                        default => route('poll.show', ['id' => $this->data['modelInstance']->id]),
+                    };
+                } elseif ($this->data['event'] == "pc_poll_created"){
+                    ${$var} = __("New poll to pc $type text");
+                    ${$varSubject} = __("New poll to pc");
+
+                    ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                        default => route('public_consultation.view', ['id' => $this->data['secondModelInstance']->id]),
+                    };
+                }
+
             } elseif ($this->data['modelInstance'] instanceof OgpPlan) {
                 if ($this->data['event'] == "created") {
                     ${$var} = __("New ogp $type text");

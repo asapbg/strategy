@@ -42,6 +42,7 @@ class NotifySubscribedUser extends Mailable
     public function build()
     {
         $modelInstance = $this->data['modelInstance'];
+        $secondModelInstance = $this->data['secondModelInstance'] ?? null;
         $markdown = $this->data['markdown'];
         $text = $this->data['text'];
         $user = $this->user;
@@ -54,6 +55,6 @@ class NotifySubscribedUser extends Mailable
 
         return $this->from($from)
             ->subject($this->data['subject'])
-            ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text'));
+            ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text', 'secondModelInstance'));
     }
 }
