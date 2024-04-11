@@ -69,9 +69,15 @@
                                     <p class="team-position text-secondary mb-2 fw-600 text-uppercase">
                                         @foreach($row->roles as $r)
                                             @if(in_array($r->name, $roles))
-                                                {{ $r->display_name }}
+                                                <span class="d-block">{{ $r->display_name }}</span>
                                             @endif
                                         @endforeach
+                                        @if(!empty($row->institution_id) && $row->institution)
+                                            <span class="main-color me-4 fw-normal d-block mt-1">
+                                                <i class="fa-solid fa-building me-1"></i>
+                                                {{ $row->institution->name }}
+                                            </span>
+                                        @endif
                                     </p>
                                     @if(!empty($row->email) || !empty($row->phone))
                                         <div class="team-member-contact d-flex flex-row">
