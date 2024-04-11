@@ -47,7 +47,7 @@
                             <td>@if(isset($isPdf) && $isPdf)<a href="{{ route('public_consultation.view', $row->id) }}" target="_blank">{{ $row->title }}</a>@else {{ $row->title }}@endif</td>
                             <td>{{ $row->fieldOfAction?->name }}</td>
                             <td>{{ $row->inPeriod }}</td>
-                            <td>{{ $row->importerInstitution?->name }}</td>
+                            <td>@if($row->importer_institution_id == env('DEFAULT_INSTITUTION_ID')){{ '' }}@else{{ $row->importerInstitution?->name }}@endif</td>
                             <td>{{ $row->actType?->name }}</td>
                             <td>{{ $row->daysCnt }}</td>
                             <td>{!! $row->short_term_reason !!}</td>

@@ -177,7 +177,7 @@ class PublicConsultationController extends Controller
             ->with(['translation', 'comments', 'fieldOfAction', 'fieldOfAction.translations',
                 'actType', 'actType.translations',
                 'importerInstitution', 'importerInstitution.translations', 'comments', 'proposalReport'])
-            ->join('institution', 'institution.id', '=', 'public_consultation.importer_institution_id')
+            ->leftJoin('institution', 'institution.id', '=', 'public_consultation.importer_institution_id')
             ->join('public_consultation_translations', function ($j){
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
@@ -192,7 +192,7 @@ class PublicConsultationController extends Controller
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
-            ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
+//            ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd);
         if($request->input('export_excel') || $request->input('export_pdf')){
@@ -326,8 +326,9 @@ class PublicConsultationController extends Controller
             })
             ->leftJoin('public_consultation', function ($q){
                 $q->on('public_consultation.field_of_actions_id', '=', 'field_of_actions.id')
-                    ->whereNull('public_consultation.deleted_at')->where('public_consultation.active')
-                    ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'));
+                    ->whereNull('public_consultation.deleted_at');
+//                    ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'))
+//                    ->where('public_consultation.active');
             })
             ->where('field_of_actions.active', '=', 1)
             ->whereNull('field_of_actions.deleted_at')

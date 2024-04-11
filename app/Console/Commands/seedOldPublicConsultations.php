@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Models\FieldOfAction;
 use App\Models\InstitutionLevel;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
@@ -48,7 +49,17 @@ class seedOldPublicConsultations extends Command
         //max id in old db
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
-        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+//        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+        $currentStep = 0;
+
+        $ourPc = PublicConsultation::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
+        $fieldOfActions = array();
+        if($fieldOfActionsDBArea->count()){
+            foreach ($fieldOfActionsDBArea as $p){
+                $fieldOfActions[mb_strtolower($p->translate('bg')->name)] = $p->id;
+            }
+        }
 
         //Create default institution
         $diEmail = 'magdalena.mitkova+egov@asap.bg';
@@ -111,6 +122,7 @@ class seedOldPublicConsultations extends Command
                         -- operational_program_row_id
                         -- legislative_program_row_id
                         pc.categoryid as field_of_actions_id,
+                        c.categoryname as field_of_actions_name,
                         -- law_id
                         -- pris_id
                         -- translation
@@ -123,6 +135,7 @@ class seedOldPublicConsultations extends Command
                         pc.createdbyuserid as author_id,
                         pc.summary as description
                     from dbo.publicconsultations pc
+                    left join dbo.categories c on c.id = pc.categoryid
                         where pc.languageid = 1
                         and pc.id >= ' . $currentStep . '
                         and pc.id < ' . ($currentStep + $step) . '
@@ -131,7 +144,25 @@ class seedOldPublicConsultations extends Command
                 if (sizeof($oldDbResult)) {
                     DB::beginTransaction();
                     try {
+                        file_put_contents('old_pc_field_of_actions', '');
                         foreach ($oldDbResult as $item) {
+                            if(isset($ourPc[(int)$item->old_id])) {
+                                $this->comment('Consultation with old id '.$item->old_id.' already exist');
+                                if(isset($fieldOfActions) && sizeof($fieldOfActions) && isset($fieldOfActions[mb_strtolower($item->field_of_actions_name)])){
+                                    $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
+                                    if($existPc){
+                                        $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
+                                        $existPc->saveQuietly();
+                                    }
+                                } else {
+                                    $existPc->field_of_actions_id = null;
+                                    $existPc->saveQuietly();
+                                    //Collect not existing fields of actions or create mapping on fly
+                                    file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
+                                }
+                                continue;
+                            }
+
 //                            //$institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
                             $institutionId = $dInstitution->id;
                             //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
@@ -164,7 +195,8 @@ class seedOldPublicConsultations extends Command
 
                             $newPc = new PublicConsultation();
                             $newPc->fill($prepareNewPc);
-                            $newPc->save();
+                            $newPc->saveQuietly();
+
                             if($newPc) {
                                 $comments = [];
                                 $newPc->reg_num = $newPc->id.'-K';
@@ -172,7 +204,7 @@ class seedOldPublicConsultations extends Command
                                     $newPc->translateOrNew($locale['code'])->title = $prepareNewPc['title'];
                                     $newPc->translateOrNew($locale['code'])->description = $prepareNewPc['description'];
                                 }
-                                $newPc->save();
+                                $newPc->saveQuietly();
 
                                 $oldDbComments = DB::connection('old_strategy_app')
                                     ->select('select

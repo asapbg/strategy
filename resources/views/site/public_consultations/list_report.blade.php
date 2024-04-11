@@ -41,7 +41,7 @@
                         <td><a href="{{ route('public_consultation.view', $item->id) }}" target="_blank">{{ $item->title }}</a></td>
                         <td>{{ $item->fieldOfAction?->name }}</td>
                         <td>{{ $item->inPeriod }}</td>
-                        <td>{{ $item->importerInstitution?->name }}</td>
+                        <td>@if($item->importer_institution_id == env('DEFAULT_INSTITUTION_ID')){{ '' }}@else{{ $item->importerInstitution?->name }}@endif</td>
                         <td>{{ $item->actType?->name }}</td>
                         <td>{{ $item->daysCnt }}</td>
                         <td>{!! $item->short_term_reason !!}</td>
