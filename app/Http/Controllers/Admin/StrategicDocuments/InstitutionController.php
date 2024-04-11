@@ -52,7 +52,9 @@ class InstitutionController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Institution::translationFieldsProperties();
         $consultationLevels = ConsultationLevel::all();
-        $fieldOfActions = FieldOfAction::with(['translations'])->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))->get();
+        $fieldOfActions = FieldOfAction::with(['translations'])
+            ->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))
+            ->orderByTranslation('name')->get();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions'));
     }
 

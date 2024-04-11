@@ -91,7 +91,7 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('create', AdvisoryBoard::class);
 
         $item = new AdvisoryBoard();
-        $field_of_actions = FieldOfAction::advisoryBoard()->orderBy('id')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->orderByTranslation('name')->get();
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
@@ -294,7 +294,7 @@ class AdvisoryBoardController extends AdminController
             $query->with('translations');
         }])->find($item->id);
 
-        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderBy('id')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderByTranslation('name')->get();
         $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();

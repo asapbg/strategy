@@ -128,7 +128,7 @@ class PublicConsultationController extends AdminController
         if($isAdmin) {
             $institutions = Institution::optionsListWithAttr();
             $institutionLevels = InstitutionCategoryLevelEnum::options();
-            $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : FieldOfAction::with(['translation'])->Active()->get();
+            $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : FieldOfAction::with(['translation'])->Active()->orderByTranslation('name')->get();
             $actTypes = $item->id ? ActType::with(['translation'])
                 ->where('consultation_level_id', '=', $item->consultation_level_id)
                 ->get() : ActType::with(['translation'])->get();
