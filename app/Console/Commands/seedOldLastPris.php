@@ -71,6 +71,7 @@ class seedOldLastPris extends Command
         }
 
         $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
+        $ourPris = Pris::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         $legalTypeDocs = [
             5017 => 7, //'Заповед',
@@ -320,7 +321,8 @@ class seedOldLastPris extends Command
         //max id in old db
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
         //start from this id in old database
-        $currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+//        $currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+        $currentStep = 0;
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -335,7 +337,7 @@ class seedOldLastPris extends Command
                                 pris.masterid,
                                 pris.state,
                                 pris.xstate,
-                                case when pris.islatestrevision = false then 0 else 1 end as last_vesrion,
+                                case when pris.islatestrevision = false then 0 else 1 end as last_version,
                                 pris.itemtypeid as old_doc_type_id,
                                 pris."xml" as to_parse_xml_details,
                                 pris.activestate as active, -- check with distinct if only 0 and 1 // check also pris.state
@@ -354,8 +356,24 @@ class seedOldLastPris extends Command
                             order by pris.id asc');
 
                 if (sizeof($oldDbResult)) {
-                    DB::beginTransaction();
                     foreach ($oldDbResult as $item) {
+                        //Update existing
+                        if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
+                            $this->comment('Pris with old id '.$item->old_id.' already exist');
+                            $existPris = Pris::find($ourPris[(int)$item->old_id]);
+
+                            if($existPris){
+                                //Update version
+                                if($existPris->last_version != $item->last_version){
+                                    $existPris->last_version = $item->last_version;
+                                    $existPris->save();
+                                    DB::commit();
+                                }
+                            }
+                            continue;
+                        }
+
+                        DB::beginTransaction();
                         try {
                             $fileForExeption = null;
                             $importerInstitutions = [];
@@ -392,6 +410,7 @@ class seedOldLastPris extends Command
                                     'importer' => '',
                                     'state' => $item->state,
                                     'xstate' => $item->xstate,
+                                    'last_version' => $item->last_version,
                                 ];
                                 //Do something
                                 //1. Parse tags and insert if need to
@@ -519,6 +538,7 @@ class seedOldLastPris extends Command
                                 if($prepareNewPris['legal_act_type_id'] == $protocolsId && str_contains($prepareNewPris['doc_num'], '.')) {
                                     $prepareNewPris['legal_act_type_id'] = $protocolDecisionsId;
                                 }
+
                                 //2. Create pris record and translations
                                 $newItem = new Pris();
                                 $newItem->fill($prepareNewPris);
@@ -629,7 +649,6 @@ class seedOldLastPris extends Command
                         } catch (\Exception $e) {
                             Log::error('Migration old pris: ' . $e);
                             DB::rollBack();
-                            dd($prepareNewPris ?? 'no prepared data', $newItemTags ?? 'no tags', $fileForExeption ?? 'no file', $data ?? 'no xml data');
                         }
                     }
                 }

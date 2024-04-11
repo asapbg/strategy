@@ -8,6 +8,7 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -36,7 +37,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', //'institution_id',
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
-        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate'];
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version'];
+
+//    protected static function booted(){
+//        static::addGlobalScope('last_version', function (Builder $builder) {
+//            $builder->where('last_version', '=' , 1);
+//        });
+//    }
 
     /**
      * @return FeedItem
