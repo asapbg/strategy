@@ -61,7 +61,7 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->boardFilters($request);
-        if( !$request->ajax() ) {
+        if( !$request->ajax() && is_null($request->input('status'))) {
             $filter['status']['value'] = 1;
             $requestFilter['status'] = 1;
         }
@@ -121,10 +121,13 @@ class AdvisoryBoardController extends Controller
                     return $query->orderBy('advisory_act_type_translations.name');
                 }
             })
-            ->when($orderByName, function ($query) {
-                return $query->orderBy('advisory_board_translations.name');
-            })
             ->orderBy('advisory_boards.active', 'desc')
+            ->orderBy('advisory_board_translations.name')
+//            ->when($orderByName, function ($query) {
+//                return $query->orderBy('advisory_boards.active', 'desc')
+//                    ->orderBy('advisory_board_translations.name');
+//            })
+//            ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
         $subscribeFilter = $requestFilter;
@@ -545,6 +548,7 @@ class AdvisoryBoardController extends Controller
                 }
             })
             ->orderBy('advisory_boards.active', 'desc')
+            ->orderBy('advisory_board_translations.name', 'asc')
             ->SortedBy($sort,$sortOrd);
         if($searchMeetings){
             $q->groupBy('advisory_boards.id');
@@ -747,8 +751,8 @@ class AdvisoryBoardController extends Controller
             ),
             'status' => array(
                 'type' => 'select',
-                'options' => optionsStatusesFilter(true, '', __('custom.any')),
-                'default' => 1,
+                'options' => optionsStatusesFilter(true, '-1', __('custom.any')),
+                'default' => -1,
                 'label' => __('custom.status'),
                 'value' => $request->input('status'),
                 'col' => 'col-md-6'

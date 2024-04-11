@@ -74,8 +74,9 @@ class AdvisoryBoardController extends AdminController
                     $query->where('user_id', '=', auth()->user()->id);
                 });
             })
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->orderBy('active', 'desc')
+            ->orderByTranslation('name')
+            ->paginate(AdvisoryBoard::PAGINATE);
 
         return $this->view('admin.advisory-boards.index', compact('items'));
     }

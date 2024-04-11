@@ -12,7 +12,7 @@ class Status extends QueryFilter implements FilterContract{
 
     public function handle($value): void
     {
-        if(!empty($value)){
+        if(!empty($value) && $value != '-1'){
             if(is_string($value) && $value == 'inactive') {
                 $value = 0;
             }
