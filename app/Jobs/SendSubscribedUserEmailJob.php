@@ -11,6 +11,7 @@ use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegislativeInitiative;
+use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocument;
@@ -158,6 +159,16 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
                     default => route('op.view', ['id' => $this->data['modelInstance']->id]),
+                };
+            }  elseif ($this->data['modelInstance'] instanceof Poll) {
+                if ($this->data['event'] == "created") {
+                    ${$var} = __("New poll $type text");
+                    ${$varSubject} = __("New poll");
+                }
+                ${$varUrl} = match ($type) {
+//                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
+//                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
+                    default => route('poll.show', ['id' => $this->data['modelInstance']->id]),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeInitiative) {
                 if ($this->data['event'] == "updated") {

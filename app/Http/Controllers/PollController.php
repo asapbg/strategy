@@ -19,6 +19,8 @@ class PollController extends Controller
 {
     public function index(Request $request)
     {
+        $rssUrl = config('feed.feeds.polls.url');
+
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
@@ -52,12 +54,15 @@ class PollController extends Controller
             ->SortedBy($sort,$sortOrd)
             ->paginate($paginate);
 
+        $hasSubscribeEmail = $this->hasSubscription(null, Poll::class, $requestFilter);
+        $hasSubscribeRss = false;
+
         if( $request->ajax() ) {
-            return $this->view('site.polls.list', compact('filter','sorter', 'items', 'rf'));
+            return $this->view('site.polls.list', compact('filter','sorter', 'items', 'rf', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter'));
         }
 
         $pageTitle = __('site.public_consultation.polls');
-        return $this->view('site.polls.index', compact('filter','sorter', 'items', 'rf', 'pageTitle'));
+        return $this->view('site.polls.index', compact('filter','sorter', 'items', 'rf', 'pageTitle', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter'));
     }
 
     public function show(Request $request, $id)

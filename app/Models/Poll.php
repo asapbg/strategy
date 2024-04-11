@@ -8,10 +8,12 @@ use App\Traits\FilterSort;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 use function Clue\StreamFilter\fun;
 
 
-class Poll extends ModelActivityExtend
+class Poll extends ModelActivityExtend implements Feedable
 {
     use FilterSort;
 
@@ -28,6 +30,34 @@ class Poll extends ModelActivityExtend
 
     protected $guarded = [];
 
+    /**
+     * @return FeedItem
+     */
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create([
+            'id' => $this->id,
+            'title' => $this->name,
+            'summary' => '',
+            'updated' => $this->updated_at ?? $this->created_at,
+            'link' => Carbon::parse($this->end_date)->format('Y-m-d') < databaseDate(Carbon::now()) ? route('poll.statistic', ['id' => $this->id]) : route('poll.show', ['id' => $this->id]),
+            'authorName' => '',
+            'authorEmail' => ''
+        ]);
+    }
+
+    /**
+     * We use this method for rss feed
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::Public()
+            ->whereDoesntHave('consultations')
+            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->limit(config('feed.items_per_page'), 20)
+            ->get();
+    }
     /**
      * Get the model name
      */
@@ -56,7 +86,7 @@ class Poll extends ModelActivityExtend
     public function scopeExpired($query)
     {
         $query->where(function ($query) {
-            $query->where('end_date', '<', databaseDate(Carbon::now()))->orWhereNull('end_date');
+            $query->where('end_date', '<', databaseDate(Carbon::now()));
         });
     }
 
@@ -98,15 +128,15 @@ class Poll extends ModelActivityExtend
     {
         return Attribute::make(
             get: fn ($value) => displayDate($value),
-            set: fn ($value) => databaseDate($value),
+            set: fn ($value) => databaseDate(Carbon::parse($value)->format('Y-m-d')),
         );
     }
 
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !is_null($value) ? displayDate($value) : $value,
-            set: fn ($value) => !is_null($value) ? databaseDate($value) : null,
+            get: fn ($value) => !is_null($value) ? displayDate($value) : '',
+            set: fn ($value) => !is_null($value) ? databaseDate(Carbon::parse($value)->format('Y-m-d')) : null,
         );
     }
 
@@ -172,6 +202,29 @@ class Poll extends ModelActivityExtend
             return DB::table('poll')
             ->select(['poll.id', 'poll.name'])
             ->orderBy('poll.name', 'asc')
+            ->get();
+    }
+
+    public static function list($filter)
+    {
+        $contentSearch = $filter['content'] ?? null;
+        return self::select('poll.id')
+            ->Active()
+            ->Public()
+            ->FilterBy($filter)
+            ->leftJoin('public_consultation_poll', 'public_consultation_poll.poll_id', '=', 'poll.id')
+            ->leftjoin('poll_question', 'poll_question.poll_id', '=', 'poll.id')
+            ->leftjoin('poll_question_option', 'poll_question_option.poll_question_id', '=', 'poll_question.id')
+            ->when($contentSearch, function ($query) use($contentSearch){
+                return $query->where(function ($query) use ($contentSearch){
+                    $query->where('poll_question.name', 'ilike', '%'.$contentSearch.'%')
+                        ->orWhere('poll_question_option.name', 'ilike', '%'.$contentSearch.'%')
+                        ->orWhere('poll.name', 'ilike', '%'.$contentSearch.'%');
+                });
+            })
+            ->whereNotNull('poll_question.id')
+            ->whereNull('public_consultation_poll.poll_id')
+            ->groupBy('poll.id')
             ->get();
     }
 }
