@@ -39,7 +39,7 @@
                                                 @if($policy != $i->sd_policy_title)
                                                     @php($policy = $i->sd_policy_title)
                                                     <div class="accordion" id="accordionpolicy{{ $i->sd_policy_id }}">
-                                                        <div class="card custom-card mb-2">
+                                                        <div class="card custom-card mb-2 ms-3">
                                                             <div class="card-header" id="headingpolicy{{ $i->sd_policy_id }}">
                                                                 <h2 class="mb-0">
                                                                     <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed" type="button" data-toggle="collapse" data-target="#collapsepolicy{{ $i->sd_policy_id }}" aria-expanded="false" aria-controls="collapsepolicy{{ $i->sd_policy_id }}">
@@ -56,8 +56,8 @@
 
                                                 @if($i->sd_id != $sdId)
                                                     @php($sdId = $i->sd_id)
-                                                    <div class="card custom-card mb-2">
-                                                        <div class="card-header" id="heading{{ $i->sd_id }}">
+                                                    <div class="card custom-card mb-2" style="margin-left: 20px">
+                                                        <div class="card-header" id="heading{{ $i->sd_id }}" >
                                                             <h2 class="mb-0">
                                                                 <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
                                                                     <i class="me-1 fas fa-sign-in-alt main-color fs-18"></i>
@@ -68,7 +68,7 @@
                                                     </div>
                                                 @endif
                                                 @if(!is_null($i->child_id))
-                                                    <div class="card custom-card mb-2" style="margin-left: {{ ($i->child_depth * 30 + 30) }}px">
+                                                    <div class="card custom-card mb-2" style="margin-left: {{ (($i->child_depth * 30) + 60) }}px">
                                                         <div class="card-header" id="heading{{ $i->sd_id }}">
                                                             <h2 class="mb-0">
                                                                 <a href="{{ route('strategy-document.view', $i->sd_id) }}" target="_blank" class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start collapsed">
