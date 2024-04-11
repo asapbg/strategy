@@ -43,10 +43,6 @@ enum DocTypesEnum: int
     case OGP_VERSION_AFTER_CONSULTATION = 19; // Файл към OGP
     case OGP_REPORT_EVALUATION = 20; // Доклади за независима оценка
 
-    //TODO ask Izi about next two documents. Are they same as 1 and 2 ???
-    //case PC_preliminary_IMPACT_EVALUATION = 6; //Предварителна оценка на въздействието
-    //case PC_MC_IMPACT_EVALUATION_OPINION = 6; //Становище на администрацията на Министерския съвет
-
     // Return enum name by value
 
     public static function keyByValue($searchVal): string

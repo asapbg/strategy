@@ -157,7 +157,6 @@
         </div>
 
         <div class="col-md-6 text-end">
-            @dd($subscribe,$requestFilter, $hasSubscribeEmail, $hasSubscribeRss)
             @if(!isset($subscribe) || $subscribe)
 {{--                @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])--}}
                 @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])
