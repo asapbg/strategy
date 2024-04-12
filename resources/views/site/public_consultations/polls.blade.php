@@ -70,28 +70,30 @@
                     </div>
                     @php($statistic = $poll->getStats())
                     @if($poll->questions->count())
-                        @foreach($poll->questions as $key => $q)
-                            <div class="col-md-6 mb-4 @if($loop->first) mt-3 @endif">
-                                <div class="comment-background p-2 rounded">
-                                    <p class="fw-bold fs-18 mb-2">{{ __('custom.question_with_number', ['number' => ($key+1)]) }} {{ $q->name }} </p>
-                                    <div class="mb-2">Потребители: <span>{{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }}</span></div>
-                                    @foreach($q->answers as $key => $a)
-                                        @php($percents = 0)
-                                        <div class="col-12 @if(!$loop->first) mt-2 @endif">
-                                            {{ $a->name }}
-                                        </div>
-                                        @if(sizeof($statistic) && isset($statistic[$q->id]) && isset($statistic[$q->id]['options'][$a->id]))
-                                            @php($percents = ($statistic[$q->id]['options'][$a->id] * 100) / $statistic[$q->id]['users'])
-                                        @endif
-                                        <div class="col-md-6">
-                                            <div class="progress">
-                                                <div class="progress-bar main-progress-bar" role="progressbar" style="width: {{ $percents }}%" aria-valuenow="{{ $percents }}" aria-valuemin="0" aria-valuemax="100">{{ $percents }}%</div>
+                        <div class="row mt-4">
+                            @foreach($poll->questions as $key => $q)
+                                <div class="col-md-6 mb-4">
+                                    <div class="comment-background p-2 rounded">
+                                        <p class="fw-bold fs-18 mb-2">{{ __('custom.question_with_number', ['number' => ($key+1)]) }} {{ $q->name }} </p>
+                                        <div class="mb-2">Потребители: <span>{{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }}</span></div>
+                                        @foreach($q->answers as $key => $a)
+                                            @php($percents = 0)
+                                            <div class="col-12 @if(!$loop->first) mt-2 @endif">
+                                                {{ $a->name }}
                                             </div>
-                                        </div>
-                                    @endforeach
+                                            @if(sizeof($statistic) && isset($statistic[$q->id]) && isset($statistic[$q->id]['options'][$a->id]))
+                                                @php($percents = ($statistic[$q->id]['options'][$a->id] * 100) / $statistic[$q->id]['users'])
+                                            @endif
+                                            <div class="col-md-6">
+                                                <div class="progress">
+                                                    <div class="progress-bar main-progress-bar" role="progressbar" style="width: {{ $percents }}%" aria-valuenow="{{ $percents }}" aria-valuemin="0" aria-valuemax="100">{{ $percents }}%</div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @endif
                 @endforeach
             </div>
