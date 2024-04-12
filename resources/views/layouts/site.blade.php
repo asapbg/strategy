@@ -42,7 +42,7 @@
     @endphp
 
     @if(isset($slider) && isset($slider['img']))
-        <section id="slider {{ $class }}">
+        <section id="sliderr" class="{{ $class }}">
             <div id="carouselExampleSlidesOnly" class="carousel slide  bgr-main " data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active" style="margin-top:115px;">
