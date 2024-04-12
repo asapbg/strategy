@@ -135,7 +135,7 @@ class AdvisoryBoardController extends AdminController
                     'code_object' => File::CODE_AB,
                     'filename' => $fileNameToStore,
                     'content_type' => $itemImg->getClientMimeType(),
-                    'path' => 'files'.DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR.$fileNameToStore,
+                    'path' => 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore,
                     'sys_user' => $request->user()->id,
                 ]);
                 $file->save();

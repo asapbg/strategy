@@ -277,7 +277,7 @@
                     <div class="form-group">
                         <label class="col-sm-12 control-label" for="active">
                             {{ __('validation.attributes.main_img') }}
-                            <br><span class="text-primary"><i>Препоръчителен размер 1900px x 400px</i></span>
+                            <br><span class="text-primary"><i>Препоръчителен размер 1900px x 200px</i></span>
                         </label>
                         @if($item->id && $item->mainImg)
                             <img src="{{ $item->headerImg }}" class="img-thumbnail mt-2 mb-4">
