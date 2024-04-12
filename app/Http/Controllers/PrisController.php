@@ -222,6 +222,40 @@ class PrisController extends Controller
                 'value' => $request->input('fullSearch'),
                 'col' => 'col-md-12'
             ),
+            'formGroup' => array(
+                'title' => __('custom.search_in'),
+                'class' => 'mb-4',
+                'fields' => array(
+                    'fileSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('fileSearch') : true,
+                        'label' => trans_choice('custom.files', 2),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'aboutSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('aboutSearch') : true,
+                        'label' => __('custom.about'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'legalReasonSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('legalReasonSearch') : true,
+                        'label' => __('custom.pris_legal_reason'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'tagsSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('tagsSearch') : true,
+                        'label' => trans_choice('custom.tags', 2),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                )
+            ),
             'docNum' => array(
                 'type' => 'text',
                 'label' => __('custom.document_number'),

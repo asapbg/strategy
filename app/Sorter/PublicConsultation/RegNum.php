@@ -5,7 +5,7 @@ use App\Sorter\QuerySorter;
 
 class RegNum extends QuerySorter implements SorterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         $direction = $value ?? 'asc';
         $this->query->orderBy('public_consultation.reg_num', $direction);

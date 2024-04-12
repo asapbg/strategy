@@ -23,7 +23,7 @@ class FilterBuilder {
             }
 
             if( (is_array($value) && sizeof($value)) || (!is_array($value) && strlen($value)) ) {
-                (new $class($this->query))->handle($value);
+                (new $class($this->query))->handle($value, $this->filters);
             }
         }
 

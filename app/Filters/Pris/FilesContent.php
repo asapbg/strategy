@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class FilesContent extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->whereHas('files', function (Builder $query) use ($value){

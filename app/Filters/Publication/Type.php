@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Type extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) && (int)$value > -1 ){
             $this->query->where('publication.type', $value);

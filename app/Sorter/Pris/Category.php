@@ -5,7 +5,7 @@ use App\Sorter\QuerySorter;
 
 class Category extends QuerySorter implements SorterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         $direction = $value ?? 'asc';
         $this->query->orderBy('legal_act_type_translations.name', $direction);

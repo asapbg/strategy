@@ -9,7 +9,7 @@ use App\Models\Comments;
 
 class Consultation extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( (int)$value > 0 ){
             $this->query->where('comments.object_code', '=', Comments::PC_OBJ_CODE)

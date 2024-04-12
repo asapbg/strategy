@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class NewspaperNumber extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->where('pris.newspaper_number', 'ilike', '%'.$value.'%');

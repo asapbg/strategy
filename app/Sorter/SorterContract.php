@@ -1,5 +1,5 @@
 <?php namespace App\Sorter;
 
 interface SorterContract {
-    public function handle($value): void;
+    public function handle($value, $filter = null): void;
 }

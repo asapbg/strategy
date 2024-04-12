@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Active extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         $value = (int)$value;
         if( in_array($value, [0,1]) ){

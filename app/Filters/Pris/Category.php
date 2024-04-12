@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Category extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( sizeof($value) ){
             $this->query->whereIn('pris.legal_act_type_id', $value);

@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Tags extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( sizeof($value) ){
             $this->query->whereHas('tags', function ($query) use ($value) {

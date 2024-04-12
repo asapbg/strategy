@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class Active extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) && (int)$value > 0){
             $now = databaseDate(Carbon::now());

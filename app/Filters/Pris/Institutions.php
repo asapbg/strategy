@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Institutions extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         //Need join to work
         if( sizeof($value) ){

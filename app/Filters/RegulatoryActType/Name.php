@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Name extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->whereHas('translations', function ($query) use ($value) {

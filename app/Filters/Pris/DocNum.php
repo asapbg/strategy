@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class DocNum extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->where('pris.doc_num', '=', $value);

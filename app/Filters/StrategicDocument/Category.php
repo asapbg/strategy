@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class Category extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             if(is_array($value)){
