@@ -166,7 +166,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        @if($item->changedDocs->count())
+                        @if($item->changedDocs->count() || $item->changedByDocs->count())
                             @foreach($item->changedDocs as $doc)
                                 <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
@@ -175,10 +175,18 @@
                                     {{ $doc->mcDisplayName }}
                                 </a>
                             @endforeach
+                                @foreach($item->changedByDocs as $doc)
+                                    <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                       class="text-decoration-none main-color d-block">
+                                        {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
+                                        {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
+                                        {{ $doc->mcDisplayName }}
+                                    </a>
+                                @endforeach
                         @endif
-                        @if(!empty($item->old_connections))
-                                {!! $item->oldConnectionsHtml !!}
-                        @endif
+{{--                        @if(!empty($item->old_connections))--}}
+{{--                                {!! $item->oldConnectionsHtml !!}--}}
+{{--                        @endif--}}
                     </div>
                 </div>
 

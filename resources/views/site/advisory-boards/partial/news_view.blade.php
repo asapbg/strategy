@@ -42,6 +42,7 @@
     $files = $publication->files()
 //        ->whereNotIn('content_type', App\Models\File::CONTENT_TYPE_IMAGES)
         ->whereLocale(currentLocale())
+        ->orderByRaw("array_position(array[".\App\Models\File::ORDER_BY_CONTENT_TYPE."], content_type)")
         ->get();
 @endphp
 @if($files->count() > 0)
@@ -52,16 +53,20 @@
                 @if(!$fileFound)
                     <h5>{{ __('custom.files') }}</h5>
                 @endif
-                <p>
-                    <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                        {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
-                    </a> |
-                    {{--                        @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))--}}
-                    <a class="text-decoration-none" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                        {{ __('custom.download') }}
-                    </a>
-                    {{--                        @endif--}}
-                </p>
+                @if(in_array($f->content_type, \App\Models\File::IMG_CONTENT_TYPE))
+                    {!! fileThumbnail($f) !!}
+                @else
+                    <p>
+                        <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
+                            {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
+                        </a> |
+                        {{--                        @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))--}}
+                        <a class="text-decoration-none" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                            {{ __('custom.download') }}
+                        </a>
+                        {{--                        @endif--}}
+                    </p>
+                @endif
                 @php($fileFound = true)
             @endif
         @endforeach

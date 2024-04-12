@@ -230,7 +230,7 @@
                                                         <div class="col-md-2">
                                                             <button type="button" class="btn btn-outline-success" id="connect-documents" data-pris="{{ $item->id }}">{{ __('custom.add') }}</button>
                                                         </div>
-                                                        @if($item->changedDocs->count())
+                                                        @if($item->changedDocs->count() || $item->changedByDocs->count())
                                                             <div class="col-12 mt-4" id="connected_documents">
                                                                 @foreach($item->changedDocs as $pris)
                                                                     <div id="disconnect_{{ $pris->id }}">
@@ -240,6 +240,14 @@
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
                                                                     </div>
                                                                 @endforeach
+                                                                    @foreach($item->changedByDocs as $pris)
+                                                                        <div id="disconnect_{{ $pris->id }}">
+                                                                            <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
+                                                                                <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }} {{ $pris->docYear }} г.
+                                                                            </a>
+                                                                            <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                        </div>
+                                                                    @endforeach
                                                             </div>
                                                         @endif
                                                         @if(!empty($item->old_connections))

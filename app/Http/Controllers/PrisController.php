@@ -228,6 +228,12 @@ class PrisController extends Controller
                 'value' => $request->input('docNum'),
                 'col' => 'col-md-3'
             ),
+            'year' => array(
+                'type' => 'text',
+                'label' => __('custom.year'),
+                'value' => $request->input('year'),
+                'col' => 'col-md-3'
+            ),
             'institutions' => array(
                 'type' => 'subjects',
                 'label' => trans_choice('custom.institutions', 1),

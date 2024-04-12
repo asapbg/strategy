@@ -1226,10 +1226,12 @@ a.box-link span {
 }
 
 /**/
-
+#slider .carousel-item.active{
+    max-height: 300px;
+}
 /*Single page - Consultations*/
 .slider {
-    padding: 60px 0px;
+    padding: 35px 0px;
     background: url(../img/slider-img.png);
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     background-color: #21659e;

@@ -34,7 +34,7 @@ class AdvisoryBoardController extends Controller
         parent::__construct($request);
         $this->title_singular = trans_choice('custom.advisory_boards', 2);
         $this->pageTitle = trans_choice('custom.advisory_boards', 2);
-        $this->setSlider(trans_choice('custom.advisory_boards', 2), AdvisoryBoard::DEFAULT_HEADER_IMG);
+//        $this->setSlider(trans_choice('custom.advisory_boards', 2), AdvisoryBoard::DEFAULT_HEADER_IMG);
     }
 
     /**
@@ -199,7 +199,9 @@ class AdvisoryBoardController extends Controller
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;
         $this->title_singular = $item->name;
-        $this->setSlider($item->name, $item->headerImg);
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
         return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting'));
     }
@@ -213,7 +215,9 @@ class AdvisoryBoardController extends Controller
         }
 
         $this->title_singular = $pageTitle = $item->name;
-        $this->setSlider($item->name, $item->headerImg);
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
         $this->composeBreadcrumbs($item, array(['name' => $section->title, 'url' => '']));
         return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle'));
     }
@@ -243,7 +247,11 @@ class AdvisoryBoardController extends Controller
         }
         $filter = $this->archiveFilters($request);
         $pageTitle = $item->name;
-        $this->setSlider($item->name, $item->headerImg);
+
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
+
         $items = AdvisoryBoardMeeting::with(['translations'])
             ->where('advisory_board_id', $item->id)
             ->where('next_meeting', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
@@ -271,7 +279,11 @@ class AdvisoryBoardController extends Controller
         }
         $filter = $this->archiveFilters($request);
         $pageTitle = $item->name;
-        $this->setSlider($item->name, $item->headerImg);
+
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
+
         $items = AdvisoryBoardFunction::with(['translations'])
             ->where('advisory_board_id', $item->id)
 //            ->with(['translations', 'siteFiles', 'siteFiles.versions'])
@@ -311,7 +323,11 @@ class AdvisoryBoardController extends Controller
             ->get();
 
         $pageTitle = $item->name;
-        $this->setSlider($item->name, $item->headerImg);
+
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
+
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.news', 2), 'url' => '']));
         return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'customSections'));
@@ -321,7 +337,9 @@ class AdvisoryBoardController extends Controller
         $pageTitle = $item->name;
         $this->setSeo($news->meta_title, $news->meta_description, $news->meta_keyword);
         $publication = $news;
-        $this->setSlider($item->name, $item->headerImg);
+        if($item->file_id > 0){
+            $this->setSlider($item->name, $item->headerImg);
+        }
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $this->composeBreadcrumbs($item,array(
             ['name' => trans_choice('custom.news', 2), 'url' => route('advisory-boards.view.news', $item)],
@@ -379,7 +397,11 @@ class AdvisoryBoardController extends Controller
                 abort(404);
             }
             $pageTitle = $item->name;
-            $this->setSlider($item->name, $item->headerImg);
+
+            if($item->file_id > 0){
+                $this->setSlider($item->name, $item->headerImg);
+            }
+
             $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
             $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
             return $this->view('site.advisory-boards.contacts_inner', compact('pageTitle', 'item', 'customSections'));

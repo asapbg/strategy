@@ -78,6 +78,8 @@ class File extends ModelActivityExtend
     const ALLOWED_FILE_OGP_EVALUATION = ['doc', 'docx', 'xsl', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png'];
 
     const CONTENT_TYPE_IMAGES = ['jpeg', 'jpg', 'png', 'gif', 'apng', 'avif', 'webp' ];//'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'
+    const ORDER_BY_CONTENT_TYPE = "'image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'";
+    const IMG_CONTENT_TYPE = ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'];
     protected $guarded = [];
 
     //activity

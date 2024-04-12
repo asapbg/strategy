@@ -506,7 +506,7 @@ if (!function_exists('fileHtmlContent')) {
     {
         $content = '';
 
-        if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES)){
+        if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES) || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)){
             return $file->preview;
         }
 
@@ -952,5 +952,17 @@ if (!function_exists('transliterate_new')) {
         );
 
         return $reverse ? str_replace($lat, $cyr, $str) : str_replace($cyr, $lat, $str);
+    }
+
+    if (!function_exists('fileThumbnail')) {
+        function fileThumbnail($file)
+        {
+            $thumbnail = '';
+            if(in_array($file->content_type, ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'])){
+                $thumbnail = '<div class="col-md-4 mb-3"><img class="img-thumbnail preview-file-modal" role="button" data-file="'.$file->id.'" data-url="'.route('modal.file_preview', ['id' => $file->id]).'" src="'.asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)).'"></div>';
+            }
+
+            return $thumbnail;
+        }
     }
 }

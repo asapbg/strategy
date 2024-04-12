@@ -29,3 +29,4 @@ app/Http/Controllers/Test.php
 institutions_for_mapping_last_pris.csv
 adv_board_positions.csv
 old_pc_field_of_actions
+old_pris_missing_connections.txt
