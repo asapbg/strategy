@@ -106,7 +106,19 @@ class AdvisoryBoardController extends Controller
                 $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
                     ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
             })
+            ->leftJoin('advisory_board_members', 'advisory_board_members.advisory_board_id', '=', 'advisory_boards.id')
+            ->leftJoin('advisory_board_member_translations', function ($j){
+                $j->on('advisory_board_member_translations.advisory_board_member_id', '=', 'advisory_board_members.id')
+                    ->where('advisory_board_member_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_board_npos', 'advisory_board_npos.advisory_board_id', '=', 'advisory_boards.id')
+            ->leftJoin('advisory_board_npo_translations', function ($j){
+                $j->on('advisory_board_npo_translations.advisory_board_npo_id', '=', 'advisory_board_npos.id')
+                    ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
+            })
             ->where('public', true)
+//            ->whereNull('advisory_board_members.deleted_at')
+//            ->whereNull('advisory_board_npos.deleted_at')
             ->FilterBy($requestFilter)
             ->when($requestGroupBy, function ($query) use($requestGroupBy){
                 if($requestGroupBy == 'fieldOfAction') {
@@ -129,6 +141,7 @@ class AdvisoryBoardController extends Controller
 //            })
 //            ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
+            ->groupBy('advisory_boards.id', 'advisory_board_translations.name')
             ->paginate($paginate);
         $subscribeFilter = $requestFilter;
         if(isset($subscribeFilter['status'])){
@@ -769,6 +782,12 @@ class AdvisoryBoardController extends Controller
                 'default' => '',
                 'label' => __('custom.presence_npo_representative'),
                 'value' => $request->input('npo'),
+                'col' => 'col-md-6'
+            ),
+            'personName' => array(
+                'type' => 'text',
+                'label' => __('custom.adv_board_search_person'),
+                'value' => $request->input('personName'),
                 'col' => 'col-md-6'
             ),
             'status' => array(
