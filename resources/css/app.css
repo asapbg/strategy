@@ -1226,7 +1226,8 @@ a.box-link span {
 }
 
 /**/
-#sliderr .carousel-item.active{
+#sliderr .carousel-item.active,
+#slider .carousel-item.active{
     max-height: 200px;
 }
 /*Single page - Consultations*/
