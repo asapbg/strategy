@@ -209,12 +209,12 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 function initInputs()
 {
     $('.select2').select2(select2Options);
-
+    $('.datepicker').datepicker('destroy');
     $('.datepicker').datepicker({
         language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
         format: 'dd.mm.yyyy',
         todayHighlight: true,
-        orientation: "bottom left",
+        orientation: "auto right",
         autoclose: true,
         weekStart: 1,
         changeMonth: true,
@@ -385,20 +385,18 @@ $(document).ready(function () {
 
     };
     $.datepicker.setDefaults($.datepicker.regional['bg']);
-
-    if ($('.datepicker').length) {
+    // if ($('.datepicker').length) {
         $('.datepicker').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
             todayHighlight: true,
-            orientation: "bottom left",
+            orientation: "auto right",
             autoclose: true,
             weekStart: 1,
             changeMonth: true,
             changeYear: true,
         });
-    }
-
+    // }
     var tabEl = $('button[data-bs-toggle="tab"]');
     tabEl.on('shown.bs.tab', function (event) {
         event.target // newly activated tab
