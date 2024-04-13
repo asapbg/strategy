@@ -390,8 +390,9 @@ class HomeController extends Controller
                 ) as result
         ');
 
+        $totalResults = $totalCnt[0];
+        $adv_board_items = $sd_items = $li_items = $pris_items = $publications_items = $news_items = $ogp_news_items = $pc_items = null;
         if(isset($totalCnt[0]) && $totalCnt[0]->sum) {
-            $totalResults = $totalCnt[0];
             //Search in Adv Boards
             $adv_board_items = \DB::select('
                 select
@@ -434,7 +435,7 @@ class HomeController extends Controller
             $li_items = \DB::select('
                 select
                     legislative_initiative.id,
-                    \''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || law_translations.name,
+                    \''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || law_translations.name as name,
                     \'li\' as item_type,
                     \'\' as act_type_name
                 from legislative_initiative
