@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/get-consultations', 'getConsultations')->name('get-consultations');
         Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
         Route::get('/search', 'search')->name('search');
+        Route::get('/search-section', 'searchSection')->name('search.section');
         Route::get('/contacts/{section?}', 'contacts')->name('contacts');
         Route::post('/contacts', 'sendMessage')->name('contacts.message');
         Route::get('/other', 'otherLinks')->name('other_links');

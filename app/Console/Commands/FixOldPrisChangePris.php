@@ -33,6 +33,7 @@ class FixOldPrisChangePris extends Command
      */
     public function handle()
     {
+        file_put_contents('old_pris_connections_missing_documents.txt', '');
         file_put_contents('old_pris_missing_connections.txt', '');
         $step = 50;
         $maxId = Pris::max('id');
@@ -185,7 +186,7 @@ class FixOldPrisChangePris extends Command
 
 
             if($pris->count() == 0){
-                //TODO if not found search by last by id
+                //TODO if not found last version search by last by id
                 $pris = Pris::where('legal_act_type_id', '=', $category)
                     ->where('doc_num', '=', $number)
                     ->where('doc_date', '>=', $from)
@@ -193,14 +194,12 @@ class FixOldPrisChangePris extends Command
                     ->orderBy('id', 'desc')
                     ->limit(1)
                     ->get();
-                dd($pris);
-            }
-
-            if($pris->count() > 1){
-                dd($pris);
             }
 
             if($pris->count() != 1){
+                if($from >= '1990-03-22'){
+                    file_put_contents('old_pris_connections_missing_documents.txt', json_encode($data, JSON_UNESCAPED_UNICODE).PHP_EOL, FILE_APPEND);
+                }
                 $this->comment('PRIS exist duplicated or not exist at all: '.json_encode($data, JSON_UNESCAPED_UNICODE));
                 return null;
             }
@@ -226,21 +225,19 @@ class FixOldPrisChangePris extends Command
                 ->get();
 
             if($pris->count() == 0){
-                //TODO if not found search by last by id
+                //TODO if not found last version search by last by id
                 $pris = Pris::where('legal_act_type_id', '=', $category)
                     ->where('doc_num', '=', $number)
                     ->where('doc_date', '=', $docDate)
                     ->orderBy('id', 'desc')
                     ->limit(1)
                     ->get();
-                dd($pris);
-            }
-
-            if($pris->count() > 1){
-                dd($pris);
             }
 
             if($pris->count() != 1){
+                if($docDate >= '1990-03-22'){
+                    file_put_contents('old_pris_connections_missing_documents.txt', json_encode($data, JSON_UNESCAPED_UNICODE).PHP_EOL, FILE_APPEND);
+                }
                 $this->comment('PRIS exist duplicated or not exist at all: '.json_encode($data, JSON_UNESCAPED_UNICODE));
                 return null;
             }

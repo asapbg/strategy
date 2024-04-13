@@ -582,67 +582,67 @@ class seedOldLastPris extends Command
                                 }
 
                                 //TODO //5. Create files and extract text
-                                $path = File::PAGE_UPLOAD_PRIS;
-                                $oldPages = DB::connection('pris')
-                                    ->select('
-                                    select
-                                         split_part(f.bloburi, \'/\', -1) as uuid,
-                                         f.filename  as filename,
-                                         f.contenttype as content_type,
-                                         f.datecreated as created_at,
-                                         f.datemodified as updated_at,
-                                         ft."text" as file_text,
-                                         b."content" as file_content
-                                    from edocs.attachments att
-                                    join archimed.blobs f on f.id = att.blobid
-                                    join archimed.blobtexts ft on ft.blobid = f.id
-                                    join blobs.blobcontents b on b.id::text = split_part(f.bloburi, \'/\', -1)
-                                    where true
-                                        and att.documentid = '.$newItem->old_id.'
-                                    order by att.documentid asc, att.pageid asc');
-
-                                if (sizeof($oldPages)) {
-                                    foreach ($oldPages as $f) {
-                                        $fileForExeption = $f;
-                                        $file = null;
-                                        if(!empty($f->file_content)) {
-//                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
-                                            $fileNameToStore = trim($f->filename);
-                                            $fullPath = $path.$fileNameToStore;
-                                            Storage::disk('public_uploads')->put($fullPath, $f->file_content);
-                                            $file = Storage::disk('public_uploads')->get($fullPath);
-                                        }
-
-                                        if($file) {
-                                            $fileIds = [];
-                                            foreach (['bg', 'en'] as $code) {
-                                                //TODO catch file version
-                                                //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                                                $version = 0;
-                                                $newFile = new File([
-                                                    'id_object' => $newItem->id,
-                                                    'code_object' => File::CODE_OBJ_PRIS,
-                                                    'filename' => $fileNameToStore,
-                                                    'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
-                                                    'path' => $fullPath,
-                                                    'description_'.$code => $f->filename,
-                                                    'sys_user' => null,
-                                                    'locale' => $code,
-                                                    'version' => ($version + 1).'.0',
-                                                    'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
-                                                    'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
-                                                ]);
-                                                $newFile->save();
-                                                $fileIds[] = $newFile->id;
-                                                $ocr = new FileOcr($newFile->refresh());
-                                                $ocr->extractText();
-                                            }
-
-                                            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-                                            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                                        }
-                                    }
-                                }
+//                                $path = File::PAGE_UPLOAD_PRIS;
+//                                $oldPages = DB::connection('pris')
+//                                    ->select('
+//                                    select
+//                                         split_part(f.bloburi, \'/\', -1) as uuid,
+//                                         f.filename  as filename,
+//                                         f.contenttype as content_type,
+//                                         f.datecreated as created_at,
+//                                         f.datemodified as updated_at,
+//                                         ft."text" as file_text,
+//                                         b."content" as file_content
+//                                    from edocs.attachments att
+//                                    join archimed.blobs f on f.id = att.blobid
+//                                    join archimed.blobtexts ft on ft.blobid = f.id
+//                                    join blobs.blobcontents b on b.id::text = split_part(f.bloburi, \'/\', -1)
+//                                    where true
+//                                        and att.documentid = '.$newItem->old_id.'
+//                                    order by att.documentid asc, att.pageid asc');
+//
+//                                if (sizeof($oldPages)) {
+//                                    foreach ($oldPages as $f) {
+//                                        $fileForExeption = $f;
+//                                        $file = null;
+//                                        if(!empty($f->file_content)) {
+////                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
+//                                            $fileNameToStore = trim($f->filename);
+//                                            $fullPath = $path.$fileNameToStore;
+//                                            Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+//                                            $file = Storage::disk('public_uploads')->get($fullPath);
+//                                        }
+//
+//                                        if($file) {
+//                                            $fileIds = [];
+//                                            foreach (['bg', 'en'] as $code) {
+//                                                //TODO catch file version
+//                                                //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+//                                                $version = 0;
+//                                                $newFile = new File([
+//                                                    'id_object' => $newItem->id,
+//                                                    'code_object' => File::CODE_OBJ_PRIS,
+//                                                    'filename' => $fileNameToStore,
+//                                                    'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
+//                                                    'path' => $fullPath,
+//                                                    'description_'.$code => $f->filename,
+//                                                    'sys_user' => null,
+//                                                    'locale' => $code,
+//                                                    'version' => ($version + 1).'.0',
+//                                                    'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
+//                                                    'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
+//                                                ]);
+//                                                $newFile->save();
+//                                                $fileIds[] = $newFile->id;
+//                                                $ocr = new FileOcr($newFile->refresh());
+//                                                $ocr->extractText();
+//                                            }
+//
+//                                            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+//                                            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+//                                        }
+//                                    }
+//                                }
                             }
                             $this->comment('PRIS with old id (' . $item->old_id . ') is created');
                             DB::commit();

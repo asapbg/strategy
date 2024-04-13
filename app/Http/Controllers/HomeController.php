@@ -7,12 +7,15 @@ use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\SendMessageRequest;
 use App\Mail\ContactFormMsg;
+use App\Models\AdvisoryBoard;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\LegislativeInitiative;
+use App\Models\Pris;
 use App\Models\Publication;
+use App\Models\StrategicDocument;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -122,9 +125,126 @@ class HomeController extends Controller
         return $initiatives;
     }
 
-    public function search(Request $request)
+    public function searchSection(Request $request)
     {
         $defaultPaginate = config('app.default_paginate');
+        $search = $request->input('search') ?? '';
+        $search = mb_strtolower($search);
+        $section = $request->input('section') ?? '';
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
+        $locale = app()->getLocale();
+        $nowDate = Carbon::now()->format('Y-m-d');
+        $nowDateTimeStamp = Carbon::now()->format('Y-m-d H:i:s');
+        switch ($section)
+        {
+            case 'adv_board':
+                $sectionName = trans_choice('custom.advisory_boards', 2);
+                $items = AdvisoryBoard::select(['advisory_boards.id', 'advisory_board_translations.name'])
+                    ->join('advisory_board_translations', function ($j) use($locale){
+                        $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
+                            ->where('advisory_board_translations.locale', '=', $locale);
+                    })
+                ->where('advisory_boards.public', '=', true)
+                ->where('advisory_board_translations.name', 'ilike', '%'.$search.'%')
+                ->paginate($paginate);
+                break;
+            case 'sd':
+                $sectionName = trans_choice('custom.strategic_documents', 2);
+                $items = StrategicDocument::select(['strategic_document.id', \DB::raw('strategic_document_translations.title as name')])
+                    ->join('strategic_document_translations', function ($j) use($locale){
+                        $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+                            ->where('strategic_document_translations.locale', '=', $locale);
+                    })
+                    ->where('strategic_document.active', '=', true)
+                    ->where('strategic_document_translations.title', 'ilike', '%'.$search.'%')
+                    ->paginate($paginate);
+                break;
+            case 'pc':
+                $sectionName = trans_choice('custom.public_consultations', 2);
+                $items = PublicConsultation::select(['public_consultation.id', \DB::raw('public_consultation_translations.title as name')])
+                    ->join('public_consultation_translations', function ($j) use($locale){
+                        $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                            ->where('public_consultation_translations.locale', '=', $locale);
+                    })
+                    ->where('public_consultation.active', '=', 1)
+                    ->where(function ($q) use($search){
+                        $q->where('public_consultation_translations.title', 'ilike', '%'.$search.'%')
+                            ->orWhere('public_consultation_translations.description', 'ilike', '%'.$search.'%');
+                    })
+                    ->where('public_consultation.open_from', '<=', $nowDate)
+                    ->paginate($paginate);
+                break;
+            case 'li':
+                $sectionName = trans_choice('custom.legislative_initiatives', 2);
+                $items = LegislativeInitiative::select(['legislative_initiative.id', \DB::raw(__('custom.change_f').' '.__('custom.in').' || \' \' || law_translations.name as name')])
+                    ->join('law', 'law.id', '=','legislative_initiative.law_id')
+                    ->join('law_translations', function ($j) use($locale){
+                        $j->on('law_translations.law_id', '=', 'law.id')
+                            ->where('law_translations.locale', '=', $locale);
+                    })
+                    ->where(function ($q) use($search){
+                        $q->where('legislative_initiative.description', 'ilike', '%'.$search.'%')
+                            ->orWhere('legislative_initiative.law_paragraph', 'ilike', '%'.$search.'%')
+                            ->orWhere('legislative_initiative.law_text', 'ilike', '%'.$search.'%');
+                    })
+                    ->paginate($paginate);
+                break;
+            case 'publications':
+            case 'news':
+            case 'ogp_news':
+                $type = $section == 'publications' ? PublicationTypesEnum::TYPE_LIBRARY->value :
+                    ($section == 'news' ? PublicationTypesEnum::TYPE_NEWS->value : PublicationTypesEnum::TYPE_OGP_NEWS->value);
+                $sectionName = $section == 'publications' ? trans_choice('custom.publications', 2) :
+                    ($section == 'news' ? trans_choice('custom.news', 2) : trans_choice('custom.ogp_news', 2));
+
+                $items = PublicConsultation::select(['publication.id', \DB::raw('publication_translations.title as name')])
+                    ->join('publication_translations', function ($j) use($locale){
+                        $j->on('publication_translations.publication_id', '=', 'publication.id')
+                            ->where('publication_translations.locale', '=', $locale);
+                    })
+                    ->where(function ($q) use($search){
+                        $q->where('publication_translations.title', 'ilike', '%'.$search.'%')
+                            ->orWhere('publication_translations.content', 'ilike', '%'.$search.'%')
+                            ->orWhere('publication_translations.short_content', 'ilike', '%'.$search.'%');
+                    })
+                    ->where('publication.active', '=', true)
+                    ->where('publication.published_at', '>=', $nowDate)
+                    ->where('publication.type', '=', $type)
+                    ->paginate($paginate);
+                break;
+            case 'pris':
+                $sectionName = trans_choice('custom.pris', 2);
+                $items = Pris::select(['pris.id', \DB::raw('legal_act_type_translations.name as act_type_name'), \DB::raw('legal_act_type_translations.name || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name')])
+                    ->join('pris_translations', function ($j) use($locale){
+                        $j->on('pris_translations.pris_id', '=', 'pris.id')
+                            ->where('pris_translations.locale', '=', $locale);
+                    })
+                    ->join('legal_act_type', 'pris.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->join('legal_act_type_translations', function ($j) use($locale){
+                        $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                            ->where('legal_act_type_translations.locale', '=', $locale);
+                    })
+                    ->where(function ($q) use($search){
+                        $q->where('pris_translations.about', 'ilike', '%'.$search.'%')
+                            ->orWhere('pris_translations.legal_reason', 'ilike', '%'.$search.'%')
+                            ->orWhere('pris_translations.importer', 'ilike', '%'.$search.'%');
+                    })
+                    ->where('pris.active', '=', 1)
+                    ->whereNotNull('pris.published_at')
+                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+                    ->paginate($paginate);
+                break;
+        }
+        $pageTitle = __('site.search_in_platform_page_title').' '.__('custom.in').' '.__('custom.section_search').' '.$sectionName;
+        $this->setBreadcrumbsFull(array(
+            ['name' => $pageTitle, 'url' => ''],
+            ['name' => $sectionName, 'url' => '']
+        ));
+        return $this->view('site.search_results_section', compact('pageTitle', 'search', 'defaultPaginate', 'items', 'sectionName'));
+    }
+    public function search(Request $request)
+    {
+        $defaultPaginate = 6;
         $totalResults = 0;
         $items = array();
         $perPage = $defaultPaginate;
@@ -139,11 +259,20 @@ class HomeController extends Controller
         //Count total
         $totalCnt = \DB::select('
             select
-                sum(result.cnt)
+                sum(result.cnt),
+                sum(case when result.type = \'pc\' then result.cnt else 0 end) as pc_cnt,
+                sum(case when result.type = \'adv_board\' then result.cnt else 0 end) as adv_board_cnt,
+                sum(case when result.type = \'sd\' then result.cnt else 0 end) as sd_cnt,
+                sum(case when result.type = \'li\' then result.cnt else 0 end) as li_cnt,
+                sum(case when result.type = \'pris\' then result.cnt else 0 end) as pris_cnt,
+                sum(case when result.type = \'publications\' then result.cnt else 0 end) as publications_cnt,
+                sum(case when result.type = \'news\' then result.cnt else 0 end) as news_cnt,
+                sum(case when result.type = \'ogp_news\' then result.cnt else 0 end) as ogp_news_cnt
             from
                 (
                     select
-                        count(public_consultation.id) as cnt
+                        count(public_consultation.id) as cnt,
+                        \'pc\' as type
                     from public_consultation
                     join public_consultation_translations on public_consultation_translations.public_consultation_id = public_consultation.id and public_consultation_translations.locale = \'' . $locale . '\'
                     where true
@@ -156,7 +285,8 @@ class HomeController extends Controller
                     and public_consultation.open_from <= \'' . $nowDate . '\'
                     union all
                         select
-                        count(advisory_boards.id) as cnt
+                        count(advisory_boards.id) as cnt,
+                        \'adv_board\' as type
                     from advisory_boards
                     join advisory_board_translations on advisory_board_translations.advisory_board_id = advisory_boards.id and advisory_board_translations.locale = \'' . $locale . '\'
                     where true
@@ -167,7 +297,8 @@ class HomeController extends Controller
                         )
                     union all
                         select
-                            count(strategic_document.id) as cnt
+                            count(strategic_document.id) as cnt,
+                            \'sd\' as type
                         from strategic_document
                         join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'' . $locale . '\'
                         where true
@@ -178,7 +309,8 @@ class HomeController extends Controller
                             )
                     union all
                         select
-                            count(legislative_initiative.id) as cnt
+                            count(legislative_initiative.id) as cnt,
+                            \'li\' as type
                         from legislative_initiative
                         join law on law.id = legislative_initiative.law_id
                         join law_translations on law_translations.law_id = law.id and law_translations.locale = \'' . $locale . '\'
@@ -191,7 +323,8 @@ class HomeController extends Controller
                             )
                     union all
                         select
-                            count(pris.id) as cnt
+                            count(pris.id) as cnt,
+                            \'pris\' as type
                         from pris
                         join pris_translations on pris_translations.pris_id = pris.id and pris_translations.locale = \'' . $locale . '\'
                         join legal_act_type on pris.legal_act_type_id = legal_act_type.id
@@ -208,14 +341,15 @@ class HomeController extends Controller
                             )
                     union all
                         select
-                            count(publication.id) as cnt
+                            count(publication.id) as cnt,
+                            \'publications\' as type
                         from publication
                         join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
                             and publication.published_at >= \'' . $nowDate . '\'
-                            and publication.type >= ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
+                            and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
                                 or publication_translations.content ilike \'%' . $search . '%\'
@@ -223,14 +357,15 @@ class HomeController extends Controller
                             )
                     union all
                         select
-                            count(publication.id) as cnt
+                            count(publication.id) as cnt,
+                            \'news\' as type
                         from publication
                         join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
                             and publication.published_at >= \'' . $nowDate . '\'
-                            and publication.type >= ' . PublicationTypesEnum::TYPE_NEWS->value . '
+                            and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
                                 or publication_translations.content ilike \'%' . $search . '%\'
@@ -238,14 +373,15 @@ class HomeController extends Controller
                             )
                     union all
                         select
-                            count(publication.id) as cnt
+                            count(publication.id) as cnt,
+                            \'ogp_news\' as type
                         from publication
                         join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
                             and publication.published_at >= \'' . $nowDate . '\'
-                            and publication.type >= ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
+                            and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
                                 or publication_translations.content ilike \'%' . $search . '%\'
@@ -255,9 +391,9 @@ class HomeController extends Controller
         ');
 
         if(isset($totalCnt[0]) && $totalCnt[0]->sum) {
-            $totalResults = $totalCnt[0]->sum;
+            $totalResults = $totalCnt[0];
             //Search in Adv Boards
-            $advItemsUnion = '
+            $adv_board_items = \DB::select('
                 select
                     advisory_boards.id,
                     advisory_board_translations.name,
@@ -271,10 +407,12 @@ class HomeController extends Controller
                     and (
                         advisory_board_translations.name ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in Strategic documents
-            $sdItemsUnion = '
+            $sd_items = \DB::select('
                 select
                     strategic_document.id,
                     strategic_document_translations.title as name,
@@ -288,10 +426,12 @@ class HomeController extends Controller
                     and (
                         strategic_document_translations.title ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in legislative Initiative
-            $liItemsUnion = '
+            $li_items = \DB::select('
                 select
                     legislative_initiative.id,
                     \''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || law_translations.name,
@@ -307,10 +447,12 @@ class HomeController extends Controller
                         or legislative_initiative.law_paragraph ilike \'%' . $search . '%\'
                         or legislative_initiative.law_text ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in PRIS
-            $prisItemsUnion = '
+            $pris_items = \DB::select('
                 select
                     pris.id,
                     legal_act_type_translations.name || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name,
@@ -330,10 +472,12 @@ class HomeController extends Controller
                         or pris_translations.legal_reason ilike \'%' . $search . '%\'
                         or pris_translations.importer ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in Publications
-            $publicationsItemsUnion = '
+            $publications_items = \DB::select('
                 select
                     publication.id,
                     publication_translations.title as name,
@@ -345,16 +489,18 @@ class HomeController extends Controller
                     and publication.deleted_at is null
                     and publication.active = true
                     and publication.published_at >= \'' . $nowDate . '\'
-                    and publication.type >= ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
+                    and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
                         or publication_translations.content ilike \'%' . $search . '%\'
                         or publication_translations.short_content ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in News
-            $newsItemsUnion = '
+            $news_items = \DB::select('
                 select
                     publication.id,
                     publication_translations.title as name,
@@ -366,16 +512,18 @@ class HomeController extends Controller
                     and publication.deleted_at is null
                     and publication.active = true
                     and publication.published_at >= \'' . $nowDate . '\'
-                    and publication.type >= ' . PublicationTypesEnum::TYPE_NEWS->value . '
+                    and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
                         or publication_translations.content ilike \'%' . $search . '%\'
                         or publication_translations.short_content ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
             //Search in OGP news
-            $ogpNewsItemsUnion = '
+            $ogp_news_items = \DB::select('
                 select
                     publication.id,
                     publication_translations.title as name,
@@ -387,18 +535,19 @@ class HomeController extends Controller
                     and publication.deleted_at is null
                     and publication.active = true
                     and publication.published_at >= \'' . $nowDate . '\'
-                    and publication.type >= ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
+                    and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
                         or publication_translations.content ilike \'%' . $search . '%\'
                         or publication_translations.short_content ilike \'%' . $search . '%\'
                     )
-            ';
+                limit ' . $perPage . '
+                offset ' . $offset . '
+            ');
 
-            //Search in Public consultation
-            $items = \DB::select('
-                select results.* from
-                    (select
+            //Search Public consultation
+            $pc_items = \DB::select('
+                select
                         public_consultation.id,
                         public_consultation_translations.title as name,
                         \'pc\' as item_type,
@@ -413,15 +562,8 @@ class HomeController extends Controller
                             or public_consultation_translations.description ilike \'%' . $search . '%\'
                         )
                     and public_consultation.open_from <= \'' . $nowDate . '\'
-                    union all ' . $advItemsUnion . '
-                    union all ' . $sdItemsUnion . '
-                    union all ' . $liItemsUnion . '
-                    union all ' . $prisItemsUnion . '
-                    union all ' . $publicationsItemsUnion . '
-                    union all ' . $newsItemsUnion . '
-                    union all ' . $ogpNewsItemsUnion . ') as results
-                limit ' . $perPage . '
-                offset ' . $offset . '
+                    limit ' . $perPage . '
+                    offset ' . $offset . '
             ');
         }
 
@@ -430,7 +572,9 @@ class HomeController extends Controller
         $this->setBreadcrumbsFull(array(
             ['name' => $pageTitle, 'url' => '']
         ));
-        return $this->view('site.search_results', compact('items', 'pageTitle', 'search', 'totalResults', 'page', 'defaultPaginate'));
+        return $this->view('site.search_results', compact('pageTitle', 'search', 'totalResults', 'page', 'defaultPaginate'
+            , 'adv_board_items', 'sd_items', 'li_items', 'pris_items', 'publications_items', 'news_items'
+            , 'ogp_news_items', 'pc_items'));
     }
 
     public function contacts(Request $request, $section = '')

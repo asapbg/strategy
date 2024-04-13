@@ -146,6 +146,7 @@ return [
     'search_in_platform' => 'Търсене в портала...',
     'search_in_platform_page_title' => 'Търсене в портала',
     'search_result_title' => 'Резултати от вашето търсене за ":text"',
+    'search_result_title_section' => 'Резултати от вашето търсене за ":text" в секция :section',
     'search_no_result' => 'Няма намерени резултати',
     'learn_more' => 'Научете повече',
     'the_ministry' => 'Министерския съвет',
