@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class Status extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if(!empty($value) && $value != '-1'){
             if(is_string($value) && $value == 'inactive') {

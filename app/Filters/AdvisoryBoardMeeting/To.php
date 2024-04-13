@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class To extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->where('next_meeting', '<=', Carbon::parse($value)->endOfDay());

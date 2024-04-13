@@ -8,7 +8,7 @@ use App\Filters\QueryFilter;
 
 class FieldOfActions extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( is_array($value) && sizeof($value) ){
             if(str_contains($value[0], ',')) {

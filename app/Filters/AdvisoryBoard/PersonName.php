@@ -7,7 +7,7 @@ use App\Filters\QueryFilter;
 
 class PersonName extends QueryFilter implements FilterContract{
 
-    public function handle($value): void
+    public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
             $this->query->where(function ($q) use ($value){
