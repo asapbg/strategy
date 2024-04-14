@@ -121,8 +121,10 @@
         <div class="sk-cube sk-cube9"></div>
     </div>
 </div>
-<div class="alert alert-success fade out d-none" id="success-alert-on-fly">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<div class="alert alert-success d-none mt-1 alert-dismissible py-2" style="z-index: 9999;" id="success-alert-on-fly" role="alert">
+{{--    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>--}}
+    <button type="button" class="btn-close py-2" data-dismiss="alert"
+            aria-label="Close"></button>
     <div class="alert-on-fly-content"></div>
 </div>
 @include('cookie-consent::index')

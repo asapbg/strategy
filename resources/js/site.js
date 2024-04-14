@@ -426,9 +426,6 @@ $(document).ready(function () {
         });
     }
 
-    $('#success-alert-on-fly .close').on('click', function(e) {
-        $('#success-alert-on-fly').addClass('d-none');
-    });
     $('.share-link').on('click', function (){
         console.log('click on share');
         if(typeof $(this).data('link') != 'undefined'){
