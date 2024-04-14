@@ -327,6 +327,7 @@ function showModalAlert(message,title = false) {
 }
 
 function toggleSuccessAlert(text = ''){
+    console.log('toggleSuccessAlert', text, text.length);
     $("#success-alert-on-fly #alert-on-fly-content").html(text);
     if(text.length > 0){
         $('#success-alert-on-fly').removeClass('d-none');
@@ -429,7 +430,9 @@ $(document).ready(function () {
         $('#success-alert-on-fly').addClass('d-none');
     });
     $('.share-link').on('click', function (){
+        console.log('click on share');
         if(typeof $(this).data('link') != 'undefined'){
+            console.log('show alert');
             window.navigator.clipboard.writeText($(this).data('link'));
             toggleSuccessAlert('Връзката е копирана');
         }
