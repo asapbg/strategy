@@ -217,6 +217,7 @@ class ImpactAssessmentController extends Controller
      */
     public function executors(Request $request)
     {
+        $requestFilter = $request->all();
         $locale = currentLocale();
         $is_search = $request->has('search');
         $sort = ($request->offsetGet('sort'))
@@ -278,7 +279,7 @@ class ImpactAssessmentController extends Controller
         $max_price = $prices->max_price;
 
         if ($is_search) {
-            return $this->view('impact_assessment.executors-results', compact('executors'));
+            return $this->view('impact_assessment.executors-results', compact('executors', 'requestFilter'));
         }
 
         $institutions = Institution::select('institution.id', 'institution_translations.name')
@@ -299,7 +300,7 @@ class ImpactAssessmentController extends Controller
             ->get();
 
         return $this->view('impact_assessment.executors',
-            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions','library'));
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions','library', 'requestFilter'));
     }
 
     public function libraryView(Request $request, $slug = ''){
