@@ -85,12 +85,6 @@
     <section class="public-page">
         <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif" id="app">
             @endif
-            <div class="toast toast-success" role="alert" aria-live="assertive" aria-atomic="true" id="success-alert-on-fly">
-                <div class="toast-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">Връзката е копирана</div>
-            </div>
             @foreach(['success', 'warning', 'danger', 'info'] as $msgType)
                 @if(Session::has($msgType))
                     <div class="alert alert-{{$msgType}} mt-1 alert-dismissible py-2" style="z-index: 9999;"

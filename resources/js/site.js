@@ -421,7 +421,7 @@ $(document).ready(function () {
     $('.share-link').on('click', function (){
         if(typeof $(this).data('link') != 'undefined'){
             window.navigator.clipboard.writeText($(this).data('link'));
-            $('#success-alert-on-fly').toast.show();
+            toastr.success('Връзката е копирана');
         }
     });
 
