@@ -462,10 +462,10 @@ class AdvisoryBoardController extends Controller
             ->paginate($paginate);
 
         if( $request->ajax() ) {
-            return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items'));
+            return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items', 'requestFilter'));
         }
 
-        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
     }
 
     public function newsDetails(Request $request, Publication $item){
