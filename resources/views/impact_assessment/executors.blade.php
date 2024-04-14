@@ -130,7 +130,7 @@
                             <div class="col-md-9 text-end col-sm-12">
 {{--                                <button class="btn btn-primary  main-color"><i class="fas fa-square-rss text-warning me-1"></i>RSS</button>--}}
 {{--                                <button class="btn btn-primary main-color"><i class="fas fa-envelope me-1"></i>Абониране</button>--}}
-                                @includeIf('site.partial.subscribe-buttons', ['no_rss' => true, 'no_email_subscribe' => true])
+{{--                                @includeIf('site.partial.subscribe-buttons', ['no_rss' => true, 'no_email_subscribe' => true])--}}
                                 @canany(['manage.*', 'manage.executors'])
                                     <a href="{{ route('admin.executors.create') }}" class="btn btn-success text-success" target="_blank">
                                         <i class="fas fa-circle-plus text-success me-1"></i>{{ trans_choice('custom.adding', 1) }}
