@@ -418,7 +418,7 @@ $(document).ready(function () {
         });
     }
 
-    $('.share-link').on('click', function (){
+    $(document).on('click', '.share-link', function (){
         if(typeof $(this).data('link') != 'undefined'){
             window.navigator.clipboard.writeText($(this).data('link'));
             toastr.success('Връзката е копирана');

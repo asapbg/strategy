@@ -5,7 +5,7 @@ use App\Sorter\QuerySorter;
 
 class FromDate extends QuerySorter implements SorterContract{
 
-    public function handle($value, $filter = null): void
+    public function handle($value): void
     {
         $direction = $value ?? 'asc';
         $this->query->orderBy('ogp_plan.from_date', $direction);
