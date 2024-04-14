@@ -89,7 +89,7 @@
                 {{--    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>--}}
                 <button type="button" class="btn-close py-2" data-dismiss="alert"
                         aria-label="Close"></button>
-                <div class="alert-on-fly-content"></div>
+                <div id="success-alert-on-fly-content"></div>
             </div>
             @foreach(['success', 'warning', 'danger', 'info'] as $msgType)
                 @if(Session::has($msgType))

@@ -328,7 +328,7 @@ function showModalAlert(message,title = false) {
 
 function toggleSuccessAlert(text = ''){
     console.log('toggleSuccessAlert', text, text.length);
-    $("#success-alert-on-fly #alert-on-fly-content").html(text);
+    $("#success-alert-on-fly #success-alert-on-fly-content").html(text);
     if(text.length > 0){
         $('#success-alert-on-fly').removeClass('d-none');
     }
