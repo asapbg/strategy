@@ -85,7 +85,12 @@
     <section class="public-page">
         <div class="@if(isset($fullwidth) && $fullwidth) container-fluid @else container @endif" id="app">
             @endif
-
+            <div class="alert alert-success d-none mt-1 alert-dismissible py-2" style="z-index: 9999;" id="success-alert-on-fly" role="alert">
+                {{--    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>--}}
+                <button type="button" class="btn-close py-2" data-dismiss="alert"
+                        aria-label="Close"></button>
+                <div class="alert-on-fly-content"></div>
+            </div>
             @foreach(['success', 'warning', 'danger', 'info'] as $msgType)
                 @if(Session::has($msgType))
                     <div class="alert alert-{{$msgType}} mt-1 alert-dismissible py-2" style="z-index: 9999;"
@@ -120,12 +125,6 @@
         <div class="sk-cube sk-cube8"></div>
         <div class="sk-cube sk-cube9"></div>
     </div>
-</div>
-<div class="alert alert-success d-none mt-1 alert-dismissible py-2" style="z-index: 9999;" id="success-alert-on-fly" role="alert">
-{{--    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>--}}
-    <button type="button" class="btn-close py-2" data-dismiss="alert"
-            aria-label="Close"></button>
-    <div class="alert-on-fly-content"></div>
 </div>
 @include('cookie-consent::index')
 <!-- SCRIPTS -->
