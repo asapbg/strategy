@@ -326,13 +326,6 @@ function showModalAlert(message,title = false) {
     $("#modal-alert").modal('show');
 }
 
-function toggleSuccessAlert(text = ''){
-    $("#success-alert-on-fly-content").html(text);
-    if(text.length > 0){
-        $('#success-alert-on-fly').removeClass('d-none');
-    }
-}
-
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -428,7 +421,7 @@ $(document).ready(function () {
     $('.share-link').on('click', function (){
         if(typeof $(this).data('link') != 'undefined'){
             window.navigator.clipboard.writeText($(this).data('link'));
-            toggleSuccessAlert('Връзката е копирана');
+            $('#success-alert-on-fly').toast.show();
         }
     });
 
