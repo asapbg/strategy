@@ -114,6 +114,16 @@
                                             </div>
                                             <div class="col-12"></div>
                                             @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => true])
+                                            @if(!empty($item->importer))
+                                                <div class="col-12 mt-2 mb-4" id="old_importers">
+                                                    <label class="col-sm-12 control-label">
+                                                        {{ __('custom.pris_importers_from_import') }}
+                                                    </label>
+                                                    <div class="col-12">
+                                                        <textarea class="form-control form-control-sm" disabled>{!! $item->importer !!}</textarea>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="protocol">
@@ -255,7 +265,9 @@
                                                                 <label class="col-sm-12 control-label">
                                                                     {{ __('custom.change_docs_from_import') }}
                                                                 </label>
-                                                                {!! $item->oldConnectionsHtml !!}
+                                                                <div class="col-12">
+                                                                    <textarea class="form-control form-control-sm" disabled>{!! $item->oldConnectionsHtml !!}</textarea>
+                                                                </div>
                                                             </div>
                                                         @endif
                                                     </div>

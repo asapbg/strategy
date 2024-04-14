@@ -20,7 +20,7 @@ class seedOldLastPris extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'old:pris';
+    protected $signature = 'old:pris {files=0}';
 
     /**
      * The console command description.
@@ -36,6 +36,12 @@ class seedOldLastPris extends Command
      */
     public function handle()
     {
+        file_put_contents('institutions_for_mapping_last_pris.txt', '');
+        $migrateFiles = $this->argument('files');
+
+        //Check how many are old pris
+//        select count(ei.id) from e_items ei where ei.itemtypeid <> 5017;
+
         $institutionForMapping = [];
         $locales = config('available_languages');
 
@@ -221,7 +227,7 @@ class seedOldLastPris extends Command
             ],
             'министър-председателят' => [
                 'importer' => 'министър-председателят',
-                'institution_id' => 126,
+                'institution_id' => 127,
             ],
             'МИС' => [
                 'importer' => 'МИС',
@@ -367,8 +373,84 @@ class seedOldLastPris extends Command
                                 if($existPris->last_version != $item->last_version){
                                     $existPris->last_version = $item->last_version;
                                     $existPris->save();
-                                    DB::commit();
                                 }
+
+                                //get Files
+                                if($migrateFiles) {
+                                    //TODO //5. Create files and extract text
+                                    $path = File::PAGE_UPLOAD_PRIS;
+                                    $oldPages = DB::connection('pris')
+                                        ->select('
+                                        select
+                                             split_part(f.bloburi, \'/\', -1) as uuid,
+                                             f.filename  as filename,
+                                             f.contenttype as content_type,
+                                             f.datecreated as created_at,
+                                             f.datemodified as updated_at,
+                                             ft."text" as file_text,
+                                             b."content" as file_content
+                                        from edocs.attachments att
+                                        join archimed.blobs f on f.id = att.blobid
+                                        join archimed.blobtexts ft on ft.blobid = f.id
+                                        join blobs.blobcontents b on b.id::text = split_part(f.bloburi, \'/\', -1)
+                                        where true
+                                            and att.documentid = '.$existPris->old_id.'
+                                        order by att.documentid asc, att.pageid asc');
+
+                                    if (sizeof($oldPages)) {
+                                        foreach ($oldPages as $f) {
+                                            $fileForExeption = $f;
+                                            $file = null;
+                                            $fileExist = null;
+                                            if(!empty($f->file_content)) {
+                                                //$fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
+                                                $fileNameToStore = trim($f->filename);
+                                                $fullPath = $path.$fileNameToStore;
+                                                $fileExist = File::where('path', '=', $fullPath)
+                                                    ->where('filename', '=', $fileNameToStore)
+                                                    ->where('id_object','=', $existPris->id)
+                                                    ->where('code_object','=', File::CODE_OBJ_PRIS)
+                                                    ->get()
+                                                    ->first();
+
+                                                if(is_null($fileExist)){
+                                                    Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+                                                    $file = Storage::disk('public_uploads')->get($fullPath);
+                                                }
+                                            }
+
+                                            if($file) {
+                                                $fileIds = [];
+                                                foreach (['bg', 'en'] as $code) {
+                                                    //TODO catch file version
+                                                    //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                                                    $version = 0;
+                                                    $newFile = new File([
+                                                        'id_object' => $existPris->id,
+                                                        'code_object' => File::CODE_OBJ_PRIS,
+                                                        'filename' => $fileNameToStore,
+                                                        'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
+                                                        'path' => $fullPath,
+                                                        'description_'.$code => $f->filename,
+                                                        'sys_user' => null,
+                                                        'locale' => $code,
+                                                        'version' => ($version + 1).'.0',
+                                                        'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
+                                                        'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
+                                                    ]);
+                                                    $newFile->save();
+                                                    $fileIds[] = $newFile->id;
+//                                                    $ocr = new FileOcr($newFile->refresh());
+//                                                    $ocr->extractText();
+                                                }
+
+                                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                            }
+                                        }
+                                    }
+                                }
+
                             }
                             continue;
                         }
@@ -491,6 +573,21 @@ class seedOldLastPris extends Command
                                                     $importerStr[]= $importers[trim($e)]['importer'];
                                                     if(!is_null($importers[trim($e)]['institution_id'])) {
                                                         $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                                    } else{
+                                                        if(!empty($importers[trim($e)]['importer'])){
+                                                            $importerStr[] = $importers[trim($e)]['importer'];
+                                                        }
+                                                        if(!isset($institutionForMapping[trim($e)])) {
+                                                            //TODO for mapping
+                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
+                                                            $institutionForMapping[trim($e)] = trim($e);
+                                                        }
+                                                    }
+                                                } else{
+                                                    //TODO for mapping
+                                                    if(!isset($institutionForMapping[trim($e)])){
+                                                        file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$e.PHP_EOL, FILE_APPEND);
+                                                        $institutionForMapping[trim($e)] = trim($e);
                                                     }
                                                 }
                                             }
@@ -543,6 +640,7 @@ class seedOldLastPris extends Command
                                 $newItem = new Pris();
                                 $newItem->fill($prepareNewPris);
                                 $newItem->save();
+
                                 if($newItem->id) {
                                     foreach ($locales as $locale) {
                                         $newItem->translateOrNew($locale['code'])->about = $prepareNewPris['about'];
@@ -580,69 +678,79 @@ class seedOldLastPris extends Command
                                         $newItem->save();
                                     }
                                 }
+                                if($migrateFiles) {
+                                    //TODO //5. Create files and extract text
+                                    $path = File::PAGE_UPLOAD_PRIS;
+                                    $oldPages = DB::connection('pris')
+                                        ->select('
+                                        select
+                                             split_part(f.bloburi, \'/\', -1) as uuid,
+                                             f.filename  as filename,
+                                             f.contenttype as content_type,
+                                             f.datecreated as created_at,
+                                             f.datemodified as updated_at,
+                                             ft."text" as file_text,
+                                             b."content" as file_content
+                                        from edocs.attachments att
+                                        join archimed.blobs f on f.id = att.blobid
+                                        join archimed.blobtexts ft on ft.blobid = f.id
+                                        join blobs.blobcontents b on b.id::text = split_part(f.bloburi, \'/\', -1)
+                                        where true
+                                            and att.documentid = '.$newItem->old_id.'
+                                        order by att.documentid asc, att.pageid asc');
 
-                                //TODO //5. Create files and extract text
-//                                $path = File::PAGE_UPLOAD_PRIS;
-//                                $oldPages = DB::connection('pris')
-//                                    ->select('
-//                                    select
-//                                         split_part(f.bloburi, \'/\', -1) as uuid,
-//                                         f.filename  as filename,
-//                                         f.contenttype as content_type,
-//                                         f.datecreated as created_at,
-//                                         f.datemodified as updated_at,
-//                                         ft."text" as file_text,
-//                                         b."content" as file_content
-//                                    from edocs.attachments att
-//                                    join archimed.blobs f on f.id = att.blobid
-//                                    join archimed.blobtexts ft on ft.blobid = f.id
-//                                    join blobs.blobcontents b on b.id::text = split_part(f.bloburi, \'/\', -1)
-//                                    where true
-//                                        and att.documentid = '.$newItem->old_id.'
-//                                    order by att.documentid asc, att.pageid asc');
-//
-//                                if (sizeof($oldPages)) {
-//                                    foreach ($oldPages as $f) {
-//                                        $fileForExeption = $f;
-//                                        $file = null;
-//                                        if(!empty($f->file_content)) {
-////                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
-//                                            $fileNameToStore = trim($f->filename);
-//                                            $fullPath = $path.$fileNameToStore;
-//                                            Storage::disk('public_uploads')->put($fullPath, $f->file_content);
-//                                            $file = Storage::disk('public_uploads')->get($fullPath);
-//                                        }
-//
-//                                        if($file) {
-//                                            $fileIds = [];
-//                                            foreach (['bg', 'en'] as $code) {
-//                                                //TODO catch file version
-//                                                //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-//                                                $version = 0;
-//                                                $newFile = new File([
-//                                                    'id_object' => $newItem->id,
-//                                                    'code_object' => File::CODE_OBJ_PRIS,
-//                                                    'filename' => $fileNameToStore,
-//                                                    'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
-//                                                    'path' => $fullPath,
-//                                                    'description_'.$code => $f->filename,
-//                                                    'sys_user' => null,
-//                                                    'locale' => $code,
-//                                                    'version' => ($version + 1).'.0',
-//                                                    'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
-//                                                    'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
-//                                                ]);
-//                                                $newFile->save();
-//                                                $fileIds[] = $newFile->id;
-//                                                $ocr = new FileOcr($newFile->refresh());
-//                                                $ocr->extractText();
-//                                            }
-//
-//                                            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-//                                            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-//                                        }
-//                                    }
-//                                }
+                                    if (sizeof($oldPages)) {
+                                        foreach ($oldPages as $f) {
+                                            $fileForExeption = $f;
+                                            $file = null;
+                                            $fileExist = null;
+                                            if(!empty($f->file_content)) {
+    //                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
+                                                $fileNameToStore = trim($f->filename);
+                                                $fullPath = $path.$fileNameToStore;
+                                                $fileExist = File::where('path', '=', $fullPath)
+                                                    ->where('filename', '=', $fileNameToStore)
+                                                    ->where('id_object','=', $existPris->id)
+                                                    ->where('code_object','=', File::CODE_OBJ_PRIS)
+                                                    ->get()
+                                                    ->first();
+                                                if(is_null($fileExist)) {
+                                                    Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+                                                    $file = Storage::disk('public_uploads')->get($fullPath);
+                                                }
+                                            }
+
+                                            if($file) {
+                                                $fileIds = [];
+                                                foreach (['bg', 'en'] as $code) {
+                                                    //TODO catch file version
+                                                    //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                                                    $version = 0;
+                                                    $newFile = new File([
+                                                        'id_object' => $newItem->id,
+                                                        'code_object' => File::CODE_OBJ_PRIS,
+                                                        'filename' => $fileNameToStore,
+                                                        'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
+                                                        'path' => $fullPath,
+                                                        'description_'.$code => $f->filename,
+                                                        'sys_user' => null,
+                                                        'locale' => $code,
+                                                        'version' => ($version + 1).'.0',
+                                                        'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
+                                                        'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
+                                                    ]);
+                                                    $newFile->save();
+                                                    $fileIds[] = $newFile->id;
+//                                                    $ocr = new FileOcr($newFile->refresh());
+//                                                    $ocr->extractText();
+                                                }
+
+                                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             $this->comment('PRIS with old id (' . $item->old_id . ') is created');
                             DB::commit();
@@ -655,13 +763,5 @@ class seedOldLastPris extends Command
                 $currentStep += $step;
             }
         }
-        if(sizeof($institutionForMapping)) {
-            $fp = fopen('institutions_for_mapping_last_pris.csv', 'w');
-            foreach ($institutionForMapping as $fields) {
-                fputcsv($fp, [$fields]);
-            }
-            fclose($fp);
-        }
-
     }
 }

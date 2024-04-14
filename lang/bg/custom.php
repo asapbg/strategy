@@ -726,6 +726,7 @@ return [
     'prepared_administration'  => 'Изработила администрация',
     'meeting_date' => 'Заседанието се проведе на',
     'change_docs_from_import'   => 'Свързани документи (import)',
+    'pris_importers_from_import'   => 'Вносители (import)',
     'add_npo_presenter' => 'Добави НПО представител',
     'as' => 'като',
     'are_you_sure_public_advisory' => 'Сигурни ли сте, че искате да публикувате този съвет',

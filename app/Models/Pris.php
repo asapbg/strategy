@@ -37,7 +37,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', //'institution_id',
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
-        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version'];
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version', 'old_importers'];
 
 //    protected static function booted(){
 //        static::addGlobalScope('last_version', function (Builder $builder) {
