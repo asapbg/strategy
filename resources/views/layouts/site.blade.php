@@ -121,6 +121,10 @@
         <div class="sk-cube sk-cube9"></div>
     </div>
 </div>
+<div class="alert alert-success fade out" id="success-alert-on-fly">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <div class="alert-on-fly-content"></div>
+</div>
 @include('cookie-consent::index')
 <!-- SCRIPTS -->
 <script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>

@@ -891,4 +891,5 @@ return [
     'search_in'                  => 'Търсене в:',
     'see_all'                  => 'виж всички',
     'section_search'                  => 'секция',
+    'share'                  => 'Сподели',
 ];

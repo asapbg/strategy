@@ -185,16 +185,16 @@ class FixOldPrisChangePris extends Command
                 ->get();
 
 
-            if($pris->count() == 0){
-                //TODO if not found last version search by last by id
-                $pris = Pris::where('legal_act_type_id', '=', $category)
-                    ->where('doc_num', '=', $number)
-                    ->where('doc_date', '>=', $from)
-                    ->where('doc_date', '<=', $to)
-                    ->orderBy('id', 'desc')
-                    ->limit(1)
-                    ->get();
-            }
+//            if($pris->count() == 0){
+//                //TODO if not found last version search by last by id
+//                $pris = Pris::where('legal_act_type_id', '=', $category)
+//                    ->where('doc_num', '=', $number)
+//                    ->where('doc_date', '>=', $from)
+//                    ->where('doc_date', '<=', $to)
+//                    ->orderBy('id', 'desc')
+//                    ->limit(1)
+//                    ->get();
+//            }
 
             if($pris->count() != 1){
                 if($from >= '1990-03-22'){
@@ -224,15 +224,15 @@ class FixOldPrisChangePris extends Command
                 ->where('last_version', '=', 1)
                 ->get();
 
-            if($pris->count() == 0){
-                //TODO if not found last version search by last by id
-                $pris = Pris::where('legal_act_type_id', '=', $category)
-                    ->where('doc_num', '=', $number)
-                    ->where('doc_date', '=', $docDate)
-                    ->orderBy('id', 'desc')
-                    ->limit(1)
-                    ->get();
-            }
+//            if($pris->count() == 0){
+//                //TODO if not found last version search by last by id
+//                $pris = Pris::where('legal_act_type_id', '=', $category)
+//                    ->where('doc_num', '=', $number)
+//                    ->where('doc_date', '=', $docDate)
+//                    ->orderBy('id', 'desc')
+//                    ->limit(1)
+//                    ->get();
+//            }
 
             if($pris->count() != 1){
                 if($docDate >= '1990-03-22'){

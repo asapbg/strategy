@@ -29,4 +29,10 @@
     <input type="hidden" id="subscribe_text" value="{{ __('custom.subscribe') }}">
     <input type="hidden" id="unsubscribe_text" value="{{ __('custom.unsubscribe') }}">
 @endauth
+@if(!isset($noShareBtn) || !$noShareBtn)
+    @php($url = request()->url().http_build_query(isset($requestFilter) && sizeof($requestFilter) ? $requestFilter : []))
+    <button type="button" class="btn btn-success share-link" name="copy_link" data-link="{{ $url }}">
+        <i class="fas fa-share-alt text-success me-2"></i>{{ __('custom.share') }}
+    </button>
+@endif
 

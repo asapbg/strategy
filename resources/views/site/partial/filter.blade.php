@@ -266,9 +266,9 @@
                     </button>
             @endif
             @if(isset($export_pdf) && $export_pdf)
-                    <button type="submit" class="btn btn-success" name="export_pdf" value="1">
-                        <i class="fas fa-file-pdf text-danger me-2"></i>{{ __('custom.export') }}
-                    </button>
+                <button type="submit" class="btn btn-success" name="export_pdf" value="1">
+                    <i class="fas fa-file-pdf text-danger me-2"></i>{{ __('custom.export') }}
+                </button>
             @endif
         </div>
 

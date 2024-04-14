@@ -326,6 +326,12 @@ function showModalAlert(message,title = false) {
     $("#modal-alert").modal('show');
 }
 
+function toggleSuccessAlert(text = ''){
+    $("#success-alert-on-fly #alert-on-fly-content").html(text)
+    $("#success-alert-on-fly").toggleClass('in out');
+    return false; // Keep close.bs.alert event from removing from DOM
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -417,6 +423,14 @@ $(document).ready(function () {
             lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
         });
     }
+
+    $('#success-alert-on-fly').on('close.bs.alert', toggleSuccessAlert);
+    $('.share-link').on('click', function (){
+        if(typeof $(this).data('link') != 'undefined'){
+            window.navigator.clipboard.writeText($(this).data('link'));
+            toggleSuccessAlert('Връзката е копирана');
+        }
+    });
 
     $('#global_search_btn').on('click', function (){
         let lForm = $(this).closest('form');
