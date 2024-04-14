@@ -114,11 +114,11 @@ class OpenGovernmentPartnership extends Controller
             ->paginate($paginate);
 
         if( $request->ajax() ) {
-            return view('site.ogp.main_news_list', compact('filter','sorter', 'items'));
+            return view('site.ogp.main_news_list', compact('filter','sorter', 'items', 'requestFilter'));
         }
 
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.news', 2), 'url' => '']));
-        return $this->view('site.ogp.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle'));
+        return $this->view('site.ogp.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
     }
 
     public function newsDetails(Request $request, Publication $item){
