@@ -327,9 +327,10 @@ function showModalAlert(message,title = false) {
 }
 
 function toggleSuccessAlert(text = ''){
-    $("#success-alert-on-fly #alert-on-fly-content").html(text)
-    $("#success-alert-on-fly").toggleClass('in out');
-    return false; // Keep close.bs.alert event from removing from DOM
+    $("#success-alert-on-fly #alert-on-fly-content").html(text);
+    if(text.length > 0){
+        $('#success-alert-on-fly').removeClass('d-none');
+    }
 }
 
 //ajaxList();
@@ -424,7 +425,9 @@ $(document).ready(function () {
         });
     }
 
-    $('#success-alert-on-fly').on('close.bs.alert', toggleSuccessAlert);
+    $('#success-alert-on-fly .close').on('click', function(e) {
+        $('#success-alert-on-fly').addClass('d-none');
+    });
     $('.share-link').on('click', function (){
         if(typeof $(this).data('link') != 'undefined'){
             window.navigator.clipboard.writeText($(this).data('link'));
