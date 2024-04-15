@@ -93,6 +93,250 @@ class seedOldLastPris extends Command
         $protocolDecisionsId = 3;
 
         $importers = [
+            'МВнР, МРР' => [
+                'importer' => 'МВнР, МРР',
+                'institution_id' => [128, 0]
+            ],
+            'МРР, МО, МИЕ' => [
+                'importer' => 'МРР, МО, МИЕ',
+                'institution_id' => [0, 140, 0]
+            ],
+            'МЗ, МРР' => [
+                'importer' => 'МЗ, МРР',
+                'institution_id' => [132, 0]
+            ],
+            'ММС, МРР' => [
+                'importer' => 'ММС, МРР',
+                'institution_id' => [137, 0]
+            ],
+            'МФ,  МРР' => [
+                'importer' => 'МФ,  МРР',
+                'institution_id' => [146, 0]
+            ],
+            'МК,  МРР' => [
+                'importer' => 'МК,  МРР',
+                'institution_id' => [136, 0]
+            ],
+            'МРР, МО' => [
+                'importer' => 'МРР, МО',
+                'institution_id' => [0, 140]
+            ],
+            'ЗМПИР, МТСП' => [
+                'importer' => 'ЗМПИР, МТСП',
+                'institution_id' => [0, 144]
+            ],
+            'МРР, МК' => [
+                'importer' => 'МРР, МК',
+                'institution_id' => [0, 136]
+            ],
+            'МЗПИР, МИЕ' => [
+                'importer' => 'МЗПИР, МИЕ',
+                'institution_id' => [0, 0]
+            ],
+            'МО, МРР' => [
+                'importer' => 'МО, МРР',
+                'institution_id' => [140, 0]
+            ],
+            'ЗМП, МП' => [
+                'importer' => 'ЗМП, МП',
+                'institution_id' => [0, 141]
+            ],
+            'ЗМП, МВР' => [
+                'importer' => 'ЗМП, МВР',
+                'institution_id' => [0, 129]
+            ],
+            'МРР, МЗХ' => [
+                'importer' => 'МРР, МЗХ',
+                'institution_id' => [0, 133]
+            ],
+            'МРР, МИЕ' => [
+                'importer' => 'МРР, МИЕ',
+                'institution_id' => [0, 0]
+            ],
+            'МВР, МРР' => [
+                'importer' => 'МВР, МРР',
+                'institution_id' => [129, 0]
+            ],
+            'МЗХ, МРР' => [
+                'importer' => 'МЗХ, МРР',
+                'institution_id' => [133, 0]
+            ],
+            'МК, МРР' => [
+                'importer' => 'МК, МРР',
+                'institution_id' => [136, 0]
+            ],
+            'МФ, МРР' => [
+                'importer' => 'МФ, МРР',
+                'institution_id' => [146, 0]
+            ],
+            'МРР, МИП' => [
+                'importer' => 'МРР, МИП',
+                'institution_id' => [0, 0]
+            ],
+            'МИЕ, МРР' => [
+                'importer' => 'МИЕ, МРР',
+                'institution_id' => [0, 0]
+            ],
+            'МРР, МФ' => [
+                'importer' => 'МРР, МФ',
+                'institution_id' => [0, 146]
+            ],
+            'МИЕТ, МРЕП' => [
+                'importer' => 'МИЕТ, МРЕП',
+                'institution_id' => [0, 0]
+            ],
+            'МУСЕС, МТИТС' => [
+                'importer' => 'МУСЕС, МТИТС',
+                'institution_id' => [0, 0]
+            ],
+            'МИЕТ, МУСЕС' => [
+                'importer' => 'МИЕТ, МУСЕСС',
+                'institution_id' => [0, 0]
+            ],
+            'МТИТС, МУСЕС' => [
+                'importer' => 'МТИТС, МУСЕС',
+                'institution_id' => [0, 0]
+            ],
+            'ВОМН, МРРБ' => [
+                'importer' => 'ВОМН, МРРБ',
+                'institution_id' => [0, 142]
+            ],
+            'МРРБ МО' => [
+                'importer' => 'МРРБ МО',
+                'institution_id' => [142, 140]
+            ],
+            'МЗ МОН МЗП' => [
+                'importer' => 'МЗ МОН МЗП',
+                'institution_id' => [132, 138, 0]
+            ],
+            'МИС МФ' => [
+                'importer' => 'МИС МФ',
+                'institution_id' => [0, 146]
+            ],
+            'МФ МРРБ МТ' => [
+                'importer' => 'МФ МРРБ МТ',
+                'institution_id' => [146, 142, 145]
+            ],
+            'МРРБ МФ' => [
+                'importer' => 'МРРБ МФ',
+                'institution_id' => [142, 146]
+            ],
+            'МВнР МТ МИЕ' => [
+                'importer' => 'МВнР МТ МИЕ',
+                'institution_id' => [128, 145, 0]
+            ],
+            'МРРБ МТСП МИЕ' => [
+                'importer' => 'МРРБ МТСП МИЕ',
+                'institution_id' => [142, 144, 0]
+            ],
+            'МВнР МФ МТ' => [
+                'importer' => 'МВнР МФ МТ',
+                'institution_id' => [128, 146, 145]
+            ],
+            'МВнР МО' => [
+                'importer' => 'МВнР МО',
+                'institution_id' => [128, 140]
+            ],
+            'МО МИЕ' => [
+                'importer' => 'МО МИЕ',
+                'institution_id' => [140, 0]
+            ],
+            'МВнР МТСП' => [
+                'importer' => 'МВнР МТСП',
+                'institution_id' => [128, 144]
+            ],
+            'МП МО' => [
+                'importer' => 'МП МО',
+                'institution_id' => [141, 140]
+            ],
+            'МЗ МРРБ' => [
+                'importer' => 'МЗ МРРБ',
+                'institution_id' => [132, 142]
+            ],
+            'МО МФ' => [
+                'importer' => 'МО МФ',
+                'institution_id' => [140, 146]
+            ],
+            'МВнР МК' => [
+                'importer' => 'МВнР МК',
+                'institution_id' => [128, 136]
+            ],
+            'МВнР МИЕ' => [
+                'importer' => 'МВнР МИЕ',
+                'institution_id' => [128, 0]
+            ],
+            'МЕВ МВР' => [
+                'importer' => 'МЕВ МВР',
+                'institution_id' => [0, 129]
+            ],
+            'МЗ МДПБА' => [
+                'importer' => 'МЗ МДПБА',
+                'institution_id' => [132, 0]
+            ],
+            'МК МВнР' => [
+                'importer' => 'МК МВнР',
+                'institution_id' => [136, 128]
+            ],
+            'МК МОН' => [
+                'importer' => 'МК МОН',
+                'institution_id' => [136, 138]
+            ],
+            'МИЕ МВнР' => [
+                'importer' => 'МИЕ МВнР',
+                'institution_id' => [0, 128]
+            ],
+            'МТСП МФ' => [
+                'importer' => 'МТСП МФ',
+                'institution_id' => [144, 146]
+            ],
+            'МИ МОН' => [
+                'importer' => 'МИ МОН',
+                'institution_id' => [0, 138]
+            ],
+            'МТС и МФ' => [
+                'importer' => 'МТС и МФ',
+                'institution_id' => [143, 146]
+            ],
+            'МК МФ' => [
+                'importer' => 'МК МФ',
+                'institution_id' => [136, 146]
+            ],
+            'МЗ и МП' => [
+                'importer' => 'МЗ и МП',
+                'institution_id' => [132, 141]
+            ],
+            'МИ МТСП' => [
+                'importer' => 'МИ МТСП',
+                'institution_id' => [0, 144]
+            ],
+            'МИ МЕЕР' => [
+                'importer' => 'МИ МЕЕР',
+                'institution_id' => [0, 0]
+            ],
+            'МО МРРБ' => [
+                'importer' => 'МО МРРБ',
+                'institution_id' => [140, 142]
+            ],
+            'МИ МЗ' => [
+                'importer' => 'МИ МЗ',
+                'institution_id' => [0, 132]
+            ],
+            'заместник министър-председателят и министър на вътрешните работи, МИП' => [
+                'importer' => 'заместник министър-председателят и министър на вътрешните работи, МИП',
+                'institution_id' => []
+            ],
+            'заместник министър-председател и министър на правосъдието, МРР, МИП' => [
+                'importer' => 'заместник министър-председател и министър на правосъдието, МРР, МИП',
+                'institution_id' => []
+            ],
+            'ЗМПИР, заместник министър-председателят и министър на вътрешните работи' => [
+                'importer' => 'ЗМПИР, заместник министър-председателят и министър на вътрешните работи',
+                'institution_id' => []
+            ],
+            'ЗМПИР, заместник министър-председателят и министър на правосъдието' => [
+                'importer' => 'ЗМПИР, заместник министър-председателят и министър на правосъдието',
+                'institution_id' => []
+            ],
             ':FIL' => [
                 'importer' => ':FIL',
                 'institution_id' => null,
@@ -223,6 +467,130 @@ class seedOldLastPris extends Command
             ],
             'МИЕТ' => [
                 'importer' => 'МИЕТ',
+                'institution_id' => null,
+            ],
+            'МИС' => [
+                'importer' => 'МИС',
+                'institution_id' => null,
+            ],
+            'МК' => [
+                'importer' => 'МК',
+                'institution_id' => 136,
+            ],
+            'МКТ' => [
+                'importer' => 'МКТ',
+                'institution_id' => null,
+            ],
+            'ММС' => [
+                'importer' => 'ММС',
+                'institution_id' => 137,
+            ],
+            'ММСМС-ДирЕИОМФИ' => [
+                'importer' => 'ММС',
+                'institution_id' => 137,
+            ],
+            'МНО' => [
+                'importer' => 'МНО',
+                'institution_id' => null,
+            ],
+            'МО' => [
+                'importer' => 'МО',
+                'institution_id' => 140,
+            ],
+            'Мо' => [
+                'importer' => 'МО',
+                'institution_id' => 140,
+            ],
+            'мо' => [
+                'importer' => 'МО',
+                'institution_id' => 140,
+            ],
+            'МОМН' => [
+                'importer' => 'МОМН',
+                'institution_id' => null,
+            ],
+            'МОН' => [
+                'importer' => 'МОН',
+                'institution_id' => 138,
+            ],
+            'МОСВ' => [
+                'importer' => 'МОСВ',
+                'institution_id' => 139,
+            ],
+            'МП' => [
+                'importer' => 'МП',
+                'institution_id' => 141,
+            ],
+            'мп' => [
+                'importer' => 'МП',
+                'institution_id' => 141,
+            ],
+            'М-во на правосъдието' => [
+                'importer' => 'М-во на правосъдието',
+                'institution_id' => 141,
+            ],
+            'м-во на правосъдието' => [
+                'importer' => 'М-во на правосъдието',
+                'institution_id' => 141,
+            ],
+            'МППЕИ' => [
+                'importer' => 'МППЕИ',
+                'institution_id' => null,
+            ],
+            'МПр' => [
+                'importer' => 'МПр',
+                'institution_id' => null,
+            ],
+            'МРРБ' => [
+                'importer' => 'МРРБ',
+                'institution_id' => 142,
+            ],
+            'мррб' => [
+                'importer' => 'МРРБ',
+                'institution_id' => 142,
+            ],
+            'МС' => [
+                'importer' => 'МС',
+                'institution_id' => 127,
+            ],
+            'МТ' => [
+                'importer' => 'МТ',
+                'institution_id' => 145,
+            ],
+            'МТИТС' => [
+                'importer' => 'МТИТС',
+                'institution_id' => null,
+            ],
+            'МТС' => [
+                'importer' => 'МТС',
+                'institution_id' => 143,
+            ],
+            'МТС_' => [
+                'importer' => 'МТС',
+                'institution_id' => 143,
+            ],
+            'МТСГ' => [
+                'importer' => 'МТСГ',
+                'institution_id' => null,
+            ],
+            'МТСП' => [
+                'importer' => 'МТСП',
+                'institution_id' => 144,
+            ],
+            'МТТ' => [
+                'importer' => 'МТТ',
+                'institution_id' => null,
+            ],
+            'МФ' => [
+                'importer' => 'МФ',
+                'institution_id' => 146,
+            ],
+            'мф' => [
+                'importer' => 'МФ',
+                'institution_id' => 146,
+            ],
+            'МФВС' => [
+                'importer' => 'МФВС',
                 'institution_id' => null,
             ],
             'министър без портфейл' => [
@@ -1048,132 +1416,7 @@ class seedOldLastPris extends Command
             'министър на регионалното развитие и министър на инвестиционното проектиране' => [
                 'importer' => 'Министър на регионалното развитие и министър на инвестиционното проектиране',
                 'institution_id' => 127,
-            ],
-            'МИС' => [
-                'importer' => 'МИС',
-                'institution_id' => null,
-            ],
-            'МК' => [
-                'importer' => 'МК',
-                'institution_id' => 136,
-            ],
-            'МКТ' => [
-                'importer' => 'МКТ',
-                'institution_id' => null,
-            ],
-            'ММС' => [
-                'importer' => 'ММС',
-                'institution_id' => 137,
-            ],
-            'ММСМС-ДирЕИОМФИ' => [
-                'importer' => 'ММС',
-                'institution_id' => 137,
-            ],
-            'МНО' => [
-                'importer' => 'МНО',
-                'institution_id' => null,
-            ],
-            'МО' => [
-                'importer' => 'МО',
-                'institution_id' => 140,
-            ],
-            'Мо' => [
-                'importer' => 'МО',
-                'institution_id' => 140,
-            ],
-            'мо' => [
-                'importer' => 'МО',
-                'institution_id' => 140,
-            ],
-            'МОМН' => [
-                'importer' => 'МОМН',
-                'institution_id' => null,
-            ],
-            'МОН' => [
-                'importer' => 'МОН',
-                'institution_id' => 138,
-            ],
-            'МОСВ' => [
-                'importer' => 'МОСВ',
-                'institution_id' => 139,
-            ],
-            'МП' => [
-                'importer' => 'МП',
-                'institution_id' => 141,
-            ],
-            'мп' => [
-                'importer' => 'МП',
-                'institution_id' => 141,
-            ],
-            'М-во на правосъдието' => [
-                'importer' => 'М-во на правосъдието',
-                'institution_id' => 141,
-            ],
-            'м-во на правосъдието' => [
-                'importer' => 'М-во на правосъдието',
-                'institution_id' => 141,
-            ],
-            'МППЕИ' => [
-                'importer' => 'МППЕИ',
-                'institution_id' => null,
-            ],
-            'МПр' => [
-                'importer' => 'МПр',
-                'institution_id' => null,
-            ],
-            'МРРБ' => [
-                'importer' => 'МРРБ',
-                'institution_id' => 142,
-            ],
-            'мррб' => [
-                'importer' => 'МРРБ',
-                'institution_id' => 142,
-            ],
-            'МС' => [
-                'importer' => 'МС',
-                'institution_id' => 127,
-            ],
-            'МТ' => [
-                'importer' => 'МТ',
-                'institution_id' => 145,
-            ],
-            'МТИТС' => [
-                'importer' => 'МТИТС',
-                'institution_id' => null,
-            ],
-            'МТС' => [
-                'importer' => 'МТС',
-                'institution_id' => 143,
-            ],
-            'МТС_' => [
-                'importer' => 'МТС',
-                'institution_id' => 143,
-            ],
-            'МТСГ' => [
-                'importer' => 'МТСГ',
-                'institution_id' => null,
-            ],
-            'МТСП' => [
-                'importer' => 'МТСП',
-                'institution_id' => 144,
-            ],
-            'МТТ' => [
-                'importer' => 'МТТ',
-                'institution_id' => null,
-            ],
-            'МФ' => [
-                'importer' => 'МФ',
-                'institution_id' => 146,
-            ],
-            'мф' => [
-                'importer' => 'МФ',
-                'institution_id' => 146,
-            ],
-            'МФВС' => [
-                'importer' => 'МФВС',
-                'institution_id' => null,
             ]
-
         ];
 
         $formatTimestamp = 'Y-m-d H:i:s';
@@ -1349,6 +1592,7 @@ class seedOldLastPris extends Command
                                     'state' => $item->state,
                                     'xstate' => $item->xstate,
                                     'last_version' => $item->last_version,
+                                    'old_importers' => null,
                                 ];
                                 //Do something
                                 //1. Parse tags and insert if need to
@@ -1416,19 +1660,25 @@ class seedOldLastPris extends Command
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                         if($val) {
+                                            $prepareNewPris['old_importers'] = $val;
                                             //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                             $importerStr = [];
                                             $importerInstitutions = [];
 
                                             $explode = explode(',', $val);
                                             foreach ($explode as $e) {
-                                                //TODO for mapping
-                                                $institutionForMapping[trim($e)] = trim($e);
-
                                                 if(isset($importers[trim($e)])) {
-                                                    $importerStr[]= $importers[trim($e)]['importer'];
-                                                    if(!is_null($importers[trim($e)]['institution_id'])) {
-                                                        $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                                    if(
+                                                        (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
+                                                        || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
+                                                    ) {
+                                                        if(is_array($importers[trim($e)]['institution_id'])){
+                                                            foreach ($importers[trim($e)]['institution_id'] as $i){
+                                                                $importerInstitutions[] = $i;
+                                                            }
+                                                        } else{
+                                                            $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                                        }
                                                     } else{
                                                         if(!empty($importers[trim($e)]['importer'])){
                                                             $importerStr[] = $importers[trim($e)]['importer'];
@@ -1440,13 +1690,23 @@ class seedOldLastPris extends Command
                                                         }
                                                     }
                                                 } else{
-                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
+//                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
+                                                    $valNoNeLine = preg_replace("/[\r\n]+/", "", $val);
                                                     $explodeByRow = explode(';', $valNoNeLine);
                                                     if(sizeof($explodeByRow)){
                                                         foreach ($explodeByRow as $eByRow){
                                                             if (isset($importers[trim($eByRow)])) {
-                                                                if (!is_null($importers[trim($eByRow)]['institution_id'])) {
-                                                                    $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
+                                                                if (
+                                                                    (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
+                                                                    || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
+                                                                ) {
+                                                                    if(is_array($importers[trim($eByRow)]['institution_id'])){
+                                                                        foreach ($importers[trim($eByRow)]['institution_id'] as $i){
+                                                                            $importerInstitutions[] = $i;
+                                                                        }
+                                                                    } else{
+                                                                        $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
+                                                                    }
                                                                 } else{
                                                                     if(!empty($importers[trim($eByRow)]['importer'])){
                                                                         $importerStr[] = $importers[trim($eByRow)]['importer'];
