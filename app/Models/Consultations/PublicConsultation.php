@@ -38,6 +38,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     const NOTIFY_DAYS_BEFORE_END = 3;
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const HOME_PAGINATE = 4;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
     const SHORT_REASON_FIELD = 'short_term_reason';

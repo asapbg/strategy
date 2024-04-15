@@ -66,6 +66,8 @@ class NationalActionPlans extends Controller
         }
         $pageTitle = $plan->name;
         $this->composeBreadcrumbs($plan);
+        $this->setSeo($plan->name, '', '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.plan_show', compact('pageTitle', 'plan'));
     }
 

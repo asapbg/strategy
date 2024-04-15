@@ -6,6 +6,7 @@ use App\Enums\PublicationTypesEnum;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\LegislativeInitiative;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
@@ -119,7 +120,8 @@ class LibraryController extends Controller
 
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $this->setBreadcrumbsTitle($publication->title);
-        $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword);
+        $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword, array('title' => $publication->meta_title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_LIBRARY));
+
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }
 

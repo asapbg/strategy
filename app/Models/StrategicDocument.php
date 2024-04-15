@@ -23,6 +23,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const TRANSLATABLE_FIELDS = ['title', 'description'];
     const MODULE_NAME = ('custom.strategic_documents');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;

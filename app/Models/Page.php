@@ -12,6 +12,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const TRANSLATABLE_FIELDS = ['name', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = 'custom.page';
     const ACCESS_POLICY = 'accessibility_policy';

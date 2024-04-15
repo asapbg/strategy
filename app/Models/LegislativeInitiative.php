@@ -28,6 +28,7 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
     use FilterSort;
 
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const HOME_PAGINATE = 4;
     const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
 

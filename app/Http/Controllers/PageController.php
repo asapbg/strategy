@@ -14,10 +14,10 @@ class PageController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
         $pageTitle = $item->name;
-        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
         $this->setBreadcrumbsFull(array(
             ['name' => $item->name, 'url' => '']
         ));
+        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword, array('title' => $item->meta_title, 'img' => Page::DEFAULT_IMG));
         return $this->view('site.page', compact('item', 'pageTitle'));
     }
 }

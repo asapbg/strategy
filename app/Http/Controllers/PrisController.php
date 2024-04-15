@@ -191,6 +191,8 @@ class PrisController extends Controller
         $hasSubscribeRss = false;
 
         $this->composeBreadcrumbs($extraBreadCrumbs, $item);
+        $this->setSeo($item->mcDisplayName, '', '', array('title' => $item->mcDisplayName, 'img' => Pris::DEFAULT_IMG));
+
         return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 

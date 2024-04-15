@@ -216,6 +216,8 @@ class AdvisoryBoardController extends Controller
             $this->setSlider($item->name, $item->headerImg);
         }
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
+
+        $this->setSeo($item->name,  '', '', array('title' => $item->name, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting'));
     }
 
@@ -348,7 +350,6 @@ class AdvisoryBoardController extends Controller
 
     public function itemNewsDetails(Request $request, AdvisoryBoard $item, Publication $news){
         $pageTitle = $item->name;
-        $this->setSeo($news->meta_title, $news->meta_description, $news->meta_keyword);
         $publication = $news;
         if($item->file_id > 0){
             $this->setSlider($item->name, $item->headerImg);
@@ -358,6 +359,8 @@ class AdvisoryBoardController extends Controller
             ['name' => trans_choice('custom.news', 2), 'url' => route('advisory-boards.view.news', $item)],
             ['name' => $news->title, 'url' => '']
         ));
+        $this->setSeo($news->title, $news->meta_description, $news->meta_keyword, array('title' => $news->title, 'img' => $news->mainImg ? $news->mainImg->path : Publication::DEFAULT_IMG_ADV));
+
         return $this->view('site.advisory-boards.view_news_details', compact('item', 'publication', 'pageTitle', 'customSections'));
     }
 

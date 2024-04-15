@@ -54,6 +54,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const MODULE_NAME = ('custom.advisory_board');
     const TRANSLATABLE_FIELDS = ['name', 'advisory_specific_name', 'advisory_act_specific_name', 'report_institution_specific_name'];
     const DEFAULT_HEADER_IMG = '/img/ms-w-2023.jpg';

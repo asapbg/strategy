@@ -219,6 +219,8 @@ class LegislativeInitiativeController extends AdminController
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = $this->hasSubscription($item, null, null, UserSubscribe::CHANNEL_RSS);
 
+        $this->setSeo($item->facebookTitle,  '', '', array('title' => $item->facebookTitle, 'img' => LegislativeInitiative::DEFAULT_IMG));
+
         return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport',
             'hasSubscribeEmail', 'hasSubscribeRss'));
     }

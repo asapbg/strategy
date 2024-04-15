@@ -123,12 +123,13 @@ class OpenGovernmentPartnership extends Controller
 
     public function newsDetails(Request $request, Publication $item){
         $pageTitle = $this->pageTitle;
-        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
         $publication = $item;
         $this->composeBreadcrumbs(null, array(
             ['name' => trans_choice('custom.news', 2), 'url' => route('ogp.news')],
             ['name' => $item->title, 'url' => '']
         ));
+        $this->setSeo($item->title, $item->meta_description, $item->meta_keyword, array('title' => $publication->title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_OGP));
+
         return $this->view('site.ogp.main_news_details', compact('publication', 'pageTitle'));
     }
 

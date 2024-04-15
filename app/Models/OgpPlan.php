@@ -20,6 +20,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
     use FilterSort, Translatable, SoftDeletes;
 
     const PAGINATE = 20;
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const MODULE_NAME = ('custom.plans');
     const TRANSLATABLE_FIELDS = ['name', 'content', 'report_title', 'report_content'];
 

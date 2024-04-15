@@ -503,6 +503,10 @@ class FixOldPrisImporters extends Command
                 'importer' => 'МП',
                 'institution_id' => 141,
             ],
+            'МИР' => [
+                'importer' => 'МИР',
+                'institution_id' => 135,
+            ],
             'М-во на правосъдието' => [
                 'importer' => 'М-во на правосъдието',
                 'institution_id' => 141,
@@ -570,6 +574,10 @@ class FixOldPrisImporters extends Command
             'МФВС' => [
                 'importer' => 'МФВС',
                 'institution_id' => null,
+            ],
+            'МИИ' => [
+                'importer' => 'МИИ',
+                'institution_id' => 134,
             ],
             'министър без портфейл' => [
                 'importer' => 'министър без портфейл',
@@ -1470,7 +1478,12 @@ class FixOldPrisImporters extends Command
                                                             ) {
                                                                 if(is_array($importers[trim($e)]['institution_id'])){
                                                                     foreach ($importers[trim($e)]['institution_id'] as $i){
-                                                                        $importerInstitutions[] = $i;
+                                                                        if($i > 0){
+                                                                            $importerInstitutions[] = $i;
+                                                                        }
+                                                                    }
+                                                                    if(sizeof($importerInstitutions) != $importers[trim($eByRow)]['institution_id']){
+                                                                        $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                     }
                                                                 } else{
                                                                     $importerInstitutions[] = $importers[trim($e)]['institution_id'];

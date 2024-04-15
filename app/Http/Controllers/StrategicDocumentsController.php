@@ -236,6 +236,7 @@ class StrategicDocumentsController extends Controller
 
         $hasSubscribeEmail = $this->hasSubscription($strategicDocument);
         $hasSubscribeRss = false;
+        $this->setSeo($strategicDocument->title, '', '', array('title' => $strategicDocument->title, 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles',
             'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
