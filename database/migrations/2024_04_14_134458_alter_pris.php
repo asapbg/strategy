@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('pris', function (Blueprint $table) {
-            $table->string('old_importers')->nullable();
+            $table->string('old_importers', 2000)->nullable();
         });
     }
 

@@ -114,13 +114,13 @@
                                             </div>
                                             <div class="col-12"></div>
                                             @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => true])
-                                            @if(!empty($item->importer))
+                                            @if($item->old_id)
                                                 <div class="col-12 mt-2 mb-4" id="old_importers">
                                                     <label class="col-sm-12 control-label">
                                                         {{ __('custom.pris_importers_from_import') }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <textarea class="form-control form-control-sm" disabled>{!! $item->importer !!}</textarea>
+                                                        <textarea class="form-control form-control-sm" disabled>{!! $item->old_importers !!}</textarea>
                                                     </div>
                                                 </div>
                                             @endif
@@ -260,7 +260,7 @@
                                                                     @endforeach
                                                             </div>
                                                         @endif
-                                                        @if(!empty($item->old_connections))
+                                                        @if($item->old_id)
                                                             <div class="col-12 mt-4" id="old_documents">
                                                                 <label class="col-sm-12 control-label">
                                                                     {{ __('custom.change_docs_from_import') }}
