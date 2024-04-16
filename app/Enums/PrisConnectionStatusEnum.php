@@ -14,4 +14,5 @@ enum PrisConnectionStatusEnum: int
     case SUPPLEMENTED = 2; //допълнен
     case CANCELED = 3; //отменен
     case CONFIDENRIAL = 4; //поверителен
+    case SEE = 5; //виж
 }
