@@ -505,22 +505,22 @@ if (!function_exists('fileHtmlContent')) {
     function fileHtmlContent($file)
     {
         $content = '';
-
+        $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
         if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES) || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)){
-            return $file->preview;
+            return '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><br>'.$file->preview;
         }
 
         switch ($file->content_type) {
             case 'application/pdf':
                 $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
-                $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
+                $content = '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><embed src="' . asset($path) . '" width="100%" height="700px" />';
                 break;
             case 'application/msword': //doc
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
             case 'application/vnd.ms-excel': //xls
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
-                $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
-                $content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
+//                $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
+                $content = '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
                 break;
 //            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
 //                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
@@ -530,7 +530,7 @@ if (!function_exists('fileHtmlContent')) {
 //                $content = $html->getContent();
 //                break;
             default:
-                return '<p>Документът не може да бъде визуализиран</p>';
+                return '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><p>Документът не може да бъде визуализиран</p>';
         }
 
         return $content;

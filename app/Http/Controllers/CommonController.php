@@ -197,8 +197,15 @@ class CommonController extends Controller
         };
 
         if (Storage::disk('public_uploads')->has($path)) {
-            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : (!empty($file->custom_name) ? \Str::slug($file->custom_name, '_').'_' : ''))).($file->id_object ? $file->id_object.'_' : '');
-            return Storage::disk('public_uploads')->download($path, $extraName.$file->filename);
+            $explodeName = explode('.', $file->filename);
+            $extraName = (!empty($file->description_bg) ? substr($file->description_bg, 0, 250) : (!empty($file->description_en) ? substr($file->description_en, 0, 250) : (!empty($file->custom_name) ? substr($file->custom_name, 0, 250) : '')));
+            if(empty($extraName)){
+                $extraName = $file->filename;
+            } else{
+                $extraName.= '.'.$explodeName[(sizeof($explodeName) - 1)];
+            }
+            //            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : (!empty($file->custom_name) ? \Str::slug($file->custom_name, '_').'_' : ''))).($file->id_object ? $file->id_object.'_' : '');
+            return Storage::disk('public_uploads')->download($path, $extraName);
         } else {
             return back()->with('warning', __('custom.record_not_found'));
         }
