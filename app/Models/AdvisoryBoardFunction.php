@@ -49,14 +49,16 @@ class AdvisoryBoardFunction extends ModelActivityExtend
         return $this->hasMany(File::class, 'id_object')
             ->withTrashed()
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_FUNCTION);
+            ->where('doc_type', DocTypesEnum::AB_FUNCTION)
+            ->orderBy('created_at', 'desc');
     }
 
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_FUNCTION);
+            ->where('doc_type', DocTypesEnum::AB_FUNCTION)
+            ->orderBy('created_at', 'desc');
     }
 
     public function siteFiles(): HasMany
@@ -65,7 +67,8 @@ class AdvisoryBoardFunction extends ModelActivityExtend
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_FUNCTION)
             ->where('parent_id', null)
-            ->whereLocale(app()->getLocale());
+            ->whereLocale(app()->getLocale())
+            ->orderBy('created_at', 'desc');
     }
 
     /**

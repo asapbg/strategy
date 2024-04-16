@@ -88,7 +88,7 @@ class File extends ModelActivityExtend
     protected static function boot() {
         parent::boot();
         static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('created_at', 'asc');
+            $builder->orderBy('created_at', 'desc');
         });
     }
 
@@ -127,6 +127,11 @@ class File extends ModelActivityExtend
         return $this->hasMany(File::class, 'parent_id')
             ->where('parent_id', $this->id)
             ->orWhere('id', $this->id);
+    }
+
+    public function parent(): HasOne
+    {
+        return $this->hasOne(File::class, 'id', 'parent_id');
     }
 
     public function getModelName(): string

@@ -35,7 +35,8 @@ class AdvisoryBoardCustom extends ModelActivityExtend
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION);
+            ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION)
+            ->orderBy('created_at', 'desc');
     }
 
     public function siteFiles(): HasMany
@@ -44,7 +45,8 @@ class AdvisoryBoardCustom extends ModelActivityExtend
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_CUSTOM_SECTION)
             ->where('parent_id', null)
-            ->whereLocale(app()->getLocale());
+            ->whereLocale(app()->getLocale())
+            ->orderBy('created_at', 'desc');
     }
 
     /**

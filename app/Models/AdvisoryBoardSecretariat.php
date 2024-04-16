@@ -40,7 +40,8 @@ class AdvisoryBoardSecretariat extends ModelActivityExtend
         return $this->hasMany(File::class, 'id_object')
             ->withTrashed()
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
+            ->orderBy('created_at', 'desc');
     }
 
     public function siteFiles(): HasMany
@@ -49,14 +50,16 @@ class AdvisoryBoardSecretariat extends ModelActivityExtend
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
             ->where('parent_id', null)
-            ->whereLocale(app()->getLocale());
+            ->whereLocale(app()->getLocale())
+            ->orderBy('created_at', 'desc');
     }
 
     public function files(): HasMany
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value);
+            ->where('doc_type', DocTypesEnum::AB_SECRETARIAT->value)
+            ->orderBy('created_at', 'desc');
     }
 
     /**

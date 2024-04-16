@@ -48,7 +48,8 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
     {
         return $this->hasMany(File::class, 'id_object')
             ->where('code_object', File::CODE_AB)
-            ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS);
+            ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS)
+            ->orderBy('created_at', 'desc');
     }
 
     public function siteFiles()
@@ -57,7 +58,8 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
             ->where('code_object', File::CODE_AB)
             ->where('doc_type', DocTypesEnum::AB_MEETINGS_AND_DECISIONS)
             ->where('parent_id', null)
-            ->whereLocale(app()->getLocale());
+            ->whereLocale(app()->getLocale())
+            ->orderBy('created_at', 'desc');
     }
 
     /**

@@ -15,7 +15,7 @@
                       action=""
                       class="pull-left">
                     @csrf
-
+                    <input type="hidden" name="formats" value="ALL_ALLOWED_FILE_EXTENSIONS">
                     <div class="row mb-2">
                         @include('admin.partial.edit_field_translate', ['item' => null, 'translatableFields' => \App\Models\AdvisoryBoardCustom::translationFieldsProperties(), 'field' => 'title', 'required' => true])
                     </div>
