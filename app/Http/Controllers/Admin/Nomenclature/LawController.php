@@ -23,16 +23,16 @@ class LawController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        if( !$request->filled('search') && !$request->filled('active') ) {
-            $filter['status']['value'] = 1;
-            $requestFilter['status'] = 1;
+        if( !$request->filled('active') ) {
+            $filter['active']['value'] = 1;
+            $requestFilter['active'] = 1;
         }
 
         $paginate = $filter['paginate'] ?? Law::PAGINATE;
 
         $items = Law::with(['translation', 'institutions', 'institutions.translations'])
             ->FilterBy($requestFilter)
-            ->orderBy('id')
+            ->orderByTranslation('name')
             ->paginate($paginate);
         $toggleBooleanModel = 'Law';
         $editRouteName = self::EDIT_ROUTE;
@@ -96,13 +96,13 @@ class LawController extends AdminController
                 'value' => $request->input('title'),
                 'col' => 'col-md-4'
             ),
-            'status' => array(
+            'active' => array(
                 'type' => 'select',
                 'options' => optionsStatusesFilter(true, '', __('custom.status').' ('.__('custom.any').')'),
                 'default' => '',
                 'placeholder' => __('validation.attributes.status'),
-                'value' => $request->input('status'),
-                'col' => 'col-md-2'
+                'value' => $request->input('active'),
+                'col' => 'col-md-2 d-none',
             )
         );
     }
