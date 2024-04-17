@@ -95,7 +95,8 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         }
 
         if($active) {
-            $q->where('active', '=', 1);
+            $q->where('active', '=', 1)
+                ->whereNull('deleted_at');
         }
 
         return $q->orderBy('field_of_action_translations.name', 'asc')
