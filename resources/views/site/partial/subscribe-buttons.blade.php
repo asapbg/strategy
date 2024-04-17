@@ -37,7 +37,7 @@
             unset($requestFilter['search'])
         @endphp
     @endif
-    @php($url = request()->url().(isset($requestFilter) && sizeof($requestFilter) ? '?'.http_build_query($requestFilter) : ''))
+    @php($url = request()->url().(isset($requestFilter) && sizeof($requestFilter) ? '?'.urldecode(http_build_query($requestFilter)) : ''))
     <button type="button" class="btn btn-success share-link" name="copy_link" data-link="{{ $url }}">
         <i class="fas fa-share-alt text-success me-2"></i>{{ __('custom.share') }}
     </button>
