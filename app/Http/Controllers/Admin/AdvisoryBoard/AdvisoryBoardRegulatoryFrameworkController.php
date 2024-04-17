@@ -36,7 +36,7 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
         $req = new StoreOrganizationRulesRequest();
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $req->rules());
         if($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
+            return back()->withFragment('regulatory')->withInput()->withErrors($validator->errors())->with('organization', 1);
         }
 
         $validated = $validator->validated();
@@ -107,7 +107,7 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
         $req = new StoreEstablishmentRequest();
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $req->rules());
         if($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
+            return back()->withFragment('regulatory')->withInput()->withErrors($validator->errors())->with('establishment', 1);
         }
         $validated = $validator->validated();
 

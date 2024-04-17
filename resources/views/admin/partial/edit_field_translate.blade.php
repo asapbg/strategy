@@ -4,6 +4,8 @@
     @foreach(config('available_languages') as $language)
         @php($mainLang = $language['code'] == config('app.default_lang'))
         @php($fieldName = $field.'_'.$language['code'])
+{{--        Ugly way to fix sections with same name field and display validation errors--}}
+        @php($oldFieldValueName = isset($old_val_is_null) && $old_val_is_null ? 'null' : $fieldName)
         @php($value = $value ?? null)
         <div class="col-md-{{ $col ?? 6 }} col-12">
             <div class="form-group">
@@ -14,26 +16,28 @@
                     @switch($fieldProperties['type'])
                         @case('textarea')
                             <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif
-                                      class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}</textarea>
+                                      class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}</textarea>
                             {{--                            <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}"--}}
                             {{--                                   class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"--}}
                             {{--                                   value="{{ old($fieldName, ($item->id ? $item->translate($language['code'])->{$field} : '')) }}">--}}
                             @break
                         @case('summernote')
                             @if($disabled)
-                                {!! old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) !!}
+                                {!! old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) !!}
                             @else
-                                <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($fieldName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
+                                <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
 
                             @endif
                             @break
                         @default
                             <input type="text" id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif
                                    class="form-control form-control-sm @error($fieldName){{ 'is-invalid' }}@enderror"
-                                   value="{{ $value ?? old($fieldName, (isset($item) && $item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
+                                   value="{{ $value ?? old($oldFieldValueName, (isset($item) && $item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : '')) }}">
                     @endswitch
                     @error($fieldName)
-                    <div class="text-danger mt-1">{{ $message }}</div>
+                        @if($oldFieldValueName != 'null')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @endif
                     @enderror
                     <div class="ajax-error text-danger mt-1 error_{{ $fieldName }}"></div>
                 </div>

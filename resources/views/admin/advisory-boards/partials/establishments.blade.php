@@ -26,7 +26,7 @@
                 @csrf
 
                 <div class="row">
-                    @include('admin.partial.edit_field_translate', ['item' => $item->establishment,'translatableFields' => \App\Models\AdvisoryBoardEstablishment::translationFieldsProperties(), 'field' => 'description', 'required' => true])
+                    @include('admin.partial.edit_field_translate', ['item' => $item->establishment,'translatableFields' => \App\Models\AdvisoryBoardEstablishment::translationFieldsProperties(), 'field' => 'description', 'required' => true, 'old_val_is_null' => !Session::has('establishment')])
                 </div>
 {{--                <div class="row mb-3">--}}
 {{--                    @foreach(config('available_languages') as $lang)--}}
