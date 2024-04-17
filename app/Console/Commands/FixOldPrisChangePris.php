@@ -47,11 +47,13 @@ class FixOldPrisChangePris extends Command
             if($prisItems->count()){
                 foreach ($prisItems as $item){
                     echo 'Start pris doc ID: '.$item->id. PHP_EOL;
-                    DB::beginTransaction();
+//                    DB::beginTransaction();
                     try {
                         $oldConnections = explode(';', $item->old_connections);
                         if(sizeof($oldConnections)){
                             foreach ($oldConnections as $key => $oldC){
+
+
                                 $connection = $this->parseConnection($oldC);
                                 if(sizeof($connection) == 5){
                                     $oldConnection = $connection[1];
@@ -114,12 +116,16 @@ class FixOldPrisChangePris extends Command
                                 } else {
                                     file_put_contents('old_pris_missing_connections.txt', 'Pris ID:'.$item->id.' - '.$oldC.' | '.json_encode($connection).PHP_EOL, FILE_APPEND);
                                 }
+
+
+
+
                             }
                         }
-                        DB::commit();
+//                        DB::commit();
                     }  catch (\Exception $e) {
                         Log::error('Fix old pris connections: ' . $e);
-                        DB::rollBack();
+//                        DB::rollBack();
                     }
                 }
 
