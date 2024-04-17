@@ -81,16 +81,35 @@ class AdvisoryBoardFileService
             return;
         }
 
-        $version = null;
+        $version = '1.0';
 
         if ($is_update) {
-            $version = File::where('locale', '=', $language)
-                ->where('id_object', '=', $id_object)
-                ->where('doc_type', '=', $doc_type)
-                ->where('code_object', '=', $code_object ?? File::CODE_AB)
-                ->count();
-        }
+            if($parent_id){
+                $parentVersion = File::find($parent_id);
+                if($parentVersion) {
+                    $parentVersions = File::where('locale', '=', $language)
+                        ->where('id_object', '=', $id_object)
+                        ->where('doc_type', '=', $doc_type)
+                        ->where('code_object', '=', $code_object ?? File::CODE_AB)
+                        ->where('parent_id', '=', $parent_id)
+                        ->count();
 
+                    if($parentVersion->parent_id){
+                        $version = $parentVersion->version.'.'.($parentVersions + 1);
+                    } else{
+                        $explodeVersion = explode('.', $parentVersion->version);
+                        $version = $explodeVersion[0].'.'. ($parentVersions + 1);
+                    }
+                }
+            } else{
+                $versionDb = File::where('locale', '=', $language)
+                    ->where('id_object', '=', $id_object)
+                    ->where('doc_type', '=', $doc_type)
+                    ->where('code_object', '=', $code_object ?? File::CODE_AB)
+                    ->count();
+                $version = ($versionDb + 1).'.0';
+            }
+        }
         $store_name = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
         $dir = File::ADVISORY_BOARD_UPLOAD_DIR . $id_subject . DIRECTORY_SEPARATOR;
 
@@ -119,7 +138,7 @@ class AdvisoryBoardFileService
             'description_' . $language => $description ?? '',
             'sys_user' => auth()->user()->id,
             'locale' => $language,
-            'version' => ($version + 1) . '.0',
+            'version' => $version,
             'custom_name' => $custom_name,
             'resolution_council_ministers' => $resolution,
             'state_newspaper' => $state_newspaper,

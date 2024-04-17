@@ -28,8 +28,10 @@
                         <h2 class="mb-3">{{ trans_choice('custom.information', 1) }}</h2>
                     </div>
                     <div class="col-md-12 text-start">
-                        <button class="btn btn-primary  main-color">
-                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>
+                        <a class="btn btn-primary  main-color" target="_blank" href="{{ route('strategy-document.export', ['id' => $strategicDocument->id]) }}">
+                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</a>
+{{--                        <button class="btn btn-primary  main-color">--}}
+{{--                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>--}}
                         <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
                         <input type="hidden" id="subscribe_model_id" value="{{ $strategicDocument->id }}">
                         @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
@@ -151,7 +153,7 @@
                             @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
                                 <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
                                    class="main-color text-decoration-none">
-                                    {{ $strategicDocument->pris?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
+                                    {{ $strategicDocument->pris?->actType?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                                 </a>
                             @else
                                 <a href="{{ $strategicDocument->strategic_act_link }}" class="main-color text-decoration-none">

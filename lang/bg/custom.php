@@ -821,7 +821,7 @@ return [
     'export_as_csv' => 'Експорт като Csv',
     'strategic_documents.sections.general' => 'Основна информация',
     'strategic_documents.sections.files' => 'Приложени Файлове',
-    'strategic_documents.documents' => 'Дъщерен документ|Дъщерени документи',
+    'strategic_documents.documents' => 'Дъщерен документ|Дъщерни документи',
     'unlimited' => 'Безсрочен',
     'no_terms' => 'Не е указан срок',
     'strategic_document_childs' => 'Дъщерен документ',

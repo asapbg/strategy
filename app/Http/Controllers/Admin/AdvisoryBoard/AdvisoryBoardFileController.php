@@ -139,7 +139,6 @@ class AdvisoryBoardFileController extends AdminController
             }
 
             $file = File::find($validated['file_id']);
-
             //Add file and attach
             $file_service->upload(
                 $validated['file'],
@@ -153,7 +152,8 @@ class AdvisoryBoardFileController extends AdminController
                 $validated['resolution_council_ministers'] ?? null,
                 $validated['state_newspaper'] ?? null,
                 $validated['effective_at'] ?? null,
-                $file->parent_id ?? $file->id
+//                $file->parent_id ?? $file->id
+                $file->id
             );
 
 //            if (\Illuminate\Support\Facades\File::exists(public_path('files' . DIRECTORY_SEPARATOR . $updated_file->path))) {

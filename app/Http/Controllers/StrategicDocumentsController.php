@@ -73,7 +73,7 @@ class StrategicDocumentsController extends Controller
         $filter = $this->filters($request, $rf);
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'title';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'document_date_accepted';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
         $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
@@ -239,6 +239,14 @@ class StrategicDocumentsController extends Controller
         $this->setSeo($strategicDocument->title, '', '', array('title' => $strategicDocument->title, 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles',
             'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents', 'hasSubscribeEmail', 'hasSubscribeRss'));
+    }
+
+    public function export(Request $request, $id)
+    {
+        $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
+        $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
+        $pdf = PDF::loadView('exports.strategic_document', compact('strategicDocument', 'documents'));
+        return $pdf->download(substr($strategicDocument->title, 0, 250).'.pdf');
     }
 
     public function contacts(Request $request, $itemId = null)

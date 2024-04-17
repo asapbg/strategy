@@ -185,6 +185,12 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     {
         return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')->orderBy('ord');
     }
+    public function filesByLocale()
+    {
+        return $this->hasMany(StrategicDocumentFile::class, 'strategic_document_id', 'id')
+            ->where('locale', '=', app()->getLocale())
+            ->orderBy('ord');
+    }
 
     public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
