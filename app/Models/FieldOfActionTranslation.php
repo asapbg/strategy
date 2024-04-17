@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FieldOfActionTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.field_of_actions');
     public $timestamps = false;
 
     protected $fillable = ['locale', 'field_of_action_id', 'name'];

@@ -21,6 +21,8 @@ class File extends ModelActivityExtend
 {
     use Searchable;
 
+    const MODULE_NAME = ('custom.files');
+
     public $timestamps = true;
 
 //    Code objects

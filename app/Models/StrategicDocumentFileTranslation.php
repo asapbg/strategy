@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StrategicDocumentFileTranslation extends ModelTranslatableActivityExtend
 {
     use SoftDeletes;
+    const MODULE_NAME = ('custom.strategic_document_file_translations');
 
     protected string $logName = "strategic_document_file_translation";
     public $timestamps = false;

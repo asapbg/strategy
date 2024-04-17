@@ -46,8 +46,10 @@ class ActivityLogController extends Controller
             ->orderBy('first_name', 'asc')
             ->get();
 
+        //TODO activity why 'App\Models\StrategicDocumentChild' trigger error
         $subjects = CustomActivity::select('subject_type')
             ->distinct('subject_type')
+            ->where('subject_type', '<>', 'App\Models\StrategicDocumentChild')
             ->get();
 
         return view('admin.activity-logs.index', compact('activities','causers', 'subjects'));
@@ -61,7 +63,7 @@ class ActivityLogController extends Controller
      */
     public function show(CustomActivity $activity)
     {
-        if(auth()->user()->cannot('create', CustomActivity::class)) {
+        if(auth()->user()->cannot('view', $activity)) {
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 

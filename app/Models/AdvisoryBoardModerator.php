@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class AdvisoryBoardModerator extends ModelActivityExtend
 {
 
+    const MODULE_NAME = ('custom.adv_board_moderators');
     protected $fillable = ['advisory_board_id', 'user_id'];
 
     public function user(): BelongsTo

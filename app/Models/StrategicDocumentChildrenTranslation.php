@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class StrategicDocumentChildrenTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.strategic_document_child_translations');
     public $timestamps = false;
 
     protected $guarded = [];

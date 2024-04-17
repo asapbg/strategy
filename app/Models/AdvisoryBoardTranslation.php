@@ -10,6 +10,7 @@ namespace App\Models;
 class AdvisoryBoardTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.adv_board_translations');
     public $timestamps = false;
 
     protected $fillable = [];

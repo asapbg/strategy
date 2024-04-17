@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class AdvisoryBoardModeratorInformationTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.adv_board_moderator_translations');
     public $timestamps = false;
 
     /**

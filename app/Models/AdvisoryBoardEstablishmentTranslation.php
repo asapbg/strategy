@@ -10,6 +10,7 @@ namespace App\Models;
 class AdvisoryBoardEstablishmentTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.adv_board_establishment_translations');
     public $timestamps = false;
 
     protected string $logName = "advisory_board_establishment_translations";

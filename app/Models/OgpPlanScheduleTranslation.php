@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class OgpPlanScheduleTranslation extends ModelTranslatableActivityExtend
 {
 
+    const MODULE_NAME = ('custom.ogp_plan_schedule_translations');
     public $timestamps = false;
 
     protected $guarded = [];

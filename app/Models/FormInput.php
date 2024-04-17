@@ -4,6 +4,7 @@ namespace App\Models;
 
 class FormInput extends ModelActivityExtend
 {
+    const MODULE_NAME = ('custom.impact_assessment');
     public $timestamps = true;
 
     protected $table = 'form_input';

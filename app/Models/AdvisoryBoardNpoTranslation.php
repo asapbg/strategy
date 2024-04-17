@@ -10,6 +10,6 @@ namespace App\Models;
  */
 class AdvisoryBoardNpoTranslation extends ModelTranslatableActivityExtend
 {
-
+    const MODULE_NAME = ('custom.adv_board_npo_translations');
     public $timestamps = false;
 }
