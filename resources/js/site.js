@@ -214,7 +214,7 @@ function initInputs()
         language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
         format: 'dd.mm.yyyy',
         todayHighlight: true,
-        orientation: "auto right",
+        orientation: "auto",
         autoclose: true,
         weekStart: 1,
         changeMonth: true,
@@ -390,7 +390,7 @@ $(document).ready(function () {
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
             todayHighlight: true,
-            orientation: "auto right",
+            orientation: "auto",
             autoclose: true,
             weekStart: 1,
             changeMonth: true,
@@ -401,16 +401,18 @@ $(document).ready(function () {
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
             todayHighlight: true,
-            orientation: "auto right",
+            orientation: "auto",
             autoclose: true,
             weekStart: 1,
             changeMonth: true,
             changeYear: true,
-            showOn: "button",
+            showOnFocus: "false"
         });
     // }
 
-    $(document).on('focus', '.datepicker-addon', function(ev) { ev.preventDefault(); });
+    $(document).on('focusout', '.datepicker-btn', function() {
+        $(this).datepicker('update', $(this).val());
+    });
     $(document).on('click', '.datepicker-addon', function (){
         $(this).parent().find('.datepicker-btn').datepicker('show');
     });
