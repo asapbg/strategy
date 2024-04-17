@@ -245,7 +245,8 @@
                                                                 @foreach($item->changedDocs as $pris)
                                                                     <div id="disconnect_{{ $pris->id }}">
                                                                         <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
-                                                                           <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }} {{ $pris->docYear }} г.
+                                                                           <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }}
+{{--                                                                            {{ $pris->docYear }} г.--}}
                                                                         </a>
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
                                                                     </div>
@@ -253,7 +254,8 @@
                                                                     @foreach($item->changedByDocs as $pris)
                                                                         <div id="disconnect_{{ $pris->id }}">
                                                                             <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
-                                                                                <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }} {{ $pris->docYear }} г.
+                                                                                <i class="text-primary fas fa-link mr-2"></i>{{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name }} {{ $pris->regNum }}
+{{--                                                                                {{ $pris->docYear }} г.--}}
                                                                             </a>
                                                                             <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
                                                                         </div>
