@@ -59,9 +59,9 @@
                                 <label for="exampleFormControlInput1" class="form-label">{{ __('custom.published_after_f') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="published_from" autocomplete="off"
-                                           id="published_from" class="form-control datepicker"
+                                           id="published_from" class="form-control datepicker-btn"
                                            value="{{ request()->offsetGet('published_from') }}">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -72,9 +72,9 @@
                                 <label for="exampleFormControlInput1" class="form-label">{{ __('custom.published_before_f') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="published_till" autocomplete="off"
-                                           id="published_till" class="form-control datepicker"
+                                           id="published_till" class="form-control datepicker-btn"
                                            value="{{ request()->offsetGet('published_till') }}">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
                         </div>

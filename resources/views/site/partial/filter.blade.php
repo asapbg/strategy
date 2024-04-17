@@ -25,8 +25,8 @@
                         <label for="{{ $key }}" class="form-label">{{ $field['label'] }}:</label>
                         <div class="input-group">
                             <input type="text" name="{{ $key }}" autocomplete="off"
-                                value="{{ old($key, $field['value']) }}" class="form-control datepicker">
-                            <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                value="{{ old($key, $field['value']) }}" class="form-control datepicker-btn">
+                            <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                         </div>
                         @break('datepicker')
                         @case('checkbox')
@@ -137,8 +137,8 @@
                                     <label for="{{ $groupKey }}" class="form-label">{{ $groupField['label'] }}:</label>
                                     <div class="input-group">
                                         <input type="text" name="{{ $groupKey }}" autocomplete="off"
-                                               value="{{ old($groupKey, $groupField['value']) }}" class="form-control datepicker">
-                                        <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                               value="{{ old($groupKey, $groupField['value']) }}" class="form-control datepicker-btn">
+                                        <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                                     </div>
                                     @break('datepicker')
                                 @case('checkbox')

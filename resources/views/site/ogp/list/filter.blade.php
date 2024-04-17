@@ -28,8 +28,8 @@
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Дата от:</label>
                 <div class="input-group">
-                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker">
-                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker-btn">
+                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                 </div>
             </div>
         </div>
@@ -39,8 +39,8 @@
             <div class="mb-3 d-flex flex-column  w-100">
                 <label for="exampleFormControlInput1" class="form-label">Дата до:</label>
                 <div class="input-group">
-                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker">
-                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                    <input type="text" name="fromDate" autocomplete="off" readonly="" value="" class="form-control datepicker-btn">
+                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                 </div>
             </div>
         </div>

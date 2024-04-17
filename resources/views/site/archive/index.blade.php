@@ -146,16 +146,16 @@
                     <label for="exampleFormControlInput1" class="form-label">Начална дата:</label>
                     <div class="input-group">
                         <input type="text" name="fromDate" autocomplete="off" readonly="" value=""
-                               class="form-control datepicker"/>
-                        <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                               class="form-control datepicker-btn"/>
+                        <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <label for="exampleFormControlInput1" class="form-label">Крайна дата:</label>
                     <div class="input-group">
                         <input type="text" name="fromDate" autocomplete="off" readonly="" value=""
-                               class="form-control datepicker"/>
-                        <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                               class="form-control datepicker-btn"/>
+                        <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -180,8 +180,8 @@
                             <label for="exampleFormControlInput1" class="form-label">Държавен вестник (година):</label>
                             <div class="input-group">
                                 <input type="text" name="fromDate" autocomplete="off" readonly="" value=""
-                                       class="form-control datepicker"/>
-                                <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                       class="form-control datepicker-btn"/>
+                                <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                             </div>
                         </div>
                     </div>

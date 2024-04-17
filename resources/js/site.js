@@ -396,7 +396,25 @@ $(document).ready(function () {
             changeMonth: true,
             changeYear: true,
         });
+
+        $('.datepicker-btn').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'dd.mm.yyyy',
+            todayHighlight: true,
+            orientation: "auto right",
+            autoclose: true,
+            weekStart: 1,
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+        });
     // }
+
+    $(document).on('focus', '.datepicker-addon', function(ev) { ev.preventDefault(); });
+    $(document).on('click', '.datepicker-addon', function (){
+        $(this).parent().find('.datepicker-btn').datepicker('show');
+    });
+
     var tabEl = $('button[data-bs-toggle="tab"]');
     tabEl.on('shown.bs.tab', function (event) {
         event.target // newly activated tab

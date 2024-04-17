@@ -107,9 +107,7 @@ class FixOldPrisChangePris extends Command
                                                                 (pris_id, changed_pris_id, connect_type, old_connect_type)
                                                              select ?, ?, ?, ?
                                                              where not exists (
-                                                                select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)
-                                                             and where not exists (
-                                                                select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)'
+                                                                select pris_change_pris.pris_id from pris_change_pris where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?))'
                                                 , [$prisId, $changedPrisId, $newConnection, $oldConnection, $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection]);
                                         }
                                     }
