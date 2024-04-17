@@ -95,12 +95,23 @@ class FixOldPrisChangePris extends Command
                                     }
 
                                     if($newConnection && $prisId && $changedPrisId){
-                                        DB::statement('insert into pris_change_pris
+                                        if($oldConnection != 'виж'){
+                                            DB::statement('insert into pris_change_pris
                                                                 (pris_id, changed_pris_id, connect_type, old_connect_type)
                                                              select ?, ?, ?, ?
                                                              where not exists (
                                                                 select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)'
-                                            , [$prisId, $changedPrisId, $newConnection, $oldConnection, $prisId, $changedPrisId, $newConnection]);
+                                                , [$prisId, $changedPrisId, $newConnection, $oldConnection, $prisId, $changedPrisId, $newConnection]);
+                                        } else{
+                                            DB::statement('insert into pris_change_pris
+                                                                (pris_id, changed_pris_id, connect_type, old_connect_type)
+                                                             select ?, ?, ?, ?
+                                                             where not exists (
+                                                                select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)
+                                                             and where not exists (
+                                                                select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)'
+                                                , [$prisId, $changedPrisId, $newConnection, $oldConnection, $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection]);
+                                        }
                                     }
                                 } else {
                                     file_put_contents('old_pris_missing_connections.txt', 'Pris ID:'.$item->id.' - '.$oldC.' | '.json_encode($connection).PHP_EOL, FILE_APPEND);
