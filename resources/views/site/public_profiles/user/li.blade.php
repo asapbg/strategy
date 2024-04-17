@@ -9,7 +9,7 @@
         <div class="col-lg-10 right-side-content py-5">
             <div class="row mb-2">
                 <h2 class="mb-4">
-                    {{ __('site.user.li.title', ['name' => $item->name]) }}
+                    {{ __('site.user.li.title', ['name' => $item->fullName()]) }}
                 </h2>
                 @if($items->count())
                     @foreach($items as $row)
@@ -31,7 +31,7 @@
                             @endphp
                             <div class="row @if(!$loop->last) mb-4 @endif">
                                 <div class="col-md-8">
-                                    <a href="{{ route('legislative_initiatives.view', $row) }}" title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $row->law?->name }}" target="_blank"
+                                    <a href="{{ route('legislative_initiatives.view', $row) }}" title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $row->law?->name }}"
                                        class="ps-3 border-start border-4  border-{{ $color_class }}">
                                         {{ __('custom.change_f') }} {{ __('custom.in') }} {{ $row->law?->name }}
                                     </a>

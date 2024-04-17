@@ -6,7 +6,7 @@
         <div class="col-lg-10 right-side-content py-5">
             <div class="row mb-2">
                 <h2 class="mb-4">
-                    {{ __('site.user.pc.title', ['name' => $item->name]) }}
+                    {{ __('site.user.pc.title', ['name' => $item->fullName()]) }}
                 </h2>
                 @if($items->count())
                     @foreach($items as $consultation)
@@ -16,7 +16,7 @@
                         @endphp
                         <div class="row @if(!$loop->last) mb-3 @endif">
                             <div class="col-sm-8">
-                                <a href="{{ route('public_consultation.view', ['id' => $consultation->id]) }}" title="{{ $consultation->title }}" target="_blank"
+                                <a href="{{ route('public_consultation.view', ['id' => $consultation->id]) }}" title="{{ $consultation->title }}"
                                    class="ps-3 border-start border-4  @if(!$inPeriod) border-warning @else border-success @endif">
                                     {{ $consultation->title }})
                                 </a>

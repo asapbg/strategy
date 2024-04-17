@@ -6,7 +6,7 @@
             @endphp
             <div class="row @if(!$loop->last) mb-3 @endif">
                 <div class="col-sm-8">
-                    <a href="{{ route('public_consultation.view', ['id' => $pc->id]) }}" title="{{ $pc->title }}" target="_blank"
+                    <a href="{{ route('public_consultation.view', ['id' => $pc->id]) }}" title="{{ $pc->title }}"
                        class="ps-3 border-start border-4  @if(!$inPeriod) border-warning @else border-success @endif">
                         {{ $pc->title }})
                     </a>

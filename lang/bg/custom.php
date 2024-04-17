@@ -512,7 +512,7 @@ return [
     'tags'                                      => 'Термин|Термини',
     'tag'                                      => 'Таг',
     'any'                                      => 'Всички',
-    'pris_about'                               => 'Заглавие',
+    'pris_about'                               => 'Относно',
     'pris_legal_reason'                        => 'Правно основание',
     'pris.change_enum.CHANGE'                  => 'Изменя',
     'pris.change_enum.reverse.CHANGE'                  => 'Изменен от',

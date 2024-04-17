@@ -18,7 +18,7 @@
             @endphp
             <div class="row @if(!$loop->last) mb-4 @endif">
                 <div class="col-md-8">
-                    <a href="{{ route('legislative_initiatives.view', $li) }}" title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $li->law?->name }}" target="_blank"
+                    <a href="{{ route('legislative_initiatives.view', $li) }}" title="{{ __('custom.change_f') }} {{ __('custom.in') }} {{ $li->law?->name }}"
                        class="ps-3 border-start border-4  border-{{ $color_class }}">
                         {{ __('custom.change_f') }} {{ __('custom.in') }} {{ $li->law?->name }}
                     </a>

@@ -293,11 +293,14 @@
                             @foreach($item->comments as $key => $comment)
                                 <div class="obj-comment comment-background p-2 rounded mb-3">
                                     <div class="info">
-                                        <span class="obj-icon-info me-2 main-color fs-18 fw-600">
-                                            <i class="fa fa-solid fa-circle-user me-2 main-color"
-                                               title="{{ __('custom.author') }}"></i>
-                                            {{ $comment->user->fullName() }}
-                                        </span>
+                                        <a class="obj-icon-info me-2 main-color fs-18 fw-600 text-decoration-none" @if($comment->user) href="{{ route('user.profile.pc', $comment->user) }}" @endif>
+                                            <i class="fa fa-solid fa-circle-user me-2 main-color" title="{{ __('custom.author') }}"></i>{{ $comment->user ? $comment->user->fullName() : __('custom.anonymous') }}
+                                        </a>
+{{--                                        <span class="obj-icon-info me-2 main-color fs-18 fw-600">--}}
+{{--                                            <i class="fa fa-solid fa-circle-user me-2 main-color"--}}
+{{--                                               title="{{ __('custom.author') }}"></i>--}}
+{{--                                            {{ $comment->user->fullName() }}--}}
+{{--                                        </span>--}}
 
                                         <span class="obj-icon-info me-2 text-muted">
                                             {{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.Y h:i') }}
