@@ -91,12 +91,12 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
             ->where('field_of_action_translations.locale', '=', app()->getLocale());
 
         if($parent){
-            $q->where('parentid', '=', $parent);
+            $q->where('field_of_actions.parentid', '=', $parent);
         }
 
         if($active) {
-            $q->where('active', '=', 1)
-                ->whereNull('deleted_at');
+            $q->where('field_of_actions.active', '=', 1)
+                ->whereNull('field_of_actions.deleted_at');
         }
 
         return $q->orderBy('field_of_action_translations.name', 'asc')
