@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class seedFixInstitutionPris extends Command
+class _seedFixInstitutionPris extends Command
 {
     /**
      * The name and signature of the console command.

@@ -248,10 +248,14 @@ class seedOldUsers extends Command
                             $missingInstitution[$item->org_name] = $item->org_name;
                         }
                         if(!isset($ourUsers[(int)$item->old_id])){
+                            $duplicated = User::where('email', '=', $item->email)->first();
+                            $duplicatedOur = User::withTrashed()->where('email', '=', 'duplicated-'.$item->email)->first();
+                            if($duplicatedOur){
+                                continue;
+                            }
                             DB::beginTransaction();
                             try {
                                 $newUserRoles = [];
-                                $duplicated = User::where('email', '=', $item->email)->first();
                                 $prepareNewUser = [
                                     'old_id' => $item->old_id,
                                     'username' => $item->username,
