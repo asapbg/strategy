@@ -904,4 +904,9 @@ return [
     'adv_board_npo_translations' => 'Консултативни съвети (НПО)',
     'adv_board_organization_rules_translations' => 'Превод Консултативни съвети (правила)',
     'adv_board_translations' => 'Превод Консултативни съвети',
+    'pc_reports.standard' => 'Стандартна',
+    'pc_reports.field_of_action' => 'Области на политика',
+    'pc_reports.field_of_action_institution' => 'Области на политика (институции)',
+    'pc_reports.institutions' => 'Институции',
+    'reportss' => 'Справка|Справки',
 ];

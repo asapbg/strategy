@@ -333,6 +333,16 @@ function showModalAlert(message,title = false) {
 // ===================
 
 $(document).ready(function () {
+    $(document).on('keypress', function (e){
+        if(e.which == 13) {
+            if($('.ajaxSearch').length){
+                e.preventDefault();
+                $('.filter-results').parent().find('.ajaxSearch').trigger('click');
+            }
+        }
+    });
+
+
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
         console.log('#' + hash + '-tab');

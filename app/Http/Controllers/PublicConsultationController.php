@@ -221,6 +221,11 @@ class PublicConsultationController extends Controller
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        $this->setBreadcrumbsFull(array(
+            ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')],
+            ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
+            ['name' => __('custom.pc_reports.standard'), 'url' => ''],
+        ));
         return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'missingFiles'));
     }
 
@@ -362,6 +367,11 @@ class PublicConsultationController extends Controller
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        $this->setBreadcrumbsFull(array(
+            ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')],
+            ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
+            ['name' => __('custom.pc_reports.field_of_action'), 'url' => ''],
+        ));
         return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
     }
 
@@ -459,6 +469,11 @@ class PublicConsultationController extends Controller
 //dd($items);
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        $this->setBreadcrumbsFull(array(
+            ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')],
+            ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
+            ['name' => __('custom.pc_reports.field_of_action_institution'), 'url' => ''],
+        ));
         return $this->view('site.public_consultations.report_fa_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
     }
 
@@ -620,6 +635,11 @@ class PublicConsultationController extends Controller
         }
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        $this->setBreadcrumbsFull(array(
+            ['name' => trans_choice('custom.public_consultations', 2), 'url' => route('public_consultation.index')],
+            ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
+            ['name' => __('custom.pc_reports.institutions'), 'url' => ''],
+        ));
         return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles'));
     }
 
