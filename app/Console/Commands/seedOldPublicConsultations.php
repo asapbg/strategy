@@ -148,25 +148,39 @@ class seedOldPublicConsultations extends Command
                         foreach ($oldDbResult as $item) {
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
-                                if(isset($fieldOfActions) && sizeof($fieldOfActions) && isset($fieldOfActions[mb_strtolower($item->field_of_actions_name)])){
-                                    $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
-                                    if($existPc){
-                                        $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
+                                $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
+                                if($existPc){
+                                    if(isset($fieldOfActions) && sizeof($fieldOfActions) && isset($fieldOfActions[mb_strtolower($item->field_of_actions_name)])){
+                                        if($existPc){
+                                            $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
+                                            $existPc->save();
+                                        }
+                                    } else {
+                                        $existPc->field_of_actions_id = null;
                                         $existPc->save();
+                                        //Collect not existing fields of actions or create mapping on fly
+                                        file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
                                     }
-                                } else {
-                                    $existPc->field_of_actions_id = null;
+
+                                    //Update institution
+                                    $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                                    $institution = Institution::withTrashed()->find($ourUsersInstitutions[$item->author_id]);
+                                    //$institutionId = $dInstitution->id;
+                                    //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
+                                    $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
+                                    $existPc->importer_institution_id = $institutionId;
+                                    $existPc->responsible_institution_id = $institutionId;
+                                    $existPc->consultation_level_id = $institutionLevel;
                                     $existPc->save();
-                                    //Collect not existing fields of actions or create mapping on fly
-                                    file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
                                 }
                                 continue;
                             }
 
-//                            //$institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                            $institutionId = $dInstitution->id;
+                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                            $institution = Institution::withTrashed()->find($ourUsersInstitutions[$item->author_id]);
+                            //$institutionId = $dInstitution->id;
                             //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
-                            $institutionLevel = $dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level;
+                            $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
 
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
