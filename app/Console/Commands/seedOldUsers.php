@@ -199,7 +199,7 @@ class seedOldUsers extends Command
 //        $currentStep = (int)(DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max) + 1;
         $currentStep = 0;
 
-        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
         $missingInstitution = array();
 
         if( (int)$maxOldId[0]->max ) {
@@ -315,7 +315,7 @@ class seedOldUsers extends Command
                             }
                         } else{
                             //Update institutions
-                            $existingUser = User::find($ourUsers[(int)$item->old_id]);
+                            $existingUser = User::find((int)$ourUsers[(int)$item->old_id]);
                             if($existingUser){
                                 $existingUser->institution_id = $institutions[$item->org_name] ?? null;
                                 $existingUser->save();
