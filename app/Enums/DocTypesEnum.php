@@ -56,6 +56,68 @@ enum DocTypesEnum: int
         return $keyName;
     }
 
+    public static function pcDocTypes()
+    {
+        return [
+            self::PC_DRAFT_ACT->value,
+            self::PC_REPORT->value,
+            self::PC_MOTIVES->value,
+            self::PC_OTHER_DOCUMENTS->value,
+            self::PC_IMPACT_EVALUATION->value,
+            self::PC_IMPACT_EVALUATION_OPINION->value,
+            self::PC_CONSOLIDATED_ACT_VERSION->value,
+            self::PC_COMMENTS_REPORT->value,
+            self::PC_KD_PDF->value
+        ];
+    }
+
+    public static function pcMissingDocTypesSelect()
+    {
+        return array(
+            ['value' => '', 'name' => ''],
+            ['value' => self::PC_DRAFT_ACT->value, 'name' =>  __('custom.public_consultation.doc_type.'.self::PC_DRAFT_ACT->value)],
+            ['value' => self::PC_REPORT->value.'_'.self::PC_MOTIVES->value, 'name' =>  __('custom.public_consultation.doc_type.'.self::PC_REPORT->value).'/'.__('custom.public_consultation.doc_type.'.self::PC_MOTIVES->value)],
+            ['value' => self::PC_IMPACT_EVALUATION->value, 'name' =>  __('custom.public_consultation.doc_type.'.self::PC_IMPACT_EVALUATION->value)],
+            ['value' => self::PC_IMPACT_EVALUATION_OPINION->value, 'name' =>  __('custom.public_consultation.doc_type.'.self::PC_IMPACT_EVALUATION_OPINION->value)]
+        );
+    }
+
+    public static function pcRequiredDocTypesByActType($actType)
+    {
+        if(is_null($actType)){
+            return [];
+        }
+        switch ($actType)
+        {
+            case ActType::ACT_LAW:
+            case ActType::ACT_COUNCIL_OF_MINISTERS:
+                $docs = [
+                    self::PC_DRAFT_ACT->value,
+                    self::PC_REPORT->value,
+                    self::PC_MOTIVES->value,
+                    self::PC_IMPACT_EVALUATION->value,
+                    self::PC_IMPACT_EVALUATION_OPINION->value
+                ];
+                break;
+            case ActType::ACT_MINISTER:
+            case ActType::ACT_OTHER_CENTRAL_AUTHORITY:
+            case ActType::ACT_REGIONAL_GOVERNOR:
+            case ActType::ACT_MUNICIPAL:
+            case ActType::ACT_MUNICIPAL_MAYOR:
+                $docs = [
+                    self::PC_DRAFT_ACT->value,
+                    self::PC_MOTIVES->value
+                ];
+                break;
+            default:
+                $docs = [
+                    self::PC_DRAFT_ACT->value
+                ];
+        }
+
+        return $docs;
+    }
+
     /**
      * @param $actType
      * @param $section {base|kd|report}

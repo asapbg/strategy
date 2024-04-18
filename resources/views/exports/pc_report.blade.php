@@ -36,10 +36,10 @@
                     <th>{{ trans_choice('custom.institution', 1) }}</th>
                     <th>{{ trans_choice('custom.act_type', 1) }}</th>
                     <th>Срок (дни)</th>
-                    <th>Мотиви за кратък срок</th>
-                    <td>Липсващи документи</td>
+                    <th>{{ __('site.public_consultation.short_term_motive_label') }}</th>
+                    <td>{{ __('custom.pc_reports.missing_documents') }}</td>
                     <th>{{ trans_choice('custom.comment', 2) }}</th>
-                    <th>Справка/съобщение</th>
+                    <th>{{ __('custom.pc_reports.standard.comment_report') }}</th>
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
@@ -52,10 +52,13 @@
                             <td>{{ $row->daysCnt }}</td>
                             <td>{!! $row->short_term_reason !!}</td>
                             <td>
-                                @if(isset($data['missingFiles']) && sizeof($data['missingFiles']) && isset($data['missingFiles'][$row->id]) && $data['missingFiles'][$row->id] > 0)
-                                    {{ __('custom.yes') }}
-                                @else
-                                    {{ __('custom.no') }}
+                                @php($requiredDocs = \App\Enums\DocTypesEnum::pcRequiredDocTypesByActType($row->act_type_id))
+                                @if(sizeof($requiredDocs))
+                                    @foreach($requiredDocs as $rd)
+                                        @if(empty($existDocTypes) || !in_array($rd, $existDocTypes))
+                                            {{ ' '.__('custom.public_consultation.doc_type.'.$rd) }};
+                                        @endif
+                                    @endforeach
                                 @endif
                             </td>
                             <td>{{ $row->comments->count() }}</td>

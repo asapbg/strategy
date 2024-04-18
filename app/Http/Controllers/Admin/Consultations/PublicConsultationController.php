@@ -216,7 +216,12 @@ class PublicConsultationController extends AdminController
                 $item->responsible_institution_id = $institution ? $institution->id : null;
             }
 
+            //cache days
+            $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
+            $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
+            $item->active_in_days = $to && $from ? $to->diffInDays($from) : null;
             $item->save();
+
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
             $item->consultations()->sync($validated['connected_pc'] ?? []);

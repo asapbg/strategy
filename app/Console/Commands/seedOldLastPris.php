@@ -1565,6 +1565,7 @@ class seedOldLastPris extends Command
 
                                                 File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
                                                 File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                                $this->comment('Pris with old id '.$item->old_id.' files updated');
                                             }
                                         }
                                     }

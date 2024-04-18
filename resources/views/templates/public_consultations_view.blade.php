@@ -134,7 +134,7 @@
             </div>
 
             <div class="row mb-4 mt-4" id="short-term">
-              <h3 class="mb-3">Мотиви за кратък срок</h3>
+              <h3 class="mb-3">{{ __('site.public_consultation.short_term_motive_label') }}</h3>
               <p> Предоставяне на мотиви за кратък срок (по-малко от 30 дни). </p>
             </div>
 

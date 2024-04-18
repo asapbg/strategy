@@ -147,33 +147,8 @@ class PublicConsultationController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        //Липса на документ
-        $missingFiles = array();
-        $qMissingFiles = DB::select('
-            select
-                    public_consultation.id,
-                    case when (
-                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and count(files.id) < 9)
-                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 6)
-                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and count(files.id) < 3)
-                    ) then 1 else 0 end as missing_files
-                from public_consultation
-                left join files on files.id_object = public_consultation.id
-                    and files.code_object = 6
-                    and files.deleted_at is null
-                    and (
-                        (public_consultation.act_type_id in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_REPORT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_IMPACT_EVALUATION->value.','.DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
-                        or (public_consultation.act_type_id in ('.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_MOTIVES->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.','.DocTypesEnum::PC_KD_PDF->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
-                        or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
-                    )
-                where public_consultation.old_id is null
-                group by public_consultation.id
-        ');
-        if(sizeof($qMissingFiles)){
-            $missingFiles = array_combine(array_column($qMissingFiles, 'id'), array_column($qMissingFiles, 'missing_files'));
-        }
-        $q = PublicConsultation::select('public_consultation.*')
-            ->ActivePublic()
+        $q = PublicConsultation::select(['public_consultation.*', DB::raw('json_agg(distinct(files.doc_type)) filter (where files.doc_type is not null) as doc_types')])
+            ->Active()
             ->with(['translation', 'comments', 'fieldOfAction', 'fieldOfAction.translations',
                 'actType', 'actType.translations',
                 'importerInstitution', 'importerInstitution.translations', 'comments', 'proposalReport'])
@@ -192,15 +167,25 @@ class PublicConsultationController extends Controller
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
+            ->leftjoin('comments', function ($j){
+                $j->on('comments.object_id', '=', 'public_consultation.id')
+                    ->where('comments.object_code', '=', Comments::PC_OBJ_CODE);
+            })
+            ->leftjoin('files', function ($j){
+                $j->on('files.id_object', '=', 'public_consultation.id')
+                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                    ->where('files.locale', '=', app()->getLocale())
+                    ->whereIn('files.doc_type', DocTypesEnum::pcDocTypes());
+            })
 //            ->where('institution.id', '<>', env('DEFAULT_INSTITUTION_ID'))
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd);
+            ->SortedBy($sort,$sortOrd)
+            ->groupBy('public_consultation.id');
         if($request->input('export_excel') || $request->input('export_pdf')){
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.pc_report_title'),
-                'rows' => $items,
-                'missingFiles' => $missingFiles
+                'rows' => $items
             ];
 
             $fileName = 'pc_report_'.Carbon::now()->format('Y_m_d_H_i_s');
@@ -216,7 +201,7 @@ class PublicConsultationController extends Controller
         }
 
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report', compact('filter','items', 'rf', 'missingFiles'));
+            return view('site.public_consultations.list_report', compact('filter','items', 'rf'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
@@ -226,7 +211,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.standard'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'missingFiles'));
+        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
     }
 
     private function filtersReport($request){
@@ -236,6 +221,7 @@ class PublicConsultationController extends Controller
             ->whereLocale(app()->getLocale())
             ->orderBy('field_of_action_translations.name', 'asc')
             ->get();
+
         return array(
             'name' => array(
                 'type' => 'text',
@@ -256,6 +242,57 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4'
+            ),
+            'openFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openFrom'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-4'
+            ),
+            'openTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openTo'),
+                'label' => __('custom.end_date'),
+                'col' => 'col-md-4'
+            ),
+            'comments' => array(
+                'type' => 'select',
+                'options' => array(
+                    ['value' => '', 'name' => ''],
+                    ['value' => '1', 'name' => __('custom.has')],
+                    ['value' => '2', 'name' => __('custom.no_has')],
+                ),
+                'multiple' => false,
+                'default' => '',
+                'label' => trans_choice('custom.comments', 2),
+                'value' => $request->input('comments'),
+                'col' => 'col-md-4'
+            ),
+            'hasShortTermsReasons' => array(
+                'type' => 'select',
+                'options' => array(
+                    ['value' => '', 'name' => ''],
+                    ['value' => '1', 'name' => __('custom.has')],
+                    ['value' => '2', 'name' => __('custom.no_has')],
+                ),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('site.public_consultation.short_term_motive_label'),
+                'value' => $request->input('hasShortTermsReasons'),
+                'col' => 'col-md-4'
+            ),
+            'commentReport' => array(
+                'type' => 'select',
+                'options' => array(
+                    ['value' => '', 'name' => ''],
+                    ['value' => '1', 'name' => __('custom.has')],
+                    ['value' => '2', 'name' => __('custom.no_has')],
+                ),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.pc_reports.standard.comment_report'),
+                'value' => $request->input('commentReport'),
                 'col' => 'col-md-4'
             ),
             'actTypes' => array(
@@ -282,6 +319,59 @@ class PublicConsultationController extends Controller
                 'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
                 'value' => request()->input('importers'),
+                'default' => '',
+                'col' => 'col-md-4'
+            ),
+            'status' => array(
+                'type' => 'subjects',
+                'label' => __('custom.status'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => __('custom.all'), 'value' => ''],
+                    ['name' => trans_choice('custom.active', 1), 'value' => '1'],
+                    ['name' => trans_choice('custom.inactive_m', 1), 'value' => '2'],
+                ),
+                'value' => request()->input('status'),
+                'default' => '',
+                'col' => 'col-md-4'
+            ),
+            'formGroup' => array(
+                'title' => __('custom.pc_reports.standard.days'),
+                'class' => 'mb-4 row',
+                'fields' => array(
+                    'days' => array(
+                        'type' => 'select',
+                        'options' => array(
+                            ['value' => '', 'name' => ''],
+                            ['value' => '1', 'name' => __('custom.pc_reports.standard.days_limit_period')],
+                            ['value' => '2', 'name' => __('custom.pc_reports.standard.days_more_then_min')],
+                        ),
+                        'multiple' => false,
+                        'default' => '',
+                        'label' => __('custom.pc_reports.standard.days_defined'),
+                        'value' => $request->input('days'),
+                        'col' => 'col-md-4'
+                    ),
+                    'daysFrom' => array(
+                        'type' => 'text',
+                        'label' => __('custom.from'),
+                        'value' => $request->input('daysFrom'),
+                        'col' => 'col-md-2'
+                    ),
+                    'daysTo' => array(
+                        'type' => 'text',
+                        'label' => __('custom.to'),
+                        'value' => $request->input('daysTo'),
+                        'col' => 'col-md-2'
+                    ),
+                )
+            ),
+            'missingDocuments' => array(
+                'type' => 'select',
+                'label' => __('custom.pc_reports.missing_documents'),
+                'multiple' => true,
+                'options' => DocTypesEnum::pcMissingDocTypesSelect(),
+                'value' => request()->input('missingDocuments'),
                 'default' => '',
                 'col' => 'col-md-4'
             ),

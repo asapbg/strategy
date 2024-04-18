@@ -29,14 +29,15 @@
                         <th>{{ trans_choice('custom.institution', 1) }}</th>
                         <th>{{ trans_choice('custom.act_type', 1) }}</th>
                         <th>Срок (дни)</th>
-                        <th>Мотиви за кратък срок</th>
-                        <th>Липсващи документи</th>
+                        <th>{{ __('site.public_consultation.short_term_motive_label') }}</th>
+                        <th>{{ __('custom.pc_reports.missing_documents') }}</th>
                         <th>{{ trans_choice('custom.comment', 2) }}</th>
-                        <th>Справка/съобщение</th>
+                        <th>{{ __('custom.pc_reports.standard.comment_report') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach($items as $item)
+                    @php($existDocTypes = json_decode($item->doc_types))
                     <tr>
                         <td><a href="{{ route('public_consultation.view', $item->id) }}" target="_blank">{{ $item->title }}</a></td>
                         <td>{{ $item->fieldOfAction?->name }}</td>
@@ -44,12 +45,15 @@
                         <td>@if($item->importer_institution_id == env('DEFAULT_INSTITUTION_ID')){{ '' }}@else{{ $item->importerInstitution?->name }}@endif</td>
                         <td>{{ $item->actType?->name }}</td>
                         <td>{{ $item->daysCnt }}</td>
-                        <td>{!! $item->short_term_reason !!}</td>
+                        <td><span>@if(!empty($item->short_term_reason)){{ __('custom.yes') }}<i class="fas fa-info-circle text-primary ms-1" title="{{ $item->short_term_reason }}" data-html="true" data-bs-placement="top" data-bs-toggle="tooltip"></i>@else{{ __('custom.no') }}@endif</span></td>
                         <td>
-                            @if(isset($missingFiles) && sizeof($missingFiles) && isset($missingFiles[$item->id]) && $missingFiles[$item->id] > 0)
-                                {{ __('custom.yes') }}
-                            @else
-                                {{ __('custom.no') }}
+                            @php($requiredDocs = \App\Enums\DocTypesEnum::pcRequiredDocTypesByActType($item->act_type_id))
+                            @if(sizeof($requiredDocs))
+                                @foreach($requiredDocs as $rd)
+                                    @if(empty($existDocTypes) || !in_array($rd, $existDocTypes))
+                                        <span class="d-block">{{ __('custom.public_consultation.doc_type.'.$rd) }}</span>
+                                    @endif
+                                @endforeach
                             @endif
                         </td>
                         <td>{{ $item->comments->count() }}</td>

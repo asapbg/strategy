@@ -57,7 +57,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         'legislative_program_id', 'operational_program_id', 'open_from', 'open_to',
         'importer_institution_id', 'responsible_institution_id', 'responsible_institution_address',
         'active', 'reg_num', 'monitorstat', 'legislative_program_row_id', 'operational_program_row_id',
-        'proposal_report_comment_id', 'field_of_actions_id', 'law_id', 'pris_id', 'user_id', 'end_notify'
+        'proposal_report_comment_id', 'field_of_actions_id', 'law_id', 'pris_id', 'user_id', 'end_notify',
+        'active_in_days'
     ];
 
     const MIN_DURATION_DAYS = 14;

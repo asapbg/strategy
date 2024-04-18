@@ -119,7 +119,7 @@
             @else
                 <div class="col-12 {{ $field['class'] ?? '' }}">
                     @if(isset($field['title']))
-                        <label class="form-label me-3">{{ $field['title'] }}</label>
+                        <label class="form-label ms-3 me-3 custom-left-border">{{ $field['title'] }}</label>
                     @endif
                     @foreach($field['fields'] as $groupKey => $groupField)
                         <div class="{{ $groupField['col'] ?? 'col-md-6' }} col-12 mb-2  @if($groupField['type'] == 'subjects') d-flex @endif">
