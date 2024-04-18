@@ -93,7 +93,7 @@ class seedOldPublicConsultations extends Command
         }
 
         $ourUsersInstitutions = User::withTrashed()->get()->pluck('institution_id', 'old_id')->toArray();
-        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         //$ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
