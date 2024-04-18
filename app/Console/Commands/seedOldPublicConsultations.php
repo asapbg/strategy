@@ -164,7 +164,7 @@ class seedOldPublicConsultations extends Command
 
                                     //Update institution
                                     $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                                    $institution = Institution::withTrashed()->find($ourUsersInstitutions[$item->author_id]);
+                                    $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
                                     //$institutionId = $dInstitution->id;
                                     //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                                     $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
@@ -177,7 +177,7 @@ class seedOldPublicConsultations extends Command
                             }
 
                             $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                            $institution = Institution::withTrashed()->find($ourUsersInstitutions[$item->author_id]);
+                            $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
                             //$institutionId = $dInstitution->id;
                             //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                             $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
