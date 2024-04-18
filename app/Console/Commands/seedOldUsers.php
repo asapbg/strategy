@@ -312,9 +312,13 @@ class seedOldUsers extends Command
                         } else{
                             //Update institutions
                             $existingUser = User::find($ourUsers[(int)$item->old_id]);
-                            $existingUser->institution_id = $institutions[$item->org_name] ?? null;
-                            $existingUser->save();
-                            $this->comment('User with old id (' . $existingUser->old_id . ') is updated');
+                            if($existingUser){
+                                $existingUser->institution_id = $institutions[$item->org_name] ?? null;
+                                $existingUser->save();
+                                $this->comment('User with old id (' . $existingUser->old_id . ') is updated');
+                            } else{
+                                $this->comment('Cant\'t find old user OldId ('.(int)$item->old_id.') OurId (' . $ourUsers[(int)$item->old_id] . ')');
+                            }
                         }
                     }
                 }
