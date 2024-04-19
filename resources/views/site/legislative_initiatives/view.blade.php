@@ -214,6 +214,19 @@
                         @endforeach
                     </div>
                 </div>
+            @else
+                @if($item->institutions->count())
+                    <div class="row mt-4">
+                        <div class="col-md-auto fw-bold">{{ __('custom.to_administrations_of') }}:</div>
+                        <div class="col-md-9">
+                            @foreach($item->institutions as $r)
+                                <span class="d-block">
+                                    <a class="main-color text-decoration-none" href="{{ route('institution.profile', $r) }}" target="_blank">{{ $r->name }}</a>
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             @endif
 
             <div class="row mt-2">

@@ -30,6 +30,7 @@ Route::prefix(app()->getLocale())->group(function (){
 });
 
 include 'eauth.php';
+include 'api.php';
 
 Route::get('/sitemap.xml', [\App\Http\Controllers\HomeController::class, 'sitemap'])->name('sitemap');
 Route::get('/sitemap/base', [\App\Http\Controllers\HomeController::class, 'sitemapBase'])->name('sitemap.base');

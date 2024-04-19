@@ -588,6 +588,7 @@ class AdvisoryBoardController extends Controller
             ->orderBy('advisory_boards.active', 'desc')
             ->orderBy('advisory_board_translations.name', 'asc')
             ->SortedBy($sort,$sortOrd);
+
         if($searchMeetings){
             $q->groupBy('advisory_boards.id');
         }

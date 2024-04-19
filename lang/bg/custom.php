@@ -872,6 +872,7 @@ return [
     'time_left' => 'Оставащо време',
     'end_after' => 'Приключила след',
     'send_to_administrations_of' => 'Изпратена до администрациите на',
+    'to_administrations_of' => 'Насочена към',
     'are_you_sure_to_close'           => 'Сигурни ли сте, че искате да затворите',
     'closing'           => 'Затваряне',
     'active_law_text'           => 'Действаща разпоредба',

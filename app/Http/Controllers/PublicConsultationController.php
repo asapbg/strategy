@@ -181,6 +181,7 @@ class PublicConsultationController extends Controller
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->groupBy('public_consultation.id');
+
         if($request->input('export_excel') || $request->input('export_pdf')){
             $items = $q->get();
             $exportData = [
@@ -315,7 +316,7 @@ class PublicConsultationController extends Controller
             ),
             'importers' => array(
                 'type' => 'subjects',
-                'label' => __('site.public_consultation.importer'),
+                'label' => __('site.public_consultation.importer_pc'),
                 'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
                 'value' => request()->input('importers'),
@@ -796,6 +797,18 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('fieldOfActions'),
                 'col' => 'col-md-4'
             ),
+            'openFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openFrom'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-4'
+            ),
+            'openTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openTo'),
+                'label' => __('custom.end_date'),
+                'col' => 'col-md-4'
+            ),
             'actTypes' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(ActType::optionsList()),
@@ -816,7 +829,7 @@ class PublicConsultationController extends Controller
             ),
             'importers' => array(
                 'type' => 'subjects',
-                'label' => __('site.public_consultation.importer'),
+                'label' => __('site.public_consultation.importer_pc'),
                 'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
                 'value' => request()->input('importers'),
