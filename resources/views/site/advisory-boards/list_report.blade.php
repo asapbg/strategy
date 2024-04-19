@@ -39,7 +39,7 @@
                 <tbody>
                 @foreach($items as $document)
                     <tr>
-                        <td>{{ $document->name }}</td>
+                        <td><a href="{{ route('advisory-boards.view', $document) }}" target="_blank">{{ $document->name }}</a></td>
                         <td>{{ $document->policyArea?->name }}</td>
                         <td>{{ $document->authority?->name }}</td>
                         <td>{{ $document->advisoryActType?->name }}</td>

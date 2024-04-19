@@ -585,9 +585,9 @@ class AdvisoryBoardController extends Controller
                     return $query->orderBy('advisory_act_type_translations.name');
                 }
             })
+            ->SortedBy($sort,$sortOrd)
             ->orderBy('advisory_boards.active', 'desc')
-            ->orderBy('advisory_board_translations.name', 'asc')
-            ->SortedBy($sort,$sortOrd);
+            ->orderBy('advisory_board_translations.name', 'asc');
 
         if($searchMeetings){
             $q->groupBy('advisory_boards.id');
@@ -846,6 +846,12 @@ class AdvisoryBoardController extends Controller
             ->whereLocale(app()->getLocale())
             ->orderBy('advisory_act_type_translations.name', 'asc')
             ->get();
+        $advisory_chairman = AdvisoryChairmanType::select('advisory_chairman_type.*')
+            ->with(['translation'])
+            ->joinTranslation(AdvisoryChairmanType::class)
+            ->whereLocale(app()->getLocale())
+            ->orderBy('advisory_chairman_type_translations.name', 'asc')
+            ->get();
 
         return array(
             'fieldOfActions' => array(
@@ -873,6 +879,15 @@ class AdvisoryBoardController extends Controller
                 'default' => '',
                 'label' => __('validation.attributes.act_of_creation'),
                 'value' => $request->input('actOfCreation'),
+                'col' => 'col-md-6'
+            ),
+            'advisoryChairman' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($advisory_chairman),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('validation.attributes.advisory_chairman_type_id'),
+                'value' => $request->input('advisoryChairman'),
                 'col' => 'col-md-6'
             ),
             'npo' => array(
