@@ -704,35 +704,6 @@ class AdvisoryBoardController extends Controller
 
     private function boardFilters($request)
     {
-        $fields = FieldOfAction::select('field_of_actions.*')
-            ->advisoryBoard()
-            ->with('translations')
-            ->joinTranslation(FieldOfAction::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('field_of_action_translations.name', 'asc')
-            ->get();
-        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderBy('id')->get();
-        $authority = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
-            ->with(['translation'])
-            ->joinTranslation(AuthorityAdvisoryBoard::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('authority_advisory_board_translations.name', 'asc')
-            ->get();
-
-        $act_of_creation = AdvisoryActType::select('advisory_act_type.*')
-            ->with(['translation'])
-            ->joinTranslation(AdvisoryActType::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('advisory_act_type_translations.name', 'asc')
-            ->get();
-
-        $chairman_types = AdvisoryChairmanType::select('advisory_chairman_type.*')
-            ->with(['translation'])
-            ->joinTranslation(AdvisoryChairmanType::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('advisory_chairman_type_translations.name', 'asc')
-            ->get();
-
         return array(
             'keywords' => array(
                 'type' => 'text',
@@ -742,7 +713,7 @@ class AdvisoryBoardController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($fields),
+                'options' => optionsFromModel(FieldOfAction::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -751,7 +722,7 @@ class AdvisoryBoardController extends Controller
             ),
             'authoritys' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($authority),
+                'options' => optionsFromModel(AuthorityAdvisoryBoard::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('custom.type_of_governing'),
@@ -760,7 +731,7 @@ class AdvisoryBoardController extends Controller
             ),
             'actOfCreations' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($act_of_creation),
+                'options' => optionsFromModel(AdvisoryActType::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.act_of_creation'),
@@ -769,7 +740,7 @@ class AdvisoryBoardController extends Controller
             ),
             'chairmanTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($chairman_types),
+                'options' => optionsFromModel(AdvisoryChairmanType::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.advisory_chairman_type', 1),
@@ -826,37 +797,11 @@ class AdvisoryBoardController extends Controller
     }
 
     private function filtersReport($request, $currentRequest){
-        $fields = FieldOfAction::select('field_of_actions.*')
-            ->advisoryBoard()
-            ->with('translations')
-            ->joinTranslation(FieldOfAction::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('field_of_action_translations.name', 'asc')
-            ->get();
-        $authority = AuthorityAdvisoryBoard::select('authority_advisory_board.*')
-            ->with(['translation'])
-            ->joinTranslation(AuthorityAdvisoryBoard::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('authority_advisory_board_translations.name', 'asc')
-            ->get();
-
-        $act_of_creation = AdvisoryActType::select('advisory_act_type.*')
-            ->with(['translation'])
-            ->joinTranslation(AdvisoryActType::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('advisory_act_type_translations.name', 'asc')
-            ->get();
-        $advisory_chairman = AdvisoryChairmanType::select('advisory_chairman_type.*')
-            ->with(['translation'])
-            ->joinTranslation(AdvisoryChairmanType::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('advisory_chairman_type_translations.name', 'asc')
-            ->get();
 
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($fields),
+                'options' => optionsFromModel(FieldOfAction::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -865,7 +810,7 @@ class AdvisoryBoardController extends Controller
             ),
             'authoritys' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($authority),
+                'options' => optionsFromModel(AuthorityAdvisoryBoard::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('custom.type_of_governing'),
@@ -874,7 +819,7 @@ class AdvisoryBoardController extends Controller
             ),
             'actOfCreations' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($act_of_creation),
+                'options' => optionsFromModel(AdvisoryActType::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.act_of_creation'),
@@ -883,7 +828,7 @@ class AdvisoryBoardController extends Controller
             ),
             'advisoryChairman' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($advisory_chairman),
+                'options' => optionsFromModel(AdvisoryChairmanType::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.advisory_chairman_type_id'),

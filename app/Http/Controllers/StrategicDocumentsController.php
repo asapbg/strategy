@@ -300,7 +300,7 @@ class StrategicDocumentsController extends Controller
         $filter = $this->filtersReport($request, $rf);
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'title';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : null;
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
         $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
@@ -321,7 +321,13 @@ class StrategicDocumentsController extends Controller
             })
             ->whereNull('parent_document_id')
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd);
+            ->when(!$sort, function ($q){
+                return $q->orderBy('strategic_document_level_id', 'asc')
+                    ->orderBy('field_of_action_translations.name', 'asc')
+                    ->orderBy('strategic_document_translations.title', 'asc');
+            })->when($sort, function ($q) use($sort,$sortOrd){
+                return $q->SortedBy($sort,$sortOrd);
+            });
             //->GroupBy('strategic_document.id');
 
         if($request->input('export_excel') || $request->input('export_pdf')){
@@ -390,7 +396,7 @@ class StrategicDocumentsController extends Controller
                 'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
                 'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.municipalities', 2),
+                'label' => trans_choice('custom.municipalitys', 2),
                 'value' => $request->input('municipalities'),
                 'col' => 'col-md-4'
             ),
@@ -440,7 +446,7 @@ class StrategicDocumentsController extends Controller
             ),
             'acceptActInstitution' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(AuthorityAcceptingStrategic::optionsList(), false),
+                'options' => optionsFromModel(AuthorityAcceptingStrategic::optionsList(true), false),
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.accept_act_institution_type_id'),
@@ -470,20 +476,20 @@ class StrategicDocumentsController extends Controller
                 'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
                 'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.municipalities', 2),
+                'label' => trans_choice('custom.municipalitys', 2),
                 'value' => $request->input('municipalities'),
                 'col' => 'col-md-4'
             ),
             'validFrom' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('validFrom'),
-                'label' => __('custom.valid_from'),
+                'label' => __('custom.valid_from_m'),
                 'col' => 'col-md-3'
             ),
             'validTo' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('validTo'),
-                'label' => __('custom.valid_to'),
+                'label' => __('custom.valid_to_m'),
                 'col' => 'col-md-3'
             ),
             'status' => array(

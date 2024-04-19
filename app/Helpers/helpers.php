@@ -426,7 +426,7 @@ if (!function_exists('optionsFromModel')) {
                     $data['data-'.$key] = $value;
                 }
             }
-            $options[] = ['value' => $option->id, 'name' => $option->name];
+            $options[] = $data;
         }
         return $options;
     }

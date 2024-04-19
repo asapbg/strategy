@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class AuthorityAcceptingStrategic extends ModelActivityExtend implements TranslatableContract
@@ -44,15 +45,19 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
         );
     }
 
-    public static function optionsList()
+    public static function optionsList($onlyWithLevel = false)
     {
         $q = DB::table('authority_accepting_strategic')
-            ->select(['authority_accepting_strategic.id', 'authority_accepting_strategic_translations.name'])
-            ->join('authority_accepting_strategic_translations', 'authority_accepting_strategic_translations.authority_accepting_strategic_id', '=', 'authority_accepting_strategic.id')
-            ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale());
+            ->select(['authority_accepting_strategic.id', 'authority_accepting_strategic_translations.name', 'authority_accepting_strategic.nomenclature_level_id as level'])
+            ->join('authority_accepting_strategic_translations', function ($j){
+                $j->on('authority_accepting_strategic_translations.authority_accepting_strategic_id', '=', 'authority_accepting_strategic.id')
+                    ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale());
+            });
 
 
-        return $q->orderBy('authority_accepting_strategic_translations.name', 'asc')
+        return $q->when($onlyWithLevel == true, function ($query) {
+            return $query->whereNotNull('authority_accepting_strategic.nomenclature_level_id');
+        })->orderBy('authority_accepting_strategic_translations.name', 'asc')
             ->get();
     }
 }

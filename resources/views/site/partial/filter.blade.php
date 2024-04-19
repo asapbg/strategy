@@ -53,7 +53,7 @@
                                                 @php($optionDataAttributes = '')
                                                 @foreach($group as $k => $v)
                                                     @if(str_contains($k, 'data-'))
-                                                        @php($optionDataAttributes .= $v.' ')
+                                                        @php($optionDataAttributes .= ($k.'='.$v.' '))
                                                     @endif
                                                 @endforeach
 
@@ -80,7 +80,7 @@
                                                 @php($optionDataAttributes = '')
                                                 @foreach($option as $k => $v)
                                                     @if(str_contains($k, 'data-'))
-                                                        @php($optionDataAttributes .= $v.' ')
+                                                        @php($optionDataAttributes .= ($k.'='.$v.' '))
                                                     @endif
                                                 @endforeach
                                             <option {{ $optionDataAttributes }} value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
@@ -165,7 +165,7 @@
                                                         @php($optionDataAttributes = '')
                                                         @foreach($group as $k => $v)
                                                             @if(str_contains($k, 'data-'))
-                                                                @php($optionDataAttributes .= $v.' ')
+                                                                @php($optionDataAttributes .= ($k.'='.$v.' '))
                                                             @endif
                                                         @endforeach
 
@@ -192,7 +192,7 @@
                                                         @php($optionDataAttributes = '')
                                                         @foreach($option as $k => $v)
                                                             @if(str_contains($k, 'data-'))
-                                                                @php($optionDataAttributes .= $v.' ')
+                                                                @php($optionDataAttributes .= ($k.'='.$v.' '))
                                                             @endif
                                                         @endforeach
                                                         <option {{ $optionDataAttributes }} value="{{ $option['value'] }}" @if((isset($groupField['multiple']) && $groupField['multiple'] &&
