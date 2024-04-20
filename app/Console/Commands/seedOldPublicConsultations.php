@@ -143,9 +143,9 @@ class seedOldPublicConsultations extends Command
 
                 if (sizeof($oldDbResult)) {
                     DB::beginTransaction();
-                    try {
-                        file_put_contents('old_pc_field_of_actions', '');
-                        foreach ($oldDbResult as $item) {
+                    file_put_contents('old_pc_field_of_actions', '');
+                    foreach ($oldDbResult as $item) {
+                        try {
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
                                 $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
@@ -173,6 +173,7 @@ class seedOldPublicConsultations extends Command
                                     $existPc->consultation_level_id = $institutionLevel;
                                     $existPc->save();
                                 }
+                                DB::commit();
                                 continue;
                             }
 
@@ -253,12 +254,13 @@ class seedOldPublicConsultations extends Command
                                 //TODO migrate files
                                 $this->comment('Finish import of public consultation with old ID '.$item->old_id);
                             }
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            Log::error('Migration old startegy public consultations, comment and files: ' . $e);
+                            DB::rollBack();
+                            //dd($prepareNewPc, $comments ?? []);
                         }
-                        DB::commit();
-                    } catch (\Exception $e) {
-                        Log::error('Migration old startegy public consultations, comment and files: ' . $e);
-                        DB::rollBack();
-                        //dd($prepareNewPc, $comments ?? []);
+
                     }
                 }
                 $currentStep += $step;
