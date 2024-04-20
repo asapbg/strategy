@@ -50,7 +50,7 @@ class seedOldPublicConsultations extends Command
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
 //        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
-        $currentStep = 0;
+        $currentStep = 7820;
 
         $ourPc = PublicConsultation::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
         $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
@@ -142,9 +142,9 @@ class seedOldPublicConsultations extends Command
                     order by pc.id ');
 
                 if (sizeof($oldDbResult)) {
-                    DB::beginTransaction();
                     file_put_contents('old_pc_field_of_actions', '');
                     foreach ($oldDbResult as $item) {
+                        DB::beginTransaction();
                         try {
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
