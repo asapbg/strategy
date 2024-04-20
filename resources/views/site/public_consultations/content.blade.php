@@ -222,19 +222,18 @@
                             @endif
                         </ul>
                     </div>
-                @else
-                    @if($documentsImport->count())
-                        <div class="col-12">
-                            <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
-                            <ul class="list-group list-group-flush">
-                                @foreach($documentsImport as $doc)
-                                    <li class="list-group-item">
-                                        @include('site.partial.file_preview_or_download', ['f' => $doc])
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                @endif
+                @if($documentsImport->count())
+                    <div class="col-12">
+                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+                        <ul class="list-group list-group-flush">
+                            @foreach($documentsImport as $doc)
+                                <li class="list-group-item">
+                                    @include('site.partial.file_preview_or_download', ['f' => $doc])
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
             </div>
         </div>

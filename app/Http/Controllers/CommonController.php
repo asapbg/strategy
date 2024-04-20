@@ -255,6 +255,7 @@ class CommonController extends Controller
 //            File::CODE_OBJ_PUBLICATION => url()->previous().'#ct-files',
             File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => url()->previous(),
             File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => url()->previous(),
+            File::CODE_OBJ_PUBLIC_CONSULTATION => url()->previous(),
             File::CODE_OBJ_OGP => url()->previous().'#report',
             default => url()->previous().'#ct-files',
         };

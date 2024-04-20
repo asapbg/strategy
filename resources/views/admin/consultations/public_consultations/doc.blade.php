@@ -41,6 +41,26 @@
     </div>
 </form>
 
+@if($item->oldFiles->count())
+    <div class="row">
+        <hr class="custom-hr mt-4">
+        <div class="col-md-12 mb-2">
+            <h4>Файлове (import)</h4>
+            @foreach($item->oldFiles as $oldFile)
+                <div class="mb-3 @if($loop->first) mt-3 @endif">
+                    <a class="mr-3" href="{{ route('admin.download.file', $oldFile) }}" target="_blank" title="{{ __('custom.download') }}">
+                        {!! fileIcon($oldFile->content_type) !!} {{ $oldFile->{'description_'.$oldFile->locale} }} - {{ __('custom.'.$oldFile->locale) }} | {{ __('custom.version_short').' '.$oldFile->version }} | {{ displayDate($oldFile->created_at) }} | {{ $oldFile->user ? $oldFile->user->fullName() : '' }}
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $oldFile->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $oldFile->id]) }}">{{ __('custom.preview') }}</button>
+                    <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $oldFile->id]) }}">
+                        <i class="fas fa-trash me-1" role="button"
+                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function (){

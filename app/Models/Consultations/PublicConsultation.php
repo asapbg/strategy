@@ -320,10 +320,29 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('created_at', 'desc');
     }
 
+    public function oldFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereNull('doc_type')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
+    public function oldFilesByLocale(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereNull('doc_type')
+            ->where('=locale','=', app()->getLocale())
+            ->orderBy('created_at', 'desc');
+    }
+
     public function documents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereNotNull('doc_type')
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
     }
