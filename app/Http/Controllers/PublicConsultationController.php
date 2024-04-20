@@ -216,12 +216,12 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersReport($request){
-        $fields = FieldOfAction::select('field_of_actions.*')
-            ->with('translations')
-            ->joinTranslation(FieldOfAction::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('field_of_action_translations.name', 'asc')
-            ->get();
+//        $fields = FieldOfAction::select('field_of_actions.*')
+//            ->with('translations')
+//            ->joinTranslation(FieldOfAction::class)
+//            ->whereLocale(app()->getLocale())
+//            ->orderBy('field_of_action_translations.name', 'asc')
+//            ->get();
 
         return array(
             'name' => array(
@@ -238,7 +238,7 @@ class PublicConsultationController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($fields),
+                'options' => optionsFromModel(FieldOfAction::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -467,16 +467,16 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersFaReport($request){
-        $fields = FieldOfAction::select('field_of_actions.*')
-            ->with('translations')
-            ->joinTranslation(FieldOfAction::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('field_of_action_translations.name', 'asc')
-            ->get();
+//        $fields = FieldOfAction::select('field_of_actions.*')
+//            ->with('translations')
+//            ->joinTranslation(FieldOfAction::class)
+//            ->whereLocale(app()->getLocale())
+//            ->orderBy('field_of_action_translations.name', 'asc')
+//            ->get();
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($fields),
+                'options' => optionsFromModel(FieldOfAction::optionsList()),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -569,16 +569,16 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersFaInstitutionReport($request){
-        $fields = FieldOfAction::select('field_of_actions.*')
-            ->with('translations')
-            ->joinTranslation(FieldOfAction::class)
-            ->whereLocale(app()->getLocale())
-            ->orderBy('field_of_action_translations.name', 'asc')
-            ->get();
+//        $fields = FieldOfAction::select('field_of_actions.*')
+//            ->with('translations')
+//            ->joinTranslation(FieldOfAction::class)
+//            ->whereLocale(app()->getLocale())
+//            ->orderBy('field_of_action_translations.name', 'asc')
+//            ->get();
         return array(
             'fieldOfAction' => array(
                 'type' => 'select',
-                'options' => optionsFromModel($fields, true),
+                'options' => optionsFromModel(FieldOfAction::optionsList()),
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfAction'),

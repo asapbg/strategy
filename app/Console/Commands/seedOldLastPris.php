@@ -1446,7 +1446,7 @@ class seedOldLastPris extends Command
         //max id in old db
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
         //start from this id in old database
-//        $currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
+        //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
 
         if( (int)$maxOldId[0]->max ) {
@@ -1621,10 +1621,10 @@ class seedOldLastPris extends Command
                                     //get tags
                                     if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
                                         if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
-                                            echo "Tags: ".$att['Value']['Value'].PHP_EOL;
+                                            //echo "Tags: ".$att['Value']['Value'].PHP_EOL;
                                             $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
-                                            echo "Tags: ".$att['Value'].PHP_EOL;
+                                            //echo "Tags: ".$att['Value'].PHP_EOL;
                                             $tags = preg_split('/\r\n|\r|\n/', $att['Value']);
                                         }
                                     }
