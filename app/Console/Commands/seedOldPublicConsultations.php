@@ -50,7 +50,7 @@ class seedOldPublicConsultations extends Command
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
 //        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
-        $currentStep = 7820;
+        $currentStep = 7981;
 
         $ourPc = PublicConsultation::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
         $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
@@ -167,7 +167,7 @@ class seedOldPublicConsultations extends Command
                                     $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
                                     //$institutionId = $dInstitution->id;
                                     //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
-                                    $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
+                                    $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
                                     $existPc->importer_institution_id = $institutionId;
                                     $existPc->responsible_institution_id = $institutionId;
                                     $existPc->consultation_level_id = $institutionLevel;
@@ -181,7 +181,7 @@ class seedOldPublicConsultations extends Command
                             $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
                             //$institutionId = $dInstitution->id;
                             //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
-                            $institutionLevel = $institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level;
+                            $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
 
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
