@@ -253,6 +253,86 @@ function initInputs()
     });
 }
 
+// START control connected filters
+
+
+function categoriesControl(){
+    let level = $('#level');
+    let levelVals = level.val();
+
+    if($('#fieldOfActions').length){
+        let fieldOfActionsConnected = $('#fieldOfActions');
+        // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel), levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
+        if((levelVals.indexOf(centralLevel) != -1 || levelVals.indexOf(centralOtherLevel) != -1) || !levelVals.length){
+            fieldOfActionsConnected.parent().parent().parent().removeClass('d-none');
+        } else{
+            fieldOfActionsConnected.parent().parent().parent().addClass('d-none');
+            fieldOfActionsConnected.val('');
+        }
+    }
+
+    if($('#areas').length){
+        let areasConnected = $('#areas');
+        // console.log(level.val(), areaLevel, levelVals.indexOf(areaLevel), levelVals.indexOf(areaLevel) != -1 || !levelVals.length);
+        if(levelVals.indexOf(areaLevel) != -1 ||!levelVals.length){
+            areasConnected.parent().parent().parent().removeClass('d-none');
+        } else{
+            areasConnected.parent().parent().parent().addClass('d-none');
+            areasConnected.val('');
+        }
+    }
+
+    if($('#municipalities').length){
+        let municipalitiesConnected = $('#municipalities');
+        // console.log(level.val(), municipalityLevel, levelVals.indexOf(municipalityLevel), levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length);
+        if(levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length){
+            municipalitiesConnected.parent().parent().parent().removeClass('d-none');
+        } else{
+            municipalitiesConnected.parent().parent().parent().addClass('d-none');
+            municipalitiesConnected.val('');
+        }
+    }
+
+    if($('#acceptActInstitution').length){
+        $('#acceptActInstitution').val(null).trigger("change");
+        if(!levelVals.length){
+            $('#acceptActInstitution option').each(function (){
+                $(this).attr('disabled', false);
+            });
+        } else{
+            $('#acceptActInstitution option').each(function (){
+                if(levelVals.indexOf($(this).data('level').toString()) != -1){
+                    $(this).attr('disabled', false);
+                } else{
+                    $(this).attr('disabled', true);
+                }
+            });
+        }
+    }
+
+    if($('#actTypes').length){
+        $('#actTypes').val(null).trigger("change");
+        if(!levelVals.length){
+            $('#actTypes option').each(function (){
+                $(this).attr('disabled', false);
+            });
+        } else{
+            $('#actTypes option').each(function (){
+                if(levelVals.indexOf($(this).data('level').toString()) != -1){
+                    $(this).attr('disabled', false);
+                } else{
+                    $(this).attr('disabled', true);
+                }
+            });
+        }
+    }
+}
+
+$(document).on('change', '#level', function (){
+    categoriesControl();
+});
+// END control connected filters
+
 function ajaxList(domElement) {
     $(document).on('change', domElement + ' #groupByAjax', function (){
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
@@ -260,6 +340,7 @@ function ajaxList(domElement) {
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
+            categoriesControl();
         });
     });
     $(document).on('change', domElement + ' #list-paginate', function (){
@@ -268,6 +349,7 @@ function ajaxList(domElement) {
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
+            categoriesControl();
         });
     });
     $(document).on('click', domElement + ' .ajaxSort', function (e){
@@ -276,6 +358,7 @@ function ajaxList(domElement) {
             ShowLoadingSpinner();
             initInputs();
             ajaxList($(this).data('container'));
+            categoriesControl();
         });
     });
     $(document).on('click', domElement + ' .ajaxSearch', function (e){
@@ -298,6 +381,7 @@ function ajaxList(domElement) {
         $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
             ShowLoadingSpinner();
             initInputs();
+            categoriesControl();
             ajaxList($(this).data('container'));
         });
     });

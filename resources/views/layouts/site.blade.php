@@ -22,6 +22,10 @@
     <script type="text/javascript">
         var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
         var MaxUploadFileSize = parseInt("{{ config('filesystems.max_upload_file_size') * 1024 }}");
+        var centralLevel = "{{ \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value }}";
+        var centralOtherLevel = "{{ \App\Enums\InstitutionCategoryLevelEnum::CENTRAL_OTHER->value }}";
+        var areaLevel = "{{ \App\Enums\InstitutionCategoryLevelEnum::AREA->value }}";
+        var municipalityLevel = "{{ \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value }}";
     </script>
 </head>
 

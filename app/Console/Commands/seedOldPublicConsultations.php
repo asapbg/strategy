@@ -39,7 +39,7 @@ class seedOldPublicConsultations extends Command
      */
     public function handle()
     {
-
+        $this->info('Start at '.date('Y-m-d H:i:s'));
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';
         $formatDate = 'Y-m-d';
@@ -264,5 +264,6 @@ class seedOldPublicConsultations extends Command
                 $currentStep += $step;
             }
         }
+        $this->info('End at '.date('Y-m-d H:i:s'));
     }
 }

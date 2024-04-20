@@ -21,9 +21,14 @@
                             <label class="col-sm-12 control-label" for="adm_level">{{ trans_choice('custom.consultation_level', 1) }}<span class="required">*</span></label>
                             <div class="col-12">
                                 <select id="consultation-category-select" name="consultation_level_id" class="form-control form-control-sm select2 @error('institution_level'){{ 'is-invalid' }}@enderror">
-                                    @if(isset($consultationLevels) && $consultationLevels->count())
+{{--                                    @if(isset($consultationLevels) && $consultationLevels->count())--}}
+{{--                                        @foreach($consultationLevels as $row)--}}
+{{--                                            <option value="{{ $row->id }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>--}}
+{{--                                        @endforeach--}}
+{{--                                    @endif--}}
+                                    @if(isset($consultationLevels) && sizeof($consultationLevels))
                                         @foreach($consultationLevels as $row)
-                                            <option value="{{ $row->id }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row->id) selected @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                            <option value="{{ $row['value'] }}" @if(old('consultation_level_id', ($item->id ? $item->consultation_level_id : 0)) == $row['value']) selected @endif data-id="{{ $row['value'] }}">{{ $row['name'] }}</option>
                                         @endforeach
                                     @endif
                                 </select>

@@ -75,5 +75,9 @@
     </div>
 
     @push('scripts')
-
+        <script type="text/javascript">
+            $(document).ready(function (){
+                categoriesControl();
+            });
+        </script>
     @endpush

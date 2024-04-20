@@ -44,6 +44,7 @@ class seedOldPublicConsultationFiles extends Command
     public function handle()
     {
 
+        $this->info('Start at '.date('Y-m-d H:i:s'));
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';
         $formatDate = 'Y-m-d';
@@ -102,6 +103,11 @@ class seedOldPublicConsultationFiles extends Command
                             continue;
                         }
 
+                        if(!isset($ourPc[$item->id])) {
+                            $this->comment('Missing public consultation with old ID ('.$item->id.') for file with old id '.$item->file_old_id);
+                            continue;
+                        }
+
                         DB::beginTransaction();
                         try {
                             $info = pathinfo($item->name);
@@ -144,8 +150,8 @@ class seedOldPublicConsultationFiles extends Command
                                         ]);
                                         $newFile->save();
                                         $fileIds[] = $newFile->id;
-                                        $ocr = new FileOcr($newFile->refresh());
-                                        $ocr->extractText();
+                                        //$ocr = new FileOcr($newFile->refresh());
+                                        //$ocr->extractText();
                                     }
 
                                     File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
@@ -167,5 +173,6 @@ class seedOldPublicConsultationFiles extends Command
                 $currentStep += $step;
             }
         }
+        $this->info('End at '.date('Y-m-d H:i:s'));
     }
 }

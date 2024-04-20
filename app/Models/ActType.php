@@ -59,7 +59,7 @@ class ActType extends ModelActivityExtend implements TranslatableContract
     public static function optionsList()
     {
         return DB::table('act_type')
-            ->select(['act_type.id', 'act_type_translations.name'])
+            ->select(['act_type.id', 'act_type_translations.name', 'act_type.consultation_level_id as level'])
             ->join('act_type_translations', 'act_type_translations.act_type_id', '=', 'act_type.id')
             ->where('act_type_translations.locale', '=', app()->getLocale())
             ->orderBy('act_type_translations.name', 'asc')

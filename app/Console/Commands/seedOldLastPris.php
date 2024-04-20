@@ -36,6 +36,7 @@ class seedOldLastPris extends Command
      */
     public function handle()
     {
+        $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
         $migrateFiles = $this->argument('files');
 
@@ -1926,5 +1927,6 @@ class seedOldLastPris extends Command
                 $currentStep += $step;
             }
         }
+        $this->info('End at '.date('Y-m-d H:i:s'));
     }
 }

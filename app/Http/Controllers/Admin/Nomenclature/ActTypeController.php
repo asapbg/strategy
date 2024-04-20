@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Nomenclature;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\StoreActTypeRequest;
 use App\Models\ActType;
@@ -47,7 +48,8 @@ class ActTypeController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = ActType::translationFieldsProperties();
-        $consultationLevels = ConsultationLevel::all();
+//        $consultationLevels = ConsultationLevel::all();
+        $consultationLevels = enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level');
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels'));
     }
 

@@ -43,6 +43,7 @@ class seedOldStrategicDocumentFiles extends Command
      */
     public function handle()
     {
+        $this->info('Start at '.date('Y-m-d H:i:s'));
         $this->formatTimestamp = 'Y-m-d H:i:s';
         $this->ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
         $ourFiles = StrategicDocumentFile::withTrashed()->get()->whereNotNull('old_file_id')->pluck('id', 'old_file_id')->toArray();
@@ -116,6 +117,7 @@ class seedOldStrategicDocumentFiles extends Command
             DB::rollBack();
             \Log::error('Import SD file error: '.$e);
         }
+        $this->info('End at '.date('Y-m-d H:i:s'));
     }
 
     public function updateFiles(

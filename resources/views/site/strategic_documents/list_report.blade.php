@@ -76,58 +76,6 @@
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function (){
-                let centralLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
-                let areaLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::AREA->value; ?>';
-                let municipalityLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value; ?>';
-
-                let fieldOfActions = $('#fieldOfActions');
-                let areas = $('#areas');
-                let municipalities = $('#municipalities');
-
-                function categoriesControl(){
-                    let level = $('#level');
-                    let levelVals = level.val();
-                    // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
-                    if(levelVals.indexOf(centralLevel) != -1 || !levelVals.length){
-                        fieldOfActions.parent().parent().parent().removeClass('d-none');
-                    } else{
-                        fieldOfActions.parent().parent().parent().addClass('d-none');
-                        fieldOfActions.val('');
-                    }
-                    // console.log(level.val(), areaLevel, levelVals.indexOf(areaLevel) != -1 || !levelVals.length);
-                    if(levelVals.indexOf(areaLevel) != -1 ||!levelVals.length){
-                        areas.parent().parent().parent().removeClass('d-none');
-                    } else{
-                        areas.parent().parent().parent().addClass('d-none');
-                        areas.val('');
-                    }
-                    // console.log(level.val(), municipalityLevel, levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length);
-                    if(levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length){
-                        municipalities.parent().parent().parent().removeClass('d-none');
-                    } else{
-                        municipalities.parent().parent().parent().addClass('d-none');
-                        municipalities.val('');
-                    }
-
-                    $('#acceptActInstitution').val(null).trigger("change");
-                    if(!levelVals.length){
-                        $('#acceptActInstitution option').each(function (){
-                            $(this).attr('disabled', false);
-                        });
-                    } else{
-                        $('#acceptActInstitution option').each(function (){
-                            if(levelVals.indexOf($(this).data('level').toString()) != -1){
-                                $(this).attr('disabled', false);
-                            } else{
-                                $(this).attr('disabled', true);
-                            }
-                        });
-                    }
-                }
-
-                $(document).on('change', '#level', function (){
-                    categoriesControl();
-                });
                 categoriesControl();
             });
         </script>

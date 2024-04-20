@@ -138,6 +138,12 @@ class PublicConsultationController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->filtersReport($request, $rf);
+
+        if(isset($requestFilter['level'])){
+            $requestFilter['levels'] = $requestFilter['level'];
+            unset($requestFilter['level']);
+        }
+
         //Sorter
         //$sorter = $this->sortersReport();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'date';
@@ -216,14 +222,43 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersReport($request){
-//        $fields = FieldOfAction::select('field_of_actions.*')
-//            ->with('translations')
-//            ->joinTranslation(FieldOfAction::class)
-//            ->whereLocale(app()->getLocale())
-//            ->orderBy('field_of_action_translations.name', 'asc')
-//            ->get();
-
         return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('custom.pc_institution_level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
             'name' => array(
                 'type' => 'text',
                 'label' => __('validation.attributes.name'),
@@ -236,15 +271,15 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('consultationNumber'),
                 'col' => 'col-md-4'
             ),
-            'fieldOfActions' => array(
-                'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
-                'multiple' => true,
-                'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfActions'),
-                'col' => 'col-md-4'
-            ),
+//            'fieldOfActions' => array(
+//                'type' => 'select',
+//                'options' => optionsFromModel(FieldOfAction::optionsList()),
+//                'multiple' => true,
+//                'default' => '',
+//                'label' => trans_choice('custom.field_of_actions', 1),
+//                'value' => $request->input('fieldOfActions'),
+//                'col' => 'col-md-4'
+//            ),
             'openFrom' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('openFrom'),
@@ -305,26 +340,17 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('actTypes'),
                 'col' => 'col-md-4'
             ),
-            'levels' => array(
-                'type' => 'select',
-                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
-                'multiple' => true,
-                'default' => '',
-                'label' => __('site.public_consultation.importer_type'),
-                'value' => $request->input('levels'),
-                'col' => 'col-md-4'
-            ),
             'importers' => array(
                 'type' => 'subjects',
                 'label' => __('site.public_consultation.importer_pc'),
                 'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
-                'value' => request()->input('importers'),
+                'value' => request()->filled('importers') && sizeof(request()->input('importers')) ?  explode(',', request()->input('importers')[0]) : request()->input('importers'),
                 'default' => '',
                 'col' => 'col-md-4'
             ),
             'status' => array(
-                'type' => 'subjects',
+                'type' => 'select',
                 'label' => __('custom.status'),
                 'multiple' => false,
                 'options' => array(
@@ -413,9 +439,13 @@ class PublicConsultationController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $fieldOfActions = isset($requestFilter['fieldOfActions']) && sizeof($requestFilter['fieldOfActions']) ? $requestFilter['fieldOfActions'] : null;
+        $fieldOfActions = isset($requestFilter['fieldOfActions']) && sizeof($requestFilter['fieldOfActions']) ? explode(',', $requestFilter['fieldOfActions'][0]) : null;
+        $fieldOfActionsAreas = isset($requestFilter['areas']) && sizeof($requestFilter['areas']) ? explode(',', $requestFilter['areas'][0]) : null;
+        $fieldOfActionsMunicipalities = isset($requestFilter['municipalities']) && sizeof($requestFilter['municipalities']) ? explode(',', $requestFilter['municipalities'][0]) : null;
+        $levels = isset($requestFilter['level']) && sizeof($requestFilter['level']) ? explode(',', $requestFilter['level'][0]) : null;
         $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
         $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
+
         $q = DB::table('field_of_actions')
             ->select(['field_of_action_translations.name', DB::raw('count(distinct(public_consultation.id)) as pc_cnt')])
             ->join('field_of_action_translations', function ($j){
@@ -432,6 +462,15 @@ class PublicConsultationController extends Controller
             ->whereNull('field_of_actions.deleted_at')
             ->when($fieldOfActions, function ($q) use($fieldOfActions){
                 $q->whereIn('field_of_actions.id', $fieldOfActions);
+            })
+            ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
+                $q->whereIn('field_of_actions.id', $fieldOfActionsAreas);
+            })
+            ->when($fieldOfActionsMunicipalities, function ($q) use($fieldOfActionsMunicipalities){
+                $q->whereIn('field_of_actions.id', $fieldOfActionsMunicipalities);
+            })
+            ->when($levels, function ($q) use($levels){
+                $q->whereIn('public_consultation.consultation_level_id', $levels);
             })
             ->when($openForm, function ($q) use($openForm){
                 $q->where('public_consultation.open_from', '>=', $openForm);
@@ -474,20 +513,41 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersFaReport($request){
-//        $fields = FieldOfAction::select('field_of_actions.*')
-//            ->with('translations')
-//            ->joinTranslation(FieldOfAction::class)
-//            ->whereLocale(app()->getLocale())
-//            ->orderBy('field_of_action_translations.name', 'asc')
-//            ->get();
         return array(
-            'fieldOfActions' => array(
+            'level' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
                 'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 1),
+                'label' => __('custom.pc_institution_level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
                 'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
                 'col' => 'col-md-4'
             ),
             'openFrom' => array(
@@ -530,7 +590,10 @@ class PublicConsultationController extends Controller
 
         $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
         $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
-        $fieldOfAction = isset($requestFilter['fieldOfAction']) && !empty($requestFilter['fieldOfAction']) ? $requestFilter['fieldOfAction'] : null;
+        $fieldOfActions = isset($requestFilter['fieldOfActions']) && sizeof($requestFilter['fieldOfActions']) ? explode(',', $requestFilter['fieldOfActions'][0]) : null;
+        $fieldOfActionsAreas = isset($requestFilter['areas']) && sizeof($requestFilter['areas']) ? explode(',', $requestFilter['areas'][0]) : null;
+        $fieldOfActionsMunicipalities = isset($requestFilter['municipalities']) && sizeof($requestFilter['municipalities']) ? explode(',', $requestFilter['municipalities'][0]) : null;
+        $levels = isset($requestFilter['level']) && sizeof($requestFilter['level']) ? explode(',', $requestFilter['level'][0]) : null;
 
         $q = DB::table('public_consultation')
             ->select(['institution_translations.name', DB::raw('count(distinct(public_consultation.id)) as pc_cnt')])
@@ -546,8 +609,17 @@ class PublicConsultationController extends Controller
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
-            ->when($fieldOfAction, function($q) use($fieldOfAction){
-                $q->where('public_consultation.field_of_actions_id', '=', $fieldOfAction);
+            ->when($fieldOfActions, function($q) use($fieldOfActions){
+                $q->whereIn('public_consultation.field_of_actions_id', '=', $fieldOfActions);
+            })
+            ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsAreas);
+            })
+            ->when($fieldOfActionsMunicipalities, function ($q) use($fieldOfActionsMunicipalities){
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsMunicipalities);
+            })
+            ->when($levels, function ($q) use($levels){
+                $q->whereIn('public_consultation.consultation_level_id', $levels);
             })
             ->when($openForm, function ($q) use($openForm){
                 $q->where('public_consultation.open_from', '>=', $openForm);
@@ -596,12 +668,40 @@ class PublicConsultationController extends Controller
 
     private function filtersFaInstitutionReport($request){
         return array(
-            'fieldOfAction' => array(
+            'level' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfAction'),
+                'label' => __('custom.pc_institution_level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
                 'col' => 'col-md-4'
             ),
             'openFrom' => array(
@@ -645,7 +745,11 @@ class PublicConsultationController extends Controller
 
         $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
         $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
-        $institution = isset($requestFilter['institution']) && !empty($requestFilter['institution']) ? $requestFilter['institution'] : null;
+        $institutions = isset($requestFilter['institution']) && sizeof($requestFilter['institution']) ? explode(',', $requestFilter['institution'][0]) : null;
+        $fieldOfActions = isset($requestFilter['fieldOfActions']) && sizeof($requestFilter['fieldOfActions']) ? explode(',', $requestFilter['fieldOfActions'][0]) : null;
+        $fieldOfActionsAreas = isset($requestFilter['areas']) && sizeof($requestFilter['areas']) ? explode(',', $requestFilter['areas'][0]) : null;
+        $fieldOfActionsMunicipalities = isset($requestFilter['municipalities']) && sizeof($requestFilter['municipalities']) ? explode(',', $requestFilter['municipalities'][0]) : null;
+        $levels = isset($requestFilter['level']) && sizeof($requestFilter['level']) ? explode(',', $requestFilter['level'][0]) : null;
 
         //Колко са консултациите по вид на обекта на консултации групирано по Институции
         $consultationsByActType = array();
@@ -664,7 +768,11 @@ class PublicConsultationController extends Controller
                 join act_type_translations on act_type_translations.act_type_id = act_type.id and act_type_translations.locale = \''.app()->getLocale().'\'
                 '.($openForm ? ' and public_consultation.open_from >= \''.$openForm.'\'' : '').'
                 '.($openTo ? ' and public_consultation.open_to <= \''.$openTo.'\'' : '').'
-                '.($institution ? ' and public_consultation.importer_institution_id = '.$institution : '').'
+                '.($institutions ? ' and public_consultation.importer_institution_id in ('. implode(',',$institutions) .')' : '').'
+                '.($levels ? ' and public_consultation.consultation_level_id in ('. implode(',',$levels) .')' : '').'
+                '.($fieldOfActions ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActions) .')' : '').'
+                '.($fieldOfActionsAreas ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActionsAreas) .')' : '').'
+                '.($fieldOfActionsMunicipalities ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActionsMunicipalities) .')' : '').'
                 group by public_consultation.importer_institution_id, act_type.id
             ) A
             group by A.institution_id
@@ -700,7 +808,11 @@ class PublicConsultationController extends Controller
                 where public_consultation.old_id is null
                 '.($openForm ? ' and public_consultation.open_from >= \''.$openForm.'\'' : '').'
                 '.($openTo ? ' and public_consultation.open_to <= \''.$openTo.'\'' : '').'
-                '.($institution ? ' and public_consultation.importer_institution_id = '.$institution : '').'
+                '.($institutions ? ' and public_consultation.importer_institution_id in ('. implode(',',$institutions) .')' : '').'
+                '.($levels ? ' and public_consultation.consultation_level_id in ('. implode(',',$levels) .')' : '').'
+                '.($fieldOfActions ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActions) .')' : '').'
+                '.($fieldOfActionsAreas ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActionsAreas) .')' : '').'
+                '.($fieldOfActionsMunicipalities ? ' and public_consultation.field_of_actions_id in ('. implode(',',$fieldOfActionsMunicipalities) .')' : '').'
                 group by public_consultation.id
             ) A
             group by A.institution_id
@@ -733,8 +845,20 @@ class PublicConsultationController extends Controller
                     ->where('files.doc_type', '=', DocTypesEnum::PC_COMMENTS_REPORT->value)
                     ->whereNull('files.deleted_at');
             })
-            ->when($institution, function($q) use($institution){
-                $q->where('public_consultation.importer_institution_id', '=', $institution);
+            ->when($institutions, function($q) use($institutions){
+                $q->whereIn('public_consultation.importer_institution_id', $institutions);
+            })
+            ->when($fieldOfActions, function($q) use($fieldOfActions){
+                $q->whereIn('public_consultation.field_of_actions_id', '=', $fieldOfActions);
+            })
+            ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsAreas);
+            })
+            ->when($fieldOfActionsMunicipalities, function ($q) use($fieldOfActionsMunicipalities){
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsMunicipalities);
+            })
+            ->when($levels, function ($q) use($levels){
+                $q->whereIn('public_consultation.consultation_level_id', $levels);
             })
             ->when($openForm, function ($q) use($openForm){
                 $q->where('public_consultation.open_from', '>=', $openForm);
@@ -781,11 +905,48 @@ class PublicConsultationController extends Controller
 
     public function filtersInstitutionReport($request){
         return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('custom.pc_institution_level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
             'institution' => array(
                 'type' => 'subjects',
                 'label' => __('site.public_consultation.importer'),
+                'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('custom.all')),
-                'value' => request()->input('institution'),
+                'value' => request()->filled('institution') && sizeof(request()->input('institution')) ?  explode(',', request()->input('institution')[0]) : request()->input('institution'),
                 'default' => '',
                 'col' => 'col-md-4'
             ),

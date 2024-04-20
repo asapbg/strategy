@@ -52,21 +52,21 @@ class seedOldStrategicDocuments extends Command
         $this->policyAreas = array();
         if($policyAreasDBCentral->count()){
             foreach ($policyAreasDBCentral as $p){
-                $this->policyAreas[$p->translate('bg')->name] = $p->id;
+                $this->policyAreas[mb_strtolower($p->translate('bg')->name)] = $p->id;
             }
         }
         $policyAreasDBArea = FieldOfAction::Area()->withTrashed()->with('translations')->get();
         $this->policyAreasArea = array();
         if($policyAreasDBArea->count()){
             foreach ($policyAreasDBArea as $p){
-                $this->policyAreasArea[$p->translate('bg')->name] = $p->id;
+                $this->policyAreasArea[mb_strtolower($p->translate('bg')->name)] = $p->id;
             }
         }
         $policyAreasDBMunicipal = FieldOfAction::Municipal()->withTrashed()->with('translations')->get();
         $this->policyAreasMunicipal = array();
         if($policyAreasDBMunicipal->count()){
             foreach ($policyAreasDBMunicipal as $p){
-                $this->policyAreasMunicipal[$p->translate('bg')->name] = $p->id;
+                $this->policyAreasMunicipal[mb_strtolower($p->translate('bg')->name)] = $p->id;
             }
         }
 
@@ -74,7 +74,9 @@ class seedOldStrategicDocuments extends Command
 
     public function handle()
     {
-        CommonController::fixSequence('field_of_actions');
+        $this->info('Start at '.date('Y-m-d H:i:s'));
+        file_put_contents('missing_field_of_actions_strategic_documents.txt', '');
+
         $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')
             ->orderBy('id', 'asc')
             ->get()
@@ -198,6 +200,7 @@ class seedOldStrategicDocuments extends Command
 
             throw $th;
         }
+        $this->info('End at '.date('Y-m-d H:i:s'));
     }
 
     /**
@@ -228,21 +231,21 @@ class seedOldStrategicDocuments extends Command
                 if((int)$oldStrategicDoc->cat_parentid > 0){
                     $strategic_document_level_id = $levelMapping[(int)$oldStrategicDoc->cat_parentid];
                     if((int)$oldStrategicDoc->cat_parentid == FieldOfAction::CATEGORY_AREA){
-                        if(empty($this->policyAreasArea) || !isset($this->policyAreasArea[$oldStrategicDoc->cat_name])) {
-                            $this->createPolicy($oldStrategicDoc);
+                        if(empty($this->policyAreasArea) || !isset($this->policyAreasArea[mb_strtolower($oldStrategicDoc->cat_name)])) {
+                            file_put_contents('missing_field_of_actions_strategic_documents.txt', $oldStrategicDoc->cat_name . PHP_EOL, FILE_APPEND);
                         }
-                        $policy_area_id = $this->policyAreasArea[$oldStrategicDoc->cat_name];
+                        $policy_area_id = $this->policyAreasArea[mb_strtolower($oldStrategicDoc->cat_name)];
                     } else if((int)$oldStrategicDoc->cat_parentid == FieldOfAction::CATEGORY_MUNICIPAL) {
-                        if(empty($this->policyAreasMunicipal) || !isset($this->policyAreasMunicipal[$oldStrategicDoc->cat_name])) {
-                            $this->createPolicy($oldStrategicDoc);
+                        if(empty($this->policyAreasMunicipal) || !isset($this->policyAreasMunicipal[mb_strtolower($oldStrategicDoc->cat_name)])) {
+                            file_put_contents('missing_field_of_actions_strategic_documents.txt', $oldStrategicDoc->cat_name . PHP_EOL, FILE_APPEND);
                         }
-                        $policy_area_id = $this->policyAreasMunicipal[$oldStrategicDoc->cat_name];
+                        $policy_area_id = $this->policyAreasMunicipal[mb_strtolower($oldStrategicDoc->cat_name)];
                     } else {
                         //Central
-                        if(empty($this->policyAreas) || !isset($this->policyAreas[$oldStrategicDoc->cat_name])) {
-                            $this->createPolicy($oldStrategicDoc);
+                        if(empty($this->policyAreas) || !isset($this->policyAreas[mb_strtolower($oldStrategicDoc->cat_name)])) {
+                            file_put_contents('missing_field_of_actions_strategic_documents.txt', $oldStrategicDoc->cat_name . PHP_EOL, FILE_APPEND);
                         }
-                        $policy_area_id = $this->policyAreas[$oldStrategicDoc->cat_name];
+                        $policy_area_id = $this->policyAreas[mb_strtolower($oldStrategicDoc->cat_name)];
                     }
                 } else{
                     //Main category
@@ -262,31 +265,6 @@ class seedOldStrategicDocuments extends Command
         } catch (\Throwable $th) {
             $this->info('Error mapping sd level and policy area: category name - '.$oldStrategicDoc->cat_name . ' | category parentid - ' . $oldStrategicDoc->cat_parentid);
             throw $th;
-        }
-    }
-
-    private function createPolicy($oldDoc){
-        $newPolicy = FieldOfAction::create([
-            'parentid' => $oldDoc->cat_parentid
-        ]);
-        foreach ($this->languages as $lang){
-            $newPolicy->translateOrNew($lang['code'])->name = $oldDoc->cat_name;
-        }
-        $newPolicy->save();
-
-        //Add new policy to array
-        if($newPolicy){
-            switch ($oldDoc->cat_parentid){
-                case FieldOfAction::CATEGORY_NATIONAL:
-                    $this->policyAreas[$oldDoc->cat_name] = $newPolicy->id;
-                    break;
-                case FieldOfAction::CATEGORY_AREA:
-                    $this->policyAreasArea[$oldDoc->cat_name] = $newPolicy->id;
-                    break;
-                case FieldOfAction::CATEGORY_MUNICIPAL:
-                    $this->policyAreasMunicipal[$oldDoc->cat_name] = $newPolicy->id;
-                    break;
-            }
         }
     }
 }
