@@ -214,7 +214,7 @@ function initInputs()
         language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
         format: 'dd.mm.yyyy',
         todayHighlight: true,
-        orientation: "auto",
+        // orientation: "auto",
         autoclose: true,
         weekStart: 1,
         changeMonth: true,
@@ -396,36 +396,36 @@ $(document).ready(function () {
     };
     $.datepicker.setDefaults($.datepicker.regional['bg']);
     // if ($('.datepicker').length) {
-        $('.datepicker').datepicker({
+        $('.datepicker, .datepicker-btn').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
             todayHighlight: true,
-            orientation: "auto",
+            // orientation: "auto",
             autoclose: true,
             weekStart: 1,
             changeMonth: true,
             changeYear: true,
         });
 
-        $('.datepicker-btn').datepicker({
-            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
-            format: 'dd.mm.yyyy',
-            todayHighlight: true,
-            orientation: "auto",
-            autoclose: true,
-            weekStart: 1,
-            changeMonth: true,
-            changeYear: true,
-            showOnFocus: "false"
-        });
+        // $('.datepicker-btn').datepicker({
+        //     language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+        //     format: 'dd.mm.yyyy',
+        //     todayHighlight: true,
+        //     orientation: "auto",
+        //     autoclose: true,
+        //     weekStart: 1,
+        //     changeMonth: true,
+        //     changeYear: true,
+        //     showOnFocus: "false"
+        // });
     // }
 
-    $(document).on('focusout', '.datepicker-btn', function() {
-        $(this).datepicker('update', $(this).val());
-    });
-    $(document).on('click', '.datepicker-addon', function (){
-        $(this).parent().find('.datepicker-btn').datepicker('show');
-    });
+    // $(document).on('focusout', '.datepicker-btn', function() {
+    //     $(this).datepicker('update', $(this).val());
+    // });
+    // $(document).on('click', '.datepicker-addon', function (){
+    //     $(this).parent().find('.datepicker-btn').datepicker('show');
+    // });
 
     var tabEl = $('button[data-bs-toggle="tab"]');
     tabEl.on('shown.bs.tab', function (event) {

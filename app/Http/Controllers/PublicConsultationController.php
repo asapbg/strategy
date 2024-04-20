@@ -414,6 +414,8 @@ class PublicConsultationController extends Controller
         $defaultDirection = $sortOrd;
 
         $fieldOfActions = isset($requestFilter['fieldOfActions']) && sizeof($requestFilter['fieldOfActions']) ? $requestFilter['fieldOfActions'] : null;
+        $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
+        $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
         $q = DB::table('field_of_actions')
             ->select(['field_of_action_translations.name', DB::raw('count(distinct(public_consultation.id)) as pc_cnt')])
             ->join('field_of_action_translations', function ($j){
@@ -430,6 +432,11 @@ class PublicConsultationController extends Controller
             ->whereNull('field_of_actions.deleted_at')
             ->when($fieldOfActions, function ($q) use($fieldOfActions){
                 $q->whereIn('field_of_actions.id', $fieldOfActions);
+            })
+            ->when($openForm, function ($q) use($openForm){
+                $q->where('public_consultation.open_from', '>=', $openForm);
+            })->when($openTo, function ($q) use($openTo){
+                $q->where('public_consultation.open_to', '<=', $openTo);
             })
             ->groupBy('field_of_action_translations.id');
 
@@ -483,6 +490,18 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('fieldOfActions'),
                 'col' => 'col-md-4'
             ),
+            'openFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openFrom'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-4'
+            ),
+            'openTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openTo'),
+                'label' => __('custom.end_date'),
+                'col' => 'col-md-4'
+            ),
             'paginate' => array(
                 'type' => 'select',
                 'options' => paginationSelect(),
@@ -509,6 +528,8 @@ class PublicConsultationController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
+        $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
         $fieldOfAction = isset($requestFilter['fieldOfAction']) && !empty($requestFilter['fieldOfAction']) ? $requestFilter['fieldOfAction'] : null;
 
         $q = DB::table('public_consultation')
@@ -527,6 +548,11 @@ class PublicConsultationController extends Controller
             })
             ->when($fieldOfAction, function($q) use($fieldOfAction){
                 $q->where('public_consultation.field_of_actions_id', '=', $fieldOfAction);
+            })
+            ->when($openForm, function ($q) use($openForm){
+                $q->where('public_consultation.open_from', '>=', $openForm);
+            })->when($openTo, function ($q) use($openTo){
+                $q->where('public_consultation.open_to', '<=', $openTo);
             })
             ->where('field_of_actions.active', '=', 1)
             ->whereNull('field_of_actions.deleted_at')
@@ -569,12 +595,6 @@ class PublicConsultationController extends Controller
     }
 
     private function filtersFaInstitutionReport($request){
-//        $fields = FieldOfAction::select('field_of_actions.*')
-//            ->with('translations')
-//            ->joinTranslation(FieldOfAction::class)
-//            ->whereLocale(app()->getLocale())
-//            ->orderBy('field_of_action_translations.name', 'asc')
-//            ->get();
         return array(
             'fieldOfAction' => array(
                 'type' => 'select',
@@ -582,6 +602,18 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
                 'value' => $request->input('fieldOfAction'),
+                'col' => 'col-md-4'
+            ),
+            'openFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openFrom'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-4'
+            ),
+            'openTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openTo'),
+                'label' => __('custom.end_date'),
                 'col' => 'col-md-4'
             ),
             'paginate' => array(
@@ -611,6 +643,8 @@ class PublicConsultationController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $openForm = isset($requestFilter['openFrom']) ? Carbon::parse($requestFilter['openFrom'])->format('Y-m-d') : null;
+        $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
         $institution = isset($requestFilter['institution']) && !empty($requestFilter['institution']) ? $requestFilter['institution'] : null;
 
         //Колко са консултациите по вид на обекта на консултации групирано по Институции
@@ -628,6 +662,9 @@ class PublicConsultationController extends Controller
                 from public_consultation
                 join act_type on act_type.id = public_consultation.act_type_id
                 join act_type_translations on act_type_translations.act_type_id = act_type.id and act_type_translations.locale = \''.app()->getLocale().'\'
+                '.($openForm ? ' and public_consultation.open_from >= \''.$openForm.'\'' : '').'
+                '.($openTo ? ' and public_consultation.open_to <= \''.$openTo.'\'' : '').'
+                '.($institution ? ' and public_consultation.importer_institution_id = '.$institution : '').'
                 group by public_consultation.importer_institution_id, act_type.id
             ) A
             group by A.institution_id
@@ -661,6 +698,9 @@ class PublicConsultationController extends Controller
                         or (public_consultation.act_type_id not in ('.ActType::ACT_LAW.','.ActType::ACT_COUNCIL_OF_MINISTERS.','.ActType::ACT_MINISTER.','.ActType::ACT_OTHER_CENTRAL_AUTHORITY.','.ActType::ACT_REGIONAL_GOVERNOR.','.ActType::ACT_MUNICIPAL.','.ActType::ACT_MUNICIPAL_MAYOR.') and files.doc_type in ('.DocTypesEnum::PC_DRAFT_ACT->value.','.DocTypesEnum::PC_OTHER_DOCUMENTS->value.','.DocTypesEnum::PC_COMMENTS_REPORT->value.'))
                     )
                 where public_consultation.old_id is null
+                '.($openForm ? ' and public_consultation.open_from >= \''.$openForm.'\'' : '').'
+                '.($openTo ? ' and public_consultation.open_to <= \''.$openTo.'\'' : '').'
+                '.($institution ? ' and public_consultation.importer_institution_id = '.$institution : '').'
                 group by public_consultation.id
             ) A
             group by A.institution_id
@@ -674,8 +714,8 @@ class PublicConsultationController extends Controller
                 'institution.id',
                 DB::raw('max(institution_translations.name) as name'),
                 DB::raw('count(distinct(public_consultation.id)) as pc_cnt'),
-                DB::raw('sum(case when (open_to - open_from) < 30 then 1 else 0 end) as less_days_cnt'),
-                DB::raw('sum(case when (open_to - open_from) < 30 and (public_consultation_translations.short_term_reason is null or public_consultation_translations.short_term_reason = \'\') then 1 else 0 end) as no_less_days_reason_cnt'),
+                DB::raw('sum(case when (public_consultation.open_to - public_consultation.open_from) < 30 then 1 else 0 end) as less_days_cnt'),
+                DB::raw('sum(case when (public_consultation.open_to - public_consultation.open_from) < 30 and (public_consultation_translations.short_term_reason is null or public_consultation_translations.short_term_reason = \'\') then 1 else 0 end) as no_less_days_reason_cnt'),
                 DB::raw('count(distinct(files.id)) as has_report')
             ])
             ->join('institution_translations', function ($j){
@@ -695,6 +735,11 @@ class PublicConsultationController extends Controller
             })
             ->when($institution, function($q) use($institution){
                 $q->where('public_consultation.importer_institution_id', '=', $institution);
+            })
+            ->when($openForm, function ($q) use($openForm){
+                $q->where('public_consultation.open_from', '>=', $openForm);
+            })->when($openTo, function ($q) use($openTo){
+                $q->where('public_consultation.open_to', '<=', $openTo);
             })
             ->whereNull('public_consultation.deleted_at')
             ->where('public_consultation.active', '=', 1)
@@ -742,6 +787,18 @@ class PublicConsultationController extends Controller
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('custom.all')),
                 'value' => request()->input('institution'),
                 'default' => '',
+                'col' => 'col-md-4'
+            ),
+            'openFrom' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openFrom'),
+                'label' => __('custom.begin_date'),
+                'col' => 'col-md-4'
+            ),
+            'openTo' => array(
+                'type' => 'datepicker',
+                'value' => $request->input('openTo'),
+                'label' => __('custom.end_date'),
                 'col' => 'col-md-4'
             ),
             'paginate' => array(

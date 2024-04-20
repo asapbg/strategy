@@ -287,13 +287,13 @@ class ReportsController extends Controller
 
                     $data = array([
                         'name' => trans_choice('custom.institutions', 1),
-                        'pc_cnt' => trans_choice('custom.public_consultations', 2),
-                        'less_days_cnt' => 'По-кратки от 30 дни',
-                        'no_less_days_reason_cnt' => 'Без мотив за кратък срок',
-                        'has_report' => 'Без справка (мнения)',
-                        'missing_documents' => 'Липса на документ',
+                        'pc_cnt' => __('custom.pc_count'),
+                        'less_days_cnt' => __('custom.pc_less_then_30_days_count'),
+                        'no_less_days_reason_cnt' => __('custom.pc_no_short_reason'),
+                        'has_report' => __('custom.pc_missing_docs'),
+                        'missing_documents' => __('custom.pc_no_proposal_report'),
                     ]);
-
+                    
                     if($q->count()){
                         foreach ($q as $item){
                             $id = $item->id;

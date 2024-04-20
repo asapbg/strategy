@@ -28,11 +28,11 @@
                 <tr><th colspan="6">{{ $data['title'] }}</th></tr>
                 <tr>
                     <th>{{ __('custom.name') }}</th>
-                    <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
-                    <th>По-кратки от 30 дни</th>
-                    <th>Без мотив за кратък срок</th>
-                    <th>Липса на документ</th>
-                    <th>Без справка (мнения)</th>
+                    <th>{{ __('custom.pc_count') }}</th>
+                    <th>{{ __('custom.pc_less_then_30_days_count') }}</th>
+                    <th>{{ __('custom.pc_no_short_reason') }}</th>
+                    <th>{{ __('custom.pc_missing_docs') }}</th>
+                    <th>{{ __('custom.pc_no_proposal_report') }}</th>
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)

@@ -24,11 +24,11 @@
                 <thead>
                     <tr>
                         <th>{{ __('custom.name') }}</th>
-                        <th>{{ trans_choice('custom.public_consultations', 2) }}</th>
-                        <th>По-кратки от 30 дни</th>
-                        <th>Без мотив за кратък срок</th>
-                        <th>Липса на документ</th>
-                        <th>Без справка (мнения)</th>
+                        <th>{{ __('custom.pc_count') }}</th>
+                        <th>{{ __('custom.pc_less_then_30_days_count') }}</th>
+                        <th>{{ __('custom.pc_no_short_reason') }}</th>
+                        <th>{{ __('custom.pc_missing_docs') }}</th>
+                        <th>{{ __('custom.pc_no_proposal_report') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,8 +36,8 @@
                     <tr>
                         <td class="custom-left-border">{{ $item->name }}</td>
                         <td>{{ $item->pc_cnt }}</td>
-                        <td>{{ $item->less_days_cnt }}</td>
-                        <td>{{ $item->no_less_days_reason_cnt }}</td>
+                        <td>{{ $item->less_days_cnt }} @if($item->pc_cnt && $item->less_days_cnt)({{ round((($item->less_days_cnt/$item->pc_cnt) * 100), 2) }}%)@endif</td>
+                        <td>{{ $item->no_less_days_reason_cnt }} @if($item->less_days_cnt && $item->no_less_days_reason_cnt)({{ round((($item->no_less_days_reason_cnt/$item->less_days_cnt) * 100), 2) }}%)@endif</td>
                         <td>
                             @if(isset($missingFiles) && sizeof($missingFiles) && isset($missingFiles[$item->id]) && $missingFiles[$item->id] > 0)
                                 {{ __('custom.yes') }}
