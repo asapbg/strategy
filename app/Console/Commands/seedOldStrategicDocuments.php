@@ -123,10 +123,8 @@ class seedOldStrategicDocuments extends Command
         //dd($acceptingInstitutions);
         $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
-        try {
-            DB::beginTransaction();
-
-            foreach ($oldDocuments as $oldDocument) {
+        foreach ($oldDocuments as $oldDocument) {
+            try {
                 $mappedKeys = $this->mapForeignKeysByCategory(
                     $oldDocument,
                     $oldCategories
@@ -192,13 +190,11 @@ class seedOldStrategicDocuments extends Command
                 }
 
                 $strategicDoc->save();
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
             }
-
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            throw $th;
         }
         $this->info('End at '.date('Y-m-d H:i:s'));
     }
