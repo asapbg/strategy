@@ -35,7 +35,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
     //activity
     protected string $logName = "publication";
 
-    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id', 'users_id', 'is_adv_board_user'];
+    protected $fillable = ['slug', 'type', 'publication_category_id', 'file_id', 'published_at', 'active', 'advisory_boards_id', 'users_id', 'is_adv_board_user', 'old_id'];
 
     /**
      * @return FeedItem

@@ -70,9 +70,9 @@ class seedOldOgpNews extends Command
                     order by a.id ');
 
                 if (sizeof($oldDbResult)) {
-                    DB::beginTransaction();
-                    try {
-                        foreach ($oldDbResult as $item) {
+                    foreach ($oldDbResult as $item) {
+                        DB::beginTransaction();
+                        try {
                             if(isset($ourNews[$item->old_id])){
                                 //update
                                 $oldItem = Publication::withTrashed()->find((int)$ourNews[$item->old_id]);
@@ -116,11 +116,11 @@ class seedOldOgpNews extends Command
                                 //TODO migrate files
                                 $this->comment('Finish import of old OGP publication with old ID '.$item->old_id);
                             }
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            Log::error('Migration old startegy OGP publicationand files: ' . $e);
+                            DB::rollBack();
                         }
-                        DB::commit();
-                    } catch (\Exception $e) {
-                        Log::error('Migration old startegy OGP publicationand files: ' . $e);
-                        DB::rollBack();
                     }
                 }
                 $currentStep += $step;

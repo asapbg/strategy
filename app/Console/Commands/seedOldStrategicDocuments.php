@@ -124,6 +124,7 @@ class seedOldStrategicDocuments extends Command
         $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         foreach ($oldDocuments as $oldDocument) {
+            DB::beginTransaction();
             try {
                 $mappedKeys = $this->mapForeignKeysByCategory(
                     $oldDocument,

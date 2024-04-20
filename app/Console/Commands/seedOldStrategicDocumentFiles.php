@@ -84,10 +84,9 @@ class seedOldStrategicDocumentFiles extends Command
         $this->directory = StrategicDocumentFile::DIR_PATH;
         $this->inserted = [];
 
-        DB::beginTransaction();
-        try {
-
-            foreach ($oldDbFiles as $oldDbFile) {
+        foreach ($oldDbFiles as $oldDbFile) {
+            DB::beginTransaction();
+            try {
                 $this->info('Beginning the import of file with old ID: ' . $oldDbFile->file_old_id.' to SD with old ID: '.$oldDbFile->sd_old_id);
 
                 $info = pathinfo($oldDbFile->name);
@@ -110,12 +109,13 @@ class seedOldStrategicDocumentFiles extends Command
                 } else {
                     $this->createNewFiles($copy_from, $to, $newName, $oldDbFile);
                 }
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                \Log::error('Import SD file error: '.$e);
             }
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error('Import SD file error: '.$e);
+
         }
         $this->info('End at '.date('Y-m-d H:i:s'));
     }
