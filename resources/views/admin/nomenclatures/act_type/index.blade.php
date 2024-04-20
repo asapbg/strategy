@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{{ $item->consultationLevel->name }}</td>
+                                    <td>{{ $item->consultation_level_id ? \App\Enums\InstitutionCategoryLevelEnum::keyToLabel()[$item->consultation_level_id] ?? '' : '' }}</td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
