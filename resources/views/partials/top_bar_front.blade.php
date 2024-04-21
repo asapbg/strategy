@@ -8,7 +8,7 @@
                     </a>
                     <div class="contact-info-text d-flex flex-column ps-2">
                         <span class="main-color fw-600" id="ms">Министерски съвет</span>
-                        <span class="fw-600" id="ok">Портал за обществени консултации</span>
+                        <span class="fw-600" id="ok">{{ __('site.seo_title') }}</span>
                     </div>
                 </div>
             </div>

@@ -91,14 +91,14 @@
 
             </ul>
             <li class="nav-item d-flex list-unstyled text-end align-items-center social-lang">
-                <a class="nav-link me-3" href="#"><i class="fa-brands fa-facebook text-light"><span
-                            class="d-none">Facebook</span></i></a>
-{{--                @foreach(config('available_languages') as $locale)--}}
-{{--                    @if($locale['code'] != app()->getLocale())--}}
-{{--                    <a href="{{ route('change-locale', ['locale' => $locale['code']]) }}" class="nav-link d-inline-block">{{ mb_strtoupper($locale['code']) }}</a>--}}
-{{--                    @endif--}}
-{{--                @endforeach--}}
-                <a class="nav-link" href="#">EN</a>
+{{--                <a class="nav-link me-3" href="#"><i class="fa-brands fa-facebook text-light"><span--}}
+{{--                            class="d-none">Facebook</span></i></a>--}}
+                @foreach(config('available_languages') as $locale)
+                    @if($locale['code'] != app()->getLocale())
+                    <a href="{{ route('change-locale', ['locale' => $locale['code']]) }}" class="nav-link d-inline-block">{{ mb_strtoupper($locale['code']) }}</a>
+                    @endif
+                @endforeach
+{{--                <a class="nav-link" href="#">EN</a>--}}
             </li>
 
         </div>

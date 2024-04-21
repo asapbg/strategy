@@ -52,7 +52,7 @@ class seedOldPublicConsultations extends Command
 //        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
 
-        $ourPc = PublicConsultation::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourPc = PublicConsultation::whereNotNull('old_id')->orderBy('old_id')->get()->pluck('id', 'old_id')->toArray();
         $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
         $fieldOfActions = array();
         if($fieldOfActionsDBArea->count()){
@@ -93,6 +93,9 @@ class seedOldPublicConsultations extends Command
         }
 
         $ourUsersInstitutions = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->pluck('institution_id', 'old_id')->toArray();
+        $ourUsersInstitutionsByMail = User::withTrashed()->where('user_type', '=', 1)
+            ->where('email', 'not like', '%duplicated-%')
+            ->get()->pluck('institution_id', 'email')->toArray();
         $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         //$ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
@@ -133,8 +136,11 @@ class seedOldPublicConsultations extends Command
                         -- responsible_unit
                         -- importer
                         pc.createdbyuserid as author_id,
+                        m.email,
                         pc.summary as description
                     from dbo.publicconsultations pc
+                    join dbo.users u on u.userid = pc.createdbyuserid
+                    join dbo.membership m on m.userid = u.userid
                     left join dbo.categories c on c.id = pc.categoryid
                         where pc.languageid = 1
                         and pc.id >= ' . $currentStep . '
@@ -146,6 +152,14 @@ class seedOldPublicConsultations extends Command
                     foreach ($oldDbResult as $item) {
                         DB::beginTransaction();
                         try {
+                            if(isset($ourUsersInstitutions[$item->author_id])){
+                                $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                            } else if(isset($ourUsersInstitutionsByMail[$item->email])){
+                                $institutionId = $ourUsersInstitutionsByMail[$item->email];
+                            } else{
+                                $institutionId = $dInstitution->id;
+                            }
+
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
                                 $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
@@ -163,8 +177,15 @@ class seedOldPublicConsultations extends Command
                                     }
 
                                     //Update institution
-                                    $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                                    $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
+//                                    if(isset($ourUsersInstitutions[$item->author_id])){
+//                                        $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+//                                    } else if(isset($ourUsersInstitutionsDuplicated['duplicated-'.$item->email])){
+//                                            $institutionId = $ourUsersInstitutionsDuplicated['duplicated-'.$item->email];
+//                                    } else{
+//                                        $institutionId = $dInstitution->id;
+//                                    }
+//                                    $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                                    $institution = Institution::withTrashed()->find($institutionId);
                                     //$institutionId = $dInstitution->id;
                                     //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                                     $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
@@ -176,9 +197,8 @@ class seedOldPublicConsultations extends Command
                                 DB::commit();
                                 continue;
                             }
-
-                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                            $institution = Institution::withTrashed()->find((int)$ourUsersInstitutions[$item->author_id]);
+//                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
+                            $institution = Institution::withTrashed()->find($institutionId);
                             //$institutionId = $dInstitution->id;
                             //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                             $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
