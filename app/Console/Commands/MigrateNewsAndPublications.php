@@ -219,8 +219,8 @@ class MigrateNewsAndPublications extends Command
                                     ]);
                                     $newFile->save();
                                     $fileIds[] = $newFile->id;
-                                    $ocr = new FileOcr($newFile->refresh());
-                                    $ocr->extractText();
+//                                    $ocr = new FileOcr($newFile->refresh());
+//                                    $ocr->extractText();
                                 }
 
                                 File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
@@ -404,8 +404,8 @@ class MigrateNewsAndPublications extends Command
                                     ]);
                                     $newFile->save();
                                     $fileIds[] = $newFile->id;
-                                    $ocr = new FileOcr($newFile->refresh());
-                                    $ocr->extractText();
+//                                    $ocr = new FileOcr($newFile->refresh());
+//                                    $ocr->extractText();
                                 }
 
                                 File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
