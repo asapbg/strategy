@@ -72,21 +72,30 @@ class MigrateNewsAndPublications extends Command
 
             $newscategoryid = $newsCategory->id;
 
-            $cat_inserts++;
+            $existCategory = PublicationCategory::whereHas('translation', function ($q) use($newsCategory){
+                $q->where('name', '=', $newsCategory->name);
+            })->get()->first();
 
-            $cat_array = [
-                'type' => $type,
-                'created_at' => databaseDateTime($newsCategory->datecreated),
-                'updated_at' => databaseDateTime($newsCategory->datemodified)
-            ];
-            $category = new PublicationCategory();
-            $category->fill($cat_array);
-            $category->save();
+            if(!$existCategory){
+                $cat_inserts++;
 
-            foreach ($languages as $lang) {
-                $category->translateOrNew($lang['code'])->name = $newsCategory->name;
+                $cat_array = [
+                    'type' => $type,
+                    'created_at' => databaseDateTime($newsCategory->datecreated),
+                    'updated_at' => databaseDateTime($newsCategory->datemodified)
+                ];
+                $category = new PublicationCategory();
+                $category->fill($cat_array);
+                $category->save();
+
+                foreach ($languages as $lang) {
+                    $category->translateOrNew($lang['code'])->name = $newsCategory->name;
+                }
+                $category->save();
+            } else{
+                $category = $existCategory;
             }
-            $category->save();
+
 
             $oldNews = [];
             $oldNews = DB::connection('old_strategy_app')
@@ -103,10 +112,14 @@ class MigrateNewsAndPublications extends Command
             }
 
             foreach ($oldNews as $row) {
+                $title = $row->title;
+                $existPublication = Publication::where('slug', '=', Str::slug($title))->first();
+                if($existPublication){
+                    continue;
+                }
 
                 //dd($row);
                 $news_id = $row->id;
-                $title = $row->title;
                 $text = $row->text;
 
                 if (empty($title) && empty($text)) {
@@ -245,21 +258,29 @@ class MigrateNewsAndPublications extends Command
 
             $publicationcategoryid = $publicationsCategory->id;
 
-            $cat_inserts++;
+            $existCategory = PublicationCategory::whereHas('translation', function ($q) use($publicationsCategory){
+                $q->where('name', '=', $publicationsCategory->name);
+            })->get()->first();
 
-            $cat_array = [
-                'type' => $type,
-                'created_at' => databaseDateTime($publicationsCategory->datecreated),
-                'updated_at' => databaseDateTime($publicationsCategory->datemodified)
-            ];
-            $category = new PublicationCategory();
-            $category->fill($cat_array);
-            $category->save();
+            if(!$existCategory){
+                $cat_inserts++;
 
-            foreach ($languages as $lang) {
-                $category->translateOrNew($lang['code'])->name = $publicationsCategory->name;
+                $cat_array = [
+                    'type' => $type,
+                    'created_at' => databaseDateTime($publicationsCategory->datecreated),
+                    'updated_at' => databaseDateTime($publicationsCategory->datemodified)
+                ];
+                $category = new PublicationCategory();
+                $category->fill($cat_array);
+                $category->save();
+
+                foreach ($languages as $lang) {
+                    $category->translateOrNew($lang['code'])->name = $publicationsCategory->name;
+                }
+                $category->save();
+            } else{
+                $category = $existCategory;
             }
-            $category->save();
 
             $oldPublications = [];
             $oldPublications = DB::connection('old_strategy_app')
@@ -277,10 +298,13 @@ class MigrateNewsAndPublications extends Command
             }
 
             foreach ($oldPublications as $row) {
-
+                $title = $row->title;
+                $existPublication = Publication::where('slug', '=', Str::slug($title))->first();
+                if($existPublication){
+                    continue;
+                }
                 //dd($row);
                 $publications_id = $row->id;
-                $title = $row->title;
                 $text = $row->text;
 
                 if (empty($title) && empty($text)) {
