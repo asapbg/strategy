@@ -76,6 +76,7 @@ class seedOldStrategicDocuments extends Command
     {
         $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('missing_field_of_actions_strategic_documents.txt', '');
+        file_put_contents('missing_institution_names_strategic_documents.txt', '');
 
         $acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')
             ->orderBy('id', 'asc')
@@ -121,7 +122,7 @@ class seedOldStrategicDocuments extends Command
 
         //$acceptingInstitutions = AuthorityAcceptingStrategic::with('translations')->get()->pluck('id', 'name')->toArray();
         //dd($acceptingInstitutions);
-        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         foreach ($oldDocuments as $oldDocument) {
             DB::beginTransaction();
@@ -146,15 +147,16 @@ class seedOldStrategicDocuments extends Command
                     //$acceptingInstitution = $acceptingInstitutions->where('name', $institutionName)->first();
 
                     if (!isset($acceptingInstitutions[$institutionName])) {
-                        $acceptingInstitution = new AuthorityAcceptingStrategic();
-
-                        foreach ($locales as $locale) {
-                            $acceptingInstitution->translateOrNew($locale['code'])->name = $institutionName;
-                        }
-
-                        $acceptingInstitution->save();
-                        $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
-                        $acceptingInstitutions[$institutionName] = $acceptingInstitution->id;
+                        file_put_contents('missing_institution_names_strategic_documents.txt', $institutionName.PHP_EOL, FILE_APPEND);
+//                        $acceptingInstitution = new AuthorityAcceptingStrategic();
+//
+//                        foreach ($locales as $locale) {
+//                            $acceptingInstitution->translateOrNew($locale['code'])->name = $institutionName;
+//                        }
+//
+//                        $acceptingInstitution->save();
+//                        $data['accept_act_institution_type_id'] = $acceptingInstitution->id ?? null;
+//                        $acceptingInstitutions[$institutionName] = $acceptingInstitution->id;
                     } else{
                         $data['accept_act_institution_type_id'] = (int)$acceptingInstitutions[$institutionName];
                     }

@@ -45,7 +45,7 @@ class seedOldOgpNews extends Command
         $currentStep = 0;
 
         $ourNews = Publication::withTrashed()->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
-        $ourUsers = User::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
