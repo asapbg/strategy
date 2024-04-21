@@ -12,12 +12,19 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="col-xs-12 pt-4">
-            <div class="alert alert-warning">
-                {{ __('custom.page_404_text') }}
-                <a href="{{ url('/') }}" class="btn btn-primary">{{ __('custom.here') }}</a>
+    <div class="row py-5">
+        <div class="col-md-2">
+        </div>
+        <form class="col-md-8" action="{{ route('search') }}">
+            <h2 class="mb-3 text-center fs-3">{{ __('site.page_not_found') }}</h2>
+            <h3 class="mb-5 fs-18 fw-normal text-center">{{ __('site.try_search') }} <a href="{{ route('site.home') }}">{{ __('site.home_page') }}</a></h3>
+
+            <div class="d-flex justify-content-center search-not-found-wrapper">
+                <input type="text" name="search" id="not-found-search" placeholder="{{ __('site.search_in_portal') }}">
+                <button type="submit" class="btn btn-primary w-auto ms-2"><i class="fas fa-search me-1"></i>{{ __('custom.search') }}</button>
             </div>
+        </form>
+        <div class="col-md-2">
         </div>
     </div>
 @endsection
