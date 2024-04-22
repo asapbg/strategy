@@ -1463,7 +1463,7 @@ class FixOldPrisImporters extends Command
 
                             if ($existPris) {
                                 $this->comment('Start update importers for Pris with old id ' . $item->old_id);
-                                DB::beginTransaction();
+//                                DB::beginTransaction();
                                 //Update importers
                                 try {
                                     $importerInstitutions = [];
@@ -1567,10 +1567,10 @@ class FixOldPrisImporters extends Command
                                             }
                                         }
                                     }
-                                    DB::commit();
+//                                    DB::commit();
                                 } catch (\Exception $e) {
                                     Log::error('Migration update old pris importers error: ' . $e);
-                                    DB::rollBack();
+//                                    DB::rollBack();
                                 }
                             }
                         }
