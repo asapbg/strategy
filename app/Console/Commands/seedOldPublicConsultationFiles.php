@@ -44,7 +44,6 @@ class seedOldPublicConsultationFiles extends Command
     public function handle()
     {
         file_put_contents('missing_pc_files_in_old_files.txt', '');
-        PublicConsultation::unsetEventDispatcher();
         activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         $locales = config('available_languages');

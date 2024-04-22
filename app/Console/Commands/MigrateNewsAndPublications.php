@@ -39,7 +39,6 @@ class MigrateNewsAndPublications extends Command
      */
     public function handle()
     {
-        Publication::unsetEventDispatcher();
         activity()->disableLogging();
 
         DB::statement('TRUNCATE publication_category CASCADE');

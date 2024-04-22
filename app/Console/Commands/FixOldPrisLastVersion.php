@@ -33,7 +33,6 @@ class FixOldPrisLastVersion extends Command
      */
     public function handle()
     {
-        Pris::unsetEventDispatcher();
         activity()->disableLogging();
 
         $this->comment('Start at '.date('Y-m-d H:i:s'));

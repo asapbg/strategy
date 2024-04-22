@@ -1466,7 +1466,7 @@ class seedOldLastPris extends Command
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
         //start from this id in old database
         //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
-        $currentStep = 160239;
+        $currentStep = 0;
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
