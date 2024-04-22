@@ -1839,7 +1839,7 @@ class seedOldLastPris extends Command
                                     }
                                     if(sizeof($newItemTags)) {
                                         $newItem->tags()->sync($newItemTags);
-                                        $newItem->save();
+//                                        $newItem->save();
                                     }
                                 }
                                 if($migrateFiles) {
