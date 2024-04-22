@@ -39,6 +39,7 @@ class seedOldPublicConsultations extends Command
      */
     public function handle()
     {
+        file_put_contents('old_pc_field_of_actions', '');
         activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         $locales = config('available_languages');
@@ -101,12 +102,14 @@ class seedOldPublicConsultations extends Command
 
         //$ourInstitutions = Institution::withTrashed()->with(['level'])->get()->pluck('level.nomenclature_level', 'id')->toArray();
 
-        if( (int)$maxOldId[0]->max ) {
-            $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep < $maxOldId) {
-                echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('old_strategy_app')
-                    ->select('select
+        DB::beginTransaction();
+        try {
+            if( (int)$maxOldId[0]->max ) {
+                $maxOldId = (int)$maxOldId[0]->max;
+                while ($currentStep < $maxOldId) {
+                    echo "FromId: ".$currentStep.PHP_EOL;
+                    $oldDbResult = DB::connection('old_strategy_app')
+                        ->select('select
                         pc.id as old_id,
                         -- consultation_level_id
                         -- act_type_id
@@ -148,11 +151,8 @@ class seedOldPublicConsultations extends Command
                         and pc.id < ' . ($currentStep + $step) . '
                     order by pc.id ');
 
-                if (sizeof($oldDbResult)) {
-                    file_put_contents('old_pc_field_of_actions', '');
-                    foreach ($oldDbResult as $item) {
-                        DB::beginTransaction();
-                        try {
+                    if (sizeof($oldDbResult)) {
+                        foreach ($oldDbResult as $item) {
                             if(isset($ourUsersInstitutions[$item->author_id])){
                                 $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
                             } else if(isset($ourUsersInstitutionsByMail[$item->email])){
@@ -244,16 +244,16 @@ class seedOldPublicConsultations extends Command
 
                                 $oldDbComments = DB::connection('old_strategy_app')
                                     ->select('select
-                                        pcomments.createdbyuserid as user_id,
-                                        pcomments.title || \'\n\' || pcomments."text" as content,
-                                        pcomments.consultationid as object_id,
-                                        pcomments.datecreated as created_at,
-                                        case when pcomments.isdeleted = true then CURRENT_TIMESTAMP else null end as deleted_at,
-                                        case when pcomments.isactive = true then 1 else 0 end as active,
-                                        case when pcomments.isapproved  = true then 1 else 0 end as approved
-                                    from dbo.publicconsultationcomments pcomments
-                                    where pcomments.consultationid = '.$item->old_id.'
-                                    order by pcomments.datecreated asc');
+                                    pcomments.createdbyuserid as user_id,
+                                    pcomments.title || \'\n\' || pcomments."text" as content,
+                                    pcomments.consultationid as object_id,
+                                    pcomments.datecreated as created_at,
+                                    case when pcomments.isdeleted = true then CURRENT_TIMESTAMP else null end as deleted_at,
+                                    case when pcomments.isactive = true then 1 else 0 end as active,
+                                    case when pcomments.isapproved  = true then 1 else 0 end as approved
+                                from dbo.publicconsultationcomments pcomments
+                                where pcomments.consultationid = '.$item->old_id.'
+                                order by pcomments.datecreated asc');
 
                                 if(sizeof($oldDbComments)) {
                                     foreach ($oldDbComments as $c) {
@@ -275,17 +275,15 @@ class seedOldPublicConsultations extends Command
                                 //TODO migrate files
                                 $this->comment('Finish import of public consultation with old ID '.$item->old_id);
                             }
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            Log::error('Migration old startegy public consultations, comment and files: ' . $e);
-                            DB::rollBack();
-                            //dd($prepareNewPc, $comments ?? []);
                         }
-
                     }
+                    $currentStep += $step;
                 }
-                $currentStep += $step;
             }
+            DB::commit();
+        } catch (\Exception $e) {
+            Log::error('Migration old startegy public consultations, comment and files: ' . $e);
+            DB::rollBack();
         }
         $this->info('End at '.date('Y-m-d H:i:s'));
     }
