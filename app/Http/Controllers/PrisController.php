@@ -41,6 +41,7 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
         $items = Pris::select('pris.*')
+            ->LastVersion()
             ->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
@@ -121,6 +122,7 @@ class PrisController extends Controller
         $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
 
         $items = Pris::select('pris.*')
+            ->LastVersion()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
             ->leftJoin('institution', 'institution.id', '=', 'pris.institution_id')
@@ -161,7 +163,7 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
-        $item = Pris::InPris()->Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
+        $item = Pris::LastVersion()->InPris()->Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
             'tags', 'tags.translation', 'changedDocs',
             'changedDocs.actType', 'changedDocs.actType.translation',
             'changedDocs.institution', 'changedDocs.institution.translation', 'files'])->find($id);

@@ -40,12 +40,6 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
         'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version'];
 
-    protected static function booted(){
-        static::addGlobalScope('last_version', function (Builder $builder) {
-            $builder->where('asap_last_version', '=' , 1);
-        });
-    }
-
     /**
      * @return FeedItem
      */
@@ -93,6 +87,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     public function scopeInPris($query){
         $query->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL]);
+    }
+
+    public function scopeLastVersion($query){
+        $query->where('pris.asap_last_version', '=', 1);
     }
 
     public function scopePublished($query){
@@ -258,6 +256,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             }
 
             $q->whereNull('pris.deleted_at');
+            $q->where('pris.asap_last_version', '=', 1);
 
             $q->orderBy('legal_act_type_translations.name', 'asc')
             ->orderBy('pris.doc_num', 'asc');
@@ -279,6 +278,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
      */
     public static function list(array $filter){
         return self::select('pris.*')
+            ->LastVersion()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')

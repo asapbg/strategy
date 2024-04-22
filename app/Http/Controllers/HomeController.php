@@ -230,6 +230,7 @@ class HomeController extends Controller
                             ->orWhere('pris_translations.importer', 'ilike', '%'.$search.'%');
                     })
                     ->where('pris.active', '=', 1)
+                    ->where('pris.asap_last_version', '=', 1)
                     ->whereNotNull('pris.published_at')
                     ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
                     ->paginate($paginate);
@@ -333,6 +334,7 @@ class HomeController extends Controller
                             and pris.deleted_at is null
                             and pris.active = 1
                             and pris.published_at  is not null
+                            and pris.asap_last_version = 1
                             and pris.legal_act_type_id <> ' . LegalActType::TYPE_ARCHIVE . '
                             and (
                                 pris_translations.about ilike \'%' . $search . '%\'
@@ -467,6 +469,7 @@ class HomeController extends Controller
                     and pris.deleted_at is null
                     and pris.active = 1
                     and pris.published_at  is not null
+                    and pris.asap_last_version = 1
                     and pris.legal_act_type_id <> ' . LegalActType::TYPE_ARCHIVE . '
                     and (
                         pris_translations.about ilike \'%' . $search . '%\'
@@ -888,6 +891,7 @@ class HomeController extends Controller
                             where
                                 pris.active = 1
                                 and pris.deleted_at is null
+                                and pris.asap_last_version = 1
                         union all
                             select
                                 \'pris\' as type,
@@ -902,6 +906,7 @@ class HomeController extends Controller
                             where
                                 pris.active = 1
                                 and pris.deleted_at is null
+                                and pris.asap_last_version = 1
                         union all
                             select
                                 \'lp\' as type,

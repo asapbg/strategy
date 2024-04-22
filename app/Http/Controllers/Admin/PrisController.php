@@ -45,6 +45,7 @@ class PrisController extends AdminController
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
 
         $items = Pris::with(['actType', 'actType.translations'])
+            ->LastVersion()
             ->FilterBy($requestFilter)
             ->orderBy('created_at', 'desc')
             ->paginate($paginate);
@@ -315,7 +316,7 @@ class PrisController extends AdminController
      */
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
-        $qItem = Pris::withTrashed();
+        $qItem = Pris::withTrashed()->LastVersion();
         if( sizeof($with) ) {
             $qItem->with($with);
         }

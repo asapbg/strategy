@@ -33,7 +33,6 @@ class seedOldOgpNews extends Command
      */
     public function handle()
     {
-        Publication::unsetEventDispatcher();
         activity()->disableLogging();
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';

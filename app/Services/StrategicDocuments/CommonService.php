@@ -53,7 +53,7 @@ class CommonService
     {
         $term = $request->input('term');
         $filter = $request->input('filter');
-        $prisActs = Pris::with('translations');
+        $prisActs = Pris::with('translations')->LastVersion();
 
         if ($strategicDocument?->publicConsultation) {
             $prisActs = $prisActs->where('public_consultation_id', $strategicDocument?->publicConsultation?->id);

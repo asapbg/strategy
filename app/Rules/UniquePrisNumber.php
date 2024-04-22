@@ -32,7 +32,7 @@ class UniquePrisNumber implements Rule
      */
     public function passes($attribute, $value)
     {
-        $q = Pris::where('legal_act_type_id', (int)$this->actType)
+        $q = Pris::LastVersion()->where('legal_act_type_id', (int)$this->actType)
             ->where('doc_num', '=', (int)$value)
             ->where(function ($q){
                 $q->where('doc_date', '>=', $this->from)

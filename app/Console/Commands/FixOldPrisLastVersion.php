@@ -104,14 +104,14 @@ class FixOldPrisLastVersion extends Command
                 if(sizeof($lastV)){
                     $lastVChunk = array_chunk($lastV, 50);
                     foreach ($lastVChunk as $ids){
-                        Pris::withoutGlobalScopes()->whereIn('id', $ids)->update(['asap_last_version' => 1]);
+                        Pris::whereIn('id', $ids)->update(['asap_last_version' => 1]);
                     }
                 }
                 if(sizeof($notLastV)){
                     $lastVChunk = array_chunk($notLastV, 50);
 //                    $this->comment('Found not last versions');
                     foreach ($lastVChunk as $ids){
-                        Pris::withoutGlobalScopes()->whereIn('id', $ids)->update(['asap_last_version' => 0]);
+                        Pris::whereIn('id', $ids)->update(['asap_last_version' => 0]);
                     }
                 }
             }

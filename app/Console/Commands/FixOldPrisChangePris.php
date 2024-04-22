@@ -36,12 +36,13 @@ class FixOldPrisChangePris extends Command
         file_put_contents('old_pris_connections_missing_documents.txt', '');
         file_put_contents('old_pris_missing_connections.txt', '');
         $step = 50;
-        $maxId = Pris::withoutGlobalScopes()->max('id');
+        $maxId = Pris::max('id');
         $currentStep = 0;
         while ($currentStep < $maxId) {
-            $prisItems = Pris::withoutGlobalScopes()->withTrashed()
+            $prisItems = Pris::withTrashed()
                 ->where('id', '>=', $currentStep)
                 ->where('id', '<', ($currentStep + $step))
+                ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->get();
             if($prisItems->count()){
@@ -200,7 +201,7 @@ class FixOldPrisChangePris extends Command
                 ->where('doc_num', '=', $number)
                 ->where('doc_date', '>=', $from)
                 ->where('doc_date', '<=', $to)
-//                ->where('last_version', '=', 1)
+                ->where('asap_last_version', '=', 1)
                 ->get();
 
 
@@ -240,7 +241,7 @@ class FixOldPrisChangePris extends Command
             $pris = Pris::where('legal_act_type_id', '=', $category)
                 ->where('doc_num', '=', $number)
                 ->where('doc_date', '=', $docDate)
-//                ->where('last_version', '=', 1)
+                ->where('asap_last_version', '=', 1)
                 ->get();
 
 //            if($pris->count() == 0){

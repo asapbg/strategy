@@ -37,7 +37,6 @@ class seedOldLastPris extends Command
      */
     public function handle()
     {
-        Pris::unsetEventDispatcher();
         activity()->disableLogging();
 
         $this->info('Start at '.date('Y-m-d H:i:s'));
@@ -83,7 +82,7 @@ class seedOldLastPris extends Command
         }
 
         $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
-        $ourPris = Pris::withoutGlobalScopes()->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourPris = Pris::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         $legalTypeDocs = [
             5017 => 7, //'Заповед',
@@ -1467,7 +1466,7 @@ class seedOldLastPris extends Command
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
         //start from this id in old database
         //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
-        $currentStep = 0;
+        $currentStep = 160239;
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
@@ -1515,9 +1514,13 @@ class seedOldLastPris extends Command
                             //Update existing
                             if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
                                 $this->comment('Pris with old id '.$item->old_id.' already exist');
-                                $existPris = Pris::withoutGlobalScopes()->find($ourPris[(int)$item->old_id]);
+                                $existPris = Pris::find($ourPris[(int)$item->old_id]);
 
                                 if($existPris){
+                                    $about = null;
+                                    $legal_reason = null;
+                                    $oldImporters = null;
+                                    $importer = null;
                                     //Update version
                                     if($existPris->last_version != $item->last_version){
                                         $existPris->last_version = $item->last_version;
@@ -1527,6 +1530,24 @@ class seedOldLastPris extends Command
                                     if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
                                         $attributes = $data['DocumentContent']['Attribute'];
                                         foreach ($attributes as $att) {
+                                            //get about
+                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
+                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                                    $about = $att['Value']['Value'];
+                                                } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                                    $about = $att['Value'];
+                                                }
+                                            }
+
+                                            //get about
+                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
+                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                                    $legal_reason = $att['Value']['Value'];
+                                                } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                                    $legal_reason = $att['Value'];
+                                                }
+                                            }
+
                                             //get tags
                                             if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
                                                 if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
@@ -1543,7 +1564,7 @@ class seedOldLastPris extends Command
                                             if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                                 $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
                                                 if($val) {
-                                                    $prepareNewPris['old_importers'] = $val;
+                                                    $oldImporters = $val;
                                                     //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                                     $importerStr = [];
                                                     $importerInstitutions = [];
@@ -1618,16 +1639,27 @@ class seedOldLastPris extends Command
                                                             }
                                                         }
                                                     }
-                                                    $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                                    $importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
                                                 }
                                             }
                                         }
 
+                                        $existPris->update(['old_importers' => $oldImporters]);
+
+                                        foreach ($locales as $locale) {
+                                            $existPris->translateOrNew($locale['code'])->about = $about;
+                                            $existPris->translateOrNew($locale['code'])->legal_reason = $legal_reason;
+                                            $existPris->translateOrNew($locale['code'])->importer = $importer;
+                                        }
+
+                                        $existPris->save();
+
                                         if(isset($importerInstitutions) && sizeof($importerInstitutions)) {
                                             $existPris->institutions()->sync($importerInstitutions);
                                         }
+
                                         //3. Create connection pris - tags
-                                        if($existPris && sizeof($tags)) {
+                                        if(sizeof($tags)) {
                                             foreach ($tags as $tag) {
                                                 if(!isset($ourTags[$tag])) {
                                                     //create tag
@@ -1641,14 +1673,13 @@ class seedOldLastPris extends Command
                                                     echo "Tag with name ".$tag." created successfully".PHP_EOL;
                                                     $ourTags[$tag] = $newTag->id;
                                                 }
-                                                $newItemTags[] = $ourTags[$tag];
+                                                $newTags[] = $ourTags[$tag];
                                             }
-                                            if(sizeof($newItemTags)) {
-                                                $existPris->tags()->sync($newItemTags);
+                                            if(sizeof($newTags)) {
+                                                $existPris->tags()->sync($newTags);
                                             }
                                         }
                                     }
-
                                     //get Files
                                     if($migrateFiles) {
                                         //TODO //5. Create files and extract text
@@ -1727,21 +1758,12 @@ class seedOldLastPris extends Command
                                             }
                                         }
                                     }
-
                                 }
                                 continue;
                             }
 
                             //Create model
-//                        try {
                             $fileForExeption = null;
-//                            $importerInstitutions = [];
-//                            $tags = [];
-//                            $newItemTags = [];//tags ids to connect to new item
-//
-//                            $xml = simplexml_load_string($item->to_parse_xml_details);
-//                            $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
-//                            $data = json_decode($json, true);
 
                             if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
                                 $attributes = $data['DocumentContent']['Attribute'];
@@ -2075,9 +2097,6 @@ class seedOldLastPris extends Command
                                 }
                             }
                             $this->comment('PRIS with old id (' . $item->old_id . ') is created');
-//                        } catch (\Exception $e) {
-//                            Log::error('Migration old pris: ' . $e);
-//                        }
                         }
                     }
                     $currentStep += $step;
