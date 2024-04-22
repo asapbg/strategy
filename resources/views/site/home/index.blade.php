@@ -11,7 +11,7 @@
                         <div class="col-md-12">
                             <div class="centered-heading w-100">
                                 <h1 class="text-light text-center" style="background: unset !important;">
-                                    Добре дошли в Портала за обществени консултации
+                                    {{ __('site.welcome') }}
                                 </h1>
                             </div>
                         </div>
@@ -26,41 +26,41 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-md-12">
-                    <h2 class="mb-2">Информирай се</h2>
+                    <h2 class="mb-2">{{ __('site.self_inform') }}</h2>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('lp.index') }}" title="Законодателна програма">
+                        <a href="{{ route('lp.index') }}" title="{{ trans_choice('custom.legislative_program', 2) }}">
                             <div class="icon">
                                 <i class="bi bi-shield-check"></i>
                             </div>
-                            <h3>Законодателна програма</h3>
+                            <h3>{{ trans_choice('custom.legislative_program', 2) }}</h3>
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('op.index') }}" title="Оперативна програма">
+                        <a href="{{ route('op.index') }}" title="{{ trans_choice('custom.operational_programs', 2) }}">
                             <div class="icon">
                                 <i class="bi bi-arrow-up-right-circle"></i>
                             </div>
-                            <h3>Оперативна програма</h3>
+                            <h3>{{ trans_choice('custom.operational_programs', 2) }}</h3>
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('strategy-documents.index') }}" title="Стратегически документи">
+                        <a href="{{ route('strategy-documents.index') }}" title="{{ trans_choice('custom.strategic_documents', 2) }}">
                             <div class="icon">
                                 <i class="bi bi-files"></i>
 
                             </div>
-                            <h3>Стратегически документи</h3>
+                            <h3>{{ trans_choice('custom.strategic_documents', 2) }}</h3>
                         </a>
                     </div>
                 </div>
@@ -69,33 +69,33 @@
             <div class="row">
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('impact_assessment.index') }}" title="Оценки на въздействието">
+                        <a href="{{ route('impact_assessment.index') }}" title="{{ trans_choice('custom.impact_assessment', 2) }}">
                             <div class="icon">
                                 <i class="bi bi-journal-plus"></i>
                             </div>
-                            <h3>Оценки на въздействието</h3>
+                            <h3>{{ trans_choice('custom.impact_assessment', 2) }}</h3>
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('pris.index') }}" title="Актове на Министерски съвет">
+                        <a href="{{ route('pris.index') }}" title="{{ __('custom.pris') }}">
                             <div class="icon">
                                 <i class="bi bi-file-earmark-medical"></i>
                             </div>
-                            <h3>Актове на Министерски съвет</h3>
+                            <h3>{{ __('custom.pris') }}</h3>
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-4 position-relative">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('legislative_initiatives.index') }}" title="Отворено управление">
+                        <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">
                             <div class="icon">
                                 <i class="bi bi-bounding-box-circles"></i>
                             </div>
-                            <h3>Отворено управление</h3>
+                            <h3>{{ __('custom.ogp') }}</h3>
                         </a>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-md-12">
-                    <h2 class="mb-2">Участвай</h2>
+                    <h2 class="mb-2">{{ __('site.participate') }}</h2>
                 </div>
             </div>
             <div class="row ">
@@ -121,7 +121,7 @@
                             </div>
                             <div class="link-heading">
                             <span>
-                                Включи се в обществени консултации
+                                {{ __('site.participate_in_pc') }}
                             </span>
                             </div>
                         </div>
@@ -131,10 +131,9 @@
                         <div class=" item-holder-one">
                             <div class="row mb-2">
                                 <div class="col-md-12">
-                                    <h2 class="mb-2" style="font-size: 24px;">Последни обществени консултации</h2>
+                                    <h2 class="mb-2" style="font-size: 24px;">{{ __('site.last_pc') }}</h2>
                                     <p>
-                                        Този раздел е предназначен за граждани, които желаят да се включат в обществения
-                                        дебат и да споделят мнението си.
+                                        {{ __('site.home.pc_description') }}
                                     </p>
 
                                 </div>
@@ -145,7 +144,7 @@
                                 <input type="hidden" name="page" class="current_page" value="{{ $consultations->currentPage() }}">
                                 <div class="row filter-results mb-2">
                                     <h3 style="font-size: 20px;">
-                                        Търсене
+                                        {{ __('custom.searching') }}
                                     </h3>
 
                                     <div class="col-md-12 mb-2 mt-2">
@@ -159,14 +158,14 @@
                                 <div class="row mb-5">
                                     <div class="col-md-6">
                                         <button class="btn rss-sub main-color search-btn" data-id="consultations">
-                                            <i class="fas fa-search main-color"></i>Търсене
+                                            <i class="fas fa-search main-color"></i>{{ __('custom.searching') }}
                                         </button>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="info-consul">
                                             <h4>
-                                                Общо <span id="consultations_total">{{ $consultations->total() }}</span> резултата
+                                                {{ __('custom.total') }} <span id="consultations_total">{{ $consultations->total() }}</span> {{ mb_strtolower(trans_choice('custom.results', 2)) }}
                                             </h4>
                                         </div>
                                     </div>
@@ -180,7 +179,7 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <a href="{{ route('public_consultation.index') }}" class="btn rss-sub main-color">
-                                        Всички консултации <i class="fas fa-long-arrow-right main-color"></i>
+                                        {{ __('site.all_pc') }} <i class="fas fa-long-arrow-right main-color"></i>
                                     </a>
                                 </div>
                             </div>
@@ -194,7 +193,7 @@
                             </div>
                             <div class="link-heading">
                             <span>
-                                Предложи мерки за добро управление
+                                {{ __('site.make_plan_proposal') }}
                             </span>
                             </div>
                         </div>
@@ -239,7 +238,7 @@
                             </div>
                             <div class="link-heading">
                             <span>
-                                Предложи/Подкрепи законодателна инициатива
+                                {{ __('site.make_ogp_proposal') }}
                             </span>
                             </div>
                         </div>
@@ -249,10 +248,9 @@
                         <div class=" item-holder-one">
                             <div class="row mb-2">
                                 <div class="col-md-12">
-                                    <h2 class="mb-2" style="font-size: 24px;">Списък отворени законодателни инициативи</h2>
+                                    <h2 class="mb-2" style="font-size: 24px;">{{ __('site.li_open_list') }}</h2>
                                     <p>
-                                        Този раздел е предназначен за граждани, които желаят да се включат в обществения
-                                        дебат и да споделят мнението си.
+                                        {{ __('site.home.li_description') }}
                                     </p>
 
                                 </div>
@@ -263,7 +261,7 @@
                                 <input type="hidden" name="page" class="current_page" value="{{ $initiatives->currentPage() }}">
                                 <div class="row filter-results mb-2">
                                     <h3 style="font-size: 20px;">
-                                        Търсене
+                                        {{ __('custom.searching') }}
                                     </h3>
 
                                     <div class="col-md-12 mb-2 mt-2">
@@ -276,14 +274,14 @@
                                 <div class="row mb-5">
                                     <div class="col-md-8">
                                         <button class="btn rss-sub main-color search-btn" data-id="initiatives">
-                                            <i class="fas fa-search main-color"></i>Търсене
+                                            <i class="fas fa-search main-color"></i>{{ __('custom.searching') }}
                                         </button>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="info-consul">
                                             <h4>
-                                                Общо <span id="initiatives_total">{{ $initiatives->total() }}</span> резултата
+                                                {{ __('custom.total') }} <span id="initiatives_total">{{ $initiatives->total() }}</span> {{ mb_strtolower(trans_choice('custom.results', 2)) }}
                                             </h4>
                                         </div>
                                     </div>
@@ -298,7 +296,7 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <a href="{{ route('legislative_initiatives.index') }}" class="btn rss-sub main-color">
-                                        Всички инициативи <i class="fas fa-long-arrow-right main-color"></i>
+                                        {{ __('site.all_li') }} <i class="fas fa-long-arrow-right main-color"></i>
                                     </a>
                                 </div>
                             </div>
@@ -312,14 +310,14 @@
                                 </div>
                                 <div class="link-heading">
                                 <span>
-                                    Участвай в анкета
+                                    {{ __('site.participate_in_poll') }}
                                 </span>
                                 </div>
                             </div>
                         </a>
 
                         <div class="col-md-12 mt-4 custom-card p-3">
-                            <h3 class="mb-3" style="font-size: 24px;">Списък отворени анкети</h3>
+                            <h3 class="mb-3" style="font-size: 24px;">{{ __('site.all_open_poll') }}</h3>
                             <ul class="list-group questionnaire">
                                 <li class="list-group-item">
                                     <a href="#" class="text-decoration-none">Финанси и данъчна политика</a>
@@ -342,7 +340,7 @@
                                     <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
                                 </li>
                             </ul>
-                            <button class="btn btn-primary main-color mt-4">Всички анкети <i
+                            <button class="btn btn-primary main-color mt-4">{{ __('site.all_poll') }} <i
                                     class="fas fa-long-arrow-right main-color"></i></button>
 
                         </div>
@@ -359,7 +357,7 @@
 
             <div class="row mb-4">
                 <div class="col-md-12 ">
-                    <h2 class="mb-2">Най-новото</h2>
+                    <h2 class="mb-2">{{ __('site.newest_in_platform') }}</h2>
                 </div>
 
             </div>
@@ -390,12 +388,12 @@
                                                data-resource-delete-url="{{ route('admin.publications.delete', $publication) }}"
                                                data-toggle="tooltip"
                                                title="{{ __('custom.delete') }}">
-                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
                                             </a>
                                         @endcan
                                         @can(($isAdvBoardNews ? 'updateAdvBoard' : 'update'), $publication)
                                             <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
-                                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="Редакция"></i>
+                                                <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}"></i>
                                             </a>
                                         @endcan
                                     </div>
@@ -407,11 +405,11 @@
                             </p>
                             @if($isAdvBoardNews)
                                 <a href="{{ $publication->advisory_boards_id ? route('advisory-boards.view.news.details', [$publication->advisory_boards_id, $publication]) : route('advisory-boards.news.details', $publication) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
-                                    Прочетете още <i class="fas fa-long-arrow-right"></i>
+                                    {{ __('site.read_more_') }} <i class="fas fa-long-arrow-right"></i>
                                 </a>
                             @else
                                 <a href="{{ route('library.details', [$publication->type, $publication->id]) }}" class="readmore mt-1" title="{{ $publication->translation->title }}">
-                                    Прочетете още <i class="fas fa-long-arrow-right"></i>
+                                    {{ __('site.read_more_') }} <i class="fas fa-long-arrow-right"></i>
                                 </a>
                             @endif
                         </div>
@@ -423,7 +421,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <a href="{{ route('library.news') }}" class="btn btn-primary">
-                        Всички новини <i class="fas fa-long-arrow-right main-color"></i>
+                        {{ __('site.all_news') }} <i class="fas fa-long-arrow-right main-color"></i>
                     </a>
                 </div>
             </div>

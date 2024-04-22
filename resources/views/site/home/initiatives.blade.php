@@ -43,10 +43,10 @@
                                 </div>
                             </div>
                             <div class="meta-consul">
-                                <span>Коментирано: <span class="voted-li">{{ $initiative->comments->count() }} пъти</span></span>
+                                <span>{{ __('site.commented') }}: <span class="voted-li">{{ $initiative->comments->count() }} пъти</span></span>
                             </div>
                             <div class="meta-consul mt-2">
-                                <span>Подкрепено: <span class="voted-li">{{ $initiative->likes->count() }} пъти</span></span>
+                                <span>{{ __('site.supported') }}: <span class="voted-li">{{ $initiative->likes->count() }} пъти</span></span>
                                 <a href="{{ route('legislative_initiatives.view', $initiative->id) }}" title="">
                                     <i class="fas fa-arrow-right read-more"><span class="d-none">Линк</span></i>
                                 </a>

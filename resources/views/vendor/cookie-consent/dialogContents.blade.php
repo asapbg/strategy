@@ -1,4 +1,4 @@
-<div class="js-cookie-consent cookie-consent fixed bottom-0 inset-x-0 px-5 py-3">
+<div class="js-cookie-consent cookie-consent fixed bottom-0 inset-x-0 px-5 py-3" style="z-index: 9;">
     <div class="row">
         <div class="col-lg-10 col-md-9">
             <p class="ml-3 text-black cookie-consent__message">
