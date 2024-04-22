@@ -26,12 +26,12 @@
                 <div class="row">
                     @if(isset($footerPages) && sizeof($footerPages))
                         @foreach($footerPages as $page)
-                            <div class="col-md-6 mb-1">
+                            <div class="col-md-6 mb-2">
                                 <a class="p-0 text-light text-decoration-none" href="{{ $page['url'] }}" title="{{ $page['name'] }}">{{ $page['name'] }}</a>
                             </div>
                         @endforeach
                     @endif
-                        <div class="col-md-6 mb-1">
+                        <div class="col-md-6 mb-2">
                             <a class="p-0 text-light text-decoration-none" href="{{ route('other_links') }}" title="{{ __('site.footer.other_links') }}">{{ __('site.footer.other_links') }}</a>
                         </div>
                 </div>

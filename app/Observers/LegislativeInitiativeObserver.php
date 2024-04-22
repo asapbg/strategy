@@ -20,23 +20,25 @@ class LegislativeInitiativeObserver
      */
     public function created(LegislativeInitiative  $legislativeInitiative)
     {
-        //TODO post on facebook
-        $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-            ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-            ->get()->first();
-        if($activeFB->value){
-            $facebookApi = new Facebook();
-            $facebookApi->postOnPage(array(
-                'message' => 'Публикувана е нова Законодателна инициатива: '.$legislativeInitiative->facebookTitle,
-                'link' => route('legislative_initiatives.view', $legislativeInitiative),
-                'published' => true
-            ));
+        if(!env('DISABLE_OBSERVERS', false)) {
+            //TODO post on facebook
+            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                ->get()->first();
+            if ($activeFB->value) {
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage(array(
+                    'message' => 'Публикувана е нова Законодателна инициатива: ' . $legislativeInitiative->facebookTitle,
+                    'link' => route('legislative_initiatives.view', $legislativeInitiative),
+                    'published' => true
+                ));
+            }
+            //TODO post on twitter
+
+
+            $this->sendEmails($legislativeInitiative, 'created');
+            Log::info('Send subscribe email on creation');
         }
-        //TODO post on twitter
-
-
-        $this->sendEmails($legislativeInitiative, 'created');
-        Log::info('Send subscribe email on creation');
     }
 
     /**
@@ -47,14 +49,16 @@ class LegislativeInitiativeObserver
      */
     public function updated(LegislativeInitiative  $legislativeInitiative)
     {
-        //Check for real changes
-        $dirty = $legislativeInitiative->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+        if(!env('DISABLE_OBSERVERS', false)) {
+            //Check for real changes
+            $dirty = $legislativeInitiative->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty)){
-            $this->sendEmails($legislativeInitiative, 'updated');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty)) {
+                $this->sendEmails($legislativeInitiative, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
 
     }

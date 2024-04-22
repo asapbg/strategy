@@ -51,7 +51,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
 
     public function scopeInFooter($query)
     {
-        $query->where('page.in_footer', 1);
+        $query->where('page.in_footer', 1)->orderBy('page.order_idx', 'asc');
     }
 
     public function scopeBySysName($query, $name)

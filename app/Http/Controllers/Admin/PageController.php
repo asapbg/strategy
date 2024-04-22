@@ -152,9 +152,9 @@ class PageController  extends AdminController
                 $validated['slug'] = Str::slug($validated['name_bg']);
             }
 
-            if($item->in_footer != (int)isset($validated['in_footer'])){
-                Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
-            }
+//            if($item->in_footer != (int)isset($validated['in_footer'])){
+//                Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
+//            }
 
             $fillable = $this->getFillableValidated($validated, $item);
             $item->in_footer = (int)isset($validated['in_footer']);
@@ -166,6 +166,21 @@ class PageController  extends AdminController
             $this->storeTranslateOrNew(Page::TRANSLATABLE_FIELDS, $item, $validated);
 
             DB::commit();
+
+            Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
+            
+            //request comes from some module
+            if($module) {
+                $modulePagesCacheKey = match ($module){
+                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT,
+                    PageModulesEnum::MODULE_OGP->value => Page::CACHE_MODULE_PAGES_OGP,
+                    default => null,
+                };
+
+                if($modulePagesCacheKey){
+                    Cache::forget($modulePagesCacheKey);
+                }
+            }
 
             $route = route(self::EDIT_ROUTE, $item);
             if($module){
@@ -180,18 +195,6 @@ class PageController  extends AdminController
                     ->with('success', trans_choice('custom.pages', 1)." ".__('messages.updated_successfully_m'));
             }
 
-            //request comes from some module
-            if($module) {
-                $modulePagesCacheKey = match ($module){
-                    PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT,
-                    PageModulesEnum::MODULE_OGP->value => Page::CACHE_MODULE_PAGES_OGP,
-                    default => null,
-                };
-
-                if($modulePagesCacheKey){
-                    Cache::forget($modulePagesCacheKey);
-                }
-            }
             return redirect($route)
                 ->with('success', trans_choice('custom.pages', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {

@@ -22,25 +22,27 @@ class StrategicDocumentObserver
      */
     public function created(StrategicDocument  $strategicDocument)
     {
-        if ($strategicDocument->active) {
-            if(!$strategicDocument->parent_document_id) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if($activeFB->value){
-                    $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'Публикуван е нов Стратегически документ: '.$strategicDocument->title,
-                        'link' => route('strategy-document.view', $strategicDocument->id),
-                        'published' => true
-                    ));
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($strategicDocument->active) {
+                if (!$strategicDocument->parent_document_id) {
+                    //post on facebook
+                    $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                        ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                        ->get()->first();
+                    if ($activeFB->value) {
+                        $facebookApi = new Facebook();
+                        $facebookApi->postOnPage(array(
+                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+                            'link' => route('strategy-document.view', $strategicDocument->id),
+                            'published' => true
+                        ));
+                    }
                 }
+
+                $this->sendEmails($strategicDocument, 'created');
+
+                Log::info('Send subscribe email on creation');
             }
-
-            $this->sendEmails($strategicDocument, 'created');
-
-            Log::info('Send subscribe email on creation');
         }
     }
 
@@ -52,35 +54,37 @@ class StrategicDocumentObserver
      */
     public function updated(StrategicDocument  $strategicDocument)
     {
-        $old_active = $strategicDocument->getOriginal('active');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_active = $strategicDocument->getOriginal('active');
 
-        //Check for real changes
-        $dirty = $strategicDocument->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+            //Check for real changes
+            $dirty = $strategicDocument->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(!$old_active && $strategicDocument->active && !$strategicDocument->parent_document_id) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Публикуван е нов Стратегически документ: '.$strategicDocument->title,
-                    'link' => route('strategy-document.view', $strategicDocument->id),
-                    'published' => true
-                ));
+            if (!$old_active && $strategicDocument->active && !$strategicDocument->parent_document_id) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if ($activeFB->value) {
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+                        'link' => route('strategy-document.view', $strategicDocument->id),
+                        'published' => true
+                    ));
+                }
             }
-        }
 
-        if($old_active == (boolval($strategicDocument->active))) {
-            unset($dirty['active']);
-        }
+            if ($old_active == (boolval($strategicDocument->active))) {
+                unset($dirty['active']);
+            }
 
-        if(sizeof($dirty)){
-            $this->sendEmails($strategicDocument, 'updated');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty)) {
+                $this->sendEmails($strategicDocument, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
 
     }

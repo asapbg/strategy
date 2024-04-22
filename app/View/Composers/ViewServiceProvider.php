@@ -133,6 +133,9 @@ class ViewServiceProvider extends ServiceProvider
                                 case PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value:
                                     $footerPages[] = ['name' => $page->name, 'url' => route('impact_assessment.library.view', ['slug' => $page->slug])];
                                     break;
+                                case PageModulesEnum::MODULE_OGP->value:
+                                    $footerPages[] = ['name' => $page->name, 'url' => route('ogp.library.view', ['slug' => $page->slug])];
+                                    break;
                             }
                         } elseif ($page->is_system){
                             //case by system name
