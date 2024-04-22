@@ -74,6 +74,7 @@ class seedOldStrategicDocuments extends Command
 
     public function handle()
     {
+        activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('missing_field_of_actions_strategic_documents.txt', '');
         file_put_contents('missing_institution_names_strategic_documents.txt', '');

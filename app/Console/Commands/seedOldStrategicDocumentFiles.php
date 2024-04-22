@@ -43,6 +43,7 @@ class seedOldStrategicDocumentFiles extends Command
      */
     public function handle()
     {
+        activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         $this->formatTimestamp = 'Y-m-d H:i:s';
         $this->ourDocuments = StrategicDocument::withTrashed()->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();

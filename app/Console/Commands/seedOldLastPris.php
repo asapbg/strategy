@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\CustomActivity;
 use App\Models\File;
 use App\Models\InstitutionLevel;
 use App\Models\Pris;
@@ -36,6 +37,7 @@ class seedOldLastPris extends Command
      */
     public function handle()
     {
+        activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
         $migrateFiles = $this->argument('files');
@@ -1452,10 +1454,10 @@ class seedOldLastPris extends Command
 
         if( (int)$maxOldId[0]->max ) {
             $maxOldId = (int)$maxOldId[0]->max;
-
-            while ($currentStep < $maxOldId) {
-                echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('pris')->select('select
+            try {
+                while ($currentStep < $maxOldId) {
+                    echo "FromId: ".$currentStep.PHP_EOL;
+                    $oldDbResult = DB::connection('pris')->select('select
                                 pris.id as old_id,
                                 pris."number" as doc_num,
                                 pris.parentid as parentdocumentid,
@@ -1477,30 +1479,165 @@ class seedOldLastPris extends Command
                                 and pris.id >= ' . $currentStep . '
                                 and pris.id < ' . ($currentStep + $step) . '
                                 and pris.itemtypeid <> 5017 -- skip law records
+                                and pris.itemtypeid <> 5030 -- skip law records
                                 -- and documents.lastrevision = \'Y\' -- get final versions
                             group by pris.id
                             order by pris.id asc');
 
-                if (sizeof($oldDbResult)) {
-                    foreach ($oldDbResult as $item) {
-                        //Update existing
-                        if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
-                            $this->comment('Pris with old id '.$item->old_id.' already exist');
-                            $existPris = Pris::find($ourPris[(int)$item->old_id]);
+                    if (sizeof($oldDbResult)) {
+                        foreach ($oldDbResult as $item) {
 
-                            if($existPris){
-                                //Update version
-                                if($existPris->last_version != $item->last_version){
-                                    $existPris->last_version = $item->last_version;
-                                    $existPris->save();
-                                }
+                            $importerInstitutions = [];
+                            $tags = [];
+                            $newItemTags = [];//tags ids to connect to new item
 
-                                //get Files
-                                if($migrateFiles) {
-                                    //TODO //5. Create files and extract text
-                                    $path = File::PAGE_UPLOAD_PRIS;
-                                    $oldPages = DB::connection('pris')
-                                        ->select('
+                            $xml = simplexml_load_string($item->to_parse_xml_details);
+                            $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
+                            $data = json_decode($json, true);
+
+                            //Update existing
+                            if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
+                                $this->comment('Pris with old id '.$item->old_id.' already exist');
+                                $existPris = Pris::find($ourPris[(int)$item->old_id]);
+
+                                if($existPris){
+                                    //Update version
+                                    if($existPris->last_version != $item->last_version){
+                                        $existPris->last_version = $item->last_version;
+                                        $existPris->save();
+                                    }
+
+                                    if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
+                                        $attributes = $data['DocumentContent']['Attribute'];
+                                        foreach ($attributes as $att) {
+                                            //get tags
+                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
+                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                                    //echo "Tags: ".$att['Value']['Value'].PHP_EOL;
+                                                    $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
+                                                } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
+                                                    //echo "Tags: ".$att['Value'].PHP_EOL;
+                                                    $tags = preg_split('/\r\n|\r|\n/', $att['Value']);
+                                                }
+                                            }
+
+                                            //importer
+                                            //institution_id
+                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
+                                                $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
+                                                if($val) {
+                                                    $prepareNewPris['old_importers'] = $val;
+                                                    //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
+                                                    $importerStr = [];
+                                                    $importerInstitutions = [];
+
+                                                    $explode = explode(',', $val);
+                                                    foreach ($explode as $e) {
+                                                        if(isset($importers[trim($e)])) {
+                                                            if(
+                                                                (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
+                                                                || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
+                                                            ) {
+                                                                if(is_array($importers[trim($e)]['institution_id'])){
+                                                                    foreach ($importers[trim($e)]['institution_id'] as $i){
+                                                                        if($i > 0){
+                                                                            $importerInstitutions[] = $i;
+                                                                        }
+                                                                    }
+                                                                } else{
+                                                                    $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                                                }
+                                                                $importerStr[] = $importers[trim($e)]['importer'];
+                                                            } else{
+                                                                $importerStr[] = $importers[trim($e)]['importer'];
+                                                                if(!isset($institutionForMapping[trim($e)])) {
+                                                                    //TODO for mapping
+                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
+                                                                    $institutionForMapping[trim($e)] = trim($e);
+                                                                }
+                                                            }
+                                                        } else{
+//                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
+                                                            $valNoNeLine = preg_replace("/[\r\n]+/", "", $val);
+                                                            $explodeByRow = explode(';', $valNoNeLine);
+                                                            if(sizeof($explodeByRow)){
+                                                                foreach ($explodeByRow as $eByRow){
+                                                                    if (isset($importers[trim($eByRow)])) {
+                                                                        $importerStr[] = $importers[trim($eByRow)]['importer'];
+                                                                        if (
+                                                                            (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
+                                                                            || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
+                                                                        ) {
+                                                                            if(is_array($importers[trim($eByRow)]['institution_id'])){
+                                                                                foreach ($importers[trim($eByRow)]['institution_id'] as $i){
+                                                                                    if($i > 0){
+                                                                                        $importerInstitutions[] = $i;
+                                                                                    }
+                                                                                }
+                                                                            } else{
+                                                                                $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
+                                                                            }
+                                                                        } else{
+                                                                            if(!isset($institutionForMapping[trim($eByRow)])) {
+                                                                                //TODO for mapping
+                                                                                file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
+                                                                                $institutionForMapping[trim($eByRow)] = trim($eByRow);
+                                                                            }
+                                                                        }
+                                                                    } else{
+                                                                        //TODO for mapping
+                                                                        if(!isset($institutionForMapping[trim($eByRow)])){
+                                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$eByRow.PHP_EOL, FILE_APPEND);
+                                                                            $institutionForMapping[trim($eByRow)] = trim($eByRow);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            } else{
+                                                                //TODO for mapping
+                                                                if(!isset($institutionForMapping[trim($e)])){
+                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$e.PHP_EOL, FILE_APPEND);
+                                                                    $institutionForMapping[trim($e)] = trim($e);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    $prepareNewPris['importer'] = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                                }
+                                            }
+                                        }
+
+                                        if(isset($importerInstitutions) && sizeof($importerInstitutions)) {
+                                            $existPris->institutions()->sync($importerInstitutions);
+                                        }
+                                        //3. Create connection pris - tags
+                                        if($existPris && sizeof($tags)) {
+                                            foreach ($tags as $tag) {
+                                                if(!isset($ourTags[$tag])) {
+                                                    //create tag
+                                                    $newTag = \App\Models\Tag::create();
+                                                    if( $newTag ) {
+                                                        foreach ($locales as $locale) {
+                                                            $newTag->translateOrNew($locale['code'])->label = $tag;
+                                                        }
+                                                    }
+                                                    $newTag->save();
+                                                    echo "Tag with name ".$tag." created successfully".PHP_EOL;
+                                                    $ourTags[$tag] = $newTag->id;
+                                                }
+                                                $newItemTags[] = $ourTags[$tag];
+                                            }
+                                            if(sizeof($newItemTags)) {
+                                                $existPris->tags()->sync($newItemTags);
+                                            }
+                                        }
+                                    }
+
+                                    //get Files
+                                    if($migrateFiles) {
+                                        //TODO //5. Create files and extract text
+                                        $path = File::PAGE_UPLOAD_PRIS;
+                                        $oldPages = DB::connection('pris')
+                                            ->select('
                                         select
                                              split_part(f.bloburi, \'/\', -1) as uuid,
                                              f.filename  as filename,
@@ -1517,75 +1654,75 @@ class seedOldLastPris extends Command
                                             and att.documentid = '.$existPris->old_id.'
                                         order by att.documentid asc, att.pageid asc');
 
-                                    if (sizeof($oldPages)) {
-                                        foreach ($oldPages as $f) {
-                                            $fileForExeption = $f;
-                                            $file = null;
-                                            $fileExist = null;
-                                            if(!empty($f->file_content)) {
-                                                //$fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
-                                                $fileNameToStore = trim($f->filename);
-                                                $fullPath = $path.$fileNameToStore;
-                                                $fileExist = File::where('path', '=', $fullPath)
-                                                    ->where('filename', '=', $fileNameToStore)
-                                                    ->where('id_object','=', $existPris->id)
-                                                    ->where('code_object','=', File::CODE_OBJ_PRIS)
-                                                    ->get()
-                                                    ->first();
+                                        if (sizeof($oldPages)) {
+                                            foreach ($oldPages as $f) {
+                                                $fileForExeption = $f;
+                                                $file = null;
+                                                $fileExist = null;
+                                                if(!empty($f->file_content)) {
+                                                    //$fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
+                                                    $fileNameToStore = trim($f->filename);
+                                                    $fullPath = $path.$fileNameToStore;
+                                                    $fileExist = File::where('path', '=', $fullPath)
+                                                        ->where('filename', '=', $fileNameToStore)
+                                                        ->where('id_object','=', $existPris->id)
+                                                        ->where('code_object','=', File::CODE_OBJ_PRIS)
+                                                        ->get()
+                                                        ->first();
 
-                                                if(is_null($fileExist)){
-                                                    Storage::disk('public_uploads')->put($fullPath, $f->file_content);
-                                                    $file = Storage::disk('public_uploads')->get($fullPath);
+                                                    if(is_null($fileExist)){
+                                                        Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+                                                        $file = Storage::disk('public_uploads')->get($fullPath);
+                                                    }
                                                 }
-                                            }
 
-                                            if($file) {
-                                                $fileIds = [];
-                                                foreach (['bg', 'en'] as $code) {
-                                                    //TODO catch file version
-                                                    //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                                                    $version = 0;
-                                                    $newFile = new File([
-                                                        'id_object' => $existPris->id,
-                                                        'code_object' => File::CODE_OBJ_PRIS,
-                                                        'filename' => $fileNameToStore,
-                                                        'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
-                                                        'path' => $fullPath,
-                                                        'description_'.$code => $f->filename,
-                                                        'sys_user' => null,
-                                                        'locale' => $code,
-                                                        'version' => ($version + 1).'.0',
-                                                        'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
-                                                        'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
-                                                    ]);
-                                                    $newFile->save();
-                                                    $fileIds[] = $newFile->id;
+                                                if($file) {
+                                                    $fileIds = [];
+                                                    foreach (['bg', 'en'] as $code) {
+                                                        //TODO catch file version
+                                                        //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
+                                                        $version = 0;
+                                                        $newFile = new File([
+                                                            'id_object' => $existPris->id,
+                                                            'code_object' => File::CODE_OBJ_PRIS,
+                                                            'filename' => $fileNameToStore,
+                                                            'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
+                                                            'path' => $fullPath,
+                                                            'description_'.$code => $f->filename,
+                                                            'sys_user' => null,
+                                                            'locale' => $code,
+                                                            'version' => ($version + 1).'.0',
+                                                            'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
+                                                            'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp)
+                                                        ]);
+                                                        $newFile->save();
+                                                        $fileIds[] = $newFile->id;
 //                                                    $ocr = new FileOcr($newFile->refresh());
 //                                                    $ocr->extractText();
-                                                }
+                                                    }
 
-                                                File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-                                                File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                                                $this->comment('Pris with old id '.$item->old_id.' files updated');
+                                                    File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
+                                                    File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
+                                                    $this->comment('Pris with old id '.$item->old_id.' files updated');
+                                                }
                                             }
                                         }
                                     }
+
                                 }
-
+                                continue;
                             }
-                            continue;
-                        }
 
-                        DB::beginTransaction();
-                        try {
+                            //Create model
+//                        try {
                             $fileForExeption = null;
-                            $importerInstitutions = [];
-                            $tags = [];
-                            $newItemTags = [];//tags ids to connect to new item
-
-                            $xml = simplexml_load_string($item->to_parse_xml_details);
-                            $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
-                            $data = json_decode($json, true);
+//                            $importerInstitutions = [];
+//                            $tags = [];
+//                            $newItemTags = [];//tags ids to connect to new item
+//
+//                            $xml = simplexml_load_string($item->to_parse_xml_details);
+//                            $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
+//                            $data = json_decode($json, true);
 
                             if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
                                 $attributes = $data['DocumentContent']['Attribute'];
@@ -1718,8 +1855,8 @@ class seedOldLastPris extends Command
                                                     $explodeByRow = explode(';', $valNoNeLine);
                                                     if(sizeof($explodeByRow)){
                                                         foreach ($explodeByRow as $eByRow){
-                                                            $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                             if (isset($importers[trim($eByRow)])) {
+                                                                $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                 if (
                                                                     (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
                                                                     || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
@@ -1869,7 +2006,7 @@ class seedOldLastPris extends Command
                                             $file = null;
                                             $fileExist = null;
                                             if(!empty($f->file_content)) {
-    //                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
+                                                //                                            $fileNameToStore = str_replace('.', '', microtime(true)).strtolower($f->doc_type);
                                                 $fileNameToStore = trim($f->filename);
                                                 $fullPath = $path.$fileNameToStore;
                                                 $fileExist = File::where('path', '=', $fullPath)
@@ -1917,14 +2054,15 @@ class seedOldLastPris extends Command
                                 }
                             }
                             $this->comment('PRIS with old id (' . $item->old_id . ') is created');
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            Log::error('Migration old pris: ' . $e);
-                            DB::rollBack();
+//                        } catch (\Exception $e) {
+//                            Log::error('Migration old pris: ' . $e);
+//                        }
                         }
                     }
+                    $currentStep += $step;
                 }
-                $currentStep += $step;
+            } catch (\Exception $e) {
+                Log::error('Migration old pris: ' . $e);
             }
         }
         $this->info('End at '.date('Y-m-d H:i:s'));

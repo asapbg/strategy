@@ -36,6 +36,7 @@ class seedOldUsers extends Command
      */
     public function handle()
     {
+        activity()->disableLogging();
         file_put_contents('institutions_for_mapping_user.txt', '');
         Artisan::call('db:seed UsersSeeder');
         Artisan::call('db:seed UsersAZSeeder');

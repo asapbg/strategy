@@ -39,6 +39,7 @@ class seedOldPublicConsultations extends Command
      */
     public function handle()
     {
+        activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
         $locales = config('available_languages');
         $formatTimestamp = 'Y-m-d H:i:s';
