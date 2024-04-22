@@ -21,8 +21,10 @@ class StrategicDocumentChildObserver
      */
     public function created(StrategicDocumentChildren  $strategicDocumentChild)
     {
-        $this->sendEmails($strategicDocumentChild, 'created');
-        Log::info('Send subscribe email on creation');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $this->sendEmails($strategicDocumentChild, 'created');
+            Log::info('Send subscribe email on creation');
+        }
     }
 
     /**
@@ -33,16 +35,18 @@ class StrategicDocumentChildObserver
      */
     public function updated(StrategicDocumentChildren  $strategicDocumentChild)
     {
-        $old_active = $strategicDocumentChild->getOriginal('active');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_active = $strategicDocumentChild->getOriginal('active');
 
-        //Check for real changes
-        $dirty = $strategicDocumentChild->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+            //Check for real changes
+            $dirty = $strategicDocumentChild->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty)){
-            $this->sendEmails($strategicDocumentChild, 'updated');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty)) {
+                $this->sendEmails($strategicDocumentChild, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
 
     }

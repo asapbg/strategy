@@ -17,9 +17,11 @@ class OperationalProgramObserver
      */
     public function created(OperationalProgram $operationalProgram)
     {
-        if ($operationalProgram->public) {
-            $this->sendEmails($operationalProgram, 'created');
-            Log::info('Send subscribe email on creation');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($operationalProgram->public) {
+                $this->sendEmails($operationalProgram, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 
@@ -31,15 +33,17 @@ class OperationalProgramObserver
      */
     public function updated(OperationalProgram $operationalProgram)
     {
-        $old_public = (int)$operationalProgram->getOriginal('public');
-        //Check for real changes
-        $dirty = $operationalProgram->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_public = (int)$operationalProgram->getOriginal('public');
+            //Check for real changes
+            $dirty = $operationalProgram->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty) && !$old_public && $operationalProgram->public){
-            $this->sendEmails($operationalProgram, 'created');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty) && !$old_public && $operationalProgram->public) {
+                $this->sendEmails($operationalProgram, 'created');
+                Log::info('Send subscribe email on update');
+            }
         }
     }
 

@@ -20,13 +20,15 @@ class PrisObserver
      */
     public function created(Pris $pris)
     {
-        if (!empty($pris->published_at)) {
-            $this->sendEmails($pris, 'created');
-            Log::info('Send subscribe email on creation');
-            if($pris->public_consultation_id){
-                //send if pris pc
-                $this->sendEmails($pris, 'created_with_pc');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if (!empty($pris->published_at)) {
+                $this->sendEmails($pris, 'created');
                 Log::info('Send subscribe email on creation');
+                if ($pris->public_consultation_id) {
+                    //send if pris pc
+                    $this->sendEmails($pris, 'created_with_pc');
+                    Log::info('Send subscribe email on creation');
+                }
             }
         }
     }
@@ -39,22 +41,24 @@ class PrisObserver
      */
     public function updated(Pris $pris)
     {
-        $old_published_at = (int)$pris->getOriginal('published_at');
-        $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_published_at = (int)$pris->getOriginal('published_at');
+            $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
 
-        //Check for real changes
-        $dirty = $pris->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+            //Check for real changes
+            $dirty = $pris->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty) && !$old_published_at && !empty($pris->published_at)){
-            $this->sendEmails($pris, 'created');
-            Log::info('Send subscribe email on update');
-        }
-        if(!$old_public_consultation_id && $pris->public_consultation_id){
-            //send if pris pc
-            $this->sendEmails($pris, 'created_with_pc');
-            Log::info('Send subscribe email on creation');
+            if (sizeof($dirty) && !$old_published_at && !empty($pris->published_at)) {
+                $this->sendEmails($pris, 'created');
+                Log::info('Send subscribe email on update');
+            }
+            if (!$old_public_consultation_id && $pris->public_consultation_id) {
+                //send if pris pc
+                $this->sendEmails($pris, 'created_with_pc');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 

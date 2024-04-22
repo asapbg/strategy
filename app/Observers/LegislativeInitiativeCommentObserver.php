@@ -18,8 +18,10 @@ class LegislativeInitiativeCommentObserver
      */
     public function created(LegislativeInitiativeComment $legislativeInitiativeComment)
     {
-        $this->sendEmails($legislativeInitiativeComment, 'comment');
-        Log::info('Send subscribe email on comment to subscribed and author');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $this->sendEmails($legislativeInitiativeComment, 'comment');
+            Log::info('Send subscribe email on comment to subscribed and author');
+        }
 
     }
 

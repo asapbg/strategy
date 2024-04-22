@@ -21,8 +21,10 @@ class AdvisoryBoardMeetingObserver
     {
         $advBoard = $advisoryBoardMeeting->advBoard;
         if($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
-            $this->sendEmails($advisoryBoardMeeting, 'created');
-            Log::info('Send subscribe email on creation');
+            if(!env('DISABLE_OBSERVERS', false)){
+                $this->sendEmails($advisoryBoardMeeting, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 

@@ -21,23 +21,25 @@ class PublicConsultationObserver
      */
     public function created(PublicConsultation $publicConsultation)
     {
-        if ($publicConsultation->active) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Публикувана е Обществена консултация: '.$publicConsultation->title,
-                    'link' => route('public_consultation.view', $publicConsultation->id),
-                    'published' => true
-                ));
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($publicConsultation->active) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if ($activeFB->value) {
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
+                        'link' => route('public_consultation.view', $publicConsultation->id),
+                        'published' => true
+                    ));
+                }
+
+                $this->sendEmails($publicConsultation, 'created');
+
+                Log::info('Send subscribe email on creation');
             }
-
-            $this->sendEmails($publicConsultation, 'created');
-
-            Log::info('Send subscribe email on creation');
         }
     }
 
@@ -49,36 +51,38 @@ class PublicConsultationObserver
      */
     public function updated(PublicConsultation $publicConsultation)
     {
-        $old_active = (int)$publicConsultation->getOriginal('active');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_active = (int)$publicConsultation->getOriginal('active');
 
-        //Check for real changes
-        $dirty = $publicConsultation->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
-        unset($dirty['end_notify']);
+            //Check for real changes
+            $dirty = $publicConsultation->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
+            unset($dirty['end_notify']);
 
-        if (!$old_active && $publicConsultation->active) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Публикувана е Обществена консултация: '.$publicConsultation->title,
-                    'link' => route('public_consultation.view', $publicConsultation->id),
-                    'published' => true
-                ));
+            if (!$old_active && $publicConsultation->active) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if ($activeFB->value) {
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
+                        'link' => route('public_consultation.view', $publicConsultation->id),
+                        'published' => true
+                    ));
+                }
             }
-        }
 
-        if($old_active == (int)$publicConsultation->active) {
-            unset($dirty['active']);
-        }
+            if ($old_active == (int)$publicConsultation->active) {
+                unset($dirty['active']);
+            }
 
-        if(sizeof($dirty)){
-            $this->sendEmails($publicConsultation, 'updated');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty)) {
+                $this->sendEmails($publicConsultation, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
     }
 

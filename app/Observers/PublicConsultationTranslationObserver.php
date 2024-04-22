@@ -29,13 +29,15 @@ class PublicConsultationTranslationObserver
      */
     public function updated(PublicConsultationTranslation $publicConsultationTranslation)
     {
-        //Check for real changes
-        $dirty = $publicConsultationTranslation->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
-        if(sizeof($dirty)){
-            $this->sendEmails($publicConsultationTranslation, 'updated');
-            Log::info('Send subscribe email on update');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            //Check for real changes
+            $dirty = $publicConsultationTranslation->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
+            if (sizeof($dirty)) {
+                $this->sendEmails($publicConsultationTranslation, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
     }
 

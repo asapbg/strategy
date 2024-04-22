@@ -20,9 +20,11 @@ class OgpPlanObserver
      */
     public function created(OgpPlan $ogpPlan)
     {
-        if($ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id){
-            $this->sendEmails($ogpPlan, 'created');
-            Log::info('Send subscribe email on creation');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id) {
+                $this->sendEmails($ogpPlan, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 
@@ -34,45 +36,47 @@ class OgpPlanObserver
      */
     public function updated(OgpPlan $ogpPlan)
     {
-        $old_ogp_status = $ogpPlan->getOriginal('ogp_status_id');
-        $old_active = $ogpPlan->getOriginal('active');
-        $report_evaluation_published_at = $ogpPlan->getOriginal('report_evaluation_published_at');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_ogp_status = $ogpPlan->getOriginal('ogp_status_id');
+            $old_active = $ogpPlan->getOriginal('active');
+            $report_evaluation_published_at = $ogpPlan->getOriginal('report_evaluation_published_at');
 
-        if(
-            $ogpPlan->active
-            && !$old_ogp_status != $ogpPlan->ogp_status_id
-            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
-        ) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Публикуван е нов Национален план: '.$ogpPlan->name,
-                    'link' => route('ogp.national_action_plans.show', $ogpPlan->id),
-                    'published' => true
-                ));
+            if (
+                $ogpPlan->active
+                && !$old_ogp_status != $ogpPlan->ogp_status_id
+                && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+            ) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if ($activeFB->value) {
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Публикуван е нов Национален план: ' . $ogpPlan->name,
+                        'link' => route('ogp.national_action_plans.show', $ogpPlan->id),
+                        'published' => true
+                    ));
+                }
             }
-        }
 
-        if(
-            ($old_active != $ogpPlan->active || $old_ogp_status != $ogpPlan->ogp_status_id)
-            && $ogpPlan->active && $ogpPlan->national_plan
-            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
-        ){
-            $this->sendEmails($ogpPlan, 'created');
-            Log::info('Send subscribe email on creation');
-        }
+            if (
+                ($old_active != $ogpPlan->active || $old_ogp_status != $ogpPlan->ogp_status_id)
+                && $ogpPlan->active && $ogpPlan->national_plan
+                && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+            ) {
+                $this->sendEmails($ogpPlan, 'created');
+                Log::info('Send subscribe email on creation');
+            }
 
-        if(
-            (is_null($report_evaluation_published_at) && $report_evaluation_published_at != $ogpPlan->report_evaluation_published_at)
-            && $ogpPlan->active && $ogpPlan->national_plan
-            && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
-        ){
-            $this->sendEmails($ogpPlan, 'created_report');
-            Log::info('Send subscribe email on creation');
+            if (
+                (is_null($report_evaluation_published_at) && $report_evaluation_published_at != $ogpPlan->report_evaluation_published_at)
+                && $ogpPlan->active && $ogpPlan->national_plan
+                && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+            ) {
+                $this->sendEmails($ogpPlan, 'created_report');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 

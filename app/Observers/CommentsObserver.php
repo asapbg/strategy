@@ -19,8 +19,10 @@ class CommentsObserver
      */
     public function created(Comments $comment)
     {
-        if ($comment->object_code == Comments::PC_OBJ_CODE) {
-            $this->sendEmails($comment);
+        if(!env('DISABLE_OBSERVERS', false)){
+            if ($comment->object_code == Comments::PC_OBJ_CODE) {
+                $this->sendEmails($comment);
+            }
         }
     }
 

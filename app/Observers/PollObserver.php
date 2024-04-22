@@ -19,9 +19,11 @@ class PollObserver
      */
     public function created(Poll $poll)
     {
-        if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
-            $this->sendEmails($poll, 'created');
-            Log::info('Send subscribe email on creation');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
+                $this->sendEmails($poll, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 
@@ -33,17 +35,19 @@ class PollObserver
      */
     public function updated(Poll $poll)
     {
-        $old_status = (int)$poll->getOriginal('status');
-        $start_date = (int)$poll->getOriginal('start_date');
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_status = (int)$poll->getOriginal('status');
+            $start_date = (int)$poll->getOriginal('start_date');
 
-        //Check for real changes
-        $dirty = $poll->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+            //Check for real changes
+            $dirty = $poll->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty) && ($old_status != $poll->status || $start_date != $poll->start_date) && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')){
-            $this->sendEmails($poll, 'created');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty) && ($old_status != $poll->status || $start_date != $poll->start_date) && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
+                $this->sendEmails($poll, 'created');
+                Log::info('Send subscribe email on update');
+            }
         }
     }
 

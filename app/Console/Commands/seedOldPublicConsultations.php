@@ -177,18 +177,7 @@ class seedOldPublicConsultations extends Command
                                         file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
                                     }
 
-                                    //Update institution
-//                                    if(isset($ourUsersInstitutions[$item->author_id])){
-//                                        $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-//                                    } else if(isset($ourUsersInstitutionsDuplicated['duplicated-'.$item->email])){
-//                                            $institutionId = $ourUsersInstitutionsDuplicated['duplicated-'.$item->email];
-//                                    } else{
-//                                        $institutionId = $dInstitution->id;
-//                                    }
-//                                    $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
                                     $institution = Institution::withTrashed()->find($institutionId);
-                                    //$institutionId = $dInstitution->id;
-                                    //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                                     $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
                                     $existPc->importer_institution_id = $institutionId;
                                     $existPc->responsible_institution_id = $institutionId;
@@ -198,10 +187,7 @@ class seedOldPublicConsultations extends Command
                                 DB::commit();
                                 continue;
                             }
-//                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
                             $institution = Institution::withTrashed()->find($institutionId);
-                            //$institutionId = $dInstitution->id;
-                            //$institutionLevel = $ourInstitutions[$institutionId] > 0 ? $ourInstitutions[$institutionId] : ($dInstitution->level->nomenclature_level == 0 ? null : $dInstitution->level->nomenclature_level);
                             $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
 
                             $prepareNewPc = [

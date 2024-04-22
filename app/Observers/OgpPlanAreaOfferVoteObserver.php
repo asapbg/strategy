@@ -20,16 +20,18 @@ class OgpPlanAreaOfferVoteObserver
      */
     public function created(OgpPlanAreaOfferVote $ogpAreaOfferVote)
     {
-        $offer_id = $ogpAreaOfferVote->ogp_plan_area_offer_id;
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $offer_id = $ogpAreaOfferVote->ogp_plan_area_offer_id;
 
-        $item = OgpPlanAreaOfferVote::select(
-            DB::raw('coalesce(sum(case when is_like = true then 1 end), 0) as likes_cnt'),
-            DB::raw('coalesce(sum(case when is_like = false then 1 end), 0) as dislikes_cnt'),
-        )
-            ->where('ogp_plan_area_offer_id', '=', $offer_id)
-            ->first();
+            $item = OgpPlanAreaOfferVote::select(
+                DB::raw('coalesce(sum(case when is_like = true then 1 end), 0) as likes_cnt'),
+                DB::raw('coalesce(sum(case when is_like = false then 1 end), 0) as dislikes_cnt'),
+            )
+                ->where('ogp_plan_area_offer_id', '=', $offer_id)
+                ->first();
 
-        OgpPlanAreaOffer::where('id', '=', $offer_id)->update($item->toArray());
+            OgpPlanAreaOffer::where('id', '=', $offer_id)->update($item->toArray());
+        }
     }
 
     /**

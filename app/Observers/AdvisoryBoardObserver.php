@@ -19,22 +19,24 @@ class AdvisoryBoardObserver
      */
     public function created(AdvisoryBoard $advisoryBoard)
     {
-        if($advisoryBoard->public) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
-                    'link' => route('advisory-boards.view', $advisoryBoard),
-                    'published' => true
-                ));
-            }
+        if(!env('DISABLE_OBSERVERS', false)){
+            if($advisoryBoard->public) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if($activeFB->value){
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
+                        'link' => route('advisory-boards.view', $advisoryBoard),
+                        'published' => true
+                    ));
+                }
 
-            $this->sendEmails($advisoryBoard, 'created');
-            Log::info('Send subscribe email on creation');
+                $this->sendEmails($advisoryBoard, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 
@@ -46,37 +48,39 @@ class AdvisoryBoardObserver
      */
     public function updated(AdvisoryBoard $advisoryBoard)
     {
-        $old_active = $advisoryBoard->getOriginal('active');
-        $old_public = $advisoryBoard->getOriginal('public');
+        if(!env('DISABLE_OBSERVERS', false)){
+            $old_active = $advisoryBoard->getOriginal('active');
+            $old_public = $advisoryBoard->getOriginal('public');
 
-        //Check for real changes
-        $dirty = $advisoryBoard->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+            //Check for real changes
+            $dirty = $advisoryBoard->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(!$old_public && $advisoryBoard->public) {
-            //post on facebook
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()->first();
-            if($activeFB->value){
-                $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
-                    'link' => route('advisory-boards.view', $advisoryBoard),
-                    'published' => true
-                ));
+            if(!$old_public && $advisoryBoard->public) {
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if($activeFB->value){
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
+                        'link' => route('advisory-boards.view', $advisoryBoard),
+                        'published' => true
+                    ));
+                }
+
+                if( (boolval($old_active) )== (boolval($advisoryBoard->active))) {
+                    unset($dirty['active']);
+                }
+
+                if(sizeof($dirty)){
+                    $this->sendEmails($advisoryBoard, 'created');
+                    Log::info('Send subscribe email on update');
+                }
+
             }
-
-            if( (boolval($old_active) )== (boolval($advisoryBoard->active))) {
-                unset($dirty['active']);
-            }
-
-            if(sizeof($dirty)){
-                $this->sendEmails($advisoryBoard, 'created');
-                Log::info('Send subscribe email on update');
-            }
-
         }
     }
 

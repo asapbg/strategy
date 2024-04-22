@@ -32,14 +32,16 @@ class StrategicDocumentTranslationObserver
      */
     public function updated(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
-        //Check for real changes
-        $dirty = $strategicDocumentTranslation->getDirty(); //return all changed fields
-        //skip some fields in specific cases
-        unset($dirty['updated_at']);
+        if(!env('DISABLE_OBSERVERS', false)) {
+            //Check for real changes
+            $dirty = $strategicDocumentTranslation->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
 
-        if(sizeof($dirty)){
-            $this->sendEmails($strategicDocumentTranslation, 'updated');
-            Log::info('Send subscribe email on update');
+            if (sizeof($dirty)) {
+                $this->sendEmails($strategicDocumentTranslation, 'updated');
+                Log::info('Send subscribe email on update');
+            }
         }
 
     }

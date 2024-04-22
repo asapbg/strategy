@@ -20,11 +20,13 @@ class PublicationObserver
      */
     public function created(Publication $publication)
     {
-        if ($publication->active && $publication->published_at <= Carbon::now()->format('Y-m-d')
-            && in_array($publication->type, [PublicationTypesEnum::TYPE_NEWS->value, PublicationTypesEnum::TYPE_LIBRARY->value])) {
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($publication->active && $publication->published_at <= Carbon::now()->format('Y-m-d')
+                && in_array($publication->type, [PublicationTypesEnum::TYPE_NEWS->value, PublicationTypesEnum::TYPE_LIBRARY->value])) {
 
-            $this->sendEmails($publication, 'created');
-            Log::info('Send subscribe email on creation');
+                $this->sendEmails($publication, 'created');
+                Log::info('Send subscribe email on creation');
+            }
         }
     }
 
