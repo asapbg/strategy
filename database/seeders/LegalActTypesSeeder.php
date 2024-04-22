@@ -24,19 +24,31 @@ class LegalActTypesSeeder extends Seeder
             ['in_pris' => 1, 'name' => 'Стенограми'],
             ['in_pris' => 1, 'name' => 'Заповеди'],
             ['in_pris' => 0, 'name' => 'Архив 1944-1989 г.'],
+            ['in_pris' => 1, 'name' => 'Доклад'],
+            ['in_pris' => 1, 'name' => 'Указ'],
+            ['in_pris' => 1, 'name' => 'Писмо'],
+            ['in_pris' => 1, 'name' => 'Предложение'],
+            ['in_pris' => 1, 'name' => 'Конституция'],
         ];
 
         foreach ($types as $type) {
-            $item = new LegalActType([
-                'in_pris' => $type['in_pris']
-            ]);
-            $item->save();
-            if ($item->id) {
-                foreach ($locales as $locale) {
-                    $item->translateOrNew($locale['code'])->name = $type['name'];
+            $exist =  LegalActType::whereHas('translation', function ($q) use($type){
+                $q->where('name', '=', $type['name']);
+            })->first();
+
+            if(!$exist){
+                $item = new LegalActType([
+                    'in_pris' => $type['in_pris']
+                ]);
+                $item->save();
+                if ($item->id) {
+                    foreach ($locales as $locale) {
+                        $item->translateOrNew($locale['code'])->name = $type['name'];
+                    }
                 }
+                $item->save();
             }
-            $item->save();
+
         }
     }
 }

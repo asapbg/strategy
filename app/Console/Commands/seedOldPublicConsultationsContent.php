@@ -39,6 +39,7 @@ class seedOldPublicConsultationsContent extends Command
     public function handle()
     {
 
+        PublicConsultation::unsetEventDispatcher();
         activity()->disableLogging();
         $locales = config('available_languages');
 

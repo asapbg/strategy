@@ -37,7 +37,9 @@ class seedOldLastPris extends Command
      */
     public function handle()
     {
+        Pris::unsetEventDispatcher();
         activity()->disableLogging();
+
         $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
         $migrateFiles = $this->argument('files');
@@ -89,6 +91,18 @@ class seedOldLastPris extends Command
             5020 => 5, //'Протокол',
             5021 => 4, //'Разпореждане',
             5022 => 6, //'Стенограма',
+            //Production
+            5029 => 9, //'Доклад',
+            5030 => 10, //'Указ',
+            5031 => 11, //'Писмо',
+            5032 => 12, //'Предложение',
+            5033 => 13, //'Конституция',
+            //Local
+//            5029 => 41, //'Доклад',
+//            5030 => 42, //'Указ',
+//            5031 => 43, //'Писмо',
+//            5032 => 44, //'Предложение',
+//            5033 => 45, //'Конституция',
         ];
 
         //If category is 'Протокол' and doc_num is float and doc_num is < 100, then we should move document to 'Протоколни решения',
@@ -1479,7 +1493,7 @@ class seedOldLastPris extends Command
                                 and pris.id >= ' . $currentStep . '
                                 and pris.id < ' . ($currentStep + $step) . '
                                 and pris.itemtypeid <> 5017 -- skip law records
-                                and pris.itemtypeid <> 5030 -- skip law records
+                                -- and pris.itemtypeid <> 5030 -- skip law records
                                 -- and documents.lastrevision = \'Y\' -- get final versions
                             group by pris.id
                             order by pris.id asc');
