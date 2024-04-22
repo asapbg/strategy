@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class _FixOldPrisImporters extends Command
+class FixOldPrisImporters extends Command
 {
     /**
      * The name and signature of the console command.
@@ -1508,7 +1508,7 @@ class _FixOldPrisImporters extends Command
                                                             }
                                                         } else{
 //                                                            $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
-                                                            $valNoNeLine = preg_replace("/[\r\n]+/", "", $val);
+                                                            $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
                                                             $explodeByRow = explode(';', $valNoNeLine);
                                                             if(sizeof($explodeByRow)){
                                                                 foreach ($explodeByRow as $eByRow){

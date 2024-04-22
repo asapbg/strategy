@@ -1574,7 +1574,7 @@ class seedOldLastPris extends Command
                                                             }
                                                         } else{
 //                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
-                                                            $valNoNeLine = preg_replace("/[\r\n]+/", "", $val);
+                                                            $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
                                                             $explodeByRow = explode(';', $valNoNeLine);
                                                             if(sizeof($explodeByRow)){
                                                                 foreach ($explodeByRow as $eByRow){
@@ -1867,7 +1867,7 @@ class seedOldLastPris extends Command
                                                     }
                                                 } else{
 //                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
-                                                    $valNoNeLine = preg_replace("/[\r\n]+/", "", $val);
+                                                    $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
                                                     $explodeByRow = explode(';', $valNoNeLine);
                                                     if(sizeof($explodeByRow)){
                                                         foreach ($explodeByRow as $eByRow){
