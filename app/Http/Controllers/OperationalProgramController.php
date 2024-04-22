@@ -25,6 +25,7 @@ class OperationalProgramController extends Controller
 
         $menuCategories = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {

@@ -42,22 +42,26 @@ class FixOldPrisLastVersion extends Command
             $this->error('Missing max pris id for update');
         }
 
-        $step = 50;
+        $step = 10000;
         $currentStep = 0;
         while ($currentStep <= $maxLocalOldPrisId) {
+            $this->comment('FromId:'. $currentStep);
             $records = DB::select(
                 'select
-                        p.old_id ,
-                        count(p.old_id) as cnt,
-                        json_agg(json_build_object(\'id\', p.id, \'created_at\', p.created_at, \'last_version\', p.last_version)) as records
+                        p.legal_act_type_id || \' - \' || p.doc_num as duplicated,
+                        count(p.id) as cnt,
+                        json_agg(json_build_object(\'id\', p.id, \'old_id\', p.old_id, \'created_at\', p.created_at, \'last_version\', p.last_version)) as records
                     from pris p
                     where p.old_id <= '.(int)$maxLocalOldPrisId.'
+                        and p.old_id is not null
                         and p.deleted_at is null
-                    group by p.old_id
-                    order by p.created_at desc, p.id desc'
+                    group by p.legal_act_type_id , p.doc_num, p.doc_date'
             );
 
             if(sizeof($records)){
+                $lastV = array();
+                $notLastV = array();
+
                 foreach ($records as $row){
                     $duplicated = json_decode($row->records, true);
                     if(!is_array($duplicated) || !sizeof($duplicated)){
@@ -65,12 +69,49 @@ class FixOldPrisLastVersion extends Command
                     }
 
                     if((int)$row->cnt > 1){
-                        usort($duplicated, function ($a, $b) { return $b['created_at'] > $a['created_at']; });
-                        dd($duplicated);
+                        //if only one has last vesrion
+                        $foundLastV = array_sum(array_column($duplicated, 'last_version'));
+                        if($foundLastV == 1){
+//                            $this->comment('Found only one last version');
+                            foreach ($duplicated as $r){
+                                if($r['last_version']){
+                                    $lastV[(int)$r['id']] = (int)$r['id'];
+                                } else{
+                                    $notLastV[(int)$r['id']] = (int)$r['id'];
+                                }
+                            }
+                        } else{
+                            //Many or missing last version
+//                            $this->comment('Many or missing last version');
+                            usort($duplicated, function ($a, $b) { return $b['id'] > $a['id']; });
+                            $first = true;
+                            foreach ($duplicated as $r){
+                                if($first){
+                                    $first = false;
+                                    $lastV[(int)$r['id']] = (int)$r['id'];
+                                } else{
+                                    $notLastV[(int)$r['id']] = (int)$r['id'];
+                                }
+                            }
+                        }
                     } else{
-//                        $rowToUpdate = Pris::find((int)$duplicated[0]['id']);
-//                        $rowToUpdate->last_vestion = 1;
-//                        $rowToUpdate->save();
+                        //Only one recor
+//                        $this->comment('Only one record');
+                        $lastV[(int)$duplicated[0]['id']] = (int)$duplicated[0]['id'];
+                    }
+                }
+
+                if(sizeof($lastV)){
+                    $lastVChunk = array_chunk($lastV, 50);
+                    foreach ($lastVChunk as $ids){
+                        Pris::withoutGlobalScopes()->whereIn('id', $ids)->update(['asap_last_version' => 1]);
+                    }
+                }
+                if(sizeof($notLastV)){
+                    $lastVChunk = array_chunk($notLastV, 50);
+//                    $this->comment('Found not last versions');
+                    foreach ($lastVChunk as $ids){
+                        Pris::withoutGlobalScopes()->whereIn('id', $ids)->update(['asap_last_version' => 0]);
                     }
                 }
             }

@@ -41,6 +41,7 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
         $items = Pris::select('pris.*')
+            ->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
@@ -79,7 +80,9 @@ class PrisController extends Controller
         }
 
         $menuCategories = [];
-        $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)
+        $actTypes = LegalActType::with(['translations'])
+            ->Pris()
+            ->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {
@@ -135,7 +138,9 @@ class PrisController extends Controller
             ->SortedBy($sort,$sortOrd)->paginate($paginate);
 
         $menuCategories = [];
-        $actTypes = LegalActType::with(['translations'])->where('id', '<>', LegalActType::TYPE_ORDER)
+        $actTypes = LegalActType::with(['translations'])
+            ->Pris()
+            ->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {
@@ -156,7 +161,7 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
-        $item = Pris::Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
+        $item = Pris::InPris()->Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
             'tags', 'tags.translation', 'changedDocs',
             'changedDocs.actType', 'changedDocs.actType.translation',
             'changedDocs.institution', 'changedDocs.institution.translation', 'files'])->find($id);
@@ -170,6 +175,7 @@ class PrisController extends Controller
 
         $menuCategories = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {

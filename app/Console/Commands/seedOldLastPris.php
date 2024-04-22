@@ -82,7 +82,7 @@ class seedOldLastPris extends Command
         }
 
         $ourTags = Tag::with(['translation'])->get()->pluck('id', 'translation.label')->toArray();
-        $ourPris = Pris::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourPris = Pris::withoutGlobalScopes()->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         $legalTypeDocs = [
             5017 => 7, //'Заповед',
@@ -1514,7 +1514,7 @@ class seedOldLastPris extends Command
                             //Update existing
                             if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
                                 $this->comment('Pris with old id '.$item->old_id.' already exist');
-                                $existPris = Pris::find($ourPris[(int)$item->old_id]);
+                                $existPris = Pris::withoutGlobalScopes()->find($ourPris[(int)$item->old_id]);
 
                                 if($existPris){
                                     //Update version

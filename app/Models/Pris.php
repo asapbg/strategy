@@ -38,13 +38,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', //'institution_id',
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
-        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version', 'old_importers'];
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version'];
 
-//    protected static function booted(){
-//        static::addGlobalScope('last_version', function (Builder $builder) {
-//            $builder->where('last_version', '=' , 1);
-//        });
-//    }
+    protected static function booted(){
+        static::addGlobalScope('last_version', function (Builder $builder) {
+            $builder->where('asap_last_version', '=' , 1);
+        });
+    }
 
     /**
      * @return FeedItem
@@ -89,6 +89,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
             set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
         );
+    }
+
+    public function scopeInPris($query){
+        $query->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL]);
     }
 
     public function scopePublished($query){
