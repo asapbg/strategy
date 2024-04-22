@@ -7,7 +7,7 @@
                         <img src="{{ asset('/img/strategy-logo.svg') }}" alt="Strategy Лого" id="siteLogo">
                     </a>
                     <div class="contact-info-text d-flex flex-column ps-2">
-                        <span class="main-color fw-600" id="ms">Министерски съвет</span>
+                        <span class="main-color fw-600" id="ms">{{ __('site.header_main_title') }}</span>
                         <span class="fw-600" id="ok">{{ __('site.seo_title') }}</span>
                     </div>
                 </div>

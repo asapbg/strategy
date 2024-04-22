@@ -190,6 +190,8 @@ class Controller extends BaseController
 
             if (
                 $segment == 'view'
+                || $segment == 'bg'
+                || $segment == 'en'
                 || ($segment == "profile" && in_array("users", $segments))
                 || $segment == "users" && in_array("profile", $segments)
                 || (is_numeric($segment) && !in_array('publications', $segments))

@@ -24,12 +24,12 @@
                 </li>
 
                 <li class="nav-item ">
-                    <a href="{{ route('legislative_initiatives.index') }}" class="nav-link" type="button">Гражданско участие
+                    <a href="{{ route('legislative_initiatives.index') }}" class="nav-link" type="button">{{ __('site.ogp_menu') }}
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('strategy-documents.index') }}">Стратегически документи</a>
+                    <a class="nav-link" href="{{ route('strategy-documents.index') }}">{{ trans_choice('custom.strategic_documents', 2) }}</a>
                 </li>
 
                 <li class="nav-item">
@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('library.publications') }}" class="nav-link" type="button">Библиотека</a>
+                    <a href="{{ route('library.publications') }}" class="nav-link" type="button">{{ __('custom.library') }}</a>
                 </li>
 
                 <li class="nav-item top-bar-left-side-mobile">

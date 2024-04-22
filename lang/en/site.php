@@ -211,4 +211,6 @@ return [
      'try_search' => 'Try to find the information you are looking for using the search engine or visit',
      'home_page_' => 'The home page!',
      'search_in_portal' => 'Search in the portal...',
+    'header_main_title' => 'Council of Ministers',
+    'ogp_menu' => 'OGP',
 ];

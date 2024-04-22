@@ -18,6 +18,14 @@ Route::get('/', function(){
 
 Route::feeds();
 
+Route::get('/locale', function (Request $request) {
+    if ($request->has('locale')) {
+        session(['locale' => $request->offsetGet('locale')]);
+        app()->setLocale($request->offsetGet('locale'));
+    }
+    return back();
+})->name('change-locale');
+
 Route::prefix(app()->getLocale())->group(function (){
     Auth::routes(['verify' => true]);
     require_once('site.php');
@@ -56,14 +64,6 @@ Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
 // Common routes
 Route::group(['middleware' => ['auth']], function() {
     Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('front.logout');
-
-    Route::get('/locale', function (Request $request) {
-        if ($request->has('locale')) {
-            session(['locale' => $request->offsetGet('locale')]);
-            app()->setLocale($request->offsetGet('locale'));
-        }
-        return back();
-    })->name('change-locale');
 
     Route::controller(UsersController::class)->group(function () {
         Route::get('/subscribe', 'subscribe')->name('subscribe');
