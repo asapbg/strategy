@@ -42,6 +42,7 @@ class seedOldLastPris extends Command
 
         $this->info('Start at '.date('Y-m-d H:i:s'));
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
+        file_put_contents('pris_files_without_content.txt', '');
         $migrateFiles = $this->argument('files');
 
         //Check how many are old pris
@@ -1690,6 +1691,8 @@ class seedOldLastPris extends Command
                                                         Storage::disk('public_uploads')->put($fullPath, $f->file_content);
                                                         $file = Storage::disk('public_uploads')->get($fullPath);
                                                     }
+                                                } else{
+                                                    file_put_contents('pris_files_without_content.txt', 'Pris ID ('.$existPris->old_id.')'.$f.PHP_EOL, FILE_APPEND);
                                                 }
 
                                                 if($file) {
@@ -2035,6 +2038,8 @@ class seedOldLastPris extends Command
                                                     Storage::disk('public_uploads')->put($fullPath, $f->file_content);
                                                     $file = Storage::disk('public_uploads')->get($fullPath);
                                                 }
+                                            } else{
+                                                file_put_contents('pris_files_without_content.txt', 'Pris ID ('.$newItem->old_id.')'.$f.PHP_EOL, FILE_APPEND);
                                             }
 
                                             if($file) {

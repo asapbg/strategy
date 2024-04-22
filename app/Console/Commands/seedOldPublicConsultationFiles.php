@@ -43,6 +43,7 @@ class seedOldPublicConsultationFiles extends Command
      */
     public function handle()
     {
+        file_put_contents('missing_pc_files_in_old_files.txt', '');
         PublicConsultation::unsetEventDispatcher();
         activity()->disableLogging();
         $this->info('Start at '.date('Y-m-d H:i:s'));
@@ -56,7 +57,7 @@ class seedOldPublicConsultationFiles extends Command
         //max id in old db
         $maxOldId = DB::connection('old_strategy_app')->select('select max(dbo.publicconsultations.id) from dbo.publicconsultations');
         //start from this id in old database
-        $currentStep = 1;
+        $currentStep = 0;
 
 //        $ourUsersInstitutions = User::get()->pluck('institution_id', 'old_id')->toArray();
         $ourPc = PublicConsultation::whereNotNull('old_id')->withTrashed()->get()->pluck('id', 'old_id')->toArray();
@@ -94,11 +95,12 @@ class seedOldPublicConsultationFiles extends Command
                         and folders.id is not null
                         and uf.tabletype = 3
                         -- check if uf.tabletype should be 3
-                    order by p.datecreated desc
+                    order by p.id asc
                     ');
 
                 if (sizeof($oldDbFiles)) {
                     foreach ($oldDbFiles as $item) {
+
                         if(isset($ourFiles[(int)$item->file_old_id])) {
                             $this->comment('File with old id '.$item->file_old_id.' already exist');
                             continue;
@@ -109,7 +111,7 @@ class seedOldPublicConsultationFiles extends Command
                             continue;
                         }
 
-                        DB::beginTransaction();
+//                        DB::beginTransaction();
                         try {
                             $info = pathinfo($item->name);
                             if(isset($info['extension'])) {
@@ -161,13 +163,14 @@ class seedOldPublicConsultationFiles extends Command
                                 } else{
                                     $this->comment('Can\'t copy file');
                                 }
+                            } else{
+                                file_put_contents('missing_pc_files_in_old_files.txt', 'oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $item->folder_id.DIRECTORY_SEPARATOR.$item->name.PHP_EOL, FILE_APPEND);
                             }
-                            DB::commit();
+//                            DB::commit();
 
                         } catch (\Exception $e) {
                             Log::error('Migration old strategy public consultations, comment and files: ' . $e);
-                            DB::rollBack();
-                            dd($item, $copied_files ?? 'no copied files');
+//                            DB::rollBack();
                         }
                     }
                 }
