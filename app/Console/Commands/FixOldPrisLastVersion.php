@@ -17,7 +17,7 @@ class FixOldPrisLastVersion extends Command
      *
      * @var string
      */
-    protected $signature = 'fix:pris_last_version {max_old_pris_id}';
+    protected $signature = 'fix:pris_last_version';
 
     /**
      * The console command description.
@@ -34,9 +34,8 @@ class FixOldPrisLastVersion extends Command
     public function handle()
     {
         activity()->disableLogging();
-
         $this->comment('Start at '.date('Y-m-d H:i:s'));
-        $maxLocalOldPrisId = $this->argument('max_old_pris_id');
+        $maxLocalOldPrisId = Pris::max('old_id');
         if(!$maxLocalOldPrisId){
             $this->error('Missing max pris id for update');
         }
