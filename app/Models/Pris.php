@@ -117,7 +117,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     protected function displayName(): Attribute
     {
-        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
+        $actName = $this->actType ? $this->actType->name_single : '';
+//        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
             get: fn () => ($actName.' '.__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y').' '.__('custom.of').' '.($this->institution ? $this->institution->name : '---')),
         );
@@ -125,7 +126,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     protected function mcDisplayName(): Attribute
     {
-        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
+        $actName = $this->actType ? $this->actType->name_single : '';
+//        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
             get: fn () => __('custom.pris_program_title', ['actType' => $actName, 'number' => __('custom.number_symbol').$this->doc_num, 'year' => Carbon::parse($this->doc_date)->format('Y')])
         );
