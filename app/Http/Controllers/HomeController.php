@@ -350,7 +350,7 @@ class HomeController extends Controller
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
-                            and publication.published_at >= \'' . $nowDate . '\'
+                            and publication.published_at <= \'' . $nowDate . '\'
                             and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
@@ -366,7 +366,7 @@ class HomeController extends Controller
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
-                            and publication.published_at >= \'' . $nowDate . '\'
+                            and publication.published_at <= \'' . $nowDate . '\'
                             and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
@@ -382,7 +382,7 @@ class HomeController extends Controller
                         where true
                             and publication.deleted_at is null
                             and publication.active = true
-                            and publication.published_at >= \'' . $nowDate . '\'
+                            and publication.published_at <= \'' . $nowDate . '\'
                             and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                             and (
                                 publication_translations.title ilike \'%' . $search . '%\'
@@ -492,7 +492,7 @@ class HomeController extends Controller
                 where true
                     and publication.deleted_at is null
                     and publication.active = true
-                    and publication.published_at >= \'' . $nowDate . '\'
+                    and publication.published_at <= \'' . $nowDate . '\'
                     and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
@@ -515,7 +515,7 @@ class HomeController extends Controller
                 where true
                     and publication.deleted_at is null
                     and publication.active = true
-                    and publication.published_at >= \'' . $nowDate . '\'
+                    and publication.published_at <= \'' . $nowDate . '\'
                     and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
@@ -538,7 +538,7 @@ class HomeController extends Controller
                 where true
                     and publication.deleted_at is null
                     and publication.active = true
-                    and publication.published_at >= \'' . $nowDate . '\'
+                    and publication.published_at <= \'' . $nowDate . '\'
                     and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                     and (
                         publication_translations.title ilike \'%' . $search . '%\'
