@@ -2,6 +2,7 @@
 
 namespace App\Models\StrategicDocuments;
 
+use App\Models\AdvisoryBoard;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
@@ -109,7 +110,27 @@ class Institution extends ModelActivityExtend implements TranslatableContract
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->join('law_institution', function ($query) {
                 $query->on('law_institution.law_id', '=', 'law.id')->where('law_institution.institution_id', '=', $this->id);
-            })->get();
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function advisoryBoards()
+    {
+        return AdvisoryBoard::select(['advisory_boards.*'])
+            ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
+                'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
+                'advisoryActType', 'advisoryActType.translations'])
+            ->leftJoin('advisory_board_translations', function ($j){
+                $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
+                    ->where('advisory_board_translations.locale', '=', app()->getLocale());
+            })->whereHas('chairmen', function ($q){
+                $q->where('institution_id', '=', $this->id);
+            })
+            ->where('public', true)
+            ->orderBy('advisory_boards.active', 'desc')
+            ->orderBy('advisory_board_translations.name')
+            ->get();
     }
 
     public static function translationFieldsProperties(): array

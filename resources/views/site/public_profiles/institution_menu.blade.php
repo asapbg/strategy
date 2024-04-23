@@ -25,6 +25,9 @@
                             <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/pris')) active-item-left p-1 @endif">
                                 <a href="{{ route('institution.profile.pris', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.pris', 2) }}">{{ trans_choice('custom.pris', 2) }}</a>
                             </li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/advisory-boards')) active-item-left p-1 @endif">
+                                <a href="{{ route('institution.profile.advisory_boards', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.advisory_boards', 2) }}">{{ trans_choice('custom.advisory_boards', 2) }}</a>
+                            </li>
                             <li class="mb-2 @if(str_contains(url()->current(),'institution-profile/moderators')) active-item-left p-1 @endif">
                                 <a href="{{ route('institution.profile.moderators', $item) }}" class="link-dark text-decoration-none" title="{{ trans_choice('custom.moderators', 2) }}">{{ trans_choice('custom.moderators', 2) }}</a>
                             </li>

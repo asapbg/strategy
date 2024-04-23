@@ -31,7 +31,8 @@ class PublicProfilesController extends Controller
                 ['name' => trans_choice('custom.public_consultations', 2), 'url' => '']
             )
         );
-        return $this->view('site.public_profiles.institution.pc', compact('item', 'pageTitle'));
+        $publicConsultation = $item->publicConsultation()->orderBy('date', 'desc')->get();
+        return $this->view('site.public_profiles.institution.pc', compact('item', 'pageTitle', 'publicConsultation'));
     }
 
 //    public function institutionStrategicDocuments(Request $request, Institution $item){
@@ -46,13 +47,15 @@ class PublicProfilesController extends Controller
                 ['name' => trans_choice('custom.legislative_initiatives', 2), 'url' => '']
             )
         );
-        return $this->view('site.public_profiles.institution.li', compact('item', 'pageTitle'));
+        $li = $item->legislativeInitiatives();
+        return $this->view('site.public_profiles.institution.li', compact('item', 'li'));
     }
 
     public function institutionPris(Request $request, Institution $item){
         $paginate = $filter['paginate'] ?? config('app.default_paginate');
         $items = $item->pris()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->orderBy('doc_date', 'desc')
             ->paginate($paginate);
         $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->name;
         $this->setBreadcrumbsFull(
@@ -62,6 +65,18 @@ class PublicProfilesController extends Controller
             )
         );
         return $this->view('site.public_profiles.institution.pris', compact('item', 'pageTitle', 'items'));
+    }
+
+    public function institutionAdvBoard(Request $request, Institution $item){
+        $items = $item->advisoryBoards();
+        $pageTitle = trans_choice('custom.profiles', 1).' '.__('custom.of').' '.$item->name;
+        $this->setBreadcrumbsFull(
+            array(
+                ['name' => $pageTitle, 'url' => route('institution.profile', $item)],
+                ['name' => trans_choice('custom.advisory_boards', 2), 'url' => '']
+            )
+        );
+        return $this->view('site.public_profiles.institution.adv_board', compact('item', 'pageTitle', 'items'));
     }
 
     public function institutionModerators(Request $request, Institution $item){

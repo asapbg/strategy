@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 //    Route::get('/institution-profile/strategic-documents/{item}', 'institutionStrategicDocuments')->name('institution.profile.sd');
         Route::get('/institution-profile/legislative-initiatives/{item}', 'institutionLegislativeInitiatives')->name('institution.profile.li');
         Route::get('/institution-profile/pris/{item}', 'institutionPris')->name('institution.profile.pris');
+        Route::get('/institution-profile/advisory-boards/{item}', 'institutionAdvBoard')->name('institution.profile.advisory_boards');
         Route::get('/institution-profile/moderators/{item}', 'institutionModerators')->name('institution.profile.moderators');
     });
 

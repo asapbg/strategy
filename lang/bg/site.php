@@ -177,7 +177,7 @@ return [
     'withdrew_change_request_title_confirm_text' => 'Сигурни ли сте, че искате да оттеглите заявката за промяна на данните',
     'withdrew_change_request_success' => 'Заявката е оттеглена успешно',
     'footer.section.terms' => 'Общи условия и политики',
-    'footer.section.contact.link' => 'За връзка',
+    'footer.section.contact.link' => 'Връзка с администратор и списък на всички модератори',
     'footer.other_links' => 'Други връзки',
     'footer.other_links.1' => 'Административен регистър',
     'footer.other_links.2' => 'Портал за работа в държавната администрация',
@@ -234,4 +234,5 @@ return [
     'all_news' => 'Всички новини',
     'commented' => 'Коментирано',
     'supported' => 'Подкрепено',
+    'institution.adv_board.title' => 'Консултативни съвети, свързани с дирекция :name',
 ];

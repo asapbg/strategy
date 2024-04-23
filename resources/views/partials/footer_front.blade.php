@@ -40,27 +40,19 @@
         <div class="d-flex flex-column flex-sm-row justify-content-center pb-4 border-top"></div>
 
         <div class="row">
-            <div class="col-md-4 col-sm-12 mb-3">
-                <h3 class="text-light fs-4 fw-400">{{ trans_choice('custom.contacts', 2) }}</h3>
-                <ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a class="p-0 text-light text-decoration-none" href="{{ route('contacts') }}" title="{{ __('site.footer.section.contact.link') }}">{{ __('site.footer.section.contact.link') }}</a></li>
-                    <li class="nav-item mb-2"><a href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" class="p-0 text-light">» @if(isset($contactMail) &&
-                            !empty($contactMail)){{ $contactMail }}@else{{ '---' }}@endif</a></li>
-                </ul>
+            <div class="col-md-4 mb-1">
+                <h3 class="text-light fs-4 fw-400 w-100">{{ trans_choice('custom.contacts', 2) }}</h3>
             </div>
-
-            <div class="col-md-4 col-sm-12 mb-3">
-                <img class="d-block w-100 px-md-3 footer-img" src="{{ asset('/img/eu_white.png') }}" alt="{{ __('site.footer.eu') }}" title="{{ __('site.footer.eu') }}">
-            </div>
-
-            <div class="col-md-4 col-sm-12 mb-3">
-                <img class="d-block w-100 px-md-3 footer-img" src="{{ asset('/img/op-white.png') }}" alt="{{ __('site.footer.operational_program') }}" title="{{ __('site.footer.operational_program') }}">
-                <!-- Секция за добавяне на страници от админ панела -->
-                 <!-- <h3 class="text-light fs-4 fw-400">Страници</h3> -->
-                 <!--<ul class="nav flex-column footer-nav">
-                    <li class="nav-item mb-2"><a href="#" class="p-0 text-light">» Пример допълнителна страница</a></li>
-                </ul>
-                -->
+            <div class="col-md-8 mb-1">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a class="p-0 text-light text-decoration-none" href="{{ route('contacts') }}" title="{{ __('site.footer.section.contact.link') }}">{{ __('site.footer.section.contact.link') }}</a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a class="p-0 text-light text-decoration-none" href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" >» @if(isset($contactMail) &&
+                            !empty($contactMail)){{ $contactMail }}@else{{ '---' }}@endif</a>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -11,8 +11,8 @@
                 <h2 class="mb-4">
                     {{ __('site.institution.li.title', ['name' => $item->name]) }}
                 </h2>
-                @if($item->legislativeInitiatives()->count())
-                    @foreach($item->legislativeInitiatives() as $row)
+                @if($li->count())
+                    @foreach($li as $row)
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="consul-wrapper">

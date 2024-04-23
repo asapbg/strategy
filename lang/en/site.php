@@ -176,7 +176,7 @@ return [
     'withdrew_change_request_title_confirm_text' => 'Are you sure you want to withdraw data change request',
     'withdrew_change_request_success' => 'Request withdrawn successfully',
     'footer.section.terms' => 'Terms and Conditions',
-    'footer.section.contact.link' => 'Contact',
+    'footer.section.contact.link' => 'Contact with adminstrator and list of all moderators',
     'footer.other_links' => 'Other Links',
     'footer.other_links.1' => 'Administrative Registry',
     'footer.other_links.2' => 'Government Job Portal',
@@ -233,4 +233,5 @@ return [
     'all_news' => 'All News',
     'commented' => 'Commented',
     'supported' => 'Supported',
+    'institution.adv_board.title' => 'Advisory boards related to directorate :name',
 ];

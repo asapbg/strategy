@@ -8,8 +8,8 @@
                 <h2 class="mb-4">
                     {{ __('site.institution.pc.title', ['name' => $item->name]) }}
                 </h2>
-                @if($item->publicConsultation->count())
-                    @foreach($item->publicConsultation as $consultation)
+                @if($publicConsultation->count())
+                    @foreach($publicConsultation as $consultation)
                         <div class="col-md-12 mb-4">
                             <div class="consul-wrapper">
                                 <div class="single-consultation d-flex">
