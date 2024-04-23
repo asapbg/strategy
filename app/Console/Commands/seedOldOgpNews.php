@@ -72,7 +72,7 @@ class seedOldOgpNews extends Command
 
                 if (sizeof($oldDbResult)) {
                     foreach ($oldDbResult as $item) {
-                        DB::beginTransaction();
+//                        DB::beginTransaction();
                         try {
                             if(isset($ourNews[$item->old_id])){
                                 //update
@@ -117,10 +117,10 @@ class seedOldOgpNews extends Command
                                 //TODO migrate files
                                 $this->comment('Finish import of old OGP publication with old ID '.$item->old_id);
                             }
-                            DB::commit();
+//                            DB::commit();
                         } catch (\Exception $e) {
                             Log::error('Migration old startegy OGP publicationand files: ' . $e);
-                            DB::rollBack();
+//                            DB::rollBack();
                         }
                     }
                 }
