@@ -1659,30 +1659,30 @@ class seedOldLastPris extends Command
                                         }
 
                                         //3. Create connection pris - tags
-                                        if(sizeof($tags)) {
-                                            $newTags = array();
-                                            foreach ($tags as $tag) {
-                                                if(!isset($ourTags[$tag])) {
-                                                    //create tag
-                                                    $newTag = \App\Models\Tag::create();
-                                                    if( $newTag ) {
-                                                        foreach ($locales as $locale) {
-                                                            $newTag->translateOrNew($locale['code'])->label = $tag;
-                                                        }
-                                                    }
-                                                    $newTag->save();
-                                                    echo "Tag with name ".$tag." created successfully".PHP_EOL;
-                                                    $ourTags[$tag] = $newTag->id;
-                                                }
-                                                $newTags[] = '('.(int)$ourTags[$tag].', '.$existPris->id.')';
-                                            }
-
-                                            DB::statement('delete from pris_tag where pris_id ='.$existPris->id);
-                                            if(sizeof($newTags)) {
-                                                DB::statement('insert into pris_tag values '.implode(',', $newTags));
-                                                //$existPris->tags()->sync($newTags); //this is slow
-                                            }
-                                        }
+//                                        if(sizeof($tags)) {
+//                                            $newTags = array();
+//                                            foreach ($tags as $tag) {
+//                                                if(!isset($ourTags[$tag])) {
+//                                                    //create tag
+//                                                    $newTag = \App\Models\Tag::create();
+//                                                    if( $newTag ) {
+//                                                        foreach ($locales as $locale) {
+//                                                            $newTag->translateOrNew($locale['code'])->label = $tag;
+//                                                        }
+//                                                    }
+//                                                    $newTag->save();
+//                                                    echo "Tag with name ".$tag." created successfully".PHP_EOL;
+//                                                    $ourTags[$tag] = $newTag->id;
+//                                                }
+//                                                $newTags[] = '('.(int)$ourTags[$tag].', '.$existPris->id.')';
+//                                            }
+//
+//                                            DB::statement('delete from pris_tag where pris_id ='.$existPris->id);
+//                                            if(sizeof($newTags)) {
+//                                                DB::statement('insert into pris_tag values '.implode(',', $newTags));
+//                                                //$existPris->tags()->sync($newTags); //this is slow
+//                                            }
+//                                        }
                                     }
                                     //get Files
                                     if($migrateFiles) {
@@ -2003,30 +2003,30 @@ class seedOldLastPris extends Command
                                 }
 
                                 //3. Create connection pris - tags
-                                if($newItem && sizeof($tags)) {
-                                    $newItemTags = array();
-                                    foreach ($tags as $tag) {
-                                        if(!isset($ourTags[$tag])) {
-                                            //create tag
-                                            $newTag = \App\Models\Tag::create();
-                                            if( $newTag ) {
-                                                foreach ($locales as $locale) {
-                                                    $newTag->translateOrNew($locale['code'])->label = $tag;
-                                                }
-                                            }
-                                            $newTag->save();
-                                            echo "Tag with name ".$tag." created successfully".PHP_EOL;
-                                            $ourTags[$tag] = $newTag->id;
-                                        }
-                                        $newItemTags[] = '('.(int)$ourTags[$tag].', '.$newItem->id.')';
-                                    }
-
-                                    DB::statement('delete from pris_tag where pris_id ='.$newItem->id);
-                                    if(sizeof($newItemTags)) {
-                                        DB::statement('insert into pris_tag values '.implode(',', $newItemTags));
-                                        //$newItem->tags()->sync($newTags); //this is slow
-                                    }
-                                }
+//                                if($newItem && sizeof($tags)) {
+//                                    $newItemTags = array();
+//                                    foreach ($tags as $tag) {
+//                                        if(!isset($ourTags[$tag])) {
+//                                            //create tag
+//                                            $newTag = \App\Models\Tag::create();
+//                                            if( $newTag ) {
+//                                                foreach ($locales as $locale) {
+//                                                    $newTag->translateOrNew($locale['code'])->label = $tag;
+//                                                }
+//                                            }
+//                                            $newTag->save();
+//                                            echo "Tag with name ".$tag." created successfully".PHP_EOL;
+//                                            $ourTags[$tag] = $newTag->id;
+//                                        }
+//                                        $newItemTags[] = '('.(int)$ourTags[$tag].', '.$newItem->id.')';
+//                                    }
+//
+//                                    DB::statement('delete from pris_tag where pris_id ='.$newItem->id);
+//                                    if(sizeof($newItemTags)) {
+//                                        DB::statement('insert into pris_tag values '.implode(',', $newItemTags));
+//                                        //$newItem->tags()->sync($newTags); //this is slow
+//                                    }
+//                                }
                                 if($migrateFiles) {
                                     //TODO //5. Create files and extract text
                                     $path = File::PAGE_UPLOAD_PRIS;
