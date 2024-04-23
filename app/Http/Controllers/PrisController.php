@@ -40,6 +40,8 @@ class PrisController extends Controller
         $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
+
+        $tagSearch = isset($requestFilter['fullSearch']) && !empty($requestFilter['fullSearch']) ? $requestFilter['fullSearch'] : null;
         $items = Pris::select('pris.*')
             ->LastVersion()
             ->InPris()
@@ -60,16 +62,16 @@ class PrisController extends Controller
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
-            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
-            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
-            ->leftJoin('tag_translations', function ($j){
-                $j->on('tag_translations.tag_id', '=', 'tag.id')
-                    ->where('tag_translations.locale', '=', app()->getLocale());
-            })
+//            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+//            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
+//            ->leftJoin('tag_translations', function ($j){
+//                $j->on('tag_translations.tag_id', '=', 'tag.id')
+//                    ->where('tag_translations.locale', '=', app()->getLocale());
+//            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
-            ->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
+            //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
             ->paginate($paginate);
 
 

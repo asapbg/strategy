@@ -32,14 +32,22 @@ class FullSearch extends QueryFilter implements FilterContract{
                                 $query->orWhere('pris_translations.legal_reason', 'ilike', '%'.$value.'%');
                             })
                             ->when($searchInTags, function ($query) use($value){
-                                $query->orWhere('tag_translations.label', 'ilike', '%'.$value.'%');
+                                $query->orWhereRaw('pris.id in ( select pris_tag.pris_id from pris_tag
+                                    LEFT JOIN "tag" on "pris_tag"."tag_id" = "tag"."id"
+                                    LEFT JOIN "tag_translations" on "tag_translations"."tag_id" = "tag"."id" and "tag_translations"."locale" = \''.app()->getLocale().'\'
+                                    where tag_translations.label ilike \'%'.$value.'%\'
+                                )');
                             });
                     });
 
                 } else{
                     $q->where('pris_translations.about', 'ilike', '%'.$value.'%')
                         ->orWhere('pris_translations.legal_reason', 'ilike', '%'.$value.'%')
-                        ->orWhere('tag_translations.label', 'ilike', '%'.$value.'%')
+                        ->orWhereRaw('pris.id in ( select pris_tag.pris_id from pris_tag
+                            LEFT JOIN "tag" on "pris_tag"."tag_id" = "tag"."id"
+                            LEFT JOIN "tag_translations" on "tag_translations"."tag_id" = "tag"."id" and "tag_translations"."locale" = \''.app()->getLocale().'\'
+                            where tag_translations.label ilike \'%'.$value.'%\'
+                        )')
                         ->orWhereHas('files', function (Builder $query) use ($value){
                             $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$value]);
                         });
