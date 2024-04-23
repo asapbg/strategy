@@ -95,7 +95,7 @@ class OpenGovernmentPartnership extends Controller
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'publishDate';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
-        $paginate = $requestFilter['paginate'] ?? Publication::PAGINATE;
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 

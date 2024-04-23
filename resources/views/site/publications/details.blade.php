@@ -69,13 +69,10 @@
                 ->get();
         @endphp
         @if($files->count() > 0)
-            @php($fileFound = false)
+            <h5>{{ __('custom.files') }}</h5>
             <div class="row mb-3 w-100">
                 @foreach($files as $f)
                     @if($f->id != $publication->file_id)
-                        @if(!$fileFound)
-                            <h5>{{ __('custom.files') }}</h5>
-                        @endif
                         @if(in_array($f->content_type, \App\Models\File::IMG_CONTENT_TYPE))
                             {!! fileThumbnail($f) !!}
                         @else
