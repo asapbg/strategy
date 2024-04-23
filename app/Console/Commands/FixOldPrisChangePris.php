@@ -33,6 +33,7 @@ class FixOldPrisChangePris extends Command
      */
     public function handle()
     {
+        DB::table('pris_change_pris')->truncate();
         file_put_contents('old_pris_connections_missing_documents.txt', '');
         file_put_contents('old_pris_missing_connections.txt', '');
         $step = 50;
