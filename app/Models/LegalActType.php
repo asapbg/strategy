@@ -12,7 +12,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const TRANSLATABLE_FIELDS = ['name'];
+    const TRANSLATABLE_FIELDS = ['name', 'name_single'];
     const MODULE_NAME = ('custom.nomenclatures.legal_act_type');
     const TYPE_ORDER = 7;
     const TYPE_ARCHIVE = 8;
@@ -57,6 +57,10 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     {
         return array(
             'name' => [
+                'type' => 'text',
+                'rules' => ['required', 'string', 'max:255']
+            ],
+            'name_single' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:255']
             ],

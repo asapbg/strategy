@@ -17,6 +17,10 @@
                             @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                         </div>
 
+                        <div class="row mb-4">
+                            @include('admin.partial.edit_field_translate', ['field' => 'name_single', 'required' => true])
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="in_pris">
                                 <input type="checkbox" id="in_pris" name="in_pris" value="1"

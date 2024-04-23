@@ -771,5 +771,7 @@ return [
         'notification_email' => 'Email (notifications)',
         'law_id' => 'Law',
         'act_type' => 'Type of act',
+        'name_single_bg'           => 'Name in singular (BG)',
+        'name_single_en'           => 'Name in singular (EN)',
     ],
 ];

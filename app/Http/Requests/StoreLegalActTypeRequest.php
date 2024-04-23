@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\ActType;
+use App\Models\LegalActType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLegalActTypeRequest extends FormRequest
@@ -30,7 +31,7 @@ class StoreLegalActTypeRequest extends FormRequest
         }
 
         foreach (config('available_languages') as $lang) {
-            foreach (ActType::translationFieldsProperties() as $field => $properties) {
+            foreach (LegalActType::translationFieldsProperties() as $field => $properties) {
                 $rules[$field.'_'.$lang['code']] = $properties['rules'];
             }
         }
