@@ -839,7 +839,7 @@ return [
     'strategic_document.levels.AREA'        => 'Областно',
     'strategic_document.levels.MUNICIPAL'        => 'Общинско',
     'pris_categories' => 'Вид на акт на МС|Видове на актове на МС',
-    'help' => 'Помощна информация',
+    'help' => 'Ръководства',
     'strategic_documents_report_title' => 'Справка "Стратегически документи"',
     'adv_board_report_title' => 'Справка "Консултативни съвети"',
     'pc_report_title' => 'Справка "Обществени консултации"',

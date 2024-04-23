@@ -21,6 +21,10 @@ overflow-x: hidden;
 .modal.w-70p .modal-dialog{
     max-width: 70%;
 }
+.guide-btn-box{
+    min-height: 95px;
+    align-content: center;
+}
 
 /*If need to add more widt to sidebar */
 /*.main-sidebar,.main-sidebar::before {*/
