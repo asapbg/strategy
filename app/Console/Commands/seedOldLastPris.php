@@ -1660,6 +1660,7 @@ class seedOldLastPris extends Command
 
                                         //3. Create connection pris - tags
                                         if(sizeof($tags)) {
+                                            $newTags = array();
                                             foreach ($tags as $tag) {
                                                 if(!isset($ourTags[$tag])) {
                                                     //create tag
@@ -1673,10 +1674,13 @@ class seedOldLastPris extends Command
                                                     echo "Tag with name ".$tag." created successfully".PHP_EOL;
                                                     $ourTags[$tag] = $newTag->id;
                                                 }
-                                                $newTags[] = $ourTags[$tag];
+                                                $newTags[] = '('.(int)$ourTags[$tag].', '.$existPris->id.')';
                                             }
+
+                                            DB::statement('delete from pris_tag where pris_id ='.$existPris->id);
                                             if(sizeof($newTags)) {
-                                                $existPris->tags()->sync($newTags);
+                                                DB::statement('insert into pris_tag values '.implode(',', $newTags));
+                                                //$existPris->tags()->sync($newTags); //this is slow
                                             }
                                         }
                                     }
@@ -2000,6 +2004,7 @@ class seedOldLastPris extends Command
 
                                 //3. Create connection pris - tags
                                 if($newItem && sizeof($tags)) {
+                                    $newItemTags = array();
                                     foreach ($tags as $tag) {
                                         if(!isset($ourTags[$tag])) {
                                             //create tag
@@ -2013,11 +2018,13 @@ class seedOldLastPris extends Command
                                             echo "Tag with name ".$tag." created successfully".PHP_EOL;
                                             $ourTags[$tag] = $newTag->id;
                                         }
-                                        $newItemTags[] = $ourTags[$tag];
+                                        $newItemTags[] = '('.(int)$ourTags[$tag].', '.$newItem->id.')';
                                     }
+
+                                    DB::statement('delete from pris_tag where pris_id ='.$newItem->id);
                                     if(sizeof($newItemTags)) {
-                                        $newItem->tags()->sync($newItemTags);
-//                                        $newItem->save();
+                                        DB::statement('insert into pris_tag values '.implode(',', $newItemTags));
+                                        //$newItem->tags()->sync($newTags); //this is slow
                                     }
                                 }
                                 if($migrateFiles) {
