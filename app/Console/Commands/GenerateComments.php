@@ -39,6 +39,7 @@ class GenerateComments extends Command
         $items = PublicConsultation::with(['comments', 'comments.author'])
             ->whereHas('comments')
             ->whereDoesntHave('commentsDocuments')
+            ->whereNull('old_id')
             ->Ended()
             ->limit(10)
             ->get();

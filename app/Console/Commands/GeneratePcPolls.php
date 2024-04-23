@@ -42,6 +42,7 @@ class GeneratePcPolls extends Command
                 $q->whereHas('entries');
             })
             ->whereDoesntHave('pollsDocuments')
+            ->whereNull('old_id')
             ->Ended()
             ->limit(10)
             ->get();
