@@ -927,4 +927,5 @@ return [
     'pc_missing_docs' => 'Number of consultations with a missing mandatory document',
     'pc_no_proposal_report' => 'Number of consultations without reference to proposals received',
     'pc_institution_level' => 'Administrative level of the authority that carried out the consultation',
+    'helps' => 'User guides',
 ];

@@ -56,6 +56,7 @@ class HelpController extends AdminController
                 $file = self::ADMIN_GUIDE_FILE;
                 break;
         }
+        $this->setTitleSingular(__('custom.help'));
         return $this->view('admin.help.guide', compact('name', 'file'));
     }
 }
