@@ -59,7 +59,7 @@ class seedOldLastPrisFiles extends Command
             Log::error('Migration old pris files Can\'t clear files before start: '.$e);
         }
 
-dd('ok');
+
         file_put_contents('pris_files_without_content.txt', '');
         $path = File::PAGE_UPLOAD_PRIS;
 
