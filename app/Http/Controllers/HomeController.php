@@ -335,7 +335,7 @@ class HomeController extends Controller
                             and pris.active = 1
                             and pris.published_at  is not null
                             and pris.asap_last_version = 1
-                            and pris.legal_act_type_id <> ' . LegalActType::TYPE_ARCHIVE . '
+                            and pris.legal_act_type_id in (' . implode(',', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL]) . ')
                             and (
                                 pris_translations.about ilike \'%' . $search . '%\'
                                 or pris_translations.legal_reason ilike \'%' . $search . '%\'
@@ -458,7 +458,7 @@ class HomeController extends Controller
             $pris_items = \DB::select('
                 select
                     pris.id,
-                    legal_act_type_translations.name || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name,
+                    legal_act_type_translations.name_single || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \' \' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name,
                     \'pris\' as item_type,
                     legal_act_type_translations.name as act_type_name
                 from pris
@@ -470,7 +470,7 @@ class HomeController extends Controller
                     and pris.active = 1
                     and pris.published_at  is not null
                     and pris.asap_last_version = 1
-                    and pris.legal_act_type_id <> ' . LegalActType::TYPE_ARCHIVE . '
+                    and pris.legal_act_type_id in (' . implode(',', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL]) . ')
                     and (
                         pris_translations.about ilike \'%' . $search . '%\'
                         or pris_translations.legal_reason ilike \'%' . $search . '%\'
