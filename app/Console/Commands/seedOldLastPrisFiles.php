@@ -147,7 +147,7 @@ class seedOldLastPrisFiles extends Command
                                     }
                                     $this->comment('File inserted for pris with ID '.$pris->id);
                                 } else{
-                                    file_put_contents('pris_files_without_content.txt', 'File Blob ID ('.$f->old_pris_bloburi.')'.$f.PHP_EOL, FILE_APPEND);
+                                    file_put_contents('pris_files_without_content.txt', 'File Blob ID ('.$f->old_pris_bloburi.')'.PHP_EOL, FILE_APPEND);
                                 }
                             }
                         }
