@@ -54,7 +54,7 @@ class seedOldPublicConsultations extends Command
 //        $currentStep = (int)DB::table('public_consultation')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
 
-        $ourPc = PublicConsultation::whereNotNull('old_id')->orderBy('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourPc = PublicConsultation::withTrashed()->whereNotNull('old_id')->orderBy('old_id')->get()->pluck('id', 'old_id')->toArray();
         $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
         $fieldOfActions = array();
         if($fieldOfActionsDBArea->count()){
@@ -163,13 +163,12 @@ class seedOldPublicConsultations extends Command
 
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
-                                $existPc = PublicConsultation::find($ourPc[(int)$item->old_id]);
+                                $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$item->old_id]);
+
                                 if($existPc){
                                     if(isset($fieldOfActions) && sizeof($fieldOfActions) && isset($fieldOfActions[mb_strtolower($item->field_of_actions_name)])){
-                                        if($existPc){
-                                            $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
-                                            $existPc->save();
-                                        }
+                                        $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
+                                        $existPc->save();
                                     } else {
                                         $existPc->field_of_actions_id = null;
                                         $existPc->save();
@@ -181,10 +180,22 @@ class seedOldPublicConsultations extends Command
                                     $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
                                     $existPc->importer_institution_id = $institutionId;
                                     $existPc->responsible_institution_id = $institutionId;
+                                    $existPc->deleted_at = !empty($item->deleted_at) ? Carbon::parse($item->deleted_at)->format($formatTimestamp) : null;
+                                    $existPc->updated_at = !empty($item->updated_at) ? Carbon::parse($item->updated_at)->format($formatTimestamp) : null;
                                     $existPc->consultation_level_id = $institutionLevel;
+                                    $existPc->open_from = !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null;
+                                    $existPc->open_to = !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null;
+                                    $existPc->active = $item->active;
                                     $existPc->save();
+
+                                    foreach ($locales as $locale) {
+                                        $existPc->translateOrNew($locale['code'])->title = $item->title;
+                                        $existPc->translateOrNew($locale['code'])->description = stripHtmlTags(html_entity_decode($item->description));
+                                    }
+                                    $existPc->save();
+                                    PublicConsultation::withTrashed()->where('old_id', '=', $existPc->old_id)->where('id', '<>', $existPc->id)->update(['old_id' => null]);
                                 }
-                                DB::commit();
+//                                DB::commit();
                                 continue;
                             }
                             $institution = Institution::withTrashed()->find($institutionId);
