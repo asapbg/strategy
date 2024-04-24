@@ -219,6 +219,9 @@ function initInputs()
         weekStart: 1,
         changeMonth: true,
         changeYear: true,
+    }).on("show", function(e) {
+        let top = $("#header-wrapper").height() + parseInt($(".datepicker").css("top"));
+        $(".datepicker").css("top", top);
     });
 
     $('.pick-institution').on('click', function (){
@@ -489,6 +492,9 @@ $(document).ready(function () {
             weekStart: 1,
             changeMonth: true,
             changeYear: true,
+        }).on("show", function(e) {
+            let top = $("#header-wrapper").height() + parseInt($(".datepicker").css("top"));
+            $(".datepicker").css("top", top);
         });
 
         // $('.datepicker-btn').datepicker({

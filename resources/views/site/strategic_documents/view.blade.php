@@ -5,7 +5,7 @@
 <div class="row">
     @include('site.strategic_documents.side_menu')
 
-    <div class="col-lg-10 right-side-content py-5" id="listContainer">
+    <div class="col-lg-10 right-side-content pb-5 pt-1 " id="listContainer">
         @can('update', $strategicDocument)
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end">

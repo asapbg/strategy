@@ -12,7 +12,7 @@
         @include('site.advisory-boards.side_menu_detail_page')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content" id="listContainer">
+        <div class="col-lg-10 pb-5 pt-1 right-side-content" id="listContainer">
             @include('site.advisory-boards.archive_wotk_programs_list')
         </div>
     </div>

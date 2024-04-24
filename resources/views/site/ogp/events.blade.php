@@ -5,7 +5,7 @@
     <div class="row">
         @include('site.legislative_initiatives.side_menu')
 
-        <div class="col-lg-10 right-side-content py-5" id="listContainer">
+        <div class="col-lg-10 right-side-content pb-5 pt-1 " id="listContainer">
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <h3 class="mb-2">{{ trans_choice('custom.lists', 1) }} {{ __('custom.with_long') }} {{ mb_strtolower(trans_choice('custom.events', 2)) }}</h3>

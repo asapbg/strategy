@@ -4,7 +4,7 @@
 <div class="row">
     @include('site.legislative_initiatives.side_menu')
 
-    <div class="col-lg-10 py-5 right-side-content" id="listContainer">
+    <div class="col-lg-10 pb-5 pt-1 right-side-content" id="listContainer">
         @include('site.ogp.plans_list')
 {{--        @include('site.ogp.develop_new_action_plan.filter')--}}
 {{--        @include('site.ogp.search_btn_actions')--}}
