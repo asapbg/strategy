@@ -43,13 +43,23 @@ class seedOldLastPrisFiles extends Command
         $now = Carbon::now()->format('Y-m-d H:i:s');
         try {
             if($clearBeforeStart){
-                DB::statement('update files set deleted_at = \''.$now.'\', old_pris_bloburi = null where code_object = '.File::CODE_OBJ_PRIS.' and deleted_at is null');
+                $cntFiles = 1;
+                while ($cntFiles > 0){
+                    $files = File::where('code_object', '=', File::CODE_OBJ_PRIS)->limit(1000)->get();
+                    $cntFiles = $files->count();
+                    if($cntFiles) {
+                        File::whereIn('id', $files->pluck('id')->toArray())->update([
+                            'deleted_at' => $now,
+                            'old_pris_bloburi' => null
+                        ]);
+                    }
+                }
             }
         } catch (\Exception $e) {
             Log::error('Migration old pris files Can\'t clear files before start: '.$e);
         }
 
-
+dd('ok');
         file_put_contents('pris_files_without_content.txt', '');
         $path = File::PAGE_UPLOAD_PRIS;
 
