@@ -27,6 +27,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HomeController extends Controller
 {
+    const USER_GUIDE = 'user_guide';
     /**
      * Show the application dashboard.
      *
@@ -630,6 +631,16 @@ class HomeController extends Controller
 
         return back()->with('success', __('site.contacts.success_send_msg'));
 
+    }
+
+    public function helpGuide(Request $request)
+    {
+        $pageTitle = __('site.user_guide');
+        $this->setBreadcrumbsFull(array(
+            ['name' => __('site.user_guide'), 'url' => '']
+        ));
+        $file = self::USER_GUIDE.'_'.app()->getLocale().'.pdf';
+        return $this->view('site.partial.guide', compact('pageTitle', 'file'));
     }
 
     public function otherLinks(Request $request)

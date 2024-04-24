@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/contacts/{section?}', 'contacts')->name('contacts');
         Route::post('/contacts', 'sendMessage')->name('contacts.message');
         Route::get('/other', 'otherLinks')->name('other_links');
+        Route::get('/help/guide', 'helpGuide')->name('help.guide');
     });
 
     Route::controller(\App\Http\Controllers\PublicProfilesController::class)->group(function () {

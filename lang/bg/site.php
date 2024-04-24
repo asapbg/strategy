@@ -236,4 +236,5 @@ return [
     'supported' => 'Подкрепено',
     'institution.adv_board.title' => 'Консултативни съвети, свързани с дирекция :name',
     'old_portal_link' => 'Връзка към стария портал',
+    'user_guide' => 'Ръководство на потребителя',
 ];

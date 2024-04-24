@@ -55,6 +55,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <a class="p-0 text-light text-decoration-none" href="{{ route('contacts') }}" title="{{ __('site.footer.section.contact.link') }}">{{ __('site.footer.section.contact.link') }}</a>
+                        <a class="p-0 text-light text-decoration-none d-block mt-3" href="{{ route('help.guide') }}" title="{{ __('site.user_guide') }}">{{ __('site.user_guide') }}</a>
                     </div>
                     <div class="col-md-6 mb-3">
                         <a class="p-0 text-light text-decoration-none" href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" >» @if(isset($contactMail) &&
