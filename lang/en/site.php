@@ -234,4 +234,5 @@ return [
     'commented' => 'Commented',
     'supported' => 'Supported',
     'institution.adv_board.title' => 'Advisory boards related to directorate :name',
+    'old_portal_link' => 'Link to the old portal',
 ];

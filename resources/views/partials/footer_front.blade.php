@@ -30,9 +30,17 @@
                                 <a class="p-0 text-light text-decoration-none" href="{{ $page['url'] }}" title="{{ $page['name'] }}">{{ $page['name'] }}</a>
                             </div>
                         @endforeach
+                        @if(sizeof($footerPages) % 2 !== 0)
+                            <div class="col-md-12 mb-3">
+                                <span class="d-none">span</span>
+                            </div>
+                        @endif
                     @endif
                         <div class="col-md-6 mb-3">
                             <a class="p-0 text-light text-decoration-none" href="{{ route('other_links') }}" title="{{ __('site.footer.other_links') }}">{{ __('site.footer.other_links') }}</a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a class="p-0 text-light text-decoration-none" href="https://www.strategy.bg/" title="{{ __('site.old_portal_link') }}л">{{ __('site.old_portal_link') }}</a>
                         </div>
                 </div>
             </div>
