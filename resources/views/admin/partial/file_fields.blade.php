@@ -64,6 +64,7 @@
                 <label class="col-sm-12 control-label"
                        for="file_description_{{ $lang['code'] }}">{{ __('custom.description') }}
                     ({{ Str::upper($lang['code']) }})
+                    <span class="required">*</span>
                 </label>
 
                 <div class="row">

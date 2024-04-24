@@ -53,7 +53,7 @@ class   StoreAdvisoryBoardFileRequest extends FormRequest
 
             $rules['file_' . $lang['code']] = [($defaultLang == $lang['code'] ? 'required' : 'nullable' ),  new FileClientMimeType(File::ALL_ALLOWED_FILE_EXTENSIONS_MIMES_TYPE)];
             $rules['file_name_' . $lang['code']] = 'required|string';
-            $rules['file_description_' . $lang['code']] = 'nullable|string';
+            $rules['file_description_' . $lang['code']] = 'required|string';
         }
 
         return $rules;

@@ -764,5 +764,8 @@ return [
         'act_type'           => 'Вид акт',
         'name_single_bg'           => 'Наименование в ед. число (BG)',
         'name_single_en'           => 'Наименование в ед. число (EN)',
+        'file_description_bg'           => 'Описание (BG)',
+        'file_description_en'           => 'Описание (EN)',
+
     ],
 ];
