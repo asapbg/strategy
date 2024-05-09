@@ -98,7 +98,8 @@ class PollController extends Controller
     public function statistic(Request $request, $id)
     {
         $item = Poll::with('questions', 'questions.answers')->find((int)$id);
-        if( !$item || $item->consultations->count()) {
+//        if( !$item || $item->consultations->count()) {
+        if( !$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
 

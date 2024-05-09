@@ -238,7 +238,7 @@
                             </div>
                             <div class="link-heading">
                             <span>
-                                {{ __('site.make_ogp_proposal') }}
+                                {{ __('site.make_li_proposal') }}
                             </span>
                             </div>
                         </div>
@@ -318,31 +318,34 @@
 
                         <div class="col-md-12 mt-4 custom-card p-3">
                             <h3 class="mb-3" style="font-size: 24px;">{{ __('site.all_open_poll') }}</h3>
-                            <ul class="list-group questionnaire">
-                                <li class="list-group-item">
-                                    <a href="#" class="text-decoration-none">Финанси и данъчна политика</a>
-                                    <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#" class="text-decoration-none">Национална сигурност</a>
-                                    <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#" class="text-decoration-none">Земеделие и селски райони</a>
-                                    <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#" class="text-decoration-none">Околна среда</a>
-                                    <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#" class="text-decoration-none">Бизнес среда</a>
-                                    <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                                </li>
-                            </ul>
-                            <button class="btn btn-primary main-color mt-4">{{ __('site.all_poll') }} <i
-                                    class="fas fa-long-arrow-right main-color"></i></button>
-
+                            @if(isset($polls) && sizeof($polls))
+                                <ul class="list-group questionnaire">
+                                    @foreach($polls as $poll)
+                                        <li class="list-group-item">
+                                            <a href="@if($poll->active_ord){{ route('poll.show', $poll->id) }}@else{{ route('poll.statistic', $poll->id) }}@endif" class="text-decoration-none">
+                                                    {{ $poll->name }}
+{{--                                                @dd(auth()->user())--}}
+                                                @if($poll->active_ord)
+                                                    @if(!auth()->user() && $poll->only_registered)
+                                                        <i class="ms-1 fa fa-solid fa-circle-user light-blue" data-bs-toggle="tooltip" title="{{ __('messages.poll_only_registered') }}. {{ __('site.home.poll_end_at', ['date' => displayDate($poll->end_date)]) }}"></i>
+                                                    @else
+                                                        <i class="ms-1 fa fa-solid fa-hourglass-end light-blue" data-bs-toggle="tooltip" title="{{ __('site.home.poll_end_at', ['date' => displayDate($poll->end_date)]) }}"></i>
+                                                    @endif
+                                                @endif
+                                            </a>
+                                            <a href="@if($poll->active_ord){{ route('poll.show', $poll->id) }}@else{{ route('poll.statistic', $poll->id) }}@endif"><span><i class="fa-solid fa-chevron-right"></i></span></a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <a href="{{ route('poll.index') }}" class="btn btn-primary main-color mt-4">{{ __('site.all_poll') }} <i
+                                        class="fas fa-long-arrow-right main-color" ></i></a>
+                            @else
+                                <ul class="list-group questionnaire">
+                                    <li class="list-group-item main-color">
+                                        {{ __('site.home.no_polls_found') }}
+                                    </li>
+                                </ul>
+                            @endif
                         </div>
                     </div>
                 </div>

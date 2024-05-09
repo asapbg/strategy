@@ -237,4 +237,6 @@ return [
     'institution.adv_board.title' => 'Консултативни съвети, свързани с дирекция :name',
     'old_portal_link' => 'Връзка към стария портал',
     'user_guide' => 'Ръководство на потребителя',
+    'home.no_polls_found' => 'Към момента няма активни анкети',
+    'home.poll_end_at' => 'Приключва на :date',
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CalcTypesEnum;
 use App\Enums\PageModulesEnum;
+use App\Enums\PollStatusEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\SendMessageRequest;
 use App\Mail\ContactFormMsg;
@@ -13,6 +14,7 @@ use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\LegislativeInitiative;
+use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
 use App\Models\StrategicDocument;
@@ -50,9 +52,33 @@ class HomeController extends Controller
 
         $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
 
-        //dd($publications->toArray());
+        $polls = $this->getPolls(new Request());
+
         return $this->view('site.home.index',
-            compact('consultations','initiatives', 'publications','default_img'));
+            compact('consultations','initiatives', 'publications','default_img', 'polls'));
+    }
+
+    public function getPolls(Request $request)
+    {
+        $nowDate = date('Y-m-d');
+        $polls = \DB::select('
+            select
+                poll.id,
+                poll.name,
+                poll.only_registered,
+                poll.start_date,
+                poll.end_date,
+                case when poll.start_date <= \''.$nowDate.'\' and poll.end_date >= \''.$nowDate.'\' then 1 else 0 end as active_ord
+            from poll
+            join poll_question on poll_question.poll_id = poll.id and poll_question.deleted_at is null
+            where poll.deleted_at is null
+                and poll.status <> '.PollStatusEnum::INACTIVE->value.'
+            group by poll.id
+            order by poll.created_at desc, active_ord desc
+            limit 5
+        ');
+
+        return $polls;
     }
 
     /**
