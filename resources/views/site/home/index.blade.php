@@ -186,7 +186,7 @@
                         </div>
                     </div>
 
-                    <a href="#" class="box-link light-blue-bgr my-4">
+                    <a href="@if($planAreas){{ route('ogp.develop_new_action_plans')  }}@else{{ '#' }}@endif" class="box-link light-blue-bgr my-4">
                         <div class="info-box">
                             <div class="icon-wrap">
                                 <i class="bi bi bi-lightbulb text-light"></i>
@@ -200,31 +200,30 @@
                     </a>
 
                     <div class="col-md-12 mt-4 custom-card p-3 mb-4">
-                        <h3 class="mb-3" style="font-size: 24px;">Списък отворени планове</h3>
-                        <ul class="list-group questionnaire">
-                            <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">Финанси и данъчна политика</a>
-                                <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">Национална сигурност</a>
-                                <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">Земеделие и селски райони</a>
-                                <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">Околна среда</a>
-                                <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">Бизнес среда</a>
-                                <a href="#"><span><i class="fa-solid fa-chevron-right"></i></span></a>
-                            </li>
-                        </ul>
-                        <button class="btn btn-primary main-color mt-4">Всички планове <i
-                                class="fas fa-long-arrow-right main-color"></i></button>
+                        <h3 class="mb-3" style="font-size: 24px;">{{ __('site.home.open_plans_title') }}</h3>
+                        @if(isset($planAreas) && $planAreas->count())
+                            <ul class="list-group questionnaire">
+                                @php($cntPlan = 0)
+                                @foreach($planAreas as $pa)
+                                    @if($cntPlan > 5)
+                                        @break
+                                    @endif
+                                    <li class="list-group-item">
+                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $pa->ogp_plan_id, 'planArea' => $pa->id]) }}" class="text-decoration-none">{{ $pa->area?->name }}</a>
+                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $pa->ogp_plan_id, 'planArea' => $pa->id]) }}"><span><i class="fa-solid fa-chevron-right"></i></span></a>
+                                    </li>
+                                    @php($cntPlan += 1)
+                                @endforeach
+                            </ul>
+                            <a href="@if($planAreas){{ route('ogp.develop_new_action_plans')  }}@else{{ '#' }}@endif" class="btn btn-primary main-color mt-4">{{ __('site.home.to_open_plan') }} <i
+                                    class="fas fa-long-arrow-right main-color"></i></a>
+                        @else
+                            <ul class="list-group questionnaire">
+                                <li class="list-group-item main-color">
+                                    {{ __('site.home.no_open_plans_found') }}
+                                </li>
+                            </ul>
+                        @endif
                     </div>
 
 

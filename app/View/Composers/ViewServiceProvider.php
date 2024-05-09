@@ -85,7 +85,7 @@ class ViewServiceProvider extends ServiceProvider
                         ->where('ogp_plan_translations.locale', '=', app()->getLocale());
                 })
                 ->where('ogp_status.type', OgpStatusEnum::IN_DEVELOPMENT->value)
-                ->orderBy('ogp_plan.created_at', 'desc')
+                ->orderBy('ogp_plan.created_at', 'asc')
                 ->count();
             $view->with('developPlan', $developPlan);
         });

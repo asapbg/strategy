@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CalcTypesEnum;
+use App\Enums\OgpStatusEnum;
 use App\Enums\PageModulesEnum;
 use App\Enums\PollStatusEnum;
 use App\Enums\PublicationTypesEnum;
@@ -14,6 +15,7 @@ use App\Models\CustomRole;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\LegislativeInitiative;
+use App\Models\OgpPlan;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
@@ -53,9 +55,25 @@ class HomeController extends Controller
         $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
 
         $polls = $this->getPolls(new Request());
+        $planAreas = $this->getPlanAreas(new Request());
 
         return $this->view('site.home.index',
-            compact('consultations','initiatives', 'publications','default_img', 'polls'));
+            compact('consultations','initiatives', 'publications','default_img', 'polls', 'planAreas'));
+    }
+
+    public function getPlanAreas(Request $request)
+    {
+        $developPlan = OgpPlan::select('ogp_plan.*')->Active()
+            ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
+            ->leftJoin('ogp_plan_translations', function ($j){
+                $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
+                    ->where('ogp_plan_translations.locale', '=', app()->getLocale());
+            })
+            ->where('ogp_status.type', OgpStatusEnum::IN_DEVELOPMENT->value)
+            ->orderBy('ogp_plan.created_at', 'desc')
+            ->limit(1)
+            ->get()->first();
+        return $developPlan?->areas;
     }
 
     public function getPolls(Request $request)

@@ -7,7 +7,7 @@
         <div class="row mb-3">
             <div class="col-lg-12">
                 <h2 class="obj-title mb-4">{{ $planArea->area->name }}</h2>
-                <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $plan, 'planArea' => $planArea]) }}" title="{{ __('custom.back') }}" class="text-decoration-none">
+                <a href="{{ url()->previous() }}" title="{{ __('custom.back') }}" class="text-decoration-none">
                     <i class="fas fa-arrow-left read-more"></i> {{ __('custom.back') }}
                 </a>
             </div>

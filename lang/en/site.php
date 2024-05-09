@@ -238,4 +238,7 @@ return [
     'user_guide' => 'User guide',
     'home.no_polls_found' => 'There are currently no active polls',
     'home.poll_end_at' => 'End at :date',
+    'home.open_plans_title' => 'List of open plans',
+    'home.no_open_plans_found' => 'here are currently no plans in development',
+    'home.to_open_plan' => 'To the development plan',
 ];

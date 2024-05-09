@@ -239,4 +239,7 @@ return [
     'user_guide' => 'Ръководство на потребителя',
     'home.no_polls_found' => 'Към момента няма активни анкети',
     'home.poll_end_at' => 'Приключва на :date',
+    'home.open_plans_title' => 'Списък отворени планове',
+    'home.no_open_plans_found' => 'Към момента няма области очакващи предложения',
+    'home.to_open_plan' => 'Към плана за разработка',
 ];
