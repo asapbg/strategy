@@ -30,7 +30,7 @@ class AdvBoardAssignedModerator extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'mail']; //, 'mail'
+        return ['mail']; //, 'mail'
     }
 
     /**

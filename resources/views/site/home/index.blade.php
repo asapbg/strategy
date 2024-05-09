@@ -149,8 +149,8 @@
 
                                     <div class="col-md-12 mb-2 mt-2">
                                         <input type="text" class="form-control" name="pc_search_title"
-                                               placeholder="Въведете дума или израз"
-                                               aria-label="Въведете дума или израз" aria-describedby="basic-addon2"
+                                               placeholder="{{ __('site.enter_word') }}"
+                                               aria-label="{{ __('site.enter_word') }}" aria-describedby="basic-addon2"
                                         >
                                     </div>
                                 </div>
@@ -265,8 +265,8 @@
 
                                     <div class="col-md-12 mb-2 mt-2">
                                         <input type="text" class="form-control" name="keywords"
-                                               placeholder="Въведете дума или израз"
-                                               aria-label="Въведете дума или израз" aria-describedby="basic-addon2">
+                                               placeholder="{{ __('site.enter_word') }}"
+                                               aria-label="{{ __('site.enter_word') }}" aria-describedby="basic-addon2">
                                     </div>
                                 </div>
 

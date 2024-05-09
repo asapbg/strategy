@@ -81,8 +81,10 @@ class AdvisoryBoardModeratorController extends AdminController
     public function store(StoreAdvisoryBoardModeratorRequest $request, AdvisoryBoard $item, AdvisoryBoardModerator $moderator)
     {
         $validated = $request->validated();
-
         $oldModerators = $item->moderators->pluck('user_id')->toArray();
+        if(in_array($validated['user_id'], $oldModerators)) {
+            return back()->with('warning', 'Модераторът вече е добавен');
+        }
 
         $route = route('admin.advisory-boards.edit', ['item' => $item]) . '#moderator';
 
@@ -97,8 +99,9 @@ class AdvisoryBoardModeratorController extends AdminController
 
             DB::commit();
 
-            if(!in_array($moderator->id, $oldModerators)) {
-                $moderator->user->notify(new AdvBoardAssignedModerator($item));
+            if(!in_array($moderator->user_id, $oldModerators)) {
+                $notifiable = $moderator->user;
+                $notifiable->notify(new AdvBoardAssignedModerator($item));
             }
 
             return redirect($route)->with('success', trans_choice('custom.moderators', 1) . " " . __('messages.added_successfully_m'));

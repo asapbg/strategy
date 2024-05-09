@@ -241,4 +241,5 @@ return [
     'home.open_plans_title' => 'List of open plans',
     'home.no_open_plans_found' => 'here are currently no plans in development',
     'home.to_open_plan' => 'To the development plan',
+    'enter_word' => 'Enter a word or phrase',
 ];
