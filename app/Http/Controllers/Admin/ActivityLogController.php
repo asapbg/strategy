@@ -50,6 +50,7 @@ class ActivityLogController extends Controller
         $subjects = CustomActivity::select('subject_type')
             ->distinct('subject_type')
             ->where('subject_type', '<>', 'App\Models\StrategicDocumentChild')
+            ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFramework')
             ->get();
 
         return view('admin.activity-logs.index', compact('activities','causers', 'subjects'));
