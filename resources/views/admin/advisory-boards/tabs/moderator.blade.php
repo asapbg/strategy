@@ -128,7 +128,7 @@
 
                                     @if(isset($all_users) && $all_users->count() > 0)
                                         @foreach($all_users as $user)
-                                            <option value="{{ $user->id }}">{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }}({{ $user->email }})</option>
+                                            <option value="{{ $user->id }}">{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }} ({{ $user->email }})</option>
                                         @endforeach
                                     @endif
                                 </select>
