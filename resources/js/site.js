@@ -209,8 +209,8 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 function initInputs()
 {
     $('.select2').select2(select2Options);
-    $('.datepicker').datepicker('destroy');
-    $('.datepicker').datepicker({
+    $('.datepicker, .datepicker-btn').datepicker('destroy');
+    $('.datepicker, .datepicker-btn').datepicker({
         language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
         format: 'dd.mm.yyyy',
         todayHighlight: true,

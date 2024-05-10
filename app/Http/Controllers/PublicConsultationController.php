@@ -611,7 +611,7 @@ class PublicConsultationController extends Controller
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->when($fieldOfActions, function($q) use($fieldOfActions){
-                $q->whereIn('public_consultation.field_of_actions_id', '=', $fieldOfActions);
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActions);
             })
             ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
                 $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsAreas);
@@ -850,7 +850,7 @@ class PublicConsultationController extends Controller
                 $q->whereIn('public_consultation.importer_institution_id', $institutions);
             })
             ->when($fieldOfActions, function($q) use($fieldOfActions){
-                $q->whereIn('public_consultation.field_of_actions_id', '=', $fieldOfActions);
+                $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActions);
             })
             ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
                 $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsAreas);
