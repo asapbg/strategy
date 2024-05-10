@@ -40,6 +40,9 @@
                             <a class="p-0 text-light text-decoration-none" href="{{ route('other_links') }}" title="{{ __('site.footer.other_links') }}">{{ __('site.footer.other_links') }}</a>
                         </div>
                         <div class="col-md-6 mb-3">
+                            <a class="p-0 text-light text-decoration-none" href="{{ route('sitemap') }}" title="{{ __('site.sitemap') }}">{{ __('site.sitemap') }}</a>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <a class="p-0 text-light text-decoration-none" href="https://www.strategy.bg/" title="{{ __('site.old_portal_link') }}л">{{ __('site.old_portal_link') }}</a>
                         </div>
                 </div>
