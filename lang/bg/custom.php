@@ -939,4 +939,7 @@ return [
     'advisory_board' => 'Консултативни съвети',
     'advisory_board_custom' => 'Консултативни съвети (секции)',
     'advisory_board_meetings' => 'Консултативни съвети (заседания)',
+    'advisory_board_moderator_information' => 'Консултативни съвети (информация за модератора)',
+    'advisory_board_secretariat' => 'Консултативни съвети (Секретариат)',
+    'nomenclatures.consultation_type' => 'Номенклатура (Типове обществени консултации)',
 ];

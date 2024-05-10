@@ -939,4 +939,6 @@ return [
     'advisory_board' => 'Advisory Boards',
     'advisory_board_custom' => 'Advisory boards (sections)',
     'advisory_board_meetings' => 'Advisory boards (meetings)',
+    'advisory_board_secretariat' => 'Advisory Boards (Secretariat)',
+    'nomenclatures.consultation_type' => 'Nomenclature (Types of public consultations)',
 ];
