@@ -51,6 +51,7 @@ class ActivityLogController extends Controller
             ->distinct('subject_type')
             ->where('subject_type', '<>', 'App\Models\StrategicDocumentChild')
             ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFramework')
+            ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFrameworkTranslation')
             ->get();
 
         return view('admin.activity-logs.index', compact('activities','causers', 'subjects'));
