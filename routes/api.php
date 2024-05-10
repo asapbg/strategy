@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['guest']], function() {
     Route::controller(ReportsController::class)->group(function () {
         Route::get('/reports/public-consultations/{type}/view',       'apiReportPc')->name('api.report.pc');
-        Route::get('/report/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
-//        Route::get('/report/advisory-boards/{type}/view',       'apiReportAdvBoard')->name('api.report.adv_board');
+        Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
+//        Route::get('/reports/advisory-boards/{type}/view',       'apiReportAdvBoard')->name('api.report.adv_board');
     });
 });

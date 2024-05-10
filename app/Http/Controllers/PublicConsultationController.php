@@ -477,6 +477,7 @@ class PublicConsultationController extends Controller
             })->when($openTo, function ($q) use($openTo){
                 $q->where('public_consultation.open_to', '<=', $openTo);
             })
+            ->where('field_of_actions.parentid', '<>', 0)
             ->groupBy('field_of_action_translations.id');
 
         if($request->input('export_excel') || $request->input('export_pdf')){

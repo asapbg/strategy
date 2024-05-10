@@ -89,7 +89,7 @@
                                     <i class="fas fa-file text-white"></i>
                                 </span>
                                     <span class="home-section-button-txt">
-                                    Ръководство за "Правна информация"
+                                    Ръководство за Актове на Министерския съвет
                                 </span>
                                 </a>
                             </div>

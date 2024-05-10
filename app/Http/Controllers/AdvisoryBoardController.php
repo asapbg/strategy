@@ -78,6 +78,22 @@ class AdvisoryBoardController extends Controller
 
         $pageTitle = $this->pageTitle;
 
+        $groupByColumn = ['advisory_boards.id', 'advisory_board_translations.name'];
+        if($requestGroupBy){
+            if($requestGroupBy == 'fieldOfAction') {
+                $groupByColumn[] = 'field_of_action_translations.name';
+            } elseif($requestGroupBy == 'authority') {
+                $groupByColumn[] = 'authority_advisory_board_translations.name';
+            } elseif($requestGroupBy == 'chairmanType') {
+                $groupByColumn[] = 'advisory_chairman_type_translations.name';
+            } elseif($requestGroupBy == 'npo') {
+                $groupByColumn[] = 'advisory_boards.has_npo_presence';
+            } elseif($requestGroupBy == 'actOfCreation') {
+                $groupByColumn[] = 'advisory_act_type_translations.name';
+            }
+        }
+
+
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
@@ -141,7 +157,7 @@ class AdvisoryBoardController extends Controller
 //            })
 //            ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
-            ->groupBy('advisory_boards.id', 'advisory_board_translations.name')
+            ->groupBy($groupByColumn)
             ->paginate($paginate);
         $subscribeFilter = $requestFilter;
         if(isset($subscribeFilter['status'])){

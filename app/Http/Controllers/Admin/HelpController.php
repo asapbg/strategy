@@ -40,7 +40,7 @@ class HelpController extends AdminController
                 $file = self::SD_INNER_GUIDE_FILE;
                 break;
             case 'pris':
-                $name = 'Ръководство за "Правна информация"';
+                $name = 'Ръководство за "Актове на Министерския съвет"';
                 $file = self::PRIS_GUIDE_FILE;
                 break;
             case 'ogp':

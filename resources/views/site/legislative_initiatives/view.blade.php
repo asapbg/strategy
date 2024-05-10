@@ -20,12 +20,12 @@
 
                 <div class="col-lg-2">
                     <div class="col-md-12 d-flex col-md-12 d-flex justify-content-end">
-                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                        <span class="text-decoration-none d-flex align-items-center">
                             <i class="fa fa-regular fa-thumbs-up main-color" style="font-size:34px;"></i>
-                        </a>
-                        <a href="#" class="text-decoration-none support-count-li d-flex align-items-center ms-3">
+                        </span>
+                        <span class="text-decoration-none support-count-li d-flex align-items-center ms-3 main-color">
                             {{ $item->countLikes() }}
-                        </a>
+                        </span>
                     </div>
                 </div>
             </div>

@@ -14,4 +14,9 @@ class AdvisoryBoardEstablishmentTranslation extends ModelTranslatableActivityExt
     public $timestamps = false;
 
     protected string $logName = "advisory_board_establishment_translations";
+
+    public function getModelName()
+    {
+        return $this->name;
+    }
 }

@@ -43,7 +43,7 @@
                 </tr>
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
-                        @php($existDocTypes = json_decode($item->doc_types))
+                        @php($existDocTypes = json_decode($row->doc_types))
                         <tr>
                             <td>@if(isset($isPdf) && $isPdf)<a href="{{ route('public_consultation.view', $row->id) }}" target="_blank">{{ $row->title }}</a>@else {{ $row->title }}@endif</td>
                             <td>{{ $row->fieldOfAction?->name }}</td>

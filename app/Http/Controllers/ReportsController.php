@@ -186,6 +186,7 @@ class ReportsController extends Controller
                     })
                     ->where('field_of_actions.active', '=', 1)
                     ->whereNull('field_of_actions.deleted_at')
+                    ->where('field_of_actions.parentid', '<>', 0)
                     ->groupBy('field_of_action_translations.id');
 
                 $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
@@ -293,7 +294,7 @@ class ReportsController extends Controller
                         'has_report' => __('custom.pc_missing_docs'),
                         'missing_documents' => __('custom.pc_no_proposal_report'),
                     ]);
-                    
+
                     if($q->count()){
                         foreach ($q as $item){
                             $id = $item->id;
