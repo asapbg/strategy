@@ -50,11 +50,13 @@ class ActivityLogController extends Controller
         $subjects = CustomActivity::select('subject_type')
             ->distinct('subject_type')
             ->where('subject_type', '<>', 'App\Models\StrategicDocumentChild')
+            ->where('subject_type', '<>', 'App\Models\OgpAreaOfferComment')
             ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFramework')
             ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFrameworkTranslation')
             ->where('subject_type', '<>', 'App\Models\OgpAreaArrangement')
             ->where('subject_type', '<>', 'App\Models\OgpAreaArrangementField')
             ->where('subject_type', '<>', 'App\Models\OgpAreaCommitment')
+            ->where('subject_type', '<>', 'App\Models\OgpAreaOffer')
             ->get();
 
         return view('admin.activity-logs.index', compact('activities','causers', 'subjects'));

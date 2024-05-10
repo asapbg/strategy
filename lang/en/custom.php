@@ -933,4 +933,10 @@ return [
     'advisory_board_functions' => 'Advisory Boards (Programmes of Work)',
     'advisory_board_establishments' => 'Advisory Boards (Act of Establishment)',
     'advisory_board_regulatory_framework' => 'Advisory Boards (Rule of Business)',
+    'user_subscribes' => 'Subscribes',
+    'nomenclatures.act_type' => 'Nomenclature (Types of Acts)',
+    'nomenclatures.advisory_act_type' => 'Nomenclature (Types of acts by which an advisory council was created)',
+    'advisory_board' => 'Advisory Boards',
+    'advisory_board_custom' => 'Advisory boards (sections)',
+    'advisory_board_meetings' => 'Advisory boards (meetings)',
 ];

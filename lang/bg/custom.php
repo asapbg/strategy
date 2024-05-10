@@ -933,4 +933,10 @@ return [
     'advisory_board_functions' => 'Консултативни съвети (Работни програми)',
     'advisory_board_establishments' => 'Консултативни съвети (Акт на създаване)',
     'advisory_board_regulatory_framework' => 'Консултативни съвети (Правилник за дейността)',
+    'user_subscribes' => 'Абонаменти',
+    'nomenclatures.act_type' => 'Номенклатура (Видове актове)',
+    'nomenclatures.advisory_act_type' => 'Номенклатура (Видове актове, с които е създаден консултативен съвет)',
+    'advisory_board' => 'Консултативни съвети',
+    'advisory_board_custom' => 'Консултативни съвети (секции)',
+    'advisory_board_meetings' => 'Консултативни съвети (заседания)',
 ];
