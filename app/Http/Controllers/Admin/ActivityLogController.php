@@ -54,6 +54,7 @@ class ActivityLogController extends Controller
             ->where('subject_type', '<>', 'App\Models\AdvisoryBoardRegulatoryFrameworkTranslation')
             ->where('subject_type', '<>', 'App\Models\OgpAreaArrangement')
             ->where('subject_type', '<>', 'App\Models\OgpAreaArrangementField')
+            ->where('subject_type', '<>', 'App\Models\OgpAreaCommitment')
             ->get();
 
         return view('admin.activity-logs.index', compact('activities','causers', 'subjects'));
