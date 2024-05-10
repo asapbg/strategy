@@ -31,7 +31,7 @@ class PublicProfilesController extends Controller
                 ['name' => trans_choice('custom.public_consultations', 2), 'url' => '']
             )
         );
-        $publicConsultation = $item->publicConsultation()->orderBy('date', 'desc')->get();
+        $publicConsultation = $item->publicConsultation()->orderBy('date', 'created_at')->get();
         return $this->view('site.public_profiles.institution.pc', compact('item', 'pageTitle', 'publicConsultation'));
     }
 
