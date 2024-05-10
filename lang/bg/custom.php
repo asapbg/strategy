@@ -928,4 +928,9 @@ return [
     'pc_no_proposal_report' => 'Брой консултации без справка за получените предложения',
     'pc_institution_level' => 'Административно ниво на органа, провел консултацията',
     'helps' => 'Ръководства',
+    'consultations.public_consultation' => 'Обществени консултации',
+    'working_year' => 'Година',
+    'advisory_board_functions' => 'Консултативни съвети (Работни програми)',
+    'advisory_board_establishments' => 'Консултативни съвети (Акт на създаване)',
+    'advisory_board_regulatory_framework' => 'Консултативни съвети (Правилник за дейността)',
 ];

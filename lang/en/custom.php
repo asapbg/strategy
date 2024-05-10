@@ -928,4 +928,9 @@ return [
     'pc_no_proposal_report' => 'Number of consultations without reference to proposals received',
     'pc_institution_level' => 'Administrative level of the authority that carried out the consultation',
     'helps' => 'User guides',
+    'consultations.public_consultation' => 'Public consultations',
+    'working_year' => 'Year',
+    'advisory_board_functions' => 'Advisory Boards (Programmes of Work)',
+    'advisory_board_establishments' => 'Advisory Boards (Act of Establishment)',
+    'advisory_board_regulatory_framework' => 'Advisory Boards (Rule of Business)',
 ];
