@@ -172,17 +172,17 @@
                                    class="text-decoration-none main-color d-block">
 {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
 {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
-                                    {{ $doc->mcDisplayName }}
+                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }}
                                 </a>
                             @endforeach
-                                @foreach($item->changedByDocs as $doc)
-                                    <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
-                                       class="text-decoration-none main-color d-block">
-                                        {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
-                                        {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
-                                        {{ $doc->mcDisplayName }}
-                                    </a>
-                                @endforeach
+                            @foreach($item->changedByDocs as $doc)
+                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                   class="text-decoration-none main-color d-block">
+                                    {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
+                                    {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
+                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }}
+                                </a>
+                            @endforeach
                         @endif
 {{--                        @if(!empty($item->old_connections))--}}
 {{--                                {!! $item->oldConnectionsHtml !!}--}}
