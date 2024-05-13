@@ -13,6 +13,18 @@
 
         <!-- Right side -->
         <div class="col-lg-10 py-5 right-side-content">
+            <div class="row edit-consultation m-0">
+                <div class="col-md-12 text-end  mt-2">
+                    @can('update', $item)
+                        <a class="btn btn-primary main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
+                            <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
+                    @endcan
+                    <input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
+                    <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
+                    @includeIf('site.partial.subscribe-buttons', ['no_rss' => true, 'no_rss' => $item->in_archive, 'no_email_subscribe' => $item->in_archive ])
+                </div>
+            </div>
+
             <div class="row mb-4 ks-row">
                 <div class="col-md-12">
                     <h2 class="mb-2">{{ __('custom.information') }}</h2>

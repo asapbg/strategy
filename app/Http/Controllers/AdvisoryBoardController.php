@@ -217,10 +217,14 @@ class AdvisoryBoardController extends Controller
         if($item->file_id > 0){
             $this->setSlider($item->name, $item->headerImg);
         }
+
+        $hasSubscribeEmail = $this->hasSubscription($item);
+        $hasSubscribeRss = false;
+
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
 
         $this->setSeo($item->name,  '', '', array('title' => $item->name, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting'));
+        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function showSection(Request $request, AdvisoryBoard $item, $sectionId = 0)
