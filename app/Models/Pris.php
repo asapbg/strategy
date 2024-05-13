@@ -182,6 +182,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         return $this->hasOne(LegalActType::class, 'id', 'legal_act_type_id');
     }
 
+    public function decisionProtocol(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Pris::class, 'id', 'decision_protocol')->where('asap_last_version', 1);
+    }
+
     public function consultation(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(PublicConsultation::class, 'id', 'public_consultation_id')->withTrashed();
