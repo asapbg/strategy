@@ -151,7 +151,7 @@
                         <div class="fs-18">
                             <span>{{ $strategicDocument->strategicActType?->name }}</span>
                             @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
-                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
+                                <a href="{{ $strategicDocument->pris->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
                                    class="main-color text-decoration-none">
                                     {{ $strategicDocument->pris?->actType?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                                 </a>

@@ -277,7 +277,7 @@
                                 <div class="consul-item">
                                     <div class="consult-item-header d-flex justify-content-between">
                                         <div class="consult-item-header-link">
-                                            <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}" class="text-decoration-none"
+                                            <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}" class="text-decoration-none"
                                                title="Решение №752 на Министерския съвет от 2023 г.">
                                                 <h3>Решение №752 на Министерския съвет от 2023 г.</h3>
                                             </a>
@@ -311,7 +311,7 @@
                                     <div class="meta-consul">
                                 <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> 30.06.2023
                                     г.</span>
-                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}"><i
+                                        <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}"><i
                                                 class="fas fa-arrow-right read-more"></i></a>
                                     </div>
                                 </div>
@@ -329,7 +329,7 @@
                                 <div class="consul-item">
                                     <div class="consult-item-header d-flex justify-content-between">
                                         <div class="consult-item-header-link">
-                                            <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}" class="text-decoration-none"
+                                            <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}" class="text-decoration-none"
                                                title="Постановление №52 на Министерския съвет от 2023 г.">
                                                 <h3>Постановление №52 на Министерския съвет от 2023 г.
                                                 </h3>
@@ -364,7 +364,7 @@
                                     <div class="meta-consul">
                                 <span class="text-secondary"><i class="far fa-calendar text-secondary"></i> 10.08.2023
                                     г.</span>
-                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}"><i
+                                        <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => 1]) }}"><i
                                                 class="fas fa-arrow-right read-more"></i></a>
                                     </div>
                                 </div>

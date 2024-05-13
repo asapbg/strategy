@@ -557,7 +557,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $pris = $this->pris;
         if($pris){
             $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
-            $prisEventDescription = '<p><a class="text-primary" href="'.route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id]).'" target="_blank">'.$pris->mcDisplayName.'</a></p>';
+            $prisEventDescription = '<p><a class="text-primary" href="'.($pris->in_archive ? route('pris.archive.view', ['category' => $pris->actType->name, 'id' => $pris->id]) : route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id])).'" target="_blank">'.$pris->mcDisplayName.'</a></p>';
         } else {
             $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
             $prisEventDescription = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value).'.description');

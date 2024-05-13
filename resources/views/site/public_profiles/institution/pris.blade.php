@@ -18,7 +18,7 @@
                                             <div class="consul-item">
                                                 <div class="consult-item-header d-flex justify-content-between">
                                                     <div class="consult-item-header-link">
-                                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name),'id' => $row->id]) }}" class="text-decoration-none" title="{{ $row->mcDisplayName }}">
+                                                        <a href="{{ $row->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name), 'id' => $row->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name),'id' => $row->id]) }}" class="text-decoration-none" title="{{ $row->mcDisplayName }}">
                                                             <h3>{{ $row->mcDisplayName }}</h3>
                                                         </a>
                                                     </div>
@@ -67,7 +67,7 @@
                                                 </div>
                                                 <div class="meta-consul">
                                                     <span class="text-secondary d-flex flex-row align-items-baseline lh-normal"><i class="far fa-calendar text-secondary me-1"></i> {{ displayDate($row->doc_date) }} {{ __('site.year_short') }}</span>
-                                                    <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name), 'id' => $row->id]) }}"><i class="fas fa-arrow-right read-more mt-2"></i></a>
+                                                    <a href="{{ $row->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name), 'id' => $row->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($row->actType->name), 'id' => $row->id]) }}"><i class="fas fa-arrow-right read-more mt-2"></i></a>
                                                 </div>
                                             </div>
 

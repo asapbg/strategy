@@ -31,7 +31,7 @@
                                 <div class="consul-item">
                                     <div class="consult-item-header d-flex justify-content-between">
                                         <div class="consult-item-header-link">
-                                            <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name),'id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->mcDisplayName }}">
+                                            <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name),'id' => $item->id]) }}" class="text-decoration-none" title="{{ $item->mcDisplayName }}">
                                                 <h3>{{ $item->mcDisplayName }}</h3>
                                             </a>
                                         </div>
@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="meta-consul">
                                         <span class="text-secondary d-flex flex-row align-items-baseline lh-normal"><i class="far fa-calendar text-secondary me-1"></i> {{ displayDate($item->doc_date) }} {{ __('site.year_short') }}</span>
-                                        <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) }}"><i class="fas fa-arrow-right read-more mt-2"></i></a>
+                                        <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) }}"><i class="fas fa-arrow-right read-more mt-2"></i></a>
                                     </div>
                                 </div>
 

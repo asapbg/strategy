@@ -11,7 +11,7 @@
                     @endcan
                     <input type="hidden" id="subscribe_model" value="App\Models\Pris">
                     <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
-                    @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
+                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true, 'no_rss' => $item->in_archive, 'no_email_subscribe' => $item->in_archive ])
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="{{ route('pris.view', ['category' => $item->actType->name, 'id' => $item->id]) }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
+                        <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $item->id]) : route('pris.view', ['category' => $item->actType->name, 'id' => $item->id]) }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
                     </div>
                 </div>
                 @if($item->newspaper)
@@ -176,7 +176,7 @@
                                 </a>
                             @endforeach
                             @foreach($item->changedByDocs as $doc)
-                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                <a href="{{ $doc->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($doc->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
                                     {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
                                     {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}

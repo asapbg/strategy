@@ -43,6 +43,7 @@ class PrisController extends Controller
 
         $tagSearch = isset($requestFilter['fullSearch']) && !empty($requestFilter['fullSearch']) ? $requestFilter['fullSearch'] : null;
         $items = Pris::select('pris.*')
+            ->NotInArchive()
             ->LastVersion()
             ->InPris()
             ->Published()
@@ -83,6 +84,7 @@ class PrisController extends Controller
         }
 
         $menuCategories = [];
+        $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             ->Pris()
             ->where('id', '<>', LegalActType::TYPE_ORDER)
@@ -93,6 +95,11 @@ class PrisController extends Controller
                 $menuCategories[] = [
                     'label' => $act->name,
                     'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+                $menuCategoriesArchive[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
                     'slug' => Str::slug($act->name)
                 ];
             }
@@ -108,40 +115,79 @@ class PrisController extends Controller
             }
         }
         $this->composeBreadcrumbs($extraBreadCrumbs);
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
     }
 
-    public function archive(Request $request)
+    public function archive(Request $request, $category = '')
     {
         //Filter
+        $rf = $request->all();
         $requestFilter = $request->all();
-        $filter = [];
+        if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
+            $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
+            if( $actType && Str::slug($actType->name) != $category ){
+                return redirect(route('pris.index', $request->query()));
+            }
+        }
+
+        $filter = $this->filters($request);
+
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
-        $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
+        $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
+        $defaultOrderBy = $sort;
+        $defaultDirection = $sortOrd;
 
+        $tagSearch = isset($requestFilter['fullSearch']) && !empty($requestFilter['fullSearch']) ? $requestFilter['fullSearch'] : null;
         $items = Pris::select('pris.*')
+            ->InArchive()
             ->LastVersion()
+            ->InPris()
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institution', 'institution.translations'])
-            ->leftJoin('institution', 'institution.id', '=', 'pris.institution_id')
+            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('pris_translations', function ($j){
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
             ->leftJoin('institution_translations', function ($j){
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
-//            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-//            ->join('legal_act_type_translations', function ($j){
-//                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-//                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+            ->join('legal_act_type_translations', function ($j){
+                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            })
+//            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+//            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
+//            ->leftJoin('tag_translations', function ($j){
+//                $j->on('tag_translations.tag_id', '=', 'tag.id')
+//                    ->where('tag_translations.locale', '=', app()->getLocale());
 //            })
-            ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_ARCHIVE)
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)->paginate($paginate);
+            ->SortedBy($sort,$sortOrd)
+            //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
+            ->paginate($paginate);
+
+
+        $hasSubscribeEmail = $this->hasSubscription(null, Pris::class, $requestFilter);
+        $hasSubscribeRss = false;
+        $no_rss = true;
+        $no_email_subscribe = true;
+
+        if( $request->ajax() ) {
+            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail',
+                'hasSubscribeRss', 'requestFilter', 'no_rss', 'no_email_subscribe'));
+        }
 
         $menuCategories = [];
+        $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             ->Pris()
             ->where('id', '<>', LegalActType::TYPE_ORDER)
@@ -154,13 +200,27 @@ class PrisController extends Controller
                     'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
                     'slug' => Str::slug($act->name)
                 ];
+                $menuCategoriesArchive[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
             }
         }
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
 
         $pageTitle = __('site.menu.pris');
-        $this->composeBreadcrumbs(array(['name' => __('site.pris.archive'), 'url' => '']));
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'pageTopContent'));
+        $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
+        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+            $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
+            if($actType) {
+                $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
+            }
+        }
+        $this->composeBreadcrumbs($extraBreadCrumbs);
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories',
+            'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss',
+            'requestFilter', 'no_rss', 'no_email_subscribe'));
     }
 
     public function show(Request $request, $category, int $id = 0)
@@ -178,6 +238,7 @@ class PrisController extends Controller
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
 
         $menuCategories = [];
+        $menuCategoriesArchive = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
             ->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
@@ -189,13 +250,25 @@ class PrisController extends Controller
                     'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
                     'slug' => Str::slug($act->name)
                 ];
+                $menuCategoriesArchive[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
             }
         }
 
         $pageTitle = __('site.pris.page_title');
-        $extraBreadCrumbs = [];
-        if($item->actType) {
-            $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
+//        $extraBreadCrumbs = [];
+//        if($item->actType) {
+//            $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
+//        }
+        $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
+        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+            $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
+            if($actType) {
+                $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
+            }
         }
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
@@ -203,7 +276,7 @@ class PrisController extends Controller
         $this->composeBreadcrumbs($extraBreadCrumbs, $item);
         $this->setSeo($item->mcDisplayName, '', '', array('title' => $item->mcDisplayName, 'img' => Pris::DEFAULT_IMG));
 
-        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     private function sorters()

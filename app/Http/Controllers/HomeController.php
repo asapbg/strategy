@@ -816,7 +816,7 @@ class HomeController extends Controller
                         $items[] = ['url' => LaravelLocalization::localizeUrl(route('legislative_initiatives.view', ['item' => $item->id]), $item->locale), 'priority' => '0.8', 'lastmod' => $item->lastmod];
                         break;
                     case 'pris':
-                        $items[] = ['url' => LaravelLocalization::localizeUrl(route('pris.view', ['category' => Str::slug($item->slug), 'id' => $item->id]), $item->locale), 'priority' => '0.8', 'lastmod' => $item->lastmod];
+                        $items[] = ['url' => LaravelLocalization::localizeUrl($item->in_archive ? route('pris.archive.view', ['category' => Str::slug($item->slug), 'id' => $item->id]) : route('pris.view', ['category' => Str::slug($item->slug), 'id' => $item->id]), $item->locale), 'priority' => '0.8', 'lastmod' => $item->lastmod];
                         break;
                     case 'lp':
                         $items[] = ['url' => LaravelLocalization::localizeUrl(route('lp.view', ['id' => $item->id]), $item->locale), 'priority' => '0.8', 'lastmod' => $item->lastmod];

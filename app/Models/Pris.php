@@ -38,7 +38,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     protected $fillable = ['doc_num', 'doc_date', 'legal_act_type_id', //'institution_id',
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
-        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid', 'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version'];
+        'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid',
+        'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version', 'in_archive'];
 
     /**
      * @return FeedItem
@@ -50,7 +51,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             'title' => $this->mcDisplayName,
             'summary' => '',
             'updated' => $this->updated_at ?? $this->created_at,
-            'link' => route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
+            'link' => $this->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($this->actType?->name), 'id' => $this->id]) : route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''
         ]);
@@ -87,6 +88,14 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     public function scopeInPris($query){
         $query->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL]);
+    }
+
+    public function scopeInArchive($query){
+        $query->where('pris.in_archive', 1);
+    }
+
+    public function scopeNotInArchive($query){
+        $query->where('pris.in_archive', 0);
     }
 
     public function scopeLastVersion($query){

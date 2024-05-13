@@ -37,7 +37,7 @@
                             @php($url = route('ogp.news.details', $item->id))
                             @break
                         @case('pris')
-                            @php($url = route('pris.view', ['category' => Str::slug($item->act_type_name), 'id' => $item->id]))
+                            @php($url = $item->in_archive ? route('pris.archive.view', ['category' => Str::slug($item->act_type_name), 'id' => $item->id]) : route('pris.view', ['category' => Str::slug($item->act_type_name), 'id' => $item->id]))
                             @break
                         @default
                             @php($url = '#')

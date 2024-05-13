@@ -139,7 +139,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 ${$varUrl} = match ($type) {
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
 //                    default => route('admin.strategic_vdocuments.edit', ['id' => $this->data['modelInstance']->id]),
-                    default => route('pris.view', ['category' => Str::slug($this->data['modelInstance']->actType?->name), 'id' => $this->data['modelInstance']->id]),
+                    default => ($this->data['modelInstance']->in_archive ? route('pris.archive.view', ['category' => Str::slug($this->data['modelInstance']->actType?->name), 'id' => $this->data['modelInstance']->id]) : route('pris.view', ['category' => Str::slug($this->data['modelInstance']->actType?->name), 'id' => $this->data['modelInstance']->id])),
                 };
             } elseif ($this->data['modelInstance'] instanceof LegislativeProgram) {
                 if ($this->data['event'] == "created") {
