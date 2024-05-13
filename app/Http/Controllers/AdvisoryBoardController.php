@@ -69,6 +69,7 @@ class AdvisoryBoardController extends Controller
         $sorter = $this->boardSorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        $queryDefaultSort = $request->filled('order_by') ? null : true;
         $paginate = $requestFilter['paginate'] ?? AdvisoryBoard::PAGINATE;
 
         $orderByName = !isset($requestFilter['status']) || $requestFilter['status'] == '';
@@ -77,22 +78,25 @@ class AdvisoryBoardController extends Controller
         $defaultDirection = $sortOrd;
 
         $pageTitle = $this->pageTitle;
-
+//dd($requestGroupBy, $sort);
         $groupByColumn = ['advisory_boards.id', 'advisory_board_translations.name'];
-        if($requestGroupBy){
-            if($requestGroupBy == 'fieldOfAction') {
+//        if($requestGroupBy){
+            if($requestGroupBy == 'fieldOfAction' || $sort == 'fieldOfAction') {
                 $groupByColumn[] = 'field_of_action_translations.name';
-            } elseif($requestGroupBy == 'authority') {
+            }
+            if($requestGroupBy == 'authority' || $sort == 'authority') {
                 $groupByColumn[] = 'authority_advisory_board_translations.name';
-            } elseif($requestGroupBy == 'chairmanType') {
+            }
+            if($requestGroupBy == 'chairmanType' || $sort == 'chairmanType') {
                 $groupByColumn[] = 'advisory_chairman_type_translations.name';
-            } elseif($requestGroupBy == 'npo') {
+            }
+            if($requestGroupBy == 'npo' || $sort == 'npo') {
                 $groupByColumn[] = 'advisory_boards.has_npo_presence';
-            } elseif($requestGroupBy == 'actOfCreation') {
+            }
+            if($requestGroupBy == 'actOfCreation' || $sort == 'actOfCreation') {
                 $groupByColumn[] = 'advisory_act_type_translations.name';
             }
-        }
-
+//        }
 
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
@@ -132,31 +136,13 @@ class AdvisoryBoardController extends Controller
                 $j->on('advisory_board_npo_translations.advisory_board_npo_id', '=', 'advisory_board_npos.id')
                     ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
             })
-            ->where('public', true)
-//            ->whereNull('advisory_board_members.deleted_at')
-//            ->whereNull('advisory_board_npos.deleted_at')
+            ->where('advisory_boards.public', true)
             ->FilterBy($requestFilter)
-            ->when($requestGroupBy, function ($query) use($requestGroupBy){
-                if($requestGroupBy == 'fieldOfAction') {
-                    return $query->orderBy('field_of_action_translations.name');
-                } elseif($requestGroupBy == 'authority') {
-                    return $query->orderBy('authority_advisory_board_translations.name');
-                } elseif($requestGroupBy == 'chairmanType') {
-                    return $query->orderBy('advisory_chairman_type_translations.name');
-                } elseif($requestGroupBy == 'npo') {
-                    return $query->orderBy('advisory_boards.has_npo_presence');
-                } elseif($requestGroupBy == 'actOfCreation') {
-                    return $query->orderBy('advisory_act_type_translations.name');
-                }
-            })
-            ->orderBy('advisory_boards.active', 'desc')
-            ->orderBy('advisory_board_translations.name')
-//            ->when($orderByName, function ($query) {
-//                return $query->orderBy('advisory_boards.active', 'desc')
-//                    ->orderBy('advisory_board_translations.name');
-//            })
-//            ->orderBy('advisory_boards.active', 'desc')
             ->SortedBy($sort,$sortOrd)
+            ->when($queryDefaultSort, function ($query){
+                $query->orderBy('advisory_boards.active', 'desc')
+                    ->orderBy('advisory_board_translations.name');
+            })
             ->groupBy($groupByColumn)
             ->paginate($paginate);
         $subscribeFilter = $requestFilter;
@@ -529,7 +515,7 @@ class AdvisoryBoardController extends Controller
     {
         //Filter
         $rf = $request->all();
-        $requestGroupBy = $rf['groupBy'] ?? null;
+//        $requestGroupBy = $rf['groupBy'] ?? null;
         //Filter
         $requestFilter = $request->all();
         if(empty($rf)){
@@ -538,8 +524,11 @@ class AdvisoryBoardController extends Controller
         $filter = $this->filtersReport($request, $rf);
         //Sorter
         $sorter = $this->sortersReport();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'status';
-        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+//        $sort = $request->filled('order_by') ? $request->input('order_by') : 'status';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : ($request->filled('export_sort_by') ? $request->input('export_sort_by') : 'status');
+//        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : ($request->filled('export_sort_direction') ? $request->input('export_sort_direction') : (!$request->filled('order_by') ? 'desc' : 'asc'));
+        $queryDefaultSort = $request->filled('order_by') ? null : true;
 
         $paginate = $requestFilter['paginate'] ?? config('app.default_paginate');
         $defaultOrderBy = $sort;
@@ -588,28 +577,30 @@ class AdvisoryBoardController extends Controller
 
             $q->where('public', true)
             ->FilterBy($requestFilter)
-            ->when($requestGroupBy, function ($query) use($requestGroupBy){
-                if($requestGroupBy == 'fieldOfAction') {
-                    return $query->orderBy('field_of_action_translations.name');
-                } elseif($requestGroupBy == 'authority') {
-                    return $query->orderBy('authority_advisory_board_translations.name');
-                } elseif($requestGroupBy == 'chairmanType') {
-                    return $query->orderBy('advisory_chairman_type_translations.name');
-                } elseif($requestGroupBy == 'npo') {
-                    return $query->orderBy('advisory_boards.has_npo_presence');
-                } elseif($requestGroupBy == 'actOfCreation') {
-                    return $query->orderBy('advisory_act_type_translations.name');
-                }
-            })
+//            ->when($requestGroupBy, function ($query) use($requestGroupBy){
+//                if($requestGroupBy == 'fieldOfAction') {
+//                    return $query->orderBy('field_of_action_translations.name');
+//                } elseif($requestGroupBy == 'authority') {
+//                    return $query->orderBy('authority_advisory_board_translations.name');
+//                } elseif($requestGroupBy == 'chairmanType') {
+//                    return $query->orderBy('advisory_chairman_type_translations.name');
+//                } elseif($requestGroupBy == 'npo') {
+//                    return $query->orderBy('advisory_boards.has_npo_presence');
+//                } elseif($requestGroupBy == 'actOfCreation') {
+//                    return $query->orderBy('advisory_act_type_translations.name');
+//                }
+//            })
             ->SortedBy($sort,$sortOrd)
-            ->orderBy('advisory_boards.active', 'desc')
-            ->orderBy('advisory_board_translations.name', 'asc');
+                ->when($queryDefaultSort, function ($query){
+                    $query->orderBy('advisory_boards.active', 'desc')
+                        ->orderBy('advisory_board_translations.name', 'asc');
+                });
 
         if($searchMeetings){
             $q->groupBy('advisory_boards.id');
         }
 
-        if($request->input('export_excel') || $request->input('export_pdf')){
+        if($request->input('export_excel') || $request->input('export_as_excel') || $request->input('export_pdf') || $request->input('export_as_pdf')){
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.adv_board_report_title'),
@@ -618,7 +609,7 @@ class AdvisoryBoardController extends Controller
             ];
 
             $fileName = 'adv_report_'.Carbon::now()->format('Y_m_d_H_i_s');
-            if($request->input('export_pdf')){
+            if($request->input('export_pdf') || $request->input('export_as_pdf')){
                 ini_set('max_execution_time', 60);
                 $pdf = PDF::loadView('exports.adv_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
                 return $pdf->download($fileName.'.pdf');
