@@ -28,6 +28,7 @@ class PrisSetInArchive extends Command
     public function handle()
     {
         \DB::statement('update pris set in_archive = 1 where doc_date < \'1989-01-01\'');
+        \DB::statement('update pris set in_archive = 0 where doc_date >= \'1989-01-01\'');
         return Command::SUCCESS;
     }
 }
