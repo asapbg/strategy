@@ -995,6 +995,42 @@ class PublicConsultationController extends Controller
 //            ->orderBy('field_of_action_translations.name', 'asc')
 //            ->get();
         return array(
+            'level' => array(
+                'type' => 'select',
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+                'multiple' => true,
+                'default' => '',
+                'label' => __('custom.pc_institution_level'),
+                'value' => $request->input('level'),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_MUNICIPAL), false),
+                'multiple' => true,
+                'default' => '',
+                'label' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
             'name' => array(
                 'type' => 'text',
                 'label' => __('validation.attributes.name'),
@@ -1005,15 +1041,6 @@ class PublicConsultationController extends Controller
                 'type' => 'text',
                 'label' => __('custom.consultation_number_'),
                 'value' => $request->input('consultationNumber'),
-                'col' => 'col-md-4'
-            ),
-            'fieldOfActions' => array(
-                'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
-                'multiple' => true,
-                'default' => '',
-                'label' => trans_choice('custom.field_of_actions', 1),
-                'value' => $request->input('fieldOfActions'),
                 'col' => 'col-md-4'
             ),
             'openFrom' => array(
