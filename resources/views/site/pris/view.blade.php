@@ -121,7 +121,7 @@
                     <div class="col-md-9 pris-left-column">
                         @php($decisionProtocol = $item->decision_protocol && $item->decisionProtocol ? $item->decisionProtocol : null)
                         @if($decisionProtocol)
-                            <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($decisionProtocol->actType->name_single), 'id' => $decisionProtocol->id]) : route('pris.view', ['category' => $decisionProtocol->actType->name_single, 'id' => $decisionProtocol->id]) }}" target="_blank">{{ $decisionProtocol->mcDisplayName }}</a>
+                            <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($decisionProtocol->actType->name_single), 'id' => $decisionProtocol->id]) : route('pris.view', ['category' => $decisionProtocol->actType->name_single, 'id' => $decisionProtocol->id]) }}" target="_blank">@if(!empty($item->protocol_point)){{ __('site.point_short').' '.$item->protocol_point }} {{ __('custom.from') }} @endif{{ $decisionProtocol->mcDisplayName }}</a>
                         @else
                             <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name_single), 'id' => $item->id]) : route('pris.view', ['category' => $item->actType->name_single, 'id' => $item->id]) }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $item->protocol }}" target="_blank">{{ $item->protocol }}</a>
                         @endif

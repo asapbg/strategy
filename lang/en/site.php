@@ -261,4 +261,5 @@ return [
     'protocol' => 'Protocol',
     'executor_name' => 'Name of executor',
     'executor_institution' => 'Name of executor',
+    'point_short' => 'point ',
 ];

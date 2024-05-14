@@ -262,4 +262,5 @@ return [
     'protocol' => 'Протокол',
     'executor_name' => 'Наименование на възложител',
     'executor_institution' => 'Наименование на изпълнител',
+    'point_short' => 'т.',
 ];
