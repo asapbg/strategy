@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\DocTypesEnum;
+use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Models\ActType;
 use App\Models\AdvisoryBoard;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
+use App\Models\LegalActType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,27 +33,27 @@ class ReportsController extends Controller
                     ])
                     ->leftJoin('advisory_board_translations', function ($j){
                         $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
-                            ->where('advisory_board_translations.locale', '=', app()->getLocale());
+                            ->where('advisory_board_translations.locale', '=', 'bg');
                     })
                     ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
                     ->leftJoin('field_of_action_translations', function ($j){
                         $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-                            ->where('field_of_action_translations.locale', '=', app()->getLocale());
+                            ->where('field_of_action_translations.locale', '=', 'bg');
                     })
                     ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
                     ->leftJoin('authority_advisory_board_translations', function ($j){
                         $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
-                            ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
+                            ->where('authority_advisory_board_translations.locale', '=', 'bg');
                     })
                     ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
                     ->leftJoin('advisory_act_type_translations', function ($j){
                         $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
-                            ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
+                            ->where('advisory_act_type_translations.locale', '=', 'bg');
                     })
                     ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
                     ->leftJoin('advisory_chairman_type_translations', function ($j){
                         $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
-                            ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
+                            ->where('advisory_chairman_type_translations.locale', '=', 'bg');
                     })
                     ->whereNull('advisory_boards.deleted_at')
                     ->where('advisory_boards.public', true)
@@ -78,6 +80,106 @@ class ReportsController extends Controller
 
         return response()->json($data);
     }
+
+    public function apiReportLegislativeInitiative(Request $request, string $type){
+        switch ($type)
+        {
+            case 'standard':
+                $q = DB::table('legislative_initiative')
+                    ->select([
+                        DB::raw('\''.__('custom.change_f').' '.__('custom.in').'\' || max(law_translations.name) as name'),
+                        DB::raw('legislative_initiative.description as description'),
+                        DB::raw('legislative_initiative.law_paragraph as law_paragraph'),
+                        DB::raw('legislative_initiative.created_at::date as start_at'),
+                        DB::raw('legislative_initiative.active_support::date as support_end_at'),
+                        'legislative_initiative.cap as required_likes',
+                        DB::raw('case when max(users.id) is not null then max(users.first_name) || \' \' || max(users.last_name) else \'\' end as author'),
+                        DB::raw('case when legislative_initiative.status::int = '.LegislativeInitiativeStatusesEnum::STATUS_SEND->value.'
+                        then \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_SEND->name)).'\'
+                        else (
+                            case when legislative_initiative.status::int = '.LegislativeInitiativeStatusesEnum::STATUS_CLOSED->value.'
+                            then \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_CLOSED->name)).'\'
+                            else \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->name)).'\' end
+                        ) end as status'),
+                        DB::raw('sum(case when legislative_initiative_votes.is_like = true then 1 else 0 end) as likes'),
+                        DB::raw('sum(case when legislative_initiative_votes.is_like = false then 1 else 0 end) as dislikes'),
+                        DB::raw('0 as supported'),
+                        DB::raw('legislative_initiative.end_support_at::date as end_at'),
+                        DB::raw('json_agg(ic_translation.name) filter (where ic_translation.name is not null) as initiative_institution'),
+                        DB::raw('json_agg(ric_translation.name) filter (where ric_translation.name is not null) as send_to_institution'),
+                        DB::raw('legislative_initiative.send_at::date as send_at')
+                    ])
+                    ->leftJoin('users', 'users.id', '=', 'legislative_initiative.author_id')
+                    ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
+                    ->join('law_translations', function ($q){
+                        $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', 'bg');
+                    })
+                    ->leftJoin('legislative_initiative_votes', 'legislative_initiative_id', '=', 'legislative_initiative.id')
+                    ->join('legislative_initiative_institution as ic', 'ic.legislative_initiative_id', '=', 'legislative_initiative.id')
+                    ->join('institution as ici', 'ici.id', '=', 'ic.institution_id')
+                    ->join('institution_translations as ic_translation', function ($q){
+                        $q->on('ic_translation.institution_id', '=', 'ici.id')->where('ic_translation.locale', '=', 'bg');
+                    })
+                    ->leftJoin('legislative_initiative_receiver as ric', 'ric.legislative_initiative_id', '=', 'legislative_initiative.id')
+                    ->leftJoin('institution as rici', 'rici.id', '=', 'ric.institution_id')
+                    ->leftJoin('institution_translations as ric_translation', function ($q){
+                        $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', 'bg');
+                    })
+                    ->whereNull('legislative_initiative.deleted_at')
+                    ->groupBy('legislative_initiative.id')
+                    ->orderBy('legislative_initiative.created_at', 'desc')
+                    ->get();
+
+                $data = array();
+                if($q->count()){
+                    foreach ($q as $row){
+                        $rowArray = (array)$row;
+                        $liInstitutions = !is_null($rowArray['initiative_institution']) ? json_decode($rowArray['initiative_institution']) : [];
+                        $rowArray['initiative_institution'] = implode(', ', $liInstitutions);
+                        $liSendInstitutions = !is_null($rowArray['send_to_institution']) ? json_decode($rowArray['send_to_institution']) : [];
+                        $rowArray['send_to_institution'] = implode(', ', $liSendInstitutions);
+
+                        $supported = (int)$rowArray['likes'] - (int)$rowArray['dislikes'];
+                        $rowArray['supported'] = $supported >= 0 ? $supported : 0;
+
+                        $rowArray['description'] = !empty($rowArray['description']) ? strip_tags($rowArray['description']) : '';
+                        $rowArray['law_paragraph'] = !empty($rowArray['law_paragraph']) ? strip_tags($rowArray['law_paragraph']) : '';
+                        $rowArray['law_text'] = !empty($rowArray['law_text']) ? strip_tags($rowArray['law_text']) : '';
+
+                        $data[] = $rowArray;
+                    }
+                }
+                //$data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+
+                $header = [
+                    'name' => __('custom.name'),
+                    'description' => __('custom.description_of_suggested_change'),
+                    'law_paragraph' => __('validation.attributes.law_paragraph'),
+                    'law_text' => __('validation.attributes.law_text'),
+                    'start_at' => __('custom.begin_date'),
+                    'support_end_at' => __('site.li_end_support_date'),
+                    'required_likes' => __('site.li_required_likes'),
+                    'author' => __('custom.author'),
+                    'status' => __('custom.status'),
+                    'likes' => __('custom.likes'),
+                    'dislikes' => __('custom.li_dislikes'),
+                    'supported' => __('custom.supported_f'),
+                    'end_at' => __('site.li_ended_at'),
+                    'initiative_institution' => __('site.li_initiative_institution'),
+                    'send_to_institution' => __('site.li_send_to_administrations'),
+                    'send_at' => __('site.li_send_at'),
+
+                ];
+                array_unshift($data, $header);
+
+                break;
+            default:
+                $data = [];
+        }
+
+        return response()->json($data);
+    }
+
     public function apiReportPc(Request $request, string $type)
     {
         switch ($type)
@@ -304,6 +406,146 @@ class ReportsController extends Controller
                             $data[] = $item;
                         }
                     }
+                break;
+            default:
+                $data = [];
+        }
+
+        return response()->json($data);
+    }
+
+    public function apiReportPris(Request $request, string $type){
+        switch ($type)
+        {
+            case 'standard':
+                DB::enableQueryLog();
+                $q = DB::table('pris')
+                    ->select([
+                        'pris.doc_num',
+                        'pris.doc_date',
+                         DB::raw('pris.published_at::date as published_at'),
+                         DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
+                         DB::raw('json_agg(institution_translations.name) filter (where institution_translations.name is not null and institution_translations.institution_id <> '.env('DEFAULT_INSTITUTION_ID', 0).') as institutions'),
+                         DB::raw('max(pris_translations.importer) as importer'),
+                         'pris.protocol',
+                         'pris.newspaper_number',
+                         'pris.newspaper_year',
+                        DB::raw('json_agg(tag_translations.label) filter (where tag_translations.label is not null) as tags'),
+                         DB::raw('max(pris_translations.about) as about'),
+                         DB::raw('max(pris_translations.legal_reason) as legal_reason')
+                    ])
+                    ->join('pris_translations', function ($q){
+                        $q->on('pris_translations.pris_id', '=', 'pris.id')->where('pris_translations.locale', '=', 'bg');
+                    })
+                    ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+                    ->join('legal_act_type_translations', function ($j){
+                        $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                            ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+                    })
+                    ->join('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+                    ->join('institution', 'institution.id', '=', 'pris_institution.institution_id')
+                    ->join('institution_translations', function ($j){
+                        $j->on('institution_translations.institution_id', '=', 'institution.id')
+                            ->where('institution_translations.locale', '=', app()->getLocale());
+                    })
+                    ->join('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+                    ->join('tag', 'tag.id', '=', 'pris_tag.tag_id')
+                    ->join('tag_translations', function ($j){
+                        $j->on('tag_translations.tag_id', '=', 'tag.id')
+                            ->where('tag_translations.locale', '=', app()->getLocale());
+                    })
+                    ->whereNull('pris.deleted_at')
+                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+                    ->whereNotNull('pris.published_at')
+                    ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL])
+                    ->where('pris.asap_last_version', '=', 1)
+                    ->where('pris.in_archive', 0)
+                    ->groupBy('pris.id')
+                    ->orderBy('pris.doc_date', 'desc')
+                    ->limit(1000)
+                ->get();
+
+                $data = array();
+
+                if($q->count()){
+                    foreach ($q as $row){
+                        $rowArray = (array)$row;
+                        $institutions = !is_null($rowArray['institutions']) ? json_decode($rowArray['institutions']) : [];
+                        $rowArray['institutions'] = implode(', ', $institutions);
+
+                        $tags = !is_null($rowArray['tags']) ? json_decode($rowArray['tags']) : [];
+                        $rowArray['tags'] = implode(', ', $tags);
+
+                        $rowArray['about'] = !empty($rowArray['about']) ? html_entity_decode($rowArray['about']) : '';
+                        $rowArray['legal_reason'] = !empty($rowArray['legal_reason']) ? html_entity_decode($rowArray['legal_reason']) : '';
+                        $data[] = $rowArray;
+                    }
+                }
+                $header = [
+                    'name' => __('custom.document_number'),
+                    'doc_date' => __('custom.date_issued'),
+                    'published_at' => __('custom.date_published'),
+                    'legal_act_type' => trans_choice('custom.act_types', 1),
+                    'institutions' => trans_choice('custom.institutions', 2),
+                    'importer' => trans_choice('custom.importers', 1),
+                    'protocol' => __('site.protocol'),
+                    'newspaper_number' => __('custom.newspaper_number'),
+                    'newspaper_year' => __('custom.newspaper_year'),
+                    'tags' => trans_choice('custom.tags', 2),
+                    'about' => __('custom.about'),
+                    'legal_reason' => __('custom.legal_reason'),
+                ];
+                array_unshift($data, $header);
+
+                break;
+            default:
+                $data = [];
+        }
+
+        return response()->json($data);
+    }
+
+    public function apiReportImpactAssessments(Request $request, string $type){
+        switch ($type)
+        {
+            case 'executors':
+                $q = DB::table('executors')
+                    ->select([
+                        'executor_translations.executor_name',
+                        'executors.eik',
+                        'executors.contract_date',
+                        'executors.price',
+                        'institution_translations.name as institution',
+                        'executor_translations.contract_subject',
+                        'executor_translations.services_description',
+                    ])
+                    ->leftJoin('executor_translations', function ($j){
+                        $j->on('executor_translations.executor_id', '=', 'executors.id')
+                            ->where('executor_translations.locale', '=', 'bg');
+                    })
+                    ->join('institution', 'institution.id', '=', 'executors.institution_id')
+                    ->join('institution_translations', function ($j){
+                        $j->on('institution_translations.institution_id', '=', 'institution.id')
+                            ->where('institution_translations.locale', '=', app()->getLocale());
+                    })
+                    ->whereNull('executors.deleted_at')
+                    ->where('executors.active', true)
+                    ->orderBy('executor_translations.executor_name', 'asc');
+
+                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+
+                $header = [
+                    'executor_name' => __('site.executor_name'),
+                    'eik' => __('custom.eik'),
+                    'contract_date' => __('custom.contract_date'),
+                    'price' => __('custom.price_with_vat'),
+                    'institution' => __('site.executor_institution'),
+                    'contract_subject' => __('custom.contract_subject'),
+                    'services_description' => __('custom.services_description'),
+
+                ];
+                array_unshift($data, $header);
+
                 break;
             default:
                 $data = [];
