@@ -259,11 +259,13 @@ class PrisController extends Controller
         }
 
         $pageTitle = __('site.pris.page_title');
-//        $extraBreadCrumbs = [];
+        $extraBreadCrumbs = [];
 //        if($item->actType) {
 //            $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
 //        }
-        $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
+        if($item->in_archive){
+            $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
+        }
         if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
             if($actType) {
