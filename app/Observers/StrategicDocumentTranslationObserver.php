@@ -100,24 +100,24 @@ class StrategicDocumentTranslationObserver
             ->get();
 
         //get users by model filter
-        $filterSubscribtions = UserSubscribe::where('subscribable_type', StrategicDocument::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->whereNull('subscribable_id')
-            ->get();
-
-        if($filterSubscribtions->count()){
-            foreach ($filterSubscribtions as $fSubscribe){
-                $filterArray = json_decode($fSubscribe->search_filters, true);
-                if($filterArray){
-                    $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($strategicDocumentTranslation->parent->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe);
-                    }
-                }
-            }
-        }
+//        $filterSubscribtions = UserSubscribe::where('subscribable_type', StrategicDocument::class)
+//            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+//            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+//            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+//            ->whereNull('subscribable_id')
+//            ->get();
+//
+//        if($filterSubscribtions->count()){
+//            foreach ($filterSubscribtions as $fSubscribe){
+//                $filterArray = json_decode($fSubscribe->search_filters, true);
+//                if($filterArray){
+//                    $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
+//                    if(in_array($strategicDocumentTranslation->parent->id, $modelIds)){
+//                        $subscribedUsers->add($fSubscribe);
+//                    }
+//                }
+//            }
+//        }
 
         if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;

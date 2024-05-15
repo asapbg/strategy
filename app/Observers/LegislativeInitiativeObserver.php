@@ -75,29 +75,32 @@ class LegislativeInitiativeObserver
         $administrators = null;
         $moderators = null;
 
-        //get users by model ID
-        $subscribedUsers = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $legislativeInitiative->id)
-            ->get();
+        if($event == 'updated'){
+            //get users by model ID
+            $subscribedUsers = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->where('subscribable_id', '=', $legislativeInitiative->id)
+                ->get();
+        }else{
+            $subscribedUsers = UserSubscribe::where('id', 0)->get();
+            //get users by model filter
+            $filterSubscribtions = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->whereNull('subscribable_id')
+                ->get();
 
-        //get users by model filter
-        $filterSubscribtions = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->whereNull('subscribable_id')
-            ->get();
-
-        if($filterSubscribtions->count()){
-            foreach ($filterSubscribtions as $fSubscribe){
-                $filterArray = json_decode($fSubscribe->search_filters, true);
-                if($filterArray){
-                    $modelIds = LegislativeInitiative::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($legislativeInitiative->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe);
+            if($filterSubscribtions->count()){
+                foreach ($filterSubscribtions as $fSubscribe){
+                    $filterArray = json_decode($fSubscribe->search_filters, true);
+                    if($filterArray){
+                        $modelIds = LegislativeInitiative::list($filterArray)->pluck('id')->toArray();
+                        if(in_array($legislativeInitiative->id, $modelIds)){
+                            $subscribedUsers->add($fSubscribe);
+                        }
                     }
                 }
             }

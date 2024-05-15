@@ -107,32 +107,33 @@ class PublicConsultationObserver
 //                ->where('institution_id', $publicConsultation->importer_institution_id)
                 ->get()
                 ->unique('id');
-        }
 
-        //get users by model ID
-        $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $publicConsultation->id)
-            ->get();
+            $subscribedUsers = UserSubscribe::where('id', 0)->get();
+            //get users by model filter
+            $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->whereNull('subscribable_id')
+                ->get();
 
-        //get users by model filter
-        $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->whereNull('subscribable_id')
-            ->get();
-
-        if($filterSubscribtions->count()){
-            foreach ($filterSubscribtions as $fSubscribe){
-                $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                if(in_array($publicConsultation->id, $modelIds)){
-                    $subscribedUsers->add($fSubscribe);
+            if($filterSubscribtions->count()){
+                foreach ($filterSubscribtions as $fSubscribe){
+                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                    $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
+                    if(in_array($publicConsultation->id, $modelIds)){
+                        $subscribedUsers->add($fSubscribe);
+                    }
                 }
             }
+        } else{
+            //get users by model ID
+            $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->where('subscribable_id', '=', $publicConsultation->id)
+                ->get();
         }
         if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;

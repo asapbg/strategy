@@ -51,12 +51,12 @@ class PrisObserver
             unset($dirty['updated_at']);
 
             if (sizeof($dirty) && !$old_published_at && !empty($pris->published_at)) {
-                $this->sendEmails($pris, 'created');
+                $this->sendEmails($pris, 'updated');
                 Log::info('Send subscribe email on update');
             }
             if (!$old_public_consultation_id && $pris->public_consultation_id) {
                 //send if pris pc
-                $this->sendEmails($pris, 'created_with_pc');
+                $this->sendEmails($pris, 'updated_with_pc');
                 Log::info('Send subscribe email on creation');
             }
         }
@@ -104,34 +104,39 @@ class PrisObserver
      */
     private function sendEmails(Pris $pris, $event): void
     {
-        if($event == 'created'){
+        if($event == 'created' || $event == 'updated'){
             $administrators = null;
             $moderators = null;
-            //get users by model ID
-            $subscribedUsers = UserSubscribe::where('subscribable_type', Pris::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->where('subscribable_id', '=', $pris->id)
-                ->get();
 
-            //get users by model filter
-            $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->whereNull('subscribable_id')
-                ->get();
+            if($event == 'updated'){
+                //get users by model ID
+                $subscribedUsers = UserSubscribe::where('subscribable_type', Pris::class)
+                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                    ->where('subscribable_id', '=', $pris->id)
+                    ->get();
+            } else{
+                $subscribedUsers = UserSubscribe::where('id', 0)->get();
+                //get users by model filter
+                $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
+                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                    ->whereNull('subscribable_id')
+                    ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
-                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                    $modelIds = Pris::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($pris->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe);
+                if($filterSubscribtions->count()){
+                    foreach ($filterSubscribtions as $fSubscribe){
+                        $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                        $modelIds = Pris::list($filterArray)->pluck('id')->toArray();
+                        if(in_array($pris->id, $modelIds)){
+                            $subscribedUsers->add($fSubscribe);
+                        }
                     }
                 }
             }
+
             if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
                 return;
             }
@@ -145,33 +150,37 @@ class PrisObserver
 
             SendSubscribedUserEmailJob::dispatch($data);
 
-        } else if($event == 'created_with_pc'){
+        } else if($event == 'created_with_pc' || $event == 'updated_with_pc'){
             if($pris->public_consultation_id){
                 $pc = $pris->consultation;
                 $administrators = null;
                 $moderators = null;
-                //get users by model ID
-                $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                    ->where('subscribable_id', '=', $pc->id)
-                    ->get();
 
-                //get users by model filter
-                $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                    ->whereNull('subscribable_id')
-                    ->get();
+                if($event == 'updated_with_pc'){
+                    //get users by model ID
+                    $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+                        ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                        ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                        ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                        ->where('subscribable_id', '=', $pc->id)
+                        ->get();
+                } else{
+                    $subscribedUsers = UserSubscribe::where('id', 0)->get();
+                    //get users by model filter
+                    $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+                        ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                        ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                        ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                        ->whereNull('subscribable_id')
+                        ->get();
 
-                if($filterSubscribtions->count()){
-                    foreach ($filterSubscribtions as $fSubscribe){
-                        $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                        $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                        if(in_array($pris->public_consultation_id, $modelIds)){
-                            $subscribedUsers->add($fSubscribe);
+                    if($filterSubscribtions->count()){
+                        foreach ($filterSubscribtions as $fSubscribe){
+                            $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                            $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
+                            if(in_array($pris->public_consultation_id, $modelIds)){
+                                $subscribedUsers->add($fSubscribe);
+                            }
                         }
                     }
                 }

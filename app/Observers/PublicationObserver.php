@@ -85,13 +85,16 @@ class PublicationObserver
     {
         $administrators = null;
         $moderators = null;
+
+        $subscribedUsers = UserSubscribe::where('id', 0)->get();
+
         //get users by model ID
-        $subscribedUsers = UserSubscribe::where('subscribable_type', Publication::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $publication->id)
-            ->get();
+//        $subscribedUsers = UserSubscribe::where('subscribable_type', Publication::class)
+//            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+//            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+//            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+//            ->where('subscribable_id', '=', $publication->id)
+//            ->get();
 
         //get users by model filter
         $filterSubscribtions = UserSubscribe::where('subscribable_type', Publication::class)

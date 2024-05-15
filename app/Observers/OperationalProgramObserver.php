@@ -92,13 +92,15 @@ class OperationalProgramObserver
         if($event == 'created'){
             $administrators = null;
             $moderators = null;
+            $subscribedUsers = UserSubscribe::where('id', 0)->get();
+
             //get users by model ID
-            $subscribedUsers = UserSubscribe::where('subscribable_type', OperationalProgram::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->where('subscribable_id', '=', $operationalProgram->id)
-                ->get();
+//            $subscribedUsers = UserSubscribe::where('subscribable_type', OperationalProgram::class)
+//                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+//                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+//                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+//                ->where('subscribable_id', '=', $operationalProgram->id)
+//                ->get();
 
             //get users by model filter
             $filterSubscribtions = UserSubscribe::where('subscribable_type', OperationalProgram::class)
