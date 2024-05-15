@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\PageModulesEnum;
+use App\Http\Requests\PageOrderFilesRequest;
 use App\Http\Requests\PageStoreRequest;
 use App\Models\CustomRole;
+use App\Models\File;
 use App\Models\Page;
 use App\Models\Publication;
 use Illuminate\Http\RedirectResponse;
@@ -85,7 +87,7 @@ class PageController  extends AdminController
      */
     public function edit(Request $request, int $item, int $module = 0)
     {
-        $customStoreRouteName = $customListRouteName = null;
+        $customStoreRouteName = $customListRouteName = $customOrderFilesRoute = null;
 
         if(($module == PageModulesEnum::MODULE_OGP->value && !$request->user()->canAny(['manage.*', 'manage.partnership']))
             || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && !$request->user()->canAny(['manage.*']))){
@@ -104,6 +106,11 @@ class PageController  extends AdminController
                 PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library',
                 default => null,
             };
+            $customOrderFilesRoute = match ($module) {
+                PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => 'admin.impact_assessments.library.edit.order_files',
+                PageModulesEnum::MODULE_OGP->value => 'admin.ogp.library.edit.order_files',
+                default => null,
+            };
         }
 
         if (!$item) {
@@ -118,7 +125,53 @@ class PageController  extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Page::translationFieldsProperties();
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
-            'customStoreRouteName', 'customListRouteName', 'module'));
+            'customStoreRouteName', 'customListRouteName', 'customOrderFilesRoute', 'module'));
+    }
+
+    /**
+     * @param Request $request
+     * @param int $item
+     * @param int $module
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function orderFiles(PageOrderFilesRequest $request, int $item, int $module = 0)
+    {
+        $validated = $request->validated();
+        if(
+            (!$module && $request->user()->cannot('update', $item))
+            || (
+                $module
+                && (
+                    ($module == PageModulesEnum::MODULE_OGP->value && $request->user()->cannot('update', $item))
+                    || ($module == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value && $request->user()->cannot('update', $item))
+                )
+            )){
+
+            DB::beginTransaction();
+            try {
+                foreach ($validated['file_id'] as $key => $fid){
+                    File::where('id', '=', $fid)->update(['ord' => (int)$validated['ord'][$key]]);
+                }
+                DB::commit();
+                $route = route(self::EDIT_ROUTE, $item);
+                if($module){
+                    $route = match ((int)$module) {
+                        PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value => route('admin.impact_assessments.library.edit', ['item' => $item, 'module' => $module]),
+                        PageModulesEnum::MODULE_OGP->value => route('admin.ogp.library.edit', ['item' => $item, 'module' => $module]),
+                        default => null,
+                    };
+                }
+
+                return redirect($route.'#ct-files')
+                    ->with('success', 'Промяната в поредността на файловете е записана');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return redirect(url()->previous())->with('danger', __('messages.system_error'));
+
+            }
+            return back()->with('warning', __('messages.unauthorized'));
+        }
     }
 
     public function store(PageStoreRequest $request, int $module = 0)
@@ -168,7 +221,7 @@ class PageController  extends AdminController
             DB::commit();
 
             Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
-            
+
             //request comes from some module
             if($module) {
                 $modulePagesCacheKey = match ($module){

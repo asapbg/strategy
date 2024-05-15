@@ -135,10 +135,14 @@
                                     </div>
                                 </form>
                                 @if($item->files)
-                                    <table class="table table-sm table-hover table-bordered mt-4">
+                                    @php($storeFileOrdRoute = isset($customOrderFilesRoute) && !empty($customOrderFilesRoute) ? route($customOrderFilesRoute, ['item' => $item, 'module' => $module]) : route('page.edit.order_files', ['id' => $item->id ?? 0]))
+                                    <form method="POST" action="{{ $storeFileOrdRoute }}">
+                                        @csrf
+                                        <table class="table table-sm table-hover table-bordered mt-4">
                                         <tbody>
                                         <tr>
                                             <th>{{ __('custom.name') }}</th>
+                                            <th>{{ __('custom.order') }}</th>
                                             <th></th>
                                         </tr>
                                         @foreach(config('available_languages') as $lang)
@@ -147,6 +151,10 @@
                                                 @if($code == $f->locale)
                                                     <tr>
                                                         <td>{{ $f->{'description_'.$code} }}</td>
+                                                        <td>
+                                                            <input type="hidden" name="file_id[]" value="{{ $f->id }}">
+                                                            <input class="form-control form-control-sm" type="number" name="ord[]" value="{{ $f->ord }}">
+                                                        </td>
                                                         <td>
                                                             <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">
                                                                 <i class="fas fa-download me-1" role="button"
@@ -162,7 +170,15 @@
                                             @endforeach
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th><button class="btn btn-sm btn-success" type="submit">Запиши поредността</button></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
+                                    </form>
                                 @endif
                             </div>
                         @endif

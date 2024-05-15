@@ -61,7 +61,9 @@ class Page  extends ModelActivityExtend implements TranslatableContract
 
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(File::class, 'id_object', 'id')->where('code_object', '=', File::CODE_OBJ_PAGE);
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PAGE)
+            ->orderBy('ord');
     }
 
     /**

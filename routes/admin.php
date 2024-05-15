@@ -169,16 +169,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(PageController::class)->group(function () {
         Route::get('/page', 'index')->name('page')->middleware('can:viewAny,App\Models\Page');
         Route::get('/page/edit/{item?}', 'edit')->name('page.edit');
+        Route::post('/page/edit/{item?}/order-files', 'orderFiles')->name('page.edit.order_files');
         Route::match(['post', 'put'], '/page/store', 'store')->name('page.store');
         Route::post('/page/{item}/delete', 'destroy')->name('page.delete');
 
         Route::get('/impact-assessments/library/{module?}', 'index')->name('impact_assessments.library');
         Route::get('/impact-assessments/library/edit/{item?}/{module?}', 'edit')->name('impact_assessments.library.edit');
+        Route::post('/impact-assessments/library/edit/{item?}/{module?}/order-files', 'orderFiles')->name('impact_assessments.library.edit.order_files');
         Route::match(['post', 'put'], '/impact-assessments/library/store/{module?}', 'store')->name('impact_assessments.page.store');
         Route::post('/impact-assessments/library/{item}/delete/{module}', 'destroy')->name('impact_assessments.page.delete');
 
         Route::get('/ogp/library/{module?}', 'index')->name('ogp.library');
         Route::get('/ogp/library/edit/{item?}/{module?}', 'edit')->name('ogp.library.edit');
+        Route::post('/ogp/library/edit/{item?}/{module?}/order-files', 'orderFiles')->name('ogp.library.edit.order_files');
         Route::match(['post', 'put'], '/ogp/library/store/{module?}', 'store')->name('ogp.page.store');
         Route::post('/ogp/library/{item}/delete/{module}', 'destroy')->name('ogp.page.delete');
     });
