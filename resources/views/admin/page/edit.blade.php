@@ -146,14 +146,17 @@
                                             <th></th>
                                         </tr>
                                         @foreach(config('available_languages') as $lang)
-                                            @foreach($item->files as $f)
+                                            @foreach($item->files as $i => $f)
                                                 @php($code = $lang['code'])
                                                 @if($code == $f->locale)
                                                     <tr>
                                                         <td>{{ $f->{'description_'.$code} }}</td>
                                                         <td>
                                                             <input type="hidden" name="file_id[]" value="{{ $f->id }}">
-                                                            <input class="form-control form-control-sm" type="number" name="ord[]" value="{{ $f->ord }}">
+                                                            <input class="form-control form-control-sm @error('ord.'.$i) is-invalid @enderror" type="number" name="ord[]" value="{{ old('ord.'.$i, $f->ord) }}">
+                                                            @error('ord.'.$i)
+                                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                                            @enderror
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('download.page.file', ['file' => $f->id]) }}">

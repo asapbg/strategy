@@ -775,5 +775,6 @@ return [
         'name_single_en'           => 'Name in singular (EN)',
         'file_description_bg'           => 'Description (BG)',
         'file_description_en'           => 'Description (EN)',
+        'ord.*'           => 'Order',
     ],
 ];

@@ -766,6 +766,7 @@ return [
         'name_single_en'           => 'Наименование в ед. число (EN)',
         'file_description_bg'           => 'Описание (BG)',
         'file_description_en'           => 'Описание (EN)',
+        'ord.*'           => 'Поредност',
 
     ],
 ];
