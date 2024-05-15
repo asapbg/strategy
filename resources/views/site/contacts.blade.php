@@ -80,7 +80,7 @@
                                         @endif
                                     </p>
                                     @if(!empty($row->email) || !empty($row->phone))
-                                        <div class="team-member-contact d-flex flex-row">
+                                        <div class="team-member-contact d-flex flex-row mb-2">
                                             @if(!empty($row->phone))
                                                 <a href="#" class="text-decoration-none me-4">
                                                     <i class="fa-solid fa-phone me-1"></i>
@@ -95,6 +95,49 @@
                                             @endif
                                         </div>
                                     @endif
+                                    @switch($section)
+                                        @case('advisory-boards')
+                                            @if($row->moderateAdvisoryBoards->count())
+                                                @php($advBoards = $row->moderatedAdvBoardOrdered())
+                                                @if($advBoards->count())
+                                                    <div class="team-member-boards">
+                                                        @foreach($advBoards as $ab)
+                                                            <a class="w-100 d-block" href="{{ route('advisory-boards.view', $ab) }}">{{ $ab->name }}</a>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @break
+                                        @case('strategy-documents')
+                                            @if($row->institution)
+                                                @php($institution = $row->institution)
+                                                <div class="team-member-boards">
+                                                    <a class="w-100 d-block" href="{{ route('institution.profile', $institution) }}">{{ $institution->name }}</a>
+                                                    @if($institution->fieldsOfActionOrdered->count())
+                                                        <ul class="mt-1">
+                                                            @foreach($institution->fieldsOfActionOrdered as $foa)
+                                                                <li class="main-color">
+                                                                @switch($foa->parentid)
+                                                                    @case(\App\Models\FieldOfAction::CATEGORY_NATIONAL)
+                                                                            <a class="text-decoration-none" href="{{ route('strategy-documents.index').'?fieldOfActions[]='.$foa->id }}">{{ $foa->name }}</a>
+                                                                    @break
+                                                                    @case(\App\Models\FieldOfAction::CATEGORY_AREA)
+                                                                            <a class="text-decoration-none" href="{{ route('strategy-documents.index').'?areas[]='.$foa->id }}">{{ $foa->name }}</a>
+                                                                        @break
+                                                                    @case(\App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                                                                            <a class="text-decoration-none" href="{{ route('strategy-documents.index').'?municipalities[]='.$foa->id }}">{{ $foa->name }}</a>
+                                                                        @break
+                                                                    @default
+                                                                        {{ $foa->name }}
+                                                                @endswitch
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        @break
+                                    @endswitch
                                 </div>
                             </div>
                         </div>

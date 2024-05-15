@@ -93,6 +93,11 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return $this->belongsToMany(FieldOfAction::class, 'institution_field_of_action', 'institution_id', 'field_of_action_id');
     }
 
+    public function fieldsOfActionOrdered()
+    {
+        return $this->belongsToMany(FieldOfAction::class, 'institution_field_of_action', 'institution_id', 'field_of_action_id')->orderBy('parentid')->orderByTranslation('name');
+    }
+
     public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id')->ActivePublic();

@@ -297,6 +297,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasMany(AdvisoryBoardModerator::class);
     }
 
+    public function moderatedAdvBoardOrdered()
+    {
+        return \App\Models\AdvisoryBoard::whereIn('advisory_boards.id', $this->moderateAdvisoryBoards->pluck('advisory_board_id')->toArray())->ActivePublic()->orderByTranslation('name')->get();
+    }
+
     public function getModerateFieldOfActionIds(): array
     {
         $own_advisory_board_ids = $this->moderateAdvisoryBoards->pluck('advisory_board_id');
