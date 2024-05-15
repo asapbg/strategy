@@ -705,7 +705,7 @@ return [
         'responsible_administration_en' => 'Lead institution/organisation (EN)',
         'responsibility' => 'Responsible Institution',
         'activity_name' => 'Activity Name',
-        'investment_costs' => 'Investment costs',
+        'investment_costs' => 'Investment costs (in BGN)',
         'diskont' => 'Annual social rate of discount (%)',
         'file' => 'File',
         'adv_board' => 'Advisory Board',

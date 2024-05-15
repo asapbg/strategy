@@ -63,7 +63,7 @@ return [
     'year' => 'Year',
     'calc.standard.hours' => 'Number of hours required to perform the activity',
     'calc.standard.hours.tooltip' => 'Calculations in the calculator are based on a 170-hour work month',
-    'calc.standard.salary' => 'Average monthly salary of the person who has to perform the activity',
+    'calc.standard.salary' => 'Average monthly salary of the person who has to perform the activity (in BGN)',
     'calc.standard.salary.tooltip' => 'Monthly salary in BGN.',
     'calc.standard.firms' => 'Number of firms to perform the activity',
     'calc.standard.firms.tooltip' => 'Number of firms to perform the activity',
@@ -262,4 +262,6 @@ return [
     'executor_name' => 'Name of executor',
     'executor_institution' => 'Name of executor',
     'point_short' => 'point ',
+    'calc.cost_and_benefits.regular_incoming.description' => 'natural (physical) units of measurement',
+    'calc.cost_and_benefits.regular_costs.description' => 'in BGNа',
 ];

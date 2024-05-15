@@ -63,7 +63,7 @@ return [
     'year' => 'Година',
     'calc.standard.hours' => 'Брой часове, необходими за извършването на дейността',
     'calc.standard.hours.tooltip' => 'Изчисленията в калкулатора се правят на баз 170-часов работен месец',
-    'calc.standard.salary' => 'Средна месечна работна заплата на човека, който трябва да извърши дейността',
+    'calc.standard.salary' => 'Средна месечна работна заплата на човека, който трябва да извърши дейността (в лева)',
     'calc.standard.salary.tooltip' => 'Месечна работна заплата в лева.',
     'calc.standard.firms' => 'Брой на фирмите, които трябва да извършат дейността',
     'calc.standard.firms.tooltip' => 'Брой на фирмите, които трябва да извършат дейността',
@@ -263,4 +263,6 @@ return [
     'executor_name' => 'Наименование на възложител',
     'executor_institution' => 'Наименование на изпълнител',
     'point_short' => 'т.',
+    'calc.cost_and_benefits.regular_incoming.description' => 'натурални (физически) мерни единици',
+    'calc.cost_and_benefits.regular_costs.description' => 'в лева',
 ];

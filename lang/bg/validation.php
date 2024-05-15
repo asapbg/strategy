@@ -696,7 +696,7 @@ return [
         'responsible_administration_en'              => 'Водеща институция/организация (EN)',
         'responsibility' => 'Отговорна институция',
         'activity_name' => 'Наименование на дейността',
-        'investment_costs' => 'Инвестиционни разходи',
+        'investment_costs' => 'Инвестиционни разходи (в лева)',
         'diskont' => 'Годишна социална норма на дисконт (%)',
         'file' => 'Файл',
         'adv_board' => 'Консултативен съвет',

@@ -10,8 +10,8 @@
     </div>
     <div class="form-group col-md-6 mb-3">
         <label>
-            <i class="fa fa-info-circle text-primary me-2"></i>
-            {{ __('site.calc.cost_and_benefits.regular_incoming') }}
+{{--            <i class="fa fa-info-circle text-primary me-2"></i>--}}
+            {{ __('site.calc.cost_and_benefits.regular_incoming') }} - {{ __('site.calc.cost_and_benefits.regular_incoming.description') }}
         </label>
         <input type="number" class="form-control @if(isset($oldInputs['incoming']['key'])) @error('incoming.'.$oldInputs['incoming']['key']) is-invalid @enderror @endif" name="incoming[]" value="{{ isset($oldInputs) && isset($oldInputs['incoming']['val']) ? $oldInputs['incoming']['val'] : 0}}">
         @if(isset($oldInputs['incoming']['key']))
@@ -22,8 +22,8 @@
     </div>
     <div class="form-group col-md-6 mb-3">
         <label>
-            <i class="fa fa-info-circle text-primary me-2"></i>
-            {{ __('site.calc.cost_and_benefits.regular_costs') }}
+{{--            <i class="fa fa-info-circle text-primary me-2"></i>--}}
+            {{ __('site.calc.cost_and_benefits.regular_costs') }} ({{ __('site.calc.cost_and_benefits.regular_costs.description') }})
         </label>
         <input type="number" class="form-control @if(isset($oldInputs['costs']['key'])) @error('costs.'.$oldInputs['costs']['key']) is-invalid @enderror @endif" name="costs[]" value="{{ isset($oldInputs) && isset($oldInputs['costs']['val']) ? $oldInputs['costs']['val'] : 0}}">
         @if(isset($oldInputs['costs']['key']))

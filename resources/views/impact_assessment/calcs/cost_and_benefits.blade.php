@@ -10,7 +10,7 @@
         @method('POST')
         @csrf
         <div class="mb-3">
-            <label for="investment_costs" class="form-label">{{ __('validation.attributes.diskont') }}</label>
+            <label for="diskont" class="form-label">{{ __('validation.attributes.diskont') }}</label>
             <input type="number" class="form-control @error('diskont') is-invalid @enderror" name="diskont" value="{{ isset($old) && isset($old['diskont']) ? $old['diskont'] : ''}}">
             @error('diskont')
                 <div class="text-danger">{{ $message }}</div>

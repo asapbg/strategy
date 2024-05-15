@@ -41,8 +41,7 @@
     </div>
     <div class="form-group col-md-6 mb-3">
         <label>
-            <i class="fa fa-info-circle text-primary me-2" data-toggle="tooltip" data-placement="right"
-               title="{{ __('site.calc.standard.firms.tooltip') }}"></i>
+{{--            <i class="fa fa-info-circle text-primary me-2" data-toggle="tooltip" data-placement="right" title="{{ __('site.calc.standard.firms.tooltip') }}"></i>--}}
             {{ __('site.calc.standard.firms') }}
         </label>
         <input type="number" class="form-control @if(isset($oldInputs['firms']['key'])) @error('firms.'.$oldInputs['firms']['key']) is-invalid @enderror @endif" name="firms[]" value="{{ isset($oldInputs) && isset($oldInputs['firms']['val']) ? $oldInputs['firms']['val'] : ''}}">
@@ -54,8 +53,7 @@
     </div>
     <div class="form-group col-md-6 mb-3">
         <label>
-            <i class="fa fa-info-circle text-primary me-2" data-toggle="tooltip" data-placement="right"
-               title="{{ __('site.calc.standard.per_year.tooltip') }}"></i>
+{{--            <i class="fa fa-info-circle text-primary me-2" data-toggle="tooltip" data-placement="right" title="{{ __('site.calc.standard.per_year.tooltip') }}"></i>--}}
             {{ __('site.calc.standard.per_year') }}
         </label>
         <input type="number" class="form-control @if(isset($oldInputs['per_year']['key'])) @error('per_year.'.$oldInputs['per_year']['key']) is-invalid @enderror @endif" name="per_year[]" value="{{ isset($oldInputs) && isset($oldInputs['per_year']['val']) ? $oldInputs['per_year']['val'] : ''}}">
