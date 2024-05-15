@@ -108,7 +108,8 @@
                         </div>
 
                         <div class="col-md-9 pris-left-column">
-                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>
+                            {{ $item->importer }}
+{{--                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>--}}
                         </div>
                     </div>
                 @endif
