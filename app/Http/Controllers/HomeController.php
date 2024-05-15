@@ -465,7 +465,8 @@ class HomeController extends Controller
                     strategic_document.id,
                     strategic_document_translations.title as name,
                     \'sd\' as item_type,
-                    \'\' as act_type_name
+                    \'\' as act_type_name,
+                    0 as in_archive
                 from strategic_document
                 join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'' . $locale . '\'
                 where true
@@ -484,7 +485,8 @@ class HomeController extends Controller
                     legislative_initiative.id,
                     \''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || law_translations.name as name,
                     \'li\' as item_type,
-                    \'\' as act_type_name
+                    \'\' as act_type_name,
+                    0 as in_archive
                 from legislative_initiative
                 join law on law.id = legislative_initiative.law_id
                 join law_translations on law_translations.law_id = law.id and law_translations.locale = \'' . $locale . '\'
@@ -505,7 +507,8 @@ class HomeController extends Controller
                     pris.id,
                     legal_act_type_translations.name_single || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \' \' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name,
                     \'pris\' as item_type,
-                    legal_act_type_translations.name as act_type_name
+                    legal_act_type_translations.name as act_type_name,
+                    pris.in_archive
                 from pris
                 join pris_translations on pris_translations.pris_id = pris.id and pris_translations.locale = \'' . $locale . '\'
                 join legal_act_type on pris.legal_act_type_id = legal_act_type.id
@@ -531,7 +534,8 @@ class HomeController extends Controller
                     publication.id,
                     publication_translations.title as name,
                     \'publications\' as item_type,
-                    \'\' as act_type_name
+                    \'\' as act_type_name,
+                    0 as in_archive
                 from publication
                 join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                 where true
@@ -554,7 +558,8 @@ class HomeController extends Controller
                     publication.id,
                     publication_translations.title as name,
                     \'news\' as item_type,
-                    \'\' as act_type_name
+                    \'\' as act_type_name,
+                    0 as in_archive
                 from publication
                 join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                 where true
@@ -577,7 +582,8 @@ class HomeController extends Controller
                     publication.id,
                     publication_translations.title as name,
                     \'ogp_news\' as item_type,
-                    \'\' as act_type_name
+                    \'\' as act_type_name,
+                    0 as in_archive
                 from publication
                 join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'' . $locale . '\'
                 where true
@@ -600,7 +606,8 @@ class HomeController extends Controller
                         public_consultation.id,
                         public_consultation_translations.title as name,
                         \'pc\' as item_type,
-                        \'\' as act_type_name
+                        \'\' as act_type_name,
+                    0 as in_archive
                     from public_consultation
                     join public_consultation_translations on public_consultation_translations.public_consultation_id = public_consultation.id and public_consultation_translations.locale = \'' . $locale . '\'
                     where true
