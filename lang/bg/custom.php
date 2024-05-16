@@ -604,6 +604,7 @@ return [
     'export' => 'Експорт',
     'rss_subscribe'      => 'RSS',
     'subscribe'      => 'Абониране',
+    'subscribe_list'      => 'Абонирай се за нови резултати',
     'unsubscribe'      => 'Отписване',
     'document_to'   => 'Документът има връзка с:',
     'public_consultation_link'   => 'Линк към обществена консултация',
@@ -942,4 +943,5 @@ return [
     'advisory_board_moderator_information' => 'Консултативни съвети (информация за модератора)',
     'advisory_board_secretariat' => 'Консултативни съвети (Секретариат)',
     'nomenclatures.consultation_type' => 'Номенклатура (Типове обществени консултации)',
+    'subscribe_title' => 'Заглавие на абонамента',
 ];

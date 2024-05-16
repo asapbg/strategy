@@ -47,4 +47,6 @@
     'action_only_registered'         => 'Необходимо е да влзете с профила си за да извършите това действие',
     'record_updated_successfully_m'    => 'Записът беше обновен успешно',
     'data_updated_successfully'    => 'Данните са обновени успешно',
+    'success_delete_subscribe'         => 'Успешно изтрихте абонамента',
+    'success_edit_subscribe'         => 'Успешно редактирахте абонамента',
 ];

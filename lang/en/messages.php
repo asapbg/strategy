@@ -47,4 +47,6 @@
     'action_only_registered' => 'You must be logged in to perform this action',
     'record_updated_successfully_m' => 'The record was updated successfully',
     'data_updated_successfully' => 'Data updated successfully',
+    'success_delete_subscribe'         => 'You have successfully deleted your subscription',
+    'success_edit_subscribe'         => 'You have successfully edited your subscription',
 ];

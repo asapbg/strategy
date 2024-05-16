@@ -264,4 +264,11 @@ return [
     'point_short' => 'point ',
     'calc.cost_and_benefits.regular_incoming.description' => 'natural (physical) units of measurement',
     'calc.cost_and_benefits.regular_costs.description' => 'in BGNа',
+    'subscribe_name' => 'Subscription name',
+    'pause' => 'Pause',
+    'activate' => 'Activate',
+    'to_list' => 'View',
+    'to_publication' => 'To the publication',
+    'to_news' => 'To the news',
+    'store_subscription_missing_name' => 'Title is missing',
 ];

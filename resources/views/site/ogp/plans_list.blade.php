@@ -4,7 +4,7 @@
 <div class="col-12 mt-2 text-end">
     <input type="hidden" id="subscribe_model" value="App\Models\OgpPlan">
     <input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
-    @includeIf('site.partial.subscribe-buttons')
+    @includeIf('site.partial.subscribe-buttons', ['subscribe_list' => true])
 </div>
 <div class="row mb-2">
 {{--    <div class="col-md-6 mt-2">--}}

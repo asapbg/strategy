@@ -2,7 +2,7 @@
     <div class="col-12 text-end">
         @if(!isset($subscribe) || $subscribe)
             @php($requestFilter['type'] = $type)
-            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false])
+            @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false, 'subscribe_list' => true])
         @endif
     </div>
 </div>

@@ -604,6 +604,7 @@ return [
     'export' => 'Export',
     'rss_subscribe' => 'RSS',
     'subscribe' => 'Subscribe',
+    'subscribe_list'      => 'Subscribe for new results',
     'unsubscribe' => 'Unsubscribe',
     'document_to' => 'The document is related to:',
     'public_consultation_link' => 'Link to public consultation',
@@ -941,4 +942,5 @@ return [
     'advisory_board_meetings' => 'Advisory boards (meetings)',
     'advisory_board_secretariat' => 'Advisory Boards (Secretariat)',
     'nomenclatures.consultation_type' => 'Nomenclature (Types of public consultations)',
+    'subscribe_title' => 'Subscription title',
 ];

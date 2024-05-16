@@ -674,14 +674,11 @@ $(document).ready(function () {
         });
     }
 
-    // Subscribe
-    $(document).on('click', 'button.subscribe', function (e) {
-        e.preventDefault();
-        let btn = $(this);
+    function subscribeWithoutName(btn){
         let channel = $(btn).data('channel');
         let model = $("#subscribe_model").val();
         let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
-        let model_filter = typeof btn.data('filter') != 'undefined' ? btn.data('filter') : null;
+        let model_filter = typeof btn.data('filter') != 'undefined' ? JSON.stringify(btn.data('filter')) : null;
         let route_name = $("#subscribe_route_name").val();
         let text = $("#unsubscribe_text").val();
 
@@ -698,7 +695,6 @@ $(document).ready(function () {
             },
             success: function (res) {
                 if (res.success) {
-                    HideLoadingSpinner();
                     $(btn).find('span').html(text);
                     $(btn).removeClass('subscribe').addClass('unsubscribe');
                     toastr.success(res.message);
@@ -710,7 +706,138 @@ $(document).ready(function () {
                 toastr.error('Възникна грешка, моля опитайте отново по-късно');
             }
         });
+    }
+    // Subscribe
+    $(document).on('click', '.edit_subscribe', function (e) {
+        e.preventDefault();
+        let btn = $(this);
+        let titleTxt = GlobalLang == 'bg' ? 'Редакция на абонамент' : 'Edit subscription';
+        let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
+        let labelTxt = GlobalLang == 'bg' ? 'Заглавие' : 'Title';
+        let ContinueTxt = GlobalLang == 'bg' ? 'Продължи' : 'Continue';
+
+        let editModal = new MyModal({
+            title: titleTxt,
+            destroyListener: true,
+            body: '<input type="hidden" id="si" value="'+ btn.data('objid') +'"><label>'+ labelTxt +':<span class="required">*</span></label><input class="form-control form-control-sm" type="text" id="sn" value="'+ btn.data('objname') +'"><p class="text-danger w-100 d-block" id="serror"></p>',
+            footer: '<button type="button" id="store-subscription" class="btn btn-sm btn-success ms-3">' + ContinueTxt + '</button>' +
+                '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+        });
+
+        $(document).on('click', '#store-subscription', function (){
+            $('#serror').html('');
+            if($("#sn").val() == ''){
+                $('#serror').html(GlobalLang == 'bg' ? 'Въведете заглавие' : 'Enter title');
+            } else{
+                $('#subscription_id').val($("#si").val());
+                $('#subscription_name').val($("#sn").val());
+                console.log($("#si").val(), $("#sn").val());
+                console.log($("#subscription_id").val(), $("#subscription_name").val());
+                $('#edit-subscription-name').submit();
+            }
+        });
     });
+
+    $(document).on('click', 'button.subscribe', function (e) {
+        e.preventDefault();
+
+        if(typeof $('#subscribe_model_id') != 'undefined' && parseInt($('#subscribe_model_id').val()) > 0){
+            subscribeWithoutName($(this));
+        } else{
+            let btn = $(this);
+            let channel = $(btn).data('channel');
+            let model = $("#subscribe_model").val();
+            let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
+            let model_filter = typeof btn.data('filter') != 'undefined' ? JSON.stringify(btn.data('filter')) : null;
+            let route_name = $("#subscribe_route_name").val();
+            let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
+            let ContinueTxt = GlobalLang == 'bg' ? 'Продължи' : 'Continue';
+
+
+            let subscribeModal = new MyModal({
+                title: btn.data('subscribetitle'),
+                destroyListener: true,
+                bodyLoadUrl: btn.data('url') + '?channel=' + channel + '&model=' + model + '&model_id=' + model_id + '&model_filter=' + model_filter + '&route_name=' + route_name,
+                footer: '<button type="button" id="confirm-subscription" class="btn btn-sm btn-success ms-3">' + ContinueTxt + '</button>' +
+                    '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
+            });
+
+            $(document).on('click', '#confirm-subscription', function (){
+                let channel = $('#'+ subscribeModal.id +' #channel').val();
+                let model = $('#'+ subscribeModal.id +' #model').val();
+                let model_id = $('#'+ subscribeModal.id +' #model_id').val() == 'undefined' ? null : $('#'+ subscribeModal.id +' #model_id').val();
+                let model_filter = $('#'+ subscribeModal.id +' #model_filter').val();
+                let route_name = $('#'+ subscribeModal.id +' #route_name').val();
+                let subscribe_title = $('#'+ subscribeModal.id +' #subscribe_name').val();
+                let text = $("#unsubscribe_text").val();
+                $.ajax({
+                    type: 'GET',
+                    url: "/subscribe",
+                    data: {
+                        channel: channel,
+                        model: model,
+                        model_id: model_id,
+                        model_filter: model_filter,
+                        route_name: route_name,
+                        is_subscribed: SUBSCRIBED,
+                        subscribe_title: subscribe_title
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            subscribeModal.modalObj.hide();
+                            $(btn).find('span').html(text);
+                            $(btn).removeClass('subscribe').addClass('unsubscribe');
+                            toastr.success(res.message);
+                        } else {
+                            subscribeModal.modalObj.hide();
+                            showModalAlert(res.message);
+                        }
+                    },
+                    error: function () {
+                        subscribeModal.modalObj.hide();
+                        toastr.error('Възникна грешка, моля опитайте отново по-късно');
+                    }
+                });
+            });
+        }
+    });
+
+    // $(document).on('click', 'button.subscribe', function (e) {
+    //     e.preventDefault();
+    //     let btn = $(this);
+    //     let channel = $(btn).data('channel');
+    //     let model = $("#subscribe_model").val();
+    //     let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
+    //     let model_filter = typeof btn.data('filter') != 'undefined' ? btn.data('filter') : null;
+    //     let route_name = $("#subscribe_route_name").val();
+    //     let text = $("#unsubscribe_text").val();
+    //
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: "/subscribe",
+    //         data: {
+    //             channel: channel,
+    //             model: model,
+    //             model_id: model_id,
+    //             model_filter: model_filter,
+    //             route_name: route_name,
+    //             is_subscribed: SUBSCRIBED
+    //         },
+    //         success: function (res) {
+    //             if (res.success) {
+    //                 HideLoadingSpinner();
+    //                 $(btn).find('span').html(text);
+    //                 $(btn).removeClass('subscribe').addClass('unsubscribe');
+    //                 toastr.success(res.message);
+    //             } else {
+    //                 showModalAlert(res.message);
+    //             }
+    //         },
+    //         error: function () {
+    //             toastr.error('Възникна грешка, моля опитайте отново по-късно');
+    //         }
+    //     });
+    // });
 
     // Unsubscribe
     $(document).on('click', 'button.unsubscribe', function (e) {
@@ -719,7 +846,7 @@ $(document).ready(function () {
         let channel = $(btn).data('channel');
         let model = $("#subscribe_model").val();
         let model_id = typeof $("#subscribe_model_id") != 'undefined' ? $("#subscribe_model_id").val() : null;
-        let model_filter = typeof btn.data('filter') != 'undefined' ? btn.data('filter') : null;
+        let model_filter = typeof btn.data('filter') != 'undefined' ? JSON.stringify(btn.data('filter')) : null;
         let route_name = $("#subscribe_route_name").val();
         let text = $("#subscribe_text").val();
 

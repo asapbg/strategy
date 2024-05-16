@@ -335,26 +335,62 @@ class  UsersController extends Controller
         }
     }
 
+    public function subscribeForm(Request $request){
+        $data = $request->all();
+        return view('site.partial.subscribe_form', compact('data'))->render();
+    }
+
     public function subscribe(Request $request)
     {
         $user = $request->user();
         $channel = $request->offsetGet('channel');
         $model = $request->offsetGet('model');
         $model_id = $request->offsetGet('model_id');
-        $model_filter = $request->offsetGet('model_filter');
+        $model_filter = str_replace('\\', '', $request->offsetGet('model_filter'));
         $route_name = $request->offsetGet('route_name');
         $is_subscribed = $request->offsetGet('is_subscribed');
+        $subscribe_title = $request->offsetGet('subscribe_title');
+
+        $subscribeCreateOrUpdate = [
+            'user_id' => $user->id,
+            'subscribable_type' => $model,
+            'subscribable_id' => $model_id == 'undefined' ? null : $model_id,
+            'route_name' => $route_name,
+            'condition' => UserSubscribe::CONDITION_PUBLISHED,
+            'channel' => $channel,
+            'search_filters' => !empty($model_filter) ? json_encode(json_decode($model_filter)) : null
+        ];
+
+        if(!empty($subscribe_title)) {
+            $subscribeCreateOrUpdate['title'] = $subscribe_title;
+        }
 
         try {
-            $userSubscribe = UserSubscribe::updateOrCreate([
-                    'user_id' => $user->id,
-                    'subscribable_type' => $model,
-                    'subscribable_id' => $model_id,
-                    'route_name' => $route_name,
-                    'condition' => UserSubscribe::CONDITION_PUBLISHED,
-                    'channel' => $channel,
-                    'search_filters' => !empty($model_filter) ? json_encode($model_filter) : null
-                ],
+
+            if($is_subscribed){
+                //If
+                $exist = UserSubscribe::where('user_id', '=', $user->id)
+                    ->where('subscribable_type', '=', $model)
+                    ->where('subscribable_id', '=', $model_id == 'undefined' ? null : $model_id)
+                    ->where('route_name', '=', $route_name)
+                    ->where('condition', '=', UserSubscribe::CONDITION_PUBLISHED)
+                    ->where('channel', '=', $channel)
+                    ->where('search_filters', '=', !empty($model_filter) ? json_encode(json_decode($model_filter)) : null)
+                    ->where('is_subscribed', '=', false)
+                    ->first();
+
+                if($exist){
+                    $exist->is_subscribed = true;
+                    if(!empty($subscribe_title)) {
+                        $exist->title = $subscribe_title;
+                    }
+                    $exist->save();
+                    return response()->json(['success' => true, 'message' => __('You have subscribed successfully')]);
+                }
+            }
+
+
+            $userSubscribe = UserSubscribe::updateOrCreate($subscribeCreateOrUpdate,
                 [
                     'is_subscribed' => $is_subscribed
                 ]

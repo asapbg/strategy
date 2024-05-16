@@ -170,6 +170,8 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/profile/change-request/withdrew', 'withdrew')->name('profile.withdrew');
         Route::post('/profile/change-password', 'changePassword')->name('profile.store.password');
         Route::get('/profile/{id}/{status}', 'subscriptionState')->name('profile.subscribe.set');
+        Route::post('/profile/subscribe/delete/{id}/', 'subscriptionDelete')->name('profile.subscribe.delete');
+        Route::post('/profile/subscribe/store', 'subscriptionStore')->name('profile.subscribe.store');
     });
 
     Route::controller(\App\Http\Controllers\LegislativeInitiativeController::class)->group(function() {

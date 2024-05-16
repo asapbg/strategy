@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::match(['get', 'post'],'/logout', [LoginController::class, 'logout'])->name('front.logout');
 
     Route::controller(UsersController::class)->group(function () {
+        Route::get('/subscribe-form', 'subscribeForm')->name('subscribe.form');
         Route::get('/subscribe', 'subscribe')->name('subscribe');
     });
 

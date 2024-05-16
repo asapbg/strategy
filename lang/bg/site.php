@@ -265,4 +265,11 @@ return [
     'point_short' => 'т.',
     'calc.cost_and_benefits.regular_incoming.description' => 'натурални (физически) мерни единици',
     'calc.cost_and_benefits.regular_costs.description' => 'в лева',
+    'subscribe_name' => 'Име на абонамента',
+    'pause' => 'Паузирай',
+    'activate' => 'Активирай',
+    'to_list' => 'Към абонамента',
+    'to_publication' => 'Към публикацията',
+    'to_news' => 'Към Новината',
+    'store_subscription_missing_name' => 'Не сте въвели заглавие',
 ];
