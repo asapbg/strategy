@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <p class="fs-18 fw-600 m-0">
-                                Списъкът се изготвя в изпълнение на § 1 от Допълнителните разпоредби на Закона за нормативните актове.
+                                {{ __('custom.executors_list') }}
                             </p>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             <div class="col-md-12">
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column w-100">
-                                        <label for="institutions" class="form-label">Изпълнител</label>
+                                        <label for="institutions" class="form-label">{{ __('custom.executor') }}</label>
                                         <select class="form-control form-control-sm select2" name="institutions[]" id="institutions" multiple>
                                             <option value=""></option>
                                             @if(isset($institutions) && $institutions->count())
@@ -53,7 +53,7 @@
                             <div class="col-md-3">
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column  w-100">
-                                        <label for="contract_subject" class="form-label">Предмет на договора</label>
+                                        <label for="contract_subject" class="form-label">{{ __('custom.contract_subject') }}</label>
                                         <input type="text" id="contract_subject" name="contract_subject" class="form-control"
                                                value="{{ request()->offsetGet('contract_subject') }}">
                                     </div>
@@ -62,7 +62,7 @@
                             <div class="col-md-3">
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column  w-100">
-                                        <label for="contractor_name" class="form-label">Възложител</label>
+                                        <label for="contractor_name" class="form-label">{{ __('custom.contractor') }}</label>
                                         <input type="text" id="contractor_name" name="contractor_name" class="form-control"
                                                value="{{ request()->offsetGet('contractor_name') }}">
                                     </div>
@@ -72,7 +72,7 @@
                             <div class="col-md-3">
                                 <div class="input-group ">
                                     <div class="mb-3 d-flex flex-column  w-100">
-                                        <label for="services_description" class="form-label">Кратко описание</label>
+                                        <label for="services_description" class="form-label">{{ __('custom.short_description') }}</label>
                                         <input type="text" id="services_description" name="services_description" class="form-control"
                                                value="{{ request()->offsetGet('services_description') }}">
                                     </div>
@@ -80,7 +80,7 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label for="contract_date_from" class="form-label">Начална дата:</label>
+                                <label for="contract_date_from" class="form-label">{{ __('custom.begin_date') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="contract_date_from" autocomplete="off"
                                            id="contract_date_from" class="form-control datepicker"
@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label for="contract_date_till" class="form-label">Крайна дата:</label>
+                                <label for="contract_date_till" class="form-label">{{ __('custom.end_date') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="contract_date_till" autocomplete="off"
                                            id="contract_date_till" class="form-control datepicker"
@@ -103,7 +103,7 @@
                                     <div class="mb-3 d-flex flex-column w-100">
                                         <div id="sort_by_price" class="block sort_by_price nopadding">
                                             <div class="options_header">
-                                                <label for="exampleFormControlInput1" class="form-label">Цена</label>
+                                                <label for="exampleFormControlInput1" class="form-label">{{ __('custom.price') }}</label>
                                                 <div style="margin-top: -6px;margin-bottom: 3px;">
                                                     <label for="amount"></label>
                                                     <input type="text" id="amount" readonly style="border:0;">
@@ -145,43 +145,43 @@
                                     <div class="col-md-2">
                                         <p class="mb-0 cursor-pointer sort_search">
                                             <input type="hidden" disabled class="order_by"  name="order_by" value="contractor_name">
-                                            <i class="fa-solid fa-sort"></i> Наименование на възложител
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.contractor_name') }}
                                         </p>
                                     </div>
                                     <div class="col-md-2">
                                         <p class="mb-0 cursor-pointer sort_search">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="executor_name">
-                                            <i class="fa-solid fa-sort"></i> Наименование на изпълнител
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.executor_name') }}
                                         </p>
                                     </div>
                                     <div class="col-md-1">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="eik">
-                                            <i class="fa-solid fa-sort"></i> ЕИК
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.eik') }}
                                         </p>
                                     </div>
                                     <div class="col-md-1">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="contract_date">
-                                            <i class="fa-solid fa-sort"></i> Дата на договора
+                                            <i class="fa-solid fa-sort"></i> {{ __('csutom.contract_date') }}
                                         </p>
                                     </div>
                                     <div class="col-md-3">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="contract_subject">
-                                            <i class="fa-solid fa-sort"></i> Предмет на договора
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.contract_subject') }}
                                         </p>
                                     </div>
                                     <div class="col-md-2">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="services_description">
-                                            <i class="fa-solid fa-sort"></i> Кратко описание на извършените услуги
+                                            <i class="fa-solid fa-sort"></i> {{ __('csutom.short_description_services') }}
                                         </p>
                                     </div>
                                     <div class="col-md-1">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="price">
-                                            <i class="fa-solid fa-sort"></i> Цена на договора (в лв. с ДДС)
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.price_with_vat') }}
                                         </p>
                                     </div>
                                 </div>

@@ -2,14 +2,14 @@
 @for($n=0; $n<$loop; $n++)
 <div class="row">
     <div class="col-sm-12">
-        <h6>{{ isset($point) ? $point : '1.3' }}.{{ $n+1 }}. По проблем {{ $n+1 }}:</h6>
+        <h6>{{ isset($point) ? $point : '1.3' }}.{{ $n+1 }}. {{ __('custom.forms.to_problem') }} {{ $n+1 }}:</h6>
     </div>
 </div>
 @php($loop2 = Arr::get($state, "variant_simple.$n", false) ? count(Arr::get($state, "variant_simple.$n")) : 1)
 @for($m=0; $m<$loop2; $m++)
 <div class="row">
     <div class="col-sm-6">
-        <h6>Вариант {{ $m+1 }}:</h6>
+        <h6>{{ __('custom.forms.variant') }} {{ $m+1 }}:</h6>
         @include('form_partials.textarea', ['name' => "variant_simple[$n][$m]", 'label' => '', 'value' => Arr::get($state, "variant_simple.$n.$m")])
     </div>
     <div class="col-sm-6">

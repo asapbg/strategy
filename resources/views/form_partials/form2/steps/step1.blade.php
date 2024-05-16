@@ -1,9 +1,9 @@
 <p class="@if(isset($readOnly) && $readOnly) mt-5 @endif">
     <b>
-        Образецът на резюме на цялостна предварителна оценка на въздействието влиза в сила от 01 януари 2021 г.
+        {{ __('custom.forms2.full_evaluation_description') }}
     </b>
 </p>
-<h3>Резюме на цялостна предварителна оценка на въздействието</h3>
+<h3>{{ __('custom.forms2.full_evaluation') }}</h3>
 
 <div class="row mb-4">
     <div class="col-sm-4">
@@ -19,7 +19,7 @@
 <div class="row mb-4">
     <div class="col-12">
         <h5>
-            От какво ниво възниква необходимостта от предприемане на действието?
+            {{ __('custom.forms2.action_level_need') }}
         </h5>
         @include('form_partials.radio', ['name' => 'level', 'value' => 0, 'label' => 'forms.national', 'class' => 'me-2'])
         @include('form_partials.radio', ['name' => 'level', 'value' => 1, 'label' => 'forms.european', 'class' => 'me-2'])
@@ -43,12 +43,12 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <h4>1. Проблеми, цели и варианти на действие</h4>
+        <h4>1. {{ __('custom.forms2.problem_goals_action') }}</h4>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <h5>1.1 Проблем/проблеми за решаване:</h5>
+        <h5>1.1 {{ __('csutom.forms2.problems_to_solve') }}:</h5>
     </div>
 </div>
 <div class="row">

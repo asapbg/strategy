@@ -4,13 +4,7 @@
     <table class="table" width="100%">
         <tr>
             <td colspan="5">
-                <p>
-                    <i>1.1. Сравнете вариантите чрез сравняване на ключовите им положителни и отрицателни въздействия.
-                        <br>1.2. Посочете степента, в която вариантите ще изпълнят определените цели, съгласно основните критерии за сравняване на вариантите:
-                        ефективност, чрез която се измерва степента, до която вариантите постигат целите на предложението;
-                        ефикасност, която отразява степента, до която целите могат да бъдат постигнати при определено ниво на ресурсите или при най-малко разходи;
-                        съгласуваност, която показва степента, до която вариантите съответстват на действащите стратегически документи.</i>
-                </p>
+                {!! __('custom.forms.problem_to_solve_description') !!}
             </td>
         </tr>
         @php($maxVariants = count(Arr::get($state, "variants.$p", [[]])))
@@ -25,7 +19,7 @@
         @for($n=0; $n<$loop2; $n++)
         <tr>
             @if($n == 0)
-            <td rowspan="{{ $loop2 }}" class="fw-bold">Ефективност</td>
+            <td rowspan="{{ $loop2 }}" class="fw-bold">{{ __('custom.efficiency') }}</td>
             @endif
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)
@@ -47,7 +41,7 @@
         @for($n=0; $n<$loop2; $n++)
         <tr>
             @if($n == 0)
-            <td rowspan="{{ $loop2 }}" class="fw-bold">Ефикасност</td>
+            <td rowspan="{{ $loop2 }}" class="fw-bold">{{ __('custom.efficiency2') }}</td>
             @endif
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)
@@ -68,7 +62,7 @@
         @for($n=0; $n<$loop2; $n++)
         <tr>
             @if($n == 0)
-            <td rowspan="{{ $loop2 }}" class="fw-bold">Съгласуваност</td>
+            <td rowspan="{{ $loop2 }}" class="fw-bold">{{ __('custom.consistency') }}</td>
             @endif
             <td>Цел {{ $n+1 }}</td>
             @for($m=0; $m<$maxVariants; $m++)

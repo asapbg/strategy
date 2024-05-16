@@ -192,6 +192,15 @@ class PageSeeder extends Seeder
                 'content_en' => '',
                 'is_system' => 1,
             ],
+            [
+                'slug' => 'video-instructions',
+                'system_name' => Page::VIDEO_INSTRUCTIONS,
+                'name_bg' => 'Видео инструкции',
+                'name_en' => 'Video instructions',
+                'content_bg' => '',
+                'content_en' => '',
+                'is_system' => 1,
+            ],
         ];
 
         foreach ($data as $page) {

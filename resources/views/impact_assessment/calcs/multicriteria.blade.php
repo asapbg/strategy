@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="input-group mb-2">
-                    <span class="input-group-text">Степени за оценка <i class="ms-2">(<span class="text-primary">1 = (-1,0,1); 2 = (-2, -1, 0, 1, 2)</span>)</i></span>
+                    <span class="input-group-text">{{ __('custom.calc.levels') }} <i class="ms-2">(<span class="text-primary">1 = (-1,0,1); 2 = (-2, -1, 0, 1, 2)</span>)</i></span>
                     <input type="number" name="step" id="step" class="form-control" value="@if(isset($old) && $old['step']){{ $old['step'] }}@else{{ '1' }}@endif">
                 </div>
             </div>
@@ -20,21 +20,21 @@
             <div class="col-md-6">
                 <div class="input-group mb-2">
                     <input type="text" id="new-variant-name" class="form-control" placeholder="Наименование" aria-label="Наименование">
-                    <button class="btn btn-outline-secondary" type="button" id="add-variant">Добави Вариант</button>
+                    <button class="btn btn-outline-secondary" type="button" id="add-variant">{{ __('custom.calc.add_variant') }}</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group mb-2">
                     <input type="text" id="new-criteria-name" class="form-control" placeholder="Наименование" aria-label="Наименование">
-                    <button class="btn btn-outline-secondary" type="button" id="add-criteria">Добави Критерий</button>
+                    <button class="btn btn-outline-secondary" type="button" id="add-criteria">{{ __('custom.calc.add_criteria') }}</button>
                 </div>
             </div>
         </div>
         <div id="matrix" style="overflow-x: scroll;">
             <table class="table table-responsive">
                 <tr id="variants">
-                    <th>Критерии</th>
-                    <th>Тегла (%) <span id="weight-total"></span></th>
+                    <th>{{ __('custom.calc.criteria') }}</th>
+                    <th>{{ __('custom.calc.weight') }} (%) <span id="weight-total"></span></th>
                     @if(isset($old) && isset($old['variants']) && sizeof($old['variants']))
                         @foreach($old['variants'] as $x => $xName)
                             <th>
@@ -82,7 +82,7 @@
                 @endif
                 @if(isset($old) && sizeof($old) && isset($old['results']) && isset($old['results']['variants']) && sizeof($old['results']['variants']))
                     <tr class="total">
-                        <th colspan="2">Общо:</th>
+                        <th colspan="2">{{ __('custom.calc.total') }}:</th>
                         @foreach($old['results']['variants'] as $r)
                             <th class="@if((int)$r == (int)$old['results']['best_result']) bg-success text-white @endif">@if((int)$r == (int)$old['results']['best_result']) <i class="fas fa-info-circle fs-18 me-1" data-bs-placement="top" data-bs-toggle="tooltip" title="{{ __('site.calc_method_best_result') }}"></i> @endif {{ $r }}</th>
                         @endforeach
@@ -144,10 +144,10 @@
 
         function initMatrix(){
             //add first variant
-            addVariant('Вариант №1');
+            addVariant(GlobalLang == 'bg' ? 'Вариант №1' : 'Variant #1');
             // matrixDom.find('tr').append('<th><input type="text" name="variants[]" class="form-control form-control-sm variants" value="Вариант №1"></th>');
             //add first criteria
-            addCriteria('Критерий №1')
+            addCriteria(GlobalLang == 'bg' ? 'Критерий №1' : 'Criteria #1')
         }
 
         $(document).ready(function (){
@@ -171,7 +171,7 @@
                 if($('.row-criteria').length > 1) {
                     $(this).closest('tr').remove();
                 } else{
-                    globalErrDiv.html('Необходим е поне един критерий за анализа.');
+                    globalErrDiv.html(GlobalLang == 'bg' ? 'Необходим е поне един критерий за анализа.' : 'At least one criteria is required');
                 }
             });
 
@@ -180,7 +180,7 @@
                     let colInx = $(this).data('v');
                     $('th[data-v="' + colInx + '"], td[data-v="' + colInx + '"]').remove();
                 } else{
-                    globalErrDiv.html('Необходим е поне един вариант за анализа.');
+                    globalErrDiv.html(GlobalLang == 'bg' ? 'Необходим е поне един вариант за анализа.' : 'At least one variant is required');
                 }
 
             });

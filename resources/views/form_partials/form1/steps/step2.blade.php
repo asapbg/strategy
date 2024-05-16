@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <h4>4. Варианти на действие. Анализ на въздействията:</h4>
+        <h4>4. {{ __('custom.forms1.variant_actions') }}:</h4>
     </div>
 </div>
 
@@ -8,8 +8,8 @@
 
 <div class="row mt-5">
     <div class="col-sm-12">
-        <h5>5. Сравняване на вариантите:</h5>
-        <p>Степени на изпълнение по критерии: 1) висока; 2) средна; 3) ниска.</p>
+        <h5>5. {{ __('custom.forms1.variant_compare') }}:</h5>
+        <p>{{ __('custom.forms1.variant_compare_levels') }}</p>
         @include('form_partials.shared.comparison')
     </div>
 </div>

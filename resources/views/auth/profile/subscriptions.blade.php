@@ -59,7 +59,7 @@
                                         <tr>
                                             @php($model = explode("\\", $s->subscribable_type))
                                             @php($label = 'custom.'.$model[sizeof($model) - 1])
-                                            <th colspan="3">{{ trans()->has($label) ? __($label) : '---' }}</th>
+                                            <th colspan="3" class="text-white bg-primary">{{ trans()->has($label) ? __($label) : '---' }}</th>
                                         </tr>
                                         <tr>
                                             <th style="width: 60%;">{{ __('custom.view') }}</th>

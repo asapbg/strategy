@@ -63,6 +63,7 @@
                     <div class="col-md-6 mb-3">
                         <a class="p-0 text-light text-decoration-none" href="@if(isset($contactMail) && !empty($contactMail)){{ 'mailto:'.$contactMail }}@else{{ '#' }}@endif" >» @if(isset($contactMail) &&
                             !empty($contactMail)){{ $contactMail }}@else{{ '---' }}@endif</a>
+                        <a class="p-0 text-light text-decoration-none d-block mt-3" href="{{ route('help.video') }}" title="{{ __('site.user_video_guide') }}">{{ __('site.user_video_guide') }}</a>
                     </div>
                 </div>
             </div>

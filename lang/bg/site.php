@@ -237,6 +237,7 @@ return [
     'institution.adv_board.title' => 'Консултативни съвети, свързани с :name',
     'old_portal_link' => 'Връзка към стария портал',
     'user_guide' => 'Ръководство на потребителя',
+    'user_video_guide' => 'Видео ръководство на потребителя',
     'home.no_polls_found' => 'Към момента няма активни анкети',
     'home.poll_end_at' => 'Приключва на :date',
     'home.open_plans_title' => 'Области очакващи предложения',

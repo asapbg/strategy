@@ -236,6 +236,7 @@ return [
     'institution.adv_board.title' => 'Advisory boards related to :name',
     'old_portal_link' => 'Link to the old portal',
     'user_guide' => 'User guide',
+    'user_video_guide' => 'User video guide',
     'home.no_polls_found' => 'There are currently no active polls',
     'home.poll_end_at' => 'End at :date',
     'home.open_plans_title' => 'List of open plans',

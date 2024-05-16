@@ -23,13 +23,13 @@
                                         <a href="{{ route('public_consultation.report.simple') }}" class=" text-decoration-none link-dark">{{ __('custom.pc_reports.standard') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'public_consultation.report.field_of_actions') active-item-left p-1 @endif">
-                                        <a href="{{ route('public_consultation.report.field_of_actions') }}" class=" text-decoration-none link-dark">Области на политика</a></li>
+                                        <a href="{{ route('public_consultation.report.field_of_actions') }}" class=" text-decoration-none link-dark">{{ __('custom.pc_reports.field_of_action') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'public_consultation.report.field_of_actions.institution') active-item-left p-1 @endif">
-                                        <a href="{{ route('public_consultation.report.field_of_actions.institution') }}" class=" text-decoration-none link-dark">Области на политика (институции)</a></li>
+                                        <a href="{{ route('public_consultation.report.field_of_actions.institution') }}" class=" text-decoration-none link-dark">{{ __('custom.pc_reports.field_of_action_institution') }}</a></li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'public_consultation.report.institutions') active-item-left p-1 @endif">
-                                        <a href="{{ route('public_consultation.report.institutions') }}" class=" text-decoration-none link-dark">Институции</a></li>
+                                        <a href="{{ route('public_consultation.report.institutions') }}" class=" text-decoration-none link-dark">{{ __('custom.pc_reports.institutions') }}</a></li>
                                     <hr class="custom-hr">
                                 </ul>
                             </ul>

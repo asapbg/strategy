@@ -19,6 +19,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const PRIVACY_POLICY = 'privacy_policy';
     const TERMS = 'terms_of_use';
     const COOKIES = 'cookies';
+    const VIDEO_INSTRUCTIONS = 'video-instructions';
     const ADV_BOARD_DOCUMENTS = 'adv_board_docs';
     const ADV_BOARD_INFO = 'advisory-board-info';
     const LP_INFO = 'legislative-programs-info';

@@ -6,7 +6,7 @@
 <section class="public-page" style="min-height: 300px; margin-top: 200px;">
     <div class="container">
        <div class="text-center mt-5">
-           <h4 class="mb-5">Успешно запазен формуляр!</h4>
+           <h4 class="mb-5">{{ __('custom.forms.success') }}</h4>
            <div class="mb-2">
                 <a href="{{ route('impact_assessment.pdf', ['form' => $formName, 'inputId' => $inputId]) }}" class="btn btn-primary">
                     {{ __('forms.print_pdf') }}

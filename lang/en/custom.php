@@ -943,4 +943,353 @@ return [
     'advisory_board_secretariat' => 'Advisory Boards (Secretariat)',
     'nomenclatures.consultation_type' => 'Nomenclature (Types of public consultations)',
     'subscribe_title' => 'Subscription title',
+    'instructions.login_mail'                => 'Login',
+    'instructions.login_mail.content'                => '',
+    'instructions.registration'                => 'Registration',
+    'instructions.registration.content'                => '',
+    'instructions.change_password'                => 'Change password',
+    'instructions.change_password.content'                => '',
+    'instructions.subscriptions'                => 'Subscriptions',
+    'instructions.subscriptions.content'                => '',
+    'instructions.subscribe_single_page'                => 'Page subscription',
+    'instructions.subscribe_single_page.content'                => '',
+    'instructions.subscribe_list_page'                => 'List subscription',
+    'instructions.subscribe_list_page.content'                => '',
+    'instructions.comments'                => 'Comments',
+    'instructions.comments.content'                => '',
+    'instructions.search_on_page'                => 'Search in list',
+    'instructions.search_on_page.content'                => '',
+    'instructions.search_on_site'                => 'Search in platform',
+    'instructions.search_on_site.content'                => '',
+    'instructions.polls'                => 'Polls',
+    'instructions.polls.content'                => '',
+    'instructions.preview_download_file'                => 'Preview and download file',
+    'instructions.preview_download_file.content'                => '',
+    'instructions.download_strategic_doc_file'                => 'Download strategic document',
+    'instructions.download_strategic_doc_file.content'                => '',
+    'part_before_evaluation_description' => 'The template for the partial ex ante impact assessment is effective from 01 January 2021.',
+    'part_before_evaluation' => 'Partial pre-impact assessment',
+    'forms1.problem_to_solve' => '<p>
+                <i>1.1. Кратко опишете проблема/проблемите и причините за неговото/тяхното възникване. По възможност посочете числови стойности.<br>
+                    1.2. Посочете възможно ли е проблемът да се реши в рамките на съществуващото законодателство чрез промяна в организацията на работа и/или чрез въвеждане на нови технологични възможности (например съвместни инспекции между няколко органа и др.).<br>
+                    1.3. Посочете защо действащата нормативна рамка не позволява решаване на проблема/проблемите.<br>
+                    1.4. Посочете задължителните действия, произтичащи от нормативни актове от по-висока степен или актове от правото на ЕС.<br>
+                    1.5. Посочете дали са извършени последващи оценки на нормативния акт или анализи за изпълнението на политиката и какви са резултатите от тях? </i>
+            </p>',
+    'efficiency' => 'Efficiency',
+    'efficiency2' => 'Efficiency',
+    'consistency' => 'Consistency',
+    'forms1.select_variant' => 'Select recommended variant',
+    'forms1.select_variant_description' => '<p>
+             <i>Indicate the recommended options for solving the problem(s) posed.</i>
+         </p>',
+    'forms1.change_administration_weight' => 'Change in the administrative burden for individuals and legal entities from the implementation of the recommended option (including on individual issues)',
+    'forms1.change_administration_weight_description' => '<p>
+             <i>
+                 1.1. The choice should be commensurate with the specified specific impacts of the recommended solution to each problem.
+                 <br>
+                 1.2. If the introduction of a fee is foreseen, present the formation of its amount according to the Methodology under Art. 7a of the Law on limiting administrative regulation and administrative control over economic activity.
+             </i>
+         </p>',
+    'forms1.step3.create_services' => 'Are new/existing regulatory regimes and services being created by implementing the recommended option (including on individual issues)?',
+    'forms1.step3.create_services_description' => '<p>
+             <i>
+                 1.1. The choice should be commensurate with the specified specific impacts of the selected option.
+                 <br>
+                 1.2. In case the creation of a new regulatory regime is envisaged, indicate its type (for economic activity: licensing, registration; for a separate insole or action: permit, notification; certification and in what way this corresponds to the achievement of the objectives).
+                 <br>
+                 1.3. Motivate the creation of the new regulatory regime according to the requirements of Art. 3, para. 4 of the Law on Limitation of Administrative Regulation and Administrative Control over Economic Activity.
+                 <br>
+                 1.4. Indicate whether the proposed new regulatory regimes meet the requirements of Art. 10 – 12 of the Act on Services Provision Activities.
+                 <br>
+                 1.5. Indicate whether the requirement of § 2 of the Supplementary Provisions of the Act on the provision of services is met.
+                 <br>
+                 1.6. In case regulatory regimes or administrative services change, indicate the change.
+             </i>
+         </p>',
+    'forms1.step3.create_variants' => 'Are new records created from the implementation of the recommended variant (including on individual issues)?',
+    'forms1.step3.create_variants_description' => '<p>
+             <i>
+                 If yes, please specify the registries being created and how they will be integrated into the overall registry infrastructure.
+             </i>
+         </p>',
+    'forms1.step3.create_micro' => 'How does the recommended option impact micro, small and medium-sized enterprises (SMEs) (including on individual issues)?',
+    'forms1.step3.create_micro_description' => '<p>
+             <i>
+                 The choice should be commensurate with the specified specific impacts of the recommended option.
+             </i>
+         </p>',
+    'forms1.step3.risk' => 'Potential risks of implementing the recommended option (including on individual issues)',
+    'forms1.step3.risk_description' => '<p>
+             <i>
+                 State the possible risks of implementing the recommended option, other than negative impacts, e.g. occurrence of legal disputes, etc.
+             </i>
+         </p>',
+    'forms1.consultations' => 'Consultations',
+    'forms1.consultations_description' => '<p class="mt-2">
+                 <i>
+                     Summarize the most important public consultation questions. Specify an indicative schedule for their implementation and the types of consultation procedures.
+                 </i>
+             </p>',
+    'forms1.act' => 'Does the adoption of the normative act derive from the law of the European Union?',
+    'forms1.act_description' => '<p class="mt-2">
+                 <i>
+                     1.1. Indicate the requirements of the law of the European Union, including the information under items 6.2 and 6.3, whether an impact assessment has been carried out at the level of the European Union, and attach it (or indicate a link to a source).
+                     <br>
+                     1.2. The choice must correspond to what is specified in section 1, according to its item 1.5.
+                 </i>
+             </p>',
+    'forms1.full_evaluation' => 'Is a full preliminary impact assessment required due to expected significant consequences?',
+    'forms1.full_evaluation_description' => '<p>
+             <i>
+                 (judgement according to Art. 20, para. 3, item 2 of the Law on normative acts)
+             </i>
+         </p>',
+    'forms1.applications' => 'Applications',
+    'forms1.applications_description' => '<p>
+             <i>
+                 Attach the necessary additional information and documents
+             </i>
+         </p>',
+    'forms1.source_information' => 'Information Sources',
+    'forms1.applications_description' => '<p>
+             <i>
+                 Provide a comprehensive list of the information sources that served to assess the impacts of the individual options and in the selection of an action option: registers, databases, analytical materials, etc.
+             </i>
+         </p>',
+    'forms1.name' => 'Name, position, date and signature of the Director of the Directorate responsible for carrying out the partial preliminary impact assessment',
+    'forms.success' => 'Form saved successfully!',
+    'calc.levels' => 'Evaluation Levels',
+    'calc.add_variant' => 'Add Variant',
+    'calc.add_criteria' => 'Add Criterion',
+    'calc.criteria' => 'Criteria',
+    'calc.weight' => 'Weights',
+    'calc.total' => 'Total',
+    'executors_list' => 'The list is drawn up pursuant to § 1 of the Additional Provisions of the Law on Regulatory Acts.',
+    'contractor_name' => 'Name of contractor',
+    'executor_name' => 'Executor Name',
+    'short_description_services' => 'Short description of services provided',
+    'forms2.full_evaluation_description' => 'Full pre-impact assessment summary template effective 01 January 2021',
+    'forms2.full_evaluation' => 'Summary of full preliminary impact assessment',
+    'forms2.action_level_need' => 'From what level does the need to take the action arise?',
+    'forms2.problem_goals_action' => 'Problems, Goals and Actions',
+    'forms2.problems_to_solve' => 'Problem/problems to solve',
+    'goals' => 'Goals',
+    'forms2.action_variant' => 'Action Variants',
+    'forms2.best_variant' => 'Recommended variant',
+    'forms.text1' => 'Briefly describe the most important monetary and non-monetary expressions of the positive impacts, including on each stakeholder/stakeholder group.',
+    'forms.text2' => 'Specific impacts in a three-year perspective',
+    'forms.text3' => '<p class="mb-3"><i>
+             Please indicate whether there are micro, small or medium-sized enterprises that are excluded from the new rules introduced by the proposal.
+             <br>
+             Indicate the distribution of costs between micro, small and medium-sized enterprises.
+         </i></p>',
+    'forms.text4' => '<p class="mb-3"><i>
+             Indicate the change in administrative burden for stakeholders.
+             <br>
+             Indicate whether new regulatory regimes or registers are being created and whether existing regulatory regimes and registers are affected.
+             <br>
+             Indicate whether the proposal exceeds the minimum EU administrative burden requirements.
+         </i></p>',
+    'forms.text5' => '<p class="mb-3"><i>
+             Please indicate whether there are micro, small or medium-sized enterprises that are excluded from the new rules introduced by the proposal.
+             <br>
+             Indicate the distribution of costs between micro, small and medium-sized enterprises.
+         </i></p>',
+    'forms2.text1' => 'Costs and benefits of action options',
+    'forms2.text2' => 'Consultations held',
+    'forms2.text3' => '<p>
+             <i>Indicate the main stakeholders consulted. Indicate the results of consultations, including at EU level: controversial issues, repeated questions, etc.</i>
+         </p>',
+    'forms2.text4' => 'Implementation and Execution',
+    'forms2.text5' => 'Which institution will be responsible for the implementation of the proposal and for control?',
+    'forms2.text6' => '<p>
+             <i>Indicate the institution responsible for the implementation of the proposal. Indicate whether the proposal foresees costs for the responsible institution or another institution?</i>
+         </p>',
+    'forms.total_year_minus' => 'Total Annual Expenses',
+    'forms.total_year_plus' => 'Total Annual Benefits',
+    'forms.text6' => '<p><i>Qualitatively and quantitatively describe all significant costs and benefits on an annual basis and which stakeholder will bear them. Use approximate figures and ranges, including cash costs (in BGN).</i></p>',
+    'content_author' => 'Content/Author',
+    'forms3.text1' => '(The form was approved by the Administrative Reform Council on 03 September 2020)',
+    'forms3.text2' => '<p>
+             <i>1.1. Description of the problem/s or issues that are regulated by the draft regulation (whenever possible, the problem should have a quantitative indicator (Guidelines, RMS No. 728 of 2019, p. 19)). Description of the reasons for their occurrence;
+             <br>
+             1.2. Description of problems in the implementation of existing legislation;
+             <br>
+             1.3. Description of the new circumstances.</i>
+         </p>',
+    'forms3.text3' => '<p>
+         <i>
+             List all potential affected and interested parties on whom the proposal will have a direct or indirect impact (businesses in a given area/all entrepreneurs, non-governmental organizations, citizens/their representatives, government bodies, etc.).
+             <br>
+             When stakeholders are specified by groups, it is necessary to specify their number in order to determine the scale of the impacts.
+         </i>
+     </p>',
+    'forms3.text4' => '<p>
+         <i>Indicate the goals that are set in the regulation of public relations with the draft normative act, in a concrete and measurable way and a timetable for their achievement. What effect would the change have and on whom?
+             <br>
+             The goals are three groups - general, specific and operational (Manual, RMS No. 728 of 2019, p. 23)</i>
+     </p>',
+    'forms3.text5' => 'Action Options',
+    'forms3.text6' => 'Describe the investigated options for achieving the set objectives for each of the described problems, including alternatives to undertaking a regulatory change. Briefly describe the potential risks associated with the options, how likely they are to occur, and their effect if they occur.',
+     'forms3.text7' => 'Impact Analysis',
+     'forms3.text8' => 'Determination of economic, social and environmental impacts',
+     'forms3.text9' => 'The impact of each individual option for solving each individual problem is analyzed. (Manual, RMS No. 728 of 2019, pp. 27 - 28).]',
+     'forms3.text10' => 'Qualitative assessment of the more significant impacts and their specific aspects',
+     'forms3.text11' => '<p><i>1. to identify the areas where the proposed action should lead to benefits, as well as the areas where it may lead to direct costs or unintended negative impacts
+<br>
+2. establish the scale of low, medium or high probability that the impact will occur, including by making assumptions about factors beyond the control of those managing the intervention that may affect these probabilities
+<br>
+3. to estimate and predict the magnitudes of each impact by presenting specific values or ranges taking into account the impact of the intervention on the behavior of the addressees in a socio-economic and environmental context
+<br>
+4. to assess the significance of the impacts based on the two preceding elements (Guidelines, RMS No. 728 of 2019, p. 36).]
+</i></p>',
+    'forms3.text12' => 'Qualitative assessment of the more significant impacts and their specific aspects in solving Problem 1',
+    'forms3.text13' => '<p>
+     <i>
+     1. to identify the areas where the proposed action should lead to benefits, as well as the areas where it may lead to direct costs or unanticipated negative impacts
+     <br>
+     2. establish the scale of low, medium or high probability that the impact will occur, including by making assumptions about factors beyond the control of those managing the intervention that may affect these probabilities
+     <br>
+     3. to estimate and predict the magnitudes of each impact by presenting specific values or ranges taking into account the impact of the intervention on the behavior of the addressees in a socio-economic and environmental context
+     <br>
+     4. to assess the significance of the impacts based on the two preceding elements (Guidelines, RMS No. 728 of 2019, p. 36).
+     </i>
+</p>',
+    'forms3.text14' => 'Qualitative assessment of the more significant impacts and their specific aspects in solving a Problem',
+    'forms3.text15' => 'Probability of impact occurring',
+    'impact' => 'Impact',
+    'low' => 'Low',
+    'forms4.text1' => 'List of abbreviations used',
+    'forms4.text2' => 'Abbreviation',
+    'forms4.text3' => 'Full Name',
+    'forms4.text4' => 'List of shapes',
+    'forms4.text5' => 'Form No',
+    'forms4.text6' => 'Figure Title/Description',
+    'forms4.text7' => 'List of Tables',
+    'forms4.text8' => 'Table No',
+    'forms4.text9' => 'Table Title/Description',
+    'forms4.text10' => '<p>
+         <span class="text-danger">*</span> This ex-post impact assessment report template has been prepared to define the structure of ex-post assessment reports and their required details.
+     </p>
+     <p>
+         <span class="text-danger">**</span> The template also aims to unify the approaches to formulating the reports, as the team performing the subsequent impact assessment is free to modify and supplement the included details according to the specifics of the performed assessment, taking into account the requirement of the minimum content of the report according to Art. 41 of NOMIOV.
+     </p>
+     <p>
+         <span class="text-danger">***</span> The template details what is provided for in the Law on Normative Acts, the Ordinance on the scope and methodology for carrying out an impact assessment and the Guide for carrying out a subsequent impact assessment, adopted by Decision No. 885 of the Council of Ministers of December 3, 2020.
+     </p>',
+    'forms4.text11' => 'Summary',
+    'forms4.text12' => 'The content and structure of the summary is determined by the ex-post impact assessment team, taking into account the researched issues, highlights and main conclusions of the assessment.',
+    'forms4.text13' => 'Body of the report',
+    'forms4.text14' => 'NB! The minimum content of the main part of the report of the subsequent impact assessment is normatively established (Article 41 of NOMIOV) in order to establish a uniform approach in structuring the subsequent impact assessments carried out by the administration.a',
+    'forms4.text15' => 'Introduction',
+    'forms4.text16' => 'Indicates the reasons for carrying out the ex-post impact assessment, the period of the assessment, the assessment team and its formation, the data sources used, notes, clarifications, tables and figures, etc.' ,
+    'forms4.text17' => '<p class="text-danger">
+         <i>[Indicate the objectives that are set before the subsequent impact assessment. The theory defines four main objectives that characterize ex-post impact assessment:
+         <br>&check; improve policy formulation (making regulations)
+         <br>&check; improving the implementation of the normative act
+         <br>&check; accountability from the implementation of the normative act
+         <br>&check; drawing conclusions from the implementation of the normative act
+         <br>(Manual, RMS No. 885 of 2020, p. 10)]
+         </i>
+     </p>',
+    'forms4.text18' => '<p>The objectives of this ex-post impact assessment are as follows:</p>',
+    'forms4.text19' => 'Evaluation scope and structure',
+    'forms4.text20' => '<p class="text-danger">
+         <i>
+             * Determining the scope of the subsequent evaluation requires specifying the "object" of the evaluation - the entire legal act in force at the time of the evaluation; part of the normative act; a separate provision thereof; specific amendment of the normative act over time; period of validity of the act, its part or amendment; territorial scope of action of the act, its part or amendment, etc.
+             <br>** The structure is presented in case more than one amendment/provision/period of effect etc. is evaluated.
+             <br>*** In the event that only one amendment/provision/period of effect etc. is being assessed, the indication of separate amendments is not necessary and the sections are not multiplied.
+         </i>
+     </p>',
+    'forms4.text21' => 'Change',
+    'forms4.text22' => 'Investigation of the reasons for the adoption or amendment of the normative act',
+    'forms4.text23' => '<p>The reasons for the adoption of the normative act may contain several achieved results, several consequences (direct effects) and several impacts - indirect effects. When studying the reasons for the adoption of the normative act, emphasis can be placed on the relationship achieved results - consequences - impacts, in this order and in the opposite order.</p>
+             <p class="text-danger">
+                 When examining the reasons for the adoption or amendment of the normative act:
+                 <br>&check; take into account the resources used, the results achieved, the consequences and impacts of the adoption or amendment of the normative act;
+                 <br>&check; take into account the causal relationships between its adoption or amendment, its consequences and impacts, changes in social relations, changes in the behavior of the addressees of the act, etc.;
+                 <br>&check; examine the reasons, respectively the report to the draft of the normative act before its adoption, the partial or complete preliminary assessment of the impact, when such have been carried out;
+                 <br>&check; researches case law that is related to the normative act.
+                 </i>
+             </p>',
+    'forms4.text24' => 'Specific problems that led to the adoption or amendment of the normative act',
+    'forms4.text25' => 'Previously defined problems are presented - those that were to be solved by the normative act. ',
+    'forms4.text26' => 'Used resources, achieved results, consequences and impacts of the adoption or amendment of the normative act;',
+    'forms4.text27' => 'Resources Used',
+    'forms4.text28' => 'Indicate the resources that were used to implement the assessed normative act (its change), such as financial resources, human resources, materials, etc.',
+    'forms4.text29' => 'Results achieved',
+    'forms4.text30' => 'The achieved results show the argument for the necessity of adopting the normative act. These are conditions, situations, actions, etc., that occurred within the framework of the implementation of the normative act.',
+    'forms4.text31' => 'Consequences (direct effects)',
+    'forms4.text32' => 'These are the direct, immediate effects of the adoption of the normative act, the manifestations of which are registered in the short term after the adoption of the normative act.',
+    'forms4.text33' => 'Impacts',
+    'forms4.text34' => 'These are the transformative effects whose manifestations are registered in the long term after the adoption of the normative act (also called "indirect").',
+    'forms4.text35' => 'Causal relationships between the adoption/amendment of the normative act, its consequences and impacts, changes in social relations, change in the behavior of the addressees of the act, etc.',
+    'forms4.text36' => 'Main highlights of the reasons, respectively the report to the draft of the normative act before its adoption, the partial or complete preliminary impact assessment, when such have been carried out;',
+    'forms4.text37' => 'Results of researched case law related to the normative act.',
+    'forms4.text38' => 'Evaluation Criteria',
+    'forms4.text39' => 'When carrying out an ex-post impact assessment, different criteria can be applied to evaluate the results of the implementation of the normative act. In the exposition below, the most frequently used criteria for ex post impact assessment (interim and ex post assessment) are presented. There are several possible criteria (Guidelines, RMS No. 885 of 2020, pp. 17 – 20):',
+    'forms4.text40' => 'Criterion 1. Achieving the objectives',
+    'forms4.text41' => 'Achievement of objectives – this criterion indicates the extent to which the objectives of the adoption or amendment of the normative act have been achieved, regardless of whether this is due to the implementation of the normative act.',
+    'forms4.text42' => 'Criterion 2. Effectiveness',
+    'forms4.text43' => 'Effectiveness – this criterion indicates the extent to which the achievement of the objectives set in the adoption or amendment of the normative act is due to the implementation of the normative act.',
+    'forms4.text44' => 'Criterion 3. Efficiency',
+    'forms4.text45' => 'Efficiency – this criterion measures the achievement of the objectives set in the adoption or amendment of the normative act, with minimal use of resources in the implementation of the normative act. ',
+    'forms4.text46' => 'Criterion 4. Sustainability',
+    'forms4.text47' => 'Sustainability – a criterion for evaluating the degree of permanent resolution of the identified problems.',
+    'forms4.text48' => 'Criterion 5. Usefulness',
+    'forms4.text49' => 'Usefulness – a criterion for measuring the degree of satisfaction of the expectations of the addressees of the policy and/or the normative act',
+    'forms4.text50' => 'Evaluation Questions',
+    'forms4.text51' => 'The questions raised for consideration by any subsequent impact assessment are two groups: general and specific. General review questions may be asked at each subsequent assessment. However, it is mandatory to ask the specific questions that are specific to the currently evaluated interventions, and that relate to each of the evaluation criteria: achievement of the objectives, effectiveness, efficiency, sustainability and usefulness of the interventions. (Manual, RMS No. 885 of 2020, pp. 20-21)',
+    'forms4.text52' => 'Specific Assessment Questions',
+    'forms4.text53' => '(The specific assessment questions specified (Manual, RMS No. 885 of 2020, pp. 20-21)',
+    'forms4.text54' => 'Stakeholders and collected data',
+    'forms4.text55' => 'Stakeholder information, data collected and information on consultations carried out are indicated.',
+    'forms4.text56' => 'Change',
+    'forms4.text57' => 'Stakeholders',
+    'forms4.text58' => 'Indicate the identified addressees and interested parties of the normative act. The fullest possible coverage of the interested parties in the process of carrying out the ex post impact assessment is of utmost importance. (Manual, RMS No. 885 of 2020, pp. 20-22)',
+    'forms4.text59' => 'Information on consultations held with interested parties',
+    'forms4.text60' => 'Indicate the interested parties, the methods and the period of conducting the consultations with the interested parties.',
+    'forms4.text61' => 'Collected data',
+    'forms4.text62' => 'Indicates information about other used sources of data relevant to the assessment.',
+    'forms4.text63' => 'Data analysis and impact assessment',
+    'forms4.text64' => 'The analysis of all collected data is presented, which includes their interpretation and summarization and/or calculation by applying alone or together some of the impact assessment methods. ',
+    'forms4.text65' => 'Information about responses and opinions expressed by interested parties',
+    'forms4.text66' => 'Information about the used impact assessment method',
+    'forms4.text67' => 'The assessment of the impacts of the adoption or amendment of the normative act is based on the analysis of the collected data. In assessing the impacts and forming conclusions, the analyzed data are interpreted and summarized by making the relevant calculations, using alone or together some of the following methods/groups of methods',
+    'forms4.text68' => 'Pragmatic methods',
+    'forms4.text69' => 'A group of pragmatic methods including performance observation and theory of change as a data framework',
+    'forms4.text70' => 'Performance Monitoring',
+    'forms4.text71' => 'Theory of change as a data frame',
+    'forms4.text72' => 'Strict Approaches',
+    'forms4.text73' => 'Rigorous impact assessment methods are methods that have a clear starting point for formulating claims of cause and effect.',
+    'forms4.text74' => 'Case Study',
+    'forms4.text75' => 'A set of case study methods, including through process tracing and realist evaluation, coherence and continuity analysis, and qualitative benchmarking.',
+    'forms4.text76' => 'Process Tracking and Realistic Evaluation',
+    'forms4.text77' => 'Coherence Analysis and Continuity Analysis',
+    'forms4.text78' => 'Qualitative Benchmarking',
+    'forms4.text79' => '(Quasi) experimental methods',
+    'forms4.text80' => 'A group of control group research methods that allow the effect of a regulatory change to be assessed by comparing outcomes between equivalent test and control groups.',
+    'forms4.text81' => 'Randomized Controlled Trials (Experimental)',
+    'forms4.text82' => 'Propensity to Conform (Quasi-Experimental)',
+    'forms4.text83' => 'Difference in difference (quasi-experimental)',
+    'forms4.text84' => 'Regression break (quasi-experimental)',
+    'forms4.text85' => 'Multicriteria Analysis',
+    'forms4.text86' => 'A method of post-assessment of the impact on the basis of a special set of criteria that are related to the intended objectives.',
+    'forms4.text87' => 'Standard cost model',
+    'forms4.text88' => 'Methodological framework for measuring the costs of fulfilling obligations to provide information.',
+    'forms4.text89' => 'Collected data analysis results',
+    'forms4.text90' => 'Indicate the specific results of the applied impact assessment methods.',
+    'forms4.text91' => 'Description of impacts and formulated conclusions',
+    'forms4.text92' => 'Describes the impacts and formulated conclusions based on the analysis of the data and the methods for their interpretation, summarization and calculation, as well as the reasons for their selection.',
+    'forms4.text93' => 'Conclusions',
+    'forms4.text94' => 'Methods of dissemination of ex-post evaluation results',
+    'forms4.text95' => 'Indicates the ways in which the results of the assessment will be disseminated, as publication on the website of the relevant institution and on the Public Consultation Portal is a statutory requirement.',
+    'forms4.text96' => 'In order to increase the publicity of the evaluation results, it is possible to use all known information channels, and the results can be presented at official political forums, at official expert forums and round tables, at press conferences, through announcements to the media, by sending to formal and informal groups inside and outside the administration, etc.',
+    'forms4.text97' => 'Recommendations for follow-up actions according to Art. 18b of the ZNA',
+    'forms4.text98' => 'According to the Law on normative acts and the Ordinance on the scope and methodology for carrying out an impact assessment depending on the results of the subsequent impact assessment, the authority whose competence is the implementation of the normative act or which traditionally proposes changes in him, may propose the cancellation, amendment or addition of the normative act and initiate the performance of a preliminary assessment of the impact of the proposed changes.',
+    'forms4.text99' => 'Sources',
+    'forms4.text100' => 'Description of the sources of information used',
+    'forms4.text101' => 'All annexes not included in the main sections and containing information supporting the analysis in the subsequent impact assessment shall be submitted to the report.',
+
 ];

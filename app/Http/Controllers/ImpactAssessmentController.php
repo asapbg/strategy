@@ -29,7 +29,7 @@ class ImpactAssessmentController extends Controller
         }
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
-        $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
+        $this->composeBreadcrumbs(array(['name' => __('site.base_info'), 'url' => '']));
 
         $library = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
@@ -41,7 +41,7 @@ class ImpactAssessmentController extends Controller
     public function index()
     {
         $pageTitle = trans_choice('custom.impact_assessment', 1);
-        $this->composeBreadcrumbs(array(['name' => 'Обща информация', 'url' => '']));
+        $this->composeBreadcrumbs(array(['name' => __('site.base_info'), 'url' => '']));
 
         $library = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)

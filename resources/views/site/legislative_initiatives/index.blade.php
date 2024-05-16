@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <div class="mb-3 d-flex flex-column w-100">
-                                <label for="keywords" class="form-label">Съдържание/Автор</label>
+                                <label for="keywords" class="form-label">{{ __('custom.content_author') }}</label>
                                 <input id="keywords" class="form-control" name="keywords" type="text"
                                        value="{{ request()->get('keywords', '') }}">
                             </div>

@@ -4,17 +4,17 @@
 
 @section('content')
     <div>
-        Списъкът се изготвя в изпълнение на § 1 от Допълнителните разпоредби на Закона за нормативните актове.
+        {{ __('custom.executors_list') }}
     </div>
     <hr>
     <div class="row filter-results mb-2">
         <h2 class="mb-4">
-            Търсене
+            {{ __('custom.searching') }}
         </h2>
         <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
-                    <label for="exampleFormControlInput1" class="form-label">Изпълнител</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('custom.executor') }}</label>
                     <input type="text" class="form-control">
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
-                    <label for="exampleFormControlInput1" class="form-label">Предмет на договора</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('custom.contract_subject') }}</label>
                     <input type="text" class="form-control">
                 </div>
             </div>
@@ -30,7 +30,7 @@
         <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
-                    <label for="exampleFormControlInput1" class="form-label">Възложител</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('custom.contractor') }}</label>
                     <input type="text" class="form-control">
                 </div>
             </div>
@@ -38,15 +38,14 @@
         <div class="col-md-3">
             <div class="input-group ">
                 <div class="mb-3 d-flex flex-column  w-100">
-                    <label for="exampleFormControlInput1" class="form-label">Сортиране</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('custom.order') }}</label>
                     <select class="form-select" aria-label="Default select example">
-                        <option value="1">Сума (възходящо)</option>
-                        <option value="1">Сума (низходящо)</option>
-                        <option value="1">Дата (възходящо)</option>
-                        <option value="1">Дата (низходящо)</option>
-                        <option value="1">Дата (възходящо)</option>
-                        <option value="1">Име възложител (възходящо)</option>
-                        <option value="1">Име възложител (низходящо)</option>
+                        <option value="1">{{ __('custom.sum_up') }}</option>
+                        <option value="1">{{ __('custom.sum_down') }}</option>
+                        <option value="1">{{ __('custom.date_up') }}</option>
+                        <option value="1">{{ __('custom.date_down') }}</option>
+                        <option value="1">{{ __('custom.name_up') }}</option>
+                        <option value="1">{{ __('custom.name_down') }}</option>
                     </select>
                 </div>
             </div>
@@ -54,7 +53,7 @@
     </div>
     <div class="row mb-5">
         <div class="col-md-8">
-            <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>Търсене</button>
+            <button class="btn rss-sub main-color"><i class="fas fa-search main-color"></i>{{ __('custom.searching') }}</button>
         </div>
 
         <div class="col-md-4">

@@ -1,39 +1,29 @@
-<h4>5.2. Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем 1:</h4>
-<p>
-    <i>
-    1. да се идентифицират областите, в които предлаганото действие трябва да доведе до ползи, както и областите, където то може да доведе до преки разходи или непредвидени отрицателни въздействия
-    <br>
-    2. да се установи скалата с ниска, средна или висока вероятност въздействието да се прояви, включително чрез извеждането на предположения относно факторите, които са извън контрола на лицата управляващи интервенцията , които могат да повлияят на тези вероятности
-    <br>
-    3. да се оценят и прогнозират величините на всяко въздействие чрез представяне на конкретни стойности или диапазони като се вземе предвид влиянието на интервенцията върху поведението на адресатите в социално-икономически и екологичен контекст
-    <br>
-    4. да се оцени значението на въздействията въз основа на двата предходни елемента (Ръководство, РМС № 728 от 2019 г., стр. 36).
-    </i>
-</p>
+<h4>5.2. {{ __('custom.forms3.text12') }}:</h4>
+{!! __('custom.forms3.text13') !!}
 @include('form_partials.textarea', ['name' => 'quality_assessment', 'label' => '', 'value' => Arr::get($state, 'quality_assessment'), 'class' => 'mb-4'])
 
 @php($loop = array_key_exists('problem_to_solve', $state) ? count($state['problem_to_solve']) : 1)
 @for($n=0; $n<$loop; $n++)
-    <h5 class="@if($n > 0) mt-5 @endif" >Качествена оценка на по-значимите въздействия и специфичните им аспекти при решаването на Проблем {{ $n+1 }}:</h5>
+    <h5 class="@if($n > 0) mt-5 @endif" >{{ __('custom.forms3.text14') }} {{ $n+1 }}:</h5>
 
     @php($loop2 = Arr::get($state, "variant_simple.$n", false) ? count(Arr::get($state, "variant_simple.$n")) : 1)
     @for($m=0; $m<$loop2; $m++)
     <table width="100%">
         <tr>
-            <th colspan="2">Проблем {{ $n+1 }} / Вариант {{ $m+1 }}</th>
+            <th colspan="2">{{ __('custom.problem') }} {{ $n+1 }} / {{ __('custom.forms.variant') }} {{ $m+1 }}</th>
 {{--            <th class="text-center">Вариант {{ $m+1 }}</th>--}}
         </tr>
     </table>
     @php($loop3 = 3)
     <table width="100%" class="table">
         <tr>
-            <td class="text-center">Вероятност въздействието да се прояви</td>
+            <td class="text-center">{{ __('custom.forms3.text15') }}</td>
             @for($o=0; $o<$loop3; $o++)
-            <td class="text-center">Въздействие {{ $o+1 }}</td>
+            <td class="text-center">{{ __('custom.impact') }} {{ $o+1 }}</td>
             @endfor
         </tr>
         <tr>
-            <td>Ниска</td>
+            <td>{{ __('custom.low') }}</td>
             @for($o=0; $o<$loop3; $o++)
             <td class="text-center">
                 @include('form_partials.radio', ['name' => "", 'value' => 0, 'label' => 'forms.not_included_in_program'])

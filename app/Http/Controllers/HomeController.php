@@ -16,6 +16,7 @@ use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\LegislativeInitiative;
 use App\Models\OgpPlan;
+use App\Models\Page;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
@@ -692,6 +693,19 @@ class HomeController extends Controller
         ));
         $file = self::USER_GUIDE.'_'.app()->getLocale().'.pdf';
         return $this->view('site.partial.guide', compact('pageTitle', 'file'));
+    }
+
+    public function helpVideo(Request $request)
+    {
+        $pageTitle = __('site.user_video_guide');
+        $this->setBreadcrumbsFull(array(
+            ['name' => __('site.user_video_guide'), 'url' => '']
+        ));
+        $item = Page::where('system_name', '=', Page::VIDEO_INSTRUCTIONS)->first();
+        if(!$item){
+            abort(404);
+        }
+        return $this->view('site.page', compact('pageTitle', 'item'));
     }
 
     public function otherLinks(Request $request)
