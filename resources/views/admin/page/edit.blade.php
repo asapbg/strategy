@@ -135,7 +135,7 @@
                                     </div>
                                 </form>
                                 @if($item->files)
-                                    @php($storeFileOrdRoute = isset($customOrderFilesRoute) && !empty($customOrderFilesRoute) ? route($customOrderFilesRoute, ['item' => $item, 'module' => $module]) : route('page.edit.order_files', ['id' => $item->id ?? 0]))
+                                    @php($storeFileOrdRoute = isset($customOrderFilesRoute) && !empty($customOrderFilesRoute) ? route($customOrderFilesRoute, ['item' => $item, 'module' => $module]) : route('admin.page.edit.order_files', ['id' => $item->id ?? 0]))
                                     <form method="POST" action="{{ $storeFileOrdRoute }}">
                                         @csrf
                                         <table class="table table-sm table-hover table-bordered mt-4">

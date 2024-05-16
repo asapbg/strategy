@@ -176,6 +176,11 @@ class AdvBoardNewsController extends AdminController
             $langReq = LanguageFileUploadRequest::createFrom($request);
             $this->uploadFileLanguages($langReq, $item->id, File::CODE_OBJ_PUBLICATION, false);
 
+            foreach (config('available_languages') as $lang){
+                if(empty($validated['short_content_'.$lang['code']]) && !empty($validated['content_'.$lang['code']])){
+                    $validated['short_content_'.$lang['code']] = substr(strip_tags($validated['content_'.$lang['code']]), 0, 1000);
+                }
+            }
             $this->storeTranslateOrNew(Publication::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
 
