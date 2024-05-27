@@ -79,8 +79,10 @@ class PrisController extends Controller
         $hasSubscribeEmail = $this->hasSubscription(null, Pris::class, $requestFilter);
         $hasSubscribeRss = false;
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+            $closeSearchForm = false;
+            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'. 'closeSearchForm'));
         }
 
         $menuCategories = [];
@@ -115,7 +117,7 @@ class PrisController extends Controller
             }
         }
         $this->composeBreadcrumbs($extraBreadCrumbs);
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
     public function archive(Request $request, $category = '')

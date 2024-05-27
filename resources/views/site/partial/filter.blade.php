@@ -3,11 +3,11 @@
 <div class="accordion my-2" id="accordionFilter">
     <div class="accordion-item">
         <h2 class="accordion-header" id="filterA">
-            <button class="accordion-button collapsed py-2 fw-bold" type="button" data-toggle="collapse" data-target="#collapseFilterA" aria-expanded="false" aria-controls="collapseFilterA">
+            <button class="accordion-button @if(!isset($closeSearchForm) || $closeSearchForm) collapsed @endif py-2 fw-bold" type="button" data-toggle="collapse" data-target="#collapseFilterA" aria-expanded="@if(!isset($closeSearchForm) || $closeSearchForm){{ 'false' }}@else{{ 'true' }}@endif" aria-controls="collapseFilterA">
                 <i class="fas fa-search me-2"></i>{{ __('custom.searching') }}
             </button>
         </h2>
-        <div id="collapseFilterA" class="accordion-collapse collapse" aria-labelledby="filterA" data-parent="#accordionFilter">
+        <div id="collapseFilterA" class="accordion-collapse collapse @if(isset($closeSearchForm) && !$closeSearchForm) show @endif" aria-labelledby="filterA" data-parent="#accordionFilter">
             <div class="accordion-body">
                 <form method="GET" class="@if(isset($class)){{ $class }}@endif" id="filter-form">
                     @if(count($filter) > 1 || !isset($filter['paginate']))
