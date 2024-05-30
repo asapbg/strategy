@@ -603,7 +603,7 @@ class AdvisoryBoardController extends Controller
                 });
 
         if($searchMeetings){
-            $q->groupBy('advisory_boards.id');
+            $q->groupBy('advisory_boards.id', 'advisory_board_translations.name');
         }
 
         if($request->input('export_excel') || $request->input('export_as_excel') || $request->input('export_pdf') || $request->input('export_as_pdf')){
@@ -728,7 +728,7 @@ class AdvisoryBoardController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
+                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -812,11 +812,10 @@ class AdvisoryBoardController extends Controller
     }
 
     private function filtersReport($request, $currentRequest){
-
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList()),
+                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
