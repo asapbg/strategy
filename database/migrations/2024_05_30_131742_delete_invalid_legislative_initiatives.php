@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement('update legislative_initiative set legislative_initiative.deleted_at = \'2024-05-30 00:00:00\' WHERE legislative_initiative.id IN (select li.id from legislative_initiative li left join law l on l.id = li.law_id where l.id is null)');
+        DB::statement('update legislative_initiative set deleted_at = \'2024-05-30 00:00:00\' WHERE id IN (select li.id from legislative_initiative li left join law l on l.id = li.law_id where l.id is null)');
     }
 
     /**
