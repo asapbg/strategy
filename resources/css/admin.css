@@ -14,7 +14,7 @@ overflow-x: hidden;
 }
 
 .custom-left-border {
-    border-left: 3px solid var(--primary-color) !important;
+    border-left: 4px solid var(--primary-color) !important;
     padding-left: 10px !important;
 }
 

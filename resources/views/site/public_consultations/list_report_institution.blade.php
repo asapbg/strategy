@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                 @foreach($items as $item)
-                    <tr>
+                    <tr class="bg-light">
                         <td class="custom-left-border">{{ $item->name }}</td>
                         <td>{{ $item->pc_cnt }}</td>
                         <td>{{ $item->less_days_cnt }} @if($item->pc_cnt && $item->less_days_cnt)({{ round((($item->less_days_cnt/$item->pc_cnt) * 100), 2) }}%)@endif</td>
@@ -51,11 +51,11 @@
                         @php($byActType = json_decode($consultationsByActType[$item->id]->act_info, true))
                         @if($byActType)
                             <tr>
-                                <th colspan="6">{{ trans_choice('custom.act_type', 1) }}</th>
+                                <th colspan="6" class="ps-4">{{ trans_choice('custom.act_type', 1) }}</th>
                             </tr>
                             @foreach($byActType as $act)
                                 <tr>
-                                    <td>{{ $act['act_name'] }}</td>
+                                    <td class="ps-4">{{ $act['act_name'] }}</td>
                                     <td colspan="5">{{ $act['act_cnt'] }}</td>
                                 </tr>
                             @endforeach
