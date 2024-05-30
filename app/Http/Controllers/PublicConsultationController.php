@@ -625,7 +625,12 @@ class PublicConsultationController extends Controller
                 $q->whereIn('public_consultation.field_of_actions_id', $fieldOfActionsMunicipalities);
             })
             ->when($levels, function ($q) use($levels){
-                $q->whereIn('public_consultation.consultation_level_id', $levels);
+//                $q->whereIn('public_consultation.consultation_level_id', $levels);
+                $faLevels = [];
+                foreach ($levels as $l){
+                    $faLevels[] = InstitutionCategoryLevelEnum::fieldOfActionCategory((int)$l);
+                }
+                $q->whereIn('field_of_actions.parentid', $faLevels);
             })
             ->when($openForm, function ($q) use($openForm){
                 $q->where('public_consultation.open_from', '>=', $openForm);
