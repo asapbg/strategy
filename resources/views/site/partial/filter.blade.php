@@ -114,7 +114,13 @@
                                                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif
                                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}">
                                                             @foreach($field['options'] as $option)
-                                                                <option value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
+                                                                @php($optionDataAttributes = '')
+                                                                @foreach($option as $k => $v)
+                                                                    @if(str_contains($k, 'data-'))
+                                                                        @php($optionDataAttributes .= ($k.'='.$v.' '))
+                                                                    @endif
+                                                                @endforeach
+                                                                <option {{ $optionDataAttributes }}  value="{{ $option['value'] }}" @if((isset($field['multiple']) && $field['multiple'] &&
                                             in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
                                             ((!isset($field['multiple']) || !$field['multiple']) && $option['value']==old($key,
                                             $field['value']))) selected @endif>{{ $option['name'] }}</option>

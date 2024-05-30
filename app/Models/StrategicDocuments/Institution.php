@@ -167,12 +167,14 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public static function simpleOptionsList(): \Illuminate\Support\Collection
     {
         return DB::table('institution')
-            ->select(['institution.id', 'institution_translations.name'])
+            ->select(['institution.id', 'institution_translations.name', DB::raw('max(institution_level.nomenclature_level) as level')])
             ->join('institution_translations', 'institution_translations.institution_id', '=', 'institution.id')
+            ->join('institution_level', 'institution_level.id', '=', 'institution.institution_level_id')
             ->where('institution.active', '=', 1)
             ->where('institution_translations.locale', '=', app()->getLocale())
             ->where('institution.id', '<>', config('app.default_institution_id'))
             ->orderBy('institution_translations.name', 'asc')
+            ->groupBy('institution.id', 'institution_translations.name')
             ->get();
     }
 

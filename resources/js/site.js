@@ -257,7 +257,24 @@ function initInputs()
 }
 
 // START control connected filters
-
+function institutionControl(){
+    let level = $('#level');
+    let levelVals = level.val();
+    if($('#importers').length){
+        $('#importers option').each(function (){
+            let opt = $(this);
+            if(typeof opt.data('level') == 'undefined'){
+                $(this).attr('disabled', false);
+            } else{
+                if(levelVals.indexOf(opt.data('level').toString()) != -1){
+                    $(this).attr('disabled', false);
+                } else{
+                    $(this).attr('disabled', true);
+                }
+            }
+        });
+    }
+}
 
 function categoriesControl(){
     let level = $('#level');
@@ -333,6 +350,7 @@ function categoriesControl(){
 
 $(document).on('change', '#level', function (){
     categoriesControl();
+    institutionControl();
 });
 // END control connected filters
 
@@ -344,6 +362,7 @@ function ajaxList(domElement) {
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
+            institutionControl();
         });
     });
     $(document).on('change', domElement + ' #list-paginate', function (){
@@ -353,6 +372,7 @@ function ajaxList(domElement) {
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
+            institutionControl();
         });
     });
     $(document).on('click', domElement + ' .ajaxSort', function (e){
@@ -362,6 +382,7 @@ function ajaxList(domElement) {
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
+            institutionControl();
         });
     });
     $(document).on('click', domElement + ' .ajaxSearch', function (e){
@@ -385,6 +406,7 @@ function ajaxList(domElement) {
             ShowLoadingSpinner();
             initInputs();
             categoriesControl();
+            institutionControl();
             ajaxList($(this).data('container'));
         });
     });
