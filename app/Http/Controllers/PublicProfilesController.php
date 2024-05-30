@@ -127,7 +127,7 @@ class PublicProfilesController extends Controller
         if(sizeof($votedLiIds)){
             $ids = array_merge($ids, $votedLiIds);
         }
-        $items = LegislativeInitiative::whereIn('id', array_keys($ids))->get();
+        $items = LegislativeInitiative::whereIn('id', $ids)->get();
 
         return $this->view('site.public_profiles.user.li', compact('item', 'pageTitle', 'items'));
     }
