@@ -100,7 +100,7 @@
 
                             @can('create', \App\Models\LegislativeInitiative::class)
                                 <a href="{{ route('legislative_initiatives.create') }}"
-                                   class="btn btn-success text-success">
+                                   class="btn btn-success text-success mt-1">
                                     <i class="fas fa-circle-plus text-success me-1"></i>
                                     {{ __('custom.add') . ' ' . trans_choice('custom.legislative_initiatives_list', 1) }}
                                 </a>

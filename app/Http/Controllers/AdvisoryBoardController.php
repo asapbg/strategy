@@ -152,11 +152,13 @@ class AdvisoryBoardController extends Controller
         $hasSubscribeEmail = $this->hasSubscription(null, AdvisoryBoard::class, $subscribeFilter);
         $hasSubscribeRss = false;
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+            $closeSearchForm = false;
+            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
 
-        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
     /**
@@ -624,14 +626,16 @@ class AdvisoryBoardController extends Controller
             $items = $q->paginate($paginate);
         }
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.advisory-boards.list_report', compact('filter','sorter', 'items', 'rf', 'searchMeetings'));
+            $closeSearchForm = false;
+            return view('site.advisory-boards.list_report', compact('filter','sorter', 'items', 'rf', 'searchMeetings', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.adv_board_report_title');
         $this->composeBreadcrumbs(null, array(['name' => __('custom.adv_board_report_title'), 'url' => '']));
 
-        return $this->view('site.advisory-boards.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'searchMeetings'));
+        return $this->view('site.advisory-boards.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'searchMeetings', 'closeSearchForm'));
     }
 
     private function sorters()

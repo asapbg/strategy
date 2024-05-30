@@ -67,13 +67,15 @@ class PublicConsultationController extends Controller
         $hasSubscribeEmail = $this->hasSubscription(null, PublicConsultation::class, $requestFilter);
         $hasSubscribeRss = false;
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl'));
+            $closeSearchForm = false;
+            return view('site.public_consultations.list', compact('filter','sorter', 'pk', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl'));
+        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
     public function show(Request $request, int $id = 0)
@@ -207,8 +209,10 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report', compact('filter','items', 'rf'));
+            $closeSearchForm = false;
+            return view('site.public_consultations.list_report', compact('filter','items', 'rf', 'closeSearchForm'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
@@ -218,7 +222,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.standard'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
     private function filtersReport($request){
@@ -504,8 +508,10 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report_fa', compact('filter','items', 'rf'));
+            $closeSearchForm = false;
+            return view('site.public_consultations.list_report_fa', compact('filter','items', 'rf', 'closeSearchForm'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
@@ -515,7 +521,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.field_of_action'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
     private function filtersFaReport($request){
@@ -663,8 +669,10 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report_fa_institution', compact('filter','items', 'rf'));
+            $closeSearchForm = false;
+            return view('site.public_consultations.list_report_fa_institution', compact('filter','items', 'rf'. 'closeSearchForm'));
         }
 //dd($items);
         $pageTitle = __('site.menu.public_consultation');
@@ -674,7 +682,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.field_of_action_institution'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report_fa_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.public_consultations.report_fa_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
     private function filtersFaInstitutionReport($request){
@@ -901,8 +909,11 @@ class PublicConsultationController extends Controller
         } else{
             $items = $q->paginate($paginate);
         }
+
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.public_consultations.list_report_institution', compact('filter','items', 'rf', 'consultationsByActType', 'missingFiles'));
+            $closeSearchForm = false;
+            return view('site.public_consultations.list_report_institution', compact('filter','items', 'rf', 'consultationsByActType', 'missingFiles', 'closeSearchForm'));
         }
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
@@ -911,7 +922,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.institutions'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles'));
+        return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles', 'closeSearchForm'));
     }
 
     public function filtersInstitutionReport($request){

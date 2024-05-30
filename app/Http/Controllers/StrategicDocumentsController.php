@@ -93,16 +93,18 @@ class StrategicDocumentsController extends Controller
         $hasSubscribeEmail = $this->hasSubscription(null, StrategicDocument::class, $requestFilter);
         $hasSubscribeRss = $this->hasSubscription(null, StrategicDocument::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
+            $closeSearchForm = false;
             return view('site.strategic_documents.list', compact('filter','sorter', 'items',
-                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss'));
+                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
 
         return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle',
-            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
+            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
     }
 
     public function tree(Request $request)
@@ -351,14 +353,16 @@ class StrategicDocumentsController extends Controller
             $items = $q->paginate($paginate);
         }
 
+        $closeSearchForm = true;
         if( $request->ajax() ) {
-            return view('site.strategic_documents.list_report', compact('filter','sorter', 'items', 'rf'));
+            $closeSearchForm = false;
+            return view('site.strategic_documents.list_report', compact('filter','sorter', 'items', 'rf', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => __('site.strategic_document.all_documents_report'), 'url' => '']));
 
-        return $this->view('site.strategic_documents.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection'));
+        return $this->view('site.strategic_documents.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
     private function filters($request, $currentRequest)

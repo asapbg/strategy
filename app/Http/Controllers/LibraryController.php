@@ -52,8 +52,10 @@ class LibraryController extends Controller
         $hasSubscribeRss = false;
         unset($requestFilter['type']);
 
+        $closeSearchForm = true;
         if ($is_search) {
-            return $this->view('site.publications.publications', compact('publications', 'default_img', 'type', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
+            $closeSearchForm = false;
+            return $this->view('site.publications.publications', compact('publications', 'default_img', 'type', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
         }
 
         $publicationCategories = PublicationCategory::optionsList(true, $type);
@@ -63,7 +65,7 @@ class LibraryController extends Controller
         }
 
         return $this->view('site.publications.index',
-            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
+            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
     }
 
     /**
