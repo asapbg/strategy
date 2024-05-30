@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(NotificationsController::class)->group(function () {
         Route::get('/notifications',                'index')->name('user.notifications');
         Route::get('/notifications/view/{id}',      'show')->name('user.notification_show');
+        Route::get('/notifications/mark-all-as-read',      'markAllAsRead')->name('user.notifications.mark_as_read');
     });
 
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {

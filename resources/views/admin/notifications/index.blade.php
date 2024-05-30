@@ -28,6 +28,9 @@
 {{--                    <h3 class="card-title">{{ __('custom.search') }}</h3>--}}
 {{--                </div>--}}
                 <div class="card-body">
+                    <div class="row">
+                        <a href="{{ route('admin.user.notifications.mark_as_read') }}" class="btn btn-sm btn-success w-auto mb-3">Маркирай всички като прочетени</a>
+                    </div>
                     <table class="table table-hover table-bordered" width="100%" cellspacing="0">
                         <thead>
                         <tr>

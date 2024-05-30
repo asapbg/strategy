@@ -35,4 +35,12 @@ class NotificationsController extends Controller
         return $this->view('admin.notifications.show', compact('notification', 'item', 'itemUrl'));
     }
 
+    public function markAllAsRead(Request $request){
+        $user = auth()->user();
+        if($user){
+            $user->unreadNotifications->markAsRead();
+        }
+        return redirect(route('admin.user.notifications'));
+    }
+
 }
