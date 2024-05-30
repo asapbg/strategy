@@ -874,7 +874,7 @@ return [
     'votes' => 'Vote|Votes',
     'develop_plan_information' => 'The information from the plan development process',
     'time_left' => 'Time left',
-    'end_after' => 'Ended after',
+    'end_after' => 'Ended in',
     'send_to_administrations_of' => 'Sent to the administrations of',
     'to_administrations_of' => 'Directed to',
     'are_you_sure_to_close' => 'Are you sure you want to close',

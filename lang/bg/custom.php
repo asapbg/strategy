@@ -874,7 +874,7 @@ return [
     'votes'  => 'Глас|Гласове',
     'develop_plan_information' => 'Информацията от процеса на разработвеане на плана',
     'time_left' => 'Оставащо време',
-    'end_after' => 'Приключила след',
+    'end_after' => 'Приключила за',
     'send_to_administrations_of' => 'Изпратена до администрациите на',
     'to_administrations_of' => 'Насочена към',
     'are_you_sure_to_close'           => 'Сигурни ли сте, че искате да затворите',
