@@ -80,7 +80,7 @@
                                     @if($consultation->consultation_level_id)
                                         <span class="ms-2 mb-2">
                                         <strong>{{ __('site.public_consultation.importer_type') }}:</strong>
-                                        <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$consultation->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}</a>
+                                        <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level[]='.$consultation->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($consultation->consultation_level_id)) }}</a>
                                     </span>
                                     @endif
                                 </div>

@@ -79,7 +79,7 @@
     {{--                      <a class="level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>--}}
     {{--                  </span>--}}
     {{--                </a>--}}
-                    <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
+                    <a class="institution-level level-{{ strtolower(\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}" target="_blank" href="{{ route('public_consultation.index').'?level[]='.$item->consultation_level_id }}">{{ __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($item->consultation_level_id)) }}</a>
                 </div>
             @endif
 {{--            <div class="col-md-4 ">--}}

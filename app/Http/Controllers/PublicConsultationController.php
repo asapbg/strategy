@@ -1064,15 +1064,15 @@ class PublicConsultationController extends Controller
                 'value' => $request->input('actTypes'),
                 'col' => 'col-md-4'
             ),
-            'levels' => array(
-                'type' => 'select',
-                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
-                'multiple' => true,
-                'default' => '',
-                'label' => __('site.public_consultation.importer_type'),
-                'value' => $request->input('levels'),
-                'col' => 'col-md-4'
-            ),
+//            'levels' => array(
+//                'type' => 'select',
+//                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'nomenclature_level', true),
+//                'multiple' => true,
+//                'default' => '',
+//                'label' => __('site.public_consultation.importer_type'),
+//                'value' => $request->input('levels'),
+//                'col' => 'col-md-4'
+//            ),
             'importers' => array(
                 'type' => 'subjects',
                 'label' => __('site.public_consultation.importer_pc'),
