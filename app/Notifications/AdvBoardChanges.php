@@ -32,7 +32,7 @@ class AdvBoardChanges extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail']; //, 'database'
+        return ['mail']; //,'database'
     }
 
     /**
@@ -49,18 +49,12 @@ class AdvBoardChanges extends Notification
                     ->action($this->item->name, route('admin.advisory-boards.edit', $this->item));
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
+    public function toArray(object $notifiable):array
     {
         return [
             'model' => get_class($this->item),
             'id' => $this->item->id,
-            'subject' => __('notifications_msg.adv_board_changes'),
+            'subject' => __('notifications_msg.adv_board_changes').'('.$this->item->name.')',
             'message' => __('notifications_msg.adv_board_changes.extra_info')
         ];
     }
