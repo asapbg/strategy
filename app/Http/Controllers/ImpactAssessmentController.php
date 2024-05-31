@@ -133,7 +133,7 @@ class ImpactAssessmentController extends Controller
                     'by_admin' => auth()->user() && auth()->user()->user_type = User::USER_TYPE_INTERNAL,
                 ]);
             }
-            $fi->data = json_encode($data);
+            $fi->data = json_encode($data, JSON_UNESCAPED_UNICODE);
             $fi->save();
             $inputId = $fi->id;
         }

@@ -509,6 +509,38 @@ class ReportsController extends Controller
     public function apiReportImpactAssessments(Request $request, string $type){
         switch ($type)
         {
+            case 'standard':
+                $q = DB::table('form_input')
+                    ->select([
+                        DB::raw('to_char(form_input.created_at, \'DD.MM.YYYY\') as date'),
+                        DB::raw('case when form_input.form = \'form1\'
+                            then \'Частична предварителна оценка на въздействието\'
+                            else case when form_input.form = \'form2\'
+                                then \'Резюме на цялостна предварителна оценка на въздействието\'
+                                else case when form_input.form = \'form3\'
+                                    then \'Доклад на цялостна предварителна оценка на въздействието\'
+                                    else \'Цялостна предварителна-доклад\' end
+                                end
+                            end as type'),
+                        DB::raw('trim(\'"\' FROM (data::json->\'institution\')::text) as institution_name'),
+                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as user_name'),
+                        'form_input.data',
+                    ])
+                    ->leftJoin('users', 'users.id' , '=', 'form_input.user_id')
+                    ->whereNull('form_input.deleted_at');
+
+                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+
+                $header = [
+                    'date' => __('custom.date'),
+                    'type' => __('custom.type'),
+                    'institution_name' => trans_choice('custom.institution', 1),
+                    'user_name' => __('custom.author'),
+                    'data' => __('custom.information')
+                ];
+                array_unshift($data, $header);
+
+                break;
             case 'executors':
                 $q = DB::table('executors')
                     ->select([
