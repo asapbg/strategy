@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
+use App\Enums\PublicationTypesEnum;
 use App\Models\ActType;
 use App\Models\AdvisoryBoard;
 use App\Models\Comments;
@@ -544,6 +545,47 @@ class ReportsController extends Controller
                     'institution' => __('site.executor_institution'),
                     'contract_subject' => __('custom.contract_subject'),
                     'services_description' => __('custom.services_description'),
+
+                ];
+                array_unshift($data, $header);
+
+                break;
+            default:
+                $data = [];
+        }
+
+        return response()->json($data);
+    }
+
+    public function apiReportLibrary(Request $request, string $type = 'standard'){
+        switch ($type)
+        {
+            case 'standard':
+                $q = DB::table('publication')
+                    ->select([
+                        'publication_translations.title',
+                        DB::raw('to_char(publication.published_at, \'DD.MM.YYYY\') as date'),
+                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as author'),
+                        'publication_translations.content'
+                    ])
+                    ->leftJoin('users', 'users.id' , '=', 'publication.users_id')
+                    ->leftJoin('publication_translations', function ($j){
+                        $j->on('publication_translations.publication_id', '=', 'publication.id')
+                            ->where('publication_translations.locale', '=', 'bg');
+                    })
+                    ->whereNull('publication.deleted_at')
+                    ->whereIn('publication.type', [PublicationTypesEnum::TYPE_LIBRARY, PublicationTypesEnum::TYPE_NEWS])
+                    ->whereNotNull('publication.published_at')
+                    ->where('publication.active', true)
+                    ->orderBy('publication.published_at', 'desc');
+
+                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+
+                $header = [
+                    'title' => __('custom.title'),
+                    'date' => __('custom.date'),
+                    'author' => __('custom.author'),
+                    'content' => __('custom.content')
 
                 ];
                 array_unshift($data, $header);
