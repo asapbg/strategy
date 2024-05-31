@@ -282,8 +282,7 @@ function categoriesControl(){
 
     if($('#fieldOfActions').length){
         let fieldOfActionsConnected = $('#fieldOfActions');
-        // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel), levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
-        if(typeof levelVals == 'undefined' || (levelVals.indexOf(centralLevel) != -1 || levelVals.indexOf(centralOtherLevel) != -1)){
+        if(levelVals.length == 0 || (levelVals.indexOf(centralLevel) != -1 || levelVals.indexOf(centralOtherLevel) != -1)){
             fieldOfActionsConnected.parent().parent().parent().removeClass('d-none');
         } else{
             fieldOfActionsConnected.parent().parent().parent().addClass('d-none');
@@ -294,7 +293,7 @@ function categoriesControl(){
     if($('#areas').length){
         let areasConnected = $('#areas');
         // console.log(level.val(), areaLevel, levelVals.indexOf(areaLevel), levelVals.indexOf(areaLevel) != -1 || !levelVals.length);
-        if(levelVals.indexOf(areaLevel) != -1 || typeof levelVals == 'undefined'){
+        if(levelVals.indexOf(areaLevel) != -1 || levelVals.length == 0){
             areasConnected.parent().parent().parent().removeClass('d-none');
         } else{
             areasConnected.parent().parent().parent().addClass('d-none');
@@ -305,7 +304,7 @@ function categoriesControl(){
     if($('#municipalities').length){
         let municipalitiesConnected = $('#municipalities');
         // console.log(level.val(), municipalityLevel, levelVals.indexOf(municipalityLevel), levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length);
-        if(levelVals.indexOf(municipalityLevel) != -1 || typeof levelVals == 'undefined'){
+        if(levelVals.indexOf(municipalityLevel) != -1 || levelVals.length == 0){
             municipalitiesConnected.parent().parent().parent().removeClass('d-none');
         } else{
             municipalitiesConnected.parent().parent().parent().addClass('d-none');
@@ -315,7 +314,7 @@ function categoriesControl(){
 
     if($('#acceptActInstitution').length){
         $('#acceptActInstitution').val(null).trigger("change");
-        if(typeof levelVals == 'undefined'){
+        if(levelVals.length == 0){
             $('#acceptActInstitution option').each(function (){
                 $(this).attr('disabled', false);
             });
@@ -332,7 +331,7 @@ function categoriesControl(){
 
     if($('#actTypes').length){
         $('#actTypes').val(null).trigger("change");
-        if(typeof levelVals == 'undefined'){
+        if(levelVals.length == 0){
             $('#actTypes option').each(function (){
                 $(this).attr('disabled', false);
             });
