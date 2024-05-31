@@ -527,7 +527,8 @@ class ReportsController extends Controller
                         'form_input.data',
                     ])
                     ->leftJoin('users', 'users.id' , '=', 'form_input.user_id')
-                    ->whereNull('form_input.deleted_at');
+                    ->whereNull('form_input.deleted_at')
+                    ->orderBy('form_input.created_at', 'desc');
 
                 $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
@@ -619,6 +620,52 @@ class ReportsController extends Controller
                     'author' => __('custom.author'),
                     'content' => __('custom.content')
 
+                ];
+                array_unshift($data, $header);
+
+                break;
+            default:
+                $data = [];
+        }
+
+        return response()->json($data);
+    }
+
+    public function apiReportPolls(Request $request, string $type = 'standard'){
+        switch ($type)
+        {
+            case 'standard':
+                $data = DB::select(
+                    'select
+                            "poll"."name",
+                            "public_consultation"."reg_num" as "consultation_reg_num",
+                            "poll"."start_date" as "date_start",
+                            "poll"."end_date" as "date_end",
+                            "poll"."only_registered",
+                            (
+                            select
+                                    json_agg(json_build_object(\'name\', poll_question.name, \'options\',
+                                        (
+                                        select json_agg(json_build_object(\'name\', poll_question_option.name, \'votes\', (select count(upo.user_poll_id) from user_poll_option upo where upo.poll_question_option_id = poll_question_option.id)))
+                                        from poll_question_option
+                                        where poll_question_option.poll_question_id = poll_question.id and poll_question_option.deleted_at is null
+                                    )))
+                                 from poll_question
+                                 where poll_question.poll_id = poll.id and poll_question.deleted_at is null
+                             ) as questions
+                        from "poll"
+                        left join "public_consultation" on "public_consultation"."id" = "poll"."consultation_id"
+                        where "poll"."deleted_at" is null
+                        order by "poll"."start_date" desc'
+                );
+
+                $header = [
+                    'name' => __('custom.name'),
+                    'consultation_reg_num' => trans_choice('custom.publications',1),
+                    'date_start' => __('custom.begin_date'),
+                    'date_end' => __('custom.end_date'),
+                    'only_registered' => __('validation.attributes.only_registered'),
+                    'questions' => trans_choice('custom.questions', 2)
                 ];
                 array_unshift($data, $header);
 

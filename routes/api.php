@@ -33,5 +33,7 @@ Route::group(['middleware' => ['guest']], function() {
         Route::get('/reports/impact_assessments/{type}/view',       'apiReportImpactAssessments')->name('api.report.ia');
         //Library
         Route::get('/reports/library/{type}/view',       'apiReportLibrary')->name('api.report.library');
+        //Library
+        Route::get('/reports/polls/{type}/view',       'apiReportPolls')->name('api.report.polls');
     });
 });
