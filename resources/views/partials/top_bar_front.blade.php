@@ -25,9 +25,12 @@
             <div class="col-md-6 text-end top-bar-right-column">
                 <div class="auth d-flex justify-content-end top-bar-left-side-desktop">
                     @if(app('auth')->check())
-                        <div id="front-timer me-2">
-                            @include('partials.count-down-timer')
-                        </div>
+                        @php($user = app('auth')->user())
+                        @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
+                            <div id="front-timer me-2">
+                                @include('partials.count-down-timer')
+                            </div>
+                        @endif
                         @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
                         <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2"
                             id="back-to-admin"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>
@@ -35,7 +38,6 @@
                         <div class="dropdown">
                             <button class="btn btn-primary dropdown-toggle" id="profile-toggle" type="button"
                                 id="profile-menu" data-toggle="dropdown" aria-expanded="false">
-                                @php($user = app('auth')->user())
                                 {{ $user->is_org ? $user->org_name : $user->first_name . ' ' . $user->last_name }}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="profile-menu">
@@ -48,7 +50,7 @@
                                         onclick="event.preventDefault();document.getElementsByClassName('logout-form')[0].submit();">
                                         {{ __('auth.logout') }}
                                     </a>
-                                    <form class="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" class="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </li>
