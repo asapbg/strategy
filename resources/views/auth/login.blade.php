@@ -29,7 +29,7 @@
 
                                 <!--<input type="text" name="username" class="form-control" @if (old('username')) value="{{ old('username') }}" @else placeholder="{{ __('validation.attributes.email') }}" @endif>-->
                                 <input type="text" name="username" class="form-control" value="{{ old('username') }}"  placeholder="">
-                                     
+
 
                                 <label for="floatingInput">
                                     {{ __('validation.attributes.email') }}
@@ -56,7 +56,7 @@
 
                             <div class="login-remember w-100">
 
-                                <div class="checkbox mb-3">
+                                <div class="checkbox mb-3 d-none">
                                     <label class="d-flex">
                                         <input class="me-1" type="checkbox" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                         {{ __('validation.attributes.rememberme') }}
