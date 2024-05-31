@@ -511,11 +511,13 @@ class ReportsController extends Controller
             case 'executors':
                 $q = DB::table('executors')
                     ->select([
-                        'executor_translations.executor_name',
                         'executors.eik',
-                        'executors.contract_date',
+                        'executors.contract_date as date_contract',
                         'executors.price',
-                        'institution_translations.name as institution',
+                        'executors.active',
+                        'institution_translations.name as institution_id',
+                        'institution_translations.name as institution_name',
+                        'executor_translations.executor_name as executor',
                         'executor_translations.contract_subject',
                         'executor_translations.services_description',
                     ])
