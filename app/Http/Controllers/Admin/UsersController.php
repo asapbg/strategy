@@ -405,8 +405,13 @@ class  UsersController extends Controller
             }
             session(['subscriptions' => $new_session]);
 
+            if(!$userSubscribe->subscribable_id){
+                $msgText = ' '.__('custom.for_this_filter').': '.$userSubscribe->filterToTxt();
+            } else{
+                $msgText = ' '.__('custom.for').' '.$userSubscribe->itemTitle();
+            }
             $message = ($is_subscribed == UserSubscribe::SUBSCRIBED)
-                ? __('You have subscribed successfully')
+                ? __('You have subscribed successfully').$msgText
                 : __('You have unsubscribed successfully');
             return response()->json(['success' => true, 'message' => $message]);
 

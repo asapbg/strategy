@@ -1292,4 +1292,6 @@ return [
     'forms4.text100' => 'Description of the sources of information used',
     'forms4.text101' => 'All annexes not included in the main sections and containing information supporting the analysis in the subsequent impact assessment shall be submitted to the report.',
     'protocol_point' => 'Protocol point',
+    'level_lower_case' => 'level',
+    'for_this_filter' => 'for this filter',
 ];

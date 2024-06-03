@@ -72,7 +72,12 @@
                                     @php($endHtml = true)
                             @endif
                             <tr>
-                                <td><a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a></td>
+                                <td>
+                                    <a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a>
+                                    @if(!$r->subscribable_id)
+                                        <br><span class="fw-bold">Филтър:</span> {{ \App\Models\UserSubscribe::filterToTextById($r->id) }}
+                                    @endif
+                                </td>
                                 <td>{{ $r->is_subscribed ? __('custom.active_m') : __('custom.inactive_m') }}</td>
                                 <td>
                                     <a href="{{ route('profile.subscribe.set', ['id' => $r->id, 'status' => (int)!$r->is_subscribed]) }}"><i class="fas @if($r->is_subscribed) fa-pause-circle main-color @else fa-play-circle text-success @endif fs-5 me-1" title="{{ $r->is_subscribed ? __('site.pause') : __('site.activate') }}"></i></a>
