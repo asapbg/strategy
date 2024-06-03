@@ -776,5 +776,6 @@ return [
         'file_description_bg'           => 'Description (BG)',
         'file_description_en'           => 'Description (EN)',
         'ord.*'           => 'Order',
+        'protocol_point'           => 'Protocol point',
     ],
 ];

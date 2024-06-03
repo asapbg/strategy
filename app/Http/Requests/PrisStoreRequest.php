@@ -35,13 +35,15 @@ class PrisStoreRequest extends FormRequest
 //            'institution_id' => ['required', 'numeric', 'exists:institution,id'],
             'institutions' => ['required', 'array'],
             'institutions.*' => ['numeric', 'exists:institution,id'],
-            'protocol' => ['required', 'string'],
+//            'protocol' => ['required', 'string'],
             'public_consultation_id' => ['nullable', 'numeric'],
             'newspaper_number' => ['nullable', 'numeric'],
             'newspaper_year' => ['nullable', 'date_format:Y', 'max:4'],
             'tags' => ['array'],
             'tags.*' => ['required', 'exists:tag,id'],
             'publish' => ['nullable', 'numeric'],
+            'decision_protocol' => ['nullable', 'numeric', 'exists:pris,id'],
+            'protocol_point' => ['nullable', 'numeric', 'gt:0'],
         ];
 
         if( request()->isMethod('put') ) {

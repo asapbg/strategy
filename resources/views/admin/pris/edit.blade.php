@@ -115,7 +115,7 @@
                                             <div class="col-12"></div>
                                             @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => true])
                                             @if($item->old_id)
-                                                <div class="col-12 mt-2 mb-4" id="old_importers">
+                                                <div class="col-md-6 mt-2 mb-4" id="old_importers">
                                                     <label class="col-sm-12 control-label">
                                                         {{ __('custom.pris_importers_from_import') }}
                                                     </label>
@@ -124,20 +124,61 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            <div class="col-md-4 col-12">
+{{--                                            <div class="col-md-4 col-12">--}}
+{{--                                                <div class="form-group">--}}
+{{--                                                    <label class="col-sm-12 control-label" for="protocol">--}}
+{{--                                                        {{ __('validation.attributes.protocol') }} <span class="required">*</span>--}}
+{{--                                                    </label>--}}
+{{--                                                    <div class="col-12">--}}
+{{--                                                        <input type="text" name="protocol" value="{{ old('protocol', $item->id ? $item->protocol : '') }}" class="form-control form-control-sm @error('protocol'){{ 'is-invalid' }}@enderror">--}}
+{{--                                                        @error('protocol')--}}
+{{--                                                        <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                        @enderror--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+                                            <div class="col-12"></div>
+                                            <div class="col-md-8 col-12">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="protocol">
-                                                        {{ __('validation.attributes.protocol') }} <span class="required">*</span>
+                                                    <label class="col-sm-12 control-label" for="decision_protocol">
+                                                        {{ __('validation.attributes.protocol') }}
                                                     </label>
                                                     <div class="col-12">
-                                                        <input type="text" name="protocol" value="{{ old('protocol', $item->id ? $item->protocol : '') }}" class="form-control form-control-sm @error('protocol'){{ 'is-invalid' }}@enderror">
-                                                        @error('protocol')
+                                                        <select id="decision_protocol" name="decision_protocol" data-types2ajax="pris_doc" data-legalacttype="{{ \App\Models\LegalActType::TYPE_PROTOCOL }}" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('decision_protocol'){{ 'is-invalid' }}@enderror">
+                                                            @if($item->id && $item->decisionProtocol)
+                                                                <option value="{{ $item->decisionProtocol->id }}">{{ $item->decisionProtocol->mcDisplayName }}</option>
+                                                            @endif
+                                                        </select>
+                                                        @error('decision_protocol')
                                                         <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label" for="protocol_point">
+                                                        {{ __('custom.protocol_point') }}
+                                                    </label>
+                                                    <div class="col-12">
+                                                        <input type="text" id="protocol_point" name="protocol_point" value="{{ old('protocol_point', $item?->protocol_point) }}" class="form-control form-control-sm @error('protocol_point'){{ 'is-invalid' }}@enderror">
+                                                        @error('protocol_point')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if($item->old_id)
+                                                <div class="col-md-6 mt-2 mb-4" id="old_importers">
+                                                    <label class="col-sm-12 control-label">
+                                                        {{ __('validation.attributes.protocol') }} (import)
+                                                    </label>
+                                                    <div class="col-12">
+                                                        <input type="text" value="{{ $item->protocol }}" class="form-control form-control-sm" disabled>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            <div class="col-12"></div>
                                             <div class="col-md-4 col-12">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="public_consultation_id">

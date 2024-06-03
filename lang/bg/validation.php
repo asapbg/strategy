@@ -767,6 +767,7 @@ return [
         'file_description_bg'           => 'Описание (BG)',
         'file_description_en'           => 'Описание (EN)',
         'ord.*'           => 'Поредност',
+        'protocol_point'           => 'Точка от протокол',
 
     ],
 ];

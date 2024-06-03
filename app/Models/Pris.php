@@ -39,7 +39,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         'version',
         'protocol', 'public_consultation_id', 'newspaper_number', 'newspaper_year', 'active', 'published_at',
         'old_connections', 'old_id', 'old_doc_num', 'old_newspaper_full', 'connection_status', 'parentdocumentid',
-        'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version', 'in_archive'];
+        'state', 'xstate', 'last_version', 'old_importers', 'asap_last_version', 'in_archive', 'decision_protocol', 'protocol_point', 'from_transcripts'];
 
     /**
      * @return FeedItem
@@ -146,6 +146,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     {
         return Attribute::make(
             get: fn () => Carbon::parse($this->doc_date)->format('Y'),
+        );
+    }
+
+    protected function protocolPoint(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string|null $value) => (int)$value > 0 ?  (int)$value : null,
         );
     }
 
