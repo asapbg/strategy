@@ -113,8 +113,8 @@ class PrisProtocolConnection extends Command
                                     $protocolPoint = $matches[3];
                                     \DB::enableQueryLog();
                                     $dbProtocol = Pris::where('doc_num', $protocolNum)
-//                                        ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL)
-                                        ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
+                                        ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL)
+//                                        ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
                                         ->where('doc_date', '>=', Carbon::parse($item->doc_date)->startOfYear()->format('Y-m-d'))
                                         ->where('doc_date', '<=', Carbon::parse($item->doc_date)->endOfYear()->format('Y-m-d'))
                                         ->where('asap_last_version', 1)

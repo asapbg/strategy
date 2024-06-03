@@ -234,6 +234,15 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->orderBy('locale');
     }
 
+    public function filesByLocale($locale = 'bg'): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PRIS)
+            ->where('locale', '=', $locale)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
 
     public static function select2AjaxOptions($filters)
     {
