@@ -75,7 +75,10 @@
                                 <td>
                                     <a href="{{ $url }}" target="_blank">{{ $objUrlTitle }}</a>
                                     @if(!$r->subscribable_id)
-                                        <br><span class="fw-bold">Филтър:</span> {{ \App\Models\UserSubscribe::filterToTextById($r->id) }}
+                                        @php($filterText = \App\Models\UserSubscribe::filterToTextById($r->id))
+                                        @if(!empty($filterText))
+                                            <br><span class="fw-bold">Филтър:</span> {{ \App\Models\UserSubscribe::filterToTextById($r->id) }}
+                                        @endif
                                     @endif
                                 </td>
                                 <td>{{ $r->is_subscribed ? __('custom.active_m') : __('custom.inactive_m') }}</td>
