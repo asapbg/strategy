@@ -358,7 +358,7 @@ class  UsersController extends Controller
             'route_name' => $route_name,
             'condition' => UserSubscribe::CONDITION_PUBLISHED,
             'channel' => $channel,
-            'search_filters' => !empty($model_filter) ? json_encode(json_decode($model_filter)) : null
+            'search_filters' => !empty($model_filter) && $model_filter != 'null' ? json_encode(json_decode($model_filter)) : null
         ];
 
         if(!empty($subscribe_title)) {
@@ -375,7 +375,7 @@ class  UsersController extends Controller
                     ->where('route_name', '=', $route_name)
                     ->where('condition', '=', UserSubscribe::CONDITION_PUBLISHED)
                     ->where('channel', '=', $channel)
-                    ->where('search_filters', '=', !empty($model_filter) ? json_encode(json_decode($model_filter)) : null)
+                    ->where('search_filters', '=', !empty($model_filter)  && $model_filter != 'null' ? json_encode(json_decode($model_filter)) : null)
                     ->where('is_subscribed', '=', false)
                     ->first();
 
@@ -385,10 +385,15 @@ class  UsersController extends Controller
                         $exist->title = $subscribe_title;
                     }
                     $exist->save();
-                    return response()->json(['success' => true, 'message' => __('You have subscribed successfully')]);
+
+                    if(!$exist->subscribable_id){
+                        $msgText = ' '.__('custom.for_this_filter').': '.$exist->filterToTxt();
+                    } else{
+                        $msgText = ' '.__('custom.for').' '.$exist->itemTitle();
+                    }
+                    return response()->json(['success' => true, 'message' => __('You have subscribed successfully').$msgText]);
                 }
             }
-
 
             $userSubscribe = UserSubscribe::updateOrCreate($subscribeCreateOrUpdate,
                 [

@@ -50,9 +50,6 @@ class UserSubscribe extends ModelActivityExtend
         $filter = [];
         if(!$this->subscribable_id && !empty($this->search_filters)){
             $jsonFilter = json_decode($this->search_filters);
-            if(is_null($jsonFilter)){
-                dd($this->id);
-            }
             switch ($this->subscribable_type){
                 case 'App\Models\Consultations\PublicConsultation':
                         foreach ($jsonFilter as $key => $value){
