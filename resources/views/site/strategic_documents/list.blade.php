@@ -8,6 +8,7 @@
     @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.strategic_documents.edit', ['item' => 0])])
     @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_strategic_documents')])
     <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
+    <input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
     <div class="row mb-2">
         <div class="col-md-6 mt-2">
             <div class="info-consul text-start">

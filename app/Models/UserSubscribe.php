@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Filters\AdvisoryBoard\ChairmanTypes;
 use App\Models\Consultations\LegislativeProgram;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
@@ -67,6 +68,39 @@ class UserSubscribe extends ModelActivityExtend
                     foreach ($jsonFilter as $key => $value){
                         if(!empty($value)){
                             $filterData = $this->getPrisFilter($key, $value);
+                            if(sizeof($filterData)){
+                                $filter[$key] = $filterData;
+                            }
+
+                        }
+                    }
+                    break;
+                case 'App\Models\LegislativeInitiative':
+                    foreach ($jsonFilter as $key => $value){
+                        if(!empty($value)){
+                            $filterData = $this->getLiFilter($key, $value);
+                            if(sizeof($filterData)){
+                                $filter[$key] = $filterData;
+                            }
+
+                        }
+                    }
+                    break;
+                case 'App\Models\StrategicDocument':
+                    foreach ($jsonFilter as $key => $value){
+                        if(!empty($value)){
+                            $filterData = $this->getSdFilter($key, $value);
+                            if(sizeof($filterData)){
+                                $filter[$key] = $filterData;
+                            }
+
+                        }
+                    }
+                    break;
+                case 'App\Models\AdvisoryBoard':
+                    foreach ($jsonFilter as $key => $value){
+                        if(!empty($value)){
+                            $filterData = $this->getAdvBoardFilter($key, $value);
                             if(sizeof($filterData)){
                                 $filter[$key] = $filterData;
                             }
@@ -143,6 +177,135 @@ class UserSubscribe extends ModelActivityExtend
     {
         $item = self::find($id);
         return $item->filterToTxt();
+    }
+
+    private function getSdFilter(string $key, mixed $value): array
+    {
+        $filterTemplate = array(
+            'key' => $key,
+            'value' => $value,
+            'viewLabel' => '',
+            'viewValue' => ''
+        );
+        $filter = [];
+        switch ($key){
+            case 'level':
+                if(!empty($value)) {
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = capitalize(__('custom.level_lower_case'));
+                    $labels = [];
+                    foreach ($values as $v){
+                        $labels[] = InstitutionCategoryLevelEnum::keyToLabel()[$v];
+                    }
+                    $filter['viewValue'] = implode(', ', $labels);
+                }
+                break;
+            case 'areas':
+            case 'municipalities':
+            case 'fieldOfActions':
+                if(!empty($value)) {
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.field_of_actions', 1);
+                    $labels = FieldOfAction::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'status':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('site.strategic_document.categories_based_on_livecycle');
+                    $filter['viewValue'] = !empty($value) ? ($value == 'active' ? __('custom.effective') : ($value == 'expired' ? __('custom.expired') : __('custom.in_process_of_consultation'))) : __('custom.any');
+                }
+                break;
+            case 'title':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.title');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+        }
+        return $filter;
+    }
+    private function getAdvBoardFilter(string $key, mixed $value): array
+    {
+        $filterTemplate = array(
+            'key' => $key,
+            'value' => $value,
+            'viewLabel' => '',
+            'viewValue' => ''
+        );
+        $filter = [];
+        switch ($key){
+            case 'keywords':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.name');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+
+            case 'fieldOfActions':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.field_of_actions', 1);
+                    $labels = FieldOfAction::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'authoritys':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = __('custom.type_of_governing');
+                    $labels = AuthorityAdvisoryBoard::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'actOfCreations':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = __('validation.attributes.advisory_act_type_id');
+                    $labels = AdvisoryActType::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'chairmanTypes':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.advisory_chairman_type',1);
+                    $labels = ChairmanTypes::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'npo':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.presence_npo_representative');
+                    $filter['viewValue'] = !empty($value) ? ((int)$value ? __('custom.yes') : __('custom.no')) : __('custom.any');
+                }
+                break;
+            case 'personName':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.adv_board_search_person');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'status':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.presence_npo_representative');
+                    $filter['viewValue'] = $value != '-1' ? ((int)$value ? __('custom.active') : __('custom.inactive')) : __('custom.any');
+                }
+                break;
+        }
+        return $filter;
     }
 
     private function getPrisFilter(string $key, mixed $value): array
@@ -234,6 +397,45 @@ class UserSubscribe extends ModelActivityExtend
                     $filter = $filterTemplate;
                     $filter['viewLabel'] = __('custom.change_docs');
                     $filter['viewValue'] = $value;
+                }
+                break;
+        }
+        return $filter;
+    }
+
+    private function getLiFilter(string $key, mixed $value): array
+    {
+        $filterTemplate = array(
+            'key' => $key,
+            'value' => $value,
+            'viewLabel' => '',
+            'viewValue' => ''
+        );
+        $filter = [];
+        switch ($key){
+            case 'keywords':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.content_author');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'institution':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.institutions', 1);
+                    $labels = Institution::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'law':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.laws', 1);
+                    $labels = Law::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
                 }
                 break;
         }

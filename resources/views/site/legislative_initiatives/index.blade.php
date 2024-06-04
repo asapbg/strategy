@@ -96,6 +96,7 @@
 
                         <div class="col-md-6 text-end col-md-6 px-0">
                             <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
+                            <input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
                             @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => false, 'subscribe_list' => true])
 
                             @can('create', \App\Models\LegislativeInitiative::class)

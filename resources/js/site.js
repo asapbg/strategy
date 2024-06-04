@@ -280,7 +280,7 @@ function categoriesControl(){
     let level = $('#level');
     let levelVals = level.val();
 
-    if($('#fieldOfActions').length){
+    if($('#fieldOfActions').length && typeof levelVals != 'undefined'){
         let fieldOfActionsConnected = $('#fieldOfActions');
         if(levelVals.length == 0 || (levelVals.indexOf(centralLevel) != -1 || levelVals.indexOf(centralOtherLevel) != -1)){
             fieldOfActionsConnected.parent().parent().parent().removeClass('d-none');
