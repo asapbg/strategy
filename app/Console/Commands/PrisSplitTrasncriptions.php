@@ -53,12 +53,12 @@ class PrisSplitTrasncriptions extends Command
                 ->first();
 
             if($dbProtocol) {
-                $this->info('Protocol exist');
+                //$this->info('Protocol exist');
                 continue;
             }
 
             if(!$transcript->filesByLocale->count()){
-                $this->info('Transcription do not have files');
+                //$this->info('Transcription do not have files');
                 continue;
             }
 
