@@ -30,7 +30,8 @@ class PrisClearTranscriptionsProtocolFiles extends Command
      */
     public function handle()
     {
-        //TODO search for transcripts category
+        $this->info('Start at: '. date('Y-m-d H:i:s'));
+        //Search for transcripts category
         $dbTranscripts = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
             ->where('asap_last_version', 1)
             ->orderBy('id', 'desc')
@@ -48,14 +49,14 @@ class PrisClearTranscriptionsProtocolFiles extends Command
             }
 
             foreach ($transcript->files as $f){
-                //TODO If there is protocol file: delete it
+                //If there is protocol file: delete it
                 if(str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num.'.doc'){
-                    dd($f);
                     $f->delete();
                 }
             }
 
         }
+        $this->info('End at: '. date('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 }

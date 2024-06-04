@@ -31,7 +31,7 @@ class PrisSplitTrasncriptions extends Command
     public function handle()
     {
         $this->info('Start at: '. date('Y-m-d H:i:s'));
-        //TODO search for transcripts category
+        //Search for transcripts category
         $dbTranscripts = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
             ->where('asap_last_version', 1)
             ->orderBy('id', 'desc')
@@ -43,7 +43,7 @@ class PrisSplitTrasncriptions extends Command
 
         foreach ($dbTranscripts as $transcript){
 
-            //TODO check if there is protocol already
+            //Check if there is protocol already
             $dbProtocol = Pris::where('doc_num', $transcript->doc_num)
                 ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL)
                 ->where('doc_date', '>=', Carbon::parse($transcript->doc_date)->startOfYear()->format('Y-m-d'))
@@ -67,7 +67,7 @@ class PrisSplitTrasncriptions extends Command
                 if(str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num.'.doc'){
                     try {
                         //$this->info('File: '.$f->filename.' | Стенограма дата: '.$transcript->doc_date.' | Стенограма номер: '.$transcript->doc_num);
-                        //TODO create protocol with this file and flag 'from_transcripts'
+                        //Create protocol with this file and flag 'from_transcripts'
                         $newProtocol = $transcript->replicate();
                         $newProtocol->legal_act_type_id = LegalActType::TYPE_PROTOCOL;
                         $newProtocol->protocol = null;
