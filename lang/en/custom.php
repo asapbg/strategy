@@ -1294,4 +1294,5 @@ return [
     'protocol_point' => 'Protocol point',
     'level_lower_case' => 'level',
     'for_this_filter' => 'for this filter',
+    'for_everything_in_section' => 'for everything in section',
 ];

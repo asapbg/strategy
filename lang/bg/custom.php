@@ -1322,4 +1322,5 @@ return [
     'protocol_point' => 'Точка от проткол',
     'level_lower_case' => 'ниво',
     'for_this_filter' => 'за следния списък',
+    'for_everything_in_section' => 'за всичко в раздела',
 ];

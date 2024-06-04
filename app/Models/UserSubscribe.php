@@ -4,6 +4,8 @@ namespace App\Models;
 
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -70,6 +72,30 @@ class UserSubscribe extends ModelActivityExtend
             switch ($this->subscribable_type){
                 case 'App\Models\Consultations\PublicConsultation':
                     $title = PublicConsultation::find($this->subscribable_id)->title;
+                    break;
+                case 'App\Models\Pris':
+                    $title = Pris::find($this->subscribable_id)->mcDisplayName;
+                    break;
+                case 'App\Models\Consultations\LegislativeProgram':
+                    $title = LegislativeProgram::find($this->subscribable_id)->name;
+                    break;
+                case 'App\Models\Consultations\OperationalProgram':
+                    $title = OperationalProgram::find($this->subscribable_id)->name;
+                    break;
+                case 'App\Models\LegislativeInitiative':
+                    $title = LegislativeInitiative::find($this->subscribable_id)->facebookTitle;
+                    break;
+                case 'App\Models\OgpPlan':
+                    $title = OgpPlan::find($this->subscribable_id)->name;
+                    break;
+                case 'App\Models\StrategicDocument':
+                    $title = StrategicDocument::find($this->subscribable_id)->title;
+                    break;
+                case 'App\Models\AdvisoryBoard':
+                    $title = AdvisoryBoard::find($this->subscribable_id)->name;
+                    break;
+                case 'App\Models\Publication':
+                    $title = Publication::find($this->subscribable_id)->title;
                     break;
             }
         }

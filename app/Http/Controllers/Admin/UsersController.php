@@ -387,9 +387,11 @@ class  UsersController extends Controller
                     $exist->save();
 
                     if(!$exist->subscribable_id){
-                        $msgText = ' '.__('custom.for_this_filter').': '.$exist->filterToTxt();
+                        $extraTxt = $exist->filterToTxt();
+                        $msgText = !empty($extraTxt) ? (' '.__('custom.for_this_filter').': '.$extraTxt) : __('custom.for_everything_in_section');
                     } else{
-                        $msgText = ' '.__('custom.for').' '.$exist->itemTitle();
+                        $extraTxt = $exist->itemTitle();
+                        $msgText = !empty($extraTxt) ? (' '.__('custom.for').' '.$extraTxt) : '';
                     }
                     return response()->json(['success' => true, 'message' => __('You have subscribed successfully').$msgText]);
                 }
@@ -411,10 +413,13 @@ class  UsersController extends Controller
             session(['subscriptions' => $new_session]);
 
             if(!$userSubscribe->subscribable_id){
-                $msgText = ' '.__('custom.for_this_filter').': '.$userSubscribe->filterToTxt();
+                $extraTxt = $userSubscribe->filterToTxt();
+                $msgText = !empty($extraTxt) ? (' '.__('custom.for_this_filter').': '.$extraTxt) : __('custom.for_everything_in_section');
             } else{
-                $msgText = ' '.__('custom.for').' '.$userSubscribe->itemTitle();
+                $extraTxt = $userSubscribe->itemTitle();
+                $msgText = !empty($extraTxt) ? (' '.__('custom.for').' '.$extraTxt) : '';
             }
+
             $message = ($is_subscribed == UserSubscribe::SUBSCRIBED)
                 ? __('You have subscribed successfully').$msgText
                 : __('You have unsubscribed successfully');
