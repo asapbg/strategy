@@ -10,9 +10,13 @@ class Institutions extends QueryFilter implements FilterContract{
 
     public function handle($value, $filter = null): void
     {
-        //Need join to work
-        if( sizeof($value) ){
-            $this->query->whereIn('institution.id', $value);
+        if( is_array($value) && sizeof($value) ){
+            if(str_contains($value[0], ',')) {
+                $explode = explode(',', $value[0]);
+                $this->query->whereIn('institution.id', $explode);
+            } else{
+                $this->query->whereIn('institution.id', $value);
+            }
         }
     }
 }

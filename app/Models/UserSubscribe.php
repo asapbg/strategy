@@ -63,6 +63,17 @@ class UserSubscribe extends ModelActivityExtend
                             }
                         }
                     break;
+                case 'App\Models\Pris':
+                    foreach ($jsonFilter as $key => $value){
+                        if(!empty($value)){
+                            $filterData = $this->getPrisFilter($key, $value);
+                            if(sizeof($filterData)){
+                                $filter[$key] = $filterData;
+                            }
+
+                        }
+                    }
+                    break;
                 case 'App\Models\Publication':
                     foreach ($jsonFilter as $key => $value){
                         if(!empty($value)){
@@ -128,13 +139,109 @@ class UserSubscribe extends ModelActivityExtend
         return $txt;
     }
 
-    public static function filterToTextById($id)
+    public static function filterToTextById($id): string
     {
         $item = self::find($id);
         return $item->filterToTxt();
     }
 
-    private function getPublicationFilter(string $key, mixed $value){
+    private function getPrisFilter(string $key, mixed $value): array
+    {
+        $filterTemplate = array(
+            'key' => $key,
+            'value' => $value,
+            'viewLabel' => '',
+            'viewValue' => ''
+        );
+        $filter = [];
+        switch ($key){
+            case 'legalActTypes':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.legal_act_type', 1);
+                    $labels = LegalActType::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'fullSearch':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.files').'/'.__('custom.pris_about').'/'.__('custom.pris_legal_reason').'/'.trans_choice('custom.tags', 2);
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'docNum':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.document_number');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'year':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.year');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'docDate':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.date');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'institutions':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $values = $this->getArrayValues($value);
+                    $filter['viewLabel'] = trans_choice('custom.institutions', 1);
+                    $labels = Institution::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'fromDate':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.begin_date');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'toDate':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.end_date');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'newspaperNumber':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.newspaper_number');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'newspaperYear':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.newspaper_year');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'changes':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.change_docs');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+        }
+        return $filter;
+    }
+
+    private function getPublicationFilter(string $key, mixed $value): array
+    {
         $filterTemplate = array(
             'key' => $key,
             'value' => $value,
@@ -179,7 +286,8 @@ class UserSubscribe extends ModelActivityExtend
         return $filter;
     }
 
-    private function getPcFilter(string $key, mixed $value){
+    private function getPcFilter(string $key, mixed $value): array
+    {
         $filterTemplate = array(
             'key' => $key,
             'value' => $value,

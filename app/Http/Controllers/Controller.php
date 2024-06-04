@@ -464,6 +464,7 @@ class Controller extends BaseController
                     }
                     $q->where('subscribable_type', '=', $modelClass)
                         ->where('channel', '=', $channel)
+                        ->whereNull('subscribable_id')
                         ->where('is_subscribed', true);
                 })->count() ) {
                 $hasSubscription = true;
