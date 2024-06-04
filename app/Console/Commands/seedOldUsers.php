@@ -286,8 +286,9 @@ class seedOldUsers extends Command
         $missingInstitution = array();
 
         if( (int)$maxOldId[0]->max ) {
+            $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep < $maxOldId) {
+            while ($currentStep <= $maxOldId  && !$stop) {
                 echo "FromId: ".$currentStep.PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
@@ -409,7 +410,15 @@ class seedOldUsers extends Command
                         }
                     }
                 }
-                $currentStep += $step;
+
+                if($currentStep == $maxOldId){
+                    $stop = true;
+                } else{
+                    $currentStep += $step;
+                    if($currentStep > $maxOldId){
+                        $currentStep = $maxOldId;
+                    }
+                }
             }
         }
         if(sizeof($missingInstitution)){

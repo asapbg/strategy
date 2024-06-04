@@ -42,7 +42,8 @@ class FixOldPrisLastVersion extends Command
 
         $step = 10000;
         $currentStep = 0;
-        while ($currentStep <= $maxLocalOldPrisId) {
+        $stop = false;
+        while ($currentStep <= $maxLocalOldPrisId && !$stop) {
             $this->comment('FromId:'. $currentStep);
             $records = DB::select(
                 'select
@@ -113,7 +114,15 @@ class FixOldPrisLastVersion extends Command
                     }
                 }
             }
-            $currentStep += $step;
+
+            if($currentStep == $maxLocalOldPrisId){
+                $stop = true;
+            } else{
+                $currentStep += $step;
+                if($currentStep > $maxLocalOldPrisId){
+                    $currentStep = $maxLocalOldPrisId;
+                }
+            }
         }
 
         return Command::SUCCESS;

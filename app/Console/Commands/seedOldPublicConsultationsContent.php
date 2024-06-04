@@ -53,8 +53,9 @@ class seedOldPublicConsultationsContent extends Command
         })->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         if ((int)$maxOldId[0]->max) {
+            $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep < $maxOldId) {
+            while ($currentStep  <= $maxOldId  && !$stop) {
                 echo "FromId: " . $currentStep . PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
@@ -88,7 +89,15 @@ class seedOldPublicConsultationsContent extends Command
                             }
                         }
                     }
+                }
+
+                if($currentStep == $maxOldId){
+                    $stop = true;
+                } else{
                     $currentStep += $step;
+                    if($currentStep > $maxOldId){
+                        $currentStep = $maxOldId;
+                    }
                 }
             }
         }

@@ -52,9 +52,10 @@ class seedOldLastPrisTags extends Command
         $currentStep = 0;
 
         if( (int)$maxOldId[0]->max ) {
+            $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
             try {
-                while ($currentStep < $maxOldId) {
+                while ($currentStep <= $maxOldId && !$stop) {
                     echo "FromId: ".$currentStep.PHP_EOL;
                     $oldDbResult = DB::connection('pris')->select('select
                                 pris.id as old_id,
@@ -125,7 +126,15 @@ class seedOldLastPrisTags extends Command
                             }
                         }
                     }
-                    $currentStep += $step;
+
+                    if($currentStep == $maxOldId){
+                        $stop = true;
+                    } else{
+                        $currentStep += $step;
+                        if($currentStep > $maxOldId){
+                            $currentStep = $maxOldId;
+                        }
+                    }
                 }
             } catch (\Exception $e) {
                 Log::error('Migration old pris: ' . $e);

@@ -1428,7 +1428,7 @@ class FixOldPrisImporters extends Command
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
 
-            while ($currentStep < $maxOldId  && !$stop) {
+            while ($currentStep <= $maxOldId  && !$stop) {
                 echo "FromId: ".$currentStep.PHP_EOL;
                 $oldDbResult = DB::connection('pris')->select('select
                         pris.id as old_id,

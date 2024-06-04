@@ -49,8 +49,9 @@ class seedOldOgpNews extends Command
         $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
         if( (int)$maxOldId[0]->max ) {
+            $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep < $maxOldId) {
+            while ($currentStep  <= $maxOldId  && !$stop) {
                 echo "FromId: ".$currentStep.PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
@@ -124,7 +125,15 @@ class seedOldOgpNews extends Command
                         }
                     }
                 }
-                $currentStep += $step;
+
+                if($currentStep == $maxOldId){
+                    $stop = true;
+                } else{
+                    $currentStep += $step;
+                    if($currentStep > $maxOldId){
+                        $currentStep = $maxOldId;
+                    }
+                }
             }
         }
         return Command::SUCCESS;
