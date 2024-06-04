@@ -56,9 +56,23 @@ class UserSubscribe extends ModelActivityExtend
                 case 'App\Models\Consultations\PublicConsultation':
                         foreach ($jsonFilter as $key => $value){
                             if(!empty($value)){
-                                $filter[$key] = $this->getPcFilter($key, $value);
+                                $filterData = $this->getPcFilter($key, $value);
+                                if(sizeof($filterData)){
+                                    $filter[$key] = $filterData;
+                                }
                             }
                         }
+                    break;
+                case 'App\Models\Publication':
+                    foreach ($jsonFilter as $key => $value){
+                        if(!empty($value)){
+                            $filterData = $this->getPublicationFilter($key, $value);
+                            if(sizeof($filterData)){
+                                $filter[$key] = $filterData;
+                            }
+
+                        }
+                    }
                     break;
             }
         }
@@ -120,41 +134,91 @@ class UserSubscribe extends ModelActivityExtend
         return $item->filterToTxt();
     }
 
-    private function getPcFilter(string $key, mixed $value){
-        $filter = array(
+    private function getPublicationFilter(string $key, mixed $value){
+        $filterTemplate = array(
             'key' => $key,
             'value' => $value,
             'viewLabel' => '',
             'viewValue' => ''
         );
 
+        $filter = [];
+
+        switch ($key){
+            case 'categories':
+                if(!empty($value)){
+                    $values = $this->getArrayValues($value);
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = trans_choice('custom.categories',1);
+                    $labels = PublicationCategory::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
+                    $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
+                }
+                break;
+            case 'keywords':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.title_content');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'published_from':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.published_after_f');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+            case 'published_till':
+                if(!empty($value)){
+                    $filter = $filterTemplate;
+                    $filter['viewLabel'] = __('custom.published_before_f');
+                    $filter['viewValue'] = $value;
+                }
+                break;
+        }
+        return $filter;
+    }
+
+    private function getPcFilter(string $key, mixed $value){
+        $filterTemplate = array(
+            'key' => $key,
+            'value' => $value,
+            'viewLabel' => '',
+            'viewValue' => ''
+        );
+        $filter = [];
         switch ($key){
             case 'name':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $filter['viewLabel'] = __('custom.name');
                     $filter['viewValue'] = $value;
                 }
                 break;
             case 'openFrom':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $filter['viewLabel'] = __('custom.begin_date');
                     $filter['viewValue'] = $value;
                 }
                 break;
             case 'openTo':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $filter['viewLabel'] = __('custom.end_date');
                     $filter['viewValue'] = $value;
                 }
                 break;
             case 'consultationNumber':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $filter['viewLabel'] = __('custom.consultation_number');
                     $filter['viewValue'] = $value;
                 }
                 break;
             case 'actTypes':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $values = $this->getArrayValues($value);
                     $filter['viewLabel'] = __('custom.act_type');
                     $labels = ActType::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
@@ -163,6 +227,7 @@ class UserSubscribe extends ModelActivityExtend
                 break;
             case 'importers':
                 if(!empty($value)){
+                    $filter = $filterTemplate;
                     $values = $this->getArrayValues($value);
                     $labels = Institution::with(['translations'])->whereIn('id', $values)->get()->pluck('name')->toArray();
                     $filter['viewValue'] = sizeof($labels) ? implode(', ', $labels) : '';
@@ -172,6 +237,7 @@ class UserSubscribe extends ModelActivityExtend
             case 'municipalities':
             case 'fieldOfActions':
                 if(!empty($value)) {
+                    $filter = $filterTemplate;
 //                    $levelKey = $key == 'areas' ? InstitutionCategoryLevelEnum::AREA->value : ($key == 'municipalities' ? InstitutionCategoryLevelEnum::MUNICIPAL->value : InstitutionCategoryLevelEnum::CENTRAL->value);
                     $values = $this->getArrayValues($value);
 //                    $filter['viewLabel'] = trans_choice('custom.field_of_actions', 1).' ('.InstitutionCategoryLevelEnum::keyToLabel()[$levelKey].' '.__('custom.level_lower_case').')';
@@ -182,6 +248,7 @@ class UserSubscribe extends ModelActivityExtend
                 break;
             case 'level':
                 if(!empty($value)) {
+                    $filter = $filterTemplate;
                     $values = $this->getArrayValues($value);
                     $filter['viewLabel'] = capitalize(__('custom.level_lower_case'));
                     $labels = [];
