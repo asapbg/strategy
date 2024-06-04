@@ -42,13 +42,13 @@ class PrisClearTranscriptionsProtocolFiles extends Command
         }
 
         foreach ($dbTranscripts as $transcript){
-
-            if(!$transcript->files->count()){
+            $files = $transcript->files()->where('locale', '=', 'bg')->get();
+            if(!$files->count()){
                 $this->info('Transcription do not have files');
                 continue;
             }
 
-            foreach ($transcript->files as $f){
+            foreach ($files as $f){
                 //If there is protocol file: delete it
                 if(str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num.'.doc'){
                     $f->delete();
