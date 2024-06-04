@@ -1425,9 +1425,10 @@ class FixOldPrisImporters extends Command
         $currentStep = 0;
 
         if( (int)$maxOldId[0]->max ) {
+            $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
 
-            while ($currentStep < $maxOldId) {
+            while ($currentStep < $maxOldId  && !$stop) {
                 echo "FromId: ".$currentStep.PHP_EOL;
                 $oldDbResult = DB::connection('pris')->select('select
                         pris.id as old_id,
@@ -1512,8 +1513,8 @@ class FixOldPrisImporters extends Command
                                                             $explodeByRow = explode(';', $valNoNeLine);
                                                             if(sizeof($explodeByRow)){
                                                                 foreach ($explodeByRow as $eByRow){
-                                                                    $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                     if (isset($importers[trim($eByRow)])) {
+                                                                        $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                         if (
                                                                             (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
                                                                             || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
@@ -1553,9 +1554,10 @@ class FixOldPrisImporters extends Command
                                                     }
 
                                                     $existPris->old_importers = $val;
-                                                    $existPris->save();
                                                     $existPris->translateOrNew('bg')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
                                                     $existPris->translateOrNew('en')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                                    $existPris->save();
+
 //                                                    $existPris->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
                                                     if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
                                                         $existPris->institutions()->sync($importerInstitutions);
@@ -1576,7 +1578,15 @@ class FixOldPrisImporters extends Command
                         }
                     }
                 }
-                $currentStep += $step;
+
+                if($currentStep == $maxOldId){
+                    $stop = true;
+                } else{
+                    $currentStep += $step;
+                    if($currentStep > $maxOldId){
+                        $currentStep = $maxOldId;
+                    }
+                }
             }
         }
 
