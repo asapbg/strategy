@@ -30,7 +30,7 @@ class PrisProtocolConnection extends Command
      */
     public function handle()
     {
-
+        $this->info('Start at '.date('Y-m-d H:i:s'));
         $maxId = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL_DECISION)->where('doc_num', 'like', '%.%')->max('id');
 
         if($maxId){
@@ -39,7 +39,7 @@ class PrisProtocolConnection extends Command
             $stop = false;
 
             while ($currentStep <= $maxId && !$stop) {
-                $this->info('Start between '.$currentStep.' and '. ($currentStep + $step));
+                //$this->info('Start between '.$currentStep.' and '. ($currentStep + $step));
                 $items = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL_DECISION)
                     ->where('doc_num', 'like', '%.%')
                     ->where('id', '>=', $currentStep)
@@ -89,7 +89,7 @@ class PrisProtocolConnection extends Command
             $stop = false;
 
             while ($currentStep <= $maxId && !$stop) {
-                $this->info('Start between '.$currentStep.' and '. ($currentStep + $step));
+                //$this->info('Start between '.$currentStep.' and '. ($currentStep + $step));
                 $items = Pris::InPris()
                     ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_PROTOCOL_DECISION)
                     ->whereNotNull('protocol')
@@ -124,7 +124,7 @@ class PrisProtocolConnection extends Command
                                         $this->clearProtocol($item);
                                     } else{
                                         \DB::statement('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
-                                        $this->info('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
+                                        //$this->info('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
                                     }
                                 }
 
@@ -133,8 +133,8 @@ class PrisProtocolConnection extends Command
                                 $protocolPoint = $matches[6];
                                 \DB::enableQueryLog();
                                 $dbProtocol = Pris::where('doc_num', $protocolNum)
-//                                    ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL)
-                                    ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
+                                    ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_PROTOCOL)
+//                                    ->where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
                                     ->where('doc_date', '>=', Carbon::parse($item->doc_date)->startOfYear()->format('Y-m-d'))
                                     ->where('doc_date', '<=', Carbon::parse($item->doc_date)->endOfYear()->format('Y-m-d'))
                                     ->where('asap_last_version', 1)
@@ -145,7 +145,7 @@ class PrisProtocolConnection extends Command
                                     $this->clearProtocol($item);
                                 } else{
                                     \DB::statement('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
-                                    $this->info('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
+                                    //$this->info('update pris set decision_protocol = '.$dbProtocol->id.', protocol_point = '.$protocolPoint.' where id = '.$item->id);
                                 }
                             }
                         }
@@ -162,7 +162,7 @@ class PrisProtocolConnection extends Command
                 }
             }
         }
-
+        $this->info('End at '.date('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 
