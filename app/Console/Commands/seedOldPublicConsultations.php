@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
@@ -55,11 +56,28 @@ class seedOldPublicConsultations extends Command
         $currentStep = 0;
 
         $ourPc = PublicConsultation::withTrashed()->whereNotNull('old_id')->orderBy('old_id')->get()->pluck('id', 'old_id')->toArray();
-        $fieldOfActionsDBArea = FieldOfAction::withTrashed()->with('translations')->get();
-        $fieldOfActions = array();
+
+        $fieldOfActionsDBArea = FieldOfAction::withTrashed()->Area()->with('translations')->get();
+        $fieldOfActionsArea = array();
         if($fieldOfActionsDBArea->count()){
             foreach ($fieldOfActionsDBArea as $p){
-                $fieldOfActions[mb_strtolower($p->translate('bg')->name)] = $p->id;
+                $fieldOfActionsArea[mb_strtolower($p->translate('bg')->name)] = $p->id;
+            }
+        }
+
+        $fieldOfActionsDBMunicipal = FieldOfAction::withTrashed()->Municipal()->with('translations')->get();
+        $fieldOfActionsMunicipal = array();
+        if($fieldOfActionsDBMunicipal->count()){
+            foreach ($fieldOfActionsDBMunicipal as $p){
+                $fieldOfActionsMunicipal[mb_strtolower($p->translate('bg')->name)] = $p->id;
+            }
+        }
+
+        $fieldOfActionsDBNational = FieldOfAction::withTrashed()->Central()->with('translations')->get();
+        $fieldOfActionsNational = array();
+        if($fieldOfActionsDBNational->count()){
+            foreach ($fieldOfActionsDBNational as $p){
+                $fieldOfActionsNational[mb_strtolower($p->translate('bg')->name)] = $p->id;
             }
         }
 
@@ -131,6 +149,7 @@ class seedOldPublicConsultations extends Command
                         -- legislative_program_row_id
                         pc.categoryid as field_of_actions_id,
                         c.categoryname as field_of_actions_name,
+                        (case when c.parentid = 1 then '.InstitutionCategoryLevelEnum::CENTRAL->value.' else (case when c.parentid = 2 then '.InstitutionCategoryLevelEnum::AREA->value.' else (case when c.parentid = 3 then '.InstitutionCategoryLevelEnum::MUNICIPAL->value.' else 0 end) end ) end )  as consultation_level_id,
                         -- law_id
                         -- pris_id
                         -- translation
@@ -154,6 +173,25 @@ class seedOldPublicConsultations extends Command
 
                     if (sizeof($oldDbResult)) {
                         foreach ($oldDbResult as $item) {
+                            if((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::CENTRAL->value){
+                                $fieldOfAct = isset($fieldOfActionsNational) && sizeof($fieldOfActionsNational) && isset($fieldOfActionsNational[mb_strtolower($item->field_of_actions_name)]) ? (int)$fieldOfActionsNational[mb_strtolower($item->field_of_actions_name)] : null;
+                                $pcLevel = InstitutionCategoryLevelEnum::CENTRAL->value;
+                            } elseif((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::AREA->value){
+                                $fieldOfAct = isset($fieldOfActionsArea) && sizeof($fieldOfActionsArea) && isset($fieldOfActionsArea[mb_strtolower($item->field_of_actions_name)]) ? (int)$fieldOfActionsArea[mb_strtolower($item->field_of_actions_name)] : null;
+                                $pcLevel = InstitutionCategoryLevelEnum::AREA->value;
+                            } elseif((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value){
+                                $fieldOfAct = isset($fieldOfActionsMunicipal) && sizeof($fieldOfActionsMunicipal) && isset($fieldOfActionsMunicipal[mb_strtolower($item->field_of_actions_name)]) ? (int)$fieldOfActionsMunicipal[mb_strtolower($item->field_of_actions_name)] : null;
+                                $pcLevel = InstitutionCategoryLevelEnum::MUNICIPAL->value;
+                            } else{
+                                $fieldOfAct = null;
+                                $pcLevel = null;
+                            }
+
+                            if(!$fieldOfAct){
+                                //Collect not existing fields of actions or create mapping on fly
+                                file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
+                            }
+
                             if(isset($ourUsersInstitutions[$item->author_id])){
                                 $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
                             } else if(isset($ourUsersInstitutionsByMail[$item->email])){
@@ -167,26 +205,17 @@ class seedOldPublicConsultations extends Command
                                 $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$item->old_id]);
 
                                 if($existPc){
-                                    if(isset($fieldOfActions) && sizeof($fieldOfActions) && isset($fieldOfActions[mb_strtolower($item->field_of_actions_name)])){
-                                        $existPc->field_of_actions_id = (int)$fieldOfActions[mb_strtolower($item->field_of_actions_name)];
-                                        $existPc->save();
-                                    } else {
-                                        $existPc->field_of_actions_id = null;
-                                        $existPc->save();
-                                        //Collect not existing fields of actions or create mapping on fly
-                                        file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name.PHP_EOL, FILE_APPEND);
-                                    }
-
                                     $institution = Institution::withTrashed()->find($institutionId);
                                     $institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
                                     $existPc->importer_institution_id = $institutionId;
                                     $existPc->responsible_institution_id = $institutionId;
                                     $existPc->deleted_at = !empty($item->deleted_at) ? Carbon::parse($item->deleted_at)->format($formatTimestamp) : null;
                                     $existPc->updated_at = !empty($item->updated_at) ? Carbon::parse($item->updated_at)->format($formatTimestamp) : null;
-                                    $existPc->consultation_level_id = $institutionLevel;
+                                    $existPc->consultation_level_id = $pcLevel;
                                     $existPc->open_from = !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null;
                                     $existPc->open_to = !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null;
                                     $existPc->active = $item->active;
+                                    $existPc->field_of_actions_id = (int)$fieldOfAct;
                                     $existPc->save();
 
                                     foreach ($locales as $locale) {
@@ -204,7 +233,7 @@ class seedOldPublicConsultations extends Command
 
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
-                                'consultation_level_id' => $institutionLevel,
+                                'consultation_level_id' => $pcLevel,
                                 'act_type_id' => null,
                                 'legislative_program_id' => null,
                                 'operational_program_id' => null,
@@ -220,7 +249,7 @@ class seedOldPublicConsultations extends Command
                                 'monitorstat' => null,
                                 'operational_program_row_id' => null,
                                 'legislative_program_row_id' => null,
-                                'field_of_actions_id' => $item->field_of_actions_id,
+                                'field_of_actions_id' => (int)$fieldOfAct,
                                 'law_id' => null,
                                 'pris_id' => null,
                                 'title' => $item->title,
