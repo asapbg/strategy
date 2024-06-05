@@ -199,8 +199,6 @@ class PublicConsultationController extends Controller
 
             $fileName = 'pc_report_'.Carbon::now()->format('Y_m_d_H_i_s');
             if($request->input('export_pdf')){
-                ini_set('memory_limit', '8000M');
-                ini_set('max_execution_time', 600);
                 $pdf = PDF::loadView('exports.pc_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
                 return $pdf->download($fileName.'.pdf');
             } else{
