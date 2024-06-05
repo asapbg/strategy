@@ -40,6 +40,15 @@ class UserSubscribe extends ModelActivityExtend
         return $this->belongsTo(User::class);
     }
 
+    public function getModelName()
+    {
+        if($this->subscribable_id){
+            return $this->itemTitle();
+        } else{
+            return $this->itemSectionTitle();
+        }
+    }
+
     /**
      * @return MorphTo
      */
@@ -157,6 +166,41 @@ class UserSubscribe extends ModelActivityExtend
                     $title = Publication::find($this->subscribable_id)->title;
                     break;
             }
+        }
+        return $title;
+    }
+
+    public function itemSectionTitle(): string
+    {
+        $title = '';
+        switch ($this->subscribable_type){
+            case 'App\Models\Consultations\PublicConsultation':
+                $title = trans_choice('custom.public_consultations', 2);
+                break;
+            case 'App\Models\Pris':
+                $title = __('custom.pris');
+                break;
+            case 'App\Models\Consultations\LegislativeProgram':
+                $title = trans_choice('custom.legislative_program', 2);
+                break;
+            case 'App\Models\Consultations\OperationalProgram':
+                $title = trans_choice('custom.operational_programs', 2);
+                break;
+            case 'App\Models\LegislativeInitiative':
+                $title = __('custom.legislative_initiatives');
+                break;
+            case 'App\Models\OgpPlan':
+                $title = trans_choice('custom.ogp_national_plans', 2);
+                break;
+            case 'App\Models\StrategicDocument':
+                $title = trans_choice('custom.strategic_documents', 2);
+                break;
+            case 'App\Models\AdvisoryBoard':
+                $title = trans_choice('custom.advisory_boards', 2);
+                break;
+            case 'App\Models\Publication':
+                $title = trans_choice('custom.publications', 2);
+                break;
         }
         return $title;
     }
