@@ -130,7 +130,7 @@
                             @foreach($activities as $activity)
                                 @php
                                     $subject_name = $activity->getSubjectName();
-                                    $causer_name = "Няма данни за Дееце, може би е бил изтрит";
+                                    $causer_name = "Системен потребител";
                                     if($activity->causer) {
                                       $causer_name = $activity->causer->fullName();
                                     }
@@ -145,7 +145,7 @@
                                     <td>{{ displayDateTime($activity->created_at) }}</td>
                                     <td>{{ trans_choice($subject_type::MODULE_NAME, 1) }}</td>
                                     <td>{{ $activity->getActivityDescription() }}</td>
-                                    <td>{{ $activity->getSubjectName() }}</td>
+                                    <td>{{ $subject_name }}</td>
                                     <td>{{ $activity->subject_id }}</td>
                                     <td>{{ $causer_name }}</td>
                                     <td>{{ $activity->causer_id }}</td>

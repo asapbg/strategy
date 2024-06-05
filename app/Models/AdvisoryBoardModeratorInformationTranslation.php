@@ -10,6 +10,11 @@ class AdvisoryBoardModeratorInformationTranslation extends ModelTranslatableActi
     const MODULE_NAME = ('custom.adv_board_moderator_translations');
     public $timestamps = false;
 
+    public function getModelName()
+    {
+        return $this->description;
+    }
+
     /**
      * Content
      */

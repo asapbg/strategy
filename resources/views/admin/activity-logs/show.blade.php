@@ -47,7 +47,7 @@
                         <tbody>
                         @php
                             $subject_name = $activity->getSubjectName();
-                            $causer_name = "Няма данни за Дееце, може би е бил изтрит";
+                            $causer_name = "Системен потребител";
                             if($activity->causer) {
                               $causer_name = $activity->causer->fullName();
                             }

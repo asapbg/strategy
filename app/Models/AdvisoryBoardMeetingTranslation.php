@@ -14,4 +14,14 @@ class AdvisoryBoardMeetingTranslation extends ModelTranslatableActivityExtend
     public $timestamps = false;
 
     protected string $logName = "advisory_board_meeting_translations";
+
+    public function getModelName()
+    {
+        return $this->parent->advBoard->name;
+    }
+
+    public function parent()
+    {
+        return $this->hasOne(AdvisoryBoardMeeting::class, 'id', 'advisory_board_meeting_id')->withTrashed();
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Activitylog\Models\Activity;
 
 class CustomActivity extends Activity
@@ -29,6 +31,11 @@ class CustomActivity extends Activity
         }
 
         return "Няма данни за Обекта, може би е бил изтрит";
+    }
+
+    public function subject(): MorphTo
+    {
+        return $this->morphTo()->withoutGlobalScope(SoftDeletingScope::class);
     }
 
     /**

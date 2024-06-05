@@ -16,4 +16,9 @@ class AdvisoryBoardTranslation extends ModelTranslatableActivityExtend
     protected $fillable = [];
 
     protected string $logName = "advisory_board_translation";
+
+    public function getModelName()
+    {
+        return $this->name;
+    }
 }

@@ -906,6 +906,7 @@ return [
     'adv_board_meetings_translations' => 'Превод Консултативни съвети (заседания)',
     'adv_board_moderators' => 'Консултативни съвети (модератори)',
     'adv_board_moderator_translations' => 'Превод Консултативни съвети (модератори)',
+    'advisory_board_npo' => 'Консултативни съвети (НПО)',
     'adv_board_npo_translations' => 'Консултативни съвети (НПО)',
     'adv_board_organization_rules_translations' => 'Превод Консултативни съвети (правила)',
     'adv_board_translations' => 'Превод Консултативни съвети',
