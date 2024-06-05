@@ -67,7 +67,7 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
      */
     public function getModelName()
     {
-        return $this->name;
+        return $this->advBoard->name;
     }
 
     public static function translationFieldsProperties(): array
