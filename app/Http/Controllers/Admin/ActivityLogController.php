@@ -74,7 +74,13 @@ class ActivityLogController extends Controller
             return back()->with('danger', __('messages.no_rights_to_view_content'));
         }
 
-        return view('admin.activity-logs.show', compact('activity'));
+        if (strstr($activity->subject_type, 'App')) {
+            $subject_type = $activity->subject_type;
+        } else {
+            $subject_type = \Illuminate\Database\Eloquent\Relations\Relation::getMorphedModel($activity->subject_type);
+        }
+        $pageTitle = '['.trans_choice($subject_type::MODULE_NAME, 1).']'.' '.$activity->getActivityDescription().': '.$activity->getSubjectName();
+        return $this->view('admin.activity-logs.show', compact('activity', 'pageTitle'));
     }
 
 }

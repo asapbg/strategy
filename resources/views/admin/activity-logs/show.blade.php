@@ -9,29 +9,30 @@
     $title = trans_choice('custom.activity_logs', 1)." ".__('custom.by')." ".l_trans($subject_type::MODULE_NAME, 1)." ".$activity->getSubjectName();
 @endphp
 
-@section('title')
-    {{ $title }}
-@endsection
+{{--@section('title')--}}
+{{--    {{ $title }}--}}
+{{--@endsection--}}
 
 @section('content')
 
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ $title }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{__('custom.home')}}</a></li>
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('admin.activity-logs') }}">
-                                <i class="fa fa fa-clock-o"></i> {{trans_choice('custom.activity_logs', 2)}}
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item active">{{ $title }}</li>
-                    </ol>
-                </div>
+                <h1>{{ $pageTitle }}</h1>
+{{--                <div class="col-sm-6">--}}
+{{--                    <h1>{{ $title }}</h1>--}}
+{{--                </div>--}}
+{{--                <div class="col-sm-6">--}}
+{{--                    <ol class="breadcrumb float-sm-right">--}}
+{{--                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{__('custom.home')}}</a></li>--}}
+{{--                        <li class="breadcrumb-item">--}}
+{{--                            <a href="{{ route('admin.activity-logs') }}">--}}
+{{--                                <i class="fa fa fa-clock-o"></i> {{trans_choice('custom.activity_logs', 2)}}--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="breadcrumb-item active">{{ $title }}</li>--}}
+{{--                    </ol>--}}
+{{--                </div>--}}
             </div>
         </div>
     </section>

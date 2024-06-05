@@ -133,7 +133,7 @@ class Controller extends BaseController
         $exclude_routes = [
             "site.home",
             "admin.home",
-            "admin.activity-logs.show"
+//            "admin.activity-logs.show"
         ];
 
         if (in_array($this->route_name, $exclude_routes)) {
@@ -238,7 +238,7 @@ class Controller extends BaseController
             ];
         }
 
-        if(request()->route()->getName() == 'admin.user.notification_show' && sizeof($breadcrumbs) && isset($breadcrumbs['links']) && sizeof($breadcrumbs['links'])){
+        if(in_array(request()->route()->getName(), ['admin.user.notification_show', 'admin.activity-logs.show']) && sizeof($breadcrumbs) && isset($breadcrumbs['links']) && sizeof($breadcrumbs['links'])){
             unset($breadcrumbs['links'][sizeof($breadcrumbs) - 1]);
         }
         return $breadcrumbs;
