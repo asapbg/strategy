@@ -79,18 +79,18 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email_verified_at' => 'datetime',
     ];
 
-    public function routeNotificationFor($driver, $notification = null)
-    {
-        if($this->user_type == self::USER_TYPE_INTERNAL){
-            return [
-                $this->email => $this->fullName()
-            ];
-        } else{
-            return [
-                $this->notification_email => $this->fullName()
-            ];
-        }
-    }
+//    public function routeNotificationFor($driver, $notification = null)
+//    {
+//        if($this->user_type == self::USER_TYPE_INTERNAL){
+//            return [
+//                $this->email => $this->fullName()
+//            ];
+//        } else{
+//            return [
+//                $this->notification_email => $this->fullName()
+//            ];
+//        }
+//    }
 
     /**
      * Route notifications for the mail channel.
