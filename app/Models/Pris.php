@@ -75,7 +75,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
      * Get the model name
      */
     public function getModelName() {
-        return $this->title;
+        return $this->mcDisplayName;
     }
 
     protected function docDate(): Attribute
