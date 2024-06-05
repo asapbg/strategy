@@ -3,6 +3,7 @@
 @section('content')
 <section class="content">
     <div class="container-fluid">
+        @include('admin.partial.filter_form')
         <div class="card">
             <form method="GET">
 {{--                <div class="card-header with-border">--}}

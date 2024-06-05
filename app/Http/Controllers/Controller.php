@@ -238,6 +238,9 @@ class Controller extends BaseController
             ];
         }
 
+        if(request()->route()->getName() == 'admin.user.notification_show' && sizeof($breadcrumbs) && isset($breadcrumbs['links']) && sizeof($breadcrumbs['links'])){
+            unset($breadcrumbs['links'][sizeof($breadcrumbs) - 1]);
+        }
         return $breadcrumbs;
     }
 
