@@ -40,7 +40,7 @@ class AdvisoryBoardArchiveController extends AdminController
                 });
             })
             ->where('active', false)
-            ->orderBy('id', 'desc')
+            ->orderByTranslation('name')
             ->paginate(10);
 
         return $this->view('admin.advisory-boards.archive.index', compact('items'));
