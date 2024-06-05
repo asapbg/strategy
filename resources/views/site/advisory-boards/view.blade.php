@@ -16,7 +16,7 @@
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end  mt-2">
                     @can('update', $item)
-                        <a class="btn btn-primary main-color main-color" target="_blank" href="{{ route('admin.pris.edit', ['item' => $item->id]) }}">
+                        <a class="btn btn-primary main-color main-color" target="_blank" href="{{ route('admin.advisory-boards.edit', ['item' => $item->id]) }}">
                             <i class="fas fa-pen me-2 main-color"></i>{{ __('custom.edit') }}</a>
                     @endcan
                     <input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
