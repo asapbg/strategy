@@ -661,6 +661,14 @@ class HomeController extends Controller
 
         $users = User::role($roles)->orderBy('first_name')->get();
 
+        $users = User::role($roles)->select('users.*')
+            ->leftJoin('institution', 'institution.id', '=', 'users.institution_id')
+            ->leftJoin('institution_translations', function ($j){
+                $j->on('institution.id', '=', 'institution_translations.institution_id')->where('locale', '=', app()->getLocale());
+            })
+            ->orderBy('institution_translations.name')->orderBy('users.first_name')
+            ->get();
+
         $pageTitle = trans_choice('custom.contacts', 2);
         return $this->view('site.contacts', compact('pageTitle', 'title', 'form', 'users', 'roles', 'section'));
     }
