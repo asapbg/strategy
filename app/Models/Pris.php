@@ -254,7 +254,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     public static function select2AjaxOptions($filters)
     {
         $q = DB::table('pris')
-            ->select(['pris.id', DB::raw('legal_act_type_translations.name || \' №\' || pris.doc_num || \' от \' || DATE_PART(\'year\', doc_date) || \' г.\' as name')])
+            ->select(['pris.id', DB::raw('legal_act_type_translations.name_single || \' №\' || pris.doc_num || \' от \' || DATE_PART(\'year\', doc_date) || \' г.\' as name')])
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
             ->join('legal_act_type_translations', function ($j){
                 $j->on('legal_act_type.id', '=', 'legal_act_type_translations.legal_act_type_id')
