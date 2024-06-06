@@ -238,7 +238,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $user_url;
                 $user = $subscribedUser->user;
                 if($user){
-                    $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $user->notification_email;
+                    $mail = $user->notification_email ?? $user->email;
                     Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
                 }
             }
