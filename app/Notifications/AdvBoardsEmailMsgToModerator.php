@@ -43,7 +43,7 @@ class AdvBoardsEmailMsgToModerator extends Notification
     {
         $data = json_decode($this->notificationInfo, true);
         return (new MailMessage)
-                    ->subject(__('Ново съобщение в Портала за обществени консултацииe'))
+                    ->subject('[Strategy.bg] '.__('Ново съобщение в Портала за обществени консултацииe'))
                     ->line('Имате ново съобщение в Портала за обществени консултации')
                     ->action('Отвори съобщението', route('admin.user.notification_show', $data['id']));
     }

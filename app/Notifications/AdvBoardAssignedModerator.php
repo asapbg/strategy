@@ -42,7 +42,7 @@ class AdvBoardAssignedModerator extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('notifications_msg.adv_board_assigned'))
+            ->subject('[Strategy.bg] '.__('notifications_msg.adv_board_assigned'))
             ->line(__('notifications_msg.adv_board_assigned.extra_info'))
             ->action($this->item->name, route('admin.advisory-boards.edit', $this->item));
     }

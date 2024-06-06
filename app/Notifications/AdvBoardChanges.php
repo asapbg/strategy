@@ -44,7 +44,7 @@ class AdvBoardChanges extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject(__('notifications_msg.adv_board_changes'))
+                    ->subject('[Strategy.bg] '.__('notifications_msg.adv_board_changes'))
                     ->line(__('notifications_msg.adv_board_changes.extra_info'))
                     ->action($this->item->name, route('admin.advisory-boards.edit', $this->item));
     }

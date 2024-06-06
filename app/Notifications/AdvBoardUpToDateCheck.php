@@ -41,7 +41,7 @@ class AdvBoardUpToDateCheck extends Notification
      */
     public function toMail($notifiable)
     {
-        $msg = (new MailMessage)->subject(__('notifications_msg.adv_board_up_to_date'))
+        $msg = (new MailMessage)->subject('[Strategy.bg] '.__('notifications_msg.adv_board_up_to_date'))
             ->line(__('notifications_msg.adv_board_up_to_date.extra_info'));
 
         if(sizeof($this->items)) {
