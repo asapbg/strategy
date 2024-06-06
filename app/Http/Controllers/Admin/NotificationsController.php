@@ -80,7 +80,7 @@ class NotificationsController extends Controller
             'status' => array(
                 'type' => 'select',
                 'options' => array(
-                    ['name' => __('custom.status').' (всички)', 'value' => 0],
+                    ['name' => __('custom.any'), 'value' => 0],
                     ['name' => trans_choice('custom.unreads', 2), 'value' => 1],
                     ['name' => trans_choice('custom.reads', 2), 'value' => 2],
                 ),

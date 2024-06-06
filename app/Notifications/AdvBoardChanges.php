@@ -54,7 +54,7 @@ class AdvBoardChanges extends Notification
         return [
             'model' => get_class($this->item),
             'id' => $this->item->id,
-            'subject' => __('notifications_msg.adv_board_changes').'('.$this->item->name.')',
+            'subject' => __('notifications_msg.adv_board_changes').' ('.$this->item->name.')',
             'message' => __('notifications_msg.adv_board_changes.extra_info')
         ];
     }
