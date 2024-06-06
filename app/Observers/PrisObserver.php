@@ -146,6 +146,7 @@ class PrisObserver
             $data['moderators'] = $moderators;
             $data['subscribedUsers'] = $subscribedUsers;
             $data['modelInstance'] = $pris;
+            $data['modelName'] = $pris->mcDisplayName;
             $data['markdown'] = 'pris';
 
             SendSubscribedUserEmailJob::dispatch($data);
@@ -194,6 +195,7 @@ class PrisObserver
                 $data['moderators'] = $moderators;
                 $data['subscribedUsers'] = $subscribedUsers;
                 $data['modelInstance'] = $pris->consultation;
+                $data['modelName'] = $pris->consultation->title;
                 $data['markdown'] = 'public-consultation';
 
                 SendSubscribedUserEmailJob::dispatch($data);

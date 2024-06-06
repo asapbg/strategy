@@ -136,6 +136,7 @@ class StrategicDocumentChildObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $strategicDocumentChild->strategicDocument;
+        $data['modelName'] = $strategicDocumentChild->strategicDocument->title;
         $data['markdown'] = 'strategic-document';
 
         SendSubscribedUserEmailJob::dispatch($data);

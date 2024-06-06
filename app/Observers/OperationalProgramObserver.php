@@ -128,6 +128,7 @@ class OperationalProgramObserver
             $data['moderators'] = $moderators;
             $data['subscribedUsers'] = $subscribedUsers;
             $data['modelInstance'] = $operationalProgram;
+            $data['modelName'] = $operationalProgram->name;
             $data['markdown'] = 'op';
 
             SendSubscribedUserEmailJob::dispatch($data);

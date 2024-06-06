@@ -234,7 +234,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($subscribedUsers) {
             foreach ($subscribedUsers as $subscribedUser) {
                 $this->data['text'] = $user_text;
-                $this->data['subject'] = $user_subject_text;
+                $this->data['subject'] = '[Strategy.bg] '.$user_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
                 $this->data['url'] = $user_url;
                 $user = $subscribedUser->user;
                 if($user){

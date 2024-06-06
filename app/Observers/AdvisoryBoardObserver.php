@@ -167,6 +167,7 @@ class AdvisoryBoardObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $advisoryBoard;
+        $data['modelName'] = $advisoryBoard->name;
         $data['markdown'] = 'adv_boards';
 
         SendSubscribedUserEmailJob::dispatch($data);

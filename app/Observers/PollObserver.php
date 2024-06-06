@@ -134,6 +134,7 @@ class PollObserver
             $data['moderators'] = $moderators;
             $data['subscribedUsers'] = $subscribedUsers;
             $data['modelInstance'] = $poll;
+            $data['modelName'] = $poll->name;
             $data['markdown'] = 'poll';
 
             SendSubscribedUserEmailJob::dispatch($data);

@@ -129,6 +129,7 @@ class LegislativeProgramObserver
             $data['moderators'] = $moderators;
             $data['subscribedUsers'] = $subscribedUsers;
             $data['modelInstance'] = $legislativeProgram;
+            $data['modelName'] = $legislativeProgram->name;
             $data['markdown'] = 'lp';
 
             SendSubscribedUserEmailJob::dispatch($data);

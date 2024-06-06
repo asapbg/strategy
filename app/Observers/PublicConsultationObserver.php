@@ -144,6 +144,7 @@ class PublicConsultationObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $publicConsultation;
+        $data['modelName'] = $publicConsultation->title;
         $data['markdown'] = 'public-consultation';
 
         SendSubscribedUserEmailJob::dispatch($data);

@@ -121,6 +121,7 @@ class PublicationObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $publication;
+        $data['modelName'] = $publication->title;
         $data['markdown'] = 'publication';
 
         SendSubscribedUserEmailJob::dispatch($data);

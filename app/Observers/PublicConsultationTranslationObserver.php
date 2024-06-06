@@ -103,6 +103,7 @@ class PublicConsultationTranslationObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $publicConsultationTranslation->parent;
+        $data['modelName'] = $publicConsultationTranslation->parent->title;
         $data['markdown'] = 'public-consultation';
 
         SendSubscribedUserEmailJob::dispatch($data);

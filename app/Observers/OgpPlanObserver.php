@@ -163,6 +163,7 @@ class OgpPlanObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $ogpPlan;
+        $data['modelName'] = $ogpPlan->name;
         $data['markdown'] = $event == 'created_report' ? 'ogp_report' : 'ogp';
 
         SendSubscribedUserEmailJob::dispatch($data);

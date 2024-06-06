@@ -122,6 +122,7 @@ class LegislativeInitiativeCommentObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $item;
+        $data['modelName'] = $item->facebookTitle;
         $data['markdown'] = 'legislative-initiative';
 
         SendSubscribedUserEmailJob::dispatch($data);
