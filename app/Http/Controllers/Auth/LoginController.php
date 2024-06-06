@@ -161,7 +161,9 @@ class LoginController extends Controller
             $sessionLifetime = Setting::where('name', '=', Setting::SESSION_LIMIT_KEY)->first();
             \Illuminate\Support\Facades\Session::put('user_session_time_limit', $sessionLifetime ? $sessionLifetime->value : config('app.default_session_expiration'));
 
+            activity()->disableLogging();
             \Auth::logoutOtherDevices(request('password'));
+            activity()->enableLogging();
             $route = $user->user_type == User::USER_TYPE_INTERNAL ? 'admin.home' : 'site.home';
 //            return redirect()->intended($route);
             return redirect()->route($route);
