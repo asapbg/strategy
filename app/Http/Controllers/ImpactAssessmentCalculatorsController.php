@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CalcTypesEnum;
+use App\Rules\MulticriteriaWeightSum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -160,7 +161,7 @@ class ImpactAssessmentCalculatorsController extends Controller
                     foreach ($data['criteria'] as $k => $kName){
                         foreach ($data['evaluation'][$k] as $e => $eval){
                             if(isset($data['evaluation'][$k][$v]) && $e == $v){
-                                $results['variants'][$v] += ($data['weight'][$k] * $data['evaluation'][$k][$v]);
+                                $results['variants'][$v] += (($data['weight'][$k]/100) * $data['evaluation'][$k][$v]);
                             }
                         }
                     }
@@ -228,7 +229,7 @@ class ImpactAssessmentCalculatorsController extends Controller
                     'variants' => ['required', 'array'],
                     'variants.*' => ['required', 'string'],
                     'weight' => ['required', 'array'],
-                    'weight.*' => ['required', 'numeric', 'gt:0'],
+                    'weight.*' => ['required', 'numeric', 'gt:0', new MulticriteriaWeightSum()],
                     'evaluation' => ['required', 'array'],
                     'evaluation.*' => ['required', 'array'],
                     'evaluation.*.*' => ['required', 'numeric', 'gte:'. (0 - request()->input('step')), 'lte:'. request()->input('step')],

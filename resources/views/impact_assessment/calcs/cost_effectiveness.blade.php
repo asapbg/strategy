@@ -11,7 +11,7 @@
         @csrf
         <div class="mb-3">
             <label for="investment_costs" class="form-label">{{ __('validation.attributes.diskont') }}</label>
-            <input type="number" class="form-control @error('diskont') is-invalid @enderror" name="diskont" value="{{ isset($old) && isset($old['diskont']) ? $old['diskont'] : ''}}">
+            <input type="number" id="diskont" class="form-control @error('diskont') is-invalid @enderror" name="diskont" value="{{ isset($old) && isset($old['diskont']) ? $old['diskont'] : ''}}">
             @error('diskont')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -96,6 +96,16 @@
                     formDom.submit();
                 } else {
                     globalErrDiv.html('{{ __('site.calc.msg.at_least_one_year') }}');
+                }
+            });
+
+            $(document).on('change keyup paste', '#diskont', function (e){
+                if($('#diskont').val() > 100) {
+                    $('#diskont').val(100).trigger('change');
+                }
+
+                if(!$('#diskont').val() > 0) {
+                    $('#diskont').val(1).trigger('change');
                 }
             });
         });

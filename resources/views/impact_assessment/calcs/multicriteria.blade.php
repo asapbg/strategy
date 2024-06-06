@@ -12,7 +12,12 @@
             <div class="col-md-6">
                 <div class="input-group mb-2">
                     <span class="input-group-text">{{ __('custom.calc.levels') }} <i class="ms-2">(<span class="text-primary">1 = (-1,0,1); 2 = (-2, -1, 0, 1, 2)</span>)</i></span>
-                    <input type="number" name="step" id="step" class="form-control" value="@if(isset($old) && $old['step']){{ $old['step'] }}@else{{ '1' }}@endif">
+{{--                    <input type="number" name="step" id="step" class="form-control" value="@if(isset($old) && $old['step']){{ $old['step'] }}@else{{ '1' }}@endif">--}}
+                    <select class="form-control form-control-sm" name="step" id="step">
+                        @foreach(range(1,10) as $i)
+                            <option value="{{ $i }}" @if(isset($old) && $old['step'] && (int)$old['step'] == $i) selected @endif>{{ __('custom.from') }} -{{ $i }} {{ __('custom.to') }} {{ $i }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -39,7 +44,7 @@
                         @foreach($old['variants'] as $x => $xName)
                             <th>
                                 <i class="remove-variant fas fa-times-circle text-danger me-2" data-v="{{ $x }}" role="button"></i>
-                                <input type="text" name="variants[]" class="form-control form-control-sm @error('variants.'.$x) is-invalid @enderror" value="{{ $xName }}">
+                                <input type="text" name="variants[]" class="variants form-control form-control-sm @error('variants.'.$x) is-invalid @enderror" value="{{ $xName }}">
                                 @error('variants.'.$x)
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -107,27 +112,41 @@
         let formDom = $('#form');
         let matrixDom = $('#matrix');
         let stepDom = $('#step');
-        let stepMin = -1;
-        let stepMax = 1;
+        var stepMin = -1;
+        var stepMax = 1;
 
         function addCriteria(name = '', countCurrentVariant = 1){
             let variantsHtml = '';
             let criteriaInx = $('.row-criteria').length;
             for(let i = 0; i < countCurrentVariant; i ++){
                 variantsHtml += '<td class="variants" data-v="' + i + '">' +
-                    '<input type="number" name="evaluation['+ criteriaInx +']['+i+']" step="1" min="'+ stepMin +'" min="'+ stepMax +'" class="form-control form-control-sm evaluation-val" value="0">' +
+                    '<input type="number" name="evaluation['+ criteriaInx +']['+i+']" step="1" min="'+ stepMin +'" max="'+ stepMax +'" class="form-control form-control-sm evaluation-val" value="0">' +
                     '</td>';
             }
-            matrixDom.find('table').append('' +
-                '<tr class="row-criteria">' +
+
+            if(matrixDom.find('.total').length){
+                $('' +
+                    '<tr class="row-criteria">' +
                     '<th>' +
-                        '<i class="remove-criteria fas fa-times-circle text-danger me-2" role="button"></i>' +
-                        '<input type="text" name="criteria[]" class="" value="' +name+ '">' +
+                    '<i class="remove-criteria fas fa-times-circle text-danger me-2" role="button"></i>' +
+                    '<input type="text" name="criteria[]" class="" value="' +name+ '">' +
                     '</th>' +
                     '<td class="weight">' +
-                        '<input type="text" name="weight[]" class="form-control form-control-sm weight-val" value="">' +
+                    '<input type="text" name="weight[]" class="form-control form-control-sm weight-val" value="">' +
                     '</td>' + variantsHtml +
-                '</tr>');
+                    '</tr>').insertBefore(matrixDom.find('.total')[0]);
+            } else{
+                matrixDom.find('table').append('' +
+                    '<tr class="row-criteria">' +
+                    '<th>' +
+                    '<i class="remove-criteria fas fa-times-circle text-danger me-2" role="button"></i>' +
+                    '<input type="text" name="criteria[]" class="" value="' +name+ '">' +
+                    '</th>' +
+                    '<td class="weight">' +
+                    '<input type="text" name="weight[]" class="form-control form-control-sm weight-val" value="">' +
+                    '</td>' + variantsHtml +
+                    '</tr>');
+            }
         }
 
         function addVariant(name = '', y = 0, x = 0){
@@ -137,7 +156,7 @@
                 console.log(el, inx);
                 let variantInx = $(this).find('.variants').length;
                 $(this).append('<td class="variants" data-v="' + (variantInx) + '">' +
-                    '<input type="number" name="evaluation['+ inx +']['+ titleVariantInx +']" step="1" min="'+ stepMin +'" min="'+ stepMax +'" class="form-control form-control-sm evaluation-val" value="0">' +
+                    '<input type="number" name="evaluation['+ inx +']['+ titleVariantInx +']" step="1" min="'+ stepMin +'" max="'+ stepMax +'" class="form-control form-control-sm evaluation-val" value="0">' +
                     '</td>');
             });
         }
@@ -185,16 +204,16 @@
 
             });
 
-            $(document).on('change keyup paste', '#step', function (){
-                if(parseInt($(this).val()) < 1) {
-                    $(this).val(1);
-                }
-                let min = 0 - parseInt($(this).val());
-                let max = parseInt($(this).val());
+            $(document).on('change', '#step', function (){
+                // if(parseInt($(this).val()) < 1) {
+                //     $(this).val(1);
+                // }
+                stepMin = 0 - parseInt($(this).val());
+                stepMax = parseInt($(this).val());
                 $('.evaluation-val').each(function (){
-                   $(this).attr('min', min);
-                   $(this).attr('max', max);
-                   if($(this).val() < min || $(this).val() > max){
+                   $(this).attr('min', stepMin);
+                   $(this).attr('max', stepMax);
+                   if($(this).val() < stepMin || $(this).val() > stepMax){
                        $(this).val(0);
                    }
                 });

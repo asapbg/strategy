@@ -129,6 +129,10 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'date_cross_program'        => 'There is another active program in period :start - :end',
+    'program_valid_period'        => 'The program period must not have passed',
+    'unique_year_work_program'        => 'A work program for the specified year already exists',
+    'multicriteria_weight_sum'        => 'The sum of the \'weights\' must be 100',
 
     /*
     |--------------------------------------------------------------------------
