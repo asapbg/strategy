@@ -48,7 +48,7 @@ class LegislativeInitiativeSuccessful extends Notification
         );
 
         return (new MailMessage)
-            ->subject('[Strategy.bg] '.__('notifications_msg.legislative_initiative.success.subject'))
+            ->subject('[Strategy.bg] '.__('notifications_msg.legislative_initiative.success.subject').': '.$this->item->facebookTitle)
             ->markdown('emails.legislative_initiative.successful', ['data' => $this->data]);
     }
 

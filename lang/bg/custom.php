@@ -1328,4 +1328,5 @@ return [
     'reads' => 'Прочетено|Прочетени',
     'user_logout' => 'Изход от платформата',
     'restored' => 'Възстановен',
+    'advisory_board_moderators' => 'Модератор|Модератори'
 ];

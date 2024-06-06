@@ -57,7 +57,7 @@ class AdvisoryBoardMember extends Model
      */
     public function getModelName()
     {
-        return $this->name;
+        return $this->member_name;
     }
 
     public static function translationFieldsProperties(): array
