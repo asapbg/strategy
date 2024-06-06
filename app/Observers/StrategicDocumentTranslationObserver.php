@@ -128,6 +128,7 @@ class StrategicDocumentTranslationObserver
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
         $data['modelInstance'] = $strategicDocumentTranslation->parent;
+        $data['modelName'] = $strategicDocumentTranslation->parent->title;
         $data['markdown'] = 'strategic-document';
 
         SendSubscribedUserEmailJob::dispatch($data);
