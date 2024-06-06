@@ -1298,4 +1298,6 @@ return [
     'for_everything_in_section' => 'for everything in section',
     'unreads' => 'Unread|Unread',
     'reads' => 'Read|Read',
+    'user_logout' => 'Logout',
+    'restored' => 'Restore',
 ];
