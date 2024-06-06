@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
@@ -200,6 +201,23 @@ class seedOldPublicConsultations extends Command
                                 $institutionId = $dInstitution->id;
                             }
 
+                            $actType = null;
+                            if(!empty($item->title)){
+                                if(str_contains(mb_strtolower($item->title),'правилник')){
+                                    $actType = ActType::ACT_NON_NORMATIVE_COUNCIL_OF_MINISTERS;
+                                } elseif (str_contains(mb_strtolower($item->title),'наредба')){
+                                    $actType = ActType::ACT_MINISTER;
+                                } elseif (str_contains(mb_strtolower($item->title),'решение на министерския съвет')){
+                                    $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
+                                } elseif (str_contains(mb_strtolower($item->title),'постанвовление на министерския съвет')){
+                                    $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
+                                } elseif (str_contains(mb_strtolower($item->title),'закон')){
+                                    $actType = ActType::ACT_LAW;
+                                } elseif (str_contains(mb_strtolower($item->title),'рамкова позиция')){
+                                    $actType = ActType::ACT_FRAME_POSITION;
+                                }
+                            }
+
                             if(isset($ourPc[(int)$item->old_id])) {
                                 $this->comment('Consultation with old id '.$item->old_id.' already exist');
                                 $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$item->old_id]);
@@ -216,6 +234,7 @@ class seedOldPublicConsultations extends Command
                                     $existPc->open_to = !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null;
                                     $existPc->active = $item->active;
                                     $existPc->field_of_actions_id = (int)$fieldOfAct;
+                                    $existPc->act_type_id = $actType;
                                     $existPc->save();
 
                                     foreach ($locales as $locale) {
@@ -234,7 +253,7 @@ class seedOldPublicConsultations extends Command
                             $prepareNewPc = [
                                 'old_id' => $item->old_id,
                                 'consultation_level_id' => $pcLevel,
-                                'act_type_id' => null,
+                                'act_type_id' => $actType,
                                 'legislative_program_id' => null,
                                 'operational_program_id' => null,
                                 'open_from' => !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null,
