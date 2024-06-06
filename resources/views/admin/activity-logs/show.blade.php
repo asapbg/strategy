@@ -47,6 +47,7 @@
                     <table class="table table-bordered" width="100%" cellspacing="0">
                         <tbody>
                         @php
+                            $properties = json_decode($activity->properties, true);
                             $subject_name = $activity->getSubjectName();
                             $causer_name = "Системен потребител";
                             if($activity->causer) {
@@ -77,6 +78,14 @@
                         <tr>
                             <td>{{__('custom.activity_log_causer')}}</td>
                             <td>{{$causer_name}}</td>
+                        </tr>
+                        <tr>
+                            <td>IP адрес</td>
+                            <td>{{$properties['ip'] ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>Браузър</td>
+                            <td>{{$properties['agent'] ?? ''}}</td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
