@@ -1300,4 +1300,5 @@ return [
     'reads' => 'Read|Read',
     'user_logout' => 'Logout',
     'restored' => 'Restore',
+    'type_act_when_is_available' => '(when is available)',
 ];

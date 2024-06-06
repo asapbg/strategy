@@ -51,7 +51,7 @@
                         @php($byActType = json_decode($consultationsByActType[$item->id]->act_info, true))
                         @if($byActType)
                             <tr>
-                                <th colspan="6" class="ps-4">{{ trans_choice('custom.act_type', 1) }}</th>
+                                <th colspan="6" class="ps-4">{{ trans_choice('custom.act_type', 1).' '.__('custom.type_act_when_is_available') }}</th>
                             </tr>
                             @foreach($byActType as $act)
                                 <tr>
