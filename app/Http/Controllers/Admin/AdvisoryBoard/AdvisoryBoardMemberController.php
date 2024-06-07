@@ -44,8 +44,11 @@ class AdvisoryBoardMemberController extends AdminController
         DB::beginTransaction();
         try {
             $item = new AdvisoryBoardMember();
+            $changes = $this->mainChanges(AdvisoryBoardMember::CHANGEABLE_FIELDS, $item, $validated);
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+
+            $changes = array_merge($this->translateChanges(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated), $changes);//use it to send detail changes in notification
             $item->save();
 
             $validated['advisory_member_id'] = $item->id;
@@ -63,8 +66,10 @@ class AdvisoryBoardMemberController extends AdminController
 
             //alert adb board modeRATOR
             $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
-            $notifyService = new Notifications();
-            $notifyService->advChanges($advBoard, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($advBoard, request()->user(), trans_choice('custom.member', 2).' - '.$item->member_name, $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -108,8 +113,12 @@ class AdvisoryBoardMemberController extends AdminController
         DB::beginTransaction();
         try {
             $item = AdvisoryBoardMember::find($validated['advisory_board_member_id']);
+            $changes = $this->mainChanges(AdvisoryBoardMember::CHANGEABLE_FIELDS, $item, $validated);
+
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
+
+            $changes = array_merge($this->translateChanges(AdvisoryBoardMember::TRANSLATABLE_FIELDS, $item, $validated), $changes);//use it to send detail changes in notification
             $item->save();
 
             $validated['advisory_member_id'] = $item->id;
@@ -119,8 +128,11 @@ class AdvisoryBoardMemberController extends AdminController
 
             //alert adb board modeRATOR
             $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
-            $notifyService = new Notifications();
-            $notifyService->advChanges($advBoard, request()->user());
+            $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($advBoard, request()->user(), trans_choice('custom.member', 2).' - '.$item->member_name, $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

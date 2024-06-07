@@ -371,7 +371,10 @@ class AdvisoryBoardController extends AdminController
             unset($validated['file']);
 
             $fillable = $this->getFillableValidated($validated, $item);
+            $changes = $this->mainChanges(AdvisoryBoard::CHANGEABLE_FIELDS, $item, $validated);
             $item->fill($fillable);
+            $changes = array_merge($this->translateChanges(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated), $changes);//use it to send detail changes in notification
+
             $item->save();
 
             // Upload File
@@ -425,8 +428,10 @@ class AdvisoryBoardController extends AdminController
             DB::commit();
 
             //TODO alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), __('custom.base_information'), $changes);
+            }
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.edit', $item)

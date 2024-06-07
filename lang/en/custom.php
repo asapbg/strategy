@@ -1304,4 +1304,10 @@ return [
     'nationals_fa' => 'National|National',
     'areas_fa' => 'Area|Area',
     'municipal_fa' => 'Municipal|municipal',
+    'body' => 'Description',
+    'member_name' => 'Име',
+    'institution_id' => 'Институция',
+    'member_job' => 'Длъжност',
+    'member_notes' => 'Бележки и кратка информация',
+    'has_npo_presence' => 'Наличие на представител на НПО в състава на съвета',
 ];

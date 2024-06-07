@@ -69,6 +69,39 @@ class AdminController extends Controller
         $item->save();
     }
 
+    public function translateChanges($fields, $item, $validated)
+    {
+        $changes = array();
+        foreach (config('available_languages') as $locale) {
+            foreach ($fields as $field) {
+                $fieldName = $field."_".$locale['code'];
+                if((is_null($item) || !$item->id)
+                    || (!isset($validated[$fieldName]) && ($item->id && !empty($item->translate($locale['code'])->{$field})) )
+                    || ($item->id && isset($validated[$fieldName]) && $item->translate($locale['code'])->{$field} != $validated[$fieldName])){
+                    if(!isset($changes[$locale['code']])){
+                        $changes[$locale['code']] = array();
+                    }
+                    $changes[$locale['code']][$field] = ['old' => $item->id ? $item->translate($locale['code'])->{$field} : '', 'new' => $validated[$fieldName]];
+                }
+            }
+        }
+
+        return $changes;
+    }
+
+    public function mainChanges($fields, $item, $validated)
+    {
+        $changes = array();
+        foreach ($fields as $field) {
+            if((!isset($validated[$field]) && ($item->id && !empty($item->{$field})) )
+                || ($item->id && isset($validated[$field]) && $item->{$field} != $validated[$field])
+                || !$item->id){
+                $changes[$field] = ['old' => $item->id ? $item->{$field} : '', 'new' => isset($validated[$field]) ? $validated[$field] : ''];
+            }
+        }
+        return $changes;
+    }
+
     //TODO Why we use only translation for current locale???
     /**
      * @param $fields  //example $item->getFillable();

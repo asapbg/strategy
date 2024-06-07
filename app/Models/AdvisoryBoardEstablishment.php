@@ -22,6 +22,7 @@ class AdvisoryBoardEstablishment extends ModelActivityExtend
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
+    protected $table = 'advisory_board_establishments';
 
     //activity
     protected string $logName = "advisory_board_establishments";

@@ -43,6 +43,7 @@ class AdvisoryBoardCustomController extends AdminController
             $fillable = $this->getFillableValidated($validated, $section);
 
             $fillable['advisory_board_id'] = $item->id;
+            $changes = $this->translateChanges(AdvisoryBoardCustom::TRANSLATABLE_FIELDS, $section, $validated);//use it to send detail changes in notification
 
             $section->fill($fillable);
             $section->save();
@@ -87,8 +88,10 @@ class AdvisoryBoardCustomController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), 'Други - '.$section->title, $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -134,6 +137,8 @@ class AdvisoryBoardCustomController extends AdminController
             $section = AdvisoryBoardCustom::find($validated['section_id']);
 
             $fillable = $this->getFillableValidated($validated, $section);
+            $changes = $this->translateChanges(AdvisoryBoardCustom::TRANSLATABLE_FIELDS, $section, $validated);//use it to send detail changes in notification
+
             $section->fill($fillable);
             $section->save();
 
@@ -142,8 +147,10 @@ class AdvisoryBoardCustomController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), 'Други - '.$section->title, $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -176,10 +183,6 @@ class AdvisoryBoardCustomController extends AdminController
             foreach ($order as $position => $id) {
                 AdvisoryBoardCustom::where(['id' => $id, 'advisory_board_id' => $item->id])->update(['order' => $position + 1]);
             }
-
-            //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
 
             return redirect($route)->with('success', __('messages.sections_order_successfully'));
         } catch (\Exception $e) {

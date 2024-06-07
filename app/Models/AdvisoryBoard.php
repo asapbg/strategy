@@ -56,6 +56,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
     const PAGINATE = 20;
     const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const MODULE_NAME = ('custom.advisory_board');
+    const CHANGEABLE_FIELDS = ['policy_area_id', 'advisory_chairman_type_id', 'advisory_act_type_id', 'meetings_per_year', 'has_npo_presence', 'authority_id', 'integration_link', 'public'];
     const TRANSLATABLE_FIELDS = ['name', 'advisory_specific_name', 'advisory_act_specific_name', 'report_institution_specific_name'];
     const DEFAULT_HEADER_IMG = '/img/ms-w-2023.jpg';
 

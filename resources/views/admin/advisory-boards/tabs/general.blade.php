@@ -93,9 +93,8 @@
                                         </label>
 
                                         @php
-                                            $value = $npo->translations->count() === 2 ?
-                                                $npo->translations->first(fn($row) => $row->locale == $lang['code'])->name :
-                                                old('npo_' . $lang['code'], '');
+                                            $value = $npo->translate($lang['code'])?->name;
+
                                         @endphp
 
                                         <input type="text" id="npo_{{ $lang['code'] }}[]"

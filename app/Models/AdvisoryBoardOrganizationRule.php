@@ -22,6 +22,7 @@ class AdvisoryBoardOrganizationRule extends ModelActivityExtend
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
+    protected $table = 'advisory_board_organization_rules';
 
     //activity
     protected string $logName = "advisory_board_regulatory_framework";

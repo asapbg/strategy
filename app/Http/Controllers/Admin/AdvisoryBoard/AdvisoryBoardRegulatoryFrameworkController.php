@@ -64,6 +64,7 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
         DB::beginTransaction();
         try {
             $validated['advisory_board_id'] = $item->id;
+            $changes = $this->translateChanges(AdvisoryBoardOrganizationRule::TRANSLATABLE_FIELDS, $rule, $validated);//use it to send detail changes in notification
 
             foreach (config('available_languages') as $lang) {
                 if(isset($validated['description_' . $lang['code']])) {
@@ -80,8 +81,10 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), __('custom.advisory_board_regulatory_framework'), $changes);
+            }
 
             return redirect($route)->with('success', trans_choice('custom.regulatory_framework', 1) . " " . __('messages.updated_successfully_f'));
         } catch (Exception $e) {
@@ -132,6 +135,7 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
         DB::beginTransaction();
         try {
             $validated['advisory_board_id'] = $item->id;
+            $changes = $this->translateChanges(AdvisoryBoardOrganizationRule::TRANSLATABLE_FIELDS, $establishment, $validated);//use it to send detail changes in notification
 
             foreach (config('available_languages') as $lang) {
                 if(isset($validated['description_' . $lang['code']])) {
@@ -148,8 +152,10 @@ class AdvisoryBoardRegulatoryFrameworkController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), __('custom.advisory_board_establishments'), $changes);
+            }
 
             return redirect($route)->with('success', __('validation.attributes.act_of_creation') . " " . __('messages.updated_successfully_m'));
         } catch (Exception $e) {

@@ -37,18 +37,21 @@ class AdvisoryBoardSecretariatController extends AdminController
 
         DB::beginTransaction();
         try {
+            $changes = $this->translateChanges(AdvisoryBoardSecretariat::TRANSLATABLE_FIELDS, $secretariat, $validated);//use it to send detail changes in notification
+
             $validated['advisory_board_id'] = $item->id;
             $fillable = $this->getFillableValidated($validated, $secretariat);
             $secretariat->fill($fillable);
             $secretariat->save();
-
             $this->storeTranslateOrNew(AdvisoryBoardSecretariat::TRANSLATABLE_FIELDS, $secretariat, $validated);
 
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), __('custom.secretariat'), $changes);
+            }
 
             return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {

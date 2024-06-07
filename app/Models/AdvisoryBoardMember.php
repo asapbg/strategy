@@ -28,6 +28,7 @@ class AdvisoryBoardMember extends Model
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_members');
     const TRANSLATABLE_FIELDS = ['member_name', 'member_job', 'member_notes'];
+    const CHANGEABLE_FIELDS = ['advisory_type_id', 'email', 'institution_id'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
