@@ -208,7 +208,7 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.public_consultations.list_report', compact('filter','items', 'rf', 'closeSearchForm'));
@@ -507,7 +507,7 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.public_consultations.list_report_fa', compact('filter','items', 'rf', 'closeSearchForm'));
@@ -668,10 +668,10 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
-            return view('site.public_consultations.list_report_fa_institution', compact('filter','items', 'rf'. 'closeSearchForm'));
+            return view('site.public_consultations.list_report_fa_institution', compact('filter','items', 'rf', 'closeSearchForm'));
         }
 //dd($items);
         $pageTitle = __('site.menu.public_consultation');
@@ -909,7 +909,7 @@ class PublicConsultationController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.public_consultations.list_report_institution', compact('filter','items', 'rf', 'consultationsByActType', 'missingFiles', 'closeSearchForm'));

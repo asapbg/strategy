@@ -353,7 +353,7 @@ class StrategicDocumentsController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.strategic_documents.list_report', compact('filter','sorter', 'items', 'rf', 'closeSearchForm'));

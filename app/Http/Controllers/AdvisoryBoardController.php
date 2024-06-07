@@ -626,7 +626,7 @@ class AdvisoryBoardController extends Controller
             $items = $q->paginate($paginate);
         }
 
-        $closeSearchForm = true;
+        $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.advisory-boards.list_report', compact('filter','sorter', 'items', 'rf', 'searchMeetings', 'closeSearchForm'));
