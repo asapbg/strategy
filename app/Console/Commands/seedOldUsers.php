@@ -95,7 +95,7 @@ class seedOldUsers extends Command
             'ММС' => 137,
             'МНО' => null,
             'МО' => 140,
-            'МОМН' => null,
+            'МОМН' => 138,
             'МОН' => 138,
             'МОСВ' => 139,
             'МП' => 141,
@@ -110,7 +110,7 @@ class seedOldUsers extends Command
             'МТСП' => 144,
             'МТТ' => null,
             'МФ' => 146,
-            'МФВС' => null,
+            'МФВС' => 137,
             'Администрация на МС' => 127,
             'Агенция за публичните предприятия и контрол' => 3,
             'Българския институт по метрология' => 22,
@@ -162,9 +162,9 @@ class seedOldUsers extends Command
             'ME' => null,
             'MT' => null,
             'АМС' => 127,
-            'АЯР' => null,
-            'ДАБ' => null,
-            'ДАБЧ' => null,
+            'АЯР' => 7,
+            'ДАБ' => 52,
+            'ДАБЧ' => 72,
             'ДМА, АМС' => 127,
             'Областна администрация - Пазарджик' => 215,
             'Община Тунджа' => 499,
@@ -272,7 +272,24 @@ class seedOldUsers extends Command
             'Община Варна' => 301,
             'Община Пловдив' => 433,
             'община Пловдив' => 433,
-            'ОбА - Симеоновград' => 467
+            'ОбА - Симеоновград' => 467,
+            'Държавна агенция ,,Безопасност на движението по пътищата&quot;' => 50,
+            'Национално бюро за правна помощ' => 201,
+            'Община Ракитово' => 446,
+            'Комисия за финансов надзор' => 103,
+            'МЗХГ' => 133,
+            'Кмет на Община Троян' => 496,
+            'ИПА' => 90,
+            'Агенция за социално подпомагане' => 4,
+            'Община Поморие' => 435,
+            'Главен Архитект - Община Балчик' => 270,
+            'ОБЩИНА СРЕДЕЦ, ОБЛ. БУРГАС' => 477,
+            'ОбА Хисаря' => 507,
+            'Общински съвет Ямбол' => 525,
+            'ФНИ' => 687,
+            'АДФИ' => 1,
+            'ОбА-Свиленград' => 461,
+            'АГКК' => 10,
         ];
 
 
@@ -403,9 +420,11 @@ class seedOldUsers extends Command
                             //Update institutions
                             $existingUser = User::find((int)$ourUsers[(int)$item->old_id]);
                             if($existingUser){
-                                $existingUser->institution_id = $institutions[$item->org_name] ?? null;
-                                $existingUser->save();
-                                $this->comment('User with old id (' . $existingUser->old_id . ') is updated');
+                                if(is_null($existingUser->institution_id) && isset($institutions[$item->org_name])){
+                                    $existingUser->institution_id = $institutions[$item->org_name] ?? null;
+                                    $existingUser->save();
+                                    $this->comment('User with old id (' . $existingUser->old_id . ') is updated');
+                                }
                             } else{
                                 $this->comment('Cant\'t find old user OldId ('.(int)$item->old_id.') OurId (' . $ourUsers[(int)$item->old_id] . ')');
                             }
