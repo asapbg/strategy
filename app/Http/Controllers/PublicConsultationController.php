@@ -450,7 +450,7 @@ class PublicConsultationController extends Controller
         $openTo = isset($requestFilter['openTo']) ? Carbon::parse($requestFilter['openTo'])->format('Y-m-d') : null;
 
         $q = DB::table('field_of_actions')
-            ->select(['field_of_action_translations.name', DB::raw('count(distinct(public_consultation.id)) as pc_cnt')])
+            ->select(['field_of_action_translations.name', DB::raw('count(distinct(public_consultation.id)) as pc_cnt'), DB::raw('max(field_of_actions.parentid) as fa_level')])
             ->join('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());

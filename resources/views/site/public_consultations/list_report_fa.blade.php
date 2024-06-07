@@ -28,7 +28,33 @@
                     </tr>
                 </thead>
                 <tbody>
+                @php($fieldOfActionGroup = '')
                 @foreach($items as $item)
+                    @switch($item->fa_level)
+                        @case(\App\Models\FieldOfAction::CATEGORY_NATIONAL)
+                            @php($itemFaGroup = trans_choice('custom.nationals_fa', 2))
+                        @break
+                        @case(\App\Models\FieldOfAction::CATEGORY_AREA)
+                            @php($itemFaGroup = trans_choice('custom.areas_fa', 2))
+                        @break
+                        @case(\App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                            @php($itemFaGroup = trans_choice('custom.municipal_fa', 2))
+                        @break
+                        @default
+                            @php($itemFaGroup = '')
+                        @break
+                    @endswitch
+                    @if($fieldOfActionGroup != $itemFaGroup)
+                        @php($fieldOfActionGroupCnt = 0)
+                        @foreach($items as $i)
+                            @php($fieldOfActionGroupCnt += ($i->fa_level == $item->fa_level ? $i->pc_cnt : 0))
+                        @endforeach
+                        @php($fieldOfActionGroup = $itemFaGroup)
+                        <tr class="fw-bold">
+                            <td class="custom-left-border">{{ $itemFaGroup }}</td>
+                            <td>{{ $fieldOfActionGroupCnt }}</td>
+                        </tr>
+                    @endif
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->pc_cnt }}</td>

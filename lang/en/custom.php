@@ -1301,4 +1301,7 @@ return [
     'user_logout' => 'Logout',
     'restored' => 'Restore',
     'type_act_when_is_available' => '(when is available)',
+    'nationals_fa' => 'National|National',
+    'areas_fa' => 'Area|Area',
+    'municipal_fa' => 'Municipal|municipal',
 ];

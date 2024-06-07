@@ -1330,4 +1330,7 @@ return [
     'restored' => 'Възстановен',
     'advisory_board_moderators' => 'Модератор|Модератори',
     'type_act_when_is_available' => '(при налична информация)',
+    'nationals_fa' => 'Национална|Национални',
+    'areas_fa' => 'Областна|Областни',
+    'municipal_fa' => 'Общинска|Общински',
 ];
