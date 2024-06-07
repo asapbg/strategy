@@ -30,6 +30,7 @@ class AdvisoryBoardFunction extends ModelActivityExtend
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_functions');
     const TRANSLATABLE_FIELDS = ['description'];
+    const CHANGEABLE_FIELDS = ['working_year'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;

@@ -43,16 +43,20 @@ class AdvisoryBoardFunctionController extends AdminController
             $fillable = $this->getFillableValidated($validated, $new);
             $fillable['advisory_board_id'] = $item->id;
             $fillable['working_year'] = Carbon::create($fillable['working_year']);
+
+            $changes = $this->mainChanges(AdvisoryBoardFunction::CHANGEABLE_FIELDS, $new, $validated);
             $new->fill($fillable);
+            $changes = array_merge($this->translateChanges(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $new, $validated), $changes);//use it to send detail changes in notification
             $new->save();
 
             $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $new, $validated);
-
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), 'Работни програми', $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -84,7 +88,11 @@ class AdvisoryBoardFunctionController extends AdminController
             $working_program = AdvisoryBoardFunction::find($validated['function_id']);
             $fillable = $this->getFillableValidated($validated, $working_program);
             $fillable['working_year'] = Carbon::create($fillable['working_year']);
+
+            $changes = $this->mainChanges(AdvisoryBoardFunction::CHANGEABLE_FIELDS, $working_program, $validated);
             $working_program->fill($fillable);
+            $changes = array_merge($this->translateChanges(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $working_program, $validated), $changes);//use it to send detail changes in notification
+
             $working_program->save();
 
             $this->storeTranslateOrNew(AdvisoryBoardFunction::TRANSLATABLE_FIELDS, $working_program, $validated);
@@ -92,8 +100,10 @@ class AdvisoryBoardFunctionController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), 'Работни програми', $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
