@@ -207,7 +207,7 @@ class Facebook
         }
 
         if( isset($result['error']) ) {
-            Log::error('['.date('Y-m-d H:i:s').'] Facebook integration error '.PHP_EOL.'Error: '.$result['message'].PHP_EOL.'Request Url: '.$this->endpoint.'/'.$this->apiVersion.'/'.$url.PHP_EOL.'Request data: '.json_encode($requestData, JSON_UNESCAPED_UNICODE).PHP_EOL.'Response: '.$response);
+            Log::error('['.date('Y-m-d H:i:s').'] Facebook integration error '.PHP_EOL.'Error: '.PHP_EOL.'Request Url: '.$this->endpoint.'/'.$this->apiVersion.'/'.$url.PHP_EOL.'Request data: '.json_encode($requestData, JSON_UNESCAPED_UNICODE).PHP_EOL.'Response: '.$response);
         }
 
         return $result;

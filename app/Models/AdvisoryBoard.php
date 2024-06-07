@@ -318,6 +318,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
 
     public static function list($requestFilter)
     {
+        $personName = isset($requestFilter['personName']) && !empty($requestFilter['personName']) ? $requestFilter['personName'] : null;
         return self::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
@@ -345,6 +346,17 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
             ->leftJoin('advisory_chairman_type_translations', function ($j){
                 $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
                     ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
+            })->when($personName, function ($query){
+                $query->join('advisory_board_members', 'advisory_board_members.advisory_board_id', '=', 'advisory_boards.id')
+                    ->join('advisory_board_member_translations', function ($j){
+                        $j->on('advisory_board_member_translations.advisory_board_member_id', '=', 'advisory_board_members.id')
+                            ->where('advisory_board_member_translations.locale', '=', app()->getLocale());
+                    })
+                    ->join('advisory_board_npos', 'advisory_board_npos.advisory_board_id', '=', 'advisory_boards.id')
+                    ->join('advisory_board_npo_translations', function ($j){
+                        $j->on('advisory_board_npo_translations.advisory_board_npo_id', '=', 'advisory_board_npos.id')
+                            ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
+                    });
             })
             ->where('public', true)
             ->FilterBy($requestFilter)->get();

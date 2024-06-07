@@ -3,8 +3,10 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
+use App\Models\Setting;
 use App\Models\UserSubscribe;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +24,20 @@ class AdvisoryBoardMeetingObserver
         $advBoard = $advisoryBoardMeeting->advBoard;
         if($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
             if(!env('DISABLE_OBSERVERS', false)){
+
+                //post on facebook
+                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                    ->get()->first();
+                if($activeFB->value){
+                    $facebookApi = new Facebook();
+                    $facebookApi->postOnPage(array(
+                        'message' => '•	Предстоящо заседание на '.$advBoard->name.' на '.$advisoryBoardMeeting->next_meeting.'. За повече информация тук.',
+                        'link' => route('advisory-boards.view', $advBoard),
+                        'published' => true
+                    ));
+                }
+
                 $this->sendEmails($advisoryBoardMeeting, 'created');
                 Log::info('Send subscribe email on creation');
             }

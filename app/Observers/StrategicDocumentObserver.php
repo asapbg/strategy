@@ -32,7 +32,8 @@ class StrategicDocumentObserver
                     if ($activeFB->value) {
                         $facebookApi = new Facebook();
                         $facebookApi->postOnPage(array(
-                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+                            'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ: '.$strategicDocument->title.'. Запознайте се с документа тук.',
+//                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
                             'link' => route('strategy-document.view', $strategicDocument->id),
                             'published' => true
                         ));
@@ -70,7 +71,8 @@ class StrategicDocumentObserver
                 if ($activeFB->value) {
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+                        'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ: '.$strategicDocument->title.'. Запознайте се с документа тук.',
+//                        'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
                         'link' => route('strategy-document.view', $strategicDocument->id),
                         'published' => true
                     ));

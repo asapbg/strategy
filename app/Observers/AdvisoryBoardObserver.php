@@ -26,9 +26,18 @@ class AdvisoryBoardObserver
                     ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                     ->get()->first();
                 if($activeFB->value){
+                    $chairmens = [];
+                    if($advisoryBoard->chairmen->count()){
+                        foreach ($advisoryBoard->chairmen as $c){
+                           if(!empty($c->member_name)){
+                               $chairmens[] = $c->member_name;
+                           }
+                        }
+                    }
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
+                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name.(sizeof($chairmens) ? ', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
+//                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
                         'link' => route('advisory-boards.view', $advisoryBoard),
                         'published' => true
                     ));
@@ -63,9 +72,19 @@ class AdvisoryBoardObserver
                     ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                     ->get()->first();
                 if($activeFB->value){
+                    $chairmens = [];
+                    if($advisoryBoard->chairmen->count()){
+                        foreach ($advisoryBoard->chairmen as $c){
+                            if(!empty($c->member_name)){
+                                $chairmens[] = $c->member_name;
+                            }
+                        }
+                    }
+
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
+                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name.(sizeof($chairmens) ? ', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
+//                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
                         'link' => route('advisory-boards.view', $advisoryBoard),
                         'published' => true
                     ));

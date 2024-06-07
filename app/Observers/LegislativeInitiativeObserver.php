@@ -28,7 +28,8 @@ class LegislativeInitiativeObserver
             if ($activeFB->value) {
                 $facebookApi = new Facebook();
                 $facebookApi->postOnPage(array(
-                    'message' => 'Публикувана е нова Законодателна инициатива: ' . $legislativeInitiative->facebookTitle,
+                    'message' => 'На Портала за обществени консултации е направено предложение за промяна на '.$legislativeInitiative->law?->name.' и ако събере подкрепа от '. (int)$legislativeInitiative->cap.' регистрирани потребители, ще бъде изпратена автоматично на компетентната институция. Срокът за коментари и подкрепа е: '.displayDate($legislativeInitiative->active_support).'. Вижте повече на линка.',
+//                    'message' => 'Публикувана е нова Законодателна инициатива: ' . $legislativeInitiative->facebookTitle,
                     'link' => route('legislative_initiatives.view', $legislativeInitiative),
                     'published' => true
                 ));
