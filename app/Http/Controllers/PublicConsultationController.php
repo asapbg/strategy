@@ -102,7 +102,7 @@ class PublicConsultationController extends Controller
         $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        $this->setSeo($item->title,  $item->description, '', array('title' => $item->title, 'img' => PublicConsultation::DEFAULT_IMG));
+        $this->setSeo($item->title,  $item->description, '', array('title' => $item->title, 'description' => strip_tags($item->description), 'img' => PublicConsultation::DEFAULT_IMG));
 
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
