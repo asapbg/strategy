@@ -439,6 +439,7 @@ class Controller extends BaseController
         seo()->og('type', isset($fbTags) && isset($fbTags['type']) && !empty($fbTags['type']) ? $fbTags['type'] : 'website');
         seo()->og('url', isset($fbTags) && isset($fbTags['url']) && !empty($fbTags['url']) ? $fbTags['url'] : request()->url());
         seo()->og('image', isset($fbTags) && isset($fbTags['img']) && !empty($fbTags['img']) ? asset($fbTags['img']) : asset('images/ms-2023.jpg'));
+        seo()->og('image:secure', isset($fbTags) && isset($fbTags['img']) && !empty($fbTags['img']) ? asset($fbTags['img']) : asset('images/ms-2023.jpg'));
     }
 
 
