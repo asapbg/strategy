@@ -1,5 +1,5 @@
 @if(isset($pageTopContent) && !empty($pageTopContent->value))
-    <div class="col-md-12 my-5">
+    <div class="col-md-12 my-2">
         {!! $pageTopContent->value !!}
     </div>
 @endif

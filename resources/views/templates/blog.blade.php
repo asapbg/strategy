@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -37,7 +37,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5 right-side-content">
+    <div class="col-lg-10 py-2 right-side-content">
         <div class="row filter-results mb-2">
             <h2 class="mb-4">
                 Търсене
@@ -142,7 +142,7 @@
                     <div class="post-img"><img src="/img/ms-2023.jpg" class="img-fluid" alt=""></div>
                     <span class="post-date text-secondary">17.05.2023</span>
                     <h3 class="post-title">Съветът за административната реформа одобри Годишния доклад за оценка на
-                        въздействието за 2022</h3>                       
+                        въздействието за 2022</h3>
                         <div class="row mb-2">
                             <div class="col-md-8">
                                 <span class="blog-category">Държавна администрация</span>
@@ -160,7 +160,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 16.05.2023 г. на свое заседание Съветът за адм. реформа (САР), ръководен от вицепремиера Атанас Пеканов...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Съветът за административната реформа одобри Годишния доклад за оценка на
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 4 април в Министерския съвет генералният секретар на Организацията за икономическо сътрудничество и развитие...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Представен е доклад „Икономически преглед на България“ на ОИСР.">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Министерският съвет одобри Първоначален меморандум на Република България във връзка с процеса на присъединяване на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Правителството одобри Първоначалния меморандум на РБ относно процеса по
@@ -231,7 +231,7 @@
                     <div class="post-img"><img src="/img/ms-2023.jpg" class="img-fluid" alt=""></div>
                     <span class="post-date text-secondary">17.05.2023</span>
                     <h3 class="post-title">Съветът за административната реформа одобри Годишния доклад за оценка на
-                        въздействието за 2022</h3>                       
+                        въздействието за 2022</h3>
                         <div class="row mb-2">
                             <div class="col-md-8">
                                 <span class="blog-category">Държавна администрация</span>
@@ -249,7 +249,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 16.05.2023 г. на свое заседание Съветът за адм. реформа (САР), ръководен от вицепремиера Атанас Пеканов...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Съветът за административната реформа одобри Годишния доклад за оценка на
@@ -278,7 +278,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 4 април в Министерския съвет генералният секретар на Организацията за икономическо сътрудничество и развитие...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Представен е доклад „Икономически преглед на България“ на ОИСР.">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -307,7 +307,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Министерският съвет одобри Първоначален меморандум на Република България във връзка с процеса на присъединяване на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Правителството одобри Първоначалния меморандум на РБ относно процеса по
@@ -320,7 +320,7 @@
                     <div class="post-img"><img src="/img/ms-2023.jpg" class="img-fluid" alt=""></div>
                     <span class="post-date text-secondary">17.05.2023</span>
                     <h3 class="post-title">Съветът за административната реформа одобри Годишния доклад за оценка на
-                        въздействието за 2022</h3>                       
+                        въздействието за 2022</h3>
                         <div class="row mb-2">
                             <div class="col-md-8">
                                 <span class="blog-category">Държавна администрация</span>
@@ -338,7 +338,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 16.05.2023 г. на свое заседание Съветът за адм. реформа (САР), ръководен от вицепремиера Атанас Пеканов...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Съветът за административната реформа одобри Годишния доклад за оценка на
@@ -367,7 +367,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         На 4 април в Министерския съвет генералният секретар на Организацията за икономическо сътрудничество и развитие...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Представен е доклад „Икономически преглед на България“ на ОИСР.">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -396,7 +396,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Министерският съвет одобри Първоначален меморандум на Република България във връзка с процеса на присъединяване на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Правителството одобри Първоначалния меморандум на РБ относно процеса по

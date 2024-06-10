@@ -9,7 +9,7 @@
             <div class="row">
                 @include('impact_assessment.sidebar')
 
-                <div class="col-lg-10 right-side-content py-5 ">
+                <div class="col-lg-10 right-side-content py-2 ">
 
                     <div class="row">
                         <div class="col-md-8">

@@ -24,14 +24,14 @@
 
     <section id="second-links" class="home-page-section">
         <div class="container">
-            <div class="row mb-4">
+            <div class="row">
                 <div class="col-md-12">
-                    <h2 class="mb-2">{{ __('site.self_inform') }}</h2>
+                    <h2 class="mb-0">{{ __('site.self_inform') }}</h2>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('lp.index') }}" title="{{ trans_choice('custom.legislative_program', 2) }}">
                             <div class="icon">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('op.index') }}" title="{{ trans_choice('custom.operational_programs', 2) }}">
                             <div class="icon">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('strategy-documents.index') }}" title="{{ trans_choice('custom.strategic_documents', 2) }}">
                             <div class="icon">
@@ -67,7 +67,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('impact_assessment.index') }}" title="{{ trans_choice('custom.impact_assessment', 2) }}">
                             <div class="icon">
@@ -78,7 +78,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('pris.index') }}" title="{{ __('custom.pris') }}">
                             <div class="icon">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 position-relative">
+                <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">
                             <div class="icon">
@@ -104,9 +104,9 @@
         </div>
     </section>
 
-    <section class="home-page-section public-constultation pb-5">
+    <section class="home-page-section public-constultation">
         <div class="container">
-            <div class="row mb-4">
+            <div class="row mb-2">
                 <div class="col-md-12">
                     <h2 class="mb-2">{{ __('site.participate') }}</h2>
                 </div>
@@ -114,7 +114,7 @@
             <div class="row ">
 
                 <div class="col-lg-6 col-md-12">
-                    <a href="{{ route('public_consultation.index') }}" class="box-link gr-color-bgr mb-4">
+                    <a href="{{ route('public_consultation.index') }}" class="box-link gr-color-bgr mb-2">
                         <div class="info-box">
                             <div class="icon-wrap">
                                 <i class="bi bi-check2-square text-light"></i>
@@ -199,7 +199,7 @@
                         </div>
                     </a>
 
-                    <div class="col-md-12 mt-4 custom-card p-3 mb-4">
+                    <div class="col-md-12 mt-4 custom-card p-3 mb-2">
                         <h3 class="mb-3" style="font-size: 24px;">{{ __('site.home.open_plans_title') }}</h3>
                         @if(isset($planAreas) && $planAreas->count())
                             <ul class="list-group questionnaire">
@@ -230,7 +230,7 @@
                 </div>
 
                 <div class="col-lg-6 col-md-12">
-                    <a href="{{ route('legislative_initiatives.index') }}" class="box-link navy-marine-bgr  mb-4">
+                    <a href="{{ route('legislative_initiatives.index') }}" class="box-link navy-marine-bgr  mb-2">
                         <div class="info-box">
                             <div class="icon-wrap">
                                 <i class="bi bi-folder-check text-light"></i>
@@ -357,7 +357,7 @@
     <section id="blog" class="home-page-section">
         <div class="container">
 
-            <div class="row mb-4">
+            <div class="row mb-2">
                 <div class="col-md-12 ">
                     <h2 class="mb-2">{{ __('site.newest_in_platform') }}</h2>
                 </div>
@@ -367,10 +367,10 @@
             <div class="row">
                 @foreach($publications as $publication)
                     @php($isAdvBoardNews = $publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
-                    <div class="col-lg-4 mb-4">
+                    <div class="col-lg-4 mb-2">
                         <div class="post-box">
                             <div class="post-img">
-                                <img src="{{ $publication->mainImg ? $publication->mainImgAsset : $publication->defaultImg }}" class="img-fluid col-md-5 float-md-start mb-4 me-md-4 news-single-img"
+                                <img src="{{ $publication->mainImg ? $publication->mainImgAsset : $publication->defaultImg }}" class="img-fluid col-md-5 float-md-start mb-2 me-md-4 news-single-img"
                                      alt="{{ $publication->translation->title }}"
                                 >
                             </div>
@@ -422,7 +422,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ route('library.news') }}" class="btn btn-primary">
+                    <a href="{{ route('library.news') }}" class="btn btn-primary mt-2">
                         {{ __('site.all_news') }} <i class="fas fa-long-arrow-right main-color"></i>
                     </a>
                 </div>

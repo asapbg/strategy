@@ -6,9 +6,9 @@
         @include('impact_assessment.sidebar')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
             @if(isset($page))
-                <h2 class="mb-5">{{ $page->name ?? $page->title }}</h2>
+                <h2 class="mb-2">{{ $page->name ?? $page->title }}</h2>
                 <div class="mb-3">
                     {!! $page->content !!}
                 </div>

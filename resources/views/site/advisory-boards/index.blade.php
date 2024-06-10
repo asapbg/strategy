@@ -6,7 +6,7 @@
 
 <div class="row">
     @include('site.advisory-boards.side_menu_home')
-    <div class="col-lg-10 right-side-content pb-5 pt-1" id="listContainer">
+    <div class="col-lg-10 right-side-content py-2" id="listContainer">
         @include('site.advisory-boards.list')
     </div>
 

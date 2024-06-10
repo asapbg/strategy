@@ -10,7 +10,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -223,7 +223,7 @@
                                                                 Иван Иванов
                                                             </span>
                                                             <span class="obj-icon-info me-2 text-muted">10.10.2023г. 19:05</span>
-                                                        </a>  
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
@@ -417,7 +417,7 @@
                             <div class="accordion-body">
 
                                 <div class="custom-card p-3 mb-2">
-                                    <div class="row mb-3">  
+                                    <div class="row mb-3">
                                         <div class="suggestion-content mb-2 ">
                                             <div class="row br-30">
                                                 <div class="new-plan-author">
@@ -429,7 +429,7 @@
                                                                 Николай Николов
                                                             </span>
                                                             <span class="obj-icon-info me-2 text-muted">12.10.2023г. 14:25</span>
-                                                        </a>  
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">

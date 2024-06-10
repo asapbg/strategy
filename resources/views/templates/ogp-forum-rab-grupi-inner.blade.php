@@ -11,7 +11,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -37,7 +37,7 @@
                                         class="link-dark text-decoration-none">OGP FORUM</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
-                                </li>   
+                                </li>
                             </ul>
                         </div>
                     </li>

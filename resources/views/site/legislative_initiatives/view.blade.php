@@ -5,7 +5,7 @@
         @include('site.legislative_initiatives.side_menu')
 
 
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
 {{--            @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
 {{--                <div class="row">--}}
 {{--                    <div class="col-12 mb-5">--}}

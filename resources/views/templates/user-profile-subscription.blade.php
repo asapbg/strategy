@@ -6,11 +6,11 @@
 @section('content')
 <div class="row mt-5">
 
- {слайдер} <br> 
+ {слайдер} <br>
  {пътечки}
 </div>
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -32,7 +32,7 @@
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Оценки на въздействието</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Публикувани коментари</a>
-                                </li>          
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -62,16 +62,16 @@
                           <button type="button" class="btn btn-labeled  bgr-main rounded sm-btn-sm">
                               <i class="fa-solid fa-pen-to-square text-light"></i>
                           </button>
-              
+
                           <button type="button" class="btn btn-labeled btn-warning">
                               <i class="fa-solid fa-ban text-light"></i>
                           </button>
-              
+
                           <button type="button" class="btn btn-labeled danger-bgr">
                               <i class="fa fa-trash text-light"></i>
                           </button>
                       </div>
-              
+
                       <div class="inner-row-subscribe mt-2">
                           <ul class="list-group subscribe-items">
                               <li class="list-group-item">
@@ -81,17 +81,17 @@
                                       <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                           <i class="fa-solid fa-pen-to-square text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                           <i class="fa-solid fa-ban text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                           <i class="fa fa-trash text-light"></i>
                                       </button>
                                   </div>
                               </li>
-              
+
                               <li class="list-group-item">
                                   <a href="#" class="text-decoration-none">Проект на Закон за изменение и допълнение на Закона за българите, живеещи извън Република България
                                   </a>
@@ -99,17 +99,17 @@
                                       <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                           <i class="fa-solid fa-pen-to-square text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                           <i class="fa-solid fa-ban text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                           <i class="fa fa-trash text-light"></i>
                                       </button>
                                   </div>
                               </li>
-              
+
                               <li class="list-group-item">
                                   <a href="#" class="text-decoration-none">Консултационен документ относно проект на нов Закон за
                                       виното и спиртните напитки</a>
@@ -117,11 +117,11 @@
                                       <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                           <i class="fa-solid fa-pen-to-square text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                           <i class="fa-solid fa-ban text-light"></i>
                                       </button>
-              
+
                                       <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                           <i class="fa fa-trash text-light"></i>
                                       </button>
@@ -130,7 +130,7 @@
                       </div>
                   </div>
               </div>
-            
+
               <div class="custom-card p-3 mb-4">
                 <div class="row subscribe-row pb-2 align-items-center">
                     <div class="col-md-9">
@@ -142,16 +142,16 @@
                         <button type="button" class="btn btn-labeled  bgr-main rounded sm-btn-sm">
                             <i class="fa-solid fa-pen-to-square text-light"></i>
                         </button>
-            
+
                         <button type="button" class="btn btn-labeled btn-warning">
                             <i class="fa-solid fa-ban text-light"></i>
                         </button>
-            
+
                         <button type="button" class="btn btn-labeled danger-bgr">
                             <i class="fa fa-trash text-light"></i>
                         </button>
                     </div>
-            
+
                     <div class="inner-row-subscribe mt-2">
                         <ul class="list-group subscribe-items">
                             <li class="list-group-item">
@@ -160,45 +160,45 @@
                                     <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                         <i class="fa-solid fa-pen-to-square text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                         <i class="fa-solid fa-ban text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                         <i class="fa fa-trash text-light"></i>
                                     </button>
                                 </div>
                             </li>
-            
+
                             <li class="list-group-item">
                                 <a href="#" class="text-decoration-none">Национален план за действие за борба с антисемитизма (2023 - 2027 г.)</a>
                                 <div class="subscribe-action text-end">
                                     <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                         <i class="fa-solid fa-pen-to-square text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                         <i class="fa-solid fa-ban text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                         <i class="fa fa-trash text-light"></i>
                                     </button>
                                 </div>
                             </li>
-            
+
                             <li class="list-group-item">
                                 <a href="#" class="text-decoration-none">Програми за разширяване и подобряване на сградния фонд и материалната база в системата на образованието за периода 2024 - 2026 г.</a>
                                 <div class="subscribe-action text-end">
                                     <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                         <i class="fa-solid fa-pen-to-square text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                         <i class="fa-solid fa-ban text-light"></i>
                                     </button>
-            
+
                                     <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                         <i class="fa fa-trash text-light"></i>
                                     </button>
@@ -207,7 +207,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="custom-card p-3 mb-4">
               <div class="row subscribe-row pb-2 align-items-center">
                   <div class="col-md-9">
@@ -219,16 +219,16 @@
                       <button type="button" class="btn btn-labeled  bgr-main rounded sm-btn-sm">
                           <i class="fa-solid fa-pen-to-square text-light"></i>
                       </button>
-            
+
                       <button type="button" class="btn btn-labeled btn-warning">
                           <i class="fa-solid fa-ban text-light"></i>
                       </button>
-            
+
                       <button type="button" class="btn btn-labeled danger-bgr">
                           <i class="fa fa-trash text-light"></i>
                       </button>
                   </div>
-            
+
                   <div class="inner-row-subscribe mt-2">
                       <ul class="list-group subscribe-items">
                           <li class="list-group-item">
@@ -237,45 +237,45 @@
                                   <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                       <i class="fa-solid fa-pen-to-square text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                       <i class="fa-solid fa-ban text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                       <i class="fa fa-trash text-light"></i>
                                   </button>
                               </div>
                           </li>
-            
+
                           <li class="list-group-item">
                               <a href="#" class="text-decoration-none">Оценка за изпълнението на плановете за действие - мониторинг</a>
                               <div class="subscribe-action text-end">
                                   <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                       <i class="fa-solid fa-pen-to-square text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                       <i class="fa-solid fa-ban text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                       <i class="fa fa-trash text-light"></i>
                                   </button>
                               </div>
                           </li>
-            
+
                           <li class="list-group-item">
                               <a href="#" class="text-decoration-none">Разработване на нов план за действие</a>
                               <div class="subscribe-action text-end">
                                   <button type="button" class="btn btn-labeled btn-sm  bgr-main rounded">
                                       <i class="fa-solid fa-pen-to-square text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm btn-warning">
                                       <i class="fa-solid fa-ban text-light"></i>
                                   </button>
-            
+
                                   <button type="button" class="btn btn-labeled btn-sm danger-bgr">
                                       <i class="fa fa-trash text-light"></i>
                                   </button>

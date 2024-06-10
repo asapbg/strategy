@@ -28,7 +28,7 @@
         <div class="container-fluid">
             <div class="row">
 
-                <div class="col-lg-2 side-menu pt-5 mt-1" style="background:#f5f9fd;">
+                <div class="col-lg-2 side-menu pt-2 mt-1" style="background:#f5f9fd;">
 
                     <div class="left-nav-panel" style="background: #fff !important;">
                         <div class="flex-shrink-0 p-2">
@@ -90,7 +90,7 @@
             </div>
 
 
-            <div class="col-lg-10  right-side-content py-5">           
+            <div class="col-lg-10  right-side-content py-5">
               <ul class=" tab nav nav-tabs mb-3">
                 <li class="nav-item pb-0">
                   <a class="nav-link tablinks" aria-current="page" href="#" onclick="openCity(event, 'July')" id="defaultOpen">Юли</a>
@@ -119,50 +119,50 @@
                                 <div class="accordion-body">
                                   <div class="custom-card py-4 px-3 mb-5">
 
-  
+
                                     <div class="row mb-3 mt-1 ">
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Наименование на законопроекта
                                         </p>
-                              
+
                                         <p>
-                                          Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване 
+                                          Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Вносител
                                         </p>
-                              
+
                                         <p>
                                           Агенция за държавна финансова инспекция
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                         </p>
-                              
+
                                         <p>
                                           Да / Mярка № 87
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Цели, основни положения и очаквани резултати
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           С проекта на ЗИД на КСО се извършват
                                           промени в регламентацията на допълнителното
@@ -170,94 +170,94 @@
                                           свързани с изпълнение на мерките за засилване
                                           на надзора и регулациите в областта на
                                           небанковия финансов сектор, залегнали в
-                                          Националната програма за реформи. 
-                                          
+                                          Националната програма за реформи.
+
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                            
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Изготвяне на цялостна оценка на въздействието (да/не)
                                         </p>
-                              
+
                                         <p>
                                           Да
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на публикуване за обществени консултации
                                         </p>
-                              
+
                                         <p>
                                           юли 2023г.
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                            
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на изпращане за предварително съгласуване
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           Да / Mярка № 87
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на внасяне в Министерския съвет
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           юли 2023г.
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Необходими промени в други закони
                                         </p>
-                              
+
                                         <p>
                                           Не
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                                    
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Оценка на въздействието
-                            
+
                                         </p>
-                              
+
                                         <p class="mb-0">
                                           <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Становище
                                         </p>
-                              
+
                                         <p class="mb-0">
                                           <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                         </p>
@@ -278,49 +278,49 @@
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                  <div class="custom-card py-4 px-3 mb-5">                           
+                                  <div class="custom-card py-4 px-3 mb-5">
                                     <div class="row mb-3 mt-1 ">
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Наименование на законопроекта
                                         </p>
-                              
+
                                         <p>
                                           ЗИД на Закона за тютюна, тютюневите и свързаните с тях изделия                                        </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Вносител
                                         </p>
-                              
+
                                         <p>
                                           Агенция за държавна финансова инспекция
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                         </p>
-                              
+
                                         <p>
                                           Да / Mярка № 87
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Цели, основни положения и очаквани резултати
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           С проекта на ЗИД на КСО се извършват
                                           промени в регламентацията на допълнителното
@@ -328,94 +328,94 @@
                                           свързани с изпълнение на мерките за засилване
                                           на надзора и регулациите в областта на
                                           небанковия финансов сектор, залегнали в
-                                          Националната програма за реформи. 
-                                          
+                                          Националната програма за реформи.
+
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                            
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Изготвяне на цялостна оценка на въздействието (да/не)
                                         </p>
-                              
+
                                         <p>
                                           Да
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на публикуване за обществени консултации
                                         </p>
-                              
+
                                         <p>
                                           юли 2023г.
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                            
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на изпращане за предварително съгласуване
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           Да / Mярка № 87
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Месец на внасяне в Министерския съвет
-                            
+
                                         </p>
-                              
+
                                         <p>
                                           юли 2023г.
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
+
                                     <div class="row mb-3">
                                       <div class="col-md-12">
                                         <p class="fw-bold fs-18 mb-1">
                                           Необходими промени в други закони
                                         </p>
-                              
+
                                         <p>
                                           Не
                                         </p>
                                       </div>
                                       <hr class="custom-hr">
                                     </div>
-                            
-                                    
+
+
                                     <div class="row mb-3">
                                       <div class="col-md-6 ">
                                         <p class="fw-bold fs-18 mb-1">
                                           Оценка на въздействието
-                            
+
                                         </p>
-                              
+
                                         <p class="mb-0">
                                           <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                         </p>
                                       </div>
-                              
+
                                       <div class="col-md-6">
                                         <p class="fw-bold fs-18 mb-1">
                                           Становище
                                         </p>
-                              
+
                                         <p class="mb-0">
                                           <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                         </p>
@@ -430,7 +430,7 @@
 
                 </div>
 
-             
+
                 <div id="August" class="tabcontent">
 
 
@@ -453,44 +453,44 @@
                                       <p class="fw-bold fs-18 mb-1">
                                         Наименование на законопроекта
                                       </p>
-                            
+
                                       <p>
-                                       АВГУСТ - Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване 
+                                       АВГУСТ - Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Вносител
                                       </p>
-                            
+
                                       <p>
                                         Агенция за държавна финансова инспекция
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                       </p>
-                            
+
                                       <p>
                                         Да / Mярка № 87
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Цели, основни положения и очаквани резултати
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         С проекта на ЗИД на КСО се извършват
                                         промени в регламентацията на допълнителното
@@ -498,94 +498,94 @@
                                         свързани с изпълнение на мерките за засилване
                                         на надзора и регулациите в областта на
                                         небанковия финансов сектор, залегнали в
-                                        Националната програма за реформи. 
-                                        
+                                        Националната програма за реформи.
+
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                          
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Изготвяне на цялостна оценка на въздействието (да/не)
                                       </p>
-                            
+
                                       <p>
                                         Да
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на публикуване за обществени консултации
                                       </p>
-                            
+
                                       <p>
                                         юли 2023г.
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                          
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на изпращане за предварително съгласуване
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         Да / Mярка № 87
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на внасяне в Министерския съвет
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         юли 2023г.
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Необходими промени в други закони
                                       </p>
-                            
+
                                       <p>
                                         Не
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                                  
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Оценка на въздействието
-                          
+
                                       </p>
-                            
+
                                       <p class="mb-0">
                                         <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Становище
                                       </p>
-                            
+
                                       <p class="mb-0">
                                         <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                       </p>
@@ -606,49 +606,49 @@
                           <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                               data-bs-parent="#accordionExample">
                               <div class="accordion-body">
-                                <div class="custom-card py-4 px-3 mb-5">                           
+                                <div class="custom-card py-4 px-3 mb-5">
                                   <div class="row mb-3 mt-1 ">
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Наименование на законопроекта
                                       </p>
-                            
+
                                       <p>
                                        АВГУСТ - ЗИД на Закона за тютюна, тютюневите и свързаните с тях изделия                                        </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Вносител
                                       </p>
-                            
+
                                       <p>
                                         Агенция за държавна финансова инспекция
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                       </p>
-                            
+
                                       <p>
                                         Да / Mярка № 87
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Цели, основни положения и очаквани резултати
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         С проекта на ЗИД на КСО се извършват
                                         промени в регламентацията на допълнителното
@@ -656,94 +656,94 @@
                                         свързани с изпълнение на мерките за засилване
                                         на надзора и регулациите в областта на
                                         небанковия финансов сектор, залегнали в
-                                        Националната програма за реформи. 
-                                        
+                                        Националната програма за реформи.
+
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                          
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Изготвяне на цялостна оценка на въздействието (да/не)
                                       </p>
-                            
+
                                       <p>
                                         Да
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на публикуване за обществени консултации
                                       </p>
-                            
+
                                       <p>
                                         юли 2023г.
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                          
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на изпращане за предварително съгласуване
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         Да / Mярка № 87
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Месец на внасяне в Министерския съвет
-                          
+
                                       </p>
-                            
+
                                       <p>
                                         юли 2023г.
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
+
                                   <div class="row mb-3">
                                     <div class="col-md-12">
                                       <p class="fw-bold fs-18 mb-1">
                                         Необходими промени в други закони
                                       </p>
-                            
+
                                       <p>
                                         Не
                                       </p>
                                     </div>
                                     <hr class="custom-hr">
                                   </div>
-                          
-                                  
+
+
                                   <div class="row mb-3">
                                     <div class="col-md-6 ">
                                       <p class="fw-bold fs-18 mb-1">
                                         Оценка на въздействието
-                          
+
                                       </p>
-                            
+
                                       <p class="mb-0">
                                         <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                       </p>
                                     </div>
-                            
+
                                     <div class="col-md-6">
                                       <p class="fw-bold fs-18 mb-1">
                                         Становище
                                       </p>
-                            
+
                                       <p class="mb-0">
                                         <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                       </p>
@@ -758,7 +758,7 @@
 
               </div>
 
-                 
+
               <div id="September" class="tabcontent">
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
@@ -779,44 +779,44 @@
                                     <p class="fw-bold fs-18 mb-1">
                                       Наименование на законопроекта
                                     </p>
-                          
+
                                     <p>
-                                      СЕПТВЕМВРИ  - Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване 
+                                      СЕПТВЕМВРИ  - Проект на Закон за изменение и допълнение на Кодекса за търговското корабоплаване
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Вносител
                                     </p>
-                          
+
                                     <p>
                                       Агенция за държавна финансова инспекция
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                     </p>
-                          
+
                                     <p>
                                       Да / Mярка № 87
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Цели, основни положения и очаквани резултати
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       С проекта на ЗИД на КСО се извършват
                                       промени в регламентацията на допълнителното
@@ -824,94 +824,94 @@
                                       свързани с изпълнение на мерките за засилване
                                       на надзора и регулациите в областта на
                                       небанковия финансов сектор, залегнали в
-                                      Националната програма за реформи. 
-                                      
+                                      Националната програма за реформи.
+
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                        
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Изготвяне на цялостна оценка на въздействието (да/не)
                                     </p>
-                          
+
                                     <p>
                                       Да
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на публикуване за обществени консултации
                                     </p>
-                          
+
                                     <p>
                                       юли 2023г.
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                        
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на изпращане за предварително съгласуване
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       Да / Mярка № 87
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на внасяне в Министерския съвет
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       юли 2023г.
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Необходими промени в други закони
                                     </p>
-                          
+
                                     <p>
                                       Не
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                                
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Оценка на въздействието
-                        
+
                                     </p>
-                          
+
                                     <p class="mb-0">
                                       <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Становище
                                     </p>
-                          
+
                                     <p class="mb-0">
                                       <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                     </p>
@@ -932,49 +932,49 @@
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                              <div class="custom-card py-4 px-3 mb-5">                           
+                              <div class="custom-card py-4 px-3 mb-5">
                                 <div class="row mb-3 mt-1 ">
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Наименование на законопроекта
                                     </p>
-                          
+
                                     <p>
                                       СЕПТВЕМВРИ  - ЗИД на Закона за тютюна, тютюневите и свързаните с тях изделия                                        </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Вносител
                                     </p>
-                          
+
                                     <p>
                                       Агенция за държавна финансова инспекция
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Включен в Плана за действие с мерките, произтичащи от членството на РБ в ЕС (№ в плана/не)
                                     </p>
-                          
+
                                     <p>
                                       Да / Mярка № 87
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Цели, основни положения и очаквани резултати
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       С проекта на ЗИД на КСО се извършват
                                       промени в регламентацията на допълнителното
@@ -982,94 +982,94 @@
                                       свързани с изпълнение на мерките за засилване
                                       на надзора и регулациите в областта на
                                       небанковия финансов сектор, залегнали в
-                                      Националната програма за реформи. 
-                                      
+                                      Националната програма за реформи.
+
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                        
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Изготвяне на цялостна оценка на въздействието (да/не)
                                     </p>
-                          
+
                                     <p>
                                       Да
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на публикуване за обществени консултации
                                     </p>
-                          
+
                                     <p>
                                       юли 2023г.
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                        
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на изпращане за предварително съгласуване
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       Да / Mярка № 87
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Месец на внасяне в Министерския съвет
-                        
+
                                     </p>
-                          
+
                                     <p>
                                       юли 2023г.
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
+
                                 <div class="row mb-3">
                                   <div class="col-md-12">
                                     <p class="fw-bold fs-18 mb-1">
                                       Необходими промени в други закони
                                     </p>
-                          
+
                                     <p>
                                       Не
                                     </p>
                                   </div>
                                   <hr class="custom-hr">
                                 </div>
-                        
-                                
+
+
                                 <div class="row mb-3">
                                   <div class="col-md-6 ">
                                     <p class="fw-bold fs-18 mb-1">
                                       Оценка на въздействието
-                        
+
                                     </p>
-                          
+
                                     <p class="mb-0">
                                       <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                     </p>
                                   </div>
-                          
+
                                   <div class="col-md-6">
                                     <p class="fw-bold fs-18 mb-1">
                                       Становище
                                     </p>
-                          
+
                                     <p class="mb-0">
                                       <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>
                                     </p>

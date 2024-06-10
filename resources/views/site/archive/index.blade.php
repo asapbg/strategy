@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-2 side-menu pt-5 mt-1" style="background:#f5f9fd;">
+        <div class="col-lg-2 side-menu pt-2 mt-1" style="background:#f5f9fd;">
             <div class="left-nav-panel" style="background: #fff !important;">
                 <div class="flex-shrink-0 p-2">
                     <ul class="list-unstyled">

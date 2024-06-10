@@ -6,7 +6,7 @@
         @include('site.advisory-boards.side_menu_home')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
             @if(isset($content))
                 <div class="mb-3">
                     {!! $content !!}

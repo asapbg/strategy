@@ -11,7 +11,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -37,7 +37,7 @@
                                         class="link-dark text-decoration-none">OGP FORUM</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
-                                </li>   
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -66,7 +66,7 @@
                             </a>
                         </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">                            
+                            <div href="#" class="consul-item row align-items-center">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -85,7 +85,7 @@
                                         <span class="dark-text">
                                             141 Гласувания
                                         </span>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-4 col-4">
@@ -94,7 +94,7 @@
                                         <span class="dark-text">
                                             122 Отговора
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-4  col-4">
                                     <div class="forum-info p-2">
@@ -102,9 +102,9 @@
                                         <span class="dark-text">
                                             290 Прегледа
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
-                              
+
                             </div>
 
                         </div>
@@ -127,7 +127,7 @@
                             </a>
                         </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">                               
+                            <div href="#" class="consul-item row align-items-center">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -145,7 +145,7 @@
                                         <span class="dark-text">
                                             256 Гласувания
                                         </span>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
@@ -154,7 +154,7 @@
                                         <span class="dark-text">
                                             251 Отговора
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
@@ -162,9 +162,9 @@
                                         <span class="dark-text">
                                             223 Прегледа
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
-                              
+
                             </div>
 
                         </div>
@@ -187,11 +187,11 @@
                             </a>
                         </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">                               
+                            <div href="#" class="consul-item row align-items-center">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
-                                            <h3>Протоколи от заседания и срещи 3 
+                                            <h3>Протоколи от заседания и срещи 3
                                             </h3>
                                         </a>
                                         <span class="text-secondary"> Публикувано на </span>
@@ -206,7 +206,7 @@
                                         <span class="dark-text">
                                             245 Гласувания
                                         </span>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
@@ -215,7 +215,7 @@
                                         <span class="dark-text">
                                             116 Отговора
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
@@ -223,9 +223,9 @@
                                         <span class="dark-text">
                                             257 Прегледа
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
-                              
+
                             </div>
 
                         </div>
@@ -248,7 +248,7 @@
                             </a>
                         </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">                         
+                            <div href="#" class="consul-item row align-items-center">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -267,7 +267,7 @@
                                         <span class="dark-text">
                                             775 Гласувания
                                         </span>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
@@ -276,7 +276,7 @@
                                         <span class="dark-text">
                                             550 Отговора
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
@@ -284,9 +284,9 @@
                                         <span class="dark-text">
                                             1097 Прегледа
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
-                              
+
                             </div>
 
                         </div>
@@ -307,7 +307,7 @@
                             </a>
                         </div>
                         <div class="forum-item-body p-3">
-                            <div href="#" class="consul-item row align-items-center">                              
+                            <div href="#" class="consul-item row align-items-center">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="consult-item-header-link">
                                         <a href="#" class="text-decoration-none" title="Промяна в нормативната уредба на търговията на дребно с лекарствени продукти">
@@ -326,7 +326,7 @@
                                         <span class="dark-text">
                                             275 Гласувания
                                         </span>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
@@ -335,7 +335,7 @@
                                         <span class="dark-text">
                                             119 Отговора
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-4 py-2 col-4">
                                     <div class="forum-info">
@@ -343,9 +343,9 @@
                                         <span class="dark-text">
                                             227 Прегледа
                                         </span>
-                                    </div> 
+                                    </div>
                                 </div>
-                              
+
                             </div>
 
                         </div>

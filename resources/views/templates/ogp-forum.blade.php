@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -31,9 +31,9 @@
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Разработване на нов план за действие</a>
                                 </li>
                                 <li class="mb-2 active-item-left p-1"><a href="#" class="link-dark text-decoration-none">OGP FORUM</a>
-                                </li> 
+                                </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
-                                </li>                             
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -47,7 +47,7 @@
 
 
     <div class="col-lg-10 py-5 right-side-content">
-       
+
     <div class="row align-items-center justify-content-center">
         <div class="col-md-8 col-sm-12">
             <div class="row">
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </a>
-                    
+
             <a href="#" class="box-link navy-marine-bgr mb-4">
                 <div class="info-box">
                     <div class="icon-wrap mt-2">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="link-heading">
                         <span class="fs-5 p-2">
-                            Работни <br>групи 
+                            Работни <br>групи
                         </span>
                     </div>
                 </div>
@@ -106,12 +106,12 @@
                 </div>
             </div>
 
-  
+
 
         </div>
-    </div>      
-           
-        
+    </div>
+
+
     </div>
 </div>
 @endsection

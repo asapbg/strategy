@@ -7,7 +7,7 @@
 <div class="row">
     @include('site.advisory-boards.side_menu_detail_page')
 
-    <div class="col-lg-10 right-side-content py-5">
+    <div class="col-lg-10 right-side-content py-2">
         <div class="row mb-2">
 {{--            <h2 class="mb-4">--}}
 {{--                {{ __('site.advisory_boards.moderators_contacts.title') }}--}}

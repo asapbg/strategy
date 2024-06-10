@@ -6,11 +6,11 @@
 @section('content')
 <div class="row mt-5">
 
- {слайдер} <br> 
+ {слайдер} <br>
  {пътечки}
 </div>
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -32,7 +32,7 @@
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Оценки на въздействието</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Публикувани коментари</a>
-                                </li>         
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -58,7 +58,7 @@
             <span>Иван Иванов Иванов</span>
             </div>
         </div>
- 
+
         <div class="row pris-row pb-2 mb-2">
             <div class="col-md-3 pris-left-column">
                 <i class="fa-solid fa-envelope main-color me-1"></i>Електронна поща

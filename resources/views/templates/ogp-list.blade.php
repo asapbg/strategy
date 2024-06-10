@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -30,9 +30,9 @@
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Разработване на нов план за действие</a>
                                 </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">OGP FORUM</a>
-                                </li>   
+                                </li>
                                 <li class="mb-2"><a href="#" class="link-dark text-decoration-none">Новини и събития</a>
-                                </li>                           
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -40,7 +40,7 @@
                 </ul>
                 <img src="/img/ogp-img.png" class="img-fluid rounded mt-2" alt="OGP">
             </div>
-  
+
         </div>
 
     </div>
@@ -149,7 +149,7 @@
             <div class="col-lg-4 mb-4">
                 <div class="post-box">
                     <div class="post-img"><img src="/img/ogp-img.png" class="img-fluid" alt="OGP"></div>                    <span class="post-date text-secondary">11.09.2023</span>
-                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>                       
+                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>
                         <div class="row mb-2">
                             <div class="col-md-10">
                                 <span class="blog-category">Национални планове за действие</span>
@@ -167,7 +167,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Две хиляди участници от 75 страни се включиха в годишната среща на Глобалната инициатива „Партньорство за открито...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -195,7 +195,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С решение на Министерския съвет вицепремиерът Мария Габриел бе определена за координатор за участието на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Вицепремиерът Мария Габриел поема националната координация по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -224,18 +224,18 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С публична дискусия на тема „Открито управление – цел и фокус на доброто управление“ страната ни се...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включва в Седмицата на откритото управление по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
                 </div>
             </div>
 
-            
+
             <div class="col-lg-4 mb-4">
                 <div class="post-box">
                     <div class="post-img"><img src="/img/ogp-img.png" class="img-fluid" alt="OGP"></div>                    <span class="post-date text-secondary">11.09.2023</span>
-                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>                       
+                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>
                         <div class="row mb-2">
                             <div class="col-md-10">
                                 <span class="blog-category">Национални планове за действие</span>
@@ -253,7 +253,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Две хиляди участници от 75 страни се включиха в годишната среща на Глобалната инициатива „Партньорство за открито...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -281,7 +281,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С решение на Министерския съвет вицепремиерът Мария Габриел бе определена за координатор за участието на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Вицепремиерът Мария Габриел поема националната координация по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -310,18 +310,18 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С публична дискусия на тема „Открито управление – цел и фокус на доброто управление“ страната ни се...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включва в Седмицата на откритото управление по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
                 </div>
             </div>
 
-            
+
             <div class="col-lg-4 mb-4">
                 <div class="post-box">
                     <div class="post-img"><img src="/img/ogp-img.png" class="img-fluid" alt="OGP"></div>                    <span class="post-date text-secondary">11.09.2023</span>
-                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>                       
+                    <h3 class="post-title">България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин</h3>
                         <div class="row mb-2">
                             <div class="col-md-10">
                                 <span class="blog-category">Национални планове за действие</span>
@@ -339,7 +339,7 @@
                             </div>
                         </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         Две хиляди участници от 75 страни се включиха в годишната среща на Глобалната инициатива „Партньорство за открито...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включи в годишната среща на Глобалната инициатива „Партньорство за открито управление“ в Талин">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -367,7 +367,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С решение на Министерския съвет вицепремиерът Мария Габриел бе определена за координатор за участието на...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="Вицепремиерът Мария Габриел поема националната координация по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>
@@ -396,7 +396,7 @@
                         </div>
                     </div>
                       <!-- За описанието ще е хубаво да се сложи някакъв лимит на символи или думи -->
-                    <p class="short-decription text-secondary">                    
+                    <p class="short-decription text-secondary">
                         С публична дискусия на тема „Открито управление – цел и фокус на доброто управление“ страната ни се...
                     </p>
                     <a href="#" class="readmore stretched-link mt-1" title="България се включва в Седмицата на откритото управление по глобалната инициатива „Партньорство за открито управление“">Прочетете още <i class="fas fa-long-arrow-right"></i></a>

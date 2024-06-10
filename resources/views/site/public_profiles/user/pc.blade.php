@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         @include('site.public_profiles.user_menu')
-        <div class="col-lg-10 right-side-content py-5">
+        <div class="col-lg-10 right-side-content py-2">
             <div class="row mb-2">
                 <h2 class="mb-4">
                     {{ __('site.user.pc.title', ['name' => $item->fullName()]) }}

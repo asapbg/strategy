@@ -9,7 +9,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -41,10 +41,10 @@
         </div>
     </div>
 
-    <div class="col-lg-10 right-side-content py-5">
+    <div class="col-lg-10 right-side-content py-2">
         <div class="row">
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
-                <div class="col-md-12 my-5">
+                <div class="col-md-12 my-2">
                     {!! $pageTopContent->value !!}
                 </div>
             @endif

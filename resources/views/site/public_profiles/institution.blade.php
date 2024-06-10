@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         @include('site.public_profiles.institution_menu')
-        <div class="col-lg-10 right-side-content py-5">
+        <div class="col-lg-10 right-side-content py-2">
             <div class="col-md-12">
                 <h2 class="mb-4">{{ __('custom.main_information') }}</h2>
             </div>

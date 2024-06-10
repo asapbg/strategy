@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     @include('site.legislative_initiatives.side_menu')
-    <div class="col-lg-10 py-5 right-side-content">
+    <div class="col-lg-10 py-2 right-side-content">
         <div class="row mb-3">
             <div class="col-lg-12">
                 <h2 class="obj-title mb-4">{{ $planArea->area->name }}</h2>

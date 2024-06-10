@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -38,7 +38,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5 right-side-content">
+    <div class="col-lg-10 py-2 right-side-content">
         <h2 class="obj-title mb-4">Удостоверение за наследници няма да се изисква пред Службите по кадастър, НОИ и Агенцията по
             горите</h2>
         <div class="row">

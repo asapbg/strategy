@@ -4,7 +4,7 @@
 <section class="content">
         <div class="row">
             @include('impact_assessment.sidebar')
-            <div class="col-lg-10 right-side-content py-5">
+            <div class="col-lg-10 right-side-content py-2">
                 <div class="row filter-results mb-2">
                     <h2 class="mb-4 col-12">
                         Търсене

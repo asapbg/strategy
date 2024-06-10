@@ -9,9 +9,9 @@
             $user = auth()->user()
         @endphp
 
-        <div class="col-lg-10 right-side-content py-5">
+        <div class="col-lg-10 right-side-content py-2">
             @if(isset($pageTopContent) && !empty($pageTopContent->value))
-                <div class="col-12 mb-5">
+                <div class="col-12 mb-2">
                     {!! $pageTopContent->value !!}
                 </div>
             @endif

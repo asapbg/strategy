@@ -12,7 +12,7 @@
         @include('site.advisory-boards.side_menu_detail_page')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
             @if($news->count())
                 <div class="row">
                     @foreach($news as $nItem)

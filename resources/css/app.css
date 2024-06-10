@@ -89,6 +89,9 @@
 }
 
 .home-page-section {
+    padding: 1.5rem 0px;
+}
+.login-page-section {
     padding: 60px 0px;
 }
 
@@ -1155,7 +1158,7 @@ a.box-link span {
 
 .service-item h3 {
     font-weight: 600;
-    margin: 0 0 20px 0;
+    margin: 0;
     padding-bottom: 8px;
     font-size: 20px;
     position: relative;

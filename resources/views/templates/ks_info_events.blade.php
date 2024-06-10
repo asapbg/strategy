@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -175,7 +175,7 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Последно публикувана информация
                                 </a>
-                           
+
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -221,7 +221,7 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Актуални събития
                                 </a>
-                           
+
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -265,9 +265,9 @@
                                     </div>
                                 </div>
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
-                                    Планирани заседания 
+                                    Планирани заседания
                                 </a>
-                           
+
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г
@@ -313,7 +313,7 @@
                                 <a href="#" title=" Партньорство за открито управление" class="text-decoration-none mb-3">
                                     Взети решения
                                 </a>
-                           
+
                                 <div class="meta-consul mt-2">
                                     <span class="text-secondary">
                                         <i class="far fa-calendar text-secondary me-1"></i> 04.07.2023 г

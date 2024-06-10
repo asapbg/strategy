@@ -40,7 +40,7 @@
 <div class="container-fluid mt-2 px-0">
       <div class="row">
 
-        <div class="col-lg-10 right-side-content py-5">
+        <div class="col-lg-10 right-side-content py-2">
           <div class="mt-5">
 
             <div class="row mb-4">

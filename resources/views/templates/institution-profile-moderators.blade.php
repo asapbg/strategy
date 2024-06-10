@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-2 side-menu pt-5 mt-1 pb-5" style="background:#f5f9fd;">
+    <div class="col-lg-2 side-menu pt-2 mt-1 pb-2" style="background:#f5f9fd;">
         <div class="left-nav-panel" style="background: #fff !important;">
             <div class="flex-shrink-0 p-2">
                 <ul class="list-unstyled">
@@ -34,7 +34,7 @@
                                 </li>
                                 <li class="mb-2 active-item-left p-1"><a href="#"
                                         class="link-dark text-decoration-none">Модератори</a>
-                                </li>        
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -46,7 +46,7 @@
     </div>
 
 
-    <div class="col-lg-10 py-5 right-side-content">
+    <div class="col-lg-10 py-2 right-side-content">
         <div class="row">
             <div class="col-lg-10">
                 <h2 class="obj-title mb-4">Лица, които отговарят за Профила на {Име на институция}</h2>

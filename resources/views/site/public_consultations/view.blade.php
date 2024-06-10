@@ -14,7 +14,7 @@
         </div>
     </section>
     @if(isset($pageTopContent) && !empty($pageTopContent->value))
-        <div class="col-12 mt-5">
+        <div class="col-12 mt-2">
             {!! $pageTopContent->value !!}
         </div>
     @endif

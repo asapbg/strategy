@@ -12,7 +12,7 @@
         $current_type = ($type == App\Enums\PublicationTypesEnum::TYPE_NEWS->value) ? "news" : "publications";
     @endphp
 
-    <div class="col-lg-10 py-5 right-side-content">
+    <div class="col-lg-10 py-2 right-side-content">
         <div class="row">
             <div class="col-md-8">
                 <a href="javascript:;" class="text-decoration-none">

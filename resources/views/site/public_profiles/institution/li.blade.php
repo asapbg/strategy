@@ -6,7 +6,7 @@
             $user = auth()->user()
         @endphp
         @include('site.public_profiles.institution_menu')
-        <div class="col-lg-10 right-side-content py-5">
+        <div class="col-lg-10 right-side-content py-2">
             <div class="row mb-2">
                 <h2 class="mb-4">
                     {{ __('site.institution.li.title', ['name' => $item->name]) }}

@@ -6,7 +6,7 @@
         @include('site.strategic_documents.side_menu')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
             <h2 class="mb-4">
                 {{ $page->name }}
             </h2>

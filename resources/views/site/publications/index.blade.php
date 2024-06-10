@@ -7,7 +7,7 @@
     <div class="row">
         @includeIf('site.publications.sidemenu')
 
-        <div class="col-lg-10  py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
 
             @php
                 $current_page = 1;

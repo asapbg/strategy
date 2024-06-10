@@ -12,7 +12,7 @@
         @include('site.advisory-boards.side_menu_detail_page')
 
         <!-- Right side -->
-        <div class="col-lg-10 py-5 right-side-content">
+        <div class="col-lg-10 py-2 right-side-content">
             <div class="row edit-consultation m-0">
                 <div class="col-md-12 text-end  mt-2">
                     @can('update', $item)
