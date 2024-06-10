@@ -1312,4 +1312,5 @@ return [
     'has_npo_presence' => 'Наличие на представител на НПО в състава на съвета',
     'next_meeting' => 'Next meeting',
     'moderator' => 'New moderator',
+    'of_council' => 'of the Council of Ministers',
 ];

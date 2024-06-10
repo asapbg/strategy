@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
+use App\Enums\PrisDocChangeTypeEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Models\ActType;
 use App\Models\AdvisoryBoard;
@@ -422,18 +423,56 @@ class ReportsController extends Controller
                 DB::enableQueryLog();
                 $q = DB::table('pris')
                     ->select([
+                        'pris.id as pris_id',
                         'pris.doc_num',
-                        'pris.doc_date',
-                         DB::raw('pris.published_at::date as published_at'),
-                         DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
-                         DB::raw('json_agg(institution_translations.name) filter (where institution_translations.name is not null and institution_translations.institution_id <> '.env('DEFAULT_INSTITUTION_ID', 0).') as institutions'),
-                         DB::raw('max(pris_translations.importer) as importer'),
-                         'pris.protocol',
-                         'pris.newspaper_number',
-                         'pris.newspaper_year',
+                        'pris.doc_date as doc_accepted_date',
+                        DB::raw('max(pris_translations.about) as doc_about'),
+                        DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
+                        DB::raw('max(pris_translations.legal_reason) as legal_reason'),
+                        DB::raw('max(pris_translations.importer) as importer'),
+//institution_id, institution_name
+//                        DB::raw('json_agg(institution_translations.name) filter (where institution_translations.name is not null and institution_translations.institution_id <> '.env('DEFAULT_INSTITUTION_ID', 0).') as institutions'),
+                        DB::raw('json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) as institutions'),
+                        DB::raw('pris.version'),
+                        DB::raw('case
+                                            when max(pp.id) is null then pris.protocol
+                                            else
+                                                case
+                                                    when max(pp.protocol_point) is null
+                                                    then (max(pp_lat_tr.name_single) || \' \' || \''.__('custom.number_symbol').'\' || max(pp.doc_num) || \' \' || \''.__('custom.of_council').'\' || \' \' || date_part(\'year\',max(pp.doc_date)))
+                                                    else (\''.__('site.point_short').'\' || \' \' || \''.__('custom.from').'\' || \' \' || max(pp_lat_tr.name_single) || \' \' || \''.__('custom.number_symbol').'\' || max(pp.doc_num) || \' \' || \''.__('custom.of_council').'\' || \' \' || date_part(\'year\',max(pp.doc_date))) end
+                                            end as protocol'),
+                         DB::raw('max(public_consultation.reg_num) as public_consultation_number'),
+                        'pris.newspaper_number as state_gazette_number',
+                        'pris.newspaper_year as state_gazette_year',
+                        DB::raw('(pris.active::int)::bool as active'),
+                        DB::raw('pris.published_at::date as date_published_at'),
+                        DB::raw('pris.deleted_at::date as date_deleted_at'),
                         DB::raw('json_agg(tag_translations.label) filter (where tag_translations.label is not null) as tags'),
-                         DB::raw('max(pris_translations.about) as about'),
-                         DB::raw('max(pris_translations.legal_reason) as legal_reason')
+                        DB::raw('(
+                            select
+                                    json_agg(json_build_object(\'relation_type\', case
+                                        when pris_change_pris.connect_type = '.PrisDocChangeTypeEnum::CHANGE->value.' then (case when pris_change_pris.pris_id <> pc.id then \''.__('custom.pris.change_enum.CHANGE').'\' else \''.__('custom.pris.change_enum.reverse.CHANGE').'\' end)
+                                        else
+                                            case when pris_change_pris.connect_type = '.PrisDocChangeTypeEnum::COMPLEMENTS->value.' then (case when pris_change_pris.pris_id <> pc.id then \''.__('custom.pris.change_enum.COMPLEMENTS').'\' else \''.__('custom.pris.change_enum.reverse.COMPLEMENTS').'\' end)
+                                            else
+                                                case when pris_change_pris.connect_type = '.PrisDocChangeTypeEnum::CANCEL->value.' then (case when pris_change_pris.pris_id <> pc.id then \''.__('custom.pris.change_enum.CANCEL').'\' else \''.__('custom.pris.change_enum.reverse.CANCEL').'\' end)
+                                                else
+                                                    case when pris_change_pris.connect_type = '.PrisDocChangeTypeEnum::SEE_IN->value.' then (case when pris_change_pris.pris_id <> pc.id then \''.__('custom.pris.change_enum.SEE_IN').'\' else \''.__('custom.pris.change_enum.reverse.SEE_IN').'\' end)
+                                                    else \'\' end
+                                                end
+                                            end
+                                        end, \'pris_id\', pc.id, \'act_type\', pc_act_tr.name_single, \'act_name\', (pc_act_tr.name_single || \' \' || \''.__('custom.number_symbol').'\' || pc.doc_num || \' \' || \''.__('custom.of_council').'\' || \' \' || date_part(\'year\',pc.doc_date)) ))
+                                 from pris_change_pris
+                                 join pris as pc on pc.id = (case when pris_change_pris.pris_id = pris.id then pris_change_pris.changed_pris_id else pris_change_pris.pris_id end)
+                                 join pris_translations as pc_tr on pc_tr.pris_id = pc.id and pc_tr.locale = \'bg\'
+                                 join legal_act_type as pc_act on pc_act.id = pc.legal_act_type_id
+                                 join legal_act_type_translations as pc_act_tr on pc_act_tr.legal_act_type_id = pc_act.id and pc_act_tr.locale = \'bg\'
+                                 where
+                                    (pris_change_pris.pris_id = pris.id
+                                    or pris_change_pris.changed_pris_id = pris.id)
+                                    and pc.deleted_at is null
+                             ) as related'),
                     ])
                     ->join('pris_translations', function ($q){
                         $q->on('pris_translations.pris_id', '=', 'pris.id')->where('pris_translations.locale', '=', 'bg');
@@ -443,15 +482,29 @@ class ReportsController extends Controller
                         $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                             ->where('legal_act_type_translations.locale', '=', app()->getLocale());
                     })
+                    //Public consultation
+                    ->leftJoin('public_consultation', 'public_consultation.id', '=', 'pris.public_consultation_id')
+                    //Institutions
                     ->join('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
                     ->join('institution', 'institution.id', '=', 'pris_institution.institution_id')
                     ->join('institution_translations', function ($j){
                         $j->on('institution_translations.institution_id', '=', 'institution.id')
                             ->where('institution_translations.locale', '=', app()->getLocale());
                     })
-                    ->join('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
-                    ->join('tag', 'tag.id', '=', 'pris_tag.tag_id')
-                    ->join('tag_translations', function ($j){
+                    //Protocol
+                    ->leftJoin('pris as pp', 'pp.id', '=', 'pris.decision_protocol')
+                    ->leftJoin('pris_translations as pp_tr', function ($q){
+                        $q->on('pp_tr.pris_id', '=', 'pp.id')->where('pp_tr.locale', '=', 'bg');
+                    })
+                    ->join('legal_act_type as pp_lat', 'pp_lat.id', '=', 'pp.legal_act_type_id')
+                    ->join('legal_act_type_translations as pp_lat_tr', function ($j){
+                        $j->on('pp_lat_tr.legal_act_type_id', '=', 'pp_lat.id')
+                            ->where('pp_lat_tr.locale', '=', app()->getLocale());
+                    })
+                    //Tags
+                    ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+                    ->leftJoin('tag', 'tag.id', '=', 'pris_tag.tag_id')
+                    ->leftJoin('tag_translations', function ($j){
                         $j->on('tag_translations.tag_id', '=', 'tag.id')
                             ->where('tag_translations.locale', '=', app()->getLocale());
                     })
@@ -463,38 +516,30 @@ class ReportsController extends Controller
                     ->where('pris.in_archive', 0)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
-                    ->limit(1000)
-                ->get();
+                    ->limit(1000);
 
-                $data = array();
+                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
-                if($q->count()){
-                    foreach ($q as $row){
-                        $rowArray = (array)$row;
-                        $institutions = !is_null($rowArray['institutions']) ? json_decode($rowArray['institutions']) : [];
-                        $rowArray['institutions'] = implode(', ', $institutions);
-
-                        $tags = !is_null($rowArray['tags']) ? json_decode($rowArray['tags']) : [];
-                        $rowArray['tags'] = implode(', ', $tags);
-
-                        $rowArray['about'] = !empty($rowArray['about']) ? html_entity_decode($rowArray['about']) : '';
-                        $rowArray['legal_reason'] = !empty($rowArray['legal_reason']) ? html_entity_decode($rowArray['legal_reason']) : '';
-                        $data[] = $rowArray;
-                    }
-                }
                 $header = [
-                    'name' => __('custom.document_number'),
-                    'doc_date' => __('custom.date_issued'),
-                    'published_at' => __('custom.date_published'),
+                    'pris_id' => 'ID',
+                    'doc_num' => __('custom.document_number'),
+                    'doc_accepted_date' => __('custom.date_issued'),
+                    'doc_about' => __('custom.about'),
                     'legal_act_type' => trans_choice('custom.act_types', 1),
-                    'institutions' => trans_choice('custom.institutions', 2),
-                    'importer' => trans_choice('custom.importers', 1),
-                    'protocol' => __('site.protocol'),
-                    'newspaper_number' => __('custom.newspaper_number'),
-                    'newspaper_year' => __('custom.newspaper_year'),
-                    'tags' => trans_choice('custom.tags', 2),
-                    'about' => __('custom.about'),
                     'legal_reason' => __('custom.legal_reason'),
+                    'importer' => trans_choice('custom.importers', 1),
+                    'institutions' => trans_choice('custom.institutions', 2),
+                    'version' => __('custom.version'),
+                    'protocol' => __('site.protocol'),
+                    'public_consultation_number' => trans_choice('custom.public_consultations', 1),
+                    'state_gazette_number' => __('custom.newspaper_number'),
+                    'state_gazette_year' => __('custom.newspaper_year'),
+                    'active' => __('custom.status'),
+                    'date_published_at' => __('custom.date_published'),
+                    'date_updated_at' => __('custom.updated_at'),
+                    'date_deleted_at' => __('custom.deleted_at'),
+                    'tags' => trans_choice('custom.tags', 2),
+                    'related' => __('custom.change_docs'),
                 ];
                 array_unshift($data, $header);
 
