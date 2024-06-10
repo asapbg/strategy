@@ -67,7 +67,7 @@ class ProfileController extends Controller
                 if(sizeof($votedLiIds)){
                     $ids = array_merge($ids, $votedLiIds);
                 }
-                $data = LegislativeInitiative::whereIn('id', array_keys($ids))->get();
+                $data = LegislativeInitiative::whereIn('id', $ids)->get();
                 $breadcrumbs[] = ['name' => trans_choice('custom.legislative_initiatives', 2), 'url' => ''];
                 $secondTitle = trans_choice('custom.legislative_initiatives', 2);
                 break;
