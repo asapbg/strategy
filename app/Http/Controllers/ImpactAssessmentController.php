@@ -28,7 +28,9 @@ class ImpactAssessmentController extends Controller
             abort(404);
         }
         $pageTitle = trans_choice('custom.impact_assessment', 1);
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
+
         $this->composeBreadcrumbs(array(['name' => __('site.base_info'), 'url' => '']));
 
         $library = Page::with(['translations'])
@@ -314,7 +316,9 @@ class ImpactAssessmentController extends Controller
             return back()->with('warning', __('custom.record_not_found'));
         }
         $pageTitle = trans_choice('custom.impact_assessment', 1);
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
+
         $this->composeBreadcrumbs(array(
             ['name' => __('custom.library'), 'url' => ''],
             ['name' => $page->name, 'url' => '']

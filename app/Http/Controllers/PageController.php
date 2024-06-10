@@ -17,7 +17,7 @@ class PageController extends Controller
         $this->setBreadcrumbsFull(array(
             ['name' => $item->name, 'url' => '']
         ));
-        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword, array('title' => $item->meta_title, 'img' => Page::DEFAULT_IMG));
+        $this->setSeo($item->meta_title ?? $item->name, $item->meta_description ?? $item->short_content, $item->meta_keyword, array('title' => $item->meta_title ?? $item->name, 'img' => Page::DEFAULT_IMG));
         return $this->view('site.page', compact('item', 'pageTitle'));
     }
 }

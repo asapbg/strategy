@@ -482,7 +482,7 @@ class AdvisoryBoardController extends Controller
     public function newsDetails(Request $request, Publication $item){
         $pageTitle = trans_choice('custom.advisory_boards', 2);
 //        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
-        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword, array('title' => $item->meta_title, 'img' => Page::DEFAULT_IMG));
+        $this->setSeo($item->meta_title ?? $item->title, $item->meta_description ?? $item->short_content, $item->meta_keyword, array('title' => $item->meta_title ?? $item->title, 'img' => Page::DEFAULT_IMG));
 
         $publication = $item;
 //        $this->setSlider(trans_choice('custom.advisory_boards', 2), $item->headerImg);
@@ -500,7 +500,9 @@ class AdvisoryBoardController extends Controller
             abort(404);
         }
         $pageTitle = $page->name;
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
+
         return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
     }
 
@@ -515,7 +517,9 @@ class AdvisoryBoardController extends Controller
             abort(404);
         }
         $pageTitle = $page->name;
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
+
         return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
     }
 

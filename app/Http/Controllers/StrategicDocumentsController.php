@@ -270,7 +270,7 @@ class StrategicDocumentsController extends Controller
             abort(404);
         }
         $pageTitle = $this->pageTitle;
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
         $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
         return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
     }
@@ -286,7 +286,9 @@ class StrategicDocumentsController extends Controller
             abort(404);
         }
         $pageTitle = $this->pageTitle;
-        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
+
         $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
         return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
     }
