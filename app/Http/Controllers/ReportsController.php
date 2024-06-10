@@ -498,7 +498,7 @@ class ReportsController extends Controller
                     ->whereNotNull('pris.published_at')
                     ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL])
                     ->where('pris.asap_last_version', '=', 1)
-                    ->where('pris.in_archive', $inArchive)
+                    ->where('pris.in_archive', '=', $inArchive)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
                     ->limit(1000);
