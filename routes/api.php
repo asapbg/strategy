@@ -29,13 +29,13 @@ Route::group(['middleware' => ['guest']], function() {
         Route::get('/reports/polls/{type}/view',       'apiReportPolls')->name('api.report.polls');
         //Pris
         Route::get('/reports/pris/{type}/view',       'apiReportPris')->name('api.report.pris');
+        //Legislative initiatives
+        Route::get('/reports/legislative-initiatives/{type}/view',       'apiReportLegislativeInitiative')->name('api.report.li');
 
         //Public consultations
         Route::get('/reports/public-consultations/{type}/view',       'apiReportPc')->name('api.report.pc');
         //Strategic Document
         Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
-        //Legislative initiatives
-        Route::get('/reports/legislative-initiatives/{type}/view',       'apiReportLegislativeInitiative')->name('api.report.li');
 
     });
 });

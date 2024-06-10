@@ -90,12 +90,9 @@ class ReportsController extends Controller
                 $q = DB::table('legislative_initiative')
                     ->select([
                         DB::raw('\''.__('custom.change_f').' '.__('custom.in').'\' || max(law_translations.name) as name'),
-                        DB::raw('legislative_initiative.description as description'),
-                        DB::raw('legislative_initiative.law_paragraph as law_paragraph'),
-                        DB::raw('legislative_initiative.created_at::date as start_at'),
-                        DB::raw('legislative_initiative.active_support::date as support_end_at'),
-                        'legislative_initiative.cap as required_likes',
-                        DB::raw('case when max(users.id) is not null then max(users.first_name) || \' \' || max(users.last_name) else \'\' end as author'),
+                        DB::raw('case when max(users.id) is not null then max(users.first_name) || \' \' || max(users.last_name) else \'\' end as author_name'),
+                        DB::raw('legislative_initiative.created_at::date as date_open'),
+                        DB::raw('legislative_initiative.active_support::date as date_close'),
                         DB::raw('case when legislative_initiative.status::int = '.LegislativeInitiativeStatusesEnum::STATUS_SEND->value.'
                         then \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_SEND->name)).'\'
                         else (
@@ -103,13 +100,24 @@ class ReportsController extends Controller
                             then \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_CLOSED->name)).'\'
                             else \''.__('custom.legislative_' . \Illuminate\Support\Str::lower(LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->name)).'\' end
                         ) end as status'),
-                        DB::raw('sum(case when legislative_initiative_votes.is_like = true then 1 else 0 end) as likes'),
-                        DB::raw('sum(case when legislative_initiative_votes.is_like = false then 1 else 0 end) as dislikes'),
-                        DB::raw('0 as supported'),
-                        DB::raw('legislative_initiative.end_support_at::date as end_at'),
-                        DB::raw('json_agg(ic_translation.name) filter (where ic_translation.name is not null) as initiative_institution'),
-                        DB::raw('json_agg(ric_translation.name) filter (where ric_translation.name is not null) as send_to_institution'),
-                        DB::raw('legislative_initiative.send_at::date as send_at')
+                        DB::raw('legislative_initiative.description as description'),
+                        DB::raw('max(law_translations.name) as law_name'),
+                        DB::raw('legislative_initiative.law_paragraph as law_paragraph'),
+                        'legislative_initiative.cap',
+                        DB::raw('case when max(ric.id) is not null then true else false end as sent'),
+                        DB::raw('sum(case when legislative_initiative_votes.is_like = true then 1 else 0 end) as votes_for'),
+                        DB::raw('sum(case when legislative_initiative_votes.is_like = false then 1 else 0 end) as votes_against'),
+                        DB::raw('json_agg(ic_translation.name) filter (where ic_translation.name is not null) as institutions'),
+                        DB::raw('(
+                            select
+                                    json_agg(json_build_object(\'date\', date_part(\'year\', legislative_initiative_comments.created_at), \'author_name\', (case when u.id is not null then u.first_name || \' \' || u.last_name else \'\' end), \'text\', legislative_initiative_comments.description))
+                                 from legislative_initiative_comments
+                                 join users as u on u.id = legislative_initiative_comments.user_id
+                                 where
+                                    legislative_initiative_comments.legislative_initiative_id = legislative_initiative.id
+                                    and legislative_initiative_comments.deleted_at is null
+                             ) as comments'),
+
                     ])
                     ->leftJoin('users', 'users.id', '=', 'legislative_initiative.author_id')
                     ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
@@ -129,48 +137,25 @@ class ReportsController extends Controller
                     })
                     ->whereNull('legislative_initiative.deleted_at')
                     ->groupBy('legislative_initiative.id')
-                    ->orderBy('legislative_initiative.created_at', 'desc')
-                    ->get();
+                    ->orderBy('legislative_initiative.created_at', 'desc');
 
-                $data = array();
-                if($q->count()){
-                    foreach ($q as $row){
-                        $rowArray = (array)$row;
-                        $liInstitutions = !is_null($rowArray['initiative_institution']) ? json_decode($rowArray['initiative_institution']) : [];
-                        $rowArray['initiative_institution'] = implode(', ', $liInstitutions);
-                        $liSendInstitutions = !is_null($rowArray['send_to_institution']) ? json_decode($rowArray['send_to_institution']) : [];
-                        $rowArray['send_to_institution'] = implode(', ', $liSendInstitutions);
-
-                        $supported = (int)$rowArray['likes'] - (int)$rowArray['dislikes'];
-                        $rowArray['supported'] = $supported >= 0 ? $supported : 0;
-
-                        $rowArray['description'] = !empty($rowArray['description']) ? strip_tags($rowArray['description']) : '';
-                        $rowArray['law_paragraph'] = !empty($rowArray['law_paragraph']) ? strip_tags($rowArray['law_paragraph']) : '';
-                        $rowArray['law_text'] = !empty($rowArray['law_text']) ? strip_tags($rowArray['law_text']) : '';
-
-                        $data[] = $rowArray;
-                    }
-                }
-                //$data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
                 $header = [
                     'name' => __('custom.name'),
-                    'description' => __('custom.description_of_suggested_change'),
-                    'law_paragraph' => __('validation.attributes.law_paragraph'),
-                    'law_text' => __('validation.attributes.law_text'),
-                    'start_at' => __('custom.begin_date'),
-                    'support_end_at' => __('site.li_end_support_date'),
-                    'required_likes' => __('site.li_required_likes'),
-                    'author' => __('custom.author'),
+                    'author_name' => __('custom.author'),
+                    'date_open' => __('custom.begin_date'),
+                    'date_close' => __('site.li_end_support_date'),
                     'status' => __('custom.status'),
-                    'likes' => __('custom.likes'),
-                    'dislikes' => __('custom.li_dislikes'),
-                    'supported' => __('custom.supported_f'),
-                    'end_at' => __('site.li_ended_at'),
-                    'initiative_institution' => __('site.li_initiative_institution'),
-                    'send_to_institution' => __('site.li_send_to_administrations'),
-                    'send_at' => __('site.li_send_at'),
-
+                    'description' => __('custom.description_of_suggested_change'),
+                    'law_name' => trans_choice('custom.laws', 1),
+                    'law_paragraph' => __('validation.attributes.law_paragraph'),
+                    'cap' => __('site.li_required_likes'),
+                    'sent' => __('custom.sent_date'),
+                    'votes_for' => __('custom.likes'),
+                    'votes_against' => __('custom.li_dislikes'),
+                    'institutions' => trans_choice('custom.institutions', 2),
+                    'comments' => trans_choice('custom.comments', 2),
                 ];
                 array_unshift($data, $header);
 
@@ -430,8 +415,6 @@ class ReportsController extends Controller
                         DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
                         DB::raw('max(pris_translations.legal_reason) as legal_reason'),
                         DB::raw('max(pris_translations.importer) as importer'),
-//institution_id, institution_name
-//                        DB::raw('json_agg(institution_translations.name) filter (where institution_translations.name is not null and institution_translations.institution_id <> '.env('DEFAULT_INSTITUTION_ID', 0).') as institutions'),
                         DB::raw('json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) as institutions'),
                         DB::raw('pris.version'),
                         DB::raw('case
