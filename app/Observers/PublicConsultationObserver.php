@@ -30,7 +30,7 @@ class PublicConsultationObserver
                 if ($activeFB->value) {
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' => 'На Портала за обществени консултации е публикувана нова консултация: "'.$publicConsultation->title.'". Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
+                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
 //                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
                         'link' => route('public_consultation.view', $publicConsultation->id),
                         'published' => true

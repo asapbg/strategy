@@ -36,7 +36,7 @@ class AdvisoryBoardObserver
                     }
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name.(sizeof($chairmens) ? ', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
+                        'message' => 'Създаден е нов консултативен съвет: '.(sizeof($chairmens) ? $advisoryBoard->name.', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
 //                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
                         'link' => route('advisory-boards.view', $advisoryBoard),
                         'published' => true
