@@ -494,7 +494,7 @@ class ReportsController extends Controller
                             ->where('tag_translations.locale', '=', app()->getLocale());
                     })
                     ->whereNull('pris.deleted_at')
-                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+//                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
                     ->whereNotNull('pris.published_at')
                     ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL])
                     ->where('pris.asap_last_version', '=', 1)
