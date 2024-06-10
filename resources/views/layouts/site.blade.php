@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{ seo()->render() }}
+    @if(isset($facebookAppId) && !empty($facebookAppId))
+        <meta property="fb:app_id" content="{{ $facebookAppId }}"/>
+    @endif
 {{--    <title>{{ __('site.seo_title') }}</title>--}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

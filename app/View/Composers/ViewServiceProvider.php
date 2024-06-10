@@ -44,6 +44,19 @@ class ViewServiceProvider extends ServiceProvider
 //            $view->with('sectors', $sectors);
 //        });
 //
+        View::composer('layouts.site', function ($view) {
+            $facebookAppIdKey = Setting::FACEBOOK_APP_ID;
+            $facebookAppId = Cache::get($facebookAppIdKey);
+            if( is_null($facebookAppId) ) {
+                $settingsFb = Setting::where('name', '=', Setting::FACEBOOK_APP_ID)
+                    ->where('section', '=', Setting::FACEBOOK_SECTION)->get()->first();
+                $facebookAppId = $settingsFb ? $settingsFb->value : '';
+                Cache::put($facebookAppIdKey, $facebookAppId, 3600);
+            }
+
+            $view->with('facebookAppId', $facebookAppId);
+        });
+
         View::composer('site.legislative_initiatives.side_menu', function ($view) {
             $ogpLibraryKey = Page::CACHE_MODULE_PAGES_OGP;
             $library = Cache::get($ogpLibraryKey);

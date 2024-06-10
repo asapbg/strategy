@@ -40,6 +40,10 @@ class SettingsController extends Controller
             if($name == Setting::CONTACT_MAIL_KEY) {
                 Cache::forget(Setting::CONTACT_MAIL_KEY);
             }
+
+            if($name == Setting::FACEBOOK_APP_ID) {
+                Cache::forget(Setting::FACEBOOK_APP_ID);
+            }
         }
         return redirect(route('admin.settings', ['section' => $section]))->with('success', __('custom.settings').' '.__('messages.updated_successfully_pl'));
     }
