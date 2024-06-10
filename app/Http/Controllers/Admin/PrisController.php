@@ -97,6 +97,7 @@ class PrisController extends AdminController
             if(isset($validated['publish']) && $validated['publish']) {
                 $fillable['published_at'] = Carbon::now()->format('Y-m-d H:i:s');
             }
+            $fillable['in_archive'] = Carbon::parse($validated['doc_date'])->format('Y-m-d') > '1989-12-31' ? 0 : 1;
             $item->fill($fillable);
 
             $item->save();
