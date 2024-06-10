@@ -1311,4 +1311,5 @@ return [
     'member_notes' => 'Бележки и кратка информация',
     'has_npo_presence' => 'Наличие на представител на НПО в състава на съвета',
     'next_meeting' => 'Next meeting',
+    'moderator' => 'New moderator',
 ];

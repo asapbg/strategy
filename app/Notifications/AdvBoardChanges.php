@@ -88,7 +88,7 @@ class AdvBoardChanges extends Notification
             'model' => get_class($this->item),
             'id' => $this->item->id,
             'subject' => __('notifications_msg.adv_board_changes').' ('.$this->item->name.')',
-            'message' => __('notifications_msg.adv_board_changes.extra_info').$extraMsg
+            'message' => __('notifications_msg.adv_board_changes.extra_info').$this->item->name.$extraMsg
         ];
     }
 }

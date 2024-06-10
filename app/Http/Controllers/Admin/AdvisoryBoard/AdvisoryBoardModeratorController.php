@@ -50,6 +50,7 @@ class AdvisoryBoardModeratorController extends AdminController
         try {
             $validated['advisory_board_id'] = $item->id;
             $fillable = $this->getFillableValidated($validated, $information);
+            $changes = $this->translateChanges(AdvisoryBoardModeratorInformation::TRANSLATABLE_FIELDS, $information, $validated);//use it to send detail changes in notification
             $information->fill($fillable);
             $information->save();
 
@@ -58,8 +59,10 @@ class AdvisoryBoardModeratorController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), 'Информация за модератора „Консултативен съвет“', $changes);
+            }
 
             return redirect($route)->with('success', trans_choice('custom.section', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
@@ -102,6 +105,13 @@ class AdvisoryBoardModeratorController extends AdminController
             if(!in_array($moderator->user_id, $oldModerators)) {
                 $notifiable = $moderator->user;
                 $notifiable->notify(new AdvBoardAssignedModerator($item));
+
+                $changes['moderator'] = ['old' => null, 'new' => $notifiable->fullName()];
+                //alert adb board modeRATOR
+                if(sizeof($changes)){
+                    $notifyService = new Notifications();
+                    $notifyService->advChanges($item, request()->user(), trans_choice('custom.moderators', 2), $changes);
+                }
             }
 
             return redirect($route)->with('success', trans_choice('custom.moderators', 1) . " " . __('messages.added_successfully_m'));
@@ -150,9 +160,12 @@ class AdvisoryBoardModeratorController extends AdminController
 
             DB::commit();
 
+            $changes['moderator'] = ['old' => null, 'new' => $user->fullName()];
             //alert adb board modeRATOR
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user());
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), trans_choice('custom.moderators', 2), $changes);
+            }
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
