@@ -122,7 +122,7 @@ class LibraryController extends Controller
 
         $pageTitle = trans_choice(PublicationTypesEnum::getTypeName()[$type], 2);
         $this->setBreadcrumbsTitle($publication->title);
-        $this->setSeo($publication->meta_title, $publication->meta_description, $publication->meta_keyword, array('title' => $publication->meta_title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_LIBRARY));
+        $this->setSeo($publication->meta_title ?? $publication->title, $publication->meta_description ?? $publication->short_content, $publication->meta_keyword, array('title' => $publication->meta_title ?? $publication->title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_LIBRARY));
 
         return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
     }

@@ -481,7 +481,9 @@ class AdvisoryBoardController extends Controller
 
     public function newsDetails(Request $request, Publication $item){
         $pageTitle = trans_choice('custom.advisory_boards', 2);
-        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
+//        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
+        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword, array('title' => $item->meta_title, 'img' => Page::DEFAULT_IMG));
+
         $publication = $item;
 //        $this->setSlider(trans_choice('custom.advisory_boards', 2), $item->headerImg);
         return $this->view('site.advisory-boards.main_news_details', compact('publication', 'pageTitle'));
