@@ -26,6 +26,7 @@ class AdvisoryBoardMeeting extends ModelActivityExtend
     const PAGINATE = 10;
     const MODULE_NAME = ('custom.advisory_board_meetings');
     const TRANSLATABLE_FIELDS = ['description'];
+    const CHANGEABLE_FIELDS = ['next_meeting'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
