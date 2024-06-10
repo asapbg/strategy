@@ -496,7 +496,7 @@ class ReportsController extends Controller
                     ->whereNull('pris.deleted_at')
 //                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
                     ->whereNotNull('pris.published_at')
-                    ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL])
+                    ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL, LegalActType::TYPE_ARCHIVE])
                     ->where('pris.asap_last_version', '=', 1)
                     ->where('pris.in_archive', '=', $inArchive)
                     ->groupBy('pris.id')
