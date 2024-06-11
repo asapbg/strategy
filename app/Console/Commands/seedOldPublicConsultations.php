@@ -203,18 +203,18 @@ class seedOldPublicConsultations extends Command
 
                             $actType = null;
                             if(!empty($item->title)){
-                                if(str_contains(mb_strtolower($item->title),'правилник')){
-                                    $actType = ActType::ACT_NON_NORMATIVE_COUNCIL_OF_MINISTERS;
-                                } elseif (str_contains(mb_strtolower($item->title),'наредба')){
-                                    $actType = ActType::ACT_MINISTER;
-                                } elseif (str_contains(mb_strtolower($item->title),'решение на министерския съвет')){
+                                if(str_contains($item->title,'Постановление на Министерския съвет')){
                                     $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
-                                } elseif (str_contains(mb_strtolower($item->title),'постанвовление на министерския съвет')){
+                                } elseif (str_contains($item->title,'Решение на Министерския съвет')){
                                     $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
-                                } elseif (str_contains(mb_strtolower($item->title),'закон')){
-                                    $actType = ActType::ACT_LAW;
-                                } elseif (str_contains(mb_strtolower($item->title),'рамкова позиция')){
+                                } elseif (str_contains($item->title,'Рамкова позиция')){
                                     $actType = ActType::ACT_FRAME_POSITION;
+                                } elseif (str_contains($item->title,'Правилник')){
+                                    $actType = ActType::ACT_NON_NORMATIVE_COUNCIL_OF_MINISTERS;
+                                } elseif (str_contains($item->title,'Наредба')){
+                                    $actType = ActType::ACT_MINISTER;
+                                } elseif (str_contains($item->title,'Закон')){
+                                    $actType = ActType::ACT_LAW;
                                 }
                             }
 
