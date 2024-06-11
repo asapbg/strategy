@@ -75,6 +75,8 @@ class PublicConsultationController extends Controller
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.public_consultations', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.public_consultations', 2), 'img' => PublicConsultation::DEFAULT_IMG));
+
         return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
@@ -102,10 +104,11 @@ class PublicConsultationController extends Controller
         $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC.'_'.app()->getLocale())->first();
-        $this->setSeo($item->title,  $item->description, '', array('title' => $item->title, 'description' => strip_tags($item->description), 'img' => PublicConsultation::DEFAULT_IMG));
+        $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'img' => PublicConsultation::DEFAULT_IMG));
 
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
+
         return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 

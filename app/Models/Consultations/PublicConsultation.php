@@ -215,6 +215,25 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
+    protected function facebookTitle(): Attribute
+    {
+        return Attribute::make(
+//            [Срок: <срок>] <заглавие>
+            get: function () {
+                return '['.__('custom.deadline') .': '. displayDate($this->open_to) .'] '.$this->title;
+            }
+        );
+    }
+
+    protected function ogDescription(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return substr(clearAfterStripTag(strip_tags($this->description)), 0, 180);
+            }
+        );
+    }
+
     protected function nomenclatureLevelLabel(): Attribute
     {
         return Attribute::make(
