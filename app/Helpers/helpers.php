@@ -238,25 +238,26 @@ if (!function_exists('getLocaleId')) {
 
 if (!function_exists('optionsUserTypes')) {
 
-/**
- * Get all users types and return options
- *
- * @method optionsUserTypes
- *
- * @param bool       $any
- * @param string|int $anyValue
- * @param string|int $anyName
- *
- * @return array
- */
-function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
-{
-    $options = User::getUserTypes();
-    if ($any) {
-        $options[$anyValue] = $anyName;
-        ksort($options);
+    /**
+     * Get all users types and return options
+     *
+     * @method optionsUserTypes
+     *
+     * @param bool $any
+     * @param string|int $anyValue
+     * @param string|int $anyName
+     *
+     * @return array
+     */
+    function optionsUserTypes(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+    {
+        $options = User::getUserTypes();
+        if ($any) {
+            $options[$anyValue] = $anyName;
+            ksort($options);
+        }
+        return $options;
     }
-    return $options;
 }
 
 /**
@@ -537,28 +538,28 @@ if (!function_exists('fileHtmlContent')) {
     }
 }
 
-    if (!function_exists('fileHtmlContentByPath')) {
+if (!function_exists('fileHtmlContentByPath')) {
 
-        /**
-         * Check if string is a json format.
-         *
-         * @param string $path
-         */
-        function fileHtmlContentByPath(string $path, $type = 'pdf')
-        {
-            $content = '';
+    /**
+     * Check if string is a json format.
+     *
+     * @param string $path
+     */
+    function fileHtmlContentByPath(string $path, $type = 'pdf')
+    {
+        $content = '';
 
-            switch ($type) {
-                case 'pdf':
-                    $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
-                    break;
-                default:
-                    return '<p>Документът не може да бъде визуализиран</p>';
-            }
-
-            return $content;
+        switch ($type) {
+            case 'pdf':
+                $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
+                break;
+            default:
+                return '<p>Документът не може да бъде визуализиран</p>';
         }
+
+        return $content;
     }
+}
 
 if (!function_exists('strategicFileHtmlContent')) {
 
@@ -781,129 +782,129 @@ if (!function_exists('copyFile')) {
 
 }
 
-    if (!function_exists('canPreview')) {
+if (!function_exists('canPreview')) {
 
-        /**
-         * Check if string is a json format.
-         * @param $file
-         * @return bool
-         */
-        function canPreview($file): bool
-        {
-            $can = false;
-            switch ($file->content_type) {
-                case 'application/pdf':
-                case 'application/msword':
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    $can = true;
-                    break;
-            }
-
-            return $can;
+    /**
+     * Check if string is a json format.
+     * @param $file
+     * @return bool
+     */
+    function canPreview($file): bool
+    {
+        $can = false;
+        switch ($file->content_type) {
+            case 'application/pdf':
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                $can = true;
+                break;
         }
+
+        return $can;
     }
+}
 
-    if (!function_exists('getOldFileInformation')) {
+if (!function_exists('getOldFileInformation')) {
 
-        /**
-         * Get information for an old file from the old db.
-         * It's using the lportal.dlfileentry table.
-         *
-         * @param       $search_name - The file name.
-         * @param array $files       - Array of file objects.
-         *
-         * @return mixed|null
-         */
-        function getOldFileInformation($search_name, array $files): object|null
-        {
-            foreach ($files as $file) {
-                if ($file->name == $search_name) {
-                    return $file;
+    /**
+     * Get information for an old file from the old db.
+     * It's using the lportal.dlfileentry table.
+     *
+     * @param       $search_name - The file name.
+     * @param array $files       - Array of file objects.
+     *
+     * @return mixed|null
+     */
+    function getOldFileInformation($search_name, array $files): object|null
+    {
+        foreach ($files as $file) {
+            if ($file->name == $search_name) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('dateBetween')) {
+
+    /**
+     * Determine if date pased by parameter or NOW is between specified dates
+     */
+
+    function dateBetween($from, $to, $date = null): bool
+    {
+        $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $from = Carbon::parse($from)->format('Y-m-d');
+        $to = Carbon::parse($to)->format('Y-m-d');
+
+        return $date >= $from && $date <= $to;
+    }
+}
+
+if (!function_exists('dateAfter')) {
+
+    /**
+     * Determine if date pased by parameter or NOW is after specified date
+     */
+
+    function dateAfter($afterDate, $date = null): bool
+    {
+        $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $afterDate = Carbon::parse($afterDate)->format('Y-m-d');
+
+        return $date < $afterDate;
+    }
+}
+
+if (!function_exists('dateBefore')) {
+
+    /**
+     * Determine if date pased by parameter or NOW is before specified date
+     */
+
+    function dateBefore($beforeDate, $date = null): bool
+    {
+        $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $beforeDate = Carbon::parse($beforeDate)->format('Y-m-d');
+
+        return $date > $beforeDate;
+    }
+}
+
+if (!function_exists('addUrlParams')) {
+
+    /**
+     * DO NOT CHANGE. Using in profile subscriptions
+     */
+
+    function addUrlParams($params): string
+    {
+        $strParams = '';
+
+        foreach ($params as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $v){
+                    $strParams .= (empty($strParams) ? '?' : '&') .$key.'[]='.$v;
                 }
+            } else{
+                $strParams .= (empty($strParams) ? '?' : '&') .$key.'='.$value;
             }
-
-            return null;
         }
+
+        return $strParams;
     }
+}
 
-    if (!function_exists('dateBetween')) {
 
-        /**
-         * Determine if date pased by parameter or NOW is between specified dates
-         */
+if (!function_exists('clearAfterStripTag')) {
+    function clearAfterStripTag($string): string
+    {
+        $string = str_replace(['&nbsp;', '&amp;'], '', $string);
 
-        function dateBetween($from, $to, $date = null): bool
-        {
-            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-            $from = Carbon::parse($from)->format('Y-m-d');
-            $to = Carbon::parse($to)->format('Y-m-d');
-
-            return $date >= $from && $date <= $to;
-        }
-    }
-
-    if (!function_exists('dateAfter')) {
-
-        /**
-         * Determine if date pased by parameter or NOW is after specified date
-         */
-
-        function dateAfter($afterDate, $date = null): bool
-        {
-            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-            $afterDate = Carbon::parse($afterDate)->format('Y-m-d');
-
-            return $date < $afterDate;
-        }
-    }
-
-    if (!function_exists('dateBefore')) {
-
-        /**
-         * Determine if date pased by parameter or NOW is before specified date
-         */
-
-        function dateBefore($beforeDate, $date = null): bool
-        {
-            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-            $beforeDate = Carbon::parse($beforeDate)->format('Y-m-d');
-
-            return $date > $beforeDate;
-        }
-    }
-
-    if (!function_exists('addUrlParams')) {
-
-        /**
-         * DO NOT CHANGE. Using in profile subscriptions
-         */
-
-        function addUrlParams($params): string
-        {
-            $strParams = '';
-
-            foreach ($params as $key => $value) {
-                if(is_array($value)){
-                    foreach ($value as $v){
-                        $strParams .= (empty($strParams) ? '?' : '&') .$key.'[]='.$v;
-                    }
-                } else{
-                    $strParams .= (empty($strParams) ? '?' : '&') .$key.'='.$value;
-                }
-            }
-
-            return $strParams;
-        }
-    }
-
-    if (!function_exists('clearAfterStripTag')) {
-        function clearAfterStripTag($string): string
-        {
-            $string = str_replace(['&nbsp;'], '', $string);
-
-            return $string;
-        }
+        return $string;
     }
 }
 

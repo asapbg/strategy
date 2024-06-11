@@ -125,7 +125,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
 //        Област на политика: <област на политика>\nОписание: <описание, отрязано до 100 символа>
         return Attribute::make(
             get: function () {
-                return trans_choice('custom.field_of_actions', 1).': '.$this->policyArea?->name.' | '.__('custom.description').': '.substr(strip_tags($this->description), 0, 100);
+                return trans_choice('custom.field_of_actions', 1).': '.$this->policyArea?->name.' | '.__('custom.description').': '.substr(clearAfterStripTag(strip_tags($this->description)), 0, 100);
             }
         );
     }
