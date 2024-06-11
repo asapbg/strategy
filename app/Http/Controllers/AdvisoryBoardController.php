@@ -157,7 +157,7 @@ class AdvisoryBoardController extends Controller
             $closeSearchForm = false;
             return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
-
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
