@@ -1315,4 +1315,6 @@ return [
     'of_council' => 'of the Council of Ministers',
     'by_article' => 'By article',
     'proposal' => 'Proposal',
+    'dev_new_plan_title' => 'Development of an Open Management Plan',
+    'open_areas' => 'Open areas',
 ];

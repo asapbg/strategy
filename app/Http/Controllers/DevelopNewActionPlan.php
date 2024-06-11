@@ -64,6 +64,13 @@ class DevelopNewActionPlan extends Controller
                 );
             }
         }
+        if(!$item){
+            $this->setSeo(__('site.seo_title'),  __('custom.dev_new_plan_title'), '', array('title' => __('site.seo_title'), 'description' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+        } else{
+            $this->setSeo(__('custom.dev_new_plan_title'),  $item->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+
+        }
+
         return $this->view('site.ogp.develop_new_action_plan.plan_show', compact('item', 'pageTitle', 'schedules'));
     }
 
@@ -96,6 +103,8 @@ class DevelopNewActionPlan extends Controller
         }
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
+        $this->setSeo(__('custom.dev_new_plan_title'),  $plan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.develop_new_action_plan.plan_area_show', compact('plan', 'planArea', 'pageTitle'));
     }
 
@@ -107,6 +116,8 @@ class DevelopNewActionPlan extends Controller
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
+        $this->setSeo(__('custom.dev_new_plan_title'),  $plan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.develop_new_action_plan.plan_area_offer_show', compact('plan', 'planArea', 'pageTitle', 'offer'));
     }
 
