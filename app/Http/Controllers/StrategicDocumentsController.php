@@ -102,6 +102,7 @@ class StrategicDocumentsController extends Controller
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
         return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle',
             'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
@@ -202,6 +203,7 @@ class StrategicDocumentsController extends Controller
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.tree_view', 1), 'url' => '']));
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
         return $this->view('site.strategic_documents.tree', compact('items', 'pageTitle', 'editRouteName', 'deleteRouteName'));
     }
@@ -238,7 +240,7 @@ class StrategicDocumentsController extends Controller
 
         $hasSubscribeEmail = $this->hasSubscription($strategicDocument);
         $hasSubscribeRss = false;
-        $this->setSeo($strategicDocument->title, '', '', array('title' => $strategicDocument->title, 'img' => StrategicDocument::DEFAULT_IMG));
+        $this->setSeo($strategicDocument->title, $strategicDocument->ogDescription, '', array('title' => $strategicDocument->title, 'description' => $strategicDocument->ogDescription, 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.view', compact('strategicDocument', 'strategicDocumentFiles',
             'actNumber', 'reportsAndDocs', 'pageTitle', 'pageTopContent', 'documents', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
@@ -256,6 +258,7 @@ class StrategicDocumentsController extends Controller
         $pageTitle = $this->pageTitle;
         $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])->get();
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2),  trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.contacts', compact('moderators', 'pageTitle'));
     }
 
@@ -363,6 +366,7 @@ class StrategicDocumentsController extends Controller
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => __('site.strategic_document.all_documents_report'), 'url' => '']));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.reports', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
         return $this->view('site.strategic_documents.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }

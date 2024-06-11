@@ -434,8 +434,8 @@ class Controller extends BaseController
         seo()->meta('description', !empty($description) ? substr($description, 0, 180) : __('site.seo_description'));
         seo()->meta('keywords', !empty($keywords) ? $keywords : __('site.seo_keywords'));
 
-        seo()->og('title', isset($fbTags) && isset($fbTags['title']) && !empty($fbTags['title']) ? $fbTags['title'] : __('site.seo_title'));
-        seo()->og('description', isset($fbTags) && isset($fbTags['description']) && !empty($fbTags['description']) ? $fbTags['description'] : __('site.seo_description'));
+        seo()->og('title', isset($fbTags) && isset($fbTags['title']) && !empty($fbTags['title']) ? $fbTags['title'] : (!empty($title) ? $title : __('site.seo_title')));
+        seo()->og('description', isset($fbTags) && isset($fbTags['description']) && !empty($fbTags['description']) ? $fbTags['description'] : (!empty($description) ? substr($description, 0, 180) : __('site.seo_description')));
         seo()->og('type', isset($fbTags) && isset($fbTags['type']) && !empty($fbTags['type']) ? $fbTags['type'] : 'website');
         seo()->og('url', isset($fbTags) && isset($fbTags['url']) && !empty($fbTags['url']) ? $fbTags['url'] : request()->url());
         seo()->og('image', isset($fbTags) && isset($fbTags['img']) && !empty($fbTags['img']) ? asset($fbTags['img']) : asset('images/ms-2023.jpg'));
