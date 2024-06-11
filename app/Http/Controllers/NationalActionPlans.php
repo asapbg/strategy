@@ -51,6 +51,8 @@ class NationalActionPlans extends Controller
 
         $hasSubscribeEmail = $this->hasSubscription(null, OgpPlan::class, $request->all());
         $hasSubscribeRss = false;
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.national_action_plans', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.national_action_plans', 2), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name', 'oldPlanStatus', 'nationalOldPlans', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter'));
     }
 
@@ -67,6 +69,7 @@ class NationalActionPlans extends Controller
         $pageTitle = $plan->name;
         $this->composeBreadcrumbs($plan);
         $this->setSeo($plan->name, '', '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo($plan->name,  $plan->ogDescription, '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.plan_show', compact('pageTitle', 'plan'));
     }
@@ -82,6 +85,8 @@ class NationalActionPlans extends Controller
         $planName = OldNationalPlanEnum::nameByValue($id);
         $planId = $id;
         $planData = $this->planData($id, app()->getLocale());
+        $this->setSeo(OldNationalPlanEnum::nameByValue($id),  substr(clearAfterStripTag(strip_tags($planData['content'])), 0, 180), '', array('title' => OldNationalPlanEnum::nameByValue($id), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.old_plan_'.app()->getLocale().'.'.$id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
     }
 
@@ -135,6 +140,8 @@ class NationalActionPlans extends Controller
         }
 
         $nationalPlanSection = true;
+        $this->setSeo(__('custom.dev_new_plan_title'),  $item->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.develop_new_action_plan.plan_show',
             compact('item', 'pageTitle', 'schedules', 'nationalPlanSection'));
     }
@@ -162,6 +169,8 @@ class NationalActionPlans extends Controller
             ['name' => $planArea->area->name, 'url' => '']
         ));
         $nationalPlanSection = true;
+        $this->setSeo(__('custom.dev_new_plan_title'),  $item->developPlan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+
         return $this->view('site.ogp.develop_new_action_plan.plan_area_show',
             compact('plan', 'planArea', 'pageTitle', 'nationalPlanSection'));
     }

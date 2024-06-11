@@ -131,15 +131,20 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
     protected function ogDescription(): Attribute
     {
 //        Отворени области: <област1> (до <срок1>), <областN> (до <срокN>)
-        $txt = __('custom.dev_new_plan_title');
-        if($this->areas->count()){
-            $txt = __('custom.open_areas').': ';
-            $first = true;
-            foreach ($this->areas as $area){
-                $txt .= (!$first ? ', ' : '').$area->area->name.' ('.__('custom.to').' '.displayDate($this->to_date_develop).')';
-                $first = false;
+        if($this->national_plan){
+            $txt = substr(clearAfterStripTag(strip_tags($this->content)), 0, 180);
+        } else{
+            $txt = __('custom.dev_new_plan_title');
+            if($this->areas->count()){
+                $txt = __('custom.open_areas').': ';
+                $first = true;
+                foreach ($this->areas as $area){
+                    $txt .= (!$first ? ', ' : '').$area->area->name.' ('.__('custom.to').' '.displayDate($this->to_date_develop).')';
+                    $first = false;
+                }
             }
         }
+
         return Attribute::make(
             get: function () use ($txt){
                 return $txt;
