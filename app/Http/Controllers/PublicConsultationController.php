@@ -224,6 +224,8 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.standard'), 'url' => ''],
         ));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.public_consultations', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
+
         return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
@@ -567,6 +569,8 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.field_of_action'), 'url' => ''],
         ));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.public_consultations', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
+
         return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm', 'fieldOfActionGroupCnt'));
     }
 
@@ -728,6 +732,8 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.field_of_action_institution'), 'url' => ''],
         ));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.public_consultations', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
+
         return $this->view('site.public_consultations.report_fa_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
@@ -968,6 +974,8 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.institutions'), 'url' => ''],
         ));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.public_consultations', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
+
         return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles', 'closeSearchForm'));
     }
 
