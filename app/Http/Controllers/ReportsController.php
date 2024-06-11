@@ -80,7 +80,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportLegislativeInitiative(Request $request, string $type){
@@ -164,7 +164,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportPc(Request $request, string $type)
@@ -398,7 +398,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportPris(Request $request, string $type){
@@ -470,9 +470,9 @@ class ReportsController extends Controller
                     //Public consultation
                     ->leftJoin('public_consultation', 'public_consultation.id', '=', 'pris.public_consultation_id')
                     //Institutions
-                    ->join('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
-                    ->join('institution', 'institution.id', '=', 'pris_institution.institution_id')
-                    ->join('institution_translations', function ($j){
+                    ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+                    ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
+                    ->leftJoin('institution_translations', function ($j){
                         $j->on('institution_translations.institution_id', '=', 'institution.id')
                             ->where('institution_translations.locale', '=', app()->getLocale());
                     })
@@ -481,8 +481,8 @@ class ReportsController extends Controller
                     ->leftJoin('pris_translations as pp_tr', function ($q){
                         $q->on('pp_tr.pris_id', '=', 'pp.id')->where('pp_tr.locale', '=', 'bg');
                     })
-                    ->join('legal_act_type as pp_lat', 'pp_lat.id', '=', 'pp.legal_act_type_id')
-                    ->join('legal_act_type_translations as pp_lat_tr', function ($j){
+                    ->leftJoin('legal_act_type as pp_lat', 'pp_lat.id', '=', 'pp.legal_act_type_id')
+                    ->leftJoin('legal_act_type_translations as pp_lat_tr', function ($j){
                         $j->on('pp_lat_tr.legal_act_type_id', '=', 'pp_lat.id')
                             ->where('pp_lat_tr.locale', '=', app()->getLocale());
                     })
@@ -501,7 +501,7 @@ class ReportsController extends Controller
                     ->where('pris.in_archive', '=', $inArchive)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
-                    ->limit(1000);
+                    ->limit(10000);
 
                 $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
@@ -533,7 +533,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportImpactAssessments(Request $request, string $type){
@@ -617,7 +617,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportLibrary(Request $request, string $type = 'standard'){
@@ -658,7 +658,7 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
     public function apiReportPolls(Request $request, string $type = 'standard'){
@@ -704,6 +704,6 @@ class ReportsController extends Controller
                 $data = [];
         }
 
-        return response()->json($data);
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 }
