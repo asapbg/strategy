@@ -11,6 +11,7 @@ use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
 use App\Models\Page;
+use App\Models\Publication;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
@@ -103,6 +104,8 @@ class LegislativeInitiativeController extends AdminController
         $requestFilter = $request->all();
         $hasSubscribeEmail = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter);
         $hasSubscribeRss = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
+        $this->setSeo(__('site.seo_title'),  trans_choice('custom.legislative_initiatives', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.legislative_initiatives', 2), 'img' => LegislativeInitiative::DEFAULT_IMG));
+
         return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent',
             'laws', 'defaultDirection', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
@@ -143,6 +146,8 @@ class LegislativeInitiativeController extends AdminController
 
         $institutions = Institution::optionsListWithAttr();
         $this->composeBreadcrumbs(null, array(['name' => __('site.new_legislative_initiative'), 'url' => '']));
+        $this->setSeo(__('site.seo_title'),  __('site.new_legislative_initiative'), '', array('title' => __('site.seo_title'), 'description' => __('site.new_legislative_initiative'), 'img' => LegislativeInitiative::DEFAULT_IMG));
+
         return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions', 'lawWithActivePc'));
     }
 
@@ -164,6 +169,7 @@ class LegislativeInitiativeController extends AdminController
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item);
         $institutions = Institution::optionsListWithAttr();
+        $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
         return $this->view(self::EDIT_VIEW, compact('item', 'pageTitle', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs', 'institutions'));
     }
 
@@ -219,7 +225,7 @@ class LegislativeInitiativeController extends AdminController
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = $this->hasSubscription($item, null, null, UserSubscribe::CHANNEL_RSS);
 
-        $this->setSeo($item->facebookTitle,  '', '', array('title' => $item->facebookTitle, 'img' => LegislativeInitiative::DEFAULT_IMG));
+        $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
 
         return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport',
             'hasSubscribeEmail', 'hasSubscribeRss'));

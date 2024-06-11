@@ -1313,4 +1313,6 @@ return [
     'next_meeting' => 'Next meeting',
     'moderator' => 'New moderator',
     'of_council' => 'of the Council of Ministers',
+    'by_article' => 'By article',
+    'proposal' => 'Proposal',
 ];

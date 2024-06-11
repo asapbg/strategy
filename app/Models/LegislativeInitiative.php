@@ -84,6 +84,16 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
         );
     }
 
+    protected function ogDescription(): Attribute
+    {
+        return Attribute::make(
+//            По член: <член>\nПредложение: <предложение за промяна, отрязано до първите 50 символа>
+            get: function () {
+                return __('custom.by_article').': '.(substr(strip_tags($this->law_paragraph), 0, 50)). ' | '.__('custom.proposal').': '.(substr(strip_tags($this->description), 0, 50));
+            }
+        );
+    }
+
     /**
      * Value
      */
