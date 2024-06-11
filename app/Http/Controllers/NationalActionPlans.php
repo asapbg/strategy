@@ -85,7 +85,8 @@ class NationalActionPlans extends Controller
         $planName = OldNationalPlanEnum::nameByValue($id);
         $planId = $id;
         $planData = $this->planData($id, app()->getLocale());
-        $this->setSeo(OldNationalPlanEnum::nameByValue($id),  substr(clearAfterStripTag(strip_tags($planData['content'])), 0, 180), '', array('title' => OldNationalPlanEnum::nameByValue($id), 'img' => OgpPlan::DEFAULT_IMG));
+
+        $this->setSeo(OldNationalPlanEnum::nameByValue($id),  substr($planData['ogDescription'], 0, 180), '', array('title' => OldNationalPlanEnum::nameByValue($id), 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.old_plan_'.app()->getLocale().'.'.$id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
     }
@@ -251,6 +252,10 @@ class NationalActionPlans extends Controller
                             </ul>
                             <p>Предвидени са и общи мерки за подобряване на условията за прилагането на принципите за открито управление.</p>',
                     'en' => array(),
+                ),
+                'ogDescription' => array(
+                    'bg' => 'През месец юни 2012 г. Министерският съвет прие Оперативен план с конкретни мерки за изпълнение на поетите ангажименти на Република България към Глобалната инициатива по "Партньорството за открито управление".',
+                    'en' => 'През месец юни 2012 г. Министерският съвет прие Оперативен план с конкретни мерки за изпълнение на поетите ангажименти на Република България към Глобалната инициатива по "Партньорството за открито управление".',
                 ),
                 'arrangements' => array(
                     'bg' => array(
@@ -768,6 +773,10 @@ class NationalActionPlans extends Controller
                     ),
                     'en' => array(),
                 ),
+                'ogDescription' => array(
+                    'bg' => 'България се присъедини към Инициативата „Партньорство за открито управление“ през 2012 г. С участието си в инициативата българското правителство желаеше и продължава да желае да играе активна роля за изграждане на общество',
+                    'en' => 'България се присъедини към Инициативата „Партньорство за открито управление“ през 2012 г. С участието си в инициативата българското правителство желаеше и продължава да желае да играе активна роля за изграждане на общество',
+                ),
                 'arrangements' => array(
                     'bg' => array(
                         [
@@ -1221,6 +1230,10 @@ class NationalActionPlans extends Controller
                 'content' => array(
                     'bg' => '<p>Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г. Преди приемането на плана беше обявен график за неговата подготовка и беше проведена онлайн обществена консултация на Портала за обществена консултации.</p>',
                     'en' => array(),
+                ),
+                'ogDescription' => array(
+                    'bg' => 'Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г.',
+                    'en' => 'Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г.',
                 ),
                 'arrangements' => array(
                     'bg' => array(
@@ -1722,6 +1735,7 @@ class NationalActionPlans extends Controller
             'files' => $data[$id]['files'][$lang] ?? [],
             'evaluations' => $data[$id]['evaluations'][$lang] ?? [],
             'content' => $data[$id]['content'][$lang] ?? [],
+            'ogDescription' => $data[$id]['ogDescription'][$lang] ?? [],
             'arrangements' => $data[$id]['arrangements'][$lang] ?? [],
         );
     }
