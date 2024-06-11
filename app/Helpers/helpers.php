@@ -902,7 +902,7 @@ if (!function_exists('addUrlParams')) {
 if (!function_exists('clearAfterStripTag')) {
     function clearAfterStripTag($string): string
     {
-        $string = str_replace(['&nbsp;', '&amp;'], '', $string);
+        $string = str_replace(['&nbsp;', '&amp;'], ' ', $string);
 
         return $string;
     }
