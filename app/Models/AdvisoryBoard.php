@@ -201,6 +201,21 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
             }
         );
     }
+
+    protected function ogDescription(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $authority = $this->authority;
+                $chairmans = '';
+                if($this->chairmen->count()){
+                    $chairmans = implode(', ', $this->chairmen->pluck('translation.member_name')->toArray());
+                }
+                return ($authority ? __('custom.belongs_to').': '.$authority->name : '').($authority && !empty($chairmans) ? ' | ' : '').(!empty($chairmans) ? trans_choice('custom.chairmen', 2).': '.$chairmans : '');
+            }
+        );
+    }
+
     protected function headerImg(): Attribute
     {
         return Attribute::make(

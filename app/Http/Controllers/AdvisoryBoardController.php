@@ -225,9 +225,10 @@ class AdvisoryBoardController extends Controller
 
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
 
-        $this->setSeo($item->name,  '', '', array('title' => $item->name, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
+
 
     public function showSection(Request $request, AdvisoryBoard $item, $sectionId = 0)
     {
@@ -242,6 +243,7 @@ class AdvisoryBoardController extends Controller
             $this->setSlider($item->name, $item->headerImg);
         }
         $this->composeBreadcrumbs($item, array(['name' => $section->title, 'url' => '']));
+        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle'));
     }
 
@@ -289,6 +291,7 @@ class AdvisoryBoardController extends Controller
         }
 
         $this->composeBreadcrumbs($item, array(['name' => __('custom.archive').' '.__('custom.meetings_and_decisions'), 'url' => '']));
+        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.archive_meeting', compact('filter','items', 'pageTitle', 'item', 'customSections', 'itemsCalendar'));
     }
 
@@ -320,6 +323,8 @@ class AdvisoryBoardController extends Controller
             return view('site.advisory-boards.archive_wotk_programs_list', compact('filter','items', 'item'));
         }
         $this->composeBreadcrumbs($item, array(['name' => __('custom.archive').' '.__('custom.work_programs'), 'url' => '']));
+        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+
         return $this->view('site.advisory-boards.archive_work_programs', compact('filter','items', 'pageTitle', 'item', 'customSections'));
     }
 
@@ -353,6 +358,8 @@ class AdvisoryBoardController extends Controller
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.news', 2), 'url' => '']));
+        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+
         return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'customSections'));
     }
 
@@ -367,7 +374,7 @@ class AdvisoryBoardController extends Controller
             ['name' => trans_choice('custom.news', 2), 'url' => route('advisory-boards.view.news', $item)],
             ['name' => $news->title, 'url' => '']
         ));
-        $this->setSeo($news->title, $news->meta_description, $news->meta_keyword, array('title' => $news->title, 'img' => $news->mainImg ? $news->mainImg->path : Publication::DEFAULT_IMG_ADV));
+        $this->setSeo($news->meta_title ?? $news->title, $news->meta_description ?? $news->short_content, $news->meta_keyword, array('title' => $news->meta_title ?? $news->title, 'img' => $news->mainImg ? $news->mainImg->path : Publication::DEFAULT_IMG_ADV));
 
         return $this->view('site.advisory-boards.view_news_details', compact('item', 'publication', 'pageTitle', 'customSections'));
     }
@@ -428,10 +435,12 @@ class AdvisoryBoardController extends Controller
 
             $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
             $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
+            $this->setSeo($item->name.' | '.trans_choice('custom.contacts', 2),  $item->ogDescription, '', array('title' => $item->name.' | '.trans_choice('custom.contacts', 2), 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts_inner', compact('pageTitle', 'item', 'customSections'));
         } else{
             $pageTitle = $this->pageTitle;
             $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])->get();
+            $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
         }
     }
@@ -476,6 +485,7 @@ class AdvisoryBoardController extends Controller
             return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items', 'requestFilter'));
         }
 
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.news', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.news', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
     }
 
@@ -486,6 +496,7 @@ class AdvisoryBoardController extends Controller
 
         $publication = $item;
 //        $this->setSlider(trans_choice('custom.advisory_boards', 2), $item->headerImg);
+        $this->setSeo($publication->meta_title ?? $publication->title, $publication->meta_description ?? $publication->short_content, $publication->meta_keyword, array('title' => $publication->meta_title ?? $publication->title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_ADV));
         return $this->view('site.advisory-boards.main_news_details', compact('publication', 'pageTitle'));
     }
 
@@ -640,6 +651,7 @@ class AdvisoryBoardController extends Controller
 
         $pageTitle = trans('custom.adv_board_report_title');
         $this->composeBreadcrumbs(null, array(['name' => __('custom.adv_board_report_title'), 'url' => '']));
+        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.reports', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
 
         return $this->view('site.advisory-boards.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'searchMeetings', 'closeSearchForm'));
     }
