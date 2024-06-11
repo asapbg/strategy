@@ -72,8 +72,12 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->title,
-            'summary' => '',
+            'extraInfo' => ($this->fieldOfAction ? (trans_choice('custom.field_of_actions', 1).': '.$this->fieldOfAction->name.'. ') : '').(__('custom.comments_deadline').': '.displayDate($this->open_to).'. ').($this->importerInstitution ? trans_choice('custom.institutions', 1).': '.$this->importerInstitution?->name.'. ' : '').($this->actType ? trans_choice('custom.act_type', 1).': '.$this->actType?->name.'. ' : ''),
+            'summary' => $this->description,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
+            'enclosureLength' => strlen(file_get_contents(asset(self::DEFAULT_IMG))),
+            'enclosureType' => 'image/jpg',
             'link' => route('public_consultation.view', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

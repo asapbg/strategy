@@ -1317,4 +1317,5 @@ return [
     'proposal' => 'Proposal',
     'dev_new_plan_title' => 'Development of an Open Management Plan',
     'open_areas' => 'Open areas',
+    'comments_deadline' => 'Срок за коментари',
 ];
