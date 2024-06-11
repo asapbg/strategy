@@ -486,6 +486,8 @@ class PublicConsultationController extends Controller
                 $q->where('public_consultation.open_to', '<=', $openTo);
             })
             ->where('field_of_actions.parentid', '<>', 0)
+            ->orderByRaw('max(field_of_actions.parentid)')
+            ->orderBy('field_of_action_translations.name')
             ->groupBy('field_of_action_translations.id');
 
         if($request->input('export_excel') || $request->input('export_pdf')){
@@ -504,13 +506,55 @@ class PublicConsultationController extends Controller
                 return Excel::download(new PublicConsultationFaReportExport($exportData), $fileName.'.xlsx');
             }
         } else{
+            $fieldOfActionGroupCnt = DB::table('field_of_actions')
+                ->select(['field_of_actions.parentid as fa_level', DB::raw('count(distinct(public_consultation.id)) as pc_cnt')])
+                ->join('field_of_action_translations', function ($j){
+                    $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                        ->where('field_of_action_translations.locale', '=', app()->getLocale());
+                })
+                ->leftJoin('public_consultation', function ($q){
+                    $q->on('public_consultation.field_of_actions_id', '=', 'field_of_actions.id')
+                        ->whereNull('public_consultation.deleted_at');
+//                    ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'))
+//                    ->where('public_consultation.active');
+                })
+                ->where('field_of_actions.active', '=', 1)
+                ->whereNull('field_of_actions.deleted_at')
+                ->when($fieldOfActions, function ($q) use($fieldOfActions){
+                    $q->whereIn('field_of_actions.id', $fieldOfActions);
+                })
+                ->when($fieldOfActionsAreas, function ($q) use($fieldOfActionsAreas){
+                    $q->whereIn('field_of_actions.id', $fieldOfActionsAreas);
+                })
+                ->when($fieldOfActionsMunicipalities, function ($q) use($fieldOfActionsMunicipalities){
+                    $q->whereIn('field_of_actions.id', $fieldOfActionsMunicipalities);
+                })
+                ->when($levels, function ($q) use($levels){
+                    //$q->whereIn('public_consultation.consultation_level_id', $levels);
+                    $faLevels = [];
+                    foreach ($levels as $l){
+                        $faLevels[] = InstitutionCategoryLevelEnum::fieldOfActionCategory((int)$l);
+                    }
+                    $q->whereIn('field_of_actions.parentid', $faLevels);
+                })
+                ->when($openForm, function ($q) use($openForm){
+                    $q->where('public_consultation.open_from', '>=', $openForm);
+                })->when($openTo, function ($q) use($openTo){
+                    $q->where('public_consultation.open_to', '<=', $openTo);
+                })
+                ->whereNotNull('field_of_action_translations.name')
+                ->where('field_of_actions.parentid', '<>', 0)
+                ->groupBy('field_of_actions.parentid')
+                ->get()
+                ->pluck('pc_cnt', 'fa_level')
+                ->toArray();
             $items = $q->paginate($paginate);
         }
 
         $closeSearchForm = false;
         if( $request->ajax() ) {
             $closeSearchForm = false;
-            return view('site.public_consultations.list_report_fa', compact('filter','items', 'rf', 'closeSearchForm'));
+            return view('site.public_consultations.list_report_fa', compact('filter','items', 'rf', 'closeSearchForm', 'fieldOfActionGroupCnt'));
         }
 
         $pageTitle = __('site.menu.public_consultation');
@@ -520,7 +564,7 @@ class PublicConsultationController extends Controller
             ['name' => trans_choice('custom.reportss', 2), 'url' => ''],
             ['name' => __('custom.pc_reports.field_of_action'), 'url' => ''],
         ));
-        return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
+        return $this->view('site.public_consultations.report_fa', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm', 'fieldOfActionGroupCnt'));
     }
 
     private function filtersFaReport($request){

@@ -45,14 +45,14 @@
                         @break
                     @endswitch
                     @if($fieldOfActionGroup != $itemFaGroup)
-                        @php($fieldOfActionGroupCnt = 0)
-                        @foreach($items as $i)
-                            @php($fieldOfActionGroupCnt += ($i->fa_level == $item->fa_level ? $i->pc_cnt : 0))
-                        @endforeach
+{{--                        @php($fieldOfActionGroupCnt = 0)--}}
+{{--                        @foreach($items as $i)--}}
+{{--                            @php($fieldOfActionGroupCnt += ($i->fa_level == $item->fa_level ? $i->pc_cnt : 0))--}}
+{{--                        @endforeach--}}
                         @php($fieldOfActionGroup = $itemFaGroup)
                         <tr class="fw-bold">
                             <td class="custom-left-border">{{ $itemFaGroup }}</td>
-                            <td>{{ $fieldOfActionGroupCnt }}</td>
+                            <td>{{ isset($fieldOfActionGroupCnt) && sizeof($fieldOfActionGroupCnt) && isset($fieldOfActionGroupCnt[(int)$item->fa_level]) ? $fieldOfActionGroupCnt[(int)$item->fa_level] : 0 }}</td>
                         </tr>
                     @endif
                     <tr>
