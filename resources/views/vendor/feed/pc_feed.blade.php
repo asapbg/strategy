@@ -34,11 +34,6 @@
             @endif
         </author>
         <summary type="html">
-            @if(empty($item->extraInfo))
-                <content>
-                    {!! \Spatie\Feed\Helpers\Cdata::out($item->extraInfo) !!}
-                </content>
-            @endif
             <description>
                 {!! \Spatie\Feed\Helpers\Cdata::out($item->summary) !!}
             </description>
