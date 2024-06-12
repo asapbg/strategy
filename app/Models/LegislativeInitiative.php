@@ -46,11 +46,13 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->facebookTitle,
-            'summary' => '',
+            'summary' => $extraInfo.$this->description,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => route('legislative_initiatives.view', ['item' => $this->id]),
             'authorName' => $this->user?->fullName(),
             'authorEmail' => ''

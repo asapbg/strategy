@@ -24,6 +24,7 @@ class OperationalProgram extends ModelActivityExtend implements Feedable
     const MODULE_NAME = ('custom.operational_program');
     public $timestamps = true;
     protected $table = 'operational_program';
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
 
     //activity
     protected string $logName = "operational_program";
@@ -35,11 +36,13 @@ class OperationalProgram extends ModelActivityExtend implements Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->name,
-            'summary' => '',
+            'summary' => $extraInfo,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => route('op.view', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

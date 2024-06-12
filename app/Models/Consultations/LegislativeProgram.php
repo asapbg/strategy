@@ -24,6 +24,7 @@ class LegislativeProgram extends ModelActivityExtend implements Feedable
     const MODULE_NAME = ('custom.nomenclatures.legislative_program');
     public $timestamps = true;
     protected $table = 'legislative_program';
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
 
     //activity
     protected string $logName = "legislative_program";
@@ -35,11 +36,13 @@ class LegislativeProgram extends ModelActivityExtend implements Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->name,
-            'summary' => '',
+            'summary' => $extraInfo,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => route('lp.view', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

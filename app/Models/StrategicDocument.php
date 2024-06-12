@@ -52,7 +52,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
             'id' => $this->id,
             'title' => $this->title,
             //TODO debug why description is bad for rss
-//            'summary' => str_replace(['&bull;'], '', $this->description),
+//            'summary' => $extraInfo.str_replace(['&bull;'], '', $this->description),
             'summary' => '',
             'updated' => $this->updated_at ?? $this->created_at,
             'enclosure' => asset(self::DEFAULT_IMG),

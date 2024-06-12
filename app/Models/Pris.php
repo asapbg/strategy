@@ -46,11 +46,13 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->mcDisplayName,
-            'summary' => '',
+            'summary' => $extraInfo,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => $this->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($this->actType?->name), 'id' => $this->id]) : route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

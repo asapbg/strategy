@@ -39,11 +39,13 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
 
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->name,
-            'summary' => '',
+            'summary' => $extraInfo.$this->content,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => route('ogp.national_action_plans.show', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

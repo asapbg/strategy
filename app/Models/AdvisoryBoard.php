@@ -75,11 +75,13 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->name,
-            'summary' => '',
+            'summary' => $extraInfo,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => $this->headerImg,
             'link' => route('advisory-boards.view', ['item' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''

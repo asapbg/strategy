@@ -42,17 +42,18 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->title,
-            'summary' => '',
+            'summary' => $extraInfo.$this->content,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => $this->mainImg ? $this->mainImgAsset : $this->defaultImg,
             'link' => route('strategy-document.view', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''
         ]);
     }
-
     /**
      * We use this method for rss feed
      * @return \Illuminate\Database\Eloquent\Collection

@@ -17,6 +17,7 @@ class Poll extends ModelActivityExtend implements Feedable
 {
     use FilterSort;
 
+    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.polls');
     const MORE_THEN_ONE_ANSWER = true;
@@ -35,11 +36,13 @@ class Poll extends ModelActivityExtend implements Feedable
      */
     public function toFeedItem(): FeedItem
     {
+        $extraInfo = '';
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->name,
-            'summary' => '',
+            'summary' => $extraInfo,
             'updated' => $this->updated_at ?? $this->created_at,
+            'enclosure' => asset(self::DEFAULT_IMG),
             'link' => Carbon::parse($this->end_date)->format('Y-m-d') < databaseDate(Carbon::now()) ? route('poll.statistic', ['id' => $this->id]) : route('poll.show', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''
