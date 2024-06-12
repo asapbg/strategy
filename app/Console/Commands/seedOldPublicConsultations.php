@@ -113,6 +113,7 @@ class seedOldPublicConsultations extends Command
             $dInstitution->save();
         }
 
+        $ourUsersIds = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->pluck('id', 'old_id')->toArray();
         $ourUsersInstitutions = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->pluck('institution_id', 'old_id')->toArray();
         $ourUsersInstitutionsByMail = User::withTrashed()->where('user_type', '=', 1)
             ->where('email', 'not like', '%duplicated-%')
@@ -201,6 +202,12 @@ class seedOldPublicConsultations extends Command
                                 $institutionId = $dInstitution->id;
                             }
 
+                            if(isset($ourUsersIds[$item->author_id])){
+                                $author = (int)$ourUsersIds[$item->author_id];
+                            } else{
+                                $author = null;
+                            }
+
                             $actType = null;
                             if(!empty($item->title)){
                                 if(str_contains($item->title,'Постановление на Министерския съвет')){
@@ -235,6 +242,7 @@ class seedOldPublicConsultations extends Command
                                     $existPc->active = $item->active;
                                     $existPc->field_of_actions_id = (int)$fieldOfAct;
                                     $existPc->act_type_id = $actType;
+                                    $existPc->user_id = $author;
                                     $existPc->save();
 
                                     foreach ($locales as $locale) {
@@ -272,7 +280,8 @@ class seedOldPublicConsultations extends Command
                                 'law_id' => null,
                                 'pris_id' => null,
                                 'title' => $item->title,
-                                'description' => $item->description
+                                'description' => $item->description,
+                                'user_id' => $author
                             ];
 
                             $newPc = new PublicConsultation();

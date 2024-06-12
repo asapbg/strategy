@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\DocTypesEnum;
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Enums\PrisDocChangeTypeEnum;
 use App\Enums\PublicationTypesEnum;
@@ -393,6 +394,131 @@ class ReportsController extends Controller
                             $data[] = $item;
                         }
                     }
+                break;
+            case 'full':
+                $defaultInstitution = env('DEFAULT_INSTITUTION_ID');
+                $data = DB::select(
+                    'select
+                                pc.reg_num,
+                                -- pc.consultation_level_id as consultation_level,
+                                case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::CENTRAL->value.'
+                                then \'Централно\'
+                                else (
+                                    case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::CENTRAL_OTHER->value.'
+                                    then \'Централно друго\'
+                                    else (
+                                        case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::AREA->value.'
+                                        then \'Областно\'
+                                        else (
+                                            case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::MUNICIPAL->value.'
+                                            then \'Общинско\'
+                                            else
+                                                \'\'
+                                            end
+                                        )
+                                        end
+                                    )
+                                    end
+                                )
+                                end as consultation_type,
+                                att.name as act_type,
+                                pc.open_from as date_open,
+                                pc.open_to as date_close,
+                                pct.short_term_reason,
+                                (pc.active::int)::bool as active,
+                                foat.name as policy_area,
+                                pc.legislative_program_id,
+                                pc.operational_program_id,
+                                pc.responsible_institution_id,
+                                it.name as responsible_institution_name,
+                                it.address as responsible_institution_address,
+                                pct.proposal_ways,
+                                (
+                                    select jsonb_agg(jsonb_build_object(\'name\', pcc.name, \'email\', pcc.email))
+                                    from public_consultation_contact pcc
+                                    where
+                                        pcc.public_consultation_id = pc.id
+                                        and pcc.deleted_at is null
+                                ) as contacts,
+                                lt.name as law_name,
+                                pc.law_id,
+                                pc.pris_id,
+                                u.first_name || \' \' || u.middle_name || \' \' || u.last_name as author_name,
+                                (
+                                    select jsonb_agg(jsonb_build_object(\'date\', c.created_at::date , \'author_name\', u2.first_name || \' \' || u2.middle_name || \' \' || u2.last_name , \'text\', c."content"))
+                                    from comments c
+                                    left join users u2 on u2.id = c.user_id
+                                    where
+                                        c.object_id = pc.id
+                                        and c.object_code = 1 -- model Comments::PC_OBJ_CODE
+                                        and c.deleted_at is null
+                                ) as comments,
+                                (
+                                    select jsonb_build_object(\'structure\', (
+                                        select jsonb_agg(jsonb_build_object(\'column\', A.column_name , \'value\', A.column_value))
+                                        from (
+                                            select
+                                                max(dsct.label) as column_name,
+                                                cdr.value as column_value
+                                            from consultation_document cd
+                                            join consultation_document_row cdr on cdr.consultation_document_id = cd.id and cdr.deleted_at is null
+                                            join dynamic_structure_column dsc on dsc.id = cdr.dynamic_structures_column_id and dsc.deleted_at is null
+                                            join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
+                                            where
+                                                cd.public_consultation_id = pc.id
+                                                and cd.deleted_at is null
+                                            group by cdr.id
+                                            order by max(dsc.ord)
+                                        ) A
+                                    ), \'file\', case when cf.id is not null then \''.url('/').'\' || \'download/\' || cf.id else \'\' end)
+                                ) as consultation_document
+                            from public_consultation pc
+                            join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \'bg\'
+                            left join field_of_actions foa on foa.id = pc.field_of_actions_id
+                            left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                            left join act_type at2 on at2.id = pc.act_type_id
+                            left join act_type_translations att on att.act_type_id = at2.id and att.locale = \'bg\'
+                            left join law l on l.id = pc.law_id
+                            left join law_translations lt on lt.law_id = l.id and lt.locale = \'bg\'
+                            left join institution i on i.id = pc.responsible_institution_id  and i.id <> '.$defaultInstitution.' --
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            left join users u on u.id = pc.user_id
+                            left join files cf on cf.id_object = pc.id
+                                        and cf.code_object = '.File::CODE_OBJ_PUBLIC_CONSULTATION.'
+                                        and cf.doc_type = '.DocTypesEnum::PC_KD_PDF->value.'
+                                        and cf.locale = \'bg\'
+                                        and cf.deleted_at is null
+                            where
+                                pc.deleted_at is null
+                                        and pc.active = 1
+                            order by pc.created_at desc'
+                );
+
+                $header = [
+                    'reg_num' => __('custom.number_symbol'),
+                    'consultation_type' => __('custom.consultation_level'),
+                    'act_type' => trans_choice('custom.act_type', 1),
+                    'date_open' => __('validation.attributes.open_from'),
+                    'date_close' => __('validation.attributes.open_to'),
+                    'short_term_reason' => __('site.public_consultation.short_term_motive_label'),
+                    'active' => __('custom.status'),
+                    'policy_area' => trans_choice('custom.field_of_actions', 1),
+                    'legislative_program_id' => trans_choice('custom.legislative_program', 1),
+                    'operational_program_id' => trans_choice('custom.operational_programs', 1),
+                    'responsible_institution_id' => trans_choice('custom.institutions', 1).'(ID)',
+                    'responsible_institution_name' => trans_choice('custom.institutions', 1).'('.__('custom.name').')',
+                    'responsible_institution_address' => trans_choice('custom.institutions', 1).'('.__('custom.address').')',
+                    'proposal_ways' => __('custom.proposal_ways'),
+                    'contacts' => trans_choice('custom.person_contacts', 2),
+                    'law_name' => trans_choice('custom.nomenclature.laws', 1),
+                    'law_id' => trans_choice('custom.nomenclature.laws', 1).'(ID)',
+                    'pris_id' => trans_choice('custom.acts_pris', 1).'(ID)',
+                    'author_name' => __('custom.author'),
+                    'comments' => trans_choice('custom.comment', 2),
+                    'consultation_document' => trans_choice('custom.consult_documents', 1)
+                ];
+                array_unshift($data, $header);
+
                 break;
             default:
                 $data = [];
