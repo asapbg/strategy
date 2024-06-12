@@ -119,6 +119,10 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/info.log'),
         ],
+        'eauth' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/eauth.log'),
+        ],
     ],
 
 ];
