@@ -277,6 +277,8 @@ class ReportsController extends Controller
                     ->where('field_of_actions.active', '=', 1)
                     ->whereNull('field_of_actions.deleted_at')
                     ->where('field_of_actions.parentid', '<>', 0)
+                    ->orderByRaw('max(field_of_actions.parentid)')
+                    ->orderBy('field_of_action_translations.name')
                     ->groupBy('field_of_action_translations.id');
 
                 $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
