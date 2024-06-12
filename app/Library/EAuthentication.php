@@ -310,6 +310,17 @@ class EAuthentication
                 return null;
             }
 
+            $log_arr['saml2NameID'] = "Неизвестен вход";
+            if (isset($fullMsg['saml2Assertion']['saml2Subject']['saml2NameID'])) {
+                $user['login_source'] = $fullMsg['saml2Assertion']['saml2Subject']['saml2NameID'];
+                $log_arr['saml2NameID'] = $user['login_source'];
+            }
+            $log_arr['saml2Attribute'] = $fullMsg['saml2Assertion']['saml2AttributeStatement']['saml2Attribute'];
+            Log::channel('eauth')->info($log_arr);
+            if ($user['login_source'] == "nap_pik" || $user['login_source'] == "noi_pik") {
+                return $user;
+            }
+
             //Log::info(dump($fullMsg));
             foreach ($fullMsg['saml2Assertion']['saml2AttributeStatement']['saml2Attribute'] as $attribute){
                 if( isset($attribute['@attributes']) && isset($attribute['@attributes']['Name']) && isset($attribute['saml2AttributeValue']) ) {

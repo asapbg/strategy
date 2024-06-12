@@ -9,9 +9,12 @@
             <div class="card-body">
                 <form method="POST" action="{{ route('eauth.user.create') }}">
                     @csrf
-                    <input type="hidden" name="legal_form" value="{{ $userInfo['legal_form'] ?? 0 }}">
-                    <input type="hidden" name="identity_number" value="{{ $userInfo['identity_number'] ?? '' }}">
-                    <input type="hidden" name="name" value="{{ $userInfo['name'] ?? '' }}">
+                    <input type="hidden" name="person_identity" value="{{ $userInfo['person_identity'] ?? '' }}">
+                    <input type="hidden" name="company_identity" value="{{ $userInfo['company_identity'] ?? '' }}">
+                    <input type="hidden" name="org_name" value="{{ $userInfo['org_name'] ?? '' }}">
+                    <input type="hidden" name="first_name" value="{{ $userInfo['first_name'] ?? '' }}">
+                    <input type="hidden" name="middle_name" value="{{ $userInfo['middle_name'] ?? '' }}">
+                    <input type="hidden" name="last_name" value="{{ $userInfo['last_name'] ?? '' }}">
                     <input type="hidden" name="phone" value="{{ $userInfo['phone'] ?? '' }}">
                     <div class="row">
                         @if(isset($validationErrors) && sizeof($validationErrors))

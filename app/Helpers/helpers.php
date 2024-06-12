@@ -954,16 +954,73 @@ if (!function_exists('transliterate_new')) {
 
         return $reverse ? str_replace($lat, $cyr, $str) : str_replace($cyr, $lat, $str);
     }
+}
 
-    if (!function_exists('fileThumbnail')) {
-        function fileThumbnail($file)
-        {
-            $thumbnail = '';
-            if(in_array($file->content_type, ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'])){
-                $thumbnail = '<div class="col-md-4 mb-3"><img class="img-thumbnail preview-file-modal" role="button" data-file="'.$file->id.'" data-url="'.route('modal.file_preview', ['id' => $file->id]).'" src="'.asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)).'"></div>';
-            }
-
-            return $thumbnail;
+if (!function_exists('fileThumbnail')) {
+    function fileThumbnail($file)
+    {
+        $thumbnail = '';
+        if(in_array($file->content_type, ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'])){
+            $thumbnail = '<div class="col-md-4 mb-3"><img class="img-thumbnail preview-file-modal" role="button" data-file="'.$file->id.'" data-url="'.route('modal.file_preview', ['id' => $file->id]).'" src="'.asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)).'"></div>';
         }
+
+        return $thumbnail;
+    }
+}
+
+if (!function_exists('getNamesByFullName')) {
+
+    /**
+     * @method getNamesByFullName
+     * @param string $fullName
+     * @return array
+     */
+    function getNamesByFullName(string $fullName, $transliterate = true): array
+    {
+        $name_expl = explode(" ", $transliterate ? transliterate($fullName) : $fullName);
+
+        $names = [
+            'first_name' => $name_expl[0] ?? null,
+            'middle_name' => null,
+            'last_name' => $name_expl[1] ?? null,
+        ];
+
+        if (count($name_expl) > 2) {
+            $names = [
+                'first_name' => $name_expl[0] ?? null,
+                'middle_name' => $name_expl[1] ?? null,
+                'last_name' => $name_expl[2] ?? null,
+            ];
+        }
+
+        return $names;
+    }
+}
+
+if (!function_exists('transliterate')) {
+
+    /**
+     * Transliterate a given string from latin to cyrillic
+     *
+     * @method transliterate
+     * @param $str
+     * @return string
+     */
+    function transliterate($str)
+    {
+        $lat = [
+            'yu', 'ya', 'ts', 'ch', 'sh', 'sht', 'a', 'b', 'v', 'g', 'd', 'e', 'io', 'zh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+            'r', 's', 't', 'u', 'f', 'h', 'a', 'i', 'y', 'e',
+            'YU', 'YA', 'TS', 'CH', 'SH', 'SHT', 'A', 'B', 'V', 'G', 'D', 'E', 'IO', 'ZH', 'Z', 'I', 'Y', 'K', 'L', 'M', 'N', 'O', 'P',
+            'R', 'S', 'T', 'U', 'F', 'H', 'A', 'I', 'Y', 'e'
+        ];
+        $cyr = [
+            'ю', 'я', 'ц', 'ч', 'ш', 'щ', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п',
+            'р', 'с', 'т', 'у', 'ф', 'х', 'ъ', 'ы', 'ь', 'э',
+            'Ю', 'Я', 'Ц', 'Ч', 'Ш', 'Щ', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П',
+            'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ъ', 'Ы', 'Ь', 'Э'
+        ];
+
+        return str_replace($lat, $cyr, $str);
     }
 }

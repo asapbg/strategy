@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Library\DigitalSignature;
 use App\Library\EAuthentication;
 use App\Models\Setting;
-use App\Models\Settings;
 use App\Models\User;
 use App\Models\UserCertificate;
 use Carbon\Carbon;
@@ -24,10 +23,6 @@ class EAuthController extends Controller
     private string $homeRouteName = 'site.home';
     private string $adminRouteName = 'admin.home';
 
-    const LEGAL_FORM_PERSON = 'person';
-    const LEGAL_FORM_COMPANY = 'company';
-    //required field to register new user
-    private array $newUserRequiredFields = ['name', 'legal_form', 'identity_number', 'email'];
 
     /**
      * Starts a eAuth process by open and submit form automatically to Identity provider
@@ -48,12 +43,11 @@ class EAuthController extends Controller
     public function loginCallback(Request $request, $source = ''): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
         $eAuth = new EAuthentication();
+        Log::channel('eauth')->info('EAuthController::SAMLResponse: ' . $request->input('SAMLResponse'));
         $userInfo = $eAuth->userData($request->input('SAMLResponse'));
 
-        //Identity number is required
-        if( !isset($userInfo['legal_form']) || !isset($userInfo['identity_number'])
-            || is_null($userInfo['legal_form']) || is_null($userInfo['identity_number']) ) {
-            return $this->showMessage($this->homeRouteName, __('eauth.identity_number_is_missing'));
+        if (isset($userInfo['login_source']) && ($userInfo['login_source'] == "nap_pik" || $userInfo['login_source'] == "noi_pik")) {
+            return $this->showMessage($this->homeRouteName, __('eauth.nap_pik'));
         }
 
         //check if kep exist and sign
@@ -64,6 +58,14 @@ class EAuthController extends Controller
             if (empty($certInfo) || !isset($certInfo['subject']) && !isset($certInfo['serialNumber'])) {
                 return $this->showMessage($this->homeRouteName, 'Невалиден електронен подпис');
             }
+
+            $personIdentity = !isset($certInfo['subject']) || !isset($certInfo['subject']['serialNumber']) ? [] : explode('-', $certInfo['subject']['serialNumber']);
+            if(sizeof($personIdentity) != 2 || empty($personIdentity[1])){
+                return $this->showMessage($this->homeRouteName, 'Невалидно ЕГН в електронния подпис');
+            }
+            $personIdentity = $personIdentity[1];
+            $companyIdentity = !isset($certInfo['subject']) || !isset($certInfo['subject']['organizationIdentifier']) ? [] : explode('-', $certInfo['subject']['organizationIdentifier']);
+            $companyIdentity = sizeof($companyIdentity) != 2 || empty($companyIdentity[1]) ? null : $companyIdentity[1];
 
             //Check if user with certificate exist and login
             $existCert = UserCertificate::with(['user'])
@@ -76,79 +78,27 @@ class EAuthController extends Controller
             }
 
             //Log::info(json_encode($userInfo));
-            $fullNameExplode = explode(' ', $userInfo['name'] ?? $certInfo['subject']['CN']);
-            //$names = getNamesByFullName(transliterate($person_name));
-            $userInfo['first_name'] = $fullNameExplode[0];
-            $userInfo['middle_name'] = $fullNameExplode[1];
-            $userInfo['last_name'] = isset($fullNameExplode[2]) ? $fullNameExplode[2] : null;
-            $userInfo['identity'] = $userInfo['identity_number'];
+            $fullName = mb_convert_case(transliterate_new($certInfo['subject']['CN'], true), MB_CASE_TITLE, 'UTF-8');
+            $fullNameExplode = getNamesByFullName($fullName, false);
+            $userInfo['first_name'] = $fullNameExplode['first_name'];
+            $userInfo['middle_name'] = $fullNameExplode['middle_name'];
+            $userInfo['last_name'] = $fullNameExplode['last_name'];
+            $userInfo['person_identity'] = $personIdentity;
+            $userInfo['company_identity'] = $companyIdentity;
+            $userInfo['org_name'] = null;
 
             //Check if user with this email exist
             $userInfo['email'] = $certInfo['subject']['emailAddress'] ?? '';
-            //Second check if email - if yes sign
-            $existUser = User::where('email', '=', $userInfo['email'])->first();
 
-
-            if ($existUser) {
-                $this->addUserCertificate($existUser, $userInfo['certificate'], $certInfo, $details);
-                $this->updateExistingUser($existUser, $userInfo);
-                return $this->redirectExistingUser($existUser);
-            }
-
-
-            if ( $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ) {
-                $existUser = User::where('person_identity', '=', $userInfo['identity_number'])->first();
-            } else{
-                //TODO If api return eik when legal form is company
-                $existUser = User::where('company_identity', '=', $userInfo['identity_number'])->first();
-            }
-
-
+            $existUser = User::where('person_identity', '=', $userInfo['person_identity'])->first();
             if ($existUser) {
                 $this->addUserCertificate($existUser, $userInfo['certificate']);
-                $this->updateExistingUser($existUser, $userInfo);
                 return $this->redirectExistingUser($existUser);
             }
-
             return $this->saveNewUser($userInfo, true);
         }
 
-       //Email is optional
-        if( isset($userInfo['email']) && !empty($userInfo['email']) ) {
-            //Second check if email and exist - if yes sign
-            $existUser = User::where('email', '=', $userInfo['email'])->first();
-            if($existUser) {
-                $this->updateExistingUser($existUser, $userInfo);
-                return $this->redirectExistingUser($existUser);
-            }
-        }
-
-        //First check if identity already exist - if yes sign
-        if ( $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ) {
-            $existUser = User::where('person_identity', '=', $userInfo['identity_number'])->first();
-        } else{
-            //TODO If api return eik when legal form is company
-            $existUser = User::where('company_identity', '=', $userInfo['identity_number'])->first();
-        }
-
-        if($existUser) {
-            $this->updateExistingUser($existUser, $userInfo);
-            return $this->redirectExistingUser($existUser);
-        }
-
-        //Check if all required fields are filled
-        $missingFields = false;
-        foreach ($this->newUserRequiredFields as $f) {
-            if( !isset($userInfo[$f]) || empty($userInfo[$f]) ) {
-                $missingFields = true;
-            }
-        }
-
-        if( $missingFields ) {
-            return view('eauth.create_user', compact('userInfo'));
-        }
-
-        return $this->saveNewUser($userInfo);
+        return view('eauth.create_user', compact('userInfo'));
     }
 
     /**
@@ -162,15 +112,6 @@ class EAuthController extends Controller
     {
         DB::beginTransaction();
         try {
-
-            if( $data['legal_form'] == self::LEGAL_FORM_PERSON ) {
-                $name = explode(' ', $data['name']);
-                $data['first_name'] = $name[0];
-                $data['last_name'] = $name[2] ?? ($name[1] ?? $name[0]);
-            } else{
-                $data['org_name'] = $data['name'];
-            }
-
             $user = new User([
                 'password' => Hash::make(Str::random(8)),
                 'user_type' => User::USER_TYPE_EXTERNAL,
@@ -179,21 +120,18 @@ class EAuthController extends Controller
                 'org_name' =>  $data['org_name'] ?? null,
                 'username' => $data['email'],
                 'email' => $data['email'],
-                'is_org' => $data['legal_form'] == 'person' ? 0 : 1,
+                'is_org' => isset($data['company_identity']) && !empty($data['company_identity']) ? 1 : 0,
                 'phone' => $data['phone'] ?? null,
                 'activity_status' => User::STATUS_ACTIVE,
                 'active' => 1,
                 'email_verified_at' => Carbon::now(),
-                'last_login_at' => Carbon::now()
+                'last_login_at' => Carbon::now(),
+                'person_identity' => $data['person_identity'] ?? null,
+                'company_identity' => $data['company_identity'] ?? null,
+                'eauth' => 1
             ]);
 
             if( $user ) {
-                if( $data['legal_form'] == 'person' ) {
-                    $user->person_identity = $data['identity_number'];
-                } else {
-                    $user->company_identity = $data['identity_number'];
-                }
-                $user->eauth = 1;
                 $user->save();
             }
 
@@ -235,10 +173,13 @@ class EAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email', 'unique:users', 'max:255'],
-            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'first_name' => ['required', 'string', 'min:3', 'max:255'],
+            'middle_name' => ['required', 'string', 'min:3', 'max:255'],
+            'last_name' => ['required', 'string', 'min:3', 'max:255'],
             'phone' => ['nullable', 'string', 'min:3', 'max:50'],
-            'legal_form' => ['required', 'string', Rule::in('person', 'company')],
-            'identity_number' => ['required', 'string', 'max:20']
+            'person_identity' => ['required', 'string', 'max:20'],
+            'company_identity' => ['nullable', 'string'],
+            'org_name' => ['nullable', 'string', 'max:255']
         ]);
 
         if( $validator->fails() ) {
@@ -310,17 +251,6 @@ class EAuthController extends Controller
     public function logout()
     {
         echo 'logout';
-    }
-
-    private function updateExistingUser($existingUser, $userInfo): void
-    {
-        if ( $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ) {
-            $existingUser->person_identity = $userInfo['identity_number'];
-        } else {
-            $existingUser->company_identity = $userInfo['identity_number'];
-            $existingUser->org_name = $userInfo['name'] ?? '';
-        }
-        $existingUser->save();
     }
 
     private function addUserCertificate($existingUser, $certificate): void
