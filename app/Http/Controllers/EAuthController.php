@@ -120,6 +120,7 @@ class EAuthController extends Controller
                 'org_name' =>  $data['org_name'] ?? null,
                 'username' => $data['email'],
                 'email' => $data['email'],
+                'notification_email' => $data['email'],
                 'is_org' => isset($data['company_identity']) && !empty($data['company_identity']) ? 1 : 0,
                 'phone' => $data['phone'] ?? null,
                 'activity_status' => User::STATUS_ACTIVE,
