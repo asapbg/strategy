@@ -39,7 +39,13 @@
             </description>
         </summary>
         @if($item->__isset('enclosure'))
-            <link href="{{ url($item->enclosure) }}" length="{{ $item->enclosureLength }}" type="{{ $item->enclosureType }}" />
+            <content type="html">
+                <![CDATA[
+                <a href="{{ url($item->link) }}">
+                    <img alt="{{ $item->title }}" src="{{ url($item->enclosure) }}" />
+                </a>
+                ]]>
+            </content>
         @endif
         @foreach($item->category as $category)
             <category term="{{ $category }}" />

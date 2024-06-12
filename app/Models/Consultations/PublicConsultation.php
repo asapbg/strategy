@@ -76,8 +76,6 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             'summary' => $extraInfo.$this->description,
             'updated' => $this->updated_at ?? $this->created_at,
             'enclosure' => asset(self::DEFAULT_IMG),
-            'enclosureLength' => strlen(file_get_contents(asset(self::DEFAULT_IMG))),
-            'enclosureType' => 'image/jpg',
             'link' => route('public_consultation.view', ['id' => $this->id]),
             'authorName' => '',
             'authorEmail' => ''
