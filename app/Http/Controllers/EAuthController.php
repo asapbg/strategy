@@ -95,7 +95,7 @@ class EAuthController extends Controller
                 $this->addUserCertificate($existUser, $userInfo['certificate']);
                 return $this->redirectExistingUser($existUser);
             }
-            return $this->saveNewUser($userInfo, true);
+            //return $this->saveNewUser($userInfo, true);
         }
 
         return view('eauth.create_user', compact('userInfo'));
