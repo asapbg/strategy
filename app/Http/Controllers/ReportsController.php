@@ -183,7 +183,15 @@ class ReportsController extends Controller
                                 C.legislative_program_id as id,
                                 max(C.date_from) as date_from,
                                 max(C.date_to) as date_to,
-                                \'????\' as files,
+                                (
+                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id)
+                                    from files f
+                                        where
+                                            f.id_object = C.legislative_program_id
+                                            and f.deleted_at is null
+                                        and f.locale = \'bg\'
+                                        and f.code_object = '.File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL.'
+                                ) as files,
                                 jsonb_agg(jsonb_build_object(C.month, C.records)) as program
                             from (
                                 select
@@ -261,7 +269,15 @@ class ReportsController extends Controller
                                 C.operational_program_id as id,
                                 max(C.date_from) as date_from,
                                 max(C.date_to) as date_to,
-                                \'????\' as files,
+                                (
+                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id)
+                                    from files f
+                                        where
+                                            f.id_object = C.operational_program_id
+                                            and f.deleted_at is null
+                                        and f.locale = \'bg\'
+                                        and f.code_object = '.File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL.'
+                                ) as files,
                                 jsonb_agg(jsonb_build_object(C.month, C.records)) as program
                             from (
                                 select
