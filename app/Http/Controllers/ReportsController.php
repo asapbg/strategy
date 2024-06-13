@@ -649,7 +649,35 @@ class ReportsController extends Controller
                                             order by max(dsc.ord)
                                         ) A
                                     ), \'file\', case when cf.id is not null then \''.url('/').'\' || \'/download/\' || cf.id else \'\' end)
-                                ) as consultation_document
+                                ) as consultation_document,
+                                (
+                                    select jsonb_agg(jsonb_build_object(\'type\', A.type_name, \'versions\', A.files))
+                                    from (
+                                        select f.doc_type, case when max(enums.type_name) is not null then max(enums.type_name) else \''.__('validation.attributes.other').'\' end as type_name, jsonb_agg(jsonb_build_object(\'date\', f.created_at::date, \'link\', \''.url('/').'\' || \'/download/\' || f.id)) as files
+                                        from files f
+                                        left join (select type_id, type_name from (
+                                                    values ('.DocTypesEnum::PC_IMPACT_EVALUATION->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_IMPACT_EVALUATION->value).'\'),
+                                                    ('.DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_IMPACT_EVALUATION_OPINION->value).'\'),
+                                                    ('.DocTypesEnum::PC_REPORT->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_REPORT->value).'\'),
+                                                    ('.DocTypesEnum::PC_DRAFT_ACT->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_DRAFT_ACT->value).'\'),
+                                                    ('.DocTypesEnum::PC_MOTIVES->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_MOTIVES->value).'\'),
+                                                    ('.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_CONSOLIDATED_ACT_VERSION->value).'\'),
+                                                    ('.DocTypesEnum::PC_OTHER_DOCUMENTS->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_OTHER_DOCUMENTS->value).'\'),
+                                                    ('.DocTypesEnum::PC_COMMENTS_REPORT->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_COMMENTS_REPORT->value).'\'),
+                                                    ('.DocTypesEnum::PC_COMMENTS_CSV->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_COMMENTS_CSV->value).'\'),
+                                                    ('.DocTypesEnum::PC_COMMENTS_PDF->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_COMMENTS_PDF->value).'\'),
+                                                    ('.DocTypesEnum::PC_KD_PDF->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_KD_PDF->value).'\'),
+                                                    ('.DocTypesEnum::PC_POLLS_PDF->value.', \''.__('custom.public_consultation.doc_type.'.DocTypesEnum::PC_POLLS_PDF->value).'\')
+                                        ) E(type_id, type_name)) enums on enums.type_id = f.doc_type
+                                        where
+                                            f.id_object = pc.id
+                                            and f.deleted_at is null
+                                                and f.locale = \'bg\'
+                                                and f.code_object = '.File::CODE_OBJ_PUBLIC_CONSULTATION.'
+                                        group by f.doc_type
+                                        order by f.doc_type
+                                    ) A
+                                ) as files
                             from public_consultation pc
                             join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \'bg\'
                             left join field_of_actions foa on foa.id = pc.field_of_actions_id
@@ -668,8 +696,9 @@ class ReportsController extends Controller
                                         and cf.deleted_at is null
                             where
                                 pc.deleted_at is null
-                                        and pc.active = 1
-                            order by pc.created_at desc'
+                                 and pc.active = 1
+                            order by pc.created_at desc
+                            limit 1000'
                 );
 
                 $header = [
@@ -707,6 +736,9 @@ class ReportsController extends Controller
                         }
                         if(!empty($row->consultation_document)){
                             $row->consultation_document = json_decode($row->consultation_document, true);
+                        }
+                        if(!empty($row->files)){
+                            $row->files = json_decode($row->files, true);
                         }
                         $finalData[] = $row;
                     }
