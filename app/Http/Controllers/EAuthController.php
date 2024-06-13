@@ -23,6 +23,9 @@ class EAuthController extends Controller
     private string $homeRouteName = 'site.home';
     private string $adminRouteName = 'admin.home';
 
+    const LEGAL_FORM_PERSON = 'person';
+    const LEGAL_FORM_COMPANY = 'company';
+
 
     /**
      * Starts a eAuth process by open and submit form automatically to Identity provider
@@ -97,6 +100,20 @@ class EAuthController extends Controller
             }
             //return $this->saveNewUser($userInfo, true);
         }
+
+        $existUser = User::where('person_identity', '=', $userInfo['identity_number'])->first();
+        if(isset($existUser) && $existUser) {
+            return $this->redirectExistingUser($existUser, $source);
+        }
+
+        $fullNameExplode = getNamesByFullName($userInfo['name'], false);
+        $userInfo['first_name'] = $fullNameExplode['first_name'];
+        $userInfo['middle_name'] = $fullNameExplode['middle_name'];
+        $userInfo['last_name'] = $fullNameExplode['last_name'];
+        $userInfo['person_identity'] = $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ? $userInfo['identity_number'] : null;
+        $userInfo['company_identity'] = null;
+        $userInfo['org_name'] = null;
+        $userInfo['source'] = $source;
 
         return view('eauth.create_user', compact('userInfo'));
     }
