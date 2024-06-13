@@ -33,6 +33,10 @@ Route::group(['middleware' => ['guest']], function() {
         Route::get('/reports/legislative-initiatives/{type}/view',       'apiReportLegislativeInitiative')->name('api.report.li');
         //Public consultations
         Route::get('/reports/public-consultations/{type}/view',       'apiReportPc')->name('api.report.pc');
+        //Legislative Program
+        Route::get('/reports/legislative-program/{type}/view',       'apiReportLp')->name('api.report.lp');
+        //Operational Program
+        Route::get('/reports/operational-program/{type}/view',       'apiReportOp')->name('api.report.op');
 
 
         //Strategic Document

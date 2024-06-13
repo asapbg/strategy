@@ -140,7 +140,12 @@ class ReportsController extends Controller
                     ->groupBy('legislative_initiative.id')
                     ->orderBy('legislative_initiative.created_at', 'desc');
 
-                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+                $data = $q->get()->map(function ($row) {
+                    if(!empty($row->comments)){
+                        $row->comments = json_decode($row->comments, true);
+                    }
+                    return (array)$row;
+                })->toArray();
 
                 $header = [
                     'name' => __('custom.name'),
@@ -168,6 +173,161 @@ class ReportsController extends Controller
         return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
+    public function apiReportLp(Request $request, string $type)
+    {
+        switch ($type)
+        {
+            case 'standard':
+                $data = DB::select(
+                    'select
+                                C.legislative_program_id as id,
+                                max(C.date_from) as date_from,
+                                max(C.date_to) as date_to,
+                                \'????\' as files,
+                                jsonb_agg(jsonb_build_object(C.month, C.records)) as program
+                            from (
+                                select
+                                    B.legislative_program_id,
+                                    max(B.date_from) as date_from,
+                                    max(B.date_to) as date_to,
+                                    B.month,
+                                    jsonb_agg(B.records) as records
+                                from (
+                                    select
+                                        A.month,
+                                        A.row_num,
+                                        jsonb_agg(jsonb_build_object(A."label", A.value)) as records,
+                                        A.legislative_program_id,
+                                        max(A.from_date) as date_from,
+                                        max(A.to_date) as date_to
+                                    from (
+                                        select
+                                            lprm.month,
+                                            lprm.row_num,
+                                            dsct."label",
+                                            lprm.value,
+                                            lprm.legislative_program_id,
+                                            lp.from_date,
+                                            lp.to_date
+                                        from legislative_program_row lprm
+                                        join dynamic_structure_column dsc on dsc.id = lprm.dynamic_structures_column_id
+                                        join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
+                                        join legislative_program lp on lp.id = lprm.legislative_program_id
+                                        where
+                                            lprm.deleted_at is null
+                                        order by lprm."month", lprm.row_num, lprm.dynamic_structures_column_id
+                                    ) A
+                                    group by A.legislative_program_id, A."month", A.row_num
+                                    order by A.legislative_program_id, A."month", A.row_num
+                                ) B
+                                group by B.legislative_program_id, B.month
+                            ) C
+                            group by C.legislative_program_id
+                    '
+                );
+
+                $header = [
+                    'id' => trans_choice('custom.legislative_program', 1).' (ID)',
+                    'date_from' => __('validation.attributes.open_from'),
+                    'date_to' => __('validation.attributes.open_to'),
+                    'files' => trans_choice('custom.files', 1),
+                    'program' => __('custom.program'),
+                ];
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->program)){
+                            $row->program = json_decode($row->program, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                break;
+            default:
+                $data = [];
+        }
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function apiReportOp(Request $request, string $type)
+    {
+        switch ($type)
+        {
+            case 'standard':
+                $data = DB::select(
+                    'select
+                                C.operational_program_id as id,
+                                max(C.date_from) as date_from,
+                                max(C.date_to) as date_to,
+                                \'????\' as files,
+                                jsonb_agg(jsonb_build_object(C.month, C.records)) as program
+                            from (
+                                select
+                                    B.operational_program_id,
+                                    max(B.date_from) as date_from,
+                                    max(B.date_to) as date_to,
+                                    B.month,
+                                    jsonb_agg(B.records) as records
+                                from (
+                                    select
+                                        A.month,
+                                        A.row_num,
+                                        jsonb_agg(jsonb_build_object(A."label", A.value)) as records,
+                                        A.operational_program_id,
+                                        max(A.from_date) as date_from,
+                                        max(A.to_date) as date_to
+                                    from (
+                                        select
+                                            oprm.month,
+                                            oprm.row_num,
+                                            dsct."label",
+                                            oprm.value,
+                                            oprm.operational_program_id,
+                                            op.from_date,
+                                            op.to_date
+                                        from operational_program_row oprm
+                                        join dynamic_structure_column dsc on dsc.id = oprm.dynamic_structures_column_id
+                                        join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
+                                        join operational_program op on op.id = oprm.operational_program_id
+                                        where
+                                            oprm.deleted_at is null
+                                        order by oprm."month", oprm.row_num, oprm.dynamic_structures_column_id
+                                    ) A
+                                    group by A.operational_program_id, A."month", A.row_num
+                                    order by A.operational_program_id, A."month", A.row_num
+                                ) B
+                                group by B.operational_program_id, B.month
+                            ) C
+                            group by C.operational_program_id
+                    '
+                );
+
+                $header = [
+                    'id' => trans_choice('custom.legislative_program', 1).' (ID)',
+                    'date_from' => __('validation.attributes.open_from'),
+                    'date_to' => __('validation.attributes.open_to'),
+                    'files' => trans_choice('custom.files', 1),
+                    'program' => __('custom.program'),
+                ];
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->program)){
+                            $row->program = json_decode($row->program, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                break;
+            default:
+                $data = [];
+        }
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+    }
     public function apiReportPc(Request $request, string $type)
     {
         switch ($type)
@@ -472,7 +632,7 @@ class ReportsController extends Controller
                                             group by cdr.id
                                             order by max(dsc.ord)
                                         ) A
-                                    ), \'file\', case when cf.id is not null then \''.url('/').'\' || \'download/\' || cf.id else \'\' end)
+                                    ), \'file\', case when cf.id is not null then \''.url('/').'\' || \'/download/\' || cf.id else \'\' end)
                                 ) as consultation_document
                             from public_consultation pc
                             join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \'bg\'
@@ -519,7 +679,23 @@ class ReportsController extends Controller
                     'comments' => trans_choice('custom.comment', 2),
                     'consultation_document' => trans_choice('custom.consult_documents', 1)
                 ];
-                array_unshift($data, $header);
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->contacts)){
+                            $row->contacts = json_decode($row->contacts, true);
+                        }
+                        if(!empty($row->comments)){
+                            $row->comments = json_decode($row->comments, true);
+                        }
+                        if(!empty($row->consultation_document)){
+                            $row->consultation_document = json_decode($row->consultation_document, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
 
                 break;
             default:
@@ -629,9 +805,17 @@ class ReportsController extends Controller
                     ->where('pris.in_archive', '=', $inArchive)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
-                    ->limit(10000);
+                    ->limit(1000);
 
-                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+                $data = $q->get()->map(function ($row) {
+                    if(!empty($row->institutions)){
+                        $row->institutions = json_decode($row->institutions, true);
+                    }
+                    if(!empty($row->related)){
+                        $row->related = json_decode($row->related, true);
+                    }
+                    return (array)$row;
+                })->toArray();
 
                 $header = [
                     'pris_id' => 'ID',
@@ -825,7 +1009,18 @@ class ReportsController extends Controller
                     'only_registered' => __('validation.attributes.only_registered'),
                     'questions' => trans_choice('custom.questions', 2)
                 ];
-                array_unshift($data, $header);
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->questions)){
+                            $row->questions = json_decode($row->questions, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+//                array_unshift($data, $header);
 
                 break;
             default:
