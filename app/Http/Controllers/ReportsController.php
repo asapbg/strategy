@@ -212,7 +212,7 @@ class ReportsController extends Controller
                                         from legislative_program_row lprm
                                         join dynamic_structure_column dsc on dsc.id = lprm.dynamic_structures_column_id
                                         join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
-                                        join legislative_program lp on lp.id = lprm.legislative_program_id
+                                        join legislative_program lp on lp.id = lprm.legislative_program_id lp.deleted_at is null and lp.public = 1
                                         where
                                             lprm.deleted_at is null
                                         order by lprm."month", lprm.row_num, lprm.dynamic_structures_column_id
@@ -290,7 +290,7 @@ class ReportsController extends Controller
                                         from operational_program_row oprm
                                         join dynamic_structure_column dsc on dsc.id = oprm.dynamic_structures_column_id
                                         join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
-                                        join operational_program op on op.id = oprm.operational_program_id
+                                        join operational_program op on op.id = oprm.operational_program_id and op.deleted_at is null and op.public = 1
                                         where
                                             oprm.deleted_at is null
                                         order by oprm."month", oprm.row_num, oprm.dynamic_structures_column_id
