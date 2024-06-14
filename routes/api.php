@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::group(['middleware' => ['guest']], function() {
+//Route::group(['middleware' => ['guest']], function() {
     Route::controller(ReportsController::class)->group(function () {
         //Impact assessments
         Route::get('/reports/impact_assessments/{type}/view',       'apiReportImpactAssessments')->name('api.report.ia');
@@ -44,4 +44,4 @@ Route::group(['middleware' => ['guest']], function() {
         Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
 
     });
-});
+//});
