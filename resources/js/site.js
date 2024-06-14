@@ -612,7 +612,7 @@ $(document).ready(function () {
         $('.li-law').on('change', function (){
             let selectedLaw = parseInt($(this).val());
             let activePc = $(this).data('activepc');
-
+            console.log(activePc);
             $('#active_consultation_info').addClass('d-none');
             $('#active_consultation_info #consultations').html('');
             $('#institutions_section').removeClass('d-none');
