@@ -154,7 +154,6 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
         ajax: {
             url: selectUrl,
             data: function (params) {
-                console.log('enters');
                 if($(this).data('types2ajax') == 'pris_doc') {
                     var query = {
                         actType: $('#legal_act_type_filter').val(),
@@ -631,7 +630,9 @@ $(document).ready(function () {
 
                 //show active consultation info
                 let consultationsHtml = '';
-                $.each(activePc[selectedLaw], function(index,value) {
+                let activePcJson = JSON.parse(JSON.stringify(activePc[selectedLaw]));
+                // console.log(activePcJson);
+                $.each(activePcJson, function(index,value) {
                     consultationsHtml += '<a class="w-100 d-block" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
                 });
                 $('#active_consultation_info #consultations').html(consultationsHtml)

@@ -10,11 +10,11 @@
         @endphp
 
         <div class="col-lg-10 right-side-content py-2">
-            @if(isset($pageTopContent) && !empty($pageTopContent->value))
-                <div class="col-12 mb-2">
-                    {!! $pageTopContent->value !!}
-                </div>
-            @endif
+{{--            @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
+{{--                <div class="col-12 mb-2">--}}
+{{--                    {!! $pageTopContent->value !!}--}}
+{{--                </div>--}}
+{{--            @endif--}}
             <div class="filter-results mb-2">
                 <h2 class="mb-4">
                     {{ __('custom.search') }}
@@ -233,7 +233,7 @@
                                                         </span>
                                                     @endif
 
-                                                    <span class="item-separator mb-2">|</span>
+                                                    <span class="item-separator mb-2 ms-2">|</span>
                                                     <span class="ms-2 mb-2">
                                                         <strong>  {{ __('custom.supported_f') }}:</strong>
                                                         <span class="voted-li">

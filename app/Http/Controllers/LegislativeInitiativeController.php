@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
+use App\Models\LegislativeInitiativeVote;
 use App\Models\Page;
 use App\Models\Publication;
 use App\Models\RegulatoryAct;
@@ -203,6 +204,11 @@ class LegislativeInitiativeController extends AdminController
                 $selectedInstitutions = Law::find($validated['law_id'])->institutions->pluck('id')->toArray();
             }
             $new->institutions()->sync($selectedInstitutions);
+
+            $new->votes()->create([
+                'user_id' => $request->user()->id,
+                'is_like' => 1
+            ]);
             DB::commit();
 
             return to_route(self::LIST_ROUTE)

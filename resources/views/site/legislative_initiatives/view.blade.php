@@ -85,6 +85,14 @@
                             {{ displayDate($item->created_at) . ' ' . __('custom.year_short') }}
                         </span>
                     </a>
+                    @if($item->user)
+                        <a href="{{ route('user.profile.li', $item->user) }}" class="text-decoration-none mx-2">
+                            <span class="obj-icon-info dark-blue">
+                                <i class="far fa-user me-1 dark-blue" title="{{ __('custom.author') }}"></i>
+                                {{ $item->user->fullName() }}
+                            </span>
+                        </a>
+                    @endif
                     <div class="mb-0 d-inline-block">
                         @php
                             $status_class = 'active-li';
