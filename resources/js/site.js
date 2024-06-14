@@ -612,7 +612,7 @@ $(document).ready(function () {
         $('.li-law').on('change', function (){
             let selectedLaw = parseInt($(this).val());
             let activePc = $(this).data('activepc');
-            console.log(1, activePc);
+
             $('#active_consultation_info').addClass('d-none');
             $('#active_consultation_info #consultations').html('');
             $('#institutions_section').removeClass('d-none');
@@ -630,11 +630,7 @@ $(document).ready(function () {
 
                 //show active consultation info
                 let consultationsHtml = '';
-                let activePcJson = JSON.stringify(activePc);
-                console.log(JSON.parse(JSON.stringify(activePc)));
-                console.log(JSON.stringify(activePc));
-                console.log(activePcJson);
-                $.each(activePcJson, function(index,value) {
+                $.each(activePc[selectedLaw], function(index,value) {
                     consultationsHtml += '<a class="w-100 d-block" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
                 });
                 $('#active_consultation_info #consultations').html(consultationsHtml)
