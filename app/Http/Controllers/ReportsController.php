@@ -79,9 +79,77 @@ class ReportsController extends Controller
 
                 break;
             case 'full':
-                $data = [];
+                $data = DB::select('
+                    select
+                        sdt.title as name,
+                        enums.level_name as level,
+                        foat."name" as policy_area,
+                        sdtt."name" as strategic_document_type,
+                        -- act_type: <string>,
+                        -- act_number: <string>,
+                        -- act_link: <string>,
+                        sd.pris_act_id,
+                        case when sd.pris_act_id is not null then
+                        (
+                            select array_agg(it."name")
+                            from pris
+                            left join pris_institution pi2 on pi2.pris_id = pris.id
+                            left join institution i on i.id = pi2.institution_id
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            where
+                                pris.id = sd.pris_act_id
+                                and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
+                            group by pris.id
+                        ) else null end as author_institutions,
+                        aast."name" as accepting_institution_type,
+                        sd.document_date,
+                        pc.reg_num as public_consultation_number,
+                        sd.active,
+                        sd.link_to_monitorstat,
+                        sd.document_date_accepted::date as date_accepted,
+                        sd.document_date_expiring::date as date_expiring,
+                        (
+                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \'bg\'
+                        ) as files,
+                        null as subdocuments
+                    from strategic_document sd
+                    join strategic_document_translations sdt on sdt.strategic_document_id = sd.id and sdt.locale = \'bg\'
+                    left join field_of_actions foa on foa.id = sd.policy_area_id
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    left join strategic_document_type sdt2 on sdt2.id = sd.strategic_document_type_id
+                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt.id and sdtt.locale = \'bg\'
+                    left join authority_accepting_strategic aas on aas.id = sd.authority_accepting_strategic_id
+                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
+                    left join public_consultation pc on pc.id = sd.public_consultation_id
+                    left join (select level_id, level_name from (
+                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
+                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
+                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                        ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
+                    where
+                        sd.deleted_at is null
+                                and sd.active = true
+                ');
                 $header = [
                     'title' => __('custom.title'),
+                    'level' => capitalize(__('custom.level_lower_case')),
+                    'policy_area' => trans_choice('custom.field_of_actions', 1),
+                    'strategic_document_type' => trans_choice('custom.strategic_document_type', 1),
+//                    'act_type' => '',
+//                    'act_number' => '',
+//                    'act_link' => '',
+                    'pris_act_id' => trans_choice('custom.acts_pris', 1),
+                    'author_institution' => trans_choice('custom.importers', 2),
+                    'accepting_institution_type' => trans_choice('custom.authority_accepting_strategics', 1),
+                    'document_date' => __('custom.document_act'),
+                    'public_consultation_number' => trans_choice('custom.public_consultations', 1),
+                    'active' => __('custom.status' ),
+                    'link_to_monitorstat' => __('validation.attributes.link_to_monitorstat' ),
+                    'date_accepted' => __('custom.date_accepted' ),
+                    'date_expiring' => __('custom.date_expiring' ),
+                    'files' => trans_choice('custom.files', 2 ),
+                    'subdocuments' => trans_choice('custom.strategic_documents.documents', 2 ),
                 ];
 
                 $finalData = array();
