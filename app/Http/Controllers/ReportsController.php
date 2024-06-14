@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
@@ -753,6 +754,200 @@ class ReportsController extends Controller
         return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
+    public function apiReportAdvBoards(Request $request, string $type)
+    {
+        switch ($type)
+        {
+            case 'standard':
+                $data = DB::select('
+                    select
+                        max(abt.name) as name,
+                        ab.created_at::date as date_established,
+                        max(aabt."name") as establishment_act_type,
+                        max(abort2.description) as establishment_act,
+                        max(abort2.description) as rules_guide,
+                        (
+                            select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
+                            from (
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                from files f
+                                where
+                                    f.deleted_at is null
+                                and f.id_object = max(abe.id)
+                                and f.doc_type = '.DocTypesEnum::AB_ESTABLISHMENT_RULES->value.'
+                                and f.code_object = '.File::CODE_AB.'
+                            ) A
+                        ) as establishment_act,
+                        (
+                        select jsonb_build_object(\'description\', max(abort2.description), \'links\', A.files)
+                            from (
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                from files f
+                                where
+                                    f.deleted_at is null
+                                and f.id_object = max(abor.id)
+                                and f.doc_type = '.DocTypesEnum::AB_ORGANIZATION_RULES->value.'
+                                and f.code_object = '.File::CODE_AB.'
+                            ) A
+                        ) as rules_guide,
+                        max(actt.name) as chairman_type,
+                        (
+                        select jsonb_agg(jsonb_build_object(ct.type_name, ct.members))
+                            from (
+                                select type_name, jsonb_agg(jsonb_build_object(\'name\', abmt.member_name , \'role\', abmt.member_job)) as members
+                                from advisory_board_members abm
+                                join advisory_board_member_translations abmt on abmt.advisory_board_member_id = abm.id and abmt.locale = \'bg\'
+                                join (select type_id, type_name from (
+                                    values ('.AdvisoryTypeEnum::CHAIRMAN->value.', \'chairmen\'),
+                                        ('.AdvisoryTypeEnum::VICE_CHAIRMAN->value.', \'vice-chairmen\'),
+                                        ('.AdvisoryTypeEnum::SECRETARY->value.', \'secretaries\')
+                                    ) E(type_id, type_name)) enums on enums.type_id = abm.advisory_type_id::int
+                                where
+                                    abm.deleted_at is null
+                                and abm.advisory_board_id = ab.id
+                                group by type_name
+                            ) ct
+                        ) as members,
+                        ab.meetings_per_year as meetings_year,
+                        ab.has_npo_presence as npo_representative,
+                        max(abst.description) as secretariate_details,
+                        (
+                        select jsonb_agg(jsonb_build_object(\'name\', f.custom_name , \'date\', f.created_at::date, \'link\', \''.url('/').'\' || \'/download/\' || f.id)) as files
+                                from files f
+                                where
+                                    f.id_object = max(abs2.id)
+                                    and f.deleted_at is null
+                                and f.locale = \'bg\'
+                                and f.code_object = '.File::CODE_AB.'
+                                and f.doc_type = '.DocTypesEnum::AB_SECRETARIAT->value.'
+                        ) as secretariate_files,
+                        (
+                        jsonb_build_object(\'info\', max(abmit.description), \'files\', (
+                        select jsonb_agg(jsonb_build_object(\'name\', f.custom_name , \'date\', f.created_at::date, \'link\', \''.url('/').'\' || \'/download/\' || f.id)) as files
+                                from files f
+                                where
+                                    f.id_object = max(abmi.id)
+                                    and f.deleted_at is null
+                                and f.locale = \'bg\'
+                                and f.code_object = '.File::CODE_OBJ_AB_MODERATOR.'
+                                and f.doc_type = '.DocTypesEnum::AB_MODERATOR->value.'
+                            ), \'persons\',
+                                (
+                                select jsonb_agg(u.first_name || \' \' || u.middle_name || \' \' || u.last_name)
+                                    from advisory_board_moderators abm2
+                                    join users u on u.id = abm2.user_id
+                                    where
+                                        abm2.deleted_at is null
+                                and abm2.advisory_board_id = ab.id
+                                )
+                            )
+                        ) as moderators,
+                        (
+                        select jsonb_agg(jsonb_build_object(\'year\', WP.working_year::date, \'description\',  WP.description, \'reports\', WP.files))
+                            from (
+                                select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) as files
+                                from advisory_board_functions abf
+                                join advisory_board_function_translations abft on abft.advisory_board_function_id = abf.id and abft.locale = \'bg\'
+                                join files f2 on f2.id_object = abf.id
+                                and f2.deleted_at is null
+                                and f2.locale = \'bg\'
+                                and f2.code_object = '.File::CODE_AB.'
+                                and f2.doc_type = '.DocTypesEnum::AB_FUNCTION->value.'
+                                where
+                                    abf.deleted_at is null
+                                and abf.advisory_board_id = ab.id
+                                group by abf.id
+                            ) WP
+                        ) as work_program,
+                        (
+                        select jsonb_agg(jsonb_build_object(\'year\', M.next_meeting::date, \'description\',  M.description, \'files\', M.files))
+                            from (
+                                select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                from advisory_board_meetings abm3
+                                join advisory_board_meeting_translations abmt2 on abmt2.advisory_board_meeting_id = abm3.id and abmt2.locale = \'bg\'
+                                join files f on f.id_object = abm3.id
+                                and f.deleted_at is null
+                                and f.locale = \'bg\'
+                                and f.code_object = '.File::CODE_AB.'
+                                and f.doc_type = '.DocTypesEnum::AB_MEETINGS_AND_DECISIONS->value.'
+                                where
+                                    abm3.deleted_at is null
+                                and abm3.advisory_board_id = ab.id
+                                group by abm3.id
+                            ) M
+                        ) as meetings,
+                        (
+                        select jsonb_agg(jsonb_build_object(\'date\', p.published_at::date, \'title\',  pt.title , \'content\', pt."content"))
+                            from "publication" p
+                            join publication_translations pt on pt.publication_id = p.id and pt.locale = \'bg\'
+                            where
+                                p.deleted_at is null
+                                and p.active = true
+                                and p.published_at is not null
+                                and p.advisory_boards_id = ab.id
+                        ) as news
+                    from advisory_boards ab
+                    join advisory_board_translations abt on abt.advisory_board_id = ab.id and abt.locale = \'bg\'
+                    left join authority_advisory_board aab on aab.id = ab.authority_id
+                    left join authority_advisory_board_translations aabt on aabt.authority_advisory_board_id = aab.id and aabt.locale = \'bg\'
+                    left join advisory_board_establishments abe on abe.advisory_board_id = ab.id
+                    left join advisory_board_establishment_translations abet on abet.advisory_board_establishment_id = abe.id and abet.locale = \'bg\'
+                    left join advisory_board_organization_rules abor on abor.advisory_board_id = ab.id
+                    left join advisory_board_organization_rule_translations abort2 on abort2.advisory_board_organization_rule_id = abor.id and abort2.locale = \'bg\'
+                    left join advisory_chairman_type act on act.id = ab.advisory_chairman_type_id
+                    left join advisory_chairman_type_translations actt on actt.advisory_chairman_type_id = act.id and actt.locale = \'bg\'
+                    left join advisory_board_secretariats abs2 on abs2.advisory_board_id = ab.id and abs2.deleted_at is null
+                    left join advisory_board_secretariat_translations abst on abst.advisory_board_secretariat_id = abs2.id and abst.locale = \'bg\'
+                    left join advisory_board_moderator_information abmi on abmi.advisory_board_id = ab.id and abmi.deleted_at is null
+                    left join advisory_board_moderator_information_translations abmit on abmit.advisory_board_moderator_information_id = abmi.id and abmit.locale = \'bg\'
+                    where
+                        ab.deleted_at is null
+                                and ab.active = true
+                                and ab.public = true
+                    group by ab.id
+                    limit 1000
+                ');
+                $header = [
+                    'title' => __('custom.title'),
+                ];
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->establishment_act)){
+                            $row->establishment_act = json_decode($row->establishment_act, true);
+                        }
+                        if(!empty($row->rules_guide)){
+                            $row->rules_guide = json_decode($row->rules_guide, true);
+                        }
+                        if(!empty($row->members)){
+                            $row->members = json_decode($row->members, true);
+                        }
+                        if(!empty($row->secretariate_files)){
+                            $row->secretariate_files = json_decode($row->secretariate_files, true);
+                        }
+                        if(!empty($row->moderators)){
+                            $row->moderators = json_decode($row->moderators, true);
+                        }
+                        if(!empty($row->work_program)){
+                            $row->work_program = json_decode($row->work_program, true);
+                        }
+                        if(!empty($row->meetings)){
+                            $row->meetings = json_decode($row->meetings, true);
+                        }
+                        if(!empty($row->news)){
+                            $row->news = json_decode($row->news, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                break;
+            default:
+                $data = [];
+        }
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+    }
     public function apiReportPris(Request $request, string $type){
         switch ($type)
         {
