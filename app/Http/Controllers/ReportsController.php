@@ -78,6 +78,20 @@ class ReportsController extends Controller
                 array_unshift($data, $header);
 
                 break;
+            case 'full':
+                $data = [];
+                $header = [
+                    'title' => __('custom.title'),
+                ];
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                break;
             default:
                 $data = [];
         }
@@ -698,8 +712,7 @@ class ReportsController extends Controller
                             where
                                 pc.deleted_at is null
                                  and pc.active = 1
-                            order by pc.created_at desc
-                            limit 1000'
+                            order by pc.created_at desc'
                 );
 
                 $header = [
@@ -764,8 +777,7 @@ class ReportsController extends Controller
                         max(abt.name) as name,
                         ab.created_at::date as date_established,
                         max(aabt."name") as establishment_act_type,
-                        max(abort2.description) as establishment_act,
-                        max(abort2.description) as rules_guide,
+                        -- max(abort2.description) as establishment_act,
                         (
                             select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
                             from (
@@ -778,6 +790,7 @@ class ReportsController extends Controller
                                 and f.code_object = '.File::CODE_AB.'
                             ) A
                         ) as establishment_act,
+                         -- max(abort2.description) as rules_guide,
                         (
                         select jsonb_build_object(\'description\', max(abort2.description), \'links\', A.files)
                             from (
@@ -905,10 +918,23 @@ class ReportsController extends Controller
                                 and ab.active = true
                                 and ab.public = true
                     group by ab.id
-                    limit 100
                 ');
                 $header = [
                     'title' => __('custom.title'),
+                    'date_established' => __('custom.created_at'),
+                    'establishment_act_type' => __('validation.attributes.act_of_creation'),
+                    'establishment_act' => __('validation.attributes.act_of_creation').' ('.__('custom.info').')',
+                    'rules_guide' => __('custom.rules_internal_organization'),
+                    'chairman_type' => __('validation.attributes.advisory_chairman_type_id').' '.trans_choice('custom.chairmen', 1),
+                    'members' => trans_choice('custom.member', 2),
+                    'meetings_year' => __('validation.attributes.meetings_per_year'),
+                    'npo_representative' => __('custom.npo'),
+                    'secretariate_details' => __('custom.advisory_board_secretariat').' ('.__('custom.info').')',
+                    'secretariate_files' => __('custom.advisory_board_secretariat').' ('.trans_choice('custom.files', 2).')',
+                    'moderators' => trans_choice('custom.moderators', 2),
+                    'work_program' => trans_choice('custom.function', 2),
+                    'meetings' => trans_choice('custom.meetings', 2),
+                    'news' => trans_choice('custom.news', 2),
                 ];
 
                 $finalData = array();
