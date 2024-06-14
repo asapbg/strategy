@@ -631,7 +631,7 @@ $(document).ready(function () {
                 //show active consultation info
                 let consultationsHtml = '';
                 let activePcJson = JSON.parse(JSON.stringify(activePc[selectedLaw]));
-                // console.log(activePcJson);
+                console.log(activePcJson);
                 $.each(activePcJson, function(index,value) {
                     consultationsHtml += '<a class="w-100 d-block" href="'+ value.url +'"><i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="'+ value.name +'"></i>'+ value.name +'</a>';
                 });
