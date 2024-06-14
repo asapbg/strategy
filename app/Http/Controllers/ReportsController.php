@@ -905,7 +905,7 @@ class ReportsController extends Controller
                                 and ab.active = true
                                 and ab.public = true
                     group by ab.id
-                    limit 1000
+                    limit 100
                 ');
                 $header = [
                     'title' => __('custom.title'),
