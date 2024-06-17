@@ -781,5 +781,6 @@ return [
         'file_description_en'           => 'Description (EN)',
         'ord.*'           => 'Order',
         'protocol_point'           => 'Protocol point',
+        'motivation' => 'Motivation of changes',
     ],
 ];

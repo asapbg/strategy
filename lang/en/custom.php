@@ -586,6 +586,7 @@ return [
     'once_count' => 'time',
     'name_of_normative_act' => 'Name of normative act',
     'description_of_suggested_change' => 'Description of suggested change',
+    'change_motivations' => 'Motivation of changes',
     'category' => 'Category',
     'categories' => 'Category|Categories',
     'accept_act_institution_type' => 'Authority accepted the act',

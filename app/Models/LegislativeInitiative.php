@@ -39,7 +39,7 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
     //activity
     protected string $logName = "legislative_initiative";
 
-    protected $fillable = ['author_id', 'law_paragraph', 'law_text', 'description', 'law_id', 'cap', 'ready_to_send', 'active_support', 'send_at', 'end_support_at'];
+    protected $fillable = ['author_id', 'law_paragraph', 'law_text', 'description', 'motivation', 'law_id', 'cap', 'ready_to_send', 'active_support', 'send_at', 'end_support_at'];
 
     /**
      * @return FeedItem

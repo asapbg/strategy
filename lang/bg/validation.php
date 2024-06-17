@@ -769,6 +769,7 @@ return [
         'file_description_en'           => 'Описание (EN)',
         'ord.*'           => 'Поредност',
         'protocol_point'           => 'Точка от протокол',
+        'motivation' => 'Мотивация на промените',
 
     ],
 ];

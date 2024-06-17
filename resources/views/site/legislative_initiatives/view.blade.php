@@ -272,7 +272,16 @@
 {{--                    <hr class="custom-hr"/>--}}
 {{--                </div>--}}
             </div>
-
+            @if($item->motivation)
+                <div class="row">
+                    <div class="col-12 fw-bold py-2">
+                        <span class="custom-left-border">
+                            {{ __('custom.change_motivations') }}:
+                        </span>
+                    </div>
+                    <div class="col-12">{!! $item->motivation !!}</div>
+                </div>
+            @endif
             <div class="row my-4">
                 <div class="col-md-12">
                     <div class="custom-card p-3">

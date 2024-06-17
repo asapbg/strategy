@@ -107,6 +107,13 @@
                                         <span class="fw-bold">{{ __('custom.description_of_suggested_change') }}:</span>
                                         {!! $item->description !!}
                                     </div>
+
+                                    @if($item->motivation)
+                                        <div class="col-12">
+                                            <span class="fw-bold">{{ __('custom.change_motivations') }}:</span>
+                                            {!! $item->motivation !!}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

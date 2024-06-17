@@ -586,6 +586,7 @@ return [
     'once_count' => 'път',
     'name_of_normative_act' => 'Наименование на нормативен акт',
     'description_of_suggested_change' => 'Описание на предложената промяна',
+    'change_motivations' => 'Мотивация на промените',
     'category' => 'Категория',
     'categories' => 'Категория|Категории',
     'accept_act_institution_type' => 'Орган приел акта',
