@@ -84,6 +84,7 @@
                         @foreach($item->npos as $npo_key => $npo)
                             @php $class = $npo_key > 0 ? ' npo-custom-child ' : ''; @endphp
                             <div class="row mt-3 align-items-center {{ $class }}">
+                                <input type="hidden" name="npo_id[]" value="{{ $npo->id }}">
                                 @foreach(config('available_languages') as $key => $lang)
                                     @php $class = $key % 2 === 0 && $npo_key > 0 ? 'col-5' : 'col-6'; @endphp
                                     <div class="{{ $class }}">
@@ -96,7 +97,6 @@
                                             $value = $npo->translate($lang['code'])?->name;
 
                                         @endphp
-
                                         <input type="text" id="npo_{{ $lang['code'] }}[]"
                                                name="npo_{{ $lang['code']}}[]"
                                                class="form-control form-control-sm"
@@ -360,6 +360,12 @@
                     row.appendChild(remove_btn_col);
                 }
             }
+
+            // id input
+            const inputId = document.createElement('input');
+            inputId.type = 'hidden';
+            inputId.name = `npo_id[]`;
+            row.append(inputId);
 
             container.appendChild(row);
         }

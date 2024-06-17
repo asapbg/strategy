@@ -44,6 +44,7 @@ class UpdateAdvisoryBoardRequest extends FormRequest
             'file'                    => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
         ];
 
+        $rules['npo_id'] = ['nullable', 'array'];
         $defaultLang = config('app.default_lang');
         foreach (config('available_languages') as $lang) {
             $rules['npo_' . $lang['code']] = ['nullable'];

@@ -24,6 +24,7 @@ class ModelActivityExtend extends ModelAlias
     {
         return LogOptions::defaults()
             ->logAll()
+            ->logExcept(['updated_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName($this->logName);

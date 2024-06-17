@@ -15,6 +15,7 @@ use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryBoardModerator;
+use App\Models\AdvisoryBoardNpo;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\ConsultationLevel;
@@ -409,15 +410,32 @@ class AdvisoryBoardController extends AdminController
             $this->storeTranslateOrNew(AdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
             $npo_service = app(AdvisoryBoardNpoService::class, ['board' => $item]);
-
-            $npo_service->removeCompletely();
-
-            if (isset($validated['npo_bg'])) {
-                foreach ($validated['npo_bg'] as $key => $presenter) {
-                    $names = [$presenter];
-                    $names[] = $validated['npo_en'][$key] ?? $presenter;
-                    $npo_service->storeMember($names);
+            //$npo_service->removeCompletely();
+            $itemOldNpoIds = $item->npos->pluck('id', 'id')->toArray();
+            if(isset($validated['npo_id']) && sizeof($validated['npo_id'])) {
+                foreach ($validated['npo_id'] as $key => $kid) {
+                    $npo = AdvisoryBoardNpo::find((int)$kid);
+                    if($npo){
+                        foreach (config('available_languages')  as $lang){
+                            $npo->translateOrNew($lang['code'])->name = $validated['npo_'.$lang['code']][$key] ?? '';
+                        }
+                        $npo->save();
+                    } else{
+                        $newNpo = $item->npos()->create();
+                        foreach (config('available_languages')  as $lang){
+                            $newNpo->translateOrNew($lang['code'])->name = $validated['npo_'.$lang['code']][$key] ?? '';
+                        }
+                        $newNpo->save();
+                    }
+                    if(isset($itemOldNpoIds[$kid])){
+                        unset($itemOldNpoIds[$kid]);
+                    }
                 }
+                if(isset($itemOldNpoIds) && sizeof($itemOldNpoIds)){
+                    $npo_service->removeCompletely($itemOldNpoIds);
+                }
+            } else{
+                $npo_service->removeCompletely();
             }
 
             if (!isset($validated['has_npo_presence'])) {
@@ -433,7 +451,6 @@ class AdvisoryBoardController extends AdminController
                 $notifyService->advChanges($item, request()->user(), __('custom.base_information'), $changes);
             }
 
-            DB::commit();
             return redirect()->route('admin.advisory-boards.edit', $item)
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {

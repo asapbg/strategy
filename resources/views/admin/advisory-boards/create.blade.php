@@ -402,6 +402,12 @@
                     }
                 }
 
+                // id input
+                const inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = `npo_id[]`;
+                row.append(inputId);
+
                 container.appendChild(row);
             }
 

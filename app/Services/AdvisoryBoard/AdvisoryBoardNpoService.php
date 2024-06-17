@@ -40,11 +40,12 @@ class AdvisoryBoardNpoService
         }
     }
 
-    public function removeCompletely(): void
+    public function removeCompletely(array $ids = []): void
     {
         foreach ($this->board->npos as $npo) {
-            $npo->translations()->delete();
-            $npo->delete();
+            if((sizeof($ids) && in_array($npo->id, $ids)) || !sizeof($ids)){
+                $npo->delete();
+            }
         }
     }
 }
