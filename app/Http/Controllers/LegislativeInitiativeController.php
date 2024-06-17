@@ -19,6 +19,7 @@ use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
 use App\Models\UserSubscribe;
 use App\Notifications\LegislativeInitiativeClosed;
+use App\Notifications\LegislativeInitiativeSuccessful;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -217,6 +218,29 @@ class LegislativeInitiativeController extends AdminController
                 'user_id' => $request->user()->id,
                 'is_like' => 1
             ]);
+
+
+            $new->refresh();
+            if($new->cap <= $new->countSupport()) {
+                $new->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
+                $new->ready_to_send = 1;
+                $new->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
+                $new->save();
+
+                //Send notification to author and all voted for successful initiative
+                $likesUserIds = $new->likes->pluck('user_id')->toArray();
+                if(sizeof($likesUserIds)){
+                    $users = User::whereIn('id', $likesUserIds)->get();
+                    if($users->count()){
+                        foreach ($users as $n){
+                            $n->notify(new LegislativeInitiativeSuccessful($new));
+                        }
+                    }
+                }
+                if($new->user){
+                    $new->user->notify(new LegislativeInitiativeSuccessful($new));
+                }
+            }
             DB::commit();
 
             return to_route(self::LIST_ROUTE)
