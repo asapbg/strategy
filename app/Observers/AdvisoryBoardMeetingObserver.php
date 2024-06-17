@@ -32,7 +32,7 @@ class AdvisoryBoardMeetingObserver
                 if($activeFB->value){
                     $facebookApi = new Facebook();
                     $facebookApi->postOnPage(array(
-                        'message' =>'Предстоящо заседание на '.$advBoard->name.' на '.$advisoryBoardMeeting->next_meeting.'. За повече информация тук.',
+                        'message' =>'Предстоящо заседание на '.$advBoard->name.' на '.displayDate($advisoryBoardMeeting->next_meeting).'. За повече информация тук.',
                         'link' => route('advisory-boards.view', $advBoard),
                         'published' => true
                     ));
