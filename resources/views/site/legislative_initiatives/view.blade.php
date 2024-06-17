@@ -77,6 +77,12 @@
                 </div>
             @endif
 
+            @if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
+                <div class="row mt-2">
+                    <div class="fst-italic text-danger mb-3">{{ __('custom.li_support_info', ['days' => $item->daysLeft, 'cap' => $item->cap]) }}</div>
+                </div>
+            @endif
+
             <div class="row mt-2">
                 <div class="col-12">
                     <a href="#" class="text-decoration-none">

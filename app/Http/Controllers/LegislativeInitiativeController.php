@@ -149,7 +149,15 @@ class LegislativeInitiativeController extends AdminController
         $this->composeBreadcrumbs(null, array(['name' => __('site.new_legislative_initiative'), 'url' => '']));
         $this->setSeo(__('site.seo_title'),  __('site.new_legislative_initiative'), '', array('title' => __('site.seo_title'), 'description' => __('site.new_legislative_initiative'), 'img' => LegislativeInitiative::DEFAULT_IMG));
 
-        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions', 'lawWithActivePc'));
+        $settingsCap = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES)
+            ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
+        $cap = $settingsCap ? $settingsCap->value : 50;
+
+        $settingsSupportDays = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_SUPPORT_IN_DAYS)
+            ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
+        $supportDays = $settingsSupportDays ? $settingsSupportDays->value : 50;
+
+        return $this->view(self::CREATE_VIEW, compact('regulatoryActs', 'translatableFields', 'item', 'pageTitle', 'institutions', 'lawWithActivePc', 'cap', 'supportDays'));
     }
 
     /**

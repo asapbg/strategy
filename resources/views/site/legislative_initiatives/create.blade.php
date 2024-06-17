@@ -10,6 +10,9 @@
                     @csrf
 
                     <div class="row">
+                        <div class="fst-italic text-danger mb-3">{{ __('custom.li_support_info', ['days' => $supportDays, 'cap' => $cap]) }}</div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="input-group ">
                                 <div class="mb-3 d-flex flex-column w-100">
