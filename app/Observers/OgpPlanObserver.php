@@ -45,11 +45,11 @@ class OgpPlanObserver
             $fbPost = [];
             if (
                 $ogpPlan->active && !$ogpPlan->national_plan
-                && !$old_ogp_status != $ogpPlan->ogp_status_id
-                && ($ogpPlan->status->type == OgpStatusEnum::IN_DEVELOPMENT->value)
+                && $old_ogp_status != $ogpPlan->ogp_status_id
+                && ($ogpPlan->ogp_status_id == OgpStatus::InDevelopment()->first()->id)
             ){
                 $fbPost = array(
-                    'message' => 'Започва изготвянето на план по Партньорството за отворено управление: '.$ogpPlan->name.' Приемат се коментари до '.displayDate($ogpPlan->to_date_develop).'. За повече информация тук.',
+                    'message' => 'Започва изготвянето на план по Партньорството за отворено управление: '.$ogpPlan->name.'. Приемат се коментари до '.displayDate($ogpPlan->to_date_develop).'. За повече информация тук.',
                     'link' => route('ogp.develop_new_action_plans', $ogpPlan->id),
                     'published' => true
                 );
@@ -57,7 +57,7 @@ class OgpPlanObserver
 
             if (
                 $ogpPlan->active && $ogpPlan->national_plan
-                && !$old_ogp_status != $ogpPlan->ogp_status_id
+                && $old_ogp_status != $ogpPlan->ogp_status_id
                 && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
             ){
                 $fbPost = array(
@@ -72,7 +72,7 @@ class OgpPlanObserver
                 && $ogpPlan->active && $ogpPlan->national_plan
                 && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
             ) {
-                $this->sendEmails($ogpPlan, 'created');
+                $this->sendEmails($ogpPlan, 'updated');
                 Log::info('Send subscribe email on creation');
             }
 
@@ -89,7 +89,6 @@ class OgpPlanObserver
                 $this->sendEmails($ogpPlan, 'created_report');
                 Log::info('Send subscribe email on creation');
             }
-
 
             if(sizeof($fbPost)){
                 //post on facebook
@@ -169,7 +168,7 @@ class OgpPlanObserver
 
             if($filterSubscribtions->count()){
                 foreach ($filterSubscribtions as $fSubscribe){
-                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true) ?? [];
                     $modelIds = OgpPlan::list($filterArray)->pluck('id')->toArray();
                     if(in_array($ogpPlan->id, $modelIds)){
                         $subscribedUsers->add($fSubscribe);
