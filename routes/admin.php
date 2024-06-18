@@ -244,7 +244,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/users/store', 'store')->name('users.store');
         Route::get('/users/{user}/edit', 'edit')->name('users.edit');
         Route::post('/users/{user}/update', 'update')->name('users.update');
-        Route::get('/users/{user}/delete', 'destroy')->name('users.delete');
+        Route::post('/users/{user}/delete', 'destroy')->name('users.delete');
         Route::get('/users/export', 'export')->name('users.export');
         Route::get('/users/change-requests', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
     });
