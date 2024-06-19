@@ -121,7 +121,6 @@ class ReportsController extends Controller
                     where
                         sd.deleted_at is null
                         and sd.active = true
-                        and sd.id = 1
                 ');
 
                 $header = [
