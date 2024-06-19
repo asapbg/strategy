@@ -6,6 +6,7 @@ use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
+use App\Enums\OgpStatusEnum;
 use App\Enums\PrisDocChangeTypeEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Models\ActType;
@@ -1380,6 +1381,87 @@ class ReportsController extends Controller
                 $data = [];
         }
 
+        return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function apiOgp(Request $request, string $type = 'standard'){
+        switch ($type) {
+            case 'full':
+                $data = DB::select('
+                    select
+                        (
+                            jsonb_build_object(\'areas\', (
+                                select
+                                    jsonb_agg(jsonb_build_object(\'name\', oat."name", \'date_start\', op.from_date_develop, \'date_end\', op.to_date_develop, \'proposals\',
+                                        (
+                                            select jsonb_agg(jsonb_build_object(\'user_name\', u.first_name || \' \' || u.last_name , \'date\', to_char(opao.created_at, \'DD.MM.YYYY\') , \'content\', opao."content" , \'votes_for\', opao.likes_cnt , \'votes_against\', opao.dislikes_cnt, \'comments\',
+                                                (
+                                                    select jsonb_agg(jsonb_build_object(\'date\', to_char(opaoc.created_at, \'DD.MM.YYYY\'), \'author_name\', u2.first_name || \'\' || u2.last_name , \'text\', opaoc."content"))
+                                                    from ogp_plan_area_offer_comment opaoc
+                                                    left join users u2 on u2.id = opaoc.users_id
+                                                    where
+                                                        opaoc.ogp_plan_area_offer_id = opao.id
+                                                        and opaoc.deleted_at is null
+                                                )
+                                            ))
+                                            from ogp_plan_area_offer opao
+                                            left join users u on u.id = opao.users_id
+                                            where
+                                                opao.deleted_at is null
+                                                and opao.ogp_plan_area_id = opa.id
+                                        )
+                                    )) filter (where opa.id is not null) as areas
+                                from ogp_plan op
+                                join ogp_plan_translations opt on opt.ogp_plan_id = op.id and opt.locale = \'bg\'
+                                join ogp_status os on os.id = op.ogp_status_id
+                                left join ogp_plan_area opa on opa.ogp_plan_id = op.id
+                                left join ogp_area oa on oa.id = opa.ogp_area_id
+                                left join ogp_area_translations oat on oat.ogp_area_id = oa.id and oat.locale = \'bg\'
+                                where
+                                    op.deleted_at is null
+                                    and op.national_plan = 0
+                                    and os."type" in ('.OgpStatusEnum::IN_DEVELOPMENT->value.')
+                                    and opa.deleted_at is null
+                                group by op.id, opa.id
+                            ))
+                        ) as next_plan,
+                        0 as plans,
+                        (
+                            select
+                                json_agg(jsonb_build_object(\'date\', to_char(p.published_at, \'DD.MM.YYYY\'), \'title\', pt.title , \'content\', pt."content"))
+                            from "publication" p
+                            left join publication_translations pt on pt.publication_id = p.id and pt.locale = \'bg\'
+                            where
+                                p.active = true
+                                and p."type" = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
+                                and p.deleted_at is null
+                        ) as news
+	            ');
+                $header = [
+                    'next_plan' => __('custom.title'),
+                    'plans' => __('custom.created_at'),
+                    'news' => trans_choice('custom.news', 2),
+                ];
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        if(!empty($row->next_plan)){
+                            $row->next_plan = json_decode($row->next_plan, true);
+                        }
+                        if(!empty($row->news)){
+                            $row->news = json_decode($row->news, true);
+                        }
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                $data = $finalData;
+
+                break;
+            default:
+                $data = [];
+        }
         return response()->json($data, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 }

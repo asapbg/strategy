@@ -39,9 +39,10 @@ use Illuminate\Support\Facades\Route;
         Route::get('/reports/operational-program/{type}/view',       'apiReportOp')->name('api.report.op');
         //Advisory Boards
         Route::get('/reports/adv-boards/{type}/view',       'apiReportAdvBoards')->name('api.report.adv_boards');
-
         //Strategic Document
         Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
+        //Strategic Document
+        Route::get('/reports/ogp/{type}/view',       'apiOgp')->name('api.report.ogp');
 
     });
 //});
