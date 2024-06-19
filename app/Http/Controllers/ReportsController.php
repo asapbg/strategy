@@ -14,6 +14,7 @@ use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\LegalActType;
+use App\Models\StrategicDocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,58 +25,65 @@ class ReportsController extends Controller
         switch ($type)
         {
             case 'standard':
-                $q = DB::table('advisory_boards')
-                    ->select([
-                        'advisory_board_translations.name',
-                        'field_of_action_translations.name as field_of_action',
-                        'authority_advisory_board_translations.name as authority',
-                        'advisory_act_type_translations.name as advisory_act_type',
-                        'advisory_chairman_type_translations.name as chairman_type',
-                        DB::raw('case when advisory_boards.has_npo_presence = true then \'Да\' else \'Не\' end as has_npo_presence'),
-                        DB::raw('concat(advisory_boards.meetings_per_year, 0) as meetings_per_year'),
-                        DB::raw('case when advisory_boards.active = true then \'Активен\' else \'Неактивен\' end as status'),
-                    ])
-                    ->leftJoin('advisory_board_translations', function ($j){
-                        $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
-                            ->where('advisory_board_translations.locale', '=', 'bg');
-                    })
-                    ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
-                    ->leftJoin('field_of_action_translations', function ($j){
-                        $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-                            ->where('field_of_action_translations.locale', '=', 'bg');
-                    })
-                    ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
-                    ->leftJoin('authority_advisory_board_translations', function ($j){
-                        $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
-                            ->where('authority_advisory_board_translations.locale', '=', 'bg');
-                    })
-                    ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
-                    ->leftJoin('advisory_act_type_translations', function ($j){
-                        $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
-                            ->where('advisory_act_type_translations.locale', '=', 'bg');
-                    })
-                    ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
-                    ->leftJoin('advisory_chairman_type_translations', function ($j){
-                        $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
-                            ->where('advisory_chairman_type_translations.locale', '=', 'bg');
-                    })
-                    ->whereNull('advisory_boards.deleted_at')
-                    ->where('advisory_boards.public', true)
-                    ->orderBy('advisory_boards.active', 'desc')
-                    ->orderBy('advisory_board_translations.name', 'asc');
+                $data = DB::select('
+                    select
+                        sdt.title as name,
+                        enums.level_name as level,
+                        foat.name as field_of_action,
+                        aast."name" as authority,
+                        to_char(strategic_document.document_date_accepted, \'DD.MM.YYYY\') || \' - \' || case when strategic_document.document_date_expiring is not null then to_char(strategic_document.document_date_expiring, \'DD.MM.YYYY\') else \''.__('custom.unlimited').'\' end as validity
+                    from strategic_document
+                    left join field_of_actions foa on foa.id = strategic_document.policy_area_id
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    join strategic_document_translations sdt on sdt.strategic_document_id = strategic_document.id and sdt.locale = \'bg\'
+                    left join authority_accepting_strategic aas on aas.id = strategic_document.accept_act_institution_type_id
+                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
+                    left join (select level_id, level_name from (
+                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
+                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
+                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                        ) E(level_id, level_name)) enums on enums.level_id = strategic_document.strategic_document_level_id
+                    where
+                        strategic_document.active = true
+                        and strategic_document.deleted_at is null
+                        and strategic_document.parent_document_id is null
+                ');
+//                $q = DB::table('strategic_document')
+//                    ->select([
+//                        DB::raw('strategic_document_translations.title as name'),
+//                        DB::raw('\'df\' as level'),
+//                        DB::raw('field_of_action_translations.name as field_of_action'),
+//                        DB::raw('\'df\' as authority'),
+//                        DB::raw('\'df\' as validity'),
+//                    ])
+//                    ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+//                    ->leftJoin('field_of_action_translations', function ($j){
+//                        $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+//                            ->where('field_of_action_translations.locale', '=', app()->getLocale());
+//                    })
+//                    ->leftJoin('strategic_document_translations', function ($j){
+//                        $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+//                            ->where('strategic_document_translations.locale', '=', app()->getLocale());
+//                    })
+//                    ->where('strategic_document.active', '=', true)
+//                    ->whereNull('parent_document_id');
 
-                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
                 $header = [
-                    'name' => __('custom.name'),
+                    'name' => __('custom.title'),
+                    'level' => __('site.strategic_document.level'),
                     'field_of_action' => trans_choice('custom.field_of_actions', 1),
-                    'authority' => __('custom.type_of_governing'),
-                    'advisory_act_type' => __('validation.attributes.act_of_creation'),
-                    'chairman_type' => __('validation.attributes.advisory_chairman_type_id'),
-                    'has_npo_presence' => 'Представител на НПО',
-                    'meetings_per_year' => 'Мин. бр. заседания на година',
-                    'status' => __('custom.status'),
+                    'authority' => trans_choice('custom.authority_accepting_strategic', 1),
+                    'validity' => __('custom.validity')
                 ];
-                array_unshift($data, $header);
+
+                $finalData = array();
+                if(sizeof($data)){
+                    foreach ($data as $row){
+                        $finalData[] = $row;
+                    }
+                }
+                array_unshift($finalData, $header);
+                break;
 
                 break;
             case 'full':
@@ -1072,7 +1080,7 @@ class ReportsController extends Controller
                         DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
                         DB::raw('max(pris_translations.legal_reason) as legal_reason'),
                         DB::raw('max(pris_translations.importer) as importer'),
-                        DB::raw('json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) as institutions'),
+                        DB::raw('json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) filter (where institution.id is not null) as institutions'),
                         DB::raw('pris.version'),
                         DB::raw('case
                                             when max(pp.id) is null then pris.protocol
@@ -1155,6 +1163,7 @@ class ReportsController extends Controller
                     ->where('pris.asap_last_version', '=', 1)
                     ->where('pris.in_archive', '=', $inArchive)
 //                    ->whereNotNull('pris.public_consultation_id')
+//                    ->where('pris.id', '=', 161921)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
                     ->limit(1000);
