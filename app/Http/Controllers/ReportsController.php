@@ -173,7 +173,7 @@ class ReportsController extends Controller
             case 'standard':
                 $q = DB::table('legislative_initiative')
                     ->select([
-                        DB::raw('\''.__('custom.change_f').' '.__('custom.in').'\' || max(law_translations.name) as name'),
+                        DB::raw('\''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || max(law_translations.name) as name'),
                         DB::raw('case when max(users.id) is not null then max(users.first_name) || \' \' || max(users.last_name) else \'\' end as author_name'),
                         DB::raw('legislative_initiative.created_at::date as date_open'),
                         DB::raw('legislative_initiative.active_support::date as date_close'),
@@ -187,6 +187,8 @@ class ReportsController extends Controller
                         DB::raw('legislative_initiative.description as description'),
                         DB::raw('max(law_translations.name) as law_name'),
                         DB::raw('legislative_initiative.law_paragraph as law_paragraph'),
+                        DB::raw('legislative_initiative.law_text as law_text_change'),
+                        DB::raw('legislative_initiative.motivation as motivation'),
                         'legislative_initiative.cap',
                         DB::raw('case when max(ric.id) is not null then true else false end as sent'),
                         DB::raw('sum(case when legislative_initiative_votes.is_like = true then 1 else 0 end) as votes_for'),
@@ -239,6 +241,8 @@ class ReportsController extends Controller
                     'description' => __('custom.description_of_suggested_change'),
                     'law_name' => trans_choice('custom.laws', 1),
                     'law_paragraph' => __('validation.attributes.law_paragraph'),
+                    'law_text_change' => __('validation.attributes.law_text'),
+                    'motivation' => __('validation.attributes.motivation'),
                     'cap' => __('site.li_required_likes'),
                     'sent' => __('custom.sent_date'),
                     'votes_for' => __('custom.likes'),
@@ -1140,6 +1144,7 @@ class ReportsController extends Controller
                     ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL, LegalActType::TYPE_ARCHIVE])
                     ->where('pris.asap_last_version', '=', 1)
                     ->where('pris.in_archive', '=', $inArchive)
+//                    ->whereNotNull('pris.public_consultation_id')
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
                     ->limit(1000);
