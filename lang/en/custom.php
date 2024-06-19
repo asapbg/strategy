@@ -1321,5 +1321,6 @@ return [
     'comments_deadline' => 'Срок за коментари',
     'program' => 'Program',
     'li_support_info' => 'The legislative initiative must gather the support of a :cap number of votes from users of the portal within a period of :days to be sent to the relevant institutions.',
+    'li_support_info_general' => 'Important: legislative initiatives must gather support from :cap number of votes from users of the portal for a period of :days to be sent to the relevant institutions.',
     'advisory_board_id' => 'Advisory board',
 ];
