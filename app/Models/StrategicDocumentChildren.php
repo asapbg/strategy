@@ -228,4 +228,138 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
         }
         return $children;
     }
+
+    /**
+     * We use this to draw documents tree
+     * If $id is 0 then we get full tree
+     * @return array
+     */
+    public static function getTreeReport($id = 0, $sd = 0, $onlyVisible = false)
+    {
+        $tree = [];
+        $documents = DB::select(
+            'select
+                        strategic_document_children.id as id,
+                        max(strategic_document_children_translations.title) as name,
+                        max(enums.level_name) as level,
+                        max(foat."name") as policy_area,
+                        max(strategic_document_type_translations."name") as strategic_document_type,
+                        strategic_document_children.pris_act_id,
+                        case when strategic_document_children.pris_act_id is not null then
+                        (
+                            select array_agg(it."name")
+                            from pris
+                            left join pris_institution pi2 on pi2.pris_id = pris.id
+                            left join institution i on i.id = pi2.institution_id
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            where
+                                pris.id = strategic_document_children.pris_act_id
+                                and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
+                            group by pris.id
+                        ) else null end as author_institutions,
+                        max(authority_accepting_strategic_translations."name") as accepting_institution_type,
+                        null as document_date,
+                        max(public_consultation.reg_num) as public_consultation_number,
+                        true as active,
+                        strategic_document_children.link_to_monitorstat,
+                        strategic_document_children.document_date_accepted::date as date_accepted,
+                        strategic_document_children.document_date_expiring::date as date_expiring,
+                        (
+                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.locale = \'bg\'
+                        ) as files
+                    from strategic_document_children
+                    left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
+                    left join (select level_id, level_name from (
+                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
+                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
+                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                        ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
+                    left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    left join strategic_document_type on strategic_document_children.strategic_document_type_id = strategic_document_type.id
+                    left join strategic_document_type_translations on strategic_document_type_translations.strategic_document_type_id = strategic_document_type.id and strategic_document_type_translations.locale = \''.app()->getLocale().'\'
+                    left join authority_accepting_strategic on strategic_document_children.accept_act_institution_type_id = authority_accepting_strategic.id
+                    left join authority_accepting_strategic_translations on authority_accepting_strategic_translations.authority_accepting_strategic_id = authority_accepting_strategic.id and authority_accepting_strategic_translations.locale = \''.app()->getLocale().'\'
+                    left join public_consultation on public_consultation.id = strategic_document_children.public_consultation_id
+                    where
+                        strategic_document_children.deleted_at is null
+                        '. ($id ? ' and strategic_document_children.id = '.(int)$id : ' and strategic_document_children.parent_id is null ') .'
+                        '. ($sd ? ' and strategic_document_children.strategic_document_id = '.(int)$sd : '') .'
+                    group by strategic_document_children.id
+                ');
+
+        if(sizeof($documents)) {
+            foreach ($documents as $d){
+                $d->subdocuments = self::documentChildrenReport($d->id);
+                $tree[] = $d;
+            }
+        }
+
+        return $tree;
+    }
+
+    private static function documentChildrenReport(int $parent, $level = 1, $onlyVisible = false): array
+    {
+        $children = [];
+        $documents = DB::select(
+            'select
+                        strategic_document_children.id as id,
+                        max(strategic_document_children_translations.title) as name,
+                        max(enums.level_name) as level,
+                        max(foat."name") as policy_area,
+                        max(strategic_document_type_translations."name") as strategic_document_type,
+                        strategic_document_children.pris_act_id,
+                        case when strategic_document_children.pris_act_id is not null then
+                        (
+                            select array_agg(it."name")
+                            from pris
+                            left join pris_institution pi2 on pi2.pris_id = pris.id
+                            left join institution i on i.id = pi2.institution_id
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            where
+                                pris.id = strategic_document_children.pris_act_id
+                                and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
+                            group by pris.id
+                        ) else null end as author_institutions,
+                        max(authority_accepting_strategic_translations."name") as accepting_institution_type,
+                        null as document_date,
+                        max(public_consultation.reg_num) as public_consultation_number,
+                        true as active,
+                        strategic_document_children.link_to_monitorstat,
+                        strategic_document_children.document_date_accepted::date as date_accepted,
+                        strategic_document_children.document_date_expiring::date as date_expiring,
+                        (
+                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.locale = \'bg\'
+                        ) as files
+                    from strategic_document_children
+                    left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
+                    left join (select level_id, level_name from (
+                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
+                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
+                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                        ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
+                    left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    left join strategic_document_type on strategic_document_children.strategic_document_type_id = strategic_document_type.id
+                    left join strategic_document_type_translations on strategic_document_type_translations.strategic_document_type_id = strategic_document_type.id and strategic_document_type_translations.locale = \'bg\'
+                    left join authority_accepting_strategic on strategic_document_children.accept_act_institution_type_id = authority_accepting_strategic.id
+                    left join authority_accepting_strategic_translations on authority_accepting_strategic_translations.authority_accepting_strategic_id = authority_accepting_strategic.id and authority_accepting_strategic_translations.locale = \'bg\'
+                    left join public_consultation on public_consultation.id = strategic_document_children.public_consultation_id
+                    where
+                        strategic_document_children.deleted_at is null
+                        and strategic_document_children.parent_id = '.$parent.'
+                    group by strategic_document_children.id
+                ');
+
+        if( sizeof($documents) ) {
+            foreach ($documents as $c) {
+//                $c->level = $level;
+                $c->subdocuments = self::documentChildren($c->id, ($level + 1), $onlyVisible);
+                $children[] = $c;
+            }
+        }
+        return $children;
+    }
 }

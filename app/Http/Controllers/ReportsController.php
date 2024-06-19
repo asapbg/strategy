@@ -15,6 +15,7 @@ use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\StrategicDocument;
+use App\Models\StrategicDocumentChildren;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,7 @@ class ReportsController extends Controller
             case 'full':
                 $data = DB::select('
                     select
+                        sd.id as sd_id,
                         sdt.title as name,
                         enums.level_name as level,
                         foat."name" as policy_area,
@@ -118,8 +120,10 @@ class ReportsController extends Controller
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where
                         sd.deleted_at is null
-                                and sd.active = true
+                        and sd.active = true
+                        and sd.id = 1
                 ');
+
                 $header = [
                     'title' => __('custom.title'),
                     'level' => capitalize(__('custom.level_lower_case')),
@@ -144,6 +148,8 @@ class ReportsController extends Controller
                 $finalData = array();
                 if(sizeof($data)){
                     foreach ($data as $row){
+                        $row->subdocuments = StrategicDocumentChildren::getTreeReport(0, $row->sd_id, true);
+                        unset($row->sd_id);
                         $finalData[] = $row;
                     }
                 }
