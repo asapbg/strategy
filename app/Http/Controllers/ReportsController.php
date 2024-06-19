@@ -291,7 +291,7 @@ class ReportsController extends Controller
                                     select
                                         A.month,
                                         A.row_num,
-                                        jsonb_agg(jsonb_build_object(A."label", A.value)) as records,
+                                        jsonb_object_agg(A."label", case when A.col = '.config('lp_op_programs.lp_ds_col_institution_id').' then A.institutions else A.value end) as records,
                                         A.legislative_program_id,
                                         max(A.from_date) as date_from,
                                         max(A.to_date) as date_to
@@ -299,17 +299,22 @@ class ReportsController extends Controller
                                         select
                                             lprm.month,
                                             lprm.row_num,
-                                            dsct."label",
-                                            lprm.value,
+                                            max(dsct."label") as label,
+				                            max(lprm.value) as value,
+				                            string_agg(it."name", \', \') as institutions,
+				                            lprm.dynamic_structures_column_id as col,
                                             lprm.legislative_program_id,
-                                            lp.from_date,
-                                            lp.to_date
+                                            max(lp.from_date) as from_date,
+				                            max(lp.to_date) as to_date
                                         from legislative_program_row lprm
                                         join dynamic_structure_column dsc on dsc.id = lprm.dynamic_structures_column_id
                                         join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
                                         join legislative_program lp on lp.id = lprm.legislative_program_id and lp.deleted_at is null and lp.public = 1
+                                        left join legislative_program_row_institution lpri on lpri.legislative_program_row_id = lprm.id
+			                            left join institution_translations it on it.institution_id = lpri.institution_id and it.locale = \'bg\'
                                         where
                                             lprm.deleted_at is null
+                                        group by lprm.id, lprm."month", lprm.row_num
                                         order by lprm."month", lprm.row_num, lprm.dynamic_structures_column_id
                                     ) A
                                     group by A.legislative_program_id, A."month", A.row_num
@@ -377,7 +382,7 @@ class ReportsController extends Controller
                                     select
                                         A.month,
                                         A.row_num,
-                                        jsonb_agg(jsonb_build_object(A."label", A.value)) as records,
+                                        jsonb_object_agg(A."label", case when A.col = '.config('lp_op_programs.op_ds_col_institution_id').' then A.institutions else A.value end) as records,
                                         A.operational_program_id,
                                         max(A.from_date) as date_from,
                                         max(A.to_date) as date_to
@@ -385,17 +390,22 @@ class ReportsController extends Controller
                                         select
                                             oprm.month,
                                             oprm.row_num,
-                                            dsct."label",
-                                            oprm.value,
+                                            max(dsct."label") as label,
+                                            max(oprm.value) as value,
+                                            string_agg(it."name", \', \')  as institutions,
+				                            oprm.dynamic_structures_column_id as col,
                                             oprm.operational_program_id,
-                                            op.from_date,
-                                            op.to_date
+                                            max(op.from_date) as from_date,
+                                            max(op.to_date) as to_date
                                         from operational_program_row oprm
                                         join dynamic_structure_column dsc on dsc.id = oprm.dynamic_structures_column_id
                                         join dynamic_structure_column_translations dsct on dsct.dynamic_structure_column_id = dsc.id and dsct.locale = \'bg\'
                                         join operational_program op on op.id = oprm.operational_program_id and op.deleted_at is null and op.public = 1
+                                        left join operational_program_row_institution opri on opri.operational_program_row_id = oprm.id
+			                            left join institution_translations it on it.institution_id = opri.institution_id and it.locale = \'bg\'
                                         where
                                             oprm.deleted_at is null
+                                        group by oprm.id, oprm."month", oprm.row_num
                                         order by oprm."month", oprm.row_num, oprm.dynamic_structures_column_id
                                     ) A
                                     group by A.operational_program_id, A."month", A.row_num
