@@ -936,7 +936,7 @@ class ReportsController extends Controller
                                 select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) as files
                                 from advisory_board_functions abf
                                 join advisory_board_function_translations abft on abft.advisory_board_function_id = abf.id and abft.locale = \'bg\'
-                                join files f2 on f2.id_object = abf.id
+                                left join files f2 on f2.id_object = abf.id
                                 and f2.deleted_at is null
                                 and f2.locale = \'bg\'
                                 and f2.code_object = '.File::CODE_AB.'
@@ -953,7 +953,7 @@ class ReportsController extends Controller
                                 select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
                                 from advisory_board_meetings abm3
                                 join advisory_board_meeting_translations abmt2 on abmt2.advisory_board_meeting_id = abm3.id and abmt2.locale = \'bg\'
-                                join files f on f.id_object = abm3.id
+                                left join files f on f.id_object = abm3.id
                                 and f.deleted_at is null
                                 and f.locale = \'bg\'
                                 and f.code_object = '.File::CODE_AB.'
