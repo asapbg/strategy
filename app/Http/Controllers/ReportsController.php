@@ -48,25 +48,6 @@ class ReportsController extends Controller
                         and strategic_document.deleted_at is null
                         and strategic_document.parent_document_id is null
                 ');
-//                $q = DB::table('strategic_document')
-//                    ->select([
-//                        DB::raw('strategic_document_translations.title as name'),
-//                        DB::raw('\'df\' as level'),
-//                        DB::raw('field_of_action_translations.name as field_of_action'),
-//                        DB::raw('\'df\' as authority'),
-//                        DB::raw('\'df\' as validity'),
-//                    ])
-//                    ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-//                    ->leftJoin('field_of_action_translations', function ($j){
-//                        $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-//                            ->where('field_of_action_translations.locale', '=', app()->getLocale());
-//                    })
-//                    ->leftJoin('strategic_document_translations', function ($j){
-//                        $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
-//                            ->where('strategic_document_translations.locale', '=', app()->getLocale());
-//                    })
-//                    ->where('strategic_document.active', '=', true)
-//                    ->whereNull('parent_document_id');
 
                 $header = [
                     'name' => __('custom.title'),
@@ -83,9 +64,9 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
                 break;
 
-                break;
             case 'full':
                 $data = DB::select('
                     select
@@ -167,6 +148,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
                 break;
             default:
                 $data = [];
@@ -352,6 +334,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
                 break;
             default:
                 $data = [];
@@ -443,6 +426,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
                 break;
             default:
                 $data = [];
@@ -848,6 +832,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
 
                 break;
             default:
@@ -1058,6 +1043,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
                 break;
             default:
                 $data = [];
@@ -1381,6 +1367,7 @@ class ReportsController extends Controller
                     }
                 }
                 array_unshift($finalData, $header);
+                $data = $finalData;
 //                array_unshift($data, $header);
 
                 break;
