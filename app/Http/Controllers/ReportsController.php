@@ -107,8 +107,8 @@ class ReportsController extends Controller
                     left join field_of_actions foa on foa.id = sd.policy_area_id
                     left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
                     left join strategic_document_type sdt2 on sdt2.id = sd.strategic_document_type_id
-                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt.id and sdtt.locale = \'bg\'
-                    left join authority_accepting_strategic aas on aas.id = sd.authority_accepting_strategic_id
+                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt2.id and sdtt.locale = \'bg\'
+                    left join authority_accepting_strategic aas on aas.id = sd.accept_act_institution_type_id
                     left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
                     left join public_consultation pc on pc.id = sd.public_consultation_id
                     left join (select level_id, level_name from (
@@ -921,7 +921,7 @@ class ReportsController extends Controller
                                 and f.doc_type = '.DocTypesEnum::AB_MODERATOR->value.'
                             ), \'persons\',
                                 (
-                                select jsonb_agg(u.first_name || \' \' || u.middle_name || \' \' || u.last_name)
+                                select jsonb_agg(case when u.first_name is not null then u.first_name else \'\' end || \' \' || case when u.last_name is not null then u.last_name else \'\' end)
                                     from advisory_board_moderators abm2
                                     join users u on u.id = abm2.user_id
                                     where
@@ -1198,39 +1198,39 @@ class ReportsController extends Controller
     public function apiReportImpactAssessments(Request $request, string $type){
         switch ($type)
         {
-            case 'standard':
-                $q = DB::table('form_input')
-                    ->select([
-                        DB::raw('to_char(form_input.created_at, \'DD.MM.YYYY\') as date'),
-                        DB::raw('case when form_input.form = \'form1\'
-                            then \'Частична предварителна оценка на въздействието\'
-                            else case when form_input.form = \'form2\'
-                                then \'Резюме на цялостна предварителна оценка на въздействието\'
-                                else case when form_input.form = \'form3\'
-                                    then \'Доклад на цялостна предварителна оценка на въздействието\'
-                                    else \'Цялостна предварителна-доклад\' end
-                                end
-                            end as type'),
-                        DB::raw('trim(\'"\' FROM (data::json->\'institution\')::text) as institution_name'),
-                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as user_name'),
-                        'form_input.data',
-                    ])
-                    ->leftJoin('users', 'users.id' , '=', 'form_input.user_id')
-                    ->whereNull('form_input.deleted_at')
-                    ->orderBy('form_input.created_at', 'desc');
-
-                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
-
-                $header = [
-                    'date' => __('custom.date'),
-                    'type' => __('custom.type'),
-                    'institution_name' => trans_choice('custom.institution', 1),
-                    'user_name' => __('custom.author'),
-                    'data' => __('custom.information')
-                ];
-                array_unshift($data, $header);
-
-                break;
+//            case 'standard':
+//                $q = DB::table('form_input')
+//                    ->select([
+//                        DB::raw('to_char(form_input.created_at, \'DD.MM.YYYY\') as date'),
+//                        DB::raw('case when form_input.form = \'form1\'
+//                            then \'Частична предварителна оценка на въздействието\'
+//                            else case when form_input.form = \'form2\'
+//                                then \'Резюме на цялостна предварителна оценка на въздействието\'
+//                                else case when form_input.form = \'form3\'
+//                                    then \'Доклад на цялостна предварителна оценка на въздействието\'
+//                                    else \'Цялостна предварителна-доклад\' end
+//                                end
+//                            end as type'),
+//                        DB::raw('trim(\'"\' FROM (data::json->\'institution\')::text) as institution_name'),
+//                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as user_name'),
+//                        'form_input.data',
+//                    ])
+//                    ->leftJoin('users', 'users.id' , '=', 'form_input.user_id')
+//                    ->whereNull('form_input.deleted_at')
+//                    ->orderBy('form_input.created_at', 'desc');
+//
+//                $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+//
+//                $header = [
+//                    'date' => __('custom.date'),
+//                    'type' => __('custom.type'),
+//                    'institution_name' => trans_choice('custom.institution', 1),
+//                    'user_name' => __('custom.author'),
+//                    'data' => __('custom.information')
+//                ];
+//                array_unshift($data, $header);
+//
+//                break;
             case 'executors':
                 $q = DB::table('executors')
                     ->select([
@@ -1287,7 +1287,7 @@ class ReportsController extends Controller
                     ->select([
                         'publication_translations.title',
                         DB::raw('to_char(publication.published_at, \'DD.MM.YYYY\') as date'),
-                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as author'),
+//                        DB::raw('case when users.id is not null then users.first_name || \' \' || users.middle_name || \' \' || users.last_name else \'\' end as author'),
                         'publication_translations.content'
                     ])
                     ->leftJoin('users', 'users.id' , '=', 'publication.users_id')
@@ -1306,7 +1306,7 @@ class ReportsController extends Controller
                 $header = [
                     'title' => __('custom.title'),
                     'date' => __('custom.date'),
-                    'author' => __('custom.author'),
+//                    'author' => __('custom.author'),
                     'content' => __('custom.content')
 
                 ];
