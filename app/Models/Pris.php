@@ -68,7 +68,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         return static::with(['translations', 'actType', 'actType.translations'])
             ->Published()
             ->where('active', '=', 1)
-            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

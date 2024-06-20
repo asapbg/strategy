@@ -63,7 +63,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
         return static::with(['translations'])
             ->ActivePublic()
             ->where('type', '=', PublicationTypesEnum::TYPE_LIBRARY->value)
-            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }
@@ -77,7 +77,7 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
         return static::with(['translations'])
             ->ActivePublic()
             ->where('type', '=', PublicationTypesEnum::TYPE_NEWS->value)
-            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }
