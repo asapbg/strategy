@@ -1423,6 +1423,7 @@ class ReportsController extends Controller
                                     and os."type" in ('.OgpStatusEnum::IN_DEVELOPMENT->value.')
                                     and opa.deleted_at is null
                                 group by op.id, opa.id
+                                limit 1
                             ))
                         ) as next_plan,
                     (
