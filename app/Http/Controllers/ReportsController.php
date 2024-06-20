@@ -1389,8 +1389,8 @@ class ReportsController extends Controller
             case 'full':
                 $data = DB::select('
                     select
-                        (
-                            jsonb_build_object(\'areas\', (
+                    (
+                        jsonb_build_object(\'areas\', (
                                 select
                                     jsonb_agg(jsonb_build_object(\'name\', oat."name", \'date_start\', op.from_date_develop, \'date_end\', op.to_date_develop, \'proposals\',
                                         (
@@ -1425,17 +1425,87 @@ class ReportsController extends Controller
                                 group by op.id, opa.id
                             ))
                         ) as next_plan,
-                        0 as plans,
+                    (
                         (
-                            select
-                                json_agg(jsonb_build_object(\'date\', to_char(p.published_at, \'DD.MM.YYYY\'), \'title\', pt.title , \'content\', pt."content"))
-                            from "publication" p
-                            left join publication_translations pt on pt.publication_id = p.id and pt.locale = \'bg\'
-                            where
-                                p.active = true
-                                and p."type" = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
-                                and p.deleted_at is null
-                        ) as news
+                            select jsonb_agg(A.a)
+                            from (
+                                select
+                                    jsonb_build_object(\'name\', max(opt2."name"), \'date_start\', op2.from_date , \'date_end\', op2."to_date",
+                                        \'version_after_public_consultation_pdf\', (
+                                            select \'http://strategy.test/download/\' || f.id
+                                            from files f
+                                            where
+                                                f.deleted_at is null
+                                            and f.id_object = op2.id
+                                            and f.code_object = '.File::CODE_OBJ_OGP.' --
+                                            and f.doc_type = '.DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value.'
+                                            and f.locale = \'bg\'
+                                            order by f.created_at desc
+                                            limit 1
+                                        ),
+                                        \'other_files\', (
+                                            select
+                                                jsonb_agg(jsonb_build_object(\'name\', f2.description_bg , \'link\', \'http://strategy.test/download/\' || f2.id))
+                                                        from files f2
+                                                        where
+                                                            f2.deleted_at is null
+                                            and f2.id_object = op2.id
+                                            and f2.code_object = '.File::CODE_OBJ_OGP.'
+                                            and f2.doc_type in ('.DocTypesEnum::OGP_REPORT_EVALUATION->value.')
+                                            and f2.locale = \'bg\'
+                                        ),
+                                        \'areas\', (
+                                            select
+                                                jsonb_agg(jsonb_build_object(\'name\', oat."name", \'commitments\',(
+                                                    select jsonb_agg(jsonb_build_object(\'name\', opat."name", \'context\', opat."content", \'npo_partner\', opat.npo_partner, \'values_initiative\', opat.values_initiative, \'problem\', opat.problem, \'solving_problem\', opat.solving_problem, \'responsible_institution\', opat.responsible_administration, \'evaluation\', opat.evaluation, \'evaluation_status\', opat.evaluation_status, \'stakeholders\', opat.interested_org, \'deadline\', opa2.to_date, \'contacts\', opat.contact_names
+                                                ))
+                                            from ogp_plan_arrangement opa2
+                                            join ogp_plan_arrangement_translations opat on opat.ogp_plan_arrangement_id = opa2.id and opat.locale = \'bg\'
+                                            where
+                                                opa2.deleted_at is null
+                                                and opa2.ogp_plan_area_id = opa.id
+                                            )
+                                        ))
+                                            from ogp_plan_area opa
+                                            left join ogp_area oa2 on oa2.id = opa.ogp_area_id
+                                            left join ogp_area_translations oat on oat.ogp_area_id = oa2.id and oat.locale = \'bg\'
+                                            where
+                                                opa.ogp_plan_id = op2.id
+                                                and opa.deleted_at is null
+                                            ),
+                                        \'reports\', \'??\',
+                                        \'events\', (
+                                            select
+                                                jsonb_agg(jsonb_build_object(\'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
+                                            from ogp_plan_schedule ops
+                                            join ogp_plan_schedule_translations opst on opst.ogp_plan_schedule_id = ops.id and opst.locale = \'bg\'
+                                            where
+                                                ops.deleted_at is null
+                                                and ops.ogp_plan_id = op2.id
+                                        )) as a,
+                                    1 as group_by
+                                from ogp_plan op2
+                                join ogp_plan_translations opt2 on opt2.ogp_plan_id = op2.id and opt2.locale = \'bg\'
+                                join ogp_status os2 on os2.id = op2.ogp_status_id
+                                where
+                                    op2.deleted_at is null
+                                    and op2.national_plan = 1
+                                    and os2."type" in (4) -- OgpStatusEnum::ACTIVE->value
+                                group by op2.id
+                            ) A
+                            group by A.group_by
+                        )
+                    ) as "plans",
+                    (
+                        select
+                            json_agg(jsonb_build_object(\'date\', to_char(p.published_at, \'DD.MM.YYYY\'), \'title\', pt.title , \'content\', pt."content"))
+                        from "publication" p
+                        left join publication_translations pt on pt.publication_id = p.id and pt.locale = \'bg\'
+                        where
+                            p.active = true
+                            and p."type" = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
+                            and p.deleted_at is null
+                    ) as news
 	            ');
                 $header = [
                     'next_plan' => __('custom.title'),
@@ -1448,6 +1518,9 @@ class ReportsController extends Controller
                     foreach ($data as $row){
                         if(!empty($row->next_plan)){
                             $row->next_plan = json_decode($row->next_plan, true);
+                        }
+                        if(!empty($row->plans)){
+                            $row->plans = json_decode($row->plans, true);
                         }
                         if(!empty($row->news)){
                             $row->news = json_decode($row->news, true);
