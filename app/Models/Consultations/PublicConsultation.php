@@ -90,7 +90,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return static::with(['translations'])
             ->ActivePublic()
-            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

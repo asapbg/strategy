@@ -65,7 +65,7 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+        return static::orderByRaw("created_at desc")
 //            ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

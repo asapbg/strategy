@@ -57,7 +57,7 @@ class Poll extends ModelActivityExtend implements Feedable
     {
         return static::Public()
             ->whereDoesntHave('consultations')
-            ->orderByRaw("(case when updated_at is null then created_at else updated_at end) desc")
+            ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }
