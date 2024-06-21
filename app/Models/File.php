@@ -121,7 +121,7 @@ class File extends ModelActivityExtend
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'id', 'sys_user');
+        return $this->hasOne(User::class, 'id', 'sys_user')->withTrashed();
     }
 
     public function versions(): HasMany

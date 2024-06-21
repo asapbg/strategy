@@ -18,7 +18,7 @@ return [
              */
             'url' => '/strategic-documents.rss',
 
-            'title' => 'Нови и обновени Стратегически документи',
+            'title' => 'Нови Стратегически документи',
             'description' => '',
             'language' => 'bg-BG',
 
@@ -116,7 +116,7 @@ return [
              */
             'url' => '/public-consultation.rss',
 
-            'title' => 'Нови и обновени Обществени консултации',
+            'title' => 'Нови консултации',
             'description' => '',
             'language' => 'bg-BG',
 
@@ -361,7 +361,7 @@ return [
              */
             'url' => '/legislative-programs.rss',
 
-            'title' => 'Нови и обновени Законодателни програми',
+            'title' => 'Нови Законодателни програми',
             'description' => '',
             'language' => 'bg-BG',
 
@@ -410,7 +410,7 @@ return [
              */
             'url' => '/operational-programs.rss',
 
-            'title' => 'Нови и обновени Оперативни програми',
+            'title' => 'Нови Оперативни програми',
             'description' => '',
             'language' => 'bg-BG',
 

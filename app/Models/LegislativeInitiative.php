@@ -159,7 +159,7 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'author_id')->withTrashed();
     }
 
     public function receivers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

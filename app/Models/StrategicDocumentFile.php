@@ -191,6 +191,6 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'sys_user');
+        return $this->belongsTo(User::class, 'sys_user')->withTrashed();
     }
 }

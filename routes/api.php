@@ -19,6 +19,43 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+Route::prefix('api')->group(function() {
+    Route::controller(\App\Http\Controllers\ApiStrategy\NomenclatureController::class)->prefix('nomenclature')->group(function () {
+        //institutions
+        Route::get('/institutions',       'institutions');
+        Route::get('/laws',       'laws');
+        Route::get('/act-types',       'actTypes');
+        Route::get('/legal-act-types',       'legalActTypes');
+        Route::get('/policy-areas',       'policyAreas');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\PublicConsultationsController::class)->group(function () {
+        //Public consultation
+        Route::get('/consultations',       'list');
+        Route::get('/consultations/{id}',       'show');
+        Route::get('/consultations/{id}/comments',       'comments');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\LegislativeProgramController::class)->group(function () {
+        //Legislative programs
+        Route::get('/legislative-programs',       'list');
+        Route::get('/legislative-programs/{id}',       'show');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\OperationalProgramController::class)->group(function () {
+        //Operational programs
+        Route::get('/operational-programs',       'list');
+        Route::get('/operational-programs/{id}',       'show');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\LegislativeInitiativeController::class)->group(function () {
+        //Legislative programs
+        Route::get('/legislative-initiatives',       'list');
+        Route::get('/legislative-initiatives/{id}',       'show');
+        Route::get('/legislative-initiatives/{id}/comments',       'comments');
+    });
+});
+
 //Route::group(['middleware' => ['guest']], function() {
     Route::controller(ReportsController::class)->group(function () {
         //Impact assessments
@@ -43,6 +80,5 @@ use Illuminate\Support\Facades\Route;
         Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
         //Strategic Document
         Route::get('/reports/ogp/{type}/view',       'apiOgp')->name('api.report.ogp');
-
     });
 //});

@@ -15,6 +15,6 @@ class UserCertificate extends Model
 
     public function user(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
-        return $this->morphTo('user');
+        return $this->morphTo('user')->withTrashed();
     }
 }

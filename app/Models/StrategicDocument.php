@@ -252,7 +252,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     //!!! TODO remove after level and field of actions changes
