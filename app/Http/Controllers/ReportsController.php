@@ -270,7 +270,7 @@ class ReportsController extends Controller
                                 max(C.date_from) as date_from,
                                 max(C.date_to) as date_to,
                                 (
-                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id)
+                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null)
                                     from files f
                                         where
                                             f.id_object = C.legislative_program_id
@@ -362,7 +362,7 @@ class ReportsController extends Controller
                                 max(C.date_from) as date_from,
                                 max(C.date_to) as date_to,
                                 (
-                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id)
+                                    select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null)
                                     from files f
                                         where
                                             f.id_object = C.operational_program_id
@@ -865,7 +865,7 @@ class ReportsController extends Controller
                         (
                             select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
                             from (
-                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from files f
                                 where
                                     f.deleted_at is null
@@ -878,7 +878,7 @@ class ReportsController extends Controller
                         (
                         select jsonb_build_object(\'description\', max(abort2.description), \'links\', A.files)
                             from (
-                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from files f
                                 where
                                     f.deleted_at is null
@@ -942,7 +942,7 @@ class ReportsController extends Controller
                         (
                         select jsonb_agg(jsonb_build_object(\'year\', WP.working_year::date, \'description\',  WP.description, \'reports\', WP.files))
                             from (
-                                select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) as files
+                                select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) filter (where f2.id is not null) as files
                                 from advisory_board_functions abf
                                 join advisory_board_function_translations abft on abft.advisory_board_function_id = abf.id and abft.locale = \'bg\'
                                 left join files f2 on f2.id_object = abf.id
@@ -959,7 +959,7 @@ class ReportsController extends Controller
                         (
                         select jsonb_agg(jsonb_build_object(\'year\', M.next_meeting::date, \'description\',  M.description, \'files\', M.files))
                             from (
-                                select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from advisory_board_meetings abm3
                                 join advisory_board_meeting_translations abmt2 on abmt2.advisory_board_meeting_id = abm3.id and abmt2.locale = \'bg\'
                                 left join files f on f.id_object = abm3.id

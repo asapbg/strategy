@@ -49,10 +49,25 @@ Route::prefix('api')->group(function() {
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\LegislativeInitiativeController::class)->group(function () {
-        //Legislative programs
+        //Legislative iniciative
         Route::get('/legislative-initiatives',       'list');
         Route::get('/legislative-initiatives/{id}',       'show');
         Route::get('/legislative-initiatives/{id}/comments',       'comments');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\AdvisoryBoardController::class)->group(function () {
+        //Legislative programs
+        Route::get('/advisory-boards',       'list');
+        Route::get('/advisory-boards/{id}',       'show');
+        Route::get('/advisory-boards/{id}/meetings',       'meetings');
+        Route::get('/advisory-boards/{id}/news',       'news');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\PollsController::class)->group(function () {
+        //Polls
+        Route::get('/polls',       'list');
+        Route::get('/polls/{id}',       'show');
+        Route::get('/polls/{id}/questions',       'questions');
     });
 });
 

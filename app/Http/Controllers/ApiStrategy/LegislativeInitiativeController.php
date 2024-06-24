@@ -61,18 +61,18 @@ class LegislativeInitiativeController extends ApiController
             ->leftJoin('users', 'users.id', '=', 'legislative_initiative.author_id')
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->join('law_translations', function ($q){
-                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', 'bg');
+                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', $this->locale);
             })
             ->leftJoin('legislative_initiative_votes', 'legislative_initiative_id', '=', 'legislative_initiative.id')
             ->join('legislative_initiative_institution as ic', 'ic.legislative_initiative_id', '=', 'legislative_initiative.id')
             ->join('institution as ici', 'ici.id', '=', 'ic.institution_id')
             ->join('institution_translations as ic_translation', function ($q){
-                $q->on('ic_translation.institution_id', '=', 'ici.id')->where('ic_translation.locale', '=', 'bg');
+                $q->on('ic_translation.institution_id', '=', 'ici.id')->where('ic_translation.locale', '=', $this->locale);
             })
             ->leftJoin('legislative_initiative_receiver as ric', 'ric.legislative_initiative_id', '=', 'legislative_initiative.id')
             ->leftJoin('institution as rici', 'rici.id', '=', 'ric.institution_id')
             ->leftJoin('institution_translations as ric_translation', function ($q){
-                $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', 'bg');
+                $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', $this->locale);
             })
             ->whereNull('legislative_initiative.deleted_at')
             ->when($isSend, function (Builder $query) use ($isSend){
@@ -93,6 +93,13 @@ class LegislativeInitiativeController extends ApiController
             })
             ->groupBy('legislative_initiative.id')
             ->orderBy('legislative_initiative.created_at', 'desc');
+
+        if($this->request_limit){
+            $q->limit($this->request_limit);
+        }
+        if($this->request_offset){
+            $q->offset($this->request_offset);
+        }
 
         $data = $q->get()->map(function ($row) {
             if(!empty($row->comments)){
@@ -147,18 +154,18 @@ class LegislativeInitiativeController extends ApiController
             ->leftJoin('users', 'users.id', '=', 'legislative_initiative.author_id')
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->join('law_translations', function ($q){
-                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', 'bg');
+                $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', $this->locale);
             })
             ->leftJoin('legislative_initiative_votes', 'legislative_initiative_id', '=', 'legislative_initiative.id')
             ->join('legislative_initiative_institution as ic', 'ic.legislative_initiative_id', '=', 'legislative_initiative.id')
             ->join('institution as ici', 'ici.id', '=', 'ic.institution_id')
             ->join('institution_translations as ic_translation', function ($q){
-                $q->on('ic_translation.institution_id', '=', 'ici.id')->where('ic_translation.locale', '=', 'bg');
+                $q->on('ic_translation.institution_id', '=', 'ici.id')->where('ic_translation.locale', '=', $this->locale);
             })
             ->leftJoin('legislative_initiative_receiver as ric', 'ric.legislative_initiative_id', '=', 'legislative_initiative.id')
             ->leftJoin('institution as rici', 'rici.id', '=', 'ric.institution_id')
             ->leftJoin('institution_translations as ric_translation', function ($q){
-                $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', 'bg');
+                $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', $this->locale);
             })
             ->whereNull('legislative_initiative.deleted_at')
             ->where('legislative_initiative.id', '=', $id)
