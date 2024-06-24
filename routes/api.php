@@ -69,6 +69,13 @@ Route::prefix('api')->group(function() {
         Route::get('/polls/{id}',       'show');
         Route::get('/polls/{id}/questions',       'questions');
     });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\StrategicDocumentsController::class)->group(function () {
+        //Polls
+        Route::get('/strategic-documents',       'list');
+        Route::get('/strategic-documents/{id}',       'show');
+        Route::get('/strategic-documents/{id}/subdocuments',       'subdocuments');
+    });
 });
 
 //Route::group(['middleware' => ['guest']], function() {
