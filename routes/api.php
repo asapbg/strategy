@@ -87,6 +87,18 @@ Route::prefix('api')->group(function() {
         Route::get('/ogp/plans/news',       'news');
         Route::get('/ogp/plans/{id}',       'show');
     });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\LibraryController::class)->group(function () {
+        //Library
+        Route::get('/library',       'list');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\ImpactAssessmentsController::class)->group(function () {
+        //ImpactAssessments
+        Route::get('/impact-assessments',       'list');
+        Route::get('/executors',       'executors');
+        Route::get('/executors/{eik}',       'showExecutor');
+    });
 });
 
 //Route::group(['middleware' => ['guest']], function() {
