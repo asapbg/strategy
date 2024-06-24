@@ -13,6 +13,7 @@ class ApiController
     protected int $request_offset;
     protected string $locale;
     protected string $output_format;
+    protected $authanticated;
 
     const ALLOWED_OUTPUT_FORMAT = ['json', 'xml'];
     const ALLOWED_LOCALE = ['bg', 'en'];

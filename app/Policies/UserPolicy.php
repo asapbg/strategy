@@ -45,6 +45,17 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can create Api models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function createApiuser(User $user)
+    {
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]);
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
@@ -53,7 +64,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->hasRole([CustomRole::SUPER_USER_ROLE]) || ($user->hasRole([CustomRole::ADMIN_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]));
+        return $user->hasRole([CustomRole::SUPER_USER_ROLE]) || ($user->hasRole([CustomRole::ADMIN_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]) && !$model->hasRole([CustomRole::SANCTUM_USER_ROLE]));
     }
 
     /**
@@ -65,7 +76,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]);
+        return $user->hasRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]) && !$model->hasRole([CustomRole::SANCTUM_USER_ROLE]);
     }
 
     /**

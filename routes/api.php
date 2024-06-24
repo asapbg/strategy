@@ -20,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::prefix('api')->group(function() {
+
+    Route::post('login',[\App\Http\Controllers\ApiStrategy\LoginController::class,'login']);
+    Route::post('logout',[\App\Http\Controllers\ApiStrategy\LoginController::class,'logout'])->middleware('auth.sanctum');
+
     Route::controller(\App\Http\Controllers\ApiStrategy\NomenclatureController::class)->prefix('nomenclature')->group(function () {
         //institutions
         Route::get('/institutions',       'institutions');

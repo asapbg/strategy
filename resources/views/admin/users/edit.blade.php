@@ -211,7 +211,7 @@
                                 <label class="control-label" for="roles">{{ trans_choice('custom.roles', 2) }}</label>
                                 @php($user_roles = $user->roles()->pluck('id')->toArray())
                                 @foreach($roles as $role)
-                                    <div class="icheck-primary @if($role->name == \App\Models\CustomRole::SUPER_USER_ROLE) d-none @endif" >
+                                    <div class="icheck-primary @if($role->name == \App\Models\CustomRole::SUPER_USER_ROLE || ($role->name == \App\Models\CustomRole::SANCTUM_USER_ROLE && auth()->user()?->cannot('createApiuser', User::class))) d-none @endif" >
                                         <input class="roles"
                                                type="checkbox"
                                                name="roles[]"

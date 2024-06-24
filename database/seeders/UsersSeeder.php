@@ -37,6 +37,25 @@ class UsersSeeder extends Seeder
             $this->command->info("Role $role->name was assigned to $user->first_name $user->last_name");
         }
 
+        // make asap user with admin role
+        if(!User::where('email', '=', 'sanctum@asap.bg')->first()) {
+            $user = new User;
+            $user->first_name = 'Sanctum';
+            $user->last_name = 'Asap';
+            $user->username = "sanctum@asap.bg";
+            $user->email = 'sanctum@asap.bg';
+            $user->password = bcrypt('pass123');
+            $user->email_verified_at = Carbon::now();
+            $user->password_changed_at = Carbon::now();
+            $user->user_type = User::USER_TYPE_INTERNAL;
+            $user->save();
+
+            $this->command->info("User with email: $user->email saved");
+            $role = Role::where('name', 'sanctum-user')->first();
+            $user->assignRole($role);
+            $this->command->info("Role $role->name was assigned to $user->first_name $user->last_name");
+        }
+
         if(!User::where('email', '=', 'service-user@asap.bg')->first()) {
             // make asap user with service_user role
             $user = new User;

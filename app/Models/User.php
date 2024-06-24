@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -33,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     use HasRoles;
     use Notifiable;
     use MustVerifyEmail;
+    use HasApiTokens;
 
     protected string $logName = "users";
 

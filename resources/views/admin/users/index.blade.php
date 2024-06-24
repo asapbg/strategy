@@ -120,7 +120,7 @@
                                     <td>{!! implode('<br>',$user->roles->pluck('display_name')->toArray()) !!}</td>
                                     <td>@if($user->institution){{ $user->institution->name }}@else{{ '---' }}@endif</td>
                                     <td>
-                                        @if(!$user->hasRole([\App\Models\CustomRole::SUPER_USER_ROLE]))
+                                        @if(!$user->hasRole([\App\Models\CustomRole::SUPER_USER_ROLE] && !$user->hasRole([\App\Models\CustomRole::SANCTUM_USER_ROLE])))
                                             @includeIf('partials.toggle-boolean', ['object' => $user, 'model' => 'User'])
                                         @endif
                                     </td>

@@ -18,6 +18,7 @@ class CustomRole extends Role
     const PAGINATE = 20;
     const SUPER_USER_ROLE = 'service_user';
     const ADMIN_USER_ROLE = 'super-admin';
+    const SANCTUM_USER_ROLE = 'sanctum-user';
     const EXTERNAL_USER_ROLE = 'external-user';
     const MODERATOR_ADVISORY_BOARD = 'moderator-advisory-board';
     const MODERATOR_ADVISORY_BOARDS = 'moderator-advisory-boards';

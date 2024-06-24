@@ -10,4 +10,5 @@ return [
     'moderator-advisory-board' => 'Модератор „Консултативен съвет“',
     'moderator-partnership' => 'Модератор „Партньорство за открито управление',
     'external-user' => 'Външен потребител',
+    'sanctum-user' => 'API потребител',
 ];
