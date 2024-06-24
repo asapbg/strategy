@@ -192,7 +192,7 @@ class ReportsController extends Controller
                         DB::raw('json_agg(ic_translation.name) filter (where ic_translation.name is not null) as institutions'),
                         DB::raw('(
                             select
-                                    json_agg(json_build_object(\'date\', date_part(\'year\', legislative_initiative_comments.created_at), \'author_name\', (case when u.id is not null then u.first_name || \' \' || u.last_name else \'\' end), \'text\', legislative_initiative_comments.description))
+                                    json_agg(json_build_object(\'date\', legislative_initiative_comments.created_at::date, \'author_name\', (case when u.id is not null then u.first_name || \' \' || u.last_name else \'\' end), \'text\', legislative_initiative_comments.description))
                                  from legislative_initiative_comments
                                  join users as u on u.id = legislative_initiative_comments.user_id
                                  where
@@ -224,6 +224,9 @@ class ReportsController extends Controller
                 $data = $q->get()->map(function ($row) {
                     if(!empty($row->comments)){
                         $row->comments = json_decode($row->comments, true);
+                    }
+                    if(!empty($row->institutions)){
+                        $row->institutions = json_decode($row->institutions, true);
                     }
                     return (array)$row;
                 })->toArray();
