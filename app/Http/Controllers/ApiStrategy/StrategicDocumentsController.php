@@ -52,7 +52,7 @@ class StrategicDocumentsController extends ApiController
                             from pris
                             left join pris_institution pi2 on pi2.pris_id = pris.id
                             left join institution i on i.id = pi2.institution_id
-                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \''.$this->locale.'\'
                             where
                                 pris.id = sd.pris_act_id
                                 and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
@@ -67,17 +67,17 @@ class StrategicDocumentsController extends ApiController
                         sd.document_date_expiring::date as date_expiring,
                         (
                             select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
-                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \'bg\'
+                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \''.$this->locale.'\'
                         ) as files,
                         null as subdocuments
                     from strategic_document sd
-                    join strategic_document_translations sdt on sdt.strategic_document_id = sd.id and sdt.locale = \'bg\'
+                    join strategic_document_translations sdt on sdt.strategic_document_id = sd.id and sdt.locale = \''.$this->locale.'\'
                     left join field_of_actions foa on foa.id = sd.policy_area_id
-                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \''.$this->locale.'\'
                     left join strategic_document_type sdt2 on sdt2.id = sd.strategic_document_type_id
-                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt2.id and sdtt.locale = \'bg\'
+                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt2.id and sdtt.locale = \''.$this->locale.'\'
                     left join authority_accepting_strategic aas on aas.id = sd.accept_act_institution_type_id
-                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
+                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \''.$this->locale.'\'
                     left join public_consultation pc on pc.id = sd.public_consultation_id
                     left join (select level_id, level_name from (
                                     values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
@@ -134,7 +134,7 @@ class StrategicDocumentsController extends ApiController
                             from pris
                             left join pris_institution pi2 on pi2.pris_id = pris.id
                             left join institution i on i.id = pi2.institution_id
-                            left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
+                            left join institution_translations it on it.institution_id = i.id and it.locale = \''.$this->locale.'\'
                             where
                                 pris.id = sd.pris_act_id
                                 and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
@@ -150,17 +150,17 @@ class StrategicDocumentsController extends ApiController
                         sd.document_date_expiring::date as date_expiring,
                         (
                             select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
-                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \'bg\'
+                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \''.$this->locale.'\'
                         ) as files,
                         null as subdocuments
                     from strategic_document sd
-                    join strategic_document_translations sdt on sdt.strategic_document_id = sd.id and sdt.locale = \'bg\'
+                    join strategic_document_translations sdt on sdt.strategic_document_id = sd.id and sdt.locale = \''.$this->locale.'\'
                     left join field_of_actions foa on foa.id = sd.policy_area_id
-                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
+                    left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \''.$this->locale.'\'
                     left join strategic_document_type sdt2 on sdt2.id = sd.strategic_document_type_id
-                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt2.id and sdtt.locale = \'bg\'
+                    left join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt2.id and sdtt.locale = \''.$this->locale.'\'
                     left join authority_accepting_strategic aas on aas.id = sd.accept_act_institution_type_id
-                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
+                    left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \''.$this->locale.'\'
                     left join public_consultation pc on pc.id = sd.public_consultation_id
                     left join (select level_id, level_name from (
                                     values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),

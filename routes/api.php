@@ -71,10 +71,17 @@ Route::prefix('api')->group(function() {
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\StrategicDocumentsController::class)->group(function () {
-        //Polls
+        //Strategic document
         Route::get('/strategic-documents',       'list');
         Route::get('/strategic-documents/{id}',       'show');
         Route::get('/strategic-documents/{id}/subdocuments',       'subdocuments');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\OgpController::class)->group(function () {
+        //Ogp
+        Route::get('/ogp/plans',       'list');
+        Route::get('/ogp/plans/news',       'news');
+        Route::get('/ogp/plans/{id}',       'show');
     });
 });
 
