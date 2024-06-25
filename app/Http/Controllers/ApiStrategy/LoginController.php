@@ -33,12 +33,17 @@ class LoginController extends ApiController
             return $this->returnError(Response::HTTP_UNAUTHORIZED, 'Invalid Credentials');
         }
         $user->tokens()->delete();
-        $token = $user->createToken($user->name.'-AuthToken')->plainTextToken;
-        return $this->output(['token' => $token]);
+        $token = $user->createToken('StrategyApi')->plainTextToken;
+        return $this->output(['token' => $token, 'token_type' => 'Bearer']);
     }
 
-    public function logout(){
-        auth()->user()->tokens()->delete();
+    public function logout(Request $request){
+        $user = $request->user();
+        if($user){
+            $user->api_token = null;
+            $user->save();
+            $user->tokens()->delete();
+        }
         return $this->output(['msg' => 'logged out']);
     }
 }

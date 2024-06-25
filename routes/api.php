@@ -15,14 +15,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
 Route::prefix('api')->group(function() {
 
-    Route::post('login',[\App\Http\Controllers\ApiStrategy\LoginController::class,'login']);
-    Route::post('logout',[\App\Http\Controllers\ApiStrategy\LoginController::class,'logout'])->middleware('auth.sanctum');
+    Route::controller(\App\Http\Controllers\ApiStrategy\UsersController::class)->group(function () {
+        //ImpactAssessments
+        Route::get('/users',       'users');
+        Route::get('/users/{id}',       'viewUser')->where('id', '[0-9]+');
+        Route::get('/users/roles',       'roles');
+//        Route::get('/users/roles/{id}',       'viewRole');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\LogController::class)->group(function () {
+        //ImpactAssessments
+        Route::get('/log',       'list');
+        Route::get('/log/subject-types',       'subjects');
+        Route::get('/log/causer-types',       'causers');
+    });
+
+    Route::controller(\App\Http\Controllers\ApiStrategy\LogController::class)->group(function () {
+        //ImpactAssessments
+        Route::get('/log',       'list');
+        Route::get('/log/subject-types',       'subjects');
+        Route::get('/log/causer-types',       'causers');
+    });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\NomenclatureController::class)->prefix('nomenclature')->group(function () {
         //institutions
@@ -36,14 +51,14 @@ Route::prefix('api')->group(function() {
     Route::controller(\App\Http\Controllers\ApiStrategy\PublicConsultationsController::class)->group(function () {
         //Public consultation
         Route::get('/consultations',       'list');
-        Route::get('/consultations/{id}',       'show');
-        Route::get('/consultations/{id}/comments',       'comments');
+        Route::get('/consultations/{id}',       'show')->where('id', '[0-9]+');
+        Route::get('/consultations/{id}/comments',       'comments')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\LegislativeProgramController::class)->group(function () {
         //Legislative programs
         Route::get('/legislative-programs',       'list');
-        Route::get('/legislative-programs/{id}',       'show');
+        Route::get('/legislative-programs/{id}',       'show')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\OperationalProgramController::class)->group(function () {
@@ -55,37 +70,37 @@ Route::prefix('api')->group(function() {
     Route::controller(\App\Http\Controllers\ApiStrategy\LegislativeInitiativeController::class)->group(function () {
         //Legislative iniciative
         Route::get('/legislative-initiatives',       'list');
-        Route::get('/legislative-initiatives/{id}',       'show');
-        Route::get('/legislative-initiatives/{id}/comments',       'comments');
+        Route::get('/legislative-initiatives/{id}',       'show')->where('id', '[0-9]+');
+        Route::get('/legislative-initiatives/{id}/comments',       'comments')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\AdvisoryBoardController::class)->group(function () {
         //Legislative programs
         Route::get('/advisory-boards',       'list');
-        Route::get('/advisory-boards/{id}',       'show');
-        Route::get('/advisory-boards/{id}/meetings',       'meetings');
-        Route::get('/advisory-boards/{id}/news',       'news');
+        Route::get('/advisory-boards/{id}',       'show')->where('id', '[0-9]+');
+        Route::get('/advisory-boards/{id}/meetings',       'meetings')->where('id', '[0-9]+');
+        Route::get('/advisory-boards/{id}/news',       'news')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\PollsController::class)->group(function () {
         //Polls
         Route::get('/polls',       'list');
-        Route::get('/polls/{id}',       'show');
-        Route::get('/polls/{id}/questions',       'questions');
+        Route::get('/polls/{id}',       'show')->where('id', '[0-9]+');
+        Route::get('/polls/{id}/questions',       'questions')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\StrategicDocumentsController::class)->group(function () {
         //Strategic document
         Route::get('/strategic-documents',       'list');
-        Route::get('/strategic-documents/{id}',       'show');
-        Route::get('/strategic-documents/{id}/subdocuments',       'subdocuments');
+        Route::get('/strategic-documents/{id}',       'show')->where('id', '[0-9]+');
+        Route::get('/strategic-documents/{id}/subdocuments',       'subdocuments')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\OgpController::class)->group(function () {
         //Ogp
         Route::get('/ogp/plans',       'list');
         Route::get('/ogp/plans/news',       'news');
-        Route::get('/ogp/plans/{id}',       'show');
+        Route::get('/ogp/plans/{id}',       'show')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\LibraryController::class)->group(function () {
