@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\ApiStrategy;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiController
+class ApiController extends Controller
 {
     protected string $api_version;
     protected array $request_inputs;
@@ -19,6 +20,7 @@ class ApiController
     const ALLOWED_LOCALE = ['bg', 'en'];
     public function __construct(Request $request)
     {
+        parent::__construct($request);
         $this->api_version = $request->headers->get('version') ?? 'v1';
         $this->request_inputs = $request->input();
         $this->request_limit = isset($this->request_inputs['limit']) ? (int)$this->request_inputs['limit'] : 0;

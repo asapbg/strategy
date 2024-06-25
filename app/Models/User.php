@@ -20,11 +20,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property int $id
  */
-class User extends Authenticatable implements MustVerifyEmailContract
+class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
 {
     use HasFactory;
     use SoftDeletes;
@@ -34,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     use HasRoles;
     use Notifiable;
     use MustVerifyEmail;
-    use HasApiTokens;
+//    use HasApiTokens;
 
     protected string $logName = "users";
 
@@ -93,6 +94,26 @@ class User extends Authenticatable implements MustVerifyEmailContract
 //            ];
 //        }
 //    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     /**
      * Route notifications for the mail channel.

@@ -14,30 +14,25 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::group(['middleware' => 'api'], function ($router){
 
-Route::prefix('api')->group(function() {
+    Route::group(['middleware' => 'auth:api'], function (){
+        Route::post('/logout',       [\App\Http\Controllers\ApiStrategy\AuthController::class, 'logout']);
+        Route::controller(\App\Http\Controllers\ApiStrategy\UsersController::class)->group(function () {
+            Route::get('/users',       'users');
+            Route::get('/users/{id}',       'viewUser')->where('id', '[0-9]+');
+            Route::get('/users/roles',       'roles');
+        });
 
-    Route::controller(\App\Http\Controllers\ApiStrategy\UsersController::class)->group(function () {
-        //ImpactAssessments
-        Route::get('/users',       'users');
-        Route::get('/users/{id}',       'viewUser')->where('id', '[0-9]+');
-        Route::get('/users/roles',       'roles');
-//        Route::get('/users/roles/{id}',       'viewRole');
+        Route::controller(\App\Http\Controllers\ApiStrategy\LogController::class)->group(function () {
+            Route::get('/log',       'list');
+            Route::get('/log/subject-types',       'subjects');
+            Route::get('/log/causer-types',       'causers');
+        });
     });
+});
 
-    Route::controller(\App\Http\Controllers\ApiStrategy\LogController::class)->group(function () {
-        //ImpactAssessments
-        Route::get('/log',       'list');
-        Route::get('/log/subject-types',       'subjects');
-        Route::get('/log/causer-types',       'causers');
-    });
-
-    Route::controller(\App\Http\Controllers\ApiStrategy\LogController::class)->group(function () {
-        //ImpactAssessments
-        Route::get('/log',       'list');
-        Route::get('/log/subject-types',       'subjects');
-        Route::get('/log/causer-types',       'causers');
-    });
+    Route::post('/login',       [\App\Http\Controllers\ApiStrategy\AuthController::class, 'login']);
 
     Route::controller(\App\Http\Controllers\ApiStrategy\NomenclatureController::class)->prefix('nomenclature')->group(function () {
         //institutions
@@ -114,9 +109,7 @@ Route::prefix('api')->group(function() {
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
     });
-});
 
-//Route::group(['middleware' => ['guest']], function() {
     Route::controller(ReportsController::class)->group(function () {
         //Impact assessments
         Route::get('/reports/impact_assessments/{type}/view',       'apiReportImpactAssessments')->name('api.report.ia');
@@ -141,4 +134,3 @@ Route::prefix('api')->group(function() {
         //Strategic Document
         Route::get('/reports/ogp/{type}/view',       'apiOgp')->name('api.report.ogp');
     });
-//});
