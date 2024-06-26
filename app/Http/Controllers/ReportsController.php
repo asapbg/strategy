@@ -459,7 +459,7 @@ class ReportsController extends Controller
                         'public_consultation.active_in_days',
                         DB::raw('max(public_consultation_translations.short_term_reason) as short_term_reason'),
                         DB::raw('sum(case when comments.id is not null then 1 else 0 end) as comments'),
-                        DB::raw('case when max(proposal_report.id) > 0 then \'Да\' else \'Не\' end as has_proposal_report'),
+                        DB::raw('case when max(proposal_report.id) > 0 then true else false end as has_proposal_report'),
                         DB::raw('json_agg(distinct(files.doc_type)) filter (where files.doc_type is not null) as doc_types')
                     ])
                     ->leftJoin('institution', 'institution.id', '=', 'public_consultation.importer_institution_id')
@@ -503,6 +503,7 @@ class ReportsController extends Controller
 
                     $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
+                    $finalData = [];
                     if(sizeof($data)){
                         foreach ($data as $item){
                             $existDocTypes = json_decode($item['doc_types']);
@@ -514,11 +515,11 @@ class ReportsController extends Controller
                             if(sizeof($requiredDocs)){
                                 foreach ($requiredDocs as $rd){
                                     if(empty($existDocTypes) || !in_array($rd, $existDocTypes)){
-                                        $item['missing_documents'].= ' '.__('custom.public_consultation.doc_type.'.$rd).';';
+                                        $item['missing_documents'].= (!empty($item['missing_documents']) ? ' ' : '').__('custom.public_consultation.doc_type.'.$rd).';';
                                     }
                                 }
                             }
-                            $data[] = $item;
+                            $finalData[] = $item;
                         }
                     }
 
@@ -531,10 +532,11 @@ class ReportsController extends Controller
                     'active_in_days' => 'Срок (дни)',
                     'short_term_reason' => __('site.public_consultation.short_term_motive_label'),
                     'comments' => trans_choice('custom.comment', 2),
-                    'has_proposal_report' => trans_choice('custom.field_of_actions', 1),
+                    'has_proposal_report' => __('custom.comments_report'),
                     'missing_documents' => __('custom.pc_reports.missing_documents'),
                 ];
-                array_unshift($data, $header);
+                array_unshift($finalData, $header);
+                $data = $finalData;
 
                 break;
             case 'field-of-actions':
@@ -1158,7 +1160,7 @@ class ReportsController extends Controller
                     ->where('pris.asap_last_version', '=', 1)
                     ->where('pris.in_archive', '=', $inArchive)
 //                    ->whereNotNull('pris.public_consultation_id')
-//                    ->where('pris.id', '=', 161921)
+//                    ->where('pris.id', '=', 131703)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
                     ->limit(1000);
