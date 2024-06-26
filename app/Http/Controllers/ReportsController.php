@@ -1077,7 +1077,15 @@ class ReportsController extends Controller
                         DB::raw('max(legal_act_type_translations.name) as legal_act_type'),
                         DB::raw('max(pris_translations.legal_reason) as legal_reason'),
                         DB::raw('max(pris_translations.importer) as importer'),
-                        DB::raw('json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) filter (where institution.id is not null) as institutions'),
+                        DB::raw('(
+                            select
+                                json_agg(json_build_object(\'id\', institution.id, \'name\', institution_translations.name)) filter (where institution.id is not null)
+                            from pris_institution
+                            join institution on institution.id = pris_institution.institution_id
+                            join institution_translations on institution_translations.institution_id = institution.id and institution_translations.locale = \''.app()->getLocale().'\'
+                            where
+                                pris_institution.pris_id = pris.id
+                            ) as institutions'),
                         DB::raw('pris.version'),
                         DB::raw('case
                                             when max(pp.id) is null then pris.protocol
@@ -1093,7 +1101,13 @@ class ReportsController extends Controller
                         DB::raw('(pris.active::int)::bool as active'),
                         DB::raw('pris.published_at::date as date_published_at'),
                         DB::raw('pris.deleted_at::date as date_deleted_at'),
-                        DB::raw('json_agg(tag_translations.label) filter (where tag_translations.label is not null) as tags'),
+                        DB::raw('(
+                            select
+                                json_agg(tag_translations.label) filter (where tag_translations.label is not null)
+                            from pris_tag
+                            join tag_translations on tag_translations.tag_id = pris_tag.tag_id and tag_translations.locale = \''.app()->getLocale().'\'
+                            where pris_tag.pris_id = pris.id
+                            ) as tags'),
                         DB::raw('(
                             select
                                     json_agg(json_build_object(\'relation_type\', case
@@ -1129,13 +1143,6 @@ class ReportsController extends Controller
                     })
                     //Public consultation
                     ->leftJoin('public_consultation', 'public_consultation.id', '=', 'pris.public_consultation_id')
-                    //Institutions
-                    ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
-                    ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-                    ->leftJoin('institution_translations', function ($j){
-                        $j->on('institution_translations.institution_id', '=', 'institution.id')
-                            ->where('institution_translations.locale', '=', app()->getLocale());
-                    })
                     //Protocol
                     ->leftJoin('pris as pp', 'pp.id', '=', 'pris.decision_protocol')
                     ->leftJoin('pris_translations as pp_tr', function ($q){
@@ -1146,20 +1153,11 @@ class ReportsController extends Controller
                         $j->on('pp_lat_tr.legal_act_type_id', '=', 'pp_lat.id')
                             ->where('pp_lat_tr.locale', '=', app()->getLocale());
                     })
-                    //Tags
-                    ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
-                    ->leftJoin('tag', 'tag.id', '=', 'pris_tag.tag_id')
-                    ->leftJoin('tag_translations', function ($j){
-                        $j->on('tag_translations.tag_id', '=', 'tag.id')
-                            ->where('tag_translations.locale', '=', app()->getLocale());
-                    })
                     ->whereNull('pris.deleted_at')
-//                    ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
                     ->whereNotNull('pris.published_at')
                     ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL, LegalActType::TYPE_ARCHIVE])
                     ->where('pris.asap_last_version', '=', 1)
                     ->where('pris.in_archive', '=', $inArchive)
-//                    ->whereNotNull('pris.public_consultation_id')
 //                    ->where('pris.id', '=', 131703)
                     ->groupBy('pris.id')
                     ->orderBy('pris.doc_date', 'desc')
@@ -1171,6 +1169,9 @@ class ReportsController extends Controller
                     }
                     if(!empty($row->related)){
                         $row->related = json_decode($row->related, true);
+                    }
+                    if(!empty($row->tags)){
+                        $row->tags = json_decode($row->tags, true);
                     }
                     return (array)$row;
                 })->toArray();
