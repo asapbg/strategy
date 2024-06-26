@@ -27,6 +27,7 @@ class ApiController extends Controller
         $this->request_offset = isset($this->request_inputs['offset']) ? (int)$this->request_inputs['offset'] : 0;
         $this->locale = isset($this->request_inputs['locale']) && in_array($this->request_inputs['locale'], self::ALLOWED_LOCALE)? $this->request_inputs['locale'] : 'bg';
         $this->output_format = isset($this->request_inputs['format']) && in_array($this->request_inputs['format'], self::ALLOWED_OUTPUT_FORMAT)? (int)$this->request_inputs['format'] : 'json';
+        $this->authanticated = auth('api')->user();
     }
 
     public function output($data)

@@ -84,9 +84,8 @@ class StrategicDocumentsController extends ApiController
                                     (2, \''.__('custom.strategic_document.levels.AREA').'\'),
                                     (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
-                    where
-                        sd.deleted_at is null
-                        and sd.active = true
+                    where true
+                        '.(!$this->authanticated ? ' and sd.deleted_at is null and sd.active = true ' : '').'
                         '.(isset($from) ? ' and sd.document_date_accepted >= \''.$from.' 00:00:00'.'\'' : '').'
                         '.(isset($to) ? ' and sd.document_date_expiring <= \''.$to.' 23:59:59'.'\'' : '').'
                         '.(isset($types) && !empty($types)? ' and sdt2.id in ('.$types.')': '').'
@@ -167,9 +166,8 @@ class StrategicDocumentsController extends ApiController
                                     (2, \''.__('custom.strategic_document.levels.AREA').'\'),
                                     (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
-                    where
-                        sd.deleted_at is null
-                        and sd.active = true
+                    where true
+                        '.(!$this->authanticated ? ' and sd.deleted_at is null and sd.active = true ' : '').'
                         and sd.id = '.$id.'
                 ');
 

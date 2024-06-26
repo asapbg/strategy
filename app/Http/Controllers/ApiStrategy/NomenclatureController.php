@@ -37,8 +37,8 @@ class NomenclatureController extends ApiController
             from institution i
             join institution_translations it on it.institution_id = i.id and it.locale = \''.$this->locale.'\'
             left join institution_field_of_action ifoa on ifoa.institution_id = i.id
-            where
-                i.deleted_at is null
+            where true
+                '.(!$this->authanticated ? 'and i.deleted_at is null ' : '').'
                 and i.id <> '.env('DEFAULT_INSTITUTION_ID').'
             group by i.id
             order by max(it."name")
@@ -62,8 +62,8 @@ class NomenclatureController extends ApiController
                 join law_translations lt on lt.law_id = l.id and lt.locale = \''.$this->locale.'\'
                 left join law_institution li on li.law_id = l.id
                 left join institution i on i.id = li.institution_id
-                where
-                    l.deleted_at is null
+                where true
+                    '.(!$this->authanticated ? 'and l.deleted_at is null ' : '').'
                     '.(sizeof($institutionsIds) ? '' : '').'
                 group by l.id
                 order by max(lt."name")
@@ -82,8 +82,8 @@ class NomenclatureController extends ApiController
                 att."name" as title
             from act_type at2
             join act_type_translations att on att.act_type_id = at2.id and att.locale = \''.$this->locale.'\'
-            where
-                at2.deleted_at is null
+            where true
+                '.(!$this->authanticated ? 'and at2.deleted_at is null ' : '').'
             order by att."name"
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
@@ -99,8 +99,8 @@ class NomenclatureController extends ApiController
                 latt."name" as title
             from legal_act_type lat
             join legal_act_type_translations latt on latt.legal_act_type_id = lat.id and latt.locale = \''.$this->locale.'\'
-            where
-                lat.deleted_at is null
+            where true
+                '.(!$this->authanticated ? 'and lat.deleted_at is null ' : '').'
             order by latt."name"
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
@@ -116,8 +116,8 @@ class NomenclatureController extends ApiController
                 foat."name" as title
             from field_of_actions foa
             join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \''.$this->locale.'\'
-            where
-                foa.deleted_at is null
+            where true
+                '.(!$this->authanticated ? 'and foa.deleted_at is null ' : '').'
                 and foa.parentid is not null
             order by foat."name"
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'

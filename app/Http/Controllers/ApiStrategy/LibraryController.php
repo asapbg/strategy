@@ -47,11 +47,15 @@ class LibraryController extends ApiController
             ->leftJoin('publication_translations', function ($j){
                 $j->on('publication_translations.publication_id', '=', 'publication.id')
                     ->where('publication_translations.locale', '=', $this->locale);
-            })
-            ->whereNull('publication.deleted_at')
-            ->whereIn('publication.type', [PublicationTypesEnum::TYPE_LIBRARY, PublicationTypesEnum::TYPE_NEWS])
-            ->whereNotNull('publication.published_at')
-            ->where('publication.active', true)
+            });
+
+            if(!$this->authanticated){
+                $q->whereNull('publication.deleted_at')
+                    ->whereNotNull('publication.published_at')
+                    ->where('publication.active', true);
+            }
+
+            $q->whereIn('publication.type', [PublicationTypesEnum::TYPE_LIBRARY, PublicationTypesEnum::TYPE_NEWS])
             ->when($from, function (Builder $query) use ($from){
                 $query->where('publication.published_at', '>=', $from);
             })

@@ -75,8 +75,8 @@ class LegislativeProgramController extends ApiController
                         join legislative_program lp on lp.id = lprm.legislative_program_id and lp.deleted_at is null and lp.public = 1
                         left join legislative_program_row_institution lpri on lpri.legislative_program_row_id = lprm.id
                         left join institution_translations it on it.institution_id = lpri.institution_id and it.locale = \''.$this->locale.'\'
-                        where
-                            lprm.deleted_at is null
+                        where true
+                            '.(!$this->authanticated ? ' and lprm.deleted_at is null ' : '').'
                             '.(isset($from) ? ' and lp.from_date >= \''.$from.'\'' : '').'
                             '.(isset($to) ? ' and lp.to_date <= \''.$to.'\'' : '').'
                         group by lprm.id, lprm."month", lprm.row_num
@@ -155,8 +155,8 @@ class LegislativeProgramController extends ApiController
                         join legislative_program lp on lp.id = lprm.legislative_program_id and lp.deleted_at is null and lp.public = 1
                         left join legislative_program_row_institution lpri on lpri.legislative_program_row_id = lprm.id
                         left join institution_translations it on it.institution_id = lpri.institution_id and it.locale = \''.$this->locale.'\'
-                        where
-                            lprm.deleted_at is null
+                        where true
+                            '.(!$this->authanticated ? ' and lprm.deleted_at is null ' : '').'
                             '.(isset($from) ? ' and lp.from_date >= \''.$from.'\'' : '').'
                             '.(isset($to) ? ' and lp.to_date <= \''.$to.'\'' : '').'
                             and lp.id = '.$id.'

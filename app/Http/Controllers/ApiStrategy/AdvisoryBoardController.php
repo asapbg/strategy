@@ -73,14 +73,13 @@ class AdvisoryBoardController extends ApiController
                     left join advisory_chairman_type_translations actt on actt.advisory_chairman_type_id = act.id and actt.locale = \''.$this->locale.'\'
                     left join field_of_actions foa2 on foa2.id = ab.policy_area_id
                     left join institution_field_of_action ifoa on ifoa.field_of_action_id = foa2.id
-                    where
-                        ab.deleted_at is null
+                    where true
+                        '.(!$this->authanticated ? ' and ab.deleted_at is null and ab.public = true ' : '').'
                         '.(isset($active) ? ' and ab.active = '.($active ? 'true' : 'false') : '').'
                         '.(isset($hasNpo) ? ' and ab.has_npo_presence = '.($hasNpo ? 'true' : 'false') : '').'
                         '.(isset($from) ? ' and ab.created_at >= \''.$from.' 00:00:00'.'\'' : '').'
                         '.(isset($to) ? ' and ab.created_at <= \''.$to.' 23:59:59'.'\'' : '').'
                         '.(isset($policyAreasIds) && !empty($policyAreasIds)? ' and foa2.id in ('.$policyAreasIds.')' : '').'
-                        and ab.public = true
                     group by ab.id
                     '.($this->request_limit ? ' limit '.$this->request_limit : '').'
                     '.($this->request_offset ? ' offset '.$this->request_offset : '').'
@@ -245,9 +244,8 @@ class AdvisoryBoardController extends ApiController
                     left join advisory_board_secretariat_translations abst on abst.advisory_board_secretariat_id = abs2.id and abst.locale = \''.$this->locale.'\'
                     left join advisory_board_moderator_information abmi on abmi.advisory_board_id = ab.id and abmi.deleted_at is null
                     left join advisory_board_moderator_information_translations abmit on abmit.advisory_board_moderator_information_id = abmi.id and abmit.locale = \''.$this->locale.'\'
-                    where
-                        ab.deleted_at is null
-                        and ab.public = true
+                    where true
+                        '.(!$this->authanticated ? ' and ab.deleted_at is null and ab.public = true ' : '').'
                         and ab.id = '.$id.'
                     group by ab.id
                 ');
@@ -294,11 +292,9 @@ class AdvisoryBoardController extends ApiController
                 and f.locale = \''.$this->locale.'\'
                 and f.code_object = '.File::CODE_AB.'
                 and f.doc_type = '.DocTypesEnum::AB_MEETINGS_AND_DECISIONS->value.'
-                where
-                    abm3.deleted_at is null
+                where true
+                    '.(!$this->authanticated ? ' and abm3.deleted_at is null and ab.deleted_at is null and ab.public = true ' : '').'
                     and abm3.advisory_board_id = '.$id.'
-                    and ab.deleted_at is null
-                    and ab.public = true
                 group by abm3.id
                 '.($this->request_limit ? ' limit '.$this->request_limit : '').'
                 '.($this->request_offset ? ' offset '.$this->request_offset : '').'
@@ -316,13 +312,9 @@ class AdvisoryBoardController extends ApiController
             from "publication" p
             join publication_translations pt on pt.publication_id = p.id and pt.locale = \''.$this->locale.'\'
             join advisory_boards ab on ab.id = p.advisory_boards_id
-            where
-                p.deleted_at is null
-                and p.active = true
-                and p.published_at is not null
+            where true
+                '.(!$this->authanticated ? ' and p.deleted_at is null and p.active = true and p.published_at is not null and ab.deleted_at is null and ab.public = true ' : '').'
                 and p.advisory_boards_id = ab.id
-                and ab.deleted_at is null
-                and ab.public = true
                 and ab.id = '.$id.'
                 '.($this->request_limit ? ' limit '.$this->request_limit : '').'
                 '.($this->request_offset ? ' offset '.$this->request_offset : '').'

@@ -54,8 +54,8 @@ class PublicConsultationsController extends ApiController
                 pc.active,
                 pc.field_of_actions_id
             from public_consultation pc
-            where
-                pc.deleted_at is null
+            where true
+                '.(!$this->authanticated ? ' and pc.deleted_at is null ' : '').'
                 '.(isset($active) ? ' and pc.active = '.$active : '').'
                 '.(isset($actTypeIds) ? ' and pc.act_type_id in ('.$actTypeIds.')' : '').'
                 '.(isset($policyAreasIds) ? ' and pc.field_of_actions_id in ('.$policyAreasIds.')' : '').'
@@ -192,9 +192,9 @@ class PublicConsultationsController extends ApiController
                                 and cf.code_object = '.File::CODE_OBJ_PUBLIC_CONSULTATION.'
                                 and cf.doc_type = '.DocTypesEnum::PC_KD_PDF->value.'
                                 and cf.locale = \''.$this->locale.'\'
-                                and cf.deleted_at is null
-                    where
-                        pc.deleted_at is null
+                        '.(!$this->authanticated ? ' and cf.deleted_at is null ' : '').'
+                    where true
+                        '.(!$this->authanticated ? ' and pc.deleted_at is null ' : '').'
                         and pc.id = '.$id.'
             '
         );
@@ -228,11 +228,10 @@ class PublicConsultationsController extends ApiController
                 from comments c
                 left join users u2 on u2.id = c.user_id
                 left join public_consultation pc on pc.id = c.object_id
-                where
-                    c.object_id = '.$id.'
-                    and pc.deleted_at is null
+                where true
+                    '.(!$this->authanticated ? ' and pc.deleted_at is null and c.deleted_at is null ' : '').'
+                    and c.object_id = '.$id.'
                     and c.object_code = 1 -- model Comments::PC_OBJ_CODE
-                    and c.deleted_at is null
         ');
 
         return $this->output($data);

@@ -46,12 +46,14 @@ class PollsController extends ApiController
                             where poll_question_option.poll_question_id = poll_question.id and poll_question_option.deleted_at is null
                         )))
                      from poll_question
-                     where poll_question.poll_id = poll.id and poll_question.deleted_at is null
+                     where true
+                        '.(!$this->authanticated ? ' and poll_question.deleted_at is null ' : '').'
+                         and poll_question.poll_id = poll.id
                  ) as questions
                 from "poll"
                 left join "public_consultation" on "public_consultation"."id" = "poll"."consultation_id"
-                where
-                    "poll"."deleted_at" is null
+                where true
+                    '.(!$this->authanticated ? ' and "poll"."deleted_at" is null ' : '').'
                     '.(isset($from) ? ' and poll.created_at >= \''.$from.' 00:00:00'.'\'' : '').'
                     '.(isset($to) ? ' and poll.created_at <= \''.$to.' 23:59:59'.'\'' : '').'
                 order by "poll"."start_date" desc
@@ -92,12 +94,14 @@ class PollsController extends ApiController
                             where poll_question_option.poll_question_id = poll_question.id and poll_question_option.deleted_at is null
                         )))
                      from poll_question
-                     where poll_question.poll_id = poll.id and poll_question.deleted_at is null
+                     where true
+                        '.(!$this->authanticated ? ' and poll_question.deleted_at is null ' : '').'
+                         and poll_question.poll_id = poll.id
                  ) as questions
                 from "poll"
                 left join "public_consultation" on "public_consultation"."id" = "poll"."consultation_id"
-                where
-                    "poll"."deleted_at" is null
+                where true
+                     '.(!$this->authanticated ? ' and "poll"."deleted_at" is null ' : '').'
                     and "poll".id = '.$id.'
                 order by "poll"."start_date" desc
                 ');
@@ -123,9 +127,8 @@ class PollsController extends ApiController
                 ) as options
              from poll_question
              join poll on poll_question.poll_id = poll.id
-             where
-                poll_question.deleted_at is null
-                and poll.deleted_at is null
+             where true
+                '.(!$this->authanticated ? ' and poll_question.deleted_at is null and poll.deleted_at is null ' : '').'
                 and poll.id = '.$id.'
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'

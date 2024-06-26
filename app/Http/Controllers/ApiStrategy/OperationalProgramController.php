@@ -75,8 +75,8 @@ class OperationalProgramController extends ApiController
                         join operational_program op on op.id = oprm.operational_program_id and op.deleted_at is null and op.public = 1
                         left join operational_program_row_institution opri on opri.operational_program_row_id = oprm.id
                         left join institution_translations it on it.institution_id = opri.institution_id and it.locale = \'bg\'
-                        where
-                            oprm.deleted_at is null
+                        where true
+                            '.(!$this->authanticated ? ' and oprm.deleted_at is null ' : '').'
                             '.(isset($from) ? ' and op.from_date >= \''.$from.'\'' : '').'
                             '.(isset($to) ? ' and op.to_date <= \''.$to.'\'' : '').'
                         group by oprm.id, oprm."month", oprm.row_num
@@ -155,8 +155,8 @@ class OperationalProgramController extends ApiController
                         join operational_program op on op.id = oprm.operational_program_id and op.deleted_at is null and op.public = 1
                         left join operational_program_row_institution opri on opri.operational_program_row_id = oprm.id
                         left join institution_translations it on it.institution_id = opri.institution_id and it.locale = \'bg\'
-                        where
-                            oprm.deleted_at is null
+                        where true
+                            '.(!$this->authanticated ? ' and oprm.deleted_at is null ' : '').'
                             '.(isset($from) ? ' and op.from_date >= \''.$from.'\'' : '').'
                             '.(isset($to) ? ' and op.to_date <= \''.$to.'\'' : '').'
                             and op.id = '.$id.'

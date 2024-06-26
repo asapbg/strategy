@@ -58,7 +58,6 @@ class ImpactAssessmentsController extends ApiController
                 'form_input.data',
             ])
             ->leftJoin('users', 'users.id' , '=', 'form_input.user_id')
-            ->whereNull('form_input.deleted_at')
             ->when($from, function (Builder $query) use ($from){
                 $query->where('form_input.created_at', '>=', $from);
             })
@@ -67,8 +66,11 @@ class ImpactAssessmentsController extends ApiController
             })
             ->when($formType, function (Builder $query) use ($formType){
                 $query->whereIn('form_input.form', $formType);
-            })
-            ->orderBy('form_input.created_at', 'desc');
+            });
+            if(!$this->authanticated){
+                $q->whereNull('form_input.deleted_at');
+            }
+            $q->orderBy('form_input.created_at', 'desc');
 
         if($this->request_limit){
             $q->limit($this->request_limit);
@@ -109,10 +111,13 @@ class ImpactAssessmentsController extends ApiController
             ->leftJoin('institution_translations', function ($j){
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
-            })
-            ->whereNull('executors.deleted_at')
-            ->where('executors.active', true)
-            ->groupBy('executors.eik');
+            });
+
+            if(!$this->authanticated){
+                $q->whereNull('executors.deleted_at')
+                    ->where('executors.active', true);
+            }
+            $q->groupBy('executors.eik');
 
         if($this->request_limit){
             $q->limit($this->request_limit);
@@ -154,10 +159,13 @@ class ImpactAssessmentsController extends ApiController
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
-            ->whereNull('executors.deleted_at')
-            ->where('executors.active', true)
-            ->where('executors.eik', '=', $eik)
-            ->groupBy('executors.eik');
+            ->where('executors.eik', '=', $eik);
+
+            if(!$this->authanticated){
+                $q->whereNull('executors.deleted_at')
+                    ->where('executors.active', true);
+            }
+            $q->groupBy('executors.eik');
 
         if($this->request_limit){
             $q->limit($this->request_limit);

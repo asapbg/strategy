@@ -73,9 +73,12 @@ class LegislativeInitiativeController extends ApiController
             ->leftJoin('institution as rici', 'rici.id', '=', 'ric.institution_id')
             ->leftJoin('institution_translations as ric_translation', function ($q){
                 $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', $this->locale);
-            })
-            ->whereNull('legislative_initiative.deleted_at')
-            ->when($isSend, function (Builder $query) use ($isSend){
+            });
+            if(!$this->authanticated){
+                $q->whereNull('legislative_initiative.deleted_at');
+            }
+
+            $q->when($isSend, function (Builder $query) use ($isSend){
                 if($isSend == 1){
                     $query->whereNotNUll('legislative_initiative.send_at');
                 } else{
@@ -166,9 +169,12 @@ class LegislativeInitiativeController extends ApiController
             ->leftJoin('institution as rici', 'rici.id', '=', 'ric.institution_id')
             ->leftJoin('institution_translations as ric_translation', function ($q){
                 $q->on('ric_translation.institution_id', '=', 'rici.id')->where('ric_translation.locale', '=', $this->locale);
-            })
-            ->whereNull('legislative_initiative.deleted_at')
-            ->where('legislative_initiative.id', '=', $id)
+            });
+            if(!$this->authanticated){
+                $q->whereNull('legislative_initiative.deleted_at');
+            }
+
+            $q->where('legislative_initiative.id', '=', $id)
             ->groupBy('legislative_initiative.id')
             ->orderBy('legislative_initiative.created_at', 'desc');
 
@@ -200,10 +206,9 @@ class LegislativeInitiativeController extends ApiController
                 from legislative_initiative_comments lic
                 left join users u on u.id = lic.user_id
                 left join legislative_initiative li on li.id = lic.legislative_initiative_id
-                where
-                    lic.deleted_at is null
+                where true
+                    '.(!$this->authanticated ? 'and lic.deleted_at is null and li.deleted_at is null ' : '').'
                     and lic.legislative_initiative_id = '.$id.'
-                    and li.deleted_at is null
         ');
 
         return $this->output($data);
