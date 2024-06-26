@@ -139,7 +139,7 @@ class ReportsController extends Controller
 //                    'act_number' => '',
 //                    'act_link' => '',
                     'pris_act_id' => trans_choice('custom.acts_pris', 1),
-                    'author_institution' => trans_choice('custom.importers', 2),
+                    'author_institutions' => trans_choice('custom.importers', 2),
                     'accepting_institution_type' => trans_choice('custom.authority_accepting_strategics', 1),
                     'document_date' => __('custom.document_act'),
                     'public_consultation_number' => trans_choice('custom.public_consultations', 1),
@@ -1262,7 +1262,7 @@ class ReportsController extends Controller
                         'executors.contract_date as date_contract',
                         'executors.price',
                         'executors.active',
-                        'institution_translations.name as institution_id',
+                        'institution.id as institution_id',
                         'institution_translations.name as institution_name',
                         'executor_translations.executor_name as executor',
                         'executor_translations.contract_subject',
@@ -1284,14 +1284,15 @@ class ReportsController extends Controller
                 $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
 
                 $header = [
-                    'executor_name' => __('site.executor_name'),
                     'eik' => __('custom.eik'),
-                    'contract_date' => __('custom.contract_date'),
+                    'date_contract' => __('custom.contract_date'),
                     'price' => __('custom.price_with_vat'),
-                    'institution' => __('site.executor_institution'),
+                    'active' => __('custom.status'),
+                    'institution_id' => trans_choice('custom.institutions', 1).' (ID)',
+                    'institution_name' => trans_choice('custom.institutions', 1),
+                    'executor' => __('site.executor_name'),
                     'contract_subject' => __('custom.contract_subject'),
                     'services_description' => __('custom.services_description'),
-
                 ];
                 array_unshift($data, $header);
 
