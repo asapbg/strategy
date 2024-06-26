@@ -31,7 +31,7 @@ class ReportsController extends Controller
                     select
                         sdt.title as name,
                         enums.level_name as level,
-                        foat.name as field_of_action,
+                        foat.name as policy_area,
                         aast."name" as authority,
                         to_char(strategic_document.document_date_accepted, \'DD.MM.YYYY\') || \' - \' || case when strategic_document.document_date_expiring is not null then to_char(strategic_document.document_date_expiring, \'DD.MM.YYYY\') else \''.__('custom.unlimited').'\' end as validity
                     from strategic_document
@@ -54,7 +54,7 @@ class ReportsController extends Controller
                 $header = [
                     'name' => __('custom.title'),
                     'level' => __('site.strategic_document.level'),
-                    'field_of_action' => trans_choice('custom.field_of_actions', 1),
+                    'policy_area' => trans_choice('custom.field_of_actions', 1),
                     'authority' => trans_choice('custom.authority_accepting_strategic', 1),
                     'validity' => __('custom.validity')
                 ];
@@ -76,6 +76,7 @@ class ReportsController extends Controller
                         sdt.title as name,
                         enums.level_name as level,
                         foat."name" as policy_area,
+                        enums2.level_name as policy_area_level,
                         sdtt."name" as strategic_document_type,
                         -- act_type: <string>,
                         -- act_number: <string>,
@@ -119,6 +120,11 @@ class ReportsController extends Controller
                                     (2, \''.__('custom.strategic_document.levels.AREA').'\'),
                                     (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
+                    left join (select level_id, level_name from (
+                                values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
+                                (2, \''.__('custom.strategic_document.levels.AREA').'\'),
+                                (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                    ) E(level_id, level_name)) enums2 on enums2.level_id = foa.parentid
                     where
                         sd.deleted_at is null
                         and sd.active = true
@@ -150,6 +156,12 @@ class ReportsController extends Controller
                     foreach ($data as $row){
                         $row->subdocuments = StrategicDocumentChildren::getTreeReport(0, $row->sd_id, true);
                         unset($row->sd_id);
+                        if(!empty($row->files)){
+                            $row->files = json_decode($row->files, true);
+                        }
+                        if(!empty($row->author_institutions)){
+                            $row->author_institutions = json_decode($row->author_institutions, true);
+                        }
                         $finalData[] = $row;
                     }
                 }
