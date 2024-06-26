@@ -236,7 +236,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-sm-12 control-label"
-                                               for="strategic_act_link">{{ __('validation.attributes.link_to_monitorstat') }}</label>
+                                               for="link_to_monitorstat">{{ __('validation.attributes.link_to_monitorstat') }}</label>
                                         <div class="col-12">
                                             <input type="text" name="link_to_monitorstat"
                                                    class="form-control form-control-sm @error('link_to_monitorstat'){{ 'is-invalid' }}@enderror"

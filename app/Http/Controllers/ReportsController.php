@@ -80,7 +80,7 @@ class ReportsController extends Controller
                         sdtt."name" as strategic_document_type,
                         -- act_type: <string>,
                         -- act_number: <string>,
-                        -- act_link: <string>,
+                        sd.strategic_act_link as act_link,
                         sd.pris_act_id,
                         case when sd.pris_act_id is not null then
                         (
@@ -91,7 +91,7 @@ class ReportsController extends Controller
                             left join institution_translations it on it.institution_id = i.id and it.locale = \'bg\'
                             where
                                 pris.id = sd.pris_act_id
-                                and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
+                                -- and pi2.institution_id <> '.env('DEFAULT_INSTITUTION_ID',0).'
                             group by pris.id
                         ) else null end as author_institutions,
                         aast."name" as accepting_institution_type,
@@ -137,7 +137,7 @@ class ReportsController extends Controller
                     'strategic_document_type' => trans_choice('custom.strategic_document_type', 1),
 //                    'act_type' => '',
 //                    'act_number' => '',
-//                    'act_link' => '',
+                    'act_link' => __('validation.attributes.strategic_act_link'),
                     'pris_act_id' => trans_choice('custom.acts_pris', 1),
                     'author_institutions' => trans_choice('custom.importers', 2),
                     'accepting_institution_type' => trans_choice('custom.authority_accepting_strategics', 1),
