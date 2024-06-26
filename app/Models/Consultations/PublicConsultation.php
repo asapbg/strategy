@@ -69,7 +69,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
      */
     public function toFeedItem(): FeedItem
     {
-        $extraInfo = ($this->fieldOfAction ? (trans_choice('custom.field_of_actions', 1).': '.$this->fieldOfAction->name.'. ') : '').(__('custom.comments_deadline').': '.displayDate($this->open_to).'. ').($this->importerInstitution ? trans_choice('custom.institutions', 1).': '.$this->importerInstitution?->name.'. ' : '').($this->actType ? trans_choice('custom.act_type', 1).': '.$this->actType?->name.'. ' : '');
+        $extraInfo = ($this->fieldOfAction ? '<p><b>'.(trans_choice('custom.field_of_actions', 1).': '.$this->fieldOfAction->name.'. ').'<b></p>' : '').('<p><b>'.__('custom.comments_deadline').': '.displayDate($this->open_to).'<b></p>. ').($this->importerInstitution ? '<p><b>'.trans_choice('custom.institutions', 1).': '.$this->importerInstitution?->name.'<b></p>. ' : '').($this->actType ? '<p><b>'.trans_choice('custom.act_type', 1).': '.$this->actType?->name.'<b></p>. ' : '');
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->title,
