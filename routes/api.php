@@ -112,25 +112,25 @@ Route::group(['middleware' => 'api'], function ($router){
 
     Route::controller(ReportsController::class)->group(function () {
         //Impact assessments
-        Route::get('/reports/impact_assessments/{type}/view',       'apiReportImpactAssessments')->name('api.report.ia');
+        Route::get('/reports/impact_assessments/{type}/view/{inFile?}',       'apiReportImpactAssessments')->name('api.report.ia');
         //Library
-        Route::get('/reports/library/{type}/view',       'apiReportLibrary')->name('api.report.library');
+        Route::get('/reports/library/{type}/view/{inFile?}',         'apiReportLibrary')->name('api.report.library');
         //Library
-        Route::get('/reports/polls/{type}/view',       'apiReportPolls')->name('api.report.polls');
+        Route::get('/reports/polls/{type}/view/{inFile?}',         'apiReportPolls')->name('api.report.polls');
         //Pris
-        Route::get('/reports/pris/{type}/view',       'apiReportPris')->name('api.report.pris');
+        Route::get('/reports/pris/{type}/view/{inFile?}',         'apiReportPris')->name('api.report.pris');
         //Legislative initiatives
-        Route::get('/reports/legislative-initiatives/{type}/view',       'apiReportLegislativeInitiative')->name('api.report.li');
+        Route::get('/reports/legislative-initiatives/{type}/view/{inFile?}',         'apiReportLegislativeInitiative')->name('api.report.li');
         //Public consultations
-        Route::get('/reports/public-consultations/{type}/view',       'apiReportPc')->name('api.report.pc');
+        Route::get('/reports/public-consultations/{type}/view/{inFile?}',         'apiReportPc')->name('api.report.pc');
         //Legislative Program
-        Route::get('/reports/legislative-program/{type}/view',       'apiReportLp')->name('api.report.lp');
+        Route::get('/reports/legislative-program/{type}/view/{inFile?}',         'apiReportLp')->name('api.report.lp');
         //Operational Program
-        Route::get('/reports/operational-program/{type}/view',       'apiReportOp')->name('api.report.op');
+        Route::get('/reports/operational-program/{type}/view/{inFile?}',         'apiReportOp')->name('api.report.op');
         //Advisory Boards
-        Route::get('/reports/adv-boards/{type}/view',       'apiReportAdvBoards')->name('api.report.adv_boards');
+        Route::get('/reports/adv-boards/{type}/view/{inFile?}',         'apiReportAdvBoards')->name('api.report.adv_boards');
         //Strategic Document
-        Route::get('/reports/strategic-documents/{type}/view',       'apiReportSd')->name('api.report.sd');
+        Route::get('/reports/strategic-documents/{type}/view/{inFile?}',         'apiReportSd')->name('api.report.sd');
         //Strategic Document
-        Route::get('/reports/ogp/{type}/view',       'apiOgp')->name('api.report.ogp');
+        Route::get('/reports/ogp/{type}/view/{inFile?}',         'apiOgp')->name('api.report.ogp');
     });
