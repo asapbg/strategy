@@ -254,6 +254,7 @@ class LegislativeInitiativeController extends AdminController
 
     public function show(LegislativeInitiative $item)
     {
+        $rssUrl = route('rss.legislative_initiative.item', $item->id);
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
 
@@ -261,12 +262,12 @@ class LegislativeInitiativeController extends AdminController
         $needSupport = ($item->cap - $item->countSupport());
 
         $hasSubscribeEmail = $this->hasSubscription($item);
-        $hasSubscribeRss = $this->hasSubscription($item, null, null, UserSubscribe::CHANNEL_RSS);
+        $hasSubscribeRss = false;
 
         $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
 
         return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport',
-            'hasSubscribeEmail', 'hasSubscribeRss'));
+            'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     public function update(UpdateLegislativeInitiativeRequest $request, LegislativeInitiative $item)

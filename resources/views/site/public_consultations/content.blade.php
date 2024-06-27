@@ -9,7 +9,7 @@
                     <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export') }}</button>
                 <input type="hidden" id="subscribe_model" value="App\Models\Consultations\PublicConsultation">
                 <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
-                @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
+                @includeIf('site.partial.subscribe-buttons')
             </div>
         </div>
 

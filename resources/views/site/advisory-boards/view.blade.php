@@ -21,7 +21,7 @@
                     @endcan
                     <input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
                     <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
-                    @includeIf('site.partial.subscribe-buttons', ['no_rss' => true, 'no_rss' => $item->in_archive, 'no_email_subscribe' => $item->in_archive ])
+                    @includeIf('site.partial.subscribe-buttons', ['no_rss' => $item->in_archive, 'no_email_subscribe' => $item->in_archive ])
                 </div>
             </div>
 

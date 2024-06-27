@@ -548,7 +548,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $q->get();
     }
 
-    public function orderTimeline()
+    public function orderTimeline($rss = false)
     {
         $events = $this->timeline;
         $sortedTimeline = [];
@@ -623,6 +623,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                                 <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="'.$event->object->id.'" data-url="'.route('admin.preview.file.modal', ['id' => $event->object->id]).'" title="'.__('custom.preview').'">'.fileIcon($event->object->content_type).' '.($event->object->{'description_' . app()->getLocale()}).' '.__('custom.version_short').' '.$event->object->version.'</button>
                                             </span></p>'
                                     ];
+                                    if($rss){
+                                        $sortedTimeline[$index]['file'] = $event->object;
+                                    }
                                 }
                                 $found = 1;
                                 break;

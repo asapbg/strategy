@@ -273,4 +273,6 @@ return [
     'to_publication' => 'Към публикацията',
     'to_news' => 'Към Новината',
     'store_subscription_missing_name' => 'Не сте въвели заглавие',
+    'support' => 'Подкрепа',
+    'meeting' => 'Заседание',
 ];

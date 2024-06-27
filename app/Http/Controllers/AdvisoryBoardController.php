@@ -192,6 +192,7 @@ class AdvisoryBoardController extends Controller
      */
     public function show(AdvisoryBoard $item)
     {
+        $rssUrl = route('rss.adv_boards.item', $item->id);
         $item = AdvisoryBoard::where('id', $item->id)
             ->with(['customSections' => function ($query) {
                 $query->with(['files', 'translations']);
@@ -226,7 +227,7 @@ class AdvisoryBoardController extends Controller
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
 
         $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
 

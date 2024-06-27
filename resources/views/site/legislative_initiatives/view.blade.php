@@ -30,13 +30,13 @@
                 </div>
             </div>
 
-            @if(auth()->user())
+{{--            @if(auth()->user())--}}
                 <div class="row mb-4">
                     <div class="col-12">
                         <input type="hidden" id="subscribe_model" value="App\Models\LegislativeInitiative">
                         <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
-                        @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
-
+                        @includeIf('site.partial.subscribe-buttons')
+                    @if(auth()->user())
                         @can('close', $item)
                             <form class="d-none"
                                   method="POST"
@@ -73,9 +73,10 @@
                                 {{ __('custom.deletion') }}
                             </button>
                         @endcan
+                    @endif
                     </div>
                 </div>
-            @endif
+{{--            @endif--}}
 
             @if($item->status == \App\Enums\LegislativeInitiativeStatusesEnum::STATUS_ACTIVE->value)
                 <div class="row mt-2">

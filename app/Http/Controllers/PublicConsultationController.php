@@ -82,6 +82,7 @@ class PublicConsultationController extends Controller
 
     public function show(Request $request, int $id = 0)
     {
+        $rssUrl = route('rss.public-consultation.item', $id);
 //        return $this->view('templates.public_consultations_view');
         $item = PublicConsultation::ActivePublic()->with(['translation', 'actType', 'actType.translation', 'contactPersons',
             'pollsInPeriod', 'pollsInPeriod.questions', 'pollsInPeriod.questions.answers', 'importerInstitution', 'importerInstitution.links',
@@ -107,9 +108,9 @@ class PublicConsultationController extends Controller
         $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'img' => PublicConsultation::DEFAULT_IMG));
 
         $hasSubscribeEmail = $this->hasSubscription($item);
-        $hasSubscribeRss = false;
+        $hasSubscribeRss = true;
 
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     public function addComment(StoreCommentRequest $request)

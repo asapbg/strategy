@@ -272,4 +272,6 @@ return [
     'to_publication' => 'To the publication',
     'to_news' => 'To the news',
     'store_subscription_missing_name' => 'Title is missing',
+    'support' => 'Support',
+    'meeting' => 'Meeting',
 ];

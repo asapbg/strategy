@@ -240,3 +240,9 @@ use Illuminate\Support\Facades\Storage;
 //    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
     });
 
+    Route::controller(\App\Http\Controllers\RssController::class)->group(function (){
+        Route::get('rss/public-consultation/{id}', 'pcItem')->name('rss.public-consultation.item');
+        Route::get('rss/adv_boards/{id}', 'advItem')->name('rss.adv_boards.item');
+        Route::get('rss/legislative_initiative/{id}', 'liItem')->name('rss.legislative_initiative.item');
+    });
+
