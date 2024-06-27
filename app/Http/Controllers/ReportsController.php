@@ -1180,8 +1180,8 @@ class ReportsController extends Controller
                         ->where('pris.in_archive', '=', $inArchive)
 //                    ->where('pris.id', '=', 131703)
                         ->groupBy('pris.id')
-                        ->orderBy('pris.doc_date', 'desc')
-                        ->limit(1000);
+                        ->orderBy('pris.doc_date', 'desc');
+//                        ->limit(1000);
 
                     $data = $q->get()->map(function ($row) {
                         if (!empty($row->institutions)) {

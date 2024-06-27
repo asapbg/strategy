@@ -35,6 +35,9 @@ class Kernel extends ConsoleKernel
 
         //Facebook
         $schedule->command('facebook:tokens')->monthly();
+
+        //OpenData
+        $schedule->command('generate:open_data')->daily();
     }
 
     /**
