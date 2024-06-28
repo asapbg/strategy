@@ -149,7 +149,7 @@ return [
              */
             'contentType' => '',
         ],
-        'public_consultation_single' => [
+        'public_consultation2' => [
             /*
              * Here you can specify which class and method will return
              * the items that should appear in the feed. For example:
@@ -163,7 +163,7 @@ return [
             /*
              * The feed will be available on this url.
              */
-            'url' => '/public-consultation.rss',
+            'url' => '/public-consultation-test.rss',
 
             'title' => 'Нови консултации',
             'description' => '',
@@ -184,7 +184,7 @@ return [
             /*
              * The view that will render the feed.
              */
-            'view' => 'feed::pc_single',
+            'view' => 'feed::pc_feed',
 
             /*
              * The mime type to be used in the <link> tag. Set to an empty string to automatically
