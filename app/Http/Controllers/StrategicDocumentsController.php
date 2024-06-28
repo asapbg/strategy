@@ -91,13 +91,13 @@ class StrategicDocumentsController extends Controller
         }
 
         $hasSubscribeEmail = $this->hasSubscription(null, StrategicDocument::class, $requestFilter);
-        $hasSubscribeRss = $this->hasSubscription(null, StrategicDocument::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
+        $hasSubscribeRss = false;
 
         $closeSearchForm = true;
         if( $request->ajax() ) {
             $closeSearchForm = false;
             return view('site.strategic_documents.list', compact('filter','sorter', 'items',
-                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'closeSearchForm'));
+                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');

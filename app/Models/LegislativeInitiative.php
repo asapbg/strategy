@@ -66,8 +66,24 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::orderByRaw("created_at desc")
-//            ->limit(config('feed.items_per_page'), 20)
+        $request = request();
+        $law = $request->offsetGet('law');
+        $keywords = $request->offsetGet('keywords');
+        return static::when(!empty($law), function ($query) use ($law) {
+                $query->whereHas('law', function ($query) use ($law){
+                    $query->whereIn('id', $law);
+                });
+            })->when(!empty($keywords), function ($query) use ($keywords){
+                $query->whereHas('translation', function ($query) use ($keywords){
+                    $query->where('description', 'ilike', '%' . $keywords . '%');
+                })
+                    ->orWhereHas('user', function ($query) use ($keywords) {
+                        $query->where('first_name', 'ilike', '%' . $keywords . '%');
+                        $query->orWhere('middle_name', 'ilike', '%' . $keywords . '%');
+                        $query->orWhere('last_name', 'ilike', '%' . $keywords . '%');
+                    });
+            })
+            ->orderByRaw("created_at desc")
             ->get();
     }
 

@@ -35,7 +35,7 @@ class PollController extends Controller
 
         $contentSearch = $requestFilter['content'] ?? null;
         $items = Poll::select('poll.id', 'poll.name', 'poll.status', 'poll.start_date', 'poll.end_date', 'poll.has_entry')
-            ->Active()
+//            ->Active()
             ->Public()
             ->FilterBy($requestFilter)
             ->leftJoin('public_consultation_poll', 'public_consultation_poll.poll_id', '=', 'poll.id')

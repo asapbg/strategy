@@ -95,9 +95,50 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::with(['translations'])
+        $request = request();
+        $requestFilter = $request->all();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        return static::select('advisory_boards.*')
+            ->leftJoin('advisory_board_translations', function ($j){
+                $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
+                    ->where('advisory_board_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
+            ->leftJoin('authority_advisory_board_translations', function ($j){
+                $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
+                    ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
+            ->leftJoin('advisory_act_type_translations', function ($j){
+                $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
+                    ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
+            ->leftJoin('advisory_chairman_type_translations', function ($j){
+                $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
+                    ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_board_members', 'advisory_board_members.advisory_board_id', '=', 'advisory_boards.id')
+            ->leftJoin('advisory_board_member_translations', function ($j){
+                $j->on('advisory_board_member_translations.advisory_board_member_id', '=', 'advisory_board_members.id')
+                    ->where('advisory_board_member_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('advisory_board_npos', 'advisory_board_npos.advisory_board_id', '=', 'advisory_boards.id')
+            ->leftJoin('advisory_board_npo_translations', function ($j){
+                $j->on('advisory_board_npo_translations.advisory_board_npo_id', '=', 'advisory_board_npos.id')
+                    ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
+            })
             ->ActivePublic()
-            ->orderByRaw("created_at desc")
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
+            ->groupBy('advisory_boards.id')
+            ->orderByRaw("advisory_boards.created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

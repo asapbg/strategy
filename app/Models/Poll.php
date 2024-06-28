@@ -56,9 +56,26 @@ class Poll extends ModelActivityExtend implements Feedable
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::Public()
+        $request = request();
+        $requestFilter = $request->all();
+        $contentSearch = $requestFilter['content'] ?? null;
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'id';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+        return static::select('poll.*')->Public()
+            ->leftjoin('poll_question', 'poll_question.poll_id', '=', 'poll.id')
+            ->leftjoin('poll_question_option', 'poll_question_option.poll_question_id', '=', 'poll_question.id')
+            ->when($contentSearch, function ($query) use($contentSearch){
+                return $query->where(function ($query) use ($contentSearch){
+                    $query->where('poll_question.name', 'ilike', '%'.$contentSearch.'%')
+                        ->orWhere('poll_question_option.name', 'ilike', '%'.$contentSearch.'%')
+                        ->orWhere('poll.name', 'ilike', '%'.$contentSearch.'%');
+                });
+            })
+            ->FilterBy($requestFilter)
             ->whereDoesntHave('consultations')
-            ->orderByRaw("created_at desc")
+            ->groupBy('poll.id')
+            ->orderByRaw("poll.created_at desc")
+            ->SortedBy($sort,$sortOrd)
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

@@ -6,7 +6,7 @@
 {{--        </button>--}}
 {{--    @else--}}
         @if(((isset($no_rss) && !$no_rss) || !isset($no_rss)) && isset($rssUrl))
-            <a href="{{ $rssUrl }}" id="rss-link"
+            <a href="{{ $rssUrl.(isset($subscribe_params) && sizeof($subscribe_params) ? '?'.urldecode(http_build_query($subscribe_params)) : '') }}" id="rss-link"
                class="btn rss-sub main-color text-decoration-none"
                target="_blank" title="{{ __('custom.subscribe') }}">
                 <i class="fas fa-square-rss text-warning"></i>{{ __('custom.rss_subscribe') }}

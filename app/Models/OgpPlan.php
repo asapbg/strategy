@@ -59,10 +59,13 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
+        $request = request();
+        $requestFilter = $request->all();
         return static::with(['translations'])
             ->where('active', '=', 1)
             ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
             ->where('national_plan', '=', 1)
+            ->FilterBy($requestFilter)
             ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();

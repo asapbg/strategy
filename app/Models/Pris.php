@@ -52,7 +52,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             'title' => $this->mcDisplayName,
             'summary' => $extraInfo,
             'updated' => $this->updated_at,
-            'created' => $this->created_at,
+            'created' => $this->published_at,
             'enclosure' => asset(self::DEFAULT_IMG),
             'link' => $this->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($this->actType?->name), 'id' => $this->id]) : route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
             'authorName' => '',
@@ -66,11 +66,33 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
+        $request = request();
+        $requestFilter = $request->all();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         return static::with(['translations', 'actType', 'actType.translations'])
             ->Published()
-            ->where('active', '=', 1)
-            ->orderByRaw("created_at desc")
+            ->LastVersion()
+            ->where('pris.active', '=', 1)
+            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('pris_translations', function ($j){
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
+            ->leftJoin('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+            ->join('legal_act_type_translations', function ($j){
+                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->orderByRaw("pris.doc_date desc")
             ->limit(config('feed.items_per_page'), 20)
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
             ->get();
     }
 

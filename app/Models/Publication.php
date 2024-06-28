@@ -61,9 +61,39 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
      */
     public static function getFeedItemsPublication(): \Illuminate\Database\Eloquent\Collection
     {
+        $request = request();
+        $sort = ($request->offsetGet('sort'))
+            ? $request->offsetGet('sort')
+            : "DESC";
+        $order_by = ($request->offsetGet('order_by'))
+            ? $request->offsetGet('order_by')
+            : "created_at";
+        $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
+            ? "publication_translations"
+            : "publication";
+        $published_from = $request->get('published_from');
+        $published_till = $request->get('published_till');
+        $keywords = $request->get('keywords');
+        $categories = $request->get('categories');
+
         return static::with(['translations'])
+            ->joinTranslation(Publication::class)
+            ->whereLocale(currentLocale())
             ->ActivePublic()
+            ->when($categories, function ($query, $categories) {
+                return $query->whereIn('publication_category_id', $categories);
+            })
+            ->when($keywords, function ($query, $keywords) {
+                return $query->whereRaw("(title::text ILIKE '%$keywords%' OR content::text ILIKE '%$keywords%')");
+            })
+            ->when($published_from, function ($query, $published_from) {
+                return $query->where('published_at', '>=', databaseDate($published_from));
+            })
+            ->when($published_till, function ($query, $published_till) {
+                return $query->where('published_at', '<=', databaseDate($published_till));
+            })
             ->where('type', '=', PublicationTypesEnum::TYPE_LIBRARY->value)
+            ->orderBy("$sort_table.$order_by", $sort)
             ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();
@@ -75,9 +105,39 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
      */
     public static function getFeedItemsNews(): \Illuminate\Database\Eloquent\Collection
     {
+        $request = request();
+        $sort = ($request->offsetGet('sort'))
+            ? $request->offsetGet('sort')
+            : "DESC";
+        $order_by = ($request->offsetGet('order_by'))
+            ? $request->offsetGet('order_by')
+            : "created_at";
+        $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
+            ? "publication_translations"
+            : "publication";
+        $published_from = $request->get('published_from');
+        $published_till = $request->get('published_till');
+        $keywords = $request->get('keywords');
+        $categories = $request->get('categories');
+
         return static::with(['translations'])
+            ->joinTranslation(Publication::class)
+            ->whereLocale(currentLocale())
             ->ActivePublic()
+            ->when($categories, function ($query, $categories) {
+                return $query->whereIn('publication_category_id', $categories);
+            })
+            ->when($keywords, function ($query, $keywords) {
+                return $query->whereRaw("(title::text ILIKE '%$keywords%' OR content::text ILIKE '%$keywords%')");
+            })
+            ->when($published_from, function ($query, $published_from) {
+                return $query->where('published_at', '>=', databaseDate($published_from));
+            })
+            ->when($published_till, function ($query, $published_till) {
+                return $query->where('published_at', '<=', databaseDate($published_till));
+            })
             ->where('type', '=', PublicationTypesEnum::TYPE_NEWS->value)
+            ->orderBy("$sort_table.$order_by", $sort)
             ->orderByRaw("created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();

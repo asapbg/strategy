@@ -69,10 +69,16 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
      */
     public static function getFeedItems(): \Illuminate\Database\Eloquent\Collection
     {
+        $request = request();
+        $requestFilter = $request->all();
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'document_date_accepted';
+        $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         return static::with(['translations'])
             ->Active()
             ->whereNull('parent_document_id')
             ->orderByRaw("created_at desc")
+            ->FilterBy($requestFilter)
+            ->SortedBy($sort,$sortOrd)
 //            ->limit(config('feed.items_per_page'), 20)
             ->get();
     }

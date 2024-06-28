@@ -105,7 +105,7 @@ class LegislativeInitiativeController extends AdminController
 
         $requestFilter = $request->all();
         $hasSubscribeEmail = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter);
-        $hasSubscribeRss = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter, UserSubscribe::CHANNEL_RSS);
+        $hasSubscribeRss = false;
         $this->setSeo(__('site.seo_title'),  trans_choice('custom.legislative_initiatives', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.legislative_initiatives', 2), 'img' => LegislativeInitiative::DEFAULT_IMG));
 
         return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent',
