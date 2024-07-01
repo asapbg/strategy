@@ -140,6 +140,14 @@
                 <div class="row mb-0 ">
                         <button class="col-md-6 offset-md-3 cstm-btn btn btn-lg  btn-primary mb-2" id="reg_btn" type="button"><i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('custom.register') }}</button>
                 </div>
+                <div class="row">
+                    <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
+                        <span class="btn-label"><i
+                                class="fa-solid fa-signature main-color "
+                            ></i></span>
+                        {{ __('eauth.with_e_auth') }}
+                    </a>
+                </div>
             </form>
         </div>
     </div>

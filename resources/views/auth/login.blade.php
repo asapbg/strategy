@@ -87,13 +87,13 @@
                             </div>
                             </button>
                             <div class="row">
-                            <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
-                                <span class="btn-label"><i
-                                        class="fa-solid fa-signature main-color "
-                                        ></i></span>
-                                {{ __('eauth.with_e_auth') }}
-                            </a>
-                        </div>
+                                <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
+                                    <span class="btn-label"><i
+                                            class="fa-solid fa-signature main-color "
+                                            ></i></span>
+                                    {{ __('eauth.with_e_auth') }}
+                                </a>
+                            </div>
 
                     </div>
                 </div>
