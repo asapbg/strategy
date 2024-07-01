@@ -53,8 +53,18 @@ class PublicConsultationsController extends ApiController
                 pc.open_from as date_open,
                 pc.open_to as date_close,
                 pc.active as published,
+                pc.legislative_program_id,
+                pc.operational_program_id,
                 case when NOW()::date >= pc.open_from and NOW()::date <= pc.open_to then true else false end as active,
-                pc.field_of_actions_id as policy_area
+                pc.field_of_actions_id as policy_area,
+                (
+                    select jsonb_agg(poll.id)
+                    from public_consultation_poll
+                    join poll on poll.id = public_consultation_poll.poll_id
+                    where
+                        poll.deleted_at is null
+                        and public_consultation_poll.public_consultation_id = pc.id
+                ) as polls
             from public_consultation pc
             join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \''.$this->locale.'\'
             where true
@@ -68,6 +78,19 @@ class PublicConsultationsController extends ApiController
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
         ');
+
+        $finalData = array();
+        if(sizeof($data)){
+            foreach ($data as $row){
+                if(!empty($row->polls)){
+                    $row->polls = json_decode($row->polls, true);
+                } else{
+                    $row->polls = [];
+                }
+                $finalData[] = $row;
+            }
+        }
+        $data = $finalData;
 
         return $this->output($data);
     }
@@ -181,7 +204,15 @@ class PublicConsultationsController extends ApiController
                                 group by f.doc_type
                                 order by f.doc_type
                             ) A
-                        ) as files
+                        ) as files,
+                        (
+                            select jsonb_agg(poll.id)
+                            from public_consultation_poll
+                            join poll on poll.id = public_consultation_poll.poll_id
+                            where
+                                poll.deleted_at is null
+                                and public_consultation_poll.public_consultation_id = pc.id
+                        ) as polls
                     from public_consultation pc
                     join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \''.$this->locale.'\'
                     left join field_of_actions foa on foa.id = pc.field_of_actions_id
@@ -219,6 +250,11 @@ class PublicConsultationsController extends ApiController
                     $data->files = json_decode($data->files, true);
                 } else {
                     $data->files = [];
+                }
+                if(!empty($data->polls)){
+                    $data->polls = json_decode($data->polls, true);
+                } else {
+                    $data->polls = [];
                 }
         }
         if(empty($data)){
