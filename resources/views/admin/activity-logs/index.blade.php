@@ -67,7 +67,7 @@
                                 <input type="text" name="activity_log_date" class="form-control datepicker" autocomplete="off"
                                        value="{{ request()->get('activity_log_date') }}">
                             </div>
-                            <div class="col-xs-12 col-md-2">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="subject_type">{{__('custom.activity_log_model')}}</label>
                                 <select name="subject_type" id="subject_type" class="form-control select2">
                                     <option value=""></option>
