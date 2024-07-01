@@ -59,7 +59,9 @@ class AdvisoryBoardController extends ApiController
                     select
                         ab.id as id,
                         max(abt.name) as title,
-                        max(aabt."name") as establishment_act_type,
+                        -- max(aabt."name") as establishment_act_type,
+                        max(aabt."name") as institution_type,
+                        max(aabt.id) as institution_id,
                         max(actt.name) as chairman_type,
                         json_agg(distinct(ifoa.institution_id)) filter(where ifoa.institution_id is not null) as institutions_id,
                         ab.created_at::date as date_established,
@@ -106,7 +108,9 @@ class AdvisoryBoardController extends ApiController
                         ab.id,
                         max(abt.name) as name,
                         ab.created_at::date as date_established,
-                        max(aabt."name") as establishment_act_type,
+                        -- max(aabt."name") as establishment_act_type,
+                        max(aabt."name") as institution_type,
+                        max(aabt.id) as institution_id,
                         -- max(abort2.description) as establishment_act,
                         (
                             select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
