@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Models\StrategicDocuments\Institution;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -81,6 +82,11 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
                 'rules' => ['required', 'string', 'max:255']
             ],
         );
+    }
+
+    public function institution()
+    {
+        return $this->belongsToMany(Institution::class, 'institution_field_of_action', 'field_of_action_id', 'institution_id');
     }
 
     public static function optionsList($active = false, $parent = 0)
