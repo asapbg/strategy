@@ -415,7 +415,7 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                             from files sdf
                             where
                                 sdf.id_object = strategic_document_children.id
-                                sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
+                                and sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
                                 and sdf.deleted_at is null
                                 and sdf.locale = \'bg\'
                         ) as files
@@ -494,7 +494,7 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                             from files sdf
                             where
                                 sdf.id_object = strategic_document_children.id
-                                sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
+                                and sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
                                 and sdf.deleted_at is null
                                 and sdf.locale = \'bg\'
                         ) as files
